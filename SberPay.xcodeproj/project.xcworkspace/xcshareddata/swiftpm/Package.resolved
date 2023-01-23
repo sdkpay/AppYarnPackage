@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "lottie-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/airbnb/lottie-ios.git",
+      "state" : {
+        "revision" : "a4622b4d6fdbe76cc5487bc27e84029abaf07217",
+        "version" : "4.0.1"
+      }
+    },
+    {
+      "identity" : "swift-mobile-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Dynatrace/swift-mobile-sdk.git",
+      "state" : {
+        "revision" : "304ee1f7f1629743870581191bfd4fba655298be",
+        "version" : "8.255.1"
+      }
+    }
+  ],
+  "version" : 2
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>371889684518-4ik1modm4o15t0dn9dh6dptblki9pmtl.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.371889684518-4ik1modm4o15t0dn9dh6dptblki9pmtl</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAuNJZQRZmKXtFjG6Tq3VdgoiERlsUeKdk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>371889684518</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>ru.ir.resheniya.PayTestApp</string>
+	<key>PROJECT_ID</key>
+	<string>paysdk-18373</string>
+	<key>STORAGE_BUCKET</key>
+	<string>paysdk-18373.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:371889684518:ios:d5360ca00cd4655da8e6e7</string>
+</dict>
+</plist>

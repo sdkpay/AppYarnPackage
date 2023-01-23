@@ -1,0 +1,27 @@
+//
+//  UIPanGestureRecognizer+Extension.swift
+//  SberPaySDK
+//
+//  Created by Alexander Ipatov on 05.12.2022.
+//
+
+import UIKit
+
+extension UIPanGestureRecognizer {
+    func incrementToBottom(maxTranslation: CGFloat) -> CGFloat {
+        let translation = self.translation(in: view).y
+        setTranslation(.zero, in: nil)
+
+        let percentIncrement = translation / maxTranslation
+        return percentIncrement
+    }
+
+    func isProjectedToDownHalf(maxTranslation: CGFloat, percentComplete: CGFloat) -> Bool {
+        let velocityOffset = velocity(in: view).projectedOffset(decelerationRate: .normal)
+        let verticalTranslation = maxTranslation * percentComplete
+        let translation = CGPoint(x: 0, y: verticalTranslation) + velocityOffset
+
+        let isPresentationCompleted = translation.y > maxTranslation / 2
+        return isPresentationCompleted
+    }
+}

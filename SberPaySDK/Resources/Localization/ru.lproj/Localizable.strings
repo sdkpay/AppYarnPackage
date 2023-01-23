@@ -1,0 +1,28 @@
+/* 
+  Localizable.strings
+  SberPay
+
+  Created by Alexander Ipatov on 21.11.2022.
+  
+*/
+// Common
+"pay.title" = "Оплатить";
+"cancel.title" = "Отменить";
+
+// Auth
+"auth.title" = "Выберите приложение для авторизации в СберБанке";
+"sber.title" = "СберБанк Онлайн";
+"sbol.title" = "СБОЛ";
+
+// Cards
+"cards.title" = "Выберите карту для оплаты";
+
+// Error
+
+// Loading
+"toSber.title" = "Переходим в СберБанк Онлайн для авторизации";
+"toSbol.title" = "Переходим в СБОЛ для авторизации";
+
+// Alert
+"alert.error.main.title" = "Не получилось оплатить.\nПожалуйста, выберите другой способ";
+"alert.pay.success.title" = "Успешно оплатили";
