@@ -13,6 +13,9 @@
 		4416E437291FA90900284972 /* StartupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E436291FA90900284972 /* StartupService.swift */; };
 		441B7904296FEE990093138D /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 441B7903296FEE990093138D /* libresolv.9.tbd */; };
 		441B791829700BEB0093138D /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 441B791729700BEB0093138D /* Lottie */; };
+		442A45C9297FE80D00EC3D73 /* StubNetworkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442A45C8297FE80D00EC3D73 /* StubNetworkProvider.swift */; };
+		442A45CC297FEE1500EC3D73 /* StubbedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442A45CB297FEE1500EC3D73 /* StubbedResponse.swift */; };
+		442A45CE297FEE8000EC3D73 /* Auth.json in Resources */ = {isa = PBXBuildFile; fileRef = 442A45CD297FEE8000EC3D73 /* Auth.json */; };
 		443D83AB295D8F31002605AA /* ecomtest.sberbank.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 443D83AA295D8F31002605AA /* ecomtest.sberbank.ru.der */; };
 		44499BED296EB4A500B6A582 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */; };
 		444A13AC291BA96100C9FBE0 /* SberPaySDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 444A13AB291BA96100C9FBE0 /* SberPaySDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -158,6 +161,9 @@
 		4416E423291E21C300284972 /* SDKError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKError.swift; sourceTree = "<group>"; };
 		4416E436291FA90900284972 /* StartupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupService.swift; sourceTree = "<group>"; };
 		441B7903296FEE990093138D /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
+		442A45C8297FE80D00EC3D73 /* StubNetworkProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubNetworkProvider.swift; sourceTree = "<group>"; };
+		442A45CB297FEE1500EC3D73 /* StubbedResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubbedResponse.swift; sourceTree = "<group>"; };
+		442A45CD297FEE8000EC3D73 /* Auth.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = Auth.json; sourceTree = "<group>"; };
 		443D83AA295D8F31002605AA /* ecomtest.sberbank.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ecomtest.sberbank.ru.der; sourceTree = "<group>"; };
 		44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		444A13A9291BA96100C9FBE0 /* SberPaySDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SberPaySDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -359,6 +365,15 @@
 			path = StartupService;
 			sourceTree = "<group>";
 		};
+		442A45CA297FEDD800EC3D73 /* Stubs */ = {
+			isa = PBXGroup;
+			children = (
+				442A45CB297FEE1500EC3D73 /* StubbedResponse.swift */,
+				442A45CD297FEE8000EC3D73 /* Auth.json */,
+			);
+			path = Stubs;
+			sourceTree = "<group>";
+		};
 		444A13AA291BA96100C9FBE0 /* SberPaySDK */ = {
 			isa = PBXGroup;
 			children = (
@@ -397,6 +412,7 @@
 		444A13B6291BA9A100C9FBE0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				442A45CA297FEDD800EC3D73 /* Stubs */,
 				440DB3AE295C645300B84E05 /* Certificates */,
 				445CB079292C9CFE00F50047 /* Fonts */,
 				445CB071292BBAC300F50047 /* Assets */,
@@ -552,6 +568,7 @@
 				4464DF8B291D0452000C9B45 /* NetworkProvider.swift */,
 				4464DF8D291D0D2E000C9B45 /* ParameterEncoding.swift */,
 				4464DF8F291D0DE3000C9B45 /* NetworkDecoding.swift */,
+				442A45C8297FE80D00EC3D73 /* StubNetworkProvider.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -1036,6 +1053,7 @@
 			files = (
 				444A13F3291CF1C100C9FBE0 /* .swiftlint.yml in Resources */,
 				445CB07F292C9D9500F50047 /* SB Sans Text.ttf in Resources */,
+				442A45CE297FEE8000EC3D73 /* Auth.json in Resources */,
 				445CB073292BBB1400F50047 /* Assets.xcassets in Resources */,
 				443D83AB295D8F31002605AA /* ecomtest.sberbank.ru.der in Resources */,
 				445CB06B292BB99F00F50047 /* Localizable.strings in Resources */,
@@ -1126,6 +1144,7 @@
 				44F9FD4B295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift in Sources */,
 				4473D6C6294063E800802446 /* ContentView.swift in Sources */,
 				4416E424291E21C300284972 /* SDKError.swift in Sources */,
+				442A45CC297FEE1500EC3D73 /* StubbedResponse.swift in Sources */,
 				44A23767292FAF3000C5883E /* Int+Price.swift in Sources */,
 				44D5361B2926198400B99463 /* UIViewController+Container.swift in Sources */,
 				44D7585F29751C9A005D2EA4 /* PersonalMetricsService.swift in Sources */,
@@ -1142,6 +1161,7 @@
 				445CB093292CC08400F50047 /* PaymentVC.swift in Sources */,
 				44C651102934E37F008F1C29 /* SBPError.swift in Sources */,
 				440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */,
+				442A45C9297FE80D00EC3D73 /* StubNetworkProvider.swift in Sources */,
 				44C6510C2934E327008F1C29 /* SBPaymentTokenResponse.swift in Sources */,
 				445CB066292BB3E300F50047 /* String+Localized.swift in Sources */,
 				44F9FD4D295AFAB800FE4B9F /* CoverPresentationController.swift in Sources */,

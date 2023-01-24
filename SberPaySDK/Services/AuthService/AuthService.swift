@@ -8,7 +8,7 @@
 import UIKit
 
 protocol AuthService {
-    func tryToAuth(with request: SBPaymentTokenRequest,
+    func tryToAuth(with model: AuthModel,
                    completion: @escaping (Result<BankModel, SDKError>) -> Void)
     func completeAuth(with url: URL)
     func removeSavedBank()
@@ -20,7 +20,7 @@ protocol AuthService {
 final class DefaultAuthService: AuthService, ResponseDecoder {
     private var authСompletion: ((Result<BankModel, SDKError>) -> Void)?
     private var analytics: AnalyticsService
-    
+
     var avaliableBanks: [BankApp] {
         BankApp.allCases.filter({ canOpen(link: $0.link) })
     }
@@ -48,15 +48,14 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         selectedBank = app
     }
 
-    func tryToAuth(with request: SBPaymentTokenRequest,
+    func tryToAuth(with model: AuthModel,
                    completion: @escaping (Result<BankModel, SDKError>) -> Void) {
         self.authСompletion = completion
-        // DEBUG
-        sberIdAuth(clientId: request.apiKey,
-                   scope: "openid",
-                   state: .generateRandom(with: 12),
-                   nonce: .generateRandom(with: 18),
-                   redirectUri: request.redirectUri)
+        guard let link = authURL(link: model.deeplink) else {
+            completion(.failure(.noData))
+            return
+        }
+        sberIdAuth(link: link)
     }
     
     func completeAuth(with url: URL) {
@@ -95,46 +94,19 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
 
     // MARK: - Методы авторизации через sberid
-    private func sberIdAuth(clientId: String,
-                            scope: String,
-                            state: String,
-                            nonce: String,
-                            redirectUri: String) {
-        let params = requestParams(clientId: clientId,
-                                   scope: scope,
-                                   state: state,
-                                   nonce: nonce,
-                                   redirectUri: redirectUri)
-        guard let url = authURL(items: params) else { return }
-        UIApplication.shared.open(url) { [weak self] success in
+    private func sberIdAuth(link: URL) {
+        UIApplication.shared.open(link) { [weak self] success in
             self?.analytics.sendEvent(.AuthViewAppeared)
             if !success {
                 self?.analytics.sendEvent(.RedirectDenied)
             }
         }
-        SBLogger.logRequestToSbolStarted(url)
+        SBLogger.logRequestToSbolStarted(link)
     }
     
-    private func requestParams(clientId: String,
-                               scope: String,
-                               state: String,
-                               nonce: String,
-                               redirectUri: String) -> [URLQueryItem] {
-        var queryItems: [String: String] = [:]
-        queryItems["client_id"] = clientId
-        queryItems["state"] = state
-        queryItems["nonce"] = nonce
-      // DEBUG
-      // queryItems["scope"] = scope
-        queryItems["redirect_uri"] = redirectUri
-        return queryItems.map { URLQueryItem(name: $0.key, value: $0.value) }
-    }
-    
-    private func authURL(items: [URLQueryItem]) -> URL? {
+    private func authURL(link: String) -> URL? {
         guard let url = selectedBank?.link else { return nil }
-        var urlComp = URLComponents(string: url)
-        urlComp?.queryItems = items
-        return urlComp?.url
+        return URL(string: url + link)
     }
     
     // MARK: - Вспомогательные методы

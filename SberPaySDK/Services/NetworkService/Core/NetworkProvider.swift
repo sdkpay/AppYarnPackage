@@ -19,6 +19,7 @@ protocol TargetType {
     var httpMethod: HTTPMethod { get }
     var task: HTTPTask { get }
     var headers: HTTPHeaders? { get }
+    var sampleData: Data? { get }
 }
 
 // MARK: - HTTPMethod
@@ -40,7 +41,6 @@ enum HTTPTask {
 }
 
 // MARK: - NetworkProvider
-
 protocol NetworkProvider {
     func request(_ route: TargetType, completion: @escaping NetworkProviderCompletion)
     func cancel()

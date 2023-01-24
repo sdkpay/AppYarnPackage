@@ -23,14 +23,14 @@ final class DefaultSDKManager: SDKManager {
     private(set) var request: SBPaymentTokenRequest?
     private var authCompletion: ((SDKError?) -> Void)?
     
-    private let networkService: NetworkService
+    private let network: NetworkService
     private let analytics: AnalyticsService
     private var authService: AuthService
     
-    init(networkService: NetworkService,
+    init(network: NetworkService,
          authService: AuthService,
          analytics: AnalyticsService) {
-        self.networkService = networkService
+        self.network = network
         self.authService = authService
         self.analytics = analytics
     }
@@ -42,13 +42,15 @@ final class DefaultSDKManager: SDKManager {
     }
 
     func tryToAuth(completion: @escaping (SDKError?) -> Void) {
-        networkService.request(AuthTarget.getSessionId) { [weak self] result in
+        network.request(AuthTarget.getSessionId,
+                        to: AuthModel.self) { [weak self] result in
             switch result {
-            case .success():
-                self?.authWithSbol(completion: completion)
+            case .success(let result):
+                self?.authWithSbol(authModel: result,
+                                   completion: completion)
             case .failure(let error):
-               completion(error)
-               self?.completionWithError(error: error)
+                completion(error)
+                self?.completionWithError(error: error)
             }
         }
     }
@@ -71,9 +73,9 @@ final class DefaultSDKManager: SDKManager {
         completion?(responce)
     }
     
-    private func authWithSbol(completion: @escaping (SDKError?) -> Void) {
-        guard let request = request else { return }
-        authService.tryToAuth(with: request) { [weak self] result in
+    private func authWithSbol(authModel: AuthModel,
+                              completion: @escaping (SDKError?) -> Void) {
+        authService.tryToAuth(with: authModel) { [weak self] result in
             switch result {
             case .success(_):
                 completion(nil)

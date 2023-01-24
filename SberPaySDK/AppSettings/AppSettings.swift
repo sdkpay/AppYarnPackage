@@ -14,6 +14,6 @@ enum AppSettings {
     static let dynatraceLogLevel = "OFF" // ALL
     
     // auth links
-    static let sberAuthLink = "sberbankidexternallogin://sberbankid"
-    static let sbolAuthLink = "sbolidexternallogin://sberbankid"
+    static let sberAuthLink = "sberbankidexternallogin://"
+    static let sbolAuthLink = "sbolidexternallogin://"
 }

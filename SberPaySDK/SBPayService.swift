@@ -24,9 +24,11 @@ protocol SBPayService {
 final class DefaultSBPayService: SBPayService {
     private lazy var analyticsService: AnalyticsService = DefaultAnalyticsService()
     private lazy var startService: StartupService = DefaultStartupService()
-    private lazy var network: NetworkService = DefaultNetworkService(provider: DefaultNetworkProvider())
+    private lazy var network: NetworkService = DefaultNetworkService(provider: StubNetworkProvider(delayedSeconds: 2))
     private lazy var authService: AuthService = DefaultAuthService(analytics: analyticsService)
-    private lazy var manager: SDKManager = DefaultSDKManager(networkService: network, authService: authService, analytics: analyticsService)
+    private lazy var manager: SDKManager = DefaultSDKManager(network: network,
+                                                             authService: authService,
+                                                             analytics: analyticsService)
     private lazy var personalMetricsService: PersonalMetricsService = DefaultPersonalMetricsService()
     
     var isReadyForSberPay: Bool {

@@ -12,7 +12,6 @@ enum AuthTarget {
 }
 
 extension AuthTarget: TargetType {
-
     var path: String {
         switch self {
         case .getSessionId:
@@ -36,6 +35,10 @@ extension AuthTarget: TargetType {
     
     var headers: HTTPHeaders? {
         return nil
+    }
+    
+    var sampleData: Data? {
+        return StubbedResponse.auth.data
     }
 }
  
