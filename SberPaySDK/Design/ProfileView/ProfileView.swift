@@ -7,10 +7,10 @@
 
 import UIKit
 
-enum Gender {
-    case male
-    case female
-    case neutral
+enum Gender: Int {
+    case female = 0
+    case male = 1
+    case neutral = 2
     
     var icon: UIImage? {
         switch self {
@@ -50,9 +50,9 @@ final class ProfileView: UIView {
         setupUI()
     }
     
-    func config(with name: String, gender: Gender) {
-        nameLabel.text = name
-        iconView.image = gender.icon
+    func config(with userInfo: UserInfo) {
+        nameLabel.text = userInfo.fullName
+        iconView.image = userInfo.sdkGender.icon
         setupUI()
     }
     

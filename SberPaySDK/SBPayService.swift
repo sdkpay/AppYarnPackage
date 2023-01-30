@@ -24,12 +24,35 @@ protocol SBPayService {
 final class DefaultSBPayService: SBPayService {
     private lazy var analyticsService: AnalyticsService = DefaultAnalyticsService()
     private lazy var startService: StartupService = DefaultStartupService()
-    private lazy var network: NetworkService = DefaultNetworkService(provider: StubNetworkProvider(delayedSeconds: 2))
-    private lazy var authService: AuthService = DefaultAuthService(analytics: analyticsService)
-    private lazy var manager: SDKManager = DefaultSDKManager(network: network,
-                                                             authService: authService,
-                                                             analytics: analyticsService)
+    
+    private lazy var network: NetworkService = {
+       DefaultNetworkService(provider: BuildSettings.needStubs ? StubNetworkProvider(delayedSeconds: 2) : DefaultNetworkProvider())
+    }()
+
+    private lazy var manager: SDKManager = DefaultSDKManager()
+    private lazy var authManager: AuthManager = DefaultAuthManager()
+    private lazy var authService: AuthService = DefaultAuthService(network: network,
+                                                                   sdkManager: manager,
+                                                                   analytics: analyticsService,
+                                                                   authManager: authManager)
+
+    private lazy var userService: UserService = DefaultUserService(network: network,
+                                                                   sdkManager: manager,
+                                                                   authManager: authManager)
     private lazy var personalMetricsService: PersonalMetricsService = DefaultPersonalMetricsService()
+
+    private lazy var locator: LocatorService = {
+        let service = DefaultLocatorService()
+        service.register(service: analyticsService)
+        service.register(service: startService)
+        service.register(service: authService)
+        service.register(service: network)
+        service.register(service: userService)
+        service.register(service: manager)
+        service.register(service: personalMetricsService)
+        service.register(service: authManager)
+        return service
+    }()
     
     var isReadyForSberPay: Bool {
         // Для симулятора всегда true для удобства разработки
@@ -46,11 +69,12 @@ final class DefaultSBPayService: SBPayService {
     func getPaymentToken(with request: SBPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
         SBLogger.logRequestPaymentToken(with: request)
-        manager.config(request: request, completion: { response in
+        manager.config(paymentTokenRequest: request, completion: { response in
             SBLogger.logResponsePaymentToken(with: response)
             completion(response)
         })
-        startService.openInitialScreen(with: manager, analytics: analyticsService)
+        SBLogger.log("📃 Stubs enabled - \(BuildSettings.needStubs)")
+        startService.openInitialScreen(with: manager, locator: locator, analytics: analyticsService)
         print(personalMetricsService.getUserData(completion: { result in
             guard let result = result else { return }
             SBLogger.log(.biZone + result)

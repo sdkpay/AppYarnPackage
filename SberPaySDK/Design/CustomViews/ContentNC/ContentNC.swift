@@ -178,7 +178,6 @@ final class ContentNC: UIViewController {
                 from.view.subviews.forEach({ $0.alpha = 1 })
             }
         )
-        
         CATransaction.commit()
     }
 }

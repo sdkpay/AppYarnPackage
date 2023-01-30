@@ -1,0 +1,120 @@
+{
+    "sessionId": "9f80261c-3455-4942-be48-cd1b2a2d7123",
+    "userInfo": {
+        "lastName": "Г.",
+        "firstName": "Матвей",
+        "gender": 1
+    },
+    "orderAmount": {
+        "amount": 12345,
+        "currency": "RUB"
+    },
+    "paymentToolInfo": [
+        {
+            "paymentId": 9,
+            "priorityCard": true,
+            "paymentSourceType": "DebitCard",
+            "financialProductId": 408173234342245570,
+            "cardNumber": "5507",
+            "paymentSystemType": "MASTERCARD",
+            "cardLogoUrl": "https:\\cardlogo1.jpeg",
+            "amountData": {
+                "amount": 15000,
+                "currency": "RUB"
+            }
+        },
+        {
+            "paymentId": 10,
+            "priorityCard": false,
+            "paymentSourceType": "DebitCard",
+            "financialProductId": 408173234342240000,
+            "cardNumber": "7779",
+            "paymentSystemType": "VISA",
+            "cardLogoUrl": "https:\\cardlogo2.jpeg",
+            "amountData": {
+                "amount": 15000000,
+                "currency": "RUB"
+            }
+        },
+        {
+            "paymentId": 11,
+            "priorityCard": false,
+            "paymentSourceType": "DebitCard",
+            "financialProductId": 408173234342240000,
+            "cardNumber": "7239",
+            "paymentSystemType": "VISA",
+            "cardLogoUrl": "https:\\cardlogo2.jpeg",
+            "amountData": {
+                "amount": 15000000,
+                "currency": "RUB"
+            }
+        },
+        {
+            "paymentId": 12,
+            "priorityCard": false,
+            "paymentSourceType": "DebitCard",
+            "financialProductId": 408173234342240000,
+            "cardNumber": "3279",
+            "paymentSystemType": "VISA",
+            "cardLogoUrl": "https:\\cardlogo2.jpeg",
+            "amountData": {
+                "amount": 15000000,
+                "currency": "RUB"
+            }
+        },
+        {
+            "paymentId": 13,
+            "priorityCard": false,
+            "paymentSourceType": "DebitCard",
+            "financialProductId": 408173234342240000,
+            "cardNumber": "7329",
+            "paymentSystemType": "VISA",
+            "cardLogoUrl": "https:\\cardlogo2.jpeg",
+            "amountData": {
+                "amount": 15000000,
+                "currency": "RUB"
+            }
+        },
+        {
+            "paymentId": 14,
+            "priorityCard": false,
+            "paymentSourceType": "DebitCard",
+            "financialProductId": 408173234342240000,
+            "cardNumber": "7333",
+            "paymentSystemType": "VISA",
+            "cardLogoUrl": "https:\\cardlogo2.jpeg",
+            "amountData": {
+                "amount": 15000000,
+                "currency": "RUB"
+            }
+        },
+        {
+            "paymentId": 15,
+            "priorityCard": false,
+            "paymentSourceType": "DebitCard",
+            "financialProductId": 408173234342240000,
+            "cardNumber": "7393",
+            "paymentSystemType": "VISA",
+            "cardLogoUrl": "https:\\cardlogo2.jpeg",
+            "amountData": {
+                "amount": 15000000,
+                "currency": "RUB"
+            }
+        },
+        {
+            "paymentId": 16,
+            "priorityCard": false,
+            "paymentSourceType": "DebitCard",
+            "financialProductId": 408173234342240000,
+            "cardNumber": "7355",
+            "paymentSystemType": "VISA",
+            "cardLogoUrl": "https:\\cardlogo2.jpeg",
+            "amountData": {
+                "amount": 15000000,
+                "currency": "RUB"
+            }
+        }
+    ],
+    "merchantName": "Test shop",
+    "logoUrl": "https:\\merch1.jpeg"
+}

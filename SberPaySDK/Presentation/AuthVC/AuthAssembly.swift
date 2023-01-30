@@ -8,18 +8,32 @@
 import UIKit
 
 final class AuthAssembly {
-    func createModule(manager: SDKManager, analytics: AnalyticsService) -> ContentVC {
-        let presenter = modulePresenter(manager, analytics: analytics)
-        let contentView = moduleView(presenter: presenter)
-        presenter.view = contentView
-        return contentView
-    }
+    private let locator: LocatorService
 
-    private func modulePresenter(_ manager: SDKManager, analytics: AnalyticsService) -> AuthPresenter {
-        let presenter = AuthPresenter(manager: manager, analytics: analytics)
-        return presenter
+    init(locator: LocatorService) {
+        self.locator = locator
     }
     
+    func createModule() -> ContentVC {
+        let router = moduleRouter()
+        let presenter = modulePresenter(router)
+        let contentView = moduleView(presenter: presenter)
+        presenter.view = contentView
+        router.viewController = contentView
+        return contentView
+    }
+    
+    func moduleRouter() -> AuthRouter {
+        AuthRouter(with: locator)
+    }
+
+    private func modulePresenter(_ router: AuthRouter) -> AuthPresenter {
+        AuthPresenter(router,
+                      authService: locator.resolve(),
+                      sdkManager: locator.resolve(),
+                      analytics: locator.resolve())
+    }
+
     private func moduleView(presenter: AuthPresenter) -> ContentVC & IAuthVC {
         let view = AuthVC(presenter)
         presenter.view = view

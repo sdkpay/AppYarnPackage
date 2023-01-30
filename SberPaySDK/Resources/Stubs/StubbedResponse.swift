@@ -8,12 +8,16 @@
 import Foundation
 
 enum StubbedResponse {
-    case auth
+    case auth, listCards, paymentToken
 
     var data: Data {
         switch self {
         case .auth:
             return stubbedResponse("Auth")
+        case .listCards:
+            return stubbedResponse("ListCards")
+        case .paymentToken:
+            return stubbedResponse("PaymentToken")
         }
     }
     

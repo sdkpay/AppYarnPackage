@@ -16,16 +16,25 @@ protocol PaymentPresenting {
 final class PaymentPresenter: PaymentPresenting {
     private let manager: SDKManager
     private let analytics: AnalyticsService
+    private let router: PaymentRouting
+    private let userService: UserService
+    private var selectedCard: PaymentToolInfo?
+    private var user: User?
 
     weak var view: (IPaymentVC & ContentVC)?
     
-    init(_ manager: SDKManager, analytics: AnalyticsService) {
+    init(_ router: PaymentRouting,
+         manager: SDKManager,
+         userService: UserService,
+         analytics: AnalyticsService) {
         self.manager = manager
         self.analytics = analytics
+        self.router = router
+        self.userService = userService
     }
     
     func viewDidLoad() {
-        configViews()
+        getUser()
         analytics.sendEvent(.PayViewAppeared)
     }
     
@@ -39,22 +48,39 @@ final class PaymentPresenter: PaymentPresenting {
         view?.dismiss(animated: true)
     }
     
-    private func configViews() {
-        // DEBUG
-        guard let cost = manager.request?.amount,
-              let name = manager.request?.clientName
-        else { return }
-        view?.configShopInfo(with: name, cost: cost.price)
-        // DEBUG
-        view?.configCardView(with: "СберКарта", cardInfo: "*** 5585") { [weak self] in
-            self?.openCardsVC()
+    private func getUser() {
+        view?.view.subviews.forEach({ $0.isHidden = true })
+        view?.showLoading(animate: false)
+        userService.getUser { [weak self] result in
+            self?.view?.hideLoading()
+            // TODO - епределать
+            self?.view?.view.subviews.forEach({ $0.isHidden = false })
+            switch result {
+            case .success(let user):
+                self?.user = user
+                self?.selectedCard = user.paymentToolInfo.first(where: { $0.priorityCard })
+                self?.configViews()
+            case .failure(let error):
+                self?.view?.showAlert(with: .failure())
+                self?.manager.completionWithError(error: error)
+            }
         }
-        // DEBUG
-        view?.configProfileView(with: "Маргарита Т.", gender: .female)
     }
-    
-    private func openCardsVC() {
-        let vc = CardsAssembly().createModule(manager: manager, analytics: analytics)
-        view?.contentNavigationController?.pushViewController(vc, animated: true)
+
+    private func configViews() {
+        guard let user = user,
+              let selectedCard = selectedCard
+        else { return }
+        view?.configShopInfo(with: user.merchantName, cost: user.orderAmount.amount.price)
+        view?.configCardView(with: selectedCard.name,
+                             cardInfo: selectedCard.cardNumber.card) { [weak self] in
+            self?.router.presentCards(cards: user.paymentToolInfo,
+                                      selectedId: selectedCard.paymentId,
+                                      selectedCard: { [weak self] card in
+                self?.selectedCard = card
+                self?.configViews()
+            })
+        }
+        view?.configProfileView(with: user.userInfo)
     }
 }

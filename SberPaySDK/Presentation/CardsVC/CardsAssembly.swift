@@ -8,15 +8,29 @@
 import UIKit
 
 final class CardsAssembly {
-    func createModule(manager: SDKManager, analytics: AnalyticsService) -> ContentVC {
-        let presenter = modulePresenter(manager, analytics: analytics)
+    private let locator: LocatorService
+
+    init(locator: LocatorService) {
+        self.locator = locator
+    }
+
+    func createModule(cards: [PaymentToolInfo],
+                      selectedId: Int,
+                      selectedCard: @escaping (PaymentToolInfo) -> Void) -> ContentVC {
+        let presenter = modulePresenter(cards: cards, selectedId: selectedId, selectedCard: selectedCard)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         return contentView
     }
 
-    private func modulePresenter(_ manager: SDKManager, analytics: AnalyticsService) -> CardsPresenter {
-        let presenter = CardsPresenter(manager: manager, analytics: analytics)
+    private func modulePresenter(cards: [PaymentToolInfo],
+                                 selectedId: Int,
+                                 selectedCard: @escaping (PaymentToolInfo) -> Void) -> CardsPresenter {
+        let presenter = CardsPresenter(userService: locator.resolve(),
+                                       analytics: locator.resolve(),
+                                       cards: cards,
+                                       selectedId: selectedId,
+                                       selectedCard: selectedCard)
         return presenter
     }
     

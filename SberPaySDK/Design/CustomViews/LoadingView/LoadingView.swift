@@ -77,12 +77,17 @@ final class LoadingView: UIView {
         loadingStack.addArrangedSubview(loadingImageView)
     }
     
-    func show() {
-        UIView.animate(withDuration: CGFloat.animationDuration,
-                       delay: 0) { [weak self] in
-            guard let self = self else { return }
+    func show(animate: Bool = true) {
+        if animate {
+            UIView.animate(withDuration: CGFloat.animationDuration,
+                           delay: 0) { [weak self] in
+                guard let self = self else { return }
+                self.alpha = 1
+            } completion: { _ in
+                self.loadingImageView.layer.add(self.animation, forKey: "Spin")
+            }
+        } else {
             self.alpha = 1
-        } completion: { _ in
             self.loadingImageView.layer.add(self.animation, forKey: "Spin")
         }
     }

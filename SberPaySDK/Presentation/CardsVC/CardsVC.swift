@@ -9,6 +9,7 @@ import UIKit
 
 private extension CGFloat {
     static let topMargin = 20.0
+    static let tableMargin = 12.0
     static let bottomMargin = 58.0
     static let rowHeight = 84.0
 }
@@ -66,7 +67,7 @@ final class CardsVC: ContentVC, ICardsVC {
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: .tableMargin),
             tableView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -.bottomMargin)
@@ -76,17 +77,15 @@ final class CardsVC: ContentVC, ICardsVC {
 
 extension CardsVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // DEBUG
-        20
+        presenter.cardsCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CardCell.reuseID) as? CardCell
         else { return UITableViewCell() }
         cell.selectionStyle = .none
-        cell.config(with: "Карта",
-                    number: "1234",
-                    selected: false)
+        let model = presenter.model(for: indexPath)
+        cell.config(with: model)
         return cell
     }
 }

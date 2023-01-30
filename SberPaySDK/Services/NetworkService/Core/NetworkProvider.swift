@@ -145,6 +145,7 @@ extension DefaultNetworkProvider: URLSessionDelegate {
                         return
                     } else {
                         completionHandler(.cancelAuthenticationChallenge, nil)
+                        return
                     }
                 }
             }

@@ -21,11 +21,11 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
                                        statusCode: 200,
                                        httpVersion: nil,
                                        headerFields: nil)
-
         DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(delayedSeconds)) {
             completion(route.sampleData, response, nil)
         }
     }
     
+    // TODO: Реализовать
     func cancel() { }
 }

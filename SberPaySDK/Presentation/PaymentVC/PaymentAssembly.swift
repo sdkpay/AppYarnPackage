@@ -8,15 +8,29 @@
 import UIKit
 
 final class PaymentAssembly {
-    func createModule(manager: SDKManager, analytics: AnalyticsService) -> ContentVC {
-        let presenter = modulePresenter(manager: manager, analytics: analytics)
+    private let locator: LocatorService
+
+    init(locator: LocatorService) {
+        self.locator = locator
+    }
+    func createModule() -> ContentVC {
+        let router = moduleRouter()
+        let presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
+        router.viewController = contentView
         return contentView
     }
 
-    private func modulePresenter(manager: SDKManager, analytics: AnalyticsService) -> PaymentPresenter {
-        let presenter = PaymentPresenter(manager, analytics: analytics)
+    func moduleRouter() -> PaymentRouter {
+        PaymentRouter(with: locator)
+    }
+
+    private func modulePresenter(_ router: PaymentRouting) -> PaymentPresenter {
+        let presenter = PaymentPresenter(router,
+                                         manager: locator.resolve(),
+                                         userService: locator.resolve(),
+                                         analytics: locator.resolve())
         return presenter
     }
     

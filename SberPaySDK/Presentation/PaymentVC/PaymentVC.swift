@@ -66,14 +66,8 @@ final class PaymentVC: ContentVC, IPaymentVC {
         view.addArrangedSubview(costLabel)
         return view
     }()
-    
+
     private lazy var cardInfoView = CardInfoView()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUI()
-        presenter.viewDidLoad()
-    }
     
     private var presenter: PaymentPresenting
     
@@ -84,6 +78,12 @@ final class PaymentVC: ContentVC, IPaymentVC {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+        presenter.viewDidLoad()
     }
     
     func configShopInfo(with shop: String, cost: String) {
@@ -101,7 +101,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
         view.addSubview(cartImageView)
         view.addSubview(purchaseInfoStack)
         view.addSubview(cardInfoView)
-        
+
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -.bottomMargin),
@@ -129,7 +129,8 @@ final class PaymentVC: ContentVC, IPaymentVC {
             purchaseInfoStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
             purchaseInfoStack.trailingAnchor.constraint(equalTo: cartImageView.leadingAnchor, constant: -.margin),
             purchaseInfoStack.bottomAnchor.constraint(equalTo: cardInfoView.topAnchor, constant: -.buttonsMargin),
-            purchaseInfoStack.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: .topMargin)
+            purchaseInfoStack.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: .topMargin),
+            purchaseInfoStack.heightAnchor.constraint(equalToConstant: .cartWidth)
         ])
         
         cartImageView.translatesAutoresizingMaskIntoConstraints = false

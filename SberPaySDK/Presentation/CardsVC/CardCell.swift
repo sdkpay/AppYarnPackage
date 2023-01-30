@@ -7,6 +7,12 @@
 
 import UIKit
 
+struct CardCellModel {
+    let title: String
+    let number: String
+    let selected: Bool
+}
+
 private extension CGFloat {
     static let topMargin = 12.0
     static let corner = 8.0
@@ -55,13 +61,11 @@ final class CardCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func config(with title: String,
-                number: String,
-                selected: Bool) {
-        containerView.backgroundColor = selected ? .mainSecondary : .backgroundSecondary
-        checkImageView.image = selected ? .Common.checkSelected : .Common.checkDeselected
-        titleLabel.text = title
-        cardLabel.text = number
+    func config(with model: CardCellModel) {
+        containerView.backgroundColor = model.selected ? .mainSecondary : .backgroundSecondary
+        checkImageView.image = model.selected ? .Common.checkSelected : .Common.checkDeselected
+        titleLabel.text = model.title
+        cardLabel.text = model.number
     }
     
     private func setupUI() {
@@ -73,10 +77,10 @@ final class CardCell: UITableViewCell {
         
         containerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: .topMargin),
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -.topMargin)
         ])
         
         containerView.addSubview(cardInfoStack)

@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>SberPayExample mock.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>SberPayExample.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -17,7 +22,7 @@
 		<key>SberPaySDKTests.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
 		<key>SnapKitPlayground (Playground) 1.xcscheme</key>
 		<dict>
@@ -70,6 +75,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>444A13A8291BA96100C9FBE0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4471721029193B21005EDF32</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -8,8 +8,7 @@
 import UIKit
 
 protocol AuthService {
-    func tryToAuth(with model: AuthModel,
-                   completion: @escaping (Result<BankModel, SDKError>) -> Void)
+    func tryToAuth(completion: @escaping (SDKError?) -> Void)
     func completeAuth(with url: URL)
     func removeSavedBank()
     var selectedBank: BankApp? { get set }
@@ -18,8 +17,11 @@ protocol AuthService {
 }
 
 final class DefaultAuthService: AuthService, ResponseDecoder {
-    private var authСompletion: ((Result<BankModel, SDKError>) -> Void)?
+    private var authСompletion: ((SDKError?) -> Void)?
     private var analytics: AnalyticsService
+    private let network: NetworkService
+    private let sdkManager: SDKManager
+    private var authManager: AuthManager
 
     var avaliableBanks: [BankApp] {
         BankApp.allCases.filter({ canOpen(link: $0.link) })
@@ -40,26 +42,49 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
     }
     
-    init(analytics: AnalyticsService) {
+    init(network: NetworkService,
+         sdkManager: SDKManager,
+         analytics: AnalyticsService,
+         authManager: AuthManager) {
         self.analytics = analytics
+        self.network = network
+        self.sdkManager = sdkManager
+        self.authManager = authManager
     }
 
     func selectBank(_ app: BankApp) {
         selectedBank = app
     }
-
-    func tryToAuth(with model: AuthModel,
-                   completion: @escaping (Result<BankModel, SDKError>) -> Void) {
-        self.authСompletion = completion
-        guard let link = authURL(link: model.deeplink) else {
-            completion(.failure(.noData))
-            return
+    
+    func tryToAuth(completion: @escaping (SDKError?) -> Void) {
+        guard let request = sdkManager.paymentTokenRequest else { return }
+        network.request(AuthTarget.getSessionId(apiKey: request.apiKey,
+                                                merchantLogin: request.clientName,
+                                                orderId: request.orderNumber),
+                        to: AuthModel.self) { [weak self] result in
+            self?.authСompletion = completion
+            switch result {
+            case .success(let result):
+                self?.authManager.sessionId = result.sessionId
+                self?.sberIdAuth(with: result)
+            case .failure(let error):
+                completion(error)
+            }
         }
-        sberIdAuth(link: link)
     }
     
     func completeAuth(with url: URL) {
-        authСompletion?(decodeParametersFrom(url: url))
+        switch decodeParametersFrom(url: url) {
+        case .success(let result):
+            authManager.authCode = result.code
+            authManager.state = result.state
+            authСompletion?(nil)
+        case .failure(let error):
+            // DEBUG
+            authManager.authCode = "A3EC701C-A08D-3AAB-C02C-F9A5C8273570"
+            authManager.state = "af0ifjsldkj"
+            authСompletion?(error)
+        }
         // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
         saveSelectedBank()
     }
@@ -94,7 +119,10 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
 
     // MARK: - Методы авторизации через sberid
-    private func sberIdAuth(link: URL) {
+    private func sberIdAuth(with model: AuthModel) {
+        guard let link = authURL(link: model.deeplink) else {
+            return
+        }
         UIApplication.shared.open(link) { [weak self] success in
             self?.analytics.sendEvent(.AuthViewAppeared)
             if !success {

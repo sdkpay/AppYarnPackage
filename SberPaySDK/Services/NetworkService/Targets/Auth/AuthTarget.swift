@@ -8,28 +8,33 @@
 import Foundation
 
 enum AuthTarget {
-    case getSessionId
+    case getSessionId(apiKey: String, merchantLogin: String, orderId: String)
 }
 
 extension AuthTarget: TargetType {
     var path: String {
         switch self {
         case .getSessionId:
-            return ""
+            return "sdk-gateway/v1/sessionId"
         }
     }
     
     var httpMethod: HTTPMethod {
         switch self {
         case .getSessionId:
-            return .get
+            return .post
         }
     }
     
     var task: HTTPTask {
         switch self {
-        case .getSessionId:
-            return .requestWithParameters(nil, bodyParameters: nil)
+        case let .getSessionId(apiKey: apiKey, merchantLogin: merchantLogin, orderId: orderId):
+            let params = [
+                "apiKey": apiKey,
+                "merchantLogin": merchantLogin,
+                "orderId": orderId
+            ]
+            return .requestWithParameters(nil, bodyParameters: params)
         }
     }
     

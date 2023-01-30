@@ -52,9 +52,9 @@ class ContentVC: UIViewController {
         configUI()
     }
     
-    func configProfileView(with name: String, gender: Gender) {
+    func configProfileView(with userInfo: UserInfo) {
         profileView.isHidden = false
-        profileView.config(with: name, gender: gender)
+        profileView.config(with: userInfo)
     }
 
     func configUI() {
@@ -94,9 +94,7 @@ class ContentVC: UIViewController {
 
 // ContentVC + Loading
 extension ContentVC {
-    func showLoading(with text: String? = nil) {
-        guard !isLoading else { return }
-        isLoading = true
+    func showLoading(with text: String? = nil, animate: Bool = true) {
         let loadingView = LoadingView(with: text)
         view.addSubview(loadingView)
         loadingView.translatesAutoresizingMaskIntoConstraints = false
@@ -106,17 +104,25 @@ extension ContentVC {
             loadingView.topAnchor.constraint(equalTo: view.topAnchor),
             loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         ])
+        view.bringSubviewToFront(loadingView)
         view.bringSubviewToFront(stickImageView)
+        view.layoutIfNeeded()
         self.loadingView = loadingView
-        self.loadingView?.show()
+        self.loadingView?.show(animate: animate)
     }
     
-    func hideLoading(animationCompletion: Action? = nil) {
-        guard isLoading else { return }
-        UIView.animate(withDuration: .animationDuration,
-                       delay: 0) {
-            self.loadingView?.alpha = 0
-        } completion: { _ in
+    func hideLoading(animationCompletion: Action? = nil, animate: Bool = true) {
+        if animate {
+            UIView.animate(withDuration: .animationDuration,
+                           delay: 0) {
+                self.loadingView?.alpha = 0
+            } completion: { _ in
+                self.loadingView?.removeFromSuperview()
+                self.loadingView = nil
+                self.isLoading = false
+                animationCompletion?()
+            }
+        } else {
             self.loadingView?.removeFromSuperview()
             self.loadingView = nil
             self.isLoading = false

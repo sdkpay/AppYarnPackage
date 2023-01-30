@@ -12,14 +12,21 @@ protocol AuthPresenting {
 }
 
 final class AuthPresenter: AuthPresenting {
-    private let manager: SDKManager
     private let analytics: AnalyticsService
+    private let router: AuthRouter
+    private let authService: AuthService
+    private let sdkManager: SDKManager
 
     weak var view: (IAuthVC & ContentVC)?
     
-    init(manager: SDKManager, analytics: AnalyticsService) {
-        self.manager = manager
+    init(_ router: AuthRouter,
+         authService: AuthService,
+         sdkManager: SDKManager,
+         analytics: AnalyticsService) {
         self.analytics = analytics
+        self.router = router
+        self.authService = authService
+        self.sdkManager = sdkManager
     }
     
     deinit {
@@ -35,7 +42,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func configAuthSettings() {
-        if manager.selectedBank == nil {
+        if authService.selectedBank == nil {
             showBanksStack()
         } else {
             getAccessSberPay()
@@ -43,38 +50,32 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func showBanksStack() {
-        manager.removeSavedBank()
+        authService.removeSavedBank()
         view?.configBanksStack(selected: { [weak self] bank in
-            self?.manager.selectBank(bank)
+            self?.authService.selectBank(bank)
             self?.getAccessSberPay()
         })
         analytics.sendEvent(.BankAppsViewAppear)
     }
     
     private func getAccessSberPay() {
-        let text = manager.selectedBank == .sber ? String.Loading.toSberTitle : String.Loading.toSbolTitle
-        view?.showLoading(with: text)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
-                // Запрос на получение authCode
-                self?.openSberId()
-                // Debug
-             //   self?.presentPaymentVC()
-            }
+        let text = authService.selectedBank == .sber ? String.Loading.toSberTitle : String.Loading.toSbolTitle
+       view?.showLoading(with: text)
+        openSberId()
     }
     
     private func openSberId() {
-        manager.tryToAuth { [weak self] error in
+        authService.tryToAuth { [weak self] error in
             guard let self = self else { return }
+            self.view?.hideLoading()
             self.removeObserver()
-            if error != nil {
-                // DEBUG
-                self.presentPaymentVC()
-//                self.view?.showAlert(with: .failure,
-//                                     text: error?.description)
+            if let error = error {
+                self.router.presentPayment()
                 self.analytics.sendEvent(.BankAppAuthFailed)
+                self.sdkManager.completionWithError(error: error)
             } else {
                 self.analytics.sendEvent(.BankAppAuthSuccess)
-                self.presentPaymentVC()
+                self.router.presentPayment()
             }
         }
     }
@@ -85,11 +86,6 @@ final class AuthPresenter: AuthPresenting {
         // от банковского приложения и перешел самостоятельно
         view?.hideLoading()
         showBanksStack()
-    }
-    
-    private func presentPaymentVC() {
-        let vc = PaymentAssembly().createModule(manager: manager, analytics: analytics)
-        view?.contentNavigationController?.pushViewController(vc, animated: true)
     }
     
     private func removeObserver() {
