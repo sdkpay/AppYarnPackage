@@ -75,10 +75,6 @@ final class DefaultSBPayService: SBPayService {
         })
         SBLogger.log("📃 Stubs enabled - \(BuildSettings.needStubs)")
         startService.openInitialScreen(with: manager, locator: locator, analytics: analyticsService)
-        print(personalMetricsService.getUserData(completion: { result in
-            guard let result = result else { return }
-            SBLogger.log(.biZone + result)
-        }))
     }
     
     func pay(with paymentRequest: SBPaymentRequest,

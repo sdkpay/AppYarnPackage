@@ -192,7 +192,7 @@
 		444A13BC291BB1FD00C9FBE0 /* RootCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCell.swift; sourceTree = "<group>"; };
 		444A13F1291CF1C100C9FBE0 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		44533D182985196D0041FAA9 /* PaymentTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTarget.swift; sourceTree = "<group>"; };
-		44533D1B29851C0D0041FAA9 /* PaymentToken.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PaymentToken.json; sourceTree = "<group>"; };
+		44533D1B29851C0D0041FAA9 /* PaymentToken.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = PaymentToken.json; sourceTree = "<group>"; };
 		44533D1D298521380041FAA9 /* PaymentTokenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTokenModel.swift; sourceTree = "<group>"; };
 		44533D2029852A2A0041FAA9 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		445CB065292BB3E300F50047 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };

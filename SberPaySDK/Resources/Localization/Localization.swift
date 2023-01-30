@@ -34,6 +34,8 @@ extension String {
         static let toSberTitle = String(stringLiteral: "toSber.title")
         /// Переходим в СБОЛ для авторизации
         static let toSbolTitle = String(stringLiteral: "toSbol.title")
+        ///  Проводим оплату...
+        static let tryToPayTitle = String(stringLiteral: "try.to.pay.title")
     }
     
     enum Alert {

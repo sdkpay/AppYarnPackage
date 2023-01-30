@@ -79,6 +79,7 @@ final class AlertView: UIView {
         switch state {
         case .success:
             imageView.image = .Common.success
+            alertTitle.text = .Alert.alertPaySuccessTitle
         case .failure(let text):
             imageView.image = .Common.failure
             if let text = text {

@@ -30,7 +30,10 @@ final class PaymentAssembly {
         let presenter = PaymentPresenter(router,
                                          manager: locator.resolve(),
                                          userService: locator.resolve(),
-                                         analytics: locator.resolve())
+                                         analytics: locator.resolve(),
+                                         authManager: locator.resolve(),
+                                         network: locator.resolve(),
+                                         personalMetricsService: locator.resolve())
         return presenter
     }
     

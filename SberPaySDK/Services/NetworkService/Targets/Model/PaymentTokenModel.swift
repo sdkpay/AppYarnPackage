@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+struct PaymentTokenModel: Codable {
+    let paymentToken: String
+}

@@ -14,6 +14,7 @@ public enum SDKError: Error {
     case failDecode
     case badDataFromSBOL
     case unauthorizedClient
+    case personalInfo
     case errorFromServer(text: String)
     case cancelled
     

@@ -11,7 +11,20 @@ protocol SDKManager {
     var paymentTokenRequest: SBPaymentTokenRequest? { get }
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion)
+    func completionPaymentToken(with paymentToken: String?,
+                                paymentTokenId: String?,
+                                tokenExpiration: Int)
     func completionWithError(error: SDKError)
+}
+
+extension SDKManager {
+    func completionPaymentToken(with paymentToken: String? = nil,
+                                paymentTokenId: String? = nil,
+                                tokenExpiration: Int = 0) {
+        completionPaymentToken(with: paymentToken,
+                               paymentTokenId: paymentTokenId,
+                               tokenExpiration: tokenExpiration)
+    }
 }
 
 final class DefaultSDKManager: SDKManager {
@@ -27,6 +40,16 @@ final class DefaultSDKManager: SDKManager {
     func completionWithError(error: SDKError) {
         let responce = SBPaymentTokenResponse()
         responce.error = SBPError(errorState: error)
+        completion?(responce)
+    }
+    
+    func completionPaymentToken(with paymentToken: String? = nil,
+                                paymentTokenId: String? = nil,
+                                tokenExpiration: Int = 0) {
+        let responce = SBPaymentTokenResponse(paymentToken: paymentToken,
+                                              paymentTokenId: paymentTokenId,
+                                              tokenExpiration: tokenExpiration,
+                                              error: nil)
         completion?(responce)
     }
 }
