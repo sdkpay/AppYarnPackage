@@ -95,6 +95,13 @@ class ContentVC: UIViewController {
 // ContentVC + Loading
 extension ContentVC {
     func showLoading(with text: String? = nil, animate: Bool = true) {
+        if !animate {
+            view.subviews.forEach { view in
+                if view != stickImageView {
+                    view.isHidden = true
+                }
+            }
+        }
         let loadingView = LoadingView(with: text)
         view.addSubview(loadingView)
         loadingView.translatesAutoresizingMaskIntoConstraints = false
@@ -112,6 +119,7 @@ extension ContentVC {
     }
     
     func hideLoading(animationCompletion: Action? = nil, animate: Bool = true) {
+        view.subviews.forEach({ $0.isHidden = false })
         if animate {
             UIView.animate(withDuration: .animationDuration,
                            delay: 0) {

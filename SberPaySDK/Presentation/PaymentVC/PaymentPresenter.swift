@@ -58,12 +58,9 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func getUser() {
-        view?.view.subviews.forEach({ $0.isHidden = true })
         view?.showLoading(animate: false)
         userService.getUser { [weak self] result in
             self?.view?.hideLoading()
-            // TODO - епределать
-            self?.view?.view.subviews.forEach({ $0.isHidden = false })
             switch result {
             case .success(let user):
                 self?.user = user
