@@ -9,12 +9,16 @@ import Foundation
 
 enum AuthTarget {
     case getSessionId(apiKey: String, merchantLogin: String, orderId: String)
+    case checkSession(sessionId: String)
 }
 
 extension AuthTarget: TargetType {
     var path: String {
         switch self {
         case .getSessionId:
+            return "sdk-gateway/v1/sessionId"
+        case .checkSession:
+            // DEBUG
             return "sdk-gateway/v1/sessionId"
         }
     }
@@ -23,6 +27,8 @@ extension AuthTarget: TargetType {
         switch self {
         case .getSessionId:
             return .post
+        case .checkSession:
+            return .get
         }
     }
     
@@ -35,6 +41,11 @@ extension AuthTarget: TargetType {
                 "orderId": orderId
             ]
             return .requestWithParameters(nil, bodyParameters: params)
+        case .checkSession(sessionId: let sessionId):
+            let params = [
+                "sessionId": sessionId
+            ]
+            return .requestWithParameters(params)
         }
     }
     
@@ -43,7 +54,12 @@ extension AuthTarget: TargetType {
     }
     
     var sampleData: Data? {
-        return StubbedResponse.auth.data
+        switch self {
+        case .getSessionId:
+            return StubbedResponse.auth.data
+        case .checkSession:
+            return StubbedResponse.validSession.data
+        }
     }
 }
  
