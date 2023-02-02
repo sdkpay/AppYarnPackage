@@ -21,7 +21,6 @@
 		442A45DD29804E2E00EC3D73 /* UserTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442A45DC29804E2E00EC3D73 /* UserTarget.swift */; };
 		442A45E0298059F900EC3D73 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442A45DF298059F900EC3D73 /* UserService.swift */; };
 		443666C8298BBE98005119A2 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443666C7298BBE98005119A2 /* LocationManager.swift */; };
-		443666CA298BC570005119A2 /* AnalyticsServiceAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443666C9298BC570005119A2 /* AnalyticsServiceAssembly.swift */; };
 		443666CD298BFB60005119A2 /* ValidSession.json in Resources */ = {isa = PBXBuildFile; fileRef = 443666CC298BFB60005119A2 /* ValidSession.json */; };
 		443666CF298BFC3E005119A2 /* ValidSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443666CE298BFC3E005119A2 /* ValidSessionModel.swift */; };
 		443D83AB295D8F31002605AA /* ecomtest.sberbank.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 443D83AA295D8F31002605AA /* ecomtest.sberbank.ru.der */; };
@@ -189,7 +188,6 @@
 		442A45DC29804E2E00EC3D73 /* UserTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTarget.swift; sourceTree = "<group>"; };
 		442A45DF298059F900EC3D73 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		443666C7298BBE98005119A2 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		443666C9298BC570005119A2 /* AnalyticsServiceAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsServiceAssembly.swift; sourceTree = "<group>"; };
 		443666CC298BFB60005119A2 /* ValidSession.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = ValidSession.json; sourceTree = "<group>"; };
 		443666CE298BFC3E005119A2 /* ValidSessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidSessionModel.swift; sourceTree = "<group>"; };
 		443D83AA295D8F31002605AA /* ecomtest.sberbank.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ecomtest.sberbank.ru.der; sourceTree = "<group>"; };
@@ -348,7 +346,6 @@
 		440DB3AB295C301F00B84E05 /* AnalyticsService */ = {
 			isa = PBXGroup;
 			children = (
-				443666C9298BC570005119A2 /* AnalyticsServiceAssembly.swift */,
 				440DB3AC295C304300B84E05 /* AnalyticsService.swift */,
 			);
 			path = AnalyticsService;
@@ -438,6 +435,7 @@
 		442A45DB29804E1D00EC3D73 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				443666CE298BFC3E005119A2 /* ValidSessionModel.swift */,
 				442A45D929804E0C00EC3D73 /* UserModel.swift */,
 			);
 			path = Model;
@@ -721,7 +719,6 @@
 			isa = PBXGroup;
 			children = (
 				4464DF98291D3DB7000C9B45 /* AuthModel.swift */,
-				443666CE298BFC3E005119A2 /* ValidSessionModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1257,7 +1254,6 @@
 				4464DF94291D283C000C9B45 /* AuthTarget.swift in Sources */,
 				44C6510E2934E33E008F1C29 /* SBPaymentTokenRequest.swift in Sources */,
 				44A0B5BD293DF282007AB3FD /* CardsPresenter.swift in Sources */,
-				443666CA298BC570005119A2 /* AnalyticsServiceAssembly.swift in Sources */,
 				445CB0A2292E119800F50047 /* PaymentAssembly.swift in Sources */,
 				445CB096292CC1A800F50047 /* ContentVC.swift in Sources */,
 				44D8ABD2295EC4D20080FF1D /* Logger.swift in Sources */,

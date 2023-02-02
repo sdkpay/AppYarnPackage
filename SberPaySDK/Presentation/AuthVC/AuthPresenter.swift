@@ -16,17 +16,20 @@ final class AuthPresenter: AuthPresenting {
     private let router: AuthRouter
     private let authService: AuthService
     private let sdkManager: SDKManager
+    private let userService: UserService
 
     weak var view: (IAuthVC & ContentVC)?
     
     init(_ router: AuthRouter,
          authService: AuthService,
          sdkManager: SDKManager,
-         analytics: AnalyticsService) {
+         analytics: AnalyticsService,
+         userService: UserService) {
         self.analytics = analytics
         self.router = router
         self.authService = authService
         self.sdkManager = sdkManager
+        self.userService = userService
     }
     
     deinit {
@@ -34,14 +37,40 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
-        configAuthSettings()
+        checkNewStart()
+    }
+    
+    private func checkNewStart() {
+        if sdkManager.newStart || userService.user == nil {
+            configAuthSettings()
+        } else {
+            checkSession()
+        }
+    }
+    
+    private func checkSession() {
+        view?.showLoading()
+        userService.checkUserSession { [weak self] result in
+            self?.view?.hideLoading()
+            switch result {
+            case .success(let result):
+                if result.statusSession {
+                    self?.router.presentPayment()
+                } else {
+                    self?.configAuthSettings()
+                }
+            case .failure(let error):
+                self?.sdkManager.completionWithError(error: error)
+                self?.view?.showAlert(with: .failure())
+            }
+        }
+    }
+    
+    private func configAuthSettings() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
-    }
-    
-    private func configAuthSettings() {
         if authService.selectedBank == nil {
             showBanksStack()
         } else {

@@ -15,6 +15,7 @@ enum UserTarget {
                       state: String,
                       merchantLogin: String,
                       orderId: String)
+    case checkSession(sessionId: String)
 }
 
 extension UserTarget: TargetType {
@@ -22,6 +23,9 @@ extension UserTarget: TargetType {
         switch self {
         case .getListCards:
             return "sdk-gateway/v1/listCards"
+        case .checkSession:
+            // DEBUG
+            return "sdk-gateway/v1/sessionId"
         }
     }
     
@@ -29,6 +33,8 @@ extension UserTarget: TargetType {
         switch self {
         case .getListCards:
             return .post
+        case .checkSession:
+            return .get
         }
     }
     
@@ -51,6 +57,11 @@ extension UserTarget: TargetType {
                 "orderId": orderId
             ]
             return .requestWithParameters(nil, bodyParameters: params)
+        case .checkSession(sessionId: let sessionId):
+            let params = [
+                "sessionId": sessionId
+            ]
+            return .requestWithParameters(params)
         }
     }
     
@@ -59,6 +70,11 @@ extension UserTarget: TargetType {
     }
     
     var sampleData: Data? {
-        return StubbedResponse.listCards.data
+        switch self {
+        case .getListCards:
+            return StubbedResponse.listCards.data
+        case .checkSession:
+            return StubbedResponse.validSession.data
+        }
     }
 }

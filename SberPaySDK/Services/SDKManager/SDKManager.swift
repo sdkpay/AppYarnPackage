@@ -16,6 +16,7 @@ final class SDKManagerAssembly: Assembly {
 
 protocol SDKManager {
     var paymentTokenRequest: SBPaymentTokenRequest? { get }
+    var newStart: Bool { get }
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion)
     func completionPaymentToken(with paymentToken: String?,
@@ -37,9 +38,20 @@ extension SDKManager {
 final class DefaultSDKManager: SDKManager {
     private var completion: PaymentTokenCompletion?
     private(set) var paymentTokenRequest: SBPaymentTokenRequest?
+    var newStart = true
 
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion) {
+
+       // Проверяем есть ли уже созданный запрос
+        if let oldRequest = self.paymentTokenRequest,
+           // Сравниваем новый запрос с предидущим
+           oldRequest.orderNumber == paymentTokenRequest.orderNumber {
+            newStart = false
+        } else {
+            newStart = true
+        }
+
         self.paymentTokenRequest = paymentTokenRequest
         self.completion = completion
     }

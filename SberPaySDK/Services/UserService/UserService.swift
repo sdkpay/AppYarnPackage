@@ -19,6 +19,7 @@ final class UserServiceAssembly: Assembly {
 protocol UserService {
     var user: User? { get }
     func getUser(completion: @escaping (Result<User, SDKError>) -> Void)
+    func checkUserSession(completion: @escaping (Result<ValidSessionModel, SDKError>) -> Void)
 }
 
 final class DefaultUserService: UserService {
@@ -57,5 +58,12 @@ final class DefaultUserService: UserService {
                 completion(.failure(error))
             }
         }
+    }
+    
+    func checkUserSession(completion: @escaping (Result<ValidSessionModel, SDKError>) -> Void) {
+        guard let sessionId = authManager.sessionId else { return }
+        network.request(UserTarget.checkSession(sessionId: sessionId),
+                        to: ValidSessionModel.self,
+                        completion: completion)
     }
 }

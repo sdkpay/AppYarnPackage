@@ -8,6 +8,13 @@
 import Foundation
 import DynatraceStatic
 
+final class AnalyticsServiceAssembly: Assembly {
+    func register(in locator: LocatorService) {
+        let service: AnalyticsService = DefaultAnalyticsService()
+        locator.register(service: service)
+    }
+}
+
 enum AnalyticsEvent: String {
     /// Версия SDK
     case SDKVersion
