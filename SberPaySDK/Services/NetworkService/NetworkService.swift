@@ -7,6 +7,13 @@
 
 import UIKit
 
+final class NetworkServiceAssembly: Assembly {
+    func register(in container: LocatorService) {
+        let service: NetworkService = DefaultNetworkService(provider: StubNetworkProvider(delayedSeconds: 2))
+        container.register(service: service)
+    }
+}
+
 var ServerURL: URL {
     let urlString = "https://app5.kurochkinas.ru/"
     return URL(string: urlString)!

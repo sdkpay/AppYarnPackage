@@ -33,10 +33,11 @@ final class PaymentAssembly {
                                          analytics: locator.resolve(),
                                          authManager: locator.resolve(),
                                          network: locator.resolve(),
-                                         personalMetricsService: locator.resolve())
+                                         personalMetricsService: locator.resolve(),
+                                         locationManager: locator.resolve())
         return presenter
     }
-    
+
     private func moduleView(presenter: PaymentPresenter) -> ContentVC & IPaymentVC {
         let view = PaymentVC(presenter)
         presenter.view = view

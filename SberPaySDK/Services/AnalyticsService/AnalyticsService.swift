@@ -41,11 +41,17 @@ enum AnalyticsEvent: String {
     case PayFailed
     /// Пользователь самостоятельно закрыл шторку сдк
     case ManuallyClosed
+    /// Пермиссии данные пользоватлем к моменту оплаты
+    case Permissions
+}
+
+enum AnalyticsValue: String {
+    case Location
 }
 
 protocol AnalyticsService {
     func sendEvent(_ event: AnalyticsEvent)
-    func sendEvent<T>(_ event: AnalyticsEvent, with value: T)
+    func sendEvent<T>(_ event: AnalyticsEvent, with value: [T])
 }
 
 final class DefaultAnalyticsService: NSObject, AnalyticsService {
@@ -54,16 +60,18 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         action?.leave()
     }
     
-    func sendEvent<T>(_ event: AnalyticsEvent, with value: T) {
+    func sendEvent<T>(_ event: AnalyticsEvent, with values: [T]) {
         let action = DTXAction.enter(withName: event.rawValue)
-        if let value = value as? String {
-            action?.reportValue(withName: event.rawValue, stringValue: value)
-        } else if let value = value as? Int64 {
-            action?.reportValue(withName: event.rawValue, intValue: value)
-        } else if let value = value as? Double {
-            action?.reportValue(withName: event.rawValue, doubleValue: value)
-        } else {
-            print("Bad type for value")
+        for value in values {
+            if let value = value as? String {
+                action?.reportValue(withName: event.rawValue, stringValue: value)
+            } else if let value = value as? Int64 {
+                action?.reportValue(withName: event.rawValue, intValue: value)
+            } else if let value = value as? Double {
+                action?.reportValue(withName: event.rawValue, doubleValue: value)
+            } else {
+                print("Bad type for value")
+            }
         }
         action?.leave()
     }
@@ -81,6 +89,6 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         ]
         Dynatrace.startup(withConfig: startupDictionary as [String: Any])
         Dynatrace.identifyUser(Bundle.main.displayName)
-        sendEvent(.SDKVersion, with: Bundle.curentSdkVersion)
+        sendEvent(.SDKVersion, with: [Bundle.curentSdkVersion])
     }
 }

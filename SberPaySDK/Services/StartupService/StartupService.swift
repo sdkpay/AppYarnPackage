@@ -10,7 +10,7 @@ import UIKit
 let closeSDKNotification = "CloseSDK"
 
 protocol StartupService {
-    func openInitialScreen(with manager: SDKManager, locator: LocatorService, analytics: AnalyticsService)
+    func openInitialScreen(with locator: LocatorService)
 }
 
 final class DefaultStartupService: StartupService {
@@ -18,13 +18,13 @@ final class DefaultStartupService: StartupService {
     private var manager: SDKManager?
     private var analytics: AnalyticsService?
     
-    func openInitialScreen(with manager: SDKManager, locator: LocatorService, analytics: AnalyticsService) {
+    func openInitialScreen(with locator: LocatorService) {
         setupWindows()
         guard let sdkWindow = sdkWindow else { return }
-        self.manager = manager
+        self.manager = locator.resolve()
         sdkWindow.rootViewController = RootAssembly(locator: locator).createModule()
-        analytics.sendEvent(.BankAppFound)
-        self.analytics = analytics
+        self.analytics = locator.resolve()
+        analytics?.sendEvent(.BankAppFound)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(closeSdk),
                                                name: Notification.Name(closeSDKNotification),

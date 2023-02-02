@@ -8,5 +8,6 @@
 import Foundation
 
 enum BuildSettings {
-    static let needStubs = ProcessInfo.processInfo.environment["STUBS_ENABLED"] != nil
+//    static let needStubs = ProcessInfo.processInfo.environment["STUBS_ENABLED"] != nil
+   static let needStubs = true
 }

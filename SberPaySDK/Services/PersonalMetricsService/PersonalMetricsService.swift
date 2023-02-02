@@ -8,6 +8,13 @@
 import Foundation
 import Fingerprint
 
+final class PersonalMetricsServiceAssembly: Assembly {
+    func register(in container: LocatorService) {
+        let service: PersonalMetricsService = DefaultPersonalMetricsService()
+        container.register(service: service)
+    }
+}
+
 protocol PersonalMetricsService {
     func getUserData(completion: @escaping (String?) -> Void)
 }

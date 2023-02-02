@@ -7,6 +7,16 @@
 
 import UIKit
 
+final class AuthServiceAssembly: Assembly {
+    func register(in container: LocatorService) {
+        let service: AuthService = DefaultAuthService(network: container.resolve(),
+                                                      sdkManager: container.resolve(),
+                                                      analytics: container.resolve(),
+                                                      authManager: container.resolve())
+        container.register(service: service)
+    }
+}
+
 protocol AuthService {
     func tryToAuth(completion: @escaping (SDKError?) -> Void)
     func completeAuth(with url: URL)

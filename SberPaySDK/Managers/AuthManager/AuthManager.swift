@@ -7,6 +7,13 @@
 
 import Foundation
 
+final class AuthManagerAssembly: Assembly {
+    func register(in container: LocatorService) {
+        let service: AuthManager = DefaultAuthManager()
+        container.register(service: service)
+    }
+}
+
 protocol AuthManager {
     var sessionId: String? { get set }
     var authCode: String? { get set }

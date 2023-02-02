@@ -71,7 +71,7 @@ final class AuthPresenter: AuthPresenting {
             self.removeObserver()
             if let error = error {
                 self.router.presentPayment()
-                self.analytics.sendEvent(.BankAppAuthFailed)
+                self.analytics.sendEvent(.BankAppAuthSuccess)
                 self.sdkManager.completionWithError(error: error)
             } else {
                 self.analytics.sendEvent(.BankAppAuthSuccess)

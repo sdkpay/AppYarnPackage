@@ -7,6 +7,13 @@
 
 import UIKit
 
+final class SDKManagerAssembly: Assembly {
+    func register(in container: LocatorService) {
+        let service: SDKManager = DefaultSDKManager()
+        container.register(service: service)
+    }
+}
+
 protocol SDKManager {
     var paymentTokenRequest: SBPaymentTokenRequest? { get }
     func config(paymentTokenRequest: SBPaymentTokenRequest,

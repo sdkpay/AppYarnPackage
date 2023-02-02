@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 protocol PaymentPresenting {
     func viewDidLoad()
@@ -21,7 +22,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let network: NetworkService
     private let authManager: AuthManager
     private let personalMetricsService: PersonalMetricsService
-
+    private let locationManager: LocationManager
     private var selectedCard: PaymentToolInfo?
     private var user: User?
 
@@ -33,13 +34,15 @@ final class PaymentPresenter: PaymentPresenting {
          analytics: AnalyticsService,
          authManager: AuthManager,
          network: NetworkService,
-         personalMetricsService: PersonalMetricsService) {
+         personalMetricsService: PersonalMetricsService,
+         locationManager: LocationManager) {
         self.manager = manager
         self.analytics = analytics
         self.router = router
         self.userService = userService
         self.network = network
         self.authManager = authManager
+        self.locationManager = locationManager
         self.personalMetricsService = personalMetricsService
     }
     
@@ -51,6 +54,8 @@ final class PaymentPresenter: PaymentPresenting {
     func payButtonTapped() {
         getMetrics()
         analytics.sendEvent(.PayConfirmedByUser)
+        let permission = locationManager.locationEnabled ? [AnalyticsValue.Location.rawValue] : []
+        analytics.sendEvent(.Permissions, with: permission)
     }
     
     func cancelTapped() {

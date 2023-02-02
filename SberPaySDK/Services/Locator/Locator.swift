@@ -5,6 +5,10 @@
 //  Created by Alexander Ipatov on 25.01.2023.
 //
 
+protocol Assembly: AnyObject {
+    func register(in container: LocatorService)
+}
+
 protocol LocatorService {
     func resolve<T>() -> T
     func register<T>(service: T) 
