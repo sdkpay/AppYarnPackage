@@ -22,18 +22,15 @@ struct OrderAmount: Codable {
 }
 
 struct PaymentToolInfo: Codable {
+    let productName: String
     let paymentId: Int
     var priorityCard: Bool
     let paymentSourceType: String
-    let financialProductId: Double
+    let financialProductId: Int
     let cardNumber: String
     let paymentSystemType: String
     let cardLogoUrl: String
     let amountData: OrderAmount
-    
-    var name: String {
-        "\(paymentSystemType.capitalized) \(paymentSourceType)"
-    }
 }
 
 struct UserInfo: Codable {

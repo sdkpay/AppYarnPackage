@@ -51,7 +51,6 @@ final class AuthPresenter: AuthPresenting {
     private func checkSession() {
         view?.showLoading()
         userService.checkUserSession { [weak self] result in
-            self?.view?.hideLoading()
             switch result {
             case .success(let result):
                 if result.statusSession {
@@ -71,6 +70,7 @@ final class AuthPresenter: AuthPresenting {
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
+
         if authService.selectedBank == nil {
             showBanksStack()
         } else {

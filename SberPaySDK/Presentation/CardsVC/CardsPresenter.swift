@@ -46,7 +46,7 @@ final class CardsPresenter: CardsPresenting {
 
     func model(for indexPath: IndexPath) -> CardCellModel {
         let card = cards[indexPath.row]
-        return CardCellModel(title: card.name,
+        return CardCellModel(title: card.productName,
                              number: card.cardNumber.card,
                              selected: card.paymentId == selectedId)
     }

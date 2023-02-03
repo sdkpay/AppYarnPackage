@@ -47,7 +47,13 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func viewDidLoad() {
-        getUser()
+        if let user = userService.user {
+            self.user = user
+            selectedCard = user.paymentToolInfo.first(where: { $0.priorityCard })
+            configViews()
+        } else {
+            getUser()
+        }
         analytics.sendEvent(.PayViewAppeared)
     }
     
@@ -83,7 +89,7 @@ final class PaymentPresenter: PaymentPresenting {
               let selectedCard = selectedCard
         else { return }
         view?.configShopInfo(with: user.merchantName, cost: user.orderAmount.amount.price)
-        view?.configCardView(with: selectedCard.name,
+        view?.configCardView(with: selectedCard.productName,
                              cardInfo: selectedCard.cardNumber.card) { [weak self] in
             self?.router.presentCards(cards: user.paymentToolInfo,
                                       selectedId: selectedCard.paymentId,
@@ -120,6 +126,7 @@ final class PaymentPresenter: PaymentPresenting {
                                                       merchantLogin: request.clientId ?? "",
                                                       orderId: request.orderNumber),
                         to: PaymentTokenModel.self) { [weak self] result in
+            self?.userService.clearData()
             switch result {
             case .success(let result):
                 self?.manager.completionPaymentToken(with: result.paymentToken)

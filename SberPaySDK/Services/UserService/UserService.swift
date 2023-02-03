@@ -20,6 +20,7 @@ protocol UserService {
     var user: User? { get }
     func getUser(completion: @escaping (Result<User, SDKError>) -> Void)
     func checkUserSession(completion: @escaping (Result<ValidSessionModel, SDKError>) -> Void)
+    func clearData()
 }
 
 final class DefaultUserService: UserService {
@@ -65,5 +66,9 @@ final class DefaultUserService: UserService {
         network.request(UserTarget.checkSession(sessionId: sessionId),
                         to: ValidSessionModel.self,
                         completion: completion)
+    }
+    
+    func clearData() {
+        user = nil
     }
 }
