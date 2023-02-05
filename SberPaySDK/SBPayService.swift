@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import DynatraceStatic
 
 typealias PaymentTokenCompletion = (SBPaymentTokenResponse) -> Void
 
@@ -46,7 +45,7 @@ final class DefaultSBPayService: SBPayService {
         registerServices()
         // Для симулятора всегда true для удобства разработки
             #if targetEnvironment(simulator)
-       true
+       return true
             #else
         let authService: AuthService = locator.resolve()
         let analyticsService: AnalyticsService = locator.resolve()

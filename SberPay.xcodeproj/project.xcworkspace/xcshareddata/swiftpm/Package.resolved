@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Dynatrace/swift-mobile-sdk.git",
       "state" : {
-        "revision" : "304ee1f7f1629743870581191bfd4fba655298be",
-        "version" : "8.255.1"
+        "revision" : "b48c0245ecc18ae53ad948640dd816c2d8ff9453",
+        "version" : "8.259.1"
       }
     }
   ],
