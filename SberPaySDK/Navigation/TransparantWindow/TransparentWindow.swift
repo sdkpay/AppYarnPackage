@@ -19,6 +19,14 @@ final class TransparentWindow: UIWindow {
         return view
     }()
     
+    var topVC: UIViewController? {
+        var topController: UIViewController? = rootViewController
+           while topController?.presentedViewController != nil {
+               topController = topController?.presentedViewController
+           }
+           return topController
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         

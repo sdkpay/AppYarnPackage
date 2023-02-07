@@ -11,6 +11,8 @@ let closeSDKNotification = "CloseSDK"
 
 protocol StartupService {
     func openInitialScreen(with locator: LocatorService)
+    func completePayment(paymentSuccess: Bool,
+                         completion: Action)
 }
 
 final class DefaultStartupService: StartupService {
@@ -46,5 +48,14 @@ final class DefaultStartupService: StartupService {
         manager?.completionWithError(error: .cancelled)
         analytics?.sendEvent(.ManuallyClosed)
         manager = nil
+    }
+    
+    func completePayment(paymentSuccess: Bool,
+                         completion: Action) {
+        // DEBUG
+        guard let topVC = sdkWindow?.topVC as? ContentVC else { return }
+        topVC.showAlert(with: paymentSuccess ? .success : .failure())
+        completion()
+        closeSdk()
     }
 }
