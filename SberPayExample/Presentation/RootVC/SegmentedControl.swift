@@ -14,7 +14,7 @@ private extension CGFloat {
 
 final class SegmentedControlCell: UITableViewCell {
     static var reuseID: String { "SegmentedControl" }
-
+    
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.numberOfLines = 2
@@ -22,7 +22,7 @@ final class SegmentedControlCell: UITableViewCell {
         view.textColor = .black
         return view
     }()
-
+    
     private lazy var langSegmentedControl: UISegmentedControl = {
         let items = ["Swift", "Obj-C"]
         let view = UISegmentedControl(items: items)
@@ -73,10 +73,9 @@ final class SegmentedControlCell: UITableViewCell {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
                                                constant: .sideMargin),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
-                                               constant: -.sideMargin),
+                                                constant: -.sideMargin),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
-                                               constant: -.topMargin)
+                                              constant: -.topMargin)
         ])
     }
 }
-

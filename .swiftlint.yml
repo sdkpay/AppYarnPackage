@@ -1,5 +1,3 @@
-included:
-    - SberPaySDK
 disabled_rules:
     - nesting
     - anyobject_protocol
@@ -136,19 +134,9 @@ opt_in_rules:
     - class_delegate_protocol
     - force_try
     - generic_type_name
-    - restricted_names_starting_with_underscore
     - discouraged_optional_boolean
 
 custom_rules:
-    restricted_names_starting_with_underscore:
-        name: "Restricted use of names that start with an underscore"
-        regex: "_.+"
-        message: "Names should not use underscores at the beginning"
-        severity: error
-        match_kinds:
-            - identifier
-            - argument
-            - parameter
     vboolean_clear_condition:
         name: "Переусложненное условие"
         regex: "^(?>(?!(as\\?)|(\\?.)).)*((!= true)|(!= false)).*$"
@@ -163,8 +151,8 @@ custom_rules:
 
     ui_magic_numbers:
         name: "Константы без Extension"
-        regex: "offset\\([a-zA-Z+\\- *./]*\\d+.*\\)|equalTo\\([a-zA-Z+\\- *./]*\\d+.*\\)"
-        message: "Расширяй AppStyle"
+        regex: "offset:\\([a-zA-Z+\\- *./]*\\d+.*\\)|equalTo:\\([a-zA-Z+\\- *./]*\\d+.*\\)|equalToConstant:\\([a-zA-Z+\\- *./]*\\d+.*\\)"
+        message: "Расширяй Extension"
         severity: error
 
 large_tuple:

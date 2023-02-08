@@ -86,7 +86,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             }
             let cellData = cellsData[indexPath.row]
             cell.config(with: cellData.title,
-                        value: cellData.value as! String,
+                        value: cellData.value as? String ?? "",
                         keyboardType: cellData.type == .cost ? .decimalPad : .default) { [weak self] value in
                 self?.cellsData[indexPath.row].value = value
             }
@@ -111,13 +111,13 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: removeUserDefaultsButton.topAnchor,
-                                                  constant: -.bottomMargin)
+                                              constant: -.bottomMargin)
         ])
         
         removeUserDefaultsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             removeUserDefaultsButton.topAnchor.constraint(equalTo: nextButton.topAnchor,
-                                                constant: -.bottomMargin),
+                                                          constant: -.bottomMargin),
             removeUserDefaultsButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             removeUserDefaultsButton.heightAnchor.constraint(equalToConstant: .buttonHeight)
         ])
@@ -125,7 +125,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         removeLogsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             removeLogsButton.topAnchor.constraint(equalTo: removeUserDefaultsButton.topAnchor,
-                                                constant: -.bottomMargin),
+                                                  constant: -.bottomMargin),
             removeLogsButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             removeLogsButton.heightAnchor.constraint(equalToConstant: .buttonHeight)
         ])
@@ -133,7 +133,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             nextButton.bottomAnchor.constraint(equalTo: view.bottomAnchor,
-                                                constant: -.bottomMargin),
+                                               constant: -.bottomMargin),
             nextButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             nextButton.heightAnchor.constraint(equalToConstant: .buttonHeight)
         ])
@@ -142,10 +142,10 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     @objc
     private func removeUserDefaultsData() {
         let defaults = UserDefaults.standard
-         let dictionary = defaults.dictionaryRepresentation()
-         dictionary.keys.forEach { key in
-             defaults.removeObject(forKey: key)
-         }
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
         showAlert(text: "User defaults cleared")
     }
     
@@ -163,13 +163,12 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             showAlert(text: error.localizedDescription)
         }
     }
-
-
+    
     @objc
     private func showCart() {
         guard let cost = Int(cellsData.first(where: { $0.type == .cost })?.value as? String ?? "0"),
               let apiKey = cellsData.first(where: { $0.type == .apiKey })?.value as? String,
-              let objSelected = cellsData.first(where: { $0.type == .lang})?.value as? Bool else {
+              let objSelected = cellsData.first(where: { $0.type == .lang })?.value as? Bool else {
             return
         }
         let vc: UIViewController
@@ -190,4 +189,3 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         present(alert, animated: true)
     }
 }
-

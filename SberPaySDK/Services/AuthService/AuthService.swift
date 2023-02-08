@@ -134,7 +134,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             return
         }
         UIApplication.shared.open(link) { [weak self] success in
-            self?.analytics.sendEvent(.AuthViewAppeared)
             if !success {
                 self?.analytics.sendEvent(.RedirectDenied)
             }
