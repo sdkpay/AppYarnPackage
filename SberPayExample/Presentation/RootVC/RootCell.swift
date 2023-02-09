@@ -14,7 +14,7 @@ private extension CGFloat {
 
 final class RootCell: UITableViewCell {
     static var reuseID: String { "RootCell" }
-
+    
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .black
@@ -76,9 +76,9 @@ final class RootCell: UITableViewCell {
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
                                                constant: .sideMargin),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
-                                               constant: -.sideMargin),
+                                                constant: -.sideMargin),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
-                                               constant: -.topMargin)
+                                              constant: -.topMargin)
         ])
     }
 }

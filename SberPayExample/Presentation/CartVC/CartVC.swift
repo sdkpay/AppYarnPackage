@@ -57,7 +57,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Swift";
+        navigationItem.title = "Swift"
         setupUI()
     }
     
@@ -87,7 +87,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         view.backgroundColor = .white
         view.addSubview(tableView)
         view.addSubview(paymentView)
-
+        
         paymentView.addSubview(totalCostNameLabel)
         paymentView.addSubview(totalCostLabel)
         
@@ -106,7 +106,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             paymentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             paymentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-
+        
         if SBPay.isReadyForSberPay {
             paymentView.addSubview(sberPayButton)
             sberPayButton.translatesAutoresizingMaskIntoConstraints = false
@@ -119,18 +119,18 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                       constant: -.bottomMargin)
             ])
         }
-       
+        
         totalCostNameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             totalCostNameLabel.leadingAnchor.constraint(equalTo: paymentView.leadingAnchor,
-                                                   constant: .margin),
+                                                        constant: .margin),
             totalCostNameLabel.topAnchor.constraint(equalTo: paymentView.topAnchor)
         ])
         
         totalCostLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             totalCostLabel.trailingAnchor.constraint(equalTo: paymentView.trailingAnchor,
-                                                   constant: -.margin),
+                                                     constant: -.margin),
             totalCostLabel.topAnchor.constraint(equalTo: paymentView.topAnchor)
         ])
     }
@@ -145,7 +145,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             recurrentEnabled: true,
                                             recurrentFrequency: 1,
                                             redirectUri: "sberPayExample.app://sberidauth")
-
+        
         SBPay.getPaymentToken(with: request) { response in
             if let error = response.error {
                 // Обработка ошибки
@@ -178,4 +178,3 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
     }
 }
-

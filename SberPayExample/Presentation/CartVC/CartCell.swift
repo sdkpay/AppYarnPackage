@@ -71,23 +71,23 @@ final class CartCell: UITableViewCell {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor,
-                                               constant: .topMargin),
+                                            constant: .topMargin),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,
-                                                   constant: .sideMargin),
+                                                constant: .sideMargin),
             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,
-                                                    constant: -.sideMargin),
+                                                 constant: -.sideMargin)
         ])
         
         costLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             costLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
-                                               constant: .topMargin),
+                                           constant: .topMargin),
             costLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,
-                                                   constant: .sideMargin),
+                                               constant: .sideMargin),
             costLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,
-                                                    constant: -.sideMargin),
+                                                constant: -.sideMargin),
             costLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,
-                                                  constant: -.topMargin)
+                                              constant: -.topMargin)
         ])
     }
 }

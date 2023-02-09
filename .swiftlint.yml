@@ -1,5 +1,3 @@
-included:
-    - SberPaySDK
 disabled_rules:
     - nesting
     - anyobject_protocol
@@ -139,9 +137,21 @@ opt_in_rules:
     - discouraged_optional_boolean
 
 custom_rules:
+    vboolean_clear_condition:
+        name: "Переусложненное условие"
+        regex: "^(?>(?!(as\\?)|(\\?.)).)*((!= true)|(!= false)).*$"
+        message: "Используй == true или == false или саму перменную в качестве условия"
+        severity: error
+
+    ob_boolean_in_ternar_return:
+        name: "Возврат Bool из тернарного оператора"
+        regex: "\\? (true : false)|(false : true)"
+        message: "Не используй тернарный оператор для возврата Bool"
+        severity: error
+
     ui_magic_numbers:
         name: "Константы без Extension"
-        regex: "equalToConstant:\\([a-zA-Z+\\- *./]*\\d+.*\\)"
+        regex: "offset:\\([a-zA-Z+\\- *./]*\\d+.*\\)|equalTo:\\([a-zA-Z+\\- *./]*\\d+.*\\)|equalToConstant:\\([a-zA-Z+\\- *./]*\\d+.*\\)"
         message: "Расширяй Extension"
         severity: error
 

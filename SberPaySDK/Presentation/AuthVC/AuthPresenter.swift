@@ -37,6 +37,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
+        analytics.sendEvent(.AuthViewAppeared)
         checkNewStart()
     }
     
