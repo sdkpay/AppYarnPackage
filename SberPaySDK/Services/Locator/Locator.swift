@@ -24,9 +24,11 @@ final class DefaultLocatorService: LocatorService {
 
     func resolve<T>() -> T {
         let key = typeName(T.self)
-        // swiftlint:disable force_cast
-        return services[key] as! T
-        // swiftlint:enable force_cast
+        if let result = services[key] as? T {
+            return result
+        } else {
+            fatalError("Cannot resolve dependency")
+        }
     }
     
     private func typeName(_ some: Any) -> String {
