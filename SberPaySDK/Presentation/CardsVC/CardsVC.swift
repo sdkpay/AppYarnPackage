@@ -27,7 +27,7 @@ final class CardsVC: ContentVC, ICardsVC {
     
     private lazy var tableView: ContentTableView = {
         let view = ContentTableView()
-        view.register(CardCell.self, forCellReuseIdentifier: CardCell.reuseID)
+        view.register(CardCell.self, forCellReuseIdentifier: CardCell.reuseId)
         view.separatorStyle = .none
         view.backgroundView?.backgroundColor = .backgroundPrimary
         view.showsVerticalScrollIndicator = false
@@ -81,7 +81,7 @@ extension CardsVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CardCell.reuseID) as? CardCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CardCell.reuseId) as? CardCell
         else { return UITableViewCell() }
         cell.selectionStyle = .none
         let model = presenter.model(for: indexPath)

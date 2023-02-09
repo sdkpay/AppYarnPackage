@@ -56,7 +56,7 @@ extension UserTarget: TargetType {
                 "merchantLogin": merchantLogin,
                 "orderId": orderId
             ]
-            return .requestWithParameters(nil, bodyParameters: params)
+            return .requestWithParametersAndHeaders(nil, bodyParameters: params)
         case .checkSession(sessionId: let sessionId):
             let params = [
                 "sessionId": sessionId
@@ -64,7 +64,7 @@ extension UserTarget: TargetType {
             return .requestWithParameters(params)
         }
     }
-    
+
     var headers: HTTPHeaders? {
         return nil
     }

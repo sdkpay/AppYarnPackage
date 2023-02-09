@@ -9,7 +9,8 @@ import UIKit
 
 final class NetworkServiceAssembly: Assembly {
     func register(in container: LocatorService) {
-        let provider: NetworkProvider = BuildSettings.needStubs ? StubNetworkProvider(delayedSeconds: 2) : DefaultNetworkProvider()
+        let provider: NetworkProvider = BuildSettings.needStubs ?
+        StubNetworkProvider(delayedSeconds: 2) : DefaultNetworkProvider(requestManager: container.resolve())
         let service: NetworkService = DefaultNetworkService(provider: provider)
         container.register(service: service)
     }

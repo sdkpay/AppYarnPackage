@@ -69,6 +69,7 @@
 		445CB09E292E056B00F50047 /* AuthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445CB09D292E056B00F50047 /* AuthVC.swift */; };
 		445CB0A0292E057E00F50047 /* AuthPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445CB09F292E057E00F50047 /* AuthPresenter.swift */; };
 		445CB0A2292E119800F50047 /* PaymentAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445CB0A1292E119800F50047 /* PaymentAssembly.swift */; };
+		445D018B2994F375006458AD /* BaseRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445D018A2994F375006458AD /* BaseRequestManager.swift */; };
 		4460275929548A2700EC9DE8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4460275829548A2700EC9DE8 /* GoogleService-Info.plist */; };
 		4464DF89291D01F4000C9B45 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF88291D01F4000C9B45 /* NetworkService.swift */; };
 		4464DF8C291D0452000C9B45 /* NetworkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF8B291D0452000C9B45 /* NetworkProvider.swift */; };
@@ -236,6 +237,7 @@
 		445CB09D292E056B00F50047 /* AuthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthVC.swift; sourceTree = "<group>"; };
 		445CB09F292E057E00F50047 /* AuthPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPresenter.swift; sourceTree = "<group>"; };
 		445CB0A1292E119800F50047 /* PaymentAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAssembly.swift; sourceTree = "<group>"; };
+		445D018A2994F375006458AD /* BaseRequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRequestManager.swift; sourceTree = "<group>"; };
 		44602757295444BE00EC9DE8 /* SberPayExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SberPayExample.entitlements; sourceTree = "<group>"; };
 		4460275829548A2700EC9DE8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4464DF88291D01F4000C9B45 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -585,6 +587,7 @@
 		44533D1F29852A1C0041FAA9 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				445D01892994F35F006458AD /* BaseRequestManager */,
 				443666C6298BBE70005119A2 /* LocationManager */,
 				443666C5298BBE68005119A2 /* AuthManager */,
 			);
@@ -695,6 +698,14 @@
 				44A3126029813ABB0099EB76 /* AuthRouter.swift */,
 			);
 			path = AuthVC;
+			sourceTree = "<group>";
+		};
+		445D01892994F35F006458AD /* BaseRequestManager */ = {
+			isa = PBXGroup;
+			children = (
+				445D018A2994F375006458AD /* BaseRequestManager.swift */,
+			);
+			path = BaseRequestManager;
 			sourceTree = "<group>";
 		};
 		4464DF8A291D043E000C9B45 /* Core */ = {
@@ -1319,6 +1330,7 @@
 				4464DF99291D3DB7000C9B45 /* AuthModel.swift in Sources */,
 				445CB075292BC3EF00F50047 /* UIImage+Bundle.swift in Sources */,
 				44F9FD4B295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift in Sources */,
+				445D018B2994F375006458AD /* BaseRequestManager.swift in Sources */,
 				4473D6C6294063E800802446 /* ContentView.swift in Sources */,
 				4416E424291E21C300284972 /* SDKError.swift in Sources */,
 				44A31268298156C30099EB76 /* String+Extensions.swift in Sources */,

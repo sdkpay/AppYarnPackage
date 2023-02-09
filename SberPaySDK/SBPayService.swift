@@ -32,7 +32,8 @@ final class DefaultSBPayService: SBPayService {
         SDKManagerAssembly(),
         AuthServiceAssembly(),
         UserServiceAssembly(),
-        LocationManagerAssembly()
+        LocationManagerAssembly(),
+        AuthRequestManagerAssembly()
     ]
     
     private func registerServices() {

@@ -20,7 +20,7 @@ private extension CGFloat {
 }
 
 final class CardCell: UITableViewCell {
-    static var reuseID: String { "CardCell" }
+    static var reuseId: String { "CardCell" }
     
     private lazy var containerView: UIView = {
         let view = UIView()

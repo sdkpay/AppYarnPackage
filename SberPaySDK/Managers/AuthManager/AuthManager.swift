@@ -18,10 +18,14 @@ protocol AuthManager {
     var sessionId: String? { get set }
     var authCode: String? { get set }
     var state: String? { get set }
+    var cookie: String? { get set }
+    var pod: String? { get set }
 }
 
 final class DefaultAuthManager: AuthManager {
     var sessionId: String?
     var authCode: String?
     var state: String?
+    var cookie: String?
+    var pod: String?
 }

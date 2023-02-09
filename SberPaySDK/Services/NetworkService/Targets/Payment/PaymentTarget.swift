@@ -60,7 +60,7 @@ extension PaymentTarget: TargetType {
     }
     
     var headers: HTTPHeaders? {
-        return nil
+        nil
     }
     
     var sampleData: Data? {

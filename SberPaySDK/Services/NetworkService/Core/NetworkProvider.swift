@@ -49,7 +49,8 @@ protocol NetworkProvider {
 final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private var task: URLSessionTask?
     private var session: URLSession?
-    
+    private var requestManager: AuthRequestManager
+     
     private lazy var certificate: Data? = {
         guard let fileDer = Bundle(for: SBPay.self).path(forResource: "ecomtest.sberbank.ru",
                                                          ofType: "der")
@@ -57,7 +58,8 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         return NSData(contentsOfFile: fileDer) as? Data
     }()
     
-    override init() {
+    init(requestManager: AuthRequestManager) {
+        self.requestManager = requestManager
         super.init()
         session = URLSession(configuration: .default,
                              delegate: self,
