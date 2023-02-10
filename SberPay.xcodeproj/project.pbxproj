@@ -375,6 +375,17 @@
 			path = Certificates;
 			sourceTree = "<group>";
 		};
+		4412F4D32996966300350CBD /* External structs */ = {
+			isa = PBXGroup;
+			children = (
+				445D018C29950BB2006458AD /* SBFullPaymentRequest.swift */,
+				44C6510B2934E327008F1C29 /* SBPaymentTokenResponse.swift */,
+				44C651112934E393008F1C29 /* SBPaymentRequest.swift */,
+				44C6510D2934E33E008F1C29 /* SBPaymentTokenRequest.swift */,
+			);
+			path = "External structs";
+			sourceTree = "<group>";
+		};
 		4416E421291E21B000284972 /* Utilites */ = {
 			isa = PBXGroup;
 			children = (
@@ -536,7 +547,7 @@
 			isa = PBXGroup;
 			children = (
 				44890674297A7CEF002CDBAD /* ProfileView */,
-				4479ECD829476EB8009B3AB8 /*  Style */,
+				4479ECD829476EB8009B3AB8 /* Style */,
 				445CB085292CA08500F50047 /* Fonts */,
 				445CB076292BC55200F50047 /* Gallery */,
 				445CB070292BBA7D00F50047 /* Palette */,
@@ -872,12 +883,12 @@
 			path = BankView;
 			sourceTree = "<group>";
 		};
-		4479ECD829476EB8009B3AB8 /*  Style */ = {
+		4479ECD829476EB8009B3AB8 /* Style */ = {
 			isa = PBXGroup;
 			children = (
 				4479ECD929476EEF009B3AB8 /* Style.swift */,
 			);
-			path = " Style";
+			path = Style;
 			sourceTree = "<group>";
 		};
 		44834C70292E32D3000A32B2 /* AuthService */ = {
@@ -982,13 +993,10 @@
 		44C6510A2934E2F5008F1C29 /* Public */ = {
 			isa = PBXGroup;
 			children = (
+				4412F4D32996966300350CBD /* External structs */,
 				444A13AB291BA96100C9FBE0 /* SberPaySDK.h */,
-				445D018C29950BB2006458AD /* SBFullPaymentRequest.swift */,
 				4464DF9C291D8E4C000C9B45 /* SBPay.swift */,
-				44C6510B2934E327008F1C29 /* SBPaymentTokenResponse.swift */,
-				44C6510D2934E33E008F1C29 /* SBPaymentTokenRequest.swift */,
 				44C6510F2934E37F008F1C29 /* SBPError.swift */,
-				44C651112934E393008F1C29 /* SBPaymentRequest.swift */,
 				444A13B9291BAFA100C9FBE0 /* SBPButton */,
 			);
 			path = Public;

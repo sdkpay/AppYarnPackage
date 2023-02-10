@@ -29,7 +29,7 @@ public final class SBFullPaymentRequest: NSObject {
     let language: String?
     /// Параметр создания платежного токена для реккурентных платежей
     let redirectUri: String
-    
+
     @objc
     public init(apiKey: String,
                 clientId: String? = nil,

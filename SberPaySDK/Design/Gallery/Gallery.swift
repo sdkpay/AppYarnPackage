@@ -31,4 +31,7 @@ extension UIImage {
         static let male = UIImage("Male")
         static let female = UIImage("Female")
     }
+    enum Cards {
+        static let stockCard = UIImage("StockCard")
+    }
 }

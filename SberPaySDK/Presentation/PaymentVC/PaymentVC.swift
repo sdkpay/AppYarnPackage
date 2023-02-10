@@ -17,7 +17,10 @@ private extension CGFloat {
 
 protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String)
-    func configCardView(with cardName: String, cardInfo: String, action: @escaping Action)
+    func configCardView(with cardName: String,
+                        cardInfo: String,
+                        needArrow: Bool,
+                        action: @escaping Action)
 }
 
 final class PaymentVC: ContentVC, IPaymentVC {
@@ -91,8 +94,14 @@ final class PaymentVC: ContentVC, IPaymentVC {
         costLabel.text = cost
     }
     
-    func configCardView(with cardName: String, cardInfo: String, action: @escaping Action) {
-        cardInfoView.config(with: cardName, cardInfo: cardInfo, action: action)
+    func configCardView(with cardName: String,
+                        cardInfo: String,
+                        needArrow: Bool,
+                        action: @escaping Action) {
+        cardInfoView.config(with: cardName,
+                            cardInfo: cardInfo,
+                            needArrow: needArrow,
+                            action: action)
     }
     
     private func setupUI() {
