@@ -79,6 +79,29 @@
     }];
 }
 
+-(void)fullPay {
+    SBFullPaymentRequest *request = [[SBFullPaymentRequest alloc]
+                                     initWithApiKey: @"awdawdawdajkdmdkladmka"
+                                     clientId: @"123123"
+                                     clientName: @"Test shop"
+                                     amount: 123123
+                                     currency: @"RUB"
+                                     mobilePhone: nil
+                                     orderId: @"12312312"
+                                     orderDescription:nil
+                                     language:nil
+                                     redirectUri: @"sberPayExample.app://sberidauth"
+    ];
+    [SBPay payWithOrderIdWithPaymentRequest:request completion:^(SBPError * _Nullable error) {
+        if (error) {
+            // Обработка ошибки
+            NSLog(@"%@ - описание ошибки", error.errorDescription);
+        } else {
+            // Успешный результат
+        }
+    }];
+}
+
 -(void)completePayment {
     [SBPay completePaymentWithPaymentSuccess:YES completion:^{
             // Блок отработает после закрытия окна SDK
