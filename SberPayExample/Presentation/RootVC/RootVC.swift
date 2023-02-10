@@ -16,7 +16,7 @@ private extension CGFloat {
 
 final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private enum Params: Int, CaseIterable {
-        case apiKey, cost, lang
+        case apiKey, cost, lang, mode
     }
     
     private var cellsData = [(type: Params, title: String, value: Any)]()
@@ -66,17 +66,24 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         cellsData = [
             (.apiKey, "ApiKey:", "9bce9e80-d20b-4acd-bb3d-199755b2ea09"),
             (.cost, "Cost:", "2000"),
-            (.lang, "Lang:", false)
+            (.lang, "Lang:", false),
+            (.mode, "Pay mode:", false)
         ]
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellData = cellsData[indexPath.row]
-        if cellData.type == .lang {
+        if cellData.type == .lang || cellData.type == .mode {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SegmentedControlCell.reuseID) as? SegmentedControlCell else {
                 return UITableViewCell()
             }
-            cell.config { [weak self] value in
+            var items: [String] = []
+            if cellData.type == .lang {
+                items = ["Swift", "Obj-C"]
+            } else if cellData.type == .mode {
+                items = ["Manual", "Auto"]
+            }
+            cell.config(title: cellData.title, items: items) { [weak self] value in
                 self?.cellsData[indexPath.row].value = value
             }
             return cell
@@ -168,7 +175,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private func showCart() {
         guard let cost = Int(cellsData.first(where: { $0.type == .cost })?.value as? String ?? "0"),
               let apiKey = cellsData.first(where: { $0.type == .apiKey })?.value as? String,
-              let objSelected = cellsData.first(where: { $0.type == .lang })?.value as? Bool else {
+              let objSelected = cellsData.first(where: { $0.type == .lang })?.value as? Bool,
+              let autoMode = cellsData.first(where: { $0.type == .mode })?.value as? Bool else {
             return
         }
         let vc: UIViewController
@@ -176,7 +184,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             vc = ObjcCartVC()
         } else {
             vc = CartVC(totalCost: cost,
-                        apiKey: apiKey)
+                        apiKey: apiKey,
+                        autoMode: autoMode)
         }
         navigationController?.pushViewController(vc, animated: true)
     }

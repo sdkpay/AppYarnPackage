@@ -17,6 +17,7 @@ private extension CGFloat {
 final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private let totalCost: Int
     private let apiKey: String
+    private let autoMode: Bool
     
     private lazy var tableView: UITableView = {
         let view = UITableView()
@@ -61,9 +62,10 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         setupUI()
     }
     
-    init(totalCost: Int, apiKey: String) {
+    init(totalCost: Int, apiKey: String, autoMode: Bool) {
         self.totalCost = totalCost
         self.apiKey = apiKey
+        self.autoMode = autoMode
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -137,6 +139,14 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     @objc
     private func sberPayButtonTapped() {
+        if autoMode {
+            autoPay()
+        } else {
+            getPaymentToken()
+        }
+    }
+    
+    private func getPaymentToken() {
         let request = SBPaymentTokenRequest(apiKey: apiKey,
                                             clientName: "Test shop",
                                             amount: totalCost,
@@ -154,6 +164,23 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 // Обработка успешно полученных данных...
                 guard let paymentToken = response.paymentToken else { return }
                 self.pay(with: paymentToken)
+            }
+        }
+    }
+    
+    private func autoPay() {
+        let request = SBFullPaymentRequest(apiKey: apiKey,
+                                           clientName: "Test shop",
+                                           amount: totalCost,
+                                           currency: "RUB",
+                                           orderId: "213231",
+                                           redirectUri: "sberPayExample.app://sberidauth")
+        SBPay.payWithOrderId(paymentRequest: request) { error in
+            if let error = error {
+                // Обработка ошибки
+                print("\(error.errorDescription) - описание ошибки")
+            } else {
+                // Успешный результат
             }
         }
     }

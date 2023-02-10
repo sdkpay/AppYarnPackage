@@ -38,18 +38,18 @@ final class DefaultUserService: UserService {
     }
 
     func getUser(completion: @escaping (Result<User, SDKError>) -> Void) {
-        guard let request = sdkManager.paymentTokenRequest,
+        guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId,
               let authCode = authManager.authCode,
               let state = authManager.state
         else { return }
-        network.request(UserTarget.getListCards(redirectUri: request.redirectUri,
-                                                apiKey: request.apiKey,
+        network.request(UserTarget.getListCards(redirectUri: authInfo.redirectUri,
+                                                apiKey: authInfo.apiKey,
                                                 authCode: authCode,
                                                 sessionId: sessionId,
                                                 state: state,
-                                                merchantLogin: request.clientName,
-                                                orderId: request.orderNumber),
+                                                merchantLogin: authInfo.clientName,
+                                                orderId: authInfo.orderId),
                         to: User.self) { [weak self] result in
             switch result {
             case .success(let user):

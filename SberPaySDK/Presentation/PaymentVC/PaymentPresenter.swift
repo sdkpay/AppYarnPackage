@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CoreLocation
 
 protocol PaymentPresenting {
     func viewDidLoad()
@@ -116,23 +115,42 @@ final class PaymentPresenter: PaymentPresenting {
     private func getPaymentToken(with deviceInfo: String) {
         guard let sessionId = authManager.sessionId,
               let paymentId = selectedCard?.paymentId,
-              let request = manager.paymentTokenRequest
+              let authInfo = manager.authInfo
         else { return }
         network.request(PaymentTarget.getPaymentToken(sessionId: sessionId,
                                                       deviceInfo: deviceInfo,
                                                       paymentId: String(paymentId),
-                                                      apiKey: request.apiKey,
-                                                      userName: request.clientName,
-                                                      merchantLogin: request.clientId ?? "",
-                                                      orderId: request.orderNumber),
+                                                      apiKey: authInfo.apiKey,
+                                                      userName: authInfo.clientName,
+                                                      merchantLogin: authInfo.clientId ?? "",
+                                                      orderId: authInfo.orderId),
                         to: PaymentTokenModel.self) { [weak self] result in
-            self?.userService.clearData()
+            guard let self = self else { return }
+            self.userService.clearData()
             switch result {
             case .success(let result):
-                self?.manager.completionPaymentToken(with: result.paymentToken)
+                switch self.manager.payStrategy {
+                case .auto:
+                    self.pay(with: result.paymentToken)
+                case .manual:
+                    self.manager.completionPaymentToken(with: result.paymentToken)
+                    self.view?.showAlert(with: .success)
+                }
+            case .failure(let error):
+                self.manager.completionWithError(error: error)
+                self.view?.showAlert(with: .failure())
+            }
+        }
+    }
+    
+    private func pay(with token: String) {
+        network.request(PaymentTarget.getPaymentOrder) { [weak self] result in
+            switch result {
+            case .success:
+                self?.manager.completionPay(with: nil)
                 self?.view?.showAlert(with: .success)
             case .failure(let error):
-                self?.manager.completionWithError(error: error)
+                self?.manager.completionPay(with: error)
                 self?.view?.showAlert(with: .failure())
             }
         }

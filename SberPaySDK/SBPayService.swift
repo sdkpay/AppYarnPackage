@@ -15,6 +15,8 @@ protocol SBPayService {
                          completion: @escaping PaymentTokenCompletion)
     func pay(with paymentRequest: SBPaymentRequest,
              completion: @escaping (_ error: SBPError?) -> Void)
+    func payWithOrderId(paymentRequest: SBFullPaymentRequest,
+                        completion: @escaping (_ error: SBPError?) -> Void)
     func completePayment(paymentSuccess: Bool,
                          completion: Action)
     func getResponseFrom(_ url: URL)
@@ -78,6 +80,14 @@ final class DefaultSBPayService: SBPayService {
         startService.completePayment(paymentSuccess: paymentSuccess, completion: completion)
     }
     
+    func payWithOrderId(paymentRequest: SBFullPaymentRequest,
+                        completion: @escaping PayCompletion) {
+        let manager: SDKManager = locator.resolve()
+        manager.configWithOrderId(paymentRequest: paymentRequest,
+                                  completion: completion)
+        startService.openInitialScreen(with: locator)
+    }
+
     func getResponseFrom(_ url: URL) {
         let authService: AuthService = locator.resolve()
         authService.completeAuth(with: url)

@@ -23,9 +23,8 @@ final class SegmentedControlCell: UITableViewCell {
         return view
     }()
     
-    private lazy var langSegmentedControl: UISegmentedControl = {
-        let items = ["Swift", "Obj-C"]
-        let view = UISegmentedControl(items: items)
+    private lazy var segmentedControl: UISegmentedControl = {
+        let view = UISegmentedControl()
         view.tintColor = .black
         view.selectedSegmentIndex = 0
         view.addTarget(self, action: #selector(valueChanged), for: .valueChanged)
@@ -38,7 +37,7 @@ final class SegmentedControlCell: UITableViewCell {
         view.axis = .vertical
         view.spacing = 10
         view.addArrangedSubview(titleLabel)
-        view.addArrangedSubview(langSegmentedControl)
+        view.addArrangedSubview(segmentedControl)
         return view
     }()
     
@@ -51,16 +50,21 @@ final class SegmentedControlCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var objSelected: ((Bool) -> Void)?
+    private var selectedItem: ((Bool) -> Void)?
     
-    func config(objSelected: @escaping (Bool) -> Void) {
-        self.objSelected = objSelected
+    func config(title: String, items: [String], selectedItem: @escaping (Bool) -> Void) {
+        titleLabel.text = title
+        self.selectedItem = selectedItem
+        for (index, item) in items.enumerated() {
+            segmentedControl.insertSegment(withTitle: item, at: index, animated: true)
+        }
+        segmentedControl.selectedSegmentIndex = 0
         setupUI()
     }
     
     @objc
     private func valueChanged() {
-        objSelected?(langSegmentedControl.selectedSegmentIndex == 1)
+        selectedItem?(segmentedControl.selectedSegmentIndex == 1)
     }
     
     func setupUI() {

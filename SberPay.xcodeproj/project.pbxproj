@@ -70,6 +70,7 @@
 		445CB0A0292E057E00F50047 /* AuthPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445CB09F292E057E00F50047 /* AuthPresenter.swift */; };
 		445CB0A2292E119800F50047 /* PaymentAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445CB0A1292E119800F50047 /* PaymentAssembly.swift */; };
 		445D018B2994F375006458AD /* BaseRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445D018A2994F375006458AD /* BaseRequestManager.swift */; };
+		445D018D29950BB2006458AD /* SBFullPaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445D018C29950BB2006458AD /* SBFullPaymentRequest.swift */; };
 		4460275929548A2700EC9DE8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4460275829548A2700EC9DE8 /* GoogleService-Info.plist */; };
 		4464DF89291D01F4000C9B45 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF88291D01F4000C9B45 /* NetworkService.swift */; };
 		4464DF8C291D0452000C9B45 /* NetworkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF8B291D0452000C9B45 /* NetworkProvider.swift */; };
@@ -238,6 +239,7 @@
 		445CB09F292E057E00F50047 /* AuthPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPresenter.swift; sourceTree = "<group>"; };
 		445CB0A1292E119800F50047 /* PaymentAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAssembly.swift; sourceTree = "<group>"; };
 		445D018A2994F375006458AD /* BaseRequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRequestManager.swift; sourceTree = "<group>"; };
+		445D018C29950BB2006458AD /* SBFullPaymentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBFullPaymentRequest.swift; sourceTree = "<group>"; };
 		44602757295444BE00EC9DE8 /* SberPayExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SberPayExample.entitlements; sourceTree = "<group>"; };
 		4460275829548A2700EC9DE8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4464DF88291D01F4000C9B45 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -981,6 +983,7 @@
 			isa = PBXGroup;
 			children = (
 				444A13AB291BA96100C9FBE0 /* SberPaySDK.h */,
+				445D018C29950BB2006458AD /* SBFullPaymentRequest.swift */,
 				4464DF9C291D8E4C000C9B45 /* SBPay.swift */,
 				44C6510B2934E327008F1C29 /* SBPaymentTokenResponse.swift */,
 				44C6510D2934E33E008F1C29 /* SBPaymentTokenRequest.swift */,
@@ -1351,6 +1354,7 @@
 				44B8220A2923D79900C06C51 /* RootVC.swift in Sources */,
 				44F9FD49295AFAB800FE4B9F /* CoverTransitioningDelegate.swift in Sources */,
 				44533D192985196D0041FAA9 /* PaymentTarget.swift in Sources */,
+				445D018D29950BB2006458AD /* SBFullPaymentRequest.swift in Sources */,
 				445CB087292CA0A800F50047 /* Fonts.swift in Sources */,
 				445CB099292CDC1200F50047 /* CardInfoView.swift in Sources */,
 				445CB093292CC08400F50047 /* PaymentVC.swift in Sources */,

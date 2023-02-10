@@ -67,10 +67,10 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
     
     func tryToAuth(completion: @escaping (SDKError?) -> Void) {
-        guard let request = sdkManager.paymentTokenRequest else { return }
+        guard let request = sdkManager.authInfo else { return }
         network.request(AuthTarget.getSessionId(apiKey: request.apiKey,
                                                 merchantLogin: request.clientName,
-                                                orderId: request.orderNumber),
+                                                orderId: request.orderId),
                         to: AuthModel.self) { [weak self] result in
             self?.authСompletion = completion
             switch result {

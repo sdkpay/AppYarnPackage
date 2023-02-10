@@ -39,6 +39,15 @@ public final class SBPay: NSObject {
     }
     
     /**
+     Единый метод для
+     */
+    @objc
+    public static func payWithOrderId(paymentRequest: SBFullPaymentRequest,
+                                      completion: @escaping (_ error: SBPError?) -> Void) {
+        payService?.payWithOrderId(paymentRequest: paymentRequest, completion: completion)
+    }
+    
+    /**
      Метод для завершения оплаты и закрытия окна SDK
      */
     @objc

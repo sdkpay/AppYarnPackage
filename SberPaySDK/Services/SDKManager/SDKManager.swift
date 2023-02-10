@@ -7,6 +7,26 @@
 
 import UIKit
 
+struct AuthInfo {
+    /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
+    let apiKey: String
+    /// Идентификатора плательщика в вашей системе
+    let clientName: String
+    /// Сумма операции в минорных единицах
+    let orderId: String
+    /// clientId
+    let clientId: String?
+    /// clientId
+    let redirectUri: String
+}
+
+enum PayStrategy {
+    case auto
+    case manual
+}
+
+typealias PayCompletion = (SBPError?) -> Void
+
 final class SDKManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         let service: SDKManager = DefaultSDKManager()
@@ -17,12 +37,17 @@ final class SDKManagerAssembly: Assembly {
 protocol SDKManager {
     var paymentTokenRequest: SBPaymentTokenRequest? { get }
     var newStart: Bool { get }
+    var payStrategy: PayStrategy { get }
+    var authInfo: AuthInfo? { get }
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion)
+    func configWithOrderId(paymentRequest: SBFullPaymentRequest,
+                           completion: @escaping PayCompletion)
     func completionPaymentToken(with paymentToken: String?,
                                 paymentTokenId: String?,
                                 tokenExpiration: Int)
     func completionWithError(error: SDKError)
+    func completionPay(with error: SDKError?)
 }
 
 extension SDKManager {
@@ -36,9 +61,13 @@ extension SDKManager {
 }
 
 final class DefaultSDKManager: SDKManager {
+    private var paymentCompletion: PayCompletion?
     private var completion: PaymentTokenCompletion?
     private(set) var paymentTokenRequest: SBPaymentTokenRequest?
-    var newStart = true
+    private(set) var fullPaymentRequest: SBFullPaymentRequest?
+    private(set) var authInfo: AuthInfo?
+    private(set) var payStrategy: PayStrategy = .manual
+    private(set) var newStart = true
 
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion) {
@@ -52,8 +81,34 @@ final class DefaultSDKManager: SDKManager {
             newStart = true
         }
 
+        payStrategy = .manual
         self.paymentTokenRequest = paymentTokenRequest
+        authInfo = AuthInfo(apiKey: paymentTokenRequest.apiKey,
+                            clientName: paymentTokenRequest.clientName,
+                            orderId: paymentTokenRequest.orderNumber,
+                            clientId: paymentTokenRequest.clientId,
+                            redirectUri: paymentTokenRequest.redirectUri)
         self.completion = completion
+    }
+    
+    func configWithOrderId(paymentRequest: SBFullPaymentRequest,
+                           completion: @escaping PayCompletion) {
+        // Проверяем есть ли уже созданный запрос
+         if let oldRequest = self.fullPaymentRequest,
+            // Сравниваем новый запрос с предидущим
+            oldRequest.orderId == paymentRequest.orderId {
+             newStart = false
+         } else {
+             newStart = true
+         }
+        payStrategy = .auto
+        fullPaymentRequest = paymentRequest
+        authInfo = AuthInfo(apiKey: paymentRequest.apiKey,
+                            clientName: paymentRequest.clientName,
+                            orderId: paymentRequest.orderId,
+                            clientId: paymentRequest.clientId,
+                            redirectUri: paymentRequest.redirectUri)
+        self.paymentCompletion = completion
     }
     
     func completionWithError(error: SDKError) {
@@ -70,5 +125,13 @@ final class DefaultSDKManager: SDKManager {
                                               tokenExpiration: tokenExpiration,
                                               error: nil)
         completion?(responce)
+    }
+    
+    func completionPay(with error: SDKError? = nil) {
+        if let error = error {
+            paymentCompletion?(SBPError(errorState: error))
+        } else {
+            paymentCompletion?(nil)
+        }
     }
 }
