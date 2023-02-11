@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIColor {
-    static let main = UIColor(named: "Green_primary", in: Bundle(for: SBPay.self), compatibleWith: nil)!hgghbdtn rfr ltkf rjr uj ,e[ytv&FDSG/ЛЬ лд лдлдьльдщлдь]
+    static let main = UIColor(named: "Green_primary", in: Bundle(for: SBPay.self), compatibleWith: nil)!
     static let mainSecondary = UIColor(named: "Green_secondary", in: Bundle(for: SBPay.self), compatibleWith: nil)!
     static let backgroundPrimary = UIColor(named: "White", in: Bundle(for: SBPay.self), compatibleWith: nil)!
     static let backgroundSecondary = UIColor(named: "Gray_disabled", in: Bundle(for: SBPay.self), compatibleWith: nil)!
