@@ -11,12 +11,16 @@ struct CardCellModel {
     let title: String
     let number: String
     let selected: Bool
+    let cardURL: String?
 }
 
 private extension CGFloat {
     static let topMargin = 12.0
     static let corner = 8.0
     static let checkWidth = 20.0
+    static let cardWidth = 28.0
+    static let cardHeight = 20.0
+    static let leadingMargin = 20.0
 }
 
 final class CardCell: UITableViewCell {
@@ -39,6 +43,12 @@ final class CardCell: UITableViewCell {
        let view = UILabel()
         view.font = .bodi2
         view.textColor = .textSecondary
+        return view
+    }()
+    
+    private var cardIconView: UIImageView = {
+        let view = UIImageView()
+        view.image = .Cards.stockCard
         return view
     }()
     
@@ -66,6 +76,10 @@ final class CardCell: UITableViewCell {
         checkImageView.image = model.selected ? .Common.checkSelected : .Common.checkDeselected
         titleLabel.text = model.title
         cardLabel.text = model.number
+        ImageDownloadService.shared.downloadImage(with: model.cardURL,
+                                                  completionHandler: { [weak self] icon, _ in
+            self?.cardIconView.image = icon
+        }, placeholderImage: .Cards.stockCard)
     }
     
     private func setupUI() {
@@ -83,10 +97,19 @@ final class CardCell: UITableViewCell {
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -.topMargin)
         ])
         
+        containerView.addSubview(cardIconView)
+        cardIconView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cardIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .leadingMargin),
+            cardIconView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            cardIconView.widthAnchor.constraint(equalToConstant: .cardWidth),
+            cardIconView.heightAnchor.constraint(equalToConstant: .cardHeight)
+        ])
+        
         containerView.addSubview(cardInfoStack)
         cardInfoStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cardInfoStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
+            cardInfoStack.leadingAnchor.constraint(equalTo: cardIconView.trailingAnchor, constant: .margin),
             cardInfoStack.trailingAnchor.constraint(equalTo: checkImageView.leadingAnchor, constant: -.margin),
             cardInfoStack.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
         ])

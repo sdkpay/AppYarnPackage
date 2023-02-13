@@ -19,6 +19,7 @@ protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String)
     func configCardView(with cardName: String,
                         cardInfo: String,
+                        cardIconURL: String?,
                         needArrow: Bool,
                         action: @escaping Action)
 }
@@ -96,10 +97,12 @@ final class PaymentVC: ContentVC, IPaymentVC {
     
     func configCardView(with cardName: String,
                         cardInfo: String,
+                        cardIconURL: String?,
                         needArrow: Bool,
                         action: @escaping Action) {
         cardInfoView.config(with: cardName,
                             cardInfo: cardInfo,
+                            cardIconURL: cardIconURL,
                             needArrow: needArrow,
                             action: action)
     }

@@ -48,7 +48,8 @@ final class CardsPresenter: CardsPresenting {
         let card = cards[indexPath.row]
         return CardCellModel(title: card.productName,
                              number: card.cardNumber.card,
-                             selected: card.paymentId == selectedId)
+                             selected: card.paymentId == selectedId,
+                             cardURL: card.cardLogoUrl)
     }
     
     func didSelectRow(at indexPath: IndexPath) {

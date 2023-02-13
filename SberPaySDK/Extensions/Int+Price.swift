@@ -13,6 +13,9 @@ extension Int {
         formatter.groupingSeparator = " "
         formatter.groupingSize = 3
         formatter.usesGroupingSeparator = true
-        return (formatter.string(from: NSNumber(value: self)) ?? "0") + " ₽"
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        let finalPrice = Double(self) / 100
+        return (formatter.string(from: NSNumber(value: finalPrice)) ?? "0") + " ₽"
     }
 }

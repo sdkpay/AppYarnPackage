@@ -29,7 +29,7 @@ final class CardInfoView: ContentView {
         return view
     }()
     
-    private var cardIcon: UIImageView = {
+    private var cardIconView: UIImageView = {
         let view = UIImageView()
         view.image = .Cards.stockCard
         return view
@@ -62,29 +62,36 @@ final class CardInfoView: ContentView {
     
     func config(with title: String,
                 cardInfo: String,
+                cardIconURL: String?,
                 needArrow: Bool,
                 action: @escaping Action) {
         titleLabel.text = title
         cardLabel.text = cardInfo
         self.needArrow = needArrow
         self.action = action
+
+        ImageDownloadService.shared.downloadImage(with: cardIconURL,
+                                                  completionHandler: { [weak self] icon, _ in
+            self?.cardIconView.image = icon
+        }, placeholderImage: .Cards.stockCard)
+
         setupUI()
     }
     
     private func setupUI() {
-        addSubview(cardIcon)
-        cardIcon.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(cardIconView)
+        cardIconView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cardIcon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .leadingMargin),
-            cardIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-            cardIcon.widthAnchor.constraint(equalToConstant: .cardWidth),
-            cardIcon.heightAnchor.constraint(equalToConstant: .cardHeight)
+            cardIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .leadingMargin),
+            cardIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            cardIconView.widthAnchor.constraint(equalToConstant: .cardWidth),
+            cardIconView.heightAnchor.constraint(equalToConstant: .cardHeight)
         ])
 
         addSubview(cardInfoStack)
         cardInfoStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cardInfoStack.leadingAnchor.constraint(equalTo: cardIcon.trailingAnchor, constant: .margin),
+            cardInfoStack.leadingAnchor.constraint(equalTo: cardIconView.trailingAnchor, constant: .margin),
             cardInfoStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin),
             cardInfoStack.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])

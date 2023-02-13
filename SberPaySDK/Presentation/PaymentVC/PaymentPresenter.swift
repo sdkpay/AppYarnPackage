@@ -90,6 +90,7 @@ final class PaymentPresenter: PaymentPresenting {
         view?.configShopInfo(with: user.merchantName, cost: user.orderAmount.amount.price)
         view?.configCardView(with: selectedCard.productName,
                              cardInfo: selectedCard.cardNumber.card,
+                             cardIconURL: selectedCard.cardLogoUrl,
                              needArrow: user.paymentToolInfo.count > 1) { [weak self] in
             self?.router.presentCards(cards: user.paymentToolInfo,
                                       selectedId: selectedCard.paymentId,

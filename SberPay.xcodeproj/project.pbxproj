@@ -114,6 +114,7 @@
 		44A438E3298FF5A100CA04FC /* BizoneCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7585A29751A70005D2EA4 /* BizoneCore.xcframework */; };
 		44A438E4298FF5A100CA04FC /* BizoneCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7585A29751A70005D2EA4 /* BizoneCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44A438F429900EEE00CA04FC /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 44A438F329900EEE00CA04FC /* Dynatrace-Static */; };
+		44A70AEA299A4F37009A0F34 /* ImageDownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A70AE9299A4F37009A0F34 /* ImageDownloadService.swift */; };
 		44B821FD2923810C00C06C51 /* TransparentWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B821FC2923810C00C06C51 /* TransparentWindow.swift */; };
 		44B822022923897D00C06C51 /* SBPayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B822012923897D00C06C51 /* SBPayService.swift */; };
 		44B8220A2923D79900C06C51 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B822092923D79900C06C51 /* RootVC.swift */; };
@@ -284,6 +285,7 @@
 		44A3126029813ABB0099EB76 /* AuthRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouter.swift; sourceTree = "<group>"; };
 		44A3126229813D110099EB76 /* PaymentRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRouter.swift; sourceTree = "<group>"; };
 		44A31267298156C30099EB76 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		44A70AE9299A4F37009A0F34 /* ImageDownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloadService.swift; sourceTree = "<group>"; };
 		44B821FC2923810C00C06C51 /* TransparentWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentWindow.swift; sourceTree = "<group>"; };
 		44B822012923897D00C06C51 /* SBPayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayService.swift; sourceTree = "<group>"; };
 		44B822092923D79900C06C51 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootVC.swift; sourceTree = "<group>"; };
@@ -518,6 +520,7 @@
 		444A13B5291BA98B00C9FBE0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				44A70AE8299A4F07009A0F34 /* ImageDownloadService */,
 				44A31252298108160099EB76 /* Locator */,
 				442A45DE298059EC00EC3D73 /* UserService */,
 				44D7585D29751C44005D2EA4 /* PersonalMetricsService */,
@@ -945,6 +948,14 @@
 			path = Locator;
 			sourceTree = "<group>";
 		};
+		44A70AE8299A4F07009A0F34 /* ImageDownloadService */ = {
+			isa = PBXGroup;
+			children = (
+				44A70AE9299A4F37009A0F34 /* ImageDownloadService.swift */,
+			);
+			path = ImageDownloadService;
+			sourceTree = "<group>";
+		};
 		44B821FB292380E100C06C51 /* TransparantWindow */ = {
 			isa = PBXGroup;
 			children = (
@@ -1328,6 +1339,7 @@
 				4464DF9D291D8E4C000C9B45 /* SBPay.swift in Sources */,
 				445CB09B292DFF5100F50047 /* PaymentPresenter.swift in Sources */,
 				44533D2129852A2A0041FAA9 /* AuthManager.swift in Sources */,
+				44A70AEA299A4F37009A0F34 /* ImageDownloadService.swift in Sources */,
 				4416E437291FA90900284972 /* StartupService.swift in Sources */,
 				44D898D52936487900550FC6 /* String+Random.swift in Sources */,
 				44E581822939D25A00BDEC4E /* BankModel.swift in Sources */,

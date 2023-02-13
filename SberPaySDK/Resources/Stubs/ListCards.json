@@ -6,7 +6,7 @@
         "gender": 1
     },
     "orderAmount": {
-        "amount": 12345,
+        "amount": 123456789,
         "currency": "RUB"
     },
     "paymentToolInfo": [
