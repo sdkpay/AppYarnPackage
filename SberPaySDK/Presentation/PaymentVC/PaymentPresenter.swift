@@ -77,8 +77,10 @@ final class PaymentPresenter: PaymentPresenting {
                 self?.selectedCard = user.paymentToolInfo.first(where: { $0.priorityCard })
                 self?.configViews()
             case .failure(let error):
-                self?.view?.showAlert(with: .failure())
-                self?.manager.completionWithError(error: error)
+                self?.view?.showAlert(with: .failure(),
+                                      completion: {
+                    self?.manager.completionWithError(error: error)
+                })
             }
         }
     }
@@ -137,25 +139,33 @@ final class PaymentPresenter: PaymentPresenting {
                 case .auto:
                     self.pay(with: result.paymentToken)
                 case .manual:
-                    self.manager.completionPaymentToken(with: result.paymentToken)
-                    self.view?.showAlert(with: .success)
+                    self.view?.showAlert(with: .success) {
+                        self.view?.dismiss(animated: true, completion: {
+                            self.manager.completionPaymentToken(with: result.paymentToken)
+                        })
+                    }
                 }
             case .failure(let error):
-                self.manager.completionWithError(error: error)
-                self.view?.showAlert(with: .failure())
+                self.view?.showAlert(with: .failure()) {
+                    self.manager.completionWithError(error: error)
+                }
             }
         }
     }
     
     private func pay(with token: String) {
         network.request(PaymentTarget.getPaymentOrder) { [weak self] result in
+            self?.view?.hideLoading(animate: false)
             switch result {
             case .success:
-                self?.manager.completionPay(with: nil)
-                self?.view?.showAlert(with: .success)
+                self?.view?.showAlert(with: .success, completion: {
+                    self?.manager.completionPay(with: nil)
+                })
             case .failure(let error):
                 self?.manager.completionPay(with: error)
-                self?.view?.showAlert(with: .failure())
+                self?.view?.showAlert(with: .failure()) {
+                    self?.manager.completionPay(with: nil)
+                }
             }
         }
     }

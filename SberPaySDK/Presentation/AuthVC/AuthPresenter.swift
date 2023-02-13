@@ -60,8 +60,9 @@ final class AuthPresenter: AuthPresenting {
                     self?.configAuthSettings()
                 }
             case .failure(let error):
-                self?.sdkManager.completionWithError(error: error)
-                self?.view?.showAlert(with: .failure())
+                self?.view?.showAlert(with: .failure(), completion: {
+                    self?.sdkManager.completionWithError(error: error)
+                })
             }
         }
     }

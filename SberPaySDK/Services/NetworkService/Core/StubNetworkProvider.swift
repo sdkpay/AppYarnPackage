@@ -9,6 +9,7 @@ import UIKit
 
 final class StubNetworkProvider: NSObject, NetworkProvider {
     let delayedSeconds: Int
+    private var dispatchWorkItem: DispatchWorkItem?
 
     init(delayedSeconds: Int = 0) {
         self.delayedSeconds = delayedSeconds
@@ -21,11 +22,16 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
                                        statusCode: 200,
                                        httpVersion: nil,
                                        headerFields: nil)
-        DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(delayedSeconds)) {
+        dispatchWorkItem = DispatchWorkItem {
             completion(route.sampleData, response, nil)
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(delayedSeconds),
+                                      execute: dispatchWorkItem!)
     }
     
-    // TODO: Реализовать
-    func cancel() { }
+    func cancel() {
+        if let dispatchWorkItem = dispatchWorkItem {
+            dispatchWorkItem.cancel()
+        }
+    }
 }

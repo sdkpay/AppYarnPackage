@@ -10,15 +10,10 @@ import UIKit
 final class ImageDownloadService {
     static let shared = ImageDownloadService()
 
-    private var cachedImages: [String: UIImage]
-    private var imagesDownloadTasks: [String: URLSessionDataTask]
+    private var cachedImages = [String: UIImage]()
+    private var imagesDownloadTasks = [String: URLSessionDataTask]()
     private let serialQueueForImages = DispatchQueue(label: "images.queue", attributes: .concurrent)
     private let serialQueueForDataTasks = DispatchQueue(label: "dataTasks.queue", attributes: .concurrent)
-
-    private init() {
-        cachedImages = [:]
-        imagesDownloadTasks = [:]
-    }
 
     func downloadImage(with imageUrlString: String?,
                        completionHandler: @escaping (UIImage?, Bool) -> Void,

@@ -18,7 +18,7 @@ protocol SBPayService {
     func payWithOrderId(paymentRequest: SBFullPaymentRequest,
                         completion: @escaping (_ error: SBPError?) -> Void)
     func completePayment(paymentSuccess: Bool,
-                         completion: Action)
+                         completion: @escaping Action)
     func getResponseFrom(_ url: URL)
 }
 
@@ -76,7 +76,7 @@ final class DefaultSBPayService: SBPayService {
     }
     
     func completePayment(paymentSuccess: Bool,
-                         completion: Action) {
+                         completion: @escaping Action) {
         startService.completePayment(paymentSuccess: paymentSuccess, completion: completion)
     }
     

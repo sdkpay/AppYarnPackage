@@ -12,21 +12,20 @@ let closeSDKNotification = "CloseSDK"
 protocol StartupService {
     func openInitialScreen(with locator: LocatorService)
     func completePayment(paymentSuccess: Bool,
-                         completion: Action)
+                         completion: @escaping Action)
 }
 
 final class DefaultStartupService: StartupService {
     private var sdkWindow: TransparentWindow?
-    private var manager: SDKManager?
-    private var analytics: AnalyticsService?
+    private var locator: LocatorService?
     
     func openInitialScreen(with locator: LocatorService) {
         setupWindows()
         guard let sdkWindow = sdkWindow else { return }
-        self.manager = locator.resolve()
+        self.locator = locator
         sdkWindow.rootViewController = RootAssembly(locator: locator).createModule()
-        self.analytics = locator.resolve()
-        analytics?.sendEvent(.BankAppFound)
+        let analytics: AnalyticsService = locator.resolve()
+        analytics.sendEvent(.BankAppFound)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(closeSdk),
                                                name: Notification.Name(closeSDKNotification),
@@ -44,18 +43,23 @@ final class DefaultStartupService: StartupService {
     
     @objc
     private func closeSdk() {
+        guard let locator = locator else { return }
+        let network: NetworkService = locator.resolve()
+        network.cancelTask()
+        let manager: SDKManager = locator.resolve()
+        manager.completionWithError(error: .cancelled)
+        let analytics: AnalyticsService = locator.resolve()
+        analytics.sendEvent(.ManuallyClosed)
         sdkWindow = nil
-        manager?.completionWithError(error: .cancelled)
-        analytics?.sendEvent(.ManuallyClosed)
-        manager = nil
     }
     
     func completePayment(paymentSuccess: Bool,
-                         completion: Action) {
+                         completion: @escaping Action) {
         // DEBUG
         guard let topVC = sdkWindow?.topVC as? ContentVC else { return }
-        topVC.showAlert(with: paymentSuccess ? .success : .failure())
-        completion()
+        topVC.showAlert(with: paymentSuccess ? .success : .failure()) {
+            completion()
+        }
         closeSdk()
     }
 }

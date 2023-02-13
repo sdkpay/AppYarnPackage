@@ -14,7 +14,11 @@ enum AlertState {
 
 private extension CGFloat {
     static let imageWidth = 80.0
-    static let animationDuration = 0.25
+}
+
+private extension TimeInterval {
+    static let animationDuration: TimeInterval = 0.25
+    static let completionDuration: TimeInterval = 2.25
 }
 
 final class AlertView: UIView {
@@ -66,11 +70,15 @@ final class AlertView: UIView {
         alertStack.addArrangedSubview(imageView)
     }
     
-    func show() {
-        UIView.animate(withDuration: CGFloat.animationDuration,
+    func show(with completion: @escaping Action) {
+        UIView.animate(withDuration: .animationDuration,
                        delay: 0) { [weak self] in
             guard let self = self else { return }
             self.alpha = 1
+        } completion: { _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration, execute: {
+                completion()
+            })
         }
     }
 
@@ -91,7 +99,7 @@ final class AlertView: UIView {
         if alertTitle.text != nil {
             alertStack.addArrangedSubview(alertTitle)
         }
-        UIView.animate(withDuration: CGFloat.animationDuration,
+        UIView.animate(withDuration: .animationDuration,
                        delay: 0) { [weak self] in
             guard let self = self else { return }
             self.alpha = 1

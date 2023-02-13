@@ -39,7 +39,7 @@ public final class SBPay: NSObject {
     }
     
     /**
-     Единый метод для
+     Единый метод для оплаты
      */
     @objc
     public static func payWithOrderId(paymentRequest: SBFullPaymentRequest,
@@ -52,7 +52,7 @@ public final class SBPay: NSObject {
      */
     @objc
     public static func completePayment(paymentSuccess: Bool,
-                                       completion: () -> Void) {
+                                       completion: @escaping () -> Void) {
         payService?.completePayment(paymentSuccess: paymentSuccess, completion: completion)
     }
     

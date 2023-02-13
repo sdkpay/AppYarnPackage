@@ -87,7 +87,7 @@ class ContentVC: UIViewController {
     }
 
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        NotificationCenter.default.post(name: Notification.Name(closeSDKNotification), object: nil, userInfo: nil)
+       // NotificationCenter.default.post(name: Notification.Name(closeSDKNotification), object: nil, userInfo: nil)
         super.dismiss(animated: flag, completion: completion)
     }
 }
@@ -139,7 +139,7 @@ extension ContentVC {
 
 // ContentVC + Alert
 extension ContentVC {
-    func showAlert(with alertState: AlertState) {
+    func showAlert(with alertState: AlertState, completion: @escaping Action) {
         let alertView = AlertView()
         alertView.config(with: alertState)
         view.addSubview(alertView)
@@ -152,19 +152,18 @@ extension ContentVC {
         ])
         view.bringSubviewToFront(stickImageView)
         self.alertView = alertView
-        self.alertView?.show()
+        self.alertView?.show(with: completion)
     }
     
     func hideAlert(animationCompletion: Action? = nil) {
-        guard isLoading else { return }
         UIView.animate(withDuration: .animationDuration,
                        delay: 0) {
             self.alertView?.alpha = 0
         } completion: { [weak self] _ in
+            animationCompletion?()
             self?.alertView?.removeFromSuperview()
             self?.alertView = nil
             self?.isLoading = false
-            animationCompletion?()
         }
     }
 }
