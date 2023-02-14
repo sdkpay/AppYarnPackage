@@ -141,7 +141,7 @@ final class PaymentPresenter: PaymentPresenting {
                 case .auto:
                     self.pay(with: result.paymentToken)
                 case .manual:
-                    self.view?.showAlert(with: .success) {
+                    self.view?.showAlert(with: .failure()) {
                         self.view?.dismiss(animated: true, completion: {
                             self.manager.completionPaymentToken(with: result.paymentToken)
                         })
@@ -157,7 +157,6 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func pay(with token: String) {
         network.request(PaymentTarget.getPaymentOrder) { [weak self] result in
-            self?.view?.hideLoading(animate: false)
             switch result {
             case .success:
                 self?.view?.showAlert(with: .success, completion: {

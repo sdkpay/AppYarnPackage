@@ -141,7 +141,7 @@ final class AlertView: UIView {
         case .success:
             feedBack = .success
         case .failure:
-            feedBack = .error
+            feedBack = .warning
         }
         UINotificationFeedbackGenerator().notificationOccurred(feedBack)
     }
