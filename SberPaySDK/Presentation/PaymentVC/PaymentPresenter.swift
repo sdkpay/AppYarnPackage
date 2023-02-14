@@ -64,7 +64,9 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func cancelTapped() {
-        view?.dismiss(animated: true)
+        view?.dismiss(animated: true, completion: { [weak self] in
+            self?.manager.completionWithError(error: .cancelled)
+        })
     }
     
     private func getUser() {
@@ -164,7 +166,9 @@ final class PaymentPresenter: PaymentPresenting {
             case .failure(let error):
                 self?.manager.completionPay(with: error)
                 self?.view?.showAlert(with: .failure()) {
-                    self?.manager.completionPay(with: nil)
+                    self?.view?.dismiss(animated: true, completion: {
+                        self?.manager.completionPay(with: nil)
+                    })
                 }
             }
         }

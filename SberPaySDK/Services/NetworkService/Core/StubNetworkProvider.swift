@@ -8,7 +8,7 @@
 import UIKit
 
 final class StubNetworkProvider: NSObject, NetworkProvider {
-    let delayedSeconds: Int
+    private let delayedSeconds: Int
     private var dispatchWorkItem: DispatchWorkItem?
 
     init(delayedSeconds: Int = 0) {

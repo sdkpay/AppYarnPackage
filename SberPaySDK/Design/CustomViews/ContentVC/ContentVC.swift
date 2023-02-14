@@ -87,7 +87,6 @@ class ContentVC: UIViewController {
     }
 
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-       // NotificationCenter.default.post(name: Notification.Name(closeSDKNotification), object: nil, userInfo: nil)
         super.dismiss(animated: flag, completion: completion)
     }
 }

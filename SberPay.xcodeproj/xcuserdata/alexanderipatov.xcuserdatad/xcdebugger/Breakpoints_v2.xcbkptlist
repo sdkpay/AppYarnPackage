@@ -7,144 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "651CD6E6-130C-4227-A84A-E36B7FD9842C"
+            uuid = "E803D627-B14F-4416-81C7-1DFEDD0F5A2E"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SberPaySDK/Presentation/PaymentVC/PaymentPresenter.swift"
+            filePath = "SberPaySDK/Navigation/Transition/CoverTransitionDriver.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
-            landmarkName = "pay(with:)"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
+            landmarkName = "handleDismiss(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "151E2F8C-B2D5-437D-A154-F7248CEDAAAE"
+            uuid = "8245454C-3B16-4E3F-BD8A-44B85AF142F5"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SberPaySDK/Presentation/PaymentVC/PaymentPresenter.swift"
+            filePath = "SberPaySDK/Navigation/Transition/CoverPresentationController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
-            landmarkName = "pay(with:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "151E2F8C-B2D5-437D-A154-F7248CEDAAAE - 2b0ae36b928a5774"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;(), SberPaySDK.SDKError&gt;) -&gt; () in SberPaySDK.PaymentPresenter.pay(with: Swift.String) -&gt; ()"
-                  moduleName = "SberPaySDK"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/alexanderipatov/Desktop/paySDK-ios/SberPaySDK/Presentation/PaymentVC/PaymentPresenter.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "166"
-                  endingLineNumber = "166"
-                  offsetFromSymbolStart = "1084">
-               </Location>
-               <Location
-                  uuid = "151E2F8C-B2D5-437D-A154-F7248CEDAAAE - 139ac542312972ea"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #2 () -&gt; () in closure #1 (Swift.Result&lt;(), SberPaySDK.SDKError&gt;) -&gt; () in SberPaySDK.PaymentPresenter.pay(with: Swift.String) -&gt; ()"
-                  moduleName = "SberPaySDK"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/alexanderipatov/Desktop/paySDK-ios/SberPaySDK/Presentation/PaymentVC/PaymentPresenter.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "157"
-                  endingLineNumber = "157"
-                  offsetFromSymbolStart = "20">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "103DDD9D-FBBB-4B58-84A3-CB2D9F338935"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SberPaySDK/Services/NetworkService/NetworkService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
-            landmarkName = "cancelTask()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B73FB13A-AA73-4F2D-8450-C399AFE06487"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SberPaySDK/Services/NetworkService/Core/StubNetworkProvider.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "33"
-            endingLineNumber = "33"
-            landmarkName = "cancel()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "B73FB13A-AA73-4F2D-8450-C399AFE06487 - d8c989dcea68f150"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SberPaySDK.StubNetworkProvider.cancel() -&gt; ()"
-                  moduleName = "SberPaySDK"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/alexanderipatov/Desktop/paySDK-ios/SberPaySDK/Services/NetworkService/Core/StubNetworkProvider.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "33"
-                  endingLineNumber = "33"
-                  offsetFromSymbolStart = "32">
-               </Location>
-               <Location
-                  uuid = "B73FB13A-AA73-4F2D-8450-C399AFE06487 - d8c989dcea68f150"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "SberPaySDK.StubNetworkProvider.cancel() -&gt; ()"
-                  moduleName = "SberPaySDK"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/alexanderipatov/Desktop/paySDK-ios/SberPaySDK/Services/NetworkService/Core/StubNetworkProvider.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "33"
-                  endingLineNumber = "33"
-                  offsetFromSymbolStart = "116">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "66380652-66FF-4108-A606-2AD770AF8A45"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SberPaySDK/Services/NetworkService/Core/StubNetworkProvider.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "cancel()"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
+            landmarkName = "handleTap(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

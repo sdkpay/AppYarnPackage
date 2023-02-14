@@ -6,10 +6,20 @@
 //
 
 import UIKit
+import AVFoundation
 
 enum AlertState {
     case success
     case failure(text: String? = nil)
+    
+    var soundPath: String {
+        switch self {
+        case .success:
+            return "poz.mp3"
+        case .failure:
+            return "neg.mp3"
+        }
+    }
 }
 
 private extension CGFloat {
@@ -23,6 +33,8 @@ private extension TimeInterval {
 
 final class AlertView: UIView {
     private lazy var imageView = UIImageView()
+    private var audioPlayer: AVAudioPlayer?
+    private var state: AlertState?
 
     private lazy var alertTitle: UILabel = {
         let view = UILabel()
@@ -75,7 +87,11 @@ final class AlertView: UIView {
                        delay: 0) { [weak self] in
             guard let self = self else { return }
             self.alpha = 1
-        } completion: { _ in
+        } completion: { [weak self] _ in
+            if let state = self?.state {
+                self?.playFeedback(for: state)
+                self?.playSound(for: state)
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration, execute: {
                 completion()
             })
@@ -83,6 +99,7 @@ final class AlertView: UIView {
     }
 
     func config(with state: AlertState) {
+        self.state = state
         backgroundColor = .backgroundPrimary
         switch state {
         case .success:
@@ -99,10 +116,33 @@ final class AlertView: UIView {
         if alertTitle.text != nil {
             alertStack.addArrangedSubview(alertTitle)
         }
+
         UIView.animate(withDuration: .animationDuration,
                        delay: 0) { [weak self] in
             guard let self = self else { return }
             self.alpha = 1
         }
+    }
+    
+    private func playSound(for state: AlertState) {
+        guard let path = Bundle.sdkBundle.path(forResource: state.soundPath, ofType: nil) else { return }
+        let url = URL(fileURLWithPath: path)
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.play()
+        } catch {
+            print("Couldn't load the file")
+        }
+    }
+    
+    private func playFeedback(for state: AlertState) {
+        var feedBack: UINotificationFeedbackGenerator.FeedbackType
+        switch state {
+        case .success:
+            feedBack = .success
+        case .failure:
+            feedBack = .error
+        }
+        UINotificationFeedbackGenerator().notificationOccurred(feedBack)
     }
 }

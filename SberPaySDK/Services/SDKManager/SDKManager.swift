@@ -62,7 +62,7 @@ extension SDKManager {
 
 final class DefaultSDKManager: SDKManager {
     private var paymentCompletion: PayCompletion?
-    private var completion: PaymentTokenCompletion?
+    private var paymentTokenCompletion: PaymentTokenCompletion?
     private(set) var paymentTokenRequest: SBPaymentTokenRequest?
     private(set) var fullPaymentRequest: SBFullPaymentRequest?
     private(set) var authInfo: AuthInfo?
@@ -88,7 +88,7 @@ final class DefaultSDKManager: SDKManager {
                             orderId: paymentTokenRequest.orderNumber,
                             clientId: paymentTokenRequest.clientId,
                             redirectUri: paymentTokenRequest.redirectUri)
-        self.completion = completion
+        self.paymentTokenCompletion = completion
     }
     
     func configWithOrderId(paymentRequest: SBFullPaymentRequest,
@@ -114,7 +114,14 @@ final class DefaultSDKManager: SDKManager {
     func completionWithError(error: SDKError) {
         let responce = SBPaymentTokenResponse()
         responce.error = SBPError(errorState: error)
-        completion?(responce)
+        switch payStrategy {
+        case .auto:
+            paymentCompletion?(SBPError(errorState: error))
+            paymentCompletion = nil
+        case .manual:
+            paymentTokenCompletion?(responce)
+            paymentTokenCompletion = nil
+        }
     }
     
     func completionPaymentToken(with paymentToken: String? = nil,
@@ -124,7 +131,7 @@ final class DefaultSDKManager: SDKManager {
                                               paymentTokenId: paymentTokenId,
                                               tokenExpiration: tokenExpiration,
                                               error: nil)
-        completion?(responce)
+        paymentTokenCompletion?(responce)
     }
     
     func completionPay(with error: SDKError? = nil) {
@@ -133,5 +140,6 @@ final class DefaultSDKManager: SDKManager {
         } else {
             paymentCompletion?(nil)
         }
+        paymentCompletion = nil
     }
 }

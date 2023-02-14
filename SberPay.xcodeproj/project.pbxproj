@@ -27,6 +27,8 @@
 		4416E437291FA90900284972 /* StartupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E436291FA90900284972 /* StartupService.swift */; };
 		441B7904296FEE990093138D /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 441B7903296FEE990093138D /* libresolv.9.tbd */; };
 		441B791829700BEB0093138D /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 441B791729700BEB0093138D /* Lottie */; };
+		4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76B299ABC7800DD7881 /* poz.mp3 */; };
+		4421B76E299ABC8500DD7881 /* neg.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76D299ABC8500DD7881 /* neg.mp3 */; };
 		442A45C9297FE80D00EC3D73 /* StubNetworkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442A45C8297FE80D00EC3D73 /* StubNetworkProvider.swift */; };
 		442A45CC297FEE1500EC3D73 /* StubbedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442A45CB297FEE1500EC3D73 /* StubbedResponse.swift */; };
 		442A45CE297FEE8000EC3D73 /* Auth.json in Resources */ = {isa = PBXBuildFile; fileRef = 442A45CD297FEE8000EC3D73 /* Auth.json */; };
@@ -196,6 +198,8 @@
 		4416E423291E21C300284972 /* SDKError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKError.swift; sourceTree = "<group>"; };
 		4416E436291FA90900284972 /* StartupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupService.swift; sourceTree = "<group>"; };
 		441B7903296FEE990093138D /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
+		4421B76B299ABC7800DD7881 /* poz.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = poz.mp3; sourceTree = "<group>"; };
+		4421B76D299ABC8500DD7881 /* neg.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = neg.mp3; sourceTree = "<group>"; };
 		442A45C8297FE80D00EC3D73 /* StubNetworkProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubNetworkProvider.swift; sourceTree = "<group>"; };
 		442A45CB297FEE1500EC3D73 /* StubbedResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubbedResponse.swift; sourceTree = "<group>"; };
 		442A45CD297FEE8000EC3D73 /* Auth.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = Auth.json; sourceTree = "<group>"; };
@@ -432,6 +436,15 @@
 			path = StartupService;
 			sourceTree = "<group>";
 		};
+		4421B76A299ABC6600DD7881 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				4421B76D299ABC8500DD7881 /* neg.mp3 */,
+				4421B76B299ABC7800DD7881 /* poz.mp3 */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		442A45CA297FEDD800EC3D73 /* Stubs */ = {
 			isa = PBXGroup;
 			children = (
@@ -537,6 +550,7 @@
 		444A13B6291BA9A100C9FBE0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4421B76A299ABC6600DD7881 /* Sounds */,
 				442A45CA297FEDD800EC3D73 /* Stubs */,
 				440DB3AE295C645300B84E05 /* Certificates */,
 				445CB079292C9CFE00F50047 /* Fonts */,
@@ -1239,6 +1253,8 @@
 				444A13F3291CF1C100C9FBE0 /* .swiftlint.yml in Resources */,
 				445CB07F292C9D9500F50047 /* SB Sans Text.ttf in Resources */,
 				44A31251298103F10099EB76 /* ListCards.json in Resources */,
+				4421B76E299ABC8500DD7881 /* neg.mp3 in Resources */,
+				4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */,
 				442A45CE297FEE8000EC3D73 /* Auth.json in Resources */,
 				445CB073292BBB1400F50047 /* Assets.xcassets in Resources */,
 				443D83AB295D8F31002605AA /* ecomtest.sberbank.ru.der in Resources */,
