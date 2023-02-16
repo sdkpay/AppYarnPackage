@@ -13,8 +13,8 @@ enum UserTarget {
                       authCode: String,
                       sessionId: String,
                       state: String,
-                      merchantLogin: String,
-                      orderId: String)
+                      merchantLogin: String?,
+                      orderId: String?)
     case checkSession(sessionId: String)
 }
 
@@ -47,15 +47,19 @@ extension UserTarget: TargetType {
                                state: state,
                                merchantLogin: merchantLogin,
                                orderId: orderId):
-            let params = [
+            var params = [
                 "redirectUri": redirectUri,
                 "apiKey": apiKey,
                 "authCode": authCode,
                 "sessionId": sessionId,
-                "state": state,
-                "merchantLogin": merchantLogin,
-                "orderId": orderId
+                "state": state
             ]
+            if let merchantLogin = merchantLogin {
+                params["merchantLogin"] = merchantLogin
+            }
+            if let orderId = orderId {
+                params["orderId"] = orderId
+            }
             return .requestWithParametersAndHeaders(nil, bodyParameters: params)
         case .checkSession(sessionId: let sessionId):
             let params = [

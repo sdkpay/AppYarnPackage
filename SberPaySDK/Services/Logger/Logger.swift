@@ -35,21 +35,34 @@ enum SBLogger: ResponseDecoder {
     
     static func logRequestCompleted(_ target: TargetType,
                                     response: URLResponse?,
-                                    data: Data?) {
+                                    data: Data?,
+                                    error: Error?) {
         let url = ServerURL.appendingPathComponent(target.path)
         var code = "None"
         if let statusCode = (response as? HTTPURLResponse)?.statusCode {
             code = String(statusCode)
         }
-        log(
-           """
+        if code != "200" {
+            log(
+                """
+                ❗️Request failed with code \(code)
+                  path: \(url)
+                  headers: \(headers(target.headers))
+                  httpMethod: \(target.httpMethod)
+                  response: \(stringToLog(from: data))
+                """
+            )
+        } else {
+            log(
+            """
             ✅ Request successed with code \(code)
                path: \(url)
                headers: \(headers(target.headers))
                httpMethod: \(target.httpMethod)
                response: \(stringToLog(from: data))
             """
-       )
+            )
+        }
     }
     
     static func logRequestFailed(_ target: TargetType,

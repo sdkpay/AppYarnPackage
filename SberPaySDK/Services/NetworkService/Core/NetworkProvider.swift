@@ -42,14 +42,14 @@ enum HTTPTask {
 
 // MARK: - NetworkProvider
 protocol NetworkProvider {
-    func request(_ route: TargetType, completion: @escaping NetworkProviderCompletion)
+    func request(_ target: TargetType, completion: @escaping NetworkProviderCompletion)
     func cancel()
 }
 
 final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private var task: URLSessionTask?
     private var session: URLSession?
-    private var requestManager: AuthRequestManager
+    private var requestManager: BaseRequestManager
      
     private lazy var certificate: Data? = {
         guard let fileDer = Bundle(for: SBPay.self).path(forResource: "ecomtest.sberbank.ru",
@@ -58,7 +58,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         return NSData(contentsOfFile: fileDer) as? Data
     }()
     
-    init(requestManager: AuthRequestManager) {
+    init(requestManager: BaseRequestManager) {
         self.requestManager = requestManager
         super.init()
         session = URLSession(configuration: .default,
@@ -66,13 +66,31 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                              delegateQueue: nil)
     }
     
-    func request(_ route: TargetType, completion: @escaping NetworkProviderCompletion) {
+    func request(_ target: TargetType, completion: @escaping NetworkProviderCompletion) {
+      _request(target: target, completion: completion)
+    }
+
+    private func _request(retry: Int = 1,
+                          target: TargetType,
+                          completion: @escaping NetworkProviderCompletion) {
         do {
-            let request = try self.buildRequest(from: route)
+            let request = try self.buildRequest(from: target)
             SBLogger.logRequestStarted(request)
             task = session?.dataTask(with: request, completionHandler: { data, response, error in
                 DispatchQueue.main.async {
-                    completion(data, response, error)
+                    if let response = response {
+                        self.saveGeobalancingData(from: response)
+                    }
+                    // DEBUG
+                    if let error = error,
+                       error._code == 404,
+                       retry < 5 {
+                        self._request(retry: (retry + 1),
+                                      target: target,
+                                      completion: completion)
+                    } else {
+                        completion(data, response, error)
+                    }
                 }
             })
         } catch {
@@ -82,7 +100,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         }
         self.task?.resume()
     }
-    
+
     func cancel() {
         self.task?.cancel()
     }
@@ -90,12 +108,13 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private func buildRequest(from route: TargetType) throws -> URLRequest {
         var request = URLRequest(url: ServerURL.appendingPathComponent(route.path),
                                  cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
-                                 timeoutInterval: 90.0)
+                                 timeoutInterval: 20.0)
         request.httpMethod = route.httpMethod.rawValue
         switch route.task {
         case .request:
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         case let .requestWithParameters(urlParameters, bodyParameters):
+            addHeaders(request: &request, headers: nil)
             try configureParameters(request: &request, bodyParameters: bodyParameters, urlParameters: urlParameters)
         case let .requestWithParametersAndHeaders(urlParameters, bodyParameters, headers):
             addHeaders(request: &request, headers: headers)
@@ -120,10 +139,29 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     }
     
     private func addHeaders(request: inout URLRequest, headers: HTTPHeaders?) {
-        guard let headers = headers else { return }
-        for (name, value) in headers {
+        var baseHeaders = HTTPHeaders()
+        baseHeaders[String.Headers.rqUID] = String.generateRandom(with: 32)
+        baseHeaders[String.Headers.localTime] = "\(Date())"
+        // DEBUG
+        baseHeaders[String.Headers.lang] = "RU"
+        for head in requestManager.headers {
+            baseHeaders[head.key] = head.value
+        }
+        if let headers = headers {
+            for head in headers {
+                baseHeaders[head.key] = head.value
+            }
+        }
+        for (name, value) in baseHeaders {
             request.setValue(value, forHTTPHeaderField: name)
         }
+    }
+    
+    private func saveGeobalancingData(from response: URLResponse) {
+        guard let response = response as? HTTPURLResponse else { return }
+        let headers = response.allHeaderFields
+        requestManager.cookie = headers[String.Headers.cookie] as? String
+        requestManager.pod = headers[String.Headers.pod] as? String
     }
 }
 

@@ -17,7 +17,7 @@ final class NetworkServiceAssembly: Assembly {
 }
 
 var ServerURL: URL {
-    let urlString = "https://app5.kurochkinas.ru/"
+    let urlString = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
     return URL(string: urlString)!
 }
 
@@ -37,7 +37,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
     func request(_ target: TargetType, completion: @escaping (Result<Void, SDKError>) -> Void) {
         provider.request(target) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error)
-            SBLogger.logRequestCompleted(target, response: response, data: data)
+            SBLogger.logRequestCompleted(target, response: response, data: data, error: error)
             completion(result)
         }
     }
@@ -45,7 +45,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
     func request<T>(_ target: TargetType, to: T.Type, completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
         provider.request(target) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
-            SBLogger.logRequestCompleted(target, response: response, data: data)
+            SBLogger.logRequestCompleted(target, response: response, data: data, error: error)
             completion(result)
         }
     }

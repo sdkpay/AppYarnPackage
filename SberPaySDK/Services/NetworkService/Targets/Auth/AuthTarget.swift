@@ -8,14 +8,14 @@
 import Foundation
 
 enum AuthTarget {
-    case getSessionId(apiKey: String, merchantLogin: String, orderId: String)
+    case getSessionId(apiKey: String, merchantLogin: String?, orderId: String?)
 }
 
 extension AuthTarget: TargetType {
     var path: String {
         switch self {
         case .getSessionId:
-            return "sdk-gateway/v1/sessionId"
+            return "/sessionId"
         }
     }
     
@@ -29,11 +29,15 @@ extension AuthTarget: TargetType {
     var task: HTTPTask {
         switch self {
         case let .getSessionId(apiKey: apiKey, merchantLogin: merchantLogin, orderId: orderId):
-            let params = [
-                "apiKey": apiKey,
-                "merchantLogin": merchantLogin,
-                "orderId": orderId
+            var params = [
+                "apiKey": apiKey
             ]
+            if let merchantLogin = merchantLogin {
+                params["merchantLogin"] = merchantLogin
+            }
+            if let orderId = orderId {
+                params["orderId"] = orderId
+            }
             return .requestWithParameters(nil, bodyParameters: params)
         }
     }

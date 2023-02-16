@@ -88,24 +88,28 @@ final class PaymentPresenter: PaymentPresenting {
     }
 
     private func configViews() {
-        guard let user = user,
-              let selectedCard = selectedCard
-        else { return }
+        guard let user = user else { return }
+
         view?.configShopInfo(with: user.merchantName, cost: user.orderAmount.amount.price)
-        view?.configCardView(with: selectedCard.productName,
-                             cardInfo: selectedCard.cardNumber.card,
-                             cardIconURL: selectedCard.cardLogoUrl,
-                             needArrow: user.paymentToolInfo.count > 1) { [weak self] in
-            self?.router.presentCards(cards: user.paymentToolInfo,
-                                      selectedId: selectedCard.paymentId,
-                                      selectedCard: { [weak self] card in
-                if user.paymentToolInfo.count > 1 {
-                    self?.selectedCard = card
-                    self?.configViews()
-                }
-            })
-        }
         view?.configProfileView(with: user.userInfo)
+
+        if let selectedCard = selectedCard {
+            view?.configCardView(with: selectedCard.productName,
+                                 cardInfo: selectedCard.cardNumber.card,
+                                 cardIconURL: selectedCard.cardLogoUrl,
+                                 needArrow: user.paymentToolInfo.count > 1) { [weak self] in
+                self?.router.presentCards(cards: user.paymentToolInfo,
+                                          selectedId: selectedCard.paymentId,
+                                          selectedCard: { [weak self] card in
+                    if user.paymentToolInfo.count > 1 {
+                        self?.selectedCard = card
+                        self?.configViews()
+                    }
+                })
+            }
+        } else {
+            view?.configWithNoCards()
+        }
     }
     
     private func getMetrics() {

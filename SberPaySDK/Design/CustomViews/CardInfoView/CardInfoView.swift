@@ -12,9 +12,12 @@ private extension CGFloat {
     static let leadingMargin = 20.0
     static let cardWidth = 28.0
     static let cardHeight = 20.0
+    static let noCardHeight = 36.0
 }
 
 final class CardInfoView: ContentView {
+    private var needArrow = false
+
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.font = .bodi1
@@ -22,7 +25,7 @@ final class CardInfoView: ContentView {
         return view
     }()
     
-    private lazy var cardLabel: UILabel = {
+    private lazy var subtitleLabel: UILabel = {
         let view = UILabel()
         view.font = .bodi2
         view.textColor = .textSecondary
@@ -45,28 +48,23 @@ final class CardInfoView: ContentView {
         let view = UIStackView()
         view.axis = .vertical
         view.addArrangedSubview(titleLabel)
-        view.addArrangedSubview(cardLabel)
+        view.addArrangedSubview(subtitleLabel)
         return view
     }()
     
-    override init() {
-        super.init()
-        setupUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private var needArrow = false
-    
+    private lazy var noCardImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = .Common.warning
+        return view
+    }()
+
     func config(with title: String,
                 cardInfo: String,
                 cardIconURL: String?,
                 needArrow: Bool,
                 action: @escaping Action) {
         titleLabel.text = title
-        cardLabel.text = cardInfo
+        subtitleLabel.text = cardInfo
         self.needArrow = needArrow
         self.action = action
 
@@ -76,6 +74,31 @@ final class CardInfoView: ContentView {
         }, placeholderImage: .Cards.stockCard)
 
         setupUI()
+    }
+    
+    func configWithNoCards() {
+        titleLabel.text = .Payment.noCardsTitle
+        subtitleLabel.text = .Payment.noCardsSubtitle
+        setupUIWithOutCards()
+    }
+    
+    private func setupUIWithOutCards() {
+        addSubview(noCardImageView)
+        noCardImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            noCardImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .leadingMargin),
+            noCardImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            noCardImageView.widthAnchor.constraint(equalToConstant: .noCardHeight),
+            noCardImageView.heightAnchor.constraint(equalToConstant: .noCardHeight)
+        ])
+        
+        addSubview(cardInfoStack)
+        cardInfoStack.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cardInfoStack.leadingAnchor.constraint(equalTo: noCardImageView.trailingAnchor, constant: .margin),
+            cardInfoStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin),
+            cardInfoStack.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
     }
     
     private func setupUI() {

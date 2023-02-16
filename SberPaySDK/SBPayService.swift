@@ -29,13 +29,13 @@ final class DefaultSBPayService: SBPayService {
     private var assemblies: [Assembly] = [
         AnalyticsServiceAssembly(),
         PersonalMetricsServiceAssembly(),
-        NetworkServiceAssembly(),
         AuthManagerAssembly(),
+        BaseRequestManagerAssembly(),
+        NetworkServiceAssembly(),
         SDKManagerAssembly(),
         AuthServiceAssembly(),
         UserServiceAssembly(),
-        LocationManagerAssembly(),
-        AuthRequestManagerAssembly()
+        LocationManagerAssembly()
     ]
     
     private func registerServices() {

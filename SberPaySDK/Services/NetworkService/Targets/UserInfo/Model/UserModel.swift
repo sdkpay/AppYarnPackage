@@ -36,13 +36,13 @@ struct PaymentToolInfo: Codable {
 struct UserInfo: Codable {
     let lastName: String
     let firstName: String
-    let gender: Int
+    let gender: Int?
     
     var fullName: String {
         "\(firstName) \(lastName)"
     }
     
     var sdkGender: Gender {
-        Gender(rawValue: gender) ?? .neutral
+        Gender(rawValue: gender ?? 2) ?? .neutral
     }
 }

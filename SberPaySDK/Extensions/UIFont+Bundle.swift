@@ -12,7 +12,8 @@ extension UIFont {
 
     static func registerFontsIfNeeded() {
         guard !fontsRegistered,
-                let fontURLs = Bundle(for: SBPay.self).urls(forResourcesWithExtension: "ttf", subdirectory: nil)
+                let fontURLs = Bundle(for: SBPay.self).urls(forResourcesWithExtension: "ttf",
+                                                            subdirectory: nil)
         else { return }
 
         fontURLs.forEach({ CTFontManagerRegisterFontsForURL($0 as CFURL,

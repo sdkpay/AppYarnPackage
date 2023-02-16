@@ -125,13 +125,16 @@ final class AlertView: UIView {
     }
     
     private func playSound(for state: AlertState) {
-        guard let path = Bundle.sdkBundle.path(forResource: state.soundPath, ofType: nil) else { return }
+        guard let path = Bundle.sdkBundle.path(forResource: state.soundPath,
+                                               ofType: nil) else { return }
         let url = URL(fileURLWithPath: path)
         do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient)
+            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
             audioPlayer = try AVAudioPlayer(contentsOf: url)
             audioPlayer?.play()
         } catch {
-            print("Couldn't load the file")
+            print(error.localizedDescription)
         }
     }
     

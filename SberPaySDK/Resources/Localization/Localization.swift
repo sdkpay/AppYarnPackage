@@ -13,6 +13,8 @@ extension String {
         static let payTitle = String(stringLiteral: "pay.title")
         /// Отменить
         static let cancelTitle = String(stringLiteral: "cancel.title")
+        /// Понятно
+        static let okTitle = String(stringLiteral: "ok.title")
     }
 
     enum Auth {
@@ -22,6 +24,13 @@ extension String {
         static let sberTitle = String(stringLiteral: "sber.title")
         /// СБОЛ
         static let sbolTitle = String(stringLiteral: "sbol.title")
+    }
+    
+    enum Payment {
+        /// Нет карт для оплаты
+        static let noCardsTitle = String(stringLiteral: "payment.noCards.title")
+        /// Выберите другой способ
+        static let noCardsSubtitle = String(stringLiteral: "payment.noCards.subtitle")
     }
 
     enum Cards {

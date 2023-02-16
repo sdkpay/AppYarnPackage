@@ -8,11 +8,16 @@
 // Common
 "pay.title" = "Оплатить";
 "cancel.title" = "Отменить";
+"ok.title" = "Понятно";
 
 // Auth
 "auth.title" = "Выберите приложение для авторизации в СберБанке";
 "sber.title" = "СберБанк Онлайн";
 "sbol.title" = "СБОЛ";
+
+// Payment
+"payment.noCards.title" = "Нет карт для оплаты";
+"payment.noCards.subtitle" = "Выберите другой способ";
 
 // Cards
 "cards.title" = "Выберите карту для оплаты";

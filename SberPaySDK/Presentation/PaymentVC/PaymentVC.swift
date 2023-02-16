@@ -22,6 +22,7 @@ protocol IPaymentVC {
                         cardIconURL: String?,
                         needArrow: Bool,
                         action: @escaping Action)
+    func configWithNoCards()
 }
 
 final class PaymentVC: ContentVC, IPaymentVC {
@@ -105,6 +106,11 @@ final class PaymentVC: ContentVC, IPaymentVC {
                             cardIconURL: cardIconURL,
                             needArrow: needArrow,
                             action: action)
+    }
+    
+    func configWithNoCards() {
+        cardInfoView.configWithNoCards()
+        payButton.isEnabled = false
     }
     
     private func setupUI() {

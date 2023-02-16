@@ -62,9 +62,13 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         setupUI()
     }
     
+    private var key: String {
+      "AFhdqaX970inj42EoOVuw+kAAAAAAAAADH8u5FkDlopXBsahjOkZA1CcQwTaKaUMQB/H1JNtlz7fSTFdvOcWXXvpgvzCkJDHyRrfKuxYc8p4wP5kcZN+ua3bxgqRjGQLNxI2b9askeQvt63cZNivX3EDIJz6Ywlk0omNVxAlneT7Z1Do/OSkelsZa5zVwVZbYV0yQVSz" // swiftlint:disable:this line_length
+    }
+    
     private func prepareData() {
         cellsData = [
-            (.apiKey, "ApiKey:", "9bce9e80-d20b-4acd-bb3d-199755b2ea09"),
+            (.apiKey, "ApiKey:", key),
             (.cost, "Cost:", "2000"),
             (.lang, "Lang:", false),
             (.mode, "Pay mode:", false)

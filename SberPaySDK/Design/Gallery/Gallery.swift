@@ -17,6 +17,7 @@ extension UIImage {
         static let checkSelected = UIImage("Check_selected")
         static let checkDeselected = UIImage("Check_deselected")
         static let stick = UIImage("Stick")
+        static let warning = UIImage("Warning")
     }
     enum Auth {
         static let sberIcon = UIImage("Sber_icon")

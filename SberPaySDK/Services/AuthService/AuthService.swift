@@ -90,9 +90,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             authManager.state = result.state
             authСompletion?(nil)
         case .failure(let error):
-            // DEBUG
-            authManager.authCode = "A3EC701C-A08D-3AAB-C02C-F9A5C8273570"
-            authManager.state = "af0ifjsldkj"
             authСompletion?(error)
         }
         // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
