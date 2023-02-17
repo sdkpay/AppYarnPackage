@@ -35,6 +35,7 @@ final class AlertView: UIView {
     private lazy var imageView = UIImageView()
     private var audioPlayer: AVAudioPlayer?
     private var state: AlertState?
+    private var needButton = false
 
     private lazy var alertTitle: UILabel = {
         let view = UILabel()
@@ -52,6 +53,8 @@ final class AlertView: UIView {
         view.alignment = .center
         return view
     }()
+    
+    private lazy var button = DefaultButton(buttonAppearance: .info)
 
     init() {
         super.init(frame: .zero)
@@ -61,46 +64,11 @@ final class AlertView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func setupUI() {
-        isUserInteractionEnabled = true
-        alpha = 0
 
-        NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: .imageWidth),
-            imageView.heightAnchor.constraint(equalToConstant: .imageWidth)
-        ])
-
-        addSubview(alertStack)
-        alertStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            alertStack.centerYAnchor.constraint(equalTo: centerYAnchor),
-            alertStack.centerXAnchor.constraint(equalTo: centerXAnchor),
-            alertStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
-            alertStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin)
-        ])
-        alertStack.addArrangedSubview(imageView)
-    }
-    
-    func show(with completion: @escaping Action) {
-        UIView.animate(withDuration: .animationDuration,
-                       delay: 0) { [weak self] in
-            guard let self = self else { return }
-            self.alpha = 1
-        } completion: { [weak self] _ in
-            if let state = self?.state {
-                self?.playFeedback(for: state)
-                self?.playSound(for: state)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration, execute: {
-                completion()
-            })
-        }
-    }
-
-    func config(with state: AlertState) {
+    func config(buttonTitle: String?, with state: AlertState) {
         self.state = state
         backgroundColor = .backgroundPrimary
+
         switch state {
         case .success:
             imageView.image = .Common.success
@@ -117,10 +85,44 @@ final class AlertView: UIView {
             alertStack.addArrangedSubview(alertTitle)
         }
 
+        if let buttonTitle = buttonTitle {
+            needButton = true
+            button.setTitle(buttonTitle, for: .normal)
+            alertStack.addArrangedSubview(button)
+        }
+
         UIView.animate(withDuration: .animationDuration,
                        delay: 0) { [weak self] in
             guard let self = self else { return }
             self.alpha = 1
+        }
+    }
+    
+    func show(animate: Bool, with completion: @escaping Action) {
+        if animate {
+            UIView.animate(withDuration: .animationDuration,
+                           delay: 0) { [weak self] in
+                guard let self = self else { return }
+                self.alpha = 1
+            } completion: { [weak self] _ in
+                self?.showCompleted(with: completion)
+            }
+        } else {
+            showCompleted(with: completion)
+        }
+    }
+    
+    private func showCompleted(with completion: @escaping Action) {
+        if let state = state {
+            self.playFeedback(for: state)
+            self.playSound(for: state)
+        }
+        if needButton {
+            button.addAction(completion)
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration, execute: {
+                completion()
+            })
         }
     }
     
@@ -147,5 +149,25 @@ final class AlertView: UIView {
             feedBack = .warning
         }
         UINotificationFeedbackGenerator().notificationOccurred(feedBack)
+    }
+    
+    func setupUI() {
+        isUserInteractionEnabled = true
+        alpha = 0
+
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: .imageWidth),
+            imageView.heightAnchor.constraint(equalToConstant: .imageWidth)
+        ])
+
+        addSubview(alertStack)
+        alertStack.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            alertStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+            alertStack.centerXAnchor.constraint(equalTo: centerXAnchor),
+            alertStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
+            alertStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin)
+        ])
+        alertStack.addArrangedSubview(imageView)
     }
 }

@@ -68,7 +68,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     func tryToAuth(completion: @escaping (SDKError?) -> Void) {
         guard let request = sdkManager.authInfo else { return }
-        network.request(AuthTarget.getSessionId(apiKey: request.apiKey,
+        network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
                                                 merchantLogin: request.clientName,
                                                 orderId: request.orderId),
                         to: AuthModel.self) { [weak self] result in
@@ -90,6 +90,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             authManager.state = result.state
             authСompletion?(nil)
         case .failure(let error):
+            if BuildSettings.needStubs {
+                // DEBUG
+                authManager.authCode = ""
+                authManager.state = ""
+            }
             authСompletion?(error)
         }
         // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
@@ -140,7 +145,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func authURL(link: String) -> URL? {
         guard let url = selectedBank?.link else { return nil }
-        return URL(string: url + link)
+        let tLink = "sberbankid?client_id=9f80261c-3455-4942-be48-cd1b2a2d7ba5&state=R2V9T2lOA16&scope=openid+name+birthdate+priority_doc+mobile&code_challenge_method=S256&code_challenge=lsme-Q-_tdwJmBr-02e0_GRqYCakqBEpH1VMKyc6_7Y&redirect_uri=sberPayExample.app://sberidauth&nonce=n-0S6_WzA2Mj" // swiftlint:disable:this line_length
+        return URL(string: url + tLink)
     }
     
     // MARK: - Вспомогательные методы

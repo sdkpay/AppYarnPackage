@@ -16,7 +16,7 @@ private extension CGFloat {
 
 final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private enum Params: Int, CaseIterable {
-        case apiKey, cost, lang, mode
+        case apiKey, cost, orderId, lang, mode
     }
     
     private var cellsData = [(type: Params, title: String, value: Any)]()
@@ -70,6 +70,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         cellsData = [
             (.apiKey, "ApiKey:", key),
             (.cost, "Cost:", "2000"),
+            (.orderId, "OdredId:", "9580e34a-54fe-4380-b9c4-70c65cd06b23"),
             (.lang, "Lang:", false),
             (.mode, "Pay mode:", false)
         ]
@@ -179,6 +180,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private func showCart() {
         guard let cost = Int(cellsData.first(where: { $0.type == .cost })?.value as? String ?? "0"),
               let apiKey = cellsData.first(where: { $0.type == .apiKey })?.value as? String,
+              let orderId = cellsData.first(where: { $0.type == .orderId })?.value as? String,
               let objSelected = cellsData.first(where: { $0.type == .lang })?.value as? Bool,
               let autoMode = cellsData.first(where: { $0.type == .mode })?.value as? Bool else {
             return
@@ -189,6 +191,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         } else {
             vc = CartVC(totalCost: cost,
                         apiKey: apiKey,
+                        orderId: orderId,
                         autoMode: autoMode)
         }
         navigationController?.pushViewController(vc, animated: true)

@@ -18,6 +18,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private let totalCost: Int
     private let apiKey: String
     private let autoMode: Bool
+    private let orderId: String
     
     private lazy var tableView: UITableView = {
         let view = UITableView()
@@ -62,9 +63,10 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         setupUI()
     }
     
-    init(totalCost: Int, apiKey: String, autoMode: Bool) {
+    init(totalCost: Int, apiKey: String, orderId: String, autoMode: Bool) {
         self.totalCost = totalCost
         self.apiKey = apiKey
+        self.orderId = orderId
         self.autoMode = autoMode
         super.init(nibName: nil, bundle: nil)
     }
@@ -151,7 +153,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             clientName: "Test shop",
                                             amount: totalCost,
                                             currency: "RUB",
-                                            orderNumber: "21312",
+                                            orderNumber: orderId,
                                             recurrentEnabled: true,
                                             recurrentFrequency: 1,
                                             redirectUri: "sberPayExample.app://sberidauth")
@@ -173,7 +175,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                            clientName: "Test shop",
                                            amount: totalCost,
                                            currency: "RUB",
-                                           orderId: "213231",
+                                           orderId: orderId,
                                            redirectUri: "sberPayExample.app://sberidauth")
         SBPay.payWithOrderId(paymentRequest: request) { error in
             if let error = error {

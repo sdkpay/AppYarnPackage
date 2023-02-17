@@ -15,17 +15,15 @@ final class AuthManagerAssembly: Assembly {
 }
 
 protocol AuthManager {
-    var sessionId: String? { get set }
+    var apiKey: String? { get set }
+    var sessionId: Int? { get set }
     var authCode: String? { get set }
     var state: String? { get set }
-    var cookie: String? { get set }
-    var pod: String? { get set }
 }
 
 final class DefaultAuthManager: AuthManager {
-    var sessionId: String?
+    var sessionId: Int?
     var authCode: String?
     var state: String?
-    var cookie: String?
-    var pod: String?
+    var apiKey: String?
 }

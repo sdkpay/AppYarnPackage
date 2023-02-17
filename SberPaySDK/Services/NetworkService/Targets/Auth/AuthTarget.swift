@@ -8,7 +8,7 @@
 import Foundation
 
 enum AuthTarget {
-    case getSessionId(apiKey: String, merchantLogin: String?, orderId: String?)
+    case getSessionId(redirectUri: String, merchantLogin: String?, orderId: String?)
 }
 
 extension AuthTarget: TargetType {
@@ -28,9 +28,9 @@ extension AuthTarget: TargetType {
     
     var task: HTTPTask {
         switch self {
-        case let .getSessionId(apiKey: apiKey, merchantLogin: merchantLogin, orderId: orderId):
+        case let .getSessionId(redirectUri: redirectUri, merchantLogin: merchantLogin, orderId: orderId):
             var params = [
-                "apiKey": apiKey
+                "redirectUri": redirectUri
             ]
             if let merchantLogin = merchantLogin {
                 params["merchantLogin"] = merchantLogin

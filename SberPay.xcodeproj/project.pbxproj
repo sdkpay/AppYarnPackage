@@ -113,10 +113,14 @@
 		44A3126129813ABB0099EB76 /* AuthRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A3126029813ABB0099EB76 /* AuthRouter.swift */; };
 		44A3126329813D110099EB76 /* PaymentRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A3126229813D110099EB76 /* PaymentRouter.swift */; };
 		44A31268298156C30099EB76 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A31267298156C30099EB76 /* String+Extensions.swift */; };
-		44A438E3298FF5A100CA04FC /* BizoneCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7585A29751A70005D2EA4 /* BizoneCore.xcframework */; };
-		44A438E4298FF5A100CA04FC /* BizoneCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7585A29751A70005D2EA4 /* BizoneCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44A438F429900EEE00CA04FC /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 44A438F329900EEE00CA04FC /* Dynatrace-Static */; };
 		44A70AEA299A4F37009A0F34 /* ImageDownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A70AE9299A4F37009A0F34 /* ImageDownloadService.swift */; };
+		44AC79C0299E32B40043FA4E /* BizoneCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */; };
+		44AC79C1299E32B40043FA4E /* BizoneCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		44AC79C4299E32B90043FA4E /* Fingerprint.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */; };
+		44AC79C5299E32B90043FA4E /* Fingerprint.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		44AC79C8299E32ED0043FA4E /* FingerprintWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AC79C7299E32ED0043FA4E /* FingerprintWrapper.h */; };
+		44AC79CA299E32F30043FA4E /* libMobileSDKLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C9299E32F30043FA4E /* libMobileSDKLib.a */; };
 		44B821FD2923810C00C06C51 /* TransparentWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B821FC2923810C00C06C51 /* TransparentWindow.swift */; };
 		44B822022923897D00C06C51 /* SBPayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B822012923897D00C06C51 /* SBPayService.swift */; };
 		44B8220A2923D79900C06C51 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B822092923D79900C06C51 /* RootVC.swift */; };
@@ -129,10 +133,6 @@
 		44C651102934E37F008F1C29 /* SBPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510F2934E37F008F1C29 /* SBPError.swift */; };
 		44C651122934E393008F1C29 /* SBPaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651112934E393008F1C29 /* SBPaymentRequest.swift */; };
 		44D5361B2926198400B99463 /* UIViewController+Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D5361A2926198400B99463 /* UIViewController+Container.swift */; };
-		44D7584629751819005D2EA4 /* FingerprintWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 44D7584429751819005D2EA4 /* FingerprintWrapper.h */; };
-		44D758572975191A005D2EA4 /* Fingerprint.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D758562975191A005D2EA4 /* Fingerprint.xcframework */; };
-		44D758582975191A005D2EA4 /* Fingerprint.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44D758562975191A005D2EA4 /* Fingerprint.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		44D7585929751A4C005D2EA4 /* libMobileSDKLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44D7584529751819005D2EA4 /* libMobileSDKLib.a */; };
 		44D7585F29751C9A005D2EA4 /* PersonalMetricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D7585E29751C9A005D2EA4 /* PersonalMetricsService.swift */; };
 		44D898D52936487900550FC6 /* String+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D898D42936487900550FC6 /* String+Random.swift */; };
 		44D898D82937449B00550FC6 /* SDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D898D72937449B00550FC6 /* SDKManager.swift */; };
@@ -178,14 +178,14 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		44D758522975187B005D2EA4 /* Embed Frameworks */ = {
+		44AC79C2299E32B40043FA4E /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				44D758582975191A005D2EA4 /* Fingerprint.xcframework in Embed Frameworks */,
-				44A438E4298FF5A100CA04FC /* BizoneCore.xcframework in Embed Frameworks */,
+				44AC79C5299E32B90043FA4E /* Fingerprint.xcframework in Embed Frameworks */,
+				44AC79C1299E32B40043FA4E /* BizoneCore.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -290,6 +290,10 @@
 		44A3126229813D110099EB76 /* PaymentRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRouter.swift; sourceTree = "<group>"; };
 		44A31267298156C30099EB76 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		44A70AE9299A4F37009A0F34 /* ImageDownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloadService.swift; sourceTree = "<group>"; };
+		44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = BizoneCore.xcframework; sourceTree = "<group>"; };
+		44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Fingerprint.xcframework; sourceTree = "<group>"; };
+		44AC79C7299E32ED0043FA4E /* FingerprintWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FingerprintWrapper.h; sourceTree = "<group>"; };
+		44AC79C9299E32F30043FA4E /* libMobileSDKLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMobileSDKLib.a; sourceTree = "<group>"; };
 		44B821FC2923810C00C06C51 /* TransparentWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentWindow.swift; sourceTree = "<group>"; };
 		44B822012923897D00C06C51 /* SBPayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayService.swift; sourceTree = "<group>"; };
 		44B822092923D79900C06C51 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootVC.swift; sourceTree = "<group>"; };
@@ -304,8 +308,6 @@
 		44C6510F2934E37F008F1C29 /* SBPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPError.swift; sourceTree = "<group>"; };
 		44C651112934E393008F1C29 /* SBPaymentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPaymentRequest.swift; sourceTree = "<group>"; };
 		44D5361A2926198400B99463 /* UIViewController+Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Container.swift"; sourceTree = "<group>"; };
-		44D7584429751819005D2EA4 /* FingerprintWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FingerprintWrapper.h; sourceTree = "<group>"; };
-		44D7584529751819005D2EA4 /* libMobileSDKLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMobileSDKLib.a; sourceTree = "<group>"; };
 		44D758562975191A005D2EA4 /* Fingerprint.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Fingerprint.xcframework; path = "../../Downloads/BZ.SDK.Fingerprint.v1.4.11 5/bin/XCFramework/Fingerprint.xcframework"; sourceTree = "<group>"; };
 		44D7585A29751A70005D2EA4 /* BizoneCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = BizoneCore.xcframework; path = "../../Downloads/BZ.SDK.Fingerprint.v1.4.11 5/bin/XCFramework/BizoneCore.xcframework"; sourceTree = "<group>"; };
 		44D7585E29751C9A005D2EA4 /* PersonalMetricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalMetricsService.swift; sourceTree = "<group>"; };
@@ -329,11 +331,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				44A438E3298FF5A100CA04FC /* BizoneCore.xcframework in Frameworks */,
-				44D7585929751A4C005D2EA4 /* libMobileSDKLib.a in Frameworks */,
+				44AC79C4299E32B90043FA4E /* Fingerprint.xcframework in Frameworks */,
+				44AC79C0299E32B40043FA4E /* BizoneCore.xcframework in Frameworks */,
+				44AC79CA299E32F30043FA4E /* libMobileSDKLib.a in Frameworks */,
 				44A438F429900EEE00CA04FC /* Dynatrace-Static in Frameworks */,
 				441B7904296FEE990093138D /* libresolv.9.tbd in Frameworks */,
-				44D758572975191A005D2EA4 /* Fingerprint.xcframework in Frameworks */,
 				441B791829700BEB0093138D /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -510,10 +512,10 @@
 		444A13AA291BA96100C9FBE0 /* SberPaySDK */ = {
 			isa = PBXGroup;
 			children = (
+				44AC79C9299E32F30043FA4E /* libMobileSDKLib.a */,
+				44AC79C6299E32ED0043FA4E /* libMobileSDKLib */,
 				44533D1F29852A1C0041FAA9 /* Managers */,
 				442A45D3298049A100EC3D73 /* BuildSettings */,
-				44D7584329751819005D2EA4 /* libMobileSDKLib */,
-				44D7584529751819005D2EA4 /* libMobileSDKLib.a */,
 				44B822012923897D00C06C51 /* SBPayService.swift */,
 				44676AC9296DD51E00D9DFAE /* AppSettings */,
 				44C6510A2934E2F5008F1C29 /* Public */,
@@ -920,7 +922,9 @@
 		44834C73292E366D000A32B2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */,
 				44D7585A29751A70005D2EA4 /* BizoneCore.xcframework */,
+				44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */,
 				44D758562975191A005D2EA4 /* Fingerprint.xcframework */,
 				441B7903296FEE990093138D /* libresolv.9.tbd */,
 			);
@@ -968,6 +972,14 @@
 				44A70AE9299A4F37009A0F34 /* ImageDownloadService.swift */,
 			);
 			path = ImageDownloadService;
+			sourceTree = "<group>";
+		};
+		44AC79C6299E32ED0043FA4E /* libMobileSDKLib */ = {
+			isa = PBXGroup;
+			children = (
+				44AC79C7299E32ED0043FA4E /* FingerprintWrapper.h */,
+			);
+			path = libMobileSDKLib;
 			sourceTree = "<group>";
 		};
 		44B821FB292380E100C06C51 /* TransparantWindow */ = {
@@ -1047,14 +1059,6 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		44D7584329751819005D2EA4 /* libMobileSDKLib */ = {
-			isa = PBXGroup;
-			children = (
-				44D7584429751819005D2EA4 /* FingerprintWrapper.h */,
-			);
-			path = libMobileSDKLib;
-			sourceTree = "<group>";
-		};
 		44D7585D29751C44005D2EA4 /* PersonalMetricsService */ = {
 			isa = PBXGroup;
 			children = (
@@ -1123,7 +1127,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				444A13AC291BA96100C9FBE0 /* SberPaySDK.h in Headers */,
-				44D7584629751819005D2EA4 /* FingerprintWrapper.h in Headers */,
+				44AC79C8299E32ED0043FA4E /* FingerprintWrapper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1139,7 +1143,7 @@
 				444A13A6291BA96100C9FBE0 /* Frameworks */,
 				444A13A7291BA96100C9FBE0 /* Resources */,
 				444A13F0291CEDC200C9FBE0 /* Swiftlint */,
-				44D758522975187B005D2EA4 /* Embed Frameworks */,
+				44AC79C2299E32B40043FA4E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1723,7 +1727,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = V2Q8G2U9C4;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1771,7 +1775,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (

@@ -27,12 +27,16 @@ private struct ButtonColorScheme {
 enum DefaultButtonAppearance {
     case full
     case cancel
+    case info
     
     fileprivate var selected: ButtonColorScheme {
         switch self {
         case .full:
             return ButtonColorScheme()
         case .cancel:
+            return ButtonColorScheme(backgroundColor: .clear,
+                                     titleColor: .notification)
+        case .info:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .notification)
         }
@@ -45,6 +49,9 @@ enum DefaultButtonAppearance {
         case .cancel:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .notification)
+        case .info:
+            return ButtonColorScheme(backgroundColor: .clear,
+                                     titleColor: .main)
         }
     }
     
@@ -53,6 +60,9 @@ enum DefaultButtonAppearance {
         case .full:
             return ButtonColorScheme()
         case .cancel:
+            return ButtonColorScheme(backgroundColor: .clear,
+                                     titleColor: .notification)
+        case .info:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .notification)
         }

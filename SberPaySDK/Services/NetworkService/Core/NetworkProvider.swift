@@ -104,7 +104,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     func cancel() {
         self.task?.cancel()
     }
-    
+
     private func buildRequest(from route: TargetType) throws -> URLRequest {
         var request = URLRequest(url: ServerURL.appendingPathComponent(route.path),
                                  cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
@@ -122,7 +122,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         }
         return request
     }
-    
+
     private func configureParameters(request: inout URLRequest,
                                      bodyParameters: NetworkParameters?,
                                      urlParameters: NetworkParameters?) throws {

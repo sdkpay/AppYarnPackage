@@ -16,6 +16,7 @@ public enum SDKError: Error {
     case unauthorizedClient
     case personalInfo
     case errorFromServer(text: String)
+    case noCards
     case cancelled
     
     // DEBUG

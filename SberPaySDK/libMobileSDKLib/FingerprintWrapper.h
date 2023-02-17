@@ -42,6 +42,8 @@ typedef enum CachingTime
 
 @property (nonatomic,assign) BOOL useAdvertiserID;
 
+@property (nonatomic,assign) BOOL useBluetoothMetrics;
+
 @property (nonatomic,assign) BOOL useLAContext;
 
 @property (nonatomic,strong) NSDictionary* patches;

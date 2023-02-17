@@ -29,7 +29,7 @@ typealias PayCompletion = (SBPError?) -> Void
 
 final class SDKManagerAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: SDKManager = DefaultSDKManager()
+        let service: SDKManager = DefaultSDKManager(authManager: container.resolve())
         container.register(service: service)
     }
 }
@@ -61,6 +61,7 @@ extension SDKManager {
 }
 
 final class DefaultSDKManager: SDKManager {
+    private var authManager: AuthManager
     private var paymentCompletion: PayCompletion?
     private var paymentTokenCompletion: PaymentTokenCompletion?
     private(set) var paymentTokenRequest: SBPaymentTokenRequest?
@@ -68,6 +69,10 @@ final class DefaultSDKManager: SDKManager {
     private(set) var authInfo: AuthInfo?
     private(set) var payStrategy: PayStrategy = .manual
     private(set) var newStart = true
+    
+    init(authManager: AuthManager) {
+        self.authManager = authManager
+    }
 
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion) {
@@ -88,6 +93,7 @@ final class DefaultSDKManager: SDKManager {
                             orderId: paymentTokenRequest.orderNumber,
                             clientId: paymentTokenRequest.clientId,
                             redirectUri: paymentTokenRequest.redirectUri)
+        authManager.apiKey = paymentTokenRequest.apiKey
         self.paymentTokenCompletion = completion
     }
     
@@ -108,6 +114,7 @@ final class DefaultSDKManager: SDKManager {
                             orderId: paymentRequest.orderId,
                             clientId: paymentRequest.clientId,
                             redirectUri: paymentRequest.redirectUri)
+        authManager.apiKey = paymentRequest.apiKey
         self.paymentCompletion = completion
     }
     

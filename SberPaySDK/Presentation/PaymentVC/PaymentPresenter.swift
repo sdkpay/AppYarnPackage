@@ -72,7 +72,6 @@ final class PaymentPresenter: PaymentPresenting {
     private func getUser() {
         view?.showLoading(animate: false)
         userService.getUser { [weak self] result in
-            self?.view?.hideLoading()
             switch result {
             case .success(let user):
                 self?.user = user
@@ -94,6 +93,7 @@ final class PaymentPresenter: PaymentPresenting {
         view?.configProfileView(with: user.userInfo)
 
         if let selectedCard = selectedCard {
+            view?.hideLoading()
             view?.configCardView(with: selectedCard.productName,
                                  cardInfo: selectedCard.cardNumber.card,
                                  cardIconURL: selectedCard.cardLogoUrl,
@@ -108,7 +108,14 @@ final class PaymentPresenter: PaymentPresenting {
                 })
             }
         } else {
-            view?.configWithNoCards()
+            view?.showAlert(with: .failure(text: .Alert.alertPayNoCardsTitle),
+                            animate: false,
+                            buttonTitle: .Common.returnTitle,
+                            completion: {
+                self.view?.dismiss(animated: true, completion: {
+                    self.manager.completionWithError(error: .noCards)
+                })
+            })
         }
     }
     
@@ -129,7 +136,7 @@ final class PaymentPresenter: PaymentPresenting {
               let paymentId = selectedCard?.paymentId,
               let authInfo = manager.authInfo
         else { return }
-        network.request(PaymentTarget.getPaymentToken(sessionId: sessionId,
+        network.request(PaymentTarget.getPaymentToken(sessionId: String(sessionId),
                                                       deviceInfo: deviceInfo,
                                                       paymentId: String(paymentId),
                                                       apiKey: authInfo.apiKey,

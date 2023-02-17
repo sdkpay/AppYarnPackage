@@ -115,7 +115,7 @@ extension ContentVC {
         self.loadingView?.show(animate: animate)
     }
     
-    func hideLoading(animationCompletion: Action? = nil, animate: Bool = true) {
+    func hideLoading(animate: Bool = true, animationCompletion: Action? = nil) {
         view.subviews.forEach({ $0.isHidden = false })
         if animate {
             UIView.animate(withDuration: .animationDuration,
@@ -138,9 +138,17 @@ extension ContentVC {
 
 // ContentVC + Alert
 extension ContentVC {
-    func showAlert(with alertState: AlertState, completion: @escaping Action) {
+    func showAlert(with alertState: AlertState,
+                   animate: Bool = true,
+                   buttonTitle: String? = nil,
+                   completion: @escaping Action) {
         let alertView = AlertView()
-        alertView.config(with: alertState)
+        view.subviews.forEach { view in
+                if view != stickImageView {
+                    view.isHidden = true
+                }
+        }
+        alertView.config(buttonTitle: buttonTitle, with: alertState)
         view.addSubview(alertView)
         alertView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -151,10 +159,11 @@ extension ContentVC {
         ])
         view.bringSubviewToFront(stickImageView)
         self.alertView = alertView
-        self.alertView?.show(with: completion)
+        self.alertView?.show(animate: animate, with: completion)
     }
     
     func hideAlert(animationCompletion: Action? = nil) {
+        view.subviews.forEach({ $0.isHidden = false })
         UIView.animate(withDuration: .animationDuration,
                        delay: 0) {
             self.alertView?.alpha = 0

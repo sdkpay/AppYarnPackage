@@ -85,7 +85,7 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
 
     override init() {
         super.init()
-      //  configDynatrace()
+        configDynatrace()
     }
     
     private func configDynatrace() {

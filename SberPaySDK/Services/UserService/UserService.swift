@@ -46,7 +46,7 @@ final class DefaultUserService: UserService {
         network.request(UserTarget.getListCards(redirectUri: authInfo.redirectUri,
                                                 apiKey: authInfo.apiKey,
                                                 authCode: authCode,
-                                                sessionId: sessionId,
+                                                sessionId: String(sessionId),
                                                 state: state,
                                                 merchantLogin: authInfo.clientName,
                                                 orderId: authInfo.orderId),
@@ -63,7 +63,7 @@ final class DefaultUserService: UserService {
     
     func checkUserSession(completion: @escaping (Result<ValidSessionModel, SDKError>) -> Void) {
         guard let sessionId = authManager.sessionId else { return }
-        network.request(UserTarget.checkSession(sessionId: sessionId),
+        network.request(UserTarget.checkSession(sessionId: String(sessionId)),
                         to: ValidSessionModel.self,
                         completion: completion)
     }

@@ -15,6 +15,8 @@ extension String {
         static let cancelTitle = String(stringLiteral: "cancel.title")
         /// Понятно
         static let okTitle = String(stringLiteral: "ok.title")
+        /// Вернуться к заказу
+        static let returnTitle = String(stringLiteral: "return.title")
     }
 
     enum Auth {
@@ -52,5 +54,7 @@ extension String {
         static let alertErrorMainTitle = String(stringLiteral: "alert.error.main.title")
         /// Успешно оплатили
         static let alertPaySuccessTitle = String(stringLiteral: "alert.pay.success.title")
+        /// Нет подходящих карт. Вернитесь к заказу\nи выберите другой способ оплаты.
+        static let alertPayNoCardsTitle = String(stringLiteral: "alert.pay.no.cards.title")
     }
 }
