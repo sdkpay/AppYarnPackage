@@ -30,9 +30,13 @@ extension ResponseDecoder {
         do {
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(type, from: data)
+            SBLogger.responseDecodedWithSuccess(for: type)
             return .success(decodedData)
+        } catch let error as DecodingError {
+            SBLogger.responseDecodedWithError(for: type, decodingError: error)
+            return .failure(.failDecode)
         } catch {
-            print(error)
+            print("error: ", error)
             return .failure(.failDecode)
         }
     }

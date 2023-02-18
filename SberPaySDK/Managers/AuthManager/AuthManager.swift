@@ -16,14 +16,14 @@ final class AuthManagerAssembly: Assembly {
 
 protocol AuthManager {
     var apiKey: String? { get set }
-    var sessionId: Int? { get set }
+    var sessionId: String? { get set }
     var authCode: String? { get set }
     var state: String? { get set }
 }
 
 final class DefaultAuthManager: AuthManager {
-    var sessionId: Int?
+    var apiKey: String?
+    var sessionId: String?
     var authCode: String?
     var state: String?
-    var apiKey: String?
 }

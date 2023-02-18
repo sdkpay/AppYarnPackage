@@ -10,7 +10,7 @@ import Foundation
 struct AuthModel: Codable {
     let deeplink: String
     let state: String
-    let sessionId: Int
+    let sessionId: String
     let clientId: String
     let nonce: String
 }

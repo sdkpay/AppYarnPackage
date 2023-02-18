@@ -2,14 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>DTXAutoStart</key>
-	<string>false</string>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<true/>
-	<key>UIFileSharingEnabled</key>
-	<true/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Наш текст</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -23,6 +15,8 @@
 			</array>
 		</dict>
 	</array>
+	<key>DTXAutoStart</key>
+	<string>false</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>sbolidexternallogin</string>
@@ -35,5 +29,7 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>

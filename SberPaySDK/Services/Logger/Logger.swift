@@ -65,23 +65,56 @@ enum SBLogger: ResponseDecoder {
         }
     }
     
-    static func logRequestFailed(_ target: TargetType,
-                                 response: URLResponse?,
-                                 data: Data?) {
-        let url = ServerURL.appendingPathComponent(target.path)
-        var code = "None"
-        if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-            code = String(statusCode)
-        }
+    static func responseDecodedWithSuccess<T>(for type: T.Type) where T: Codable {
         log(
             """
-            ❗️Request failed with code \(code)
-              path: \(url)
-              headers: \(headers(target.headers))
-              httpMethod: \(target.httpMethod)
-              response: \(stringToLog(from: data))
+            🟢 Response decoded to type \(type)
             """
         )
+    }
+    
+    static func responseDecodedWithError<T>(for type: T.Type, decodingError: DecodingError) where T: Codable {
+        switch decodingError {
+        case let .typeMismatch(t, context):
+            log(
+                """
+                🔴 Responce failed to decode to type \(type)
+                   error: Type '\(t)' mismatch: \(context.debugDescription)
+                   codingPath: \(context.codingPath)
+                """
+            )
+        case let .valueNotFound(value, context):
+            log(
+                """
+                🔴 Responce failed to decode to type \(type)
+                   error: Type '\(value)' mismatch: \(context.debugDescription)
+                   codingPath: \(context.codingPath)
+                """
+            )
+        case let .keyNotFound(codingKey, context):
+            log(
+                """
+                🔴 Responce failed to decode to type \(type)
+                   error: Key '\(codingKey)' not found: \(context.debugDescription)
+                   codingPath: \(context.codingPath)
+                """
+            )
+        case .dataCorrupted(let context):
+            log(
+                """
+                🔴 Responce failed to decode to type \(type)
+                   error: dataCorrupted
+                   context: \(context)
+                """
+            )
+        @unknown default:
+            log(
+                """
+                🔴 Responce failed to decode to type \(type)
+                   error: uncnown decode error
+                """
+            )
+        }
     }
     
     static func logRequestToSbolStarted(_ url: URL) {
@@ -145,8 +178,8 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
-    static func stringToLog(from data: Data?) -> String {
-        if let data = data, let decoded = String(data: data, encoding: .utf8), !decoded.isEmpty {
+    static func stringToLog(from data: Data?) -> NSString {
+        if let data = data, let decoded = data.prettyPrintedJSONString {
             return decoded
         }
         return "None"
@@ -154,7 +187,7 @@ enum SBLogger: ResponseDecoder {
     
     private static func headers(_ headers: [String: String]?) -> String {
         if let headers = headers, !headers.isEmpty {
-            return headers.description
+            return headers.json
         } else {
             return "None"
         }

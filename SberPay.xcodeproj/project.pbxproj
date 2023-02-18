@@ -121,6 +121,8 @@
 		44AC79C5299E32B90043FA4E /* Fingerprint.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44AC79C8299E32ED0043FA4E /* FingerprintWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AC79C7299E32ED0043FA4E /* FingerprintWrapper.h */; };
 		44AC79CA299E32F30043FA4E /* libMobileSDKLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C9299E32F30043FA4E /* libMobileSDKLib.a */; };
+		44AC79CC299FE9A50043FA4E /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AC79CB299FE9A50043FA4E /* Data+Extension.swift */; };
+		44AC79CE299FEB5B0043FA4E /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AC79CD299FEB5B0043FA4E /* Collection+Extension.swift */; };
 		44B821FD2923810C00C06C51 /* TransparentWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B821FC2923810C00C06C51 /* TransparentWindow.swift */; };
 		44B822022923897D00C06C51 /* SBPayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B822012923897D00C06C51 /* SBPayService.swift */; };
 		44B8220A2923D79900C06C51 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B822092923D79900C06C51 /* RootVC.swift */; };
@@ -294,6 +296,8 @@
 		44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Fingerprint.xcframework; sourceTree = "<group>"; };
 		44AC79C7299E32ED0043FA4E /* FingerprintWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FingerprintWrapper.h; sourceTree = "<group>"; };
 		44AC79C9299E32F30043FA4E /* libMobileSDKLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMobileSDKLib.a; sourceTree = "<group>"; };
+		44AC79CB299FE9A50043FA4E /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
+		44AC79CD299FEB5B0043FA4E /* Collection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extension.swift"; sourceTree = "<group>"; };
 		44B821FC2923810C00C06C51 /* TransparentWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentWindow.swift; sourceTree = "<group>"; };
 		44B822012923897D00C06C51 /* SBPayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayService.swift; sourceTree = "<group>"; };
 		44B822092923D79900C06C51 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootVC.swift; sourceTree = "<group>"; };
@@ -1055,6 +1059,8 @@
 				44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */,
 				44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */,
 				44A31267298156C30099EB76 /* String+Extensions.swift */,
+				44AC79CB299FE9A50043FA4E /* Data+Extension.swift */,
+				44AC79CD299FEB5B0043FA4E /* Collection+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1341,6 +1347,7 @@
 				44C6510E2934E33E008F1C29 /* SBPaymentTokenRequest.swift in Sources */,
 				44A0B5BD293DF282007AB3FD /* CardsPresenter.swift in Sources */,
 				445CB0A2292E119800F50047 /* PaymentAssembly.swift in Sources */,
+				44AC79CE299FEB5B0043FA4E /* Collection+Extension.swift in Sources */,
 				445CB096292CC1A800F50047 /* ContentVC.swift in Sources */,
 				44D8ABD2295EC4D20080FF1D /* Logger.swift in Sources */,
 				44834C72292E32E8000A32B2 /* AuthService.swift in Sources */,
@@ -1350,6 +1357,7 @@
 				44F9FD4C295AFAB800FE4B9F /* CoverTransitionDriver.swift in Sources */,
 				442A45DD29804E2E00EC3D73 /* UserTarget.swift in Sources */,
 				44676ACB296DD52A00D9DFAE /* AppSettings.swift in Sources */,
+				44AC79CC299FE9A50043FA4E /* Data+Extension.swift in Sources */,
 				44A3125C298135F10099EB76 /* RootRouter.swift in Sources */,
 				445CB08E292CBA4F00F50047 /* DefaultButton.swift in Sources */,
 				44A0B5B9293DF25E007AB3FD /* CardsAssembly.swift in Sources */,
@@ -1735,7 +1743,8 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SberPayExample/SupportingFiles/Info.plist;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow to get location to prevent fraud? ";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Наш текст";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "pp would like to access IDFA for tracking purpose";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
@@ -1784,7 +1793,8 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SberPayExample/SupportingFiles/Info.plist;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow to get location to prevent fraud? ";
+				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Наш текст";
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "pp would like to access IDFA for tracking purpose";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
