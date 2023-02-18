@@ -120,7 +120,8 @@ final class AlertView: UIView {
         if needButton {
             button.addAction(completion)
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration,
+                                          execute: {
                 completion()
             })
         }
