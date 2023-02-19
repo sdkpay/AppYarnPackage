@@ -8,10 +8,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>sberPayExample.app</string>
+			<string>sberPayExampleapp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>sberPayExample.app</string>
+				<string>sberPayExampleapp</string>
 			</array>
 		</dict>
 	</array>

@@ -124,6 +124,7 @@ final class AuthPresenter: AuthPresenting {
         // Если пользователь не смог получить обратный редирект
         // от банковского приложения и перешел самостоятельно
         view?.hideLoading()
+        SBLogger.log(.userReturned)
         showBanksStack()
     }
     

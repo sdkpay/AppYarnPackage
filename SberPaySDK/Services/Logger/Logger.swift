@@ -11,6 +11,7 @@ extension String {
     static let start = "🚀 SDK started"
     static let close = "❌ SDK closed"
     static let biZone = "📡 BiZone fingerprint:\n"
+    static let userReturned = "🔙 User returned by himself"
 }
 
 enum SBLogger: ResponseDecoder {
@@ -78,31 +79,30 @@ enum SBLogger: ResponseDecoder {
         case let .typeMismatch(t, context):
             log(
                 """
-                🔴 Response failed to decode to type \(type)
+                🔴 The response could not be decoded for \(type)
                    error: Type '\(t)' mismatch: \(context.debugDescription)
-                   codingPath: \(context.codingPath)
+                   codingPath: \(context.codingPath.first?.stringValue ?? "None")
                 """
             )
         case let .valueNotFound(value, context):
             log(
                 """
-                🔴 Response failed to decode to type \(type)
+                🔴 The response could not be decoded for \(type)
                    error: Type '\(value)' mismatch: \(context.debugDescription)
-                   codingPath: \(context.codingPath)
+                   codingPath: \(context.codingPath.first?.stringValue ?? "None")
                 """
             )
-        case let .keyNotFound(codingKey, context):
+        case let .keyNotFound(codingKey, _):
             log(
                 """
-                🔴 Response failed to decode to type \(type)
-                   error: Key '\(codingKey)' not found: \(context.debugDescription)
-                   codingPath: \(context.codingPath)
+                🔴 The response could not be decoded for \(type)
+                   error: Key '\(codingKey.stringValue)' not found
                 """
             )
         case .dataCorrupted(let context):
             log(
                 """
-                🔴 Response failed to decode to type \(type)
+                🔴 The response could not be decoded for \(type)
                    error: DataCorrupted
                    context: \(context)
                 """
@@ -110,7 +110,7 @@ enum SBLogger: ResponseDecoder {
         @unknown default:
             log(
                 """
-                🔴 Response failed to decode to type \(type)
+                🔴 The response could not be decoded for \(type)
                    error: unknown decode error
                 """
             )
@@ -118,9 +118,23 @@ enum SBLogger: ResponseDecoder {
     }
     
     static func logRequestToSbolStarted(_ url: URL) {
+        var parameters = [String: String]()
+        guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true),
+              let queryItems = urlComponents.queryItems
+        else {
+            parameters = ["None": "None"]
+            return
+        }
+        queryItems.forEach {
+            if let value = $0.value {
+                parameters[$0.name] = value
+            }
+        }
         log(
             """
             ⏱ Request to Sbol in progress
+               parameters:
+            \(parameters.json)
                url: \(url.absoluteString)
             """
         )
@@ -130,7 +144,7 @@ enum SBLogger: ResponseDecoder {
         log(
            """
             ✅ Response from Sbol with success
-               parameters:
+               response:
             \(parameters)
             """
        )
@@ -206,7 +220,7 @@ struct Log: TextOutputStream {
         let log = path.appendingPathComponent("log.txt")
         if let handle = try? FileHandle(forWritingTo: log) {
             handle.seekToEndOfFile()
-            handle.write(string.data(using: .utf8)!)
+            handle.write(string.data(using: .utf8) ?? Data())
             handle.closeFile()
         } else {
             try? string.data(using: .utf8)?.write(to: log)

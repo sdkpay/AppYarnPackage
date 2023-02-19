@@ -51,12 +51,6 @@ final class CardInfoView: ContentView {
         view.addArrangedSubview(subtitleLabel)
         return view
     }()
-    
-    private lazy var noCardImageView: UIImageView = {
-        let view = UIImageView()
-        view.image = .Common.warning
-        return view
-    }()
 
     func config(with title: String,
                 cardInfo: String,
@@ -75,32 +69,7 @@ final class CardInfoView: ContentView {
 
         setupUI()
     }
-    
-    func configWithNoCards() {
-        titleLabel.text = .Payment.noCardsTitle
-        subtitleLabel.text = .Payment.noCardsSubtitle
-        setupUIWithOutCards()
-    }
-    
-    private func setupUIWithOutCards() {
-        addSubview(noCardImageView)
-        noCardImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            noCardImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .leadingMargin),
-            noCardImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            noCardImageView.widthAnchor.constraint(equalToConstant: .noCardHeight),
-            noCardImageView.heightAnchor.constraint(equalToConstant: .noCardHeight)
-        ])
-        
-        addSubview(cardInfoStack)
-        cardInfoStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            cardInfoStack.leadingAnchor.constraint(equalTo: noCardImageView.trailingAnchor, constant: .margin),
-            cardInfoStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin),
-            cardInfoStack.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
-    }
-    
+
     private func setupUI() {
         addSubview(cardIconView)
         cardIconView.translatesAutoresizingMaskIntoConstraints = false

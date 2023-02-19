@@ -22,7 +22,6 @@ protocol IPaymentVC {
                         cardIconURL: String?,
                         needArrow: Bool,
                         action: @escaping Action)
-    func configWithNoCards()
 }
 
 final class PaymentVC: ContentVC, IPaymentVC {
@@ -108,11 +107,6 @@ final class PaymentVC: ContentVC, IPaymentVC {
                             action: action)
     }
     
-    func configWithNoCards() {
-        cardInfoView.configWithNoCards()
-        payButton.isEnabled = false
-    }
-    
     private func setupUI() {
         view.addSubview(cancelButton)
         view.addSubview(payButton)
@@ -136,6 +130,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
             payButton.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -.buttonsMargin)
         ])
         
+        cardInfoView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             cardInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
             cardInfoView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),

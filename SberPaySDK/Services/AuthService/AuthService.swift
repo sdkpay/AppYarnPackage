@@ -145,7 +145,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func authURL(link: String) -> URL? {
         guard let url = selectedBank?.link else { return nil }
-        let tLink = "sberbankid?client_id=9f80261c-3455-4942-be48-cd1b2a2d7ba5&nonce=n-0S6_WzA3Mj&state=R2V9T2lOA16&scope=openid+name+birthdate+priority_doc+mobile&code_challenge_method=S256&code_challenge=lsme-Q-_tdwJmBr-02e0_GRqYCakqBEpH1VMKyc6_7Y&redirect_uri=sberPayExampleapp://sberidauth" // swiftlint:disable:this line_length
+        let tLink = "sberbankid?client_id=9f80261c-3455-4942-be48-cd1b2a2d7ba5&state=R2V4T2lOA16&scope=openid+name+birthdate+priority_doc+mobile&code_challenge_method=S256&code_challenge=lsme-Q-_tdwJmBr-02e0_GRqYCakqBEpH1VMKyc6_7Y&redirect_uri=sberPayExampleapp://sberidauth" // swiftlint:disable:this line_length
         return URL(string: url + tLink)
     }
     

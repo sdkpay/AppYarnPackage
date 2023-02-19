@@ -89,7 +89,6 @@
 		4471722D291941EA005EDF32 /* StartupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471722C291941EA005EDF32 /* StartupService.swift */; };
 		447172302919466E005EDF32 /* CartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471722F2919466E005EDF32 /* CartCell.swift */; };
 		44717236291A458F005EDF32 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44717235291A458F005EDF32 /* RootVC.swift */; };
-		4473D6C6294063E800802446 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6C5294063E800802446 /* ContentView.swift */; };
 		4473D6C92940653300802446 /* BankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6C82940653300802446 /* BankView.swift */; };
 		4473D6CB294083DA00802446 /* BankApps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6CA294083DA00802446 /* BankApps.swift */; };
 		4473D6CD29409A8D00802446 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6CC29409A8D00802446 /* UserDefaults+Extension.swift */; };
@@ -97,6 +96,7 @@
 		44834C6A292E16EA000A32B2 /* AuthAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44834C69292E16EA000A32B2 /* AuthAssembly.swift */; };
 		44834C72292E32E8000A32B2 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44834C71292E32E8000A32B2 /* AuthService.swift */; };
 		44890676297A7D0B002CDBAD /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44890675297A7D0B002CDBAD /* ProfileView.swift */; };
+		4496792529A2375F00EC3439 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4496792429A2375F00EC3439 /* ContentView.swift */; };
 		449D51382971481A00497E82 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449D51372971481A00497E82 /* Localization.swift */; };
 		44A0B5B0293DC3F7007AB3FD /* SberPaySDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A0B5AF293DC3F7007AB3FD /* SberPaySDKTests.swift */; };
 		44A0B5B1293DC3F7007AB3FD /* SberPaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SberPaySDK.framework */; platformFilter = ios; };
@@ -266,7 +266,6 @@
 		4471722C291941EA005EDF32 /* StartupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupService.swift; sourceTree = "<group>"; };
 		4471722F2919466E005EDF32 /* CartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCell.swift; sourceTree = "<group>"; };
 		44717235291A458F005EDF32 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootVC.swift; sourceTree = "<group>"; };
-		4473D6C5294063E800802446 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4473D6C82940653300802446 /* BankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankView.swift; sourceTree = "<group>"; };
 		4473D6CA294083DA00802446 /* BankApps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankApps.swift; sourceTree = "<group>"; };
 		4473D6CC29409A8D00802446 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
@@ -275,6 +274,7 @@
 		44834C71292E32E8000A32B2 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		44834C83292E4285000A32B2 /* info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = info.plist; path = SberPaySDK/SupportingFiles/info.plist; sourceTree = SOURCE_ROOT; };
 		44890675297A7D0B002CDBAD /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		4496792429A2375F00EC3439 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		449D51372971481A00497E82 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		44A0B5AD293DC3F7007AB3FD /* SberPaySDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SberPaySDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		44A0B5AF293DC3F7007AB3FD /* SberPaySDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SberPaySDKTests.swift; sourceTree = "<group>"; };
@@ -582,11 +582,11 @@
 		444A13B8291BAF6400C9FBE0 /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				4496792329A2375400EC3439 /* ContentView */,
 				445CB094292CC19100F50047 /* ContentVC */,
 				44F9FD4E295AFAD700FE4B9F /* ContentNC */,
 				440DB3A8295C1C6200B84E05 /* ContentTableView */,
 				4473D6C7294064F100802446 /* BankView */,
-				4473D6C4294063C700802446 /* ContentView */,
 				44C651062930E112008F1C29 /* LoadingView */,
 				44C651072930E70F008F1C29 /* AlertView */,
 				445CB097292CDBFA00F50047 /* CardInfoView */,
@@ -890,14 +890,6 @@
 			path = RootVC;
 			sourceTree = "<group>";
 		};
-		4473D6C4294063C700802446 /* ContentView */ = {
-			isa = PBXGroup;
-			children = (
-				4473D6C5294063E800802446 /* ContentView.swift */,
-			);
-			path = ContentView;
-			sourceTree = "<group>";
-		};
 		4473D6C7294064F100802446 /* BankView */ = {
 			isa = PBXGroup;
 			children = (
@@ -941,6 +933,14 @@
 				44890675297A7D0B002CDBAD /* ProfileView.swift */,
 			);
 			path = ProfileView;
+			sourceTree = "<group>";
+		};
+		4496792329A2375400EC3439 /* ContentView */ = {
+			isa = PBXGroup;
+			children = (
+				4496792429A2375F00EC3439 /* ContentView.swift */,
+			);
+			path = ContentView;
 			sourceTree = "<group>";
 		};
 		44A0B5AE293DC3F7007AB3FD /* SberPaySDKTests */ = {
@@ -1362,6 +1362,7 @@
 				445CB08E292CBA4F00F50047 /* DefaultButton.swift in Sources */,
 				44A0B5B9293DF25E007AB3FD /* CardsAssembly.swift in Sources */,
 				44C651122934E393008F1C29 /* SBPaymentRequest.swift in Sources */,
+				4496792529A2375F00EC3439 /* ContentView.swift in Sources */,
 				440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */,
 				4473D6C92940653300802446 /* BankView.swift in Sources */,
 				4464DF9D291D8E4C000C9B45 /* SBPay.swift in Sources */,
@@ -1382,7 +1383,6 @@
 				445CB075292BC3EF00F50047 /* UIImage+Bundle.swift in Sources */,
 				44F9FD4B295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift in Sources */,
 				445D018B2994F375006458AD /* BaseRequestManager.swift in Sources */,
-				4473D6C6294063E800802446 /* ContentView.swift in Sources */,
 				4416E424291E21C300284972 /* SDKError.swift in Sources */,
 				44A31268298156C30099EB76 /* String+Extensions.swift in Sources */,
 				44A3125E298137E90099EB76 /* RootPresenter.swift in Sources */,
