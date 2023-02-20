@@ -156,7 +156,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             orderNumber: orderId,
                                             recurrentEnabled: true,
                                             recurrentFrequency: 1,
-                                            redirectUri: "sberPayExample.app://sberidauth")
+                                            redirectUri: "sberPayExampleapp://sberidauth")
         
         SBPay.getPaymentToken(with: request) { response in
             if let error = response.error {
@@ -174,9 +174,9 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let request = SBFullPaymentRequest(apiKey: apiKey,
                                            clientName: "Test shop",
                                            amount: totalCost,
-                                           currency: "RUB",
+                                           currency: 643,
                                            orderId: orderId,
-                                           redirectUri: "sberPayExample.app://sberidauth")
+                                           redirectUri: "sberPayExampleapp://sberidauth")
         SBPay.payWithOrderId(paymentRequest: request) { error in
             if let error = error {
                 // Обработка ошибки

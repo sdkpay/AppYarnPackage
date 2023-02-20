@@ -52,7 +52,7 @@
                                                                        recurrentEnabled:YES
                                                                        recurrentExipiry:@""
                                                                      recurrentFrequency:1
-                                                                            redirectUri:@"sberPayExample.app"];
+                                                                            redirectUri:@"sberPayExampleapp"];
     
     [SBPay getPaymentTokenWith: requestModel  completion:^(SBPaymentTokenResponse * _Nonnull response) {
         if (response.error) {
@@ -85,12 +85,12 @@
                                      clientId: @"123123"
                                      clientName: @"Test shop"
                                      amount: 123123
-                                     currency: @"RUB"
+                                     currency: 643
                                      mobilePhone: nil
                                      orderId: @"12312312"
                                      orderDescription:nil
                                      language:nil
-                                     redirectUri: @"sberPayExample.app://sberidauth"
+                                     redirectUri: @"sberPayExampleapp://sberidauth"
     ];
     [SBPay payWithOrderIdWithPaymentRequest:request completion:^(SBPError * _Nullable error) {
         if (error) {
