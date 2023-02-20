@@ -12,4 +12,5 @@ final class BuildSettings {
     private init() {}
     
     var needStubs = false
+    var ssl = true
 }

@@ -16,7 +16,7 @@ private extension CGFloat {
 
 final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private enum Params: Int, CaseIterable {
-        case apiKey, cost, orderId, lang, mode, mocks
+        case apiKey, cost, orderId, lang, mode, mocks, ssl
     }
     
     private var cellsData = [(type: Params, title: String, value: Any)]()
@@ -73,13 +73,14 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             (.orderId, "OdredId:", "9580e34a-54fe-4380-b9c4-70c65cd06b23"),
             (.lang, "Lang:", false),
             (.mode, "Pay mode:", false),
-            (.mocks, "Mocks:", false)
+            (.mocks, "Mocks:", false),
+            (.ssl, "SSL", true)
         ]
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellData = cellsData[indexPath.row]
-        if cellData.type == .lang || cellData.type == .mode || cellData.type == .mocks {
+        if cellData.type == .lang || cellData.type == .mode || cellData.type == .mocks || cellData.type == .ssl {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SegmentedControlCell.reuseID) as? SegmentedControlCell else {
                 return UITableViewCell()
             }
@@ -91,7 +92,11 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 items = ["Manual", "Auto"]
             } else if cellData.type == .mocks {
                 items = ["Off", "On"]
+            } else if cellData.type == .ssl {
+                items = ["Off", "On"]
+                selected = 1
             }
+            
             cell.config(title: cellData.title,
                         items: items,
                         selected: selected) { [weak self] value in
@@ -189,7 +194,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
               let orderId = cellsData.first(where: { $0.type == .orderId })?.value as? String,
               let objSelected = cellsData.first(where: { $0.type == .lang })?.value as? Bool,
               let autoMode = cellsData.first(where: { $0.type == .mode })?.value as? Bool,
-              let mocksOn = cellsData.first(where: { $0.type == .mocks })?.value as? Bool else {
+              let mocksOn = cellsData.first(where: { $0.type == .mocks })?.value as? Bool,
+              let sslOn = cellsData.first(where: { $0.type == .ssl })?.value as? Bool else {
             return
         }
         let vc: UIViewController
@@ -200,7 +206,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                         apiKey: apiKey,
                         orderId: orderId,
                         autoMode: autoMode,
-                        mocksOn: mocksOn)
+                        mocksOn: mocksOn,
+                        sslOn: sslOn)
         }
         navigationController?.pushViewController(vc, animated: true)
     }

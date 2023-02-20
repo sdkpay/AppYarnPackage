@@ -171,6 +171,10 @@ extension DefaultNetworkProvider: URLSessionDelegate {
     func urlSession(_ session: URLSession,
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        if !BuildSettings.shared.ssl {
+            completionHandler(.cancelAuthenticationChallenge, nil)
+            return
+        }
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
             if let serverTrust = challenge.protectionSpace.serverTrust {
                 if let serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0) {

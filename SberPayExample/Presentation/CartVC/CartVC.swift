@@ -20,6 +20,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private let autoMode: Bool
     private let orderId: String
     private let mocksOn: Bool
+    private let sslOn: Bool
     
     private lazy var tableView: UITableView = {
         let view = UITableView()
@@ -64,14 +65,20 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         setupUI()
     }
     
-    init(totalCost: Int, apiKey: String, orderId: String, autoMode: Bool, mocksOn: Bool) {
+    init(totalCost: Int,
+         apiKey: String,
+         orderId: String,
+         autoMode: Bool,
+         mocksOn: Bool,
+         sslOn: Bool) {
         self.totalCost = totalCost
         self.apiKey = apiKey
         self.orderId = orderId
         self.autoMode = autoMode
         self.mocksOn = mocksOn
+        self.sslOn = sslOn
         super.init(nibName: nil, bundle: nil)
-        SBPay.setMocks(mocksOn)
+        SBPay.debugConfig(mocks: mocksOn, ssl: sslOn)
     }
     
     required init?(coder: NSCoder) {
