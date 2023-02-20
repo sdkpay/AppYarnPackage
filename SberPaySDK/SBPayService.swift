@@ -67,7 +67,7 @@ final class DefaultSBPayService: SBPayService {
             SBLogger.logResponsePaymentToken(with: response)
             completion(response)
         })
-        SBLogger.log("📃 Stubs enabled - \(BuildSettings.needStubs)")
+        SBLogger.log("📃 Stubs enabled - \(BuildSettings.shared.needStubs)")
         startService.openInitialScreen(with: locator)
     }
     

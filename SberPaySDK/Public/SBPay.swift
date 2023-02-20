@@ -63,4 +63,12 @@ public final class SBPay: NSObject {
     public static func getAuthURL(_ url: URL) {
         payService?.getResponseFrom(url)
     }
+    
+    /**
+     Метод для установки моков, только для тестовых версий
+     */
+    @objc
+    public static func setMocks(_ value: Bool) {
+        BuildSettings.shared.needStubs = value
+    }
 }

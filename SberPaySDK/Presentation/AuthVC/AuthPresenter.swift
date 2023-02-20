@@ -101,7 +101,7 @@ final class AuthPresenter: AuthPresenting {
             self.view?.hideLoading()
             self.removeObserver()
             if let error = error {
-                if BuildSettings.needStubs {
+                if BuildSettings.shared.needStubs {
                     self.analytics.sendEvent(.BankAppAuthSuccess)
                     self.router.presentPayment()
                 } else {

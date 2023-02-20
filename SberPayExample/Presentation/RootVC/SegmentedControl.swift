@@ -52,13 +52,13 @@ final class SegmentedControlCell: UITableViewCell {
     
     private var selectedItem: ((Bool) -> Void)?
     
-    func config(title: String, items: [String], selectedItem: @escaping (Bool) -> Void) {
+    func config(title: String, items: [String], selected: Int, selectedItem: @escaping (Bool) -> Void) {
         titleLabel.text = title
         self.selectedItem = selectedItem
         for (index, item) in items.enumerated() {
             segmentedControl.insertSegment(withTitle: item, at: index, animated: true)
         }
-        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.selectedSegmentIndex = selected
         setupUI()
     }
     

@@ -7,6 +7,9 @@
 
 import Foundation
 
-enum BuildSettings {
-    static let needStubs = (Bundle.main.infoDictionary?["needStubs"] as? String == "YES")
+final class BuildSettings {
+    static let shared = BuildSettings()
+    private init() {}
+    
+    var needStubs = false
 }

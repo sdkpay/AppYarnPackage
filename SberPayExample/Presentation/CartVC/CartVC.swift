@@ -19,6 +19,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private let apiKey: String
     private let autoMode: Bool
     private let orderId: String
+    private let mocksOn: Bool
     
     private lazy var tableView: UITableView = {
         let view = UITableView()
@@ -63,12 +64,14 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         setupUI()
     }
     
-    init(totalCost: Int, apiKey: String, orderId: String, autoMode: Bool) {
+    init(totalCost: Int, apiKey: String, orderId: String, autoMode: Bool, mocksOn: Bool) {
         self.totalCost = totalCost
         self.apiKey = apiKey
         self.orderId = orderId
         self.autoMode = autoMode
+        self.mocksOn = mocksOn
         super.init(nibName: nil, bundle: nil)
+        SBPay.setMocks(mocksOn)
     }
     
     required init?(coder: NSCoder) {
@@ -157,7 +160,6 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             recurrentEnabled: true,
                                             recurrentFrequency: 1,
                                             redirectUri: "sberPayExampleapp://sberidauth")
-        
         SBPay.getPaymentToken(with: request) { response in
             if let error = response.error {
                 // Обработка ошибки

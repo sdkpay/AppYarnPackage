@@ -16,7 +16,7 @@ private extension CGFloat {
 
 final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private enum Params: Int, CaseIterable {
-        case apiKey, cost, orderId, lang, mode
+        case apiKey, cost, orderId, lang, mode, mocks
     }
     
     private var cellsData = [(type: Params, title: String, value: Any)]()
@@ -72,23 +72,29 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             (.cost, "Cost:", "2000"),
             (.orderId, "OdredId:", "9580e34a-54fe-4380-b9c4-70c65cd06b23"),
             (.lang, "Lang:", false),
-            (.mode, "Pay mode:", false)
+            (.mode, "Pay mode:", false),
+            (.mocks, "Mocks:", false)
         ]
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellData = cellsData[indexPath.row]
-        if cellData.type == .lang || cellData.type == .mode {
+        if cellData.type == .lang || cellData.type == .mode || cellData.type == .mocks {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: SegmentedControlCell.reuseID) as? SegmentedControlCell else {
                 return UITableViewCell()
             }
             var items: [String] = []
+            var selected = 0
             if cellData.type == .lang {
                 items = ["Swift", "Obj-C"]
             } else if cellData.type == .mode {
                 items = ["Manual", "Auto"]
+            } else if cellData.type == .mocks {
+                items = ["Off", "On"]
             }
-            cell.config(title: cellData.title, items: items) { [weak self] value in
+            cell.config(title: cellData.title,
+                        items: items,
+                        selected: selected) { [weak self] value in
                 self?.cellsData[indexPath.row].value = value
             }
             return cell
@@ -182,7 +188,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
               let apiKey = cellsData.first(where: { $0.type == .apiKey })?.value as? String,
               let orderId = cellsData.first(where: { $0.type == .orderId })?.value as? String,
               let objSelected = cellsData.first(where: { $0.type == .lang })?.value as? Bool,
-              let autoMode = cellsData.first(where: { $0.type == .mode })?.value as? Bool else {
+              let autoMode = cellsData.first(where: { $0.type == .mode })?.value as? Bool,
+              let mocksOn = cellsData.first(where: { $0.type == .mocks })?.value as? Bool else {
             return
         }
         let vc: UIViewController
@@ -192,7 +199,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             vc = CartVC(totalCost: cost,
                         apiKey: apiKey,
                         orderId: orderId,
-                        autoMode: autoMode)
+                        autoMode: autoMode,
+                        mocksOn: mocksOn)
         }
         navigationController?.pushViewController(vc, animated: true)
     }
