@@ -145,7 +145,7 @@ enum SBLogger: ResponseDecoder {
            """
             ✅ Response from Sbol with success
                response:
-            \(parameters)
+            \(parameters.json)
             """
        )
     }

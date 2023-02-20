@@ -12,7 +12,7 @@ struct BankModel {
     var state: String?
 
     init(dictionary: [String: String]) {
-        self.state = dictionary["code"]
+        self.code = dictionary["code"]
         self.state = dictionary["state"]
     }
 }

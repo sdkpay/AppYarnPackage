@@ -46,7 +46,7 @@ final class DefaultUserService: UserService {
         network.request(UserTarget.getListCards(redirectUri: authInfo.redirectUri,
                                                 apiKey: authInfo.apiKey,
                                                 authCode: authCode,
-                                                sessionId: String(sessionId),
+                                                sessionId: sessionId,
                                                 state: state,
                                                 merchantLogin: authInfo.clientName,
                                                 orderId: authInfo.orderId),

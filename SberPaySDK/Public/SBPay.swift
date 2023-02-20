@@ -69,6 +69,6 @@ public final class SBPay: NSObject {
      */
     @objc
     public static func setMocks(_ value: Bool) {
-        BuildSettings.shared.needStubs = value
+        BuildSettings.shared.needStubs = true
     }
 }

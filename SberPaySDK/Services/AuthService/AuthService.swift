@@ -90,11 +90,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             authManager.state = result.state
             authСompletion?(nil)
         case .failure(let error):
-            if BuildSettings.shared.needStubs {
-                // DEBUG
-                authManager.authCode = ""
-                authManager.state = ""
-            }
             authСompletion?(error)
         }
         // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
@@ -145,13 +140,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func authURL(link: String) -> URL? {
         guard let url = selectedBank?.link else { return nil }
-        var tLink: String
-        if BuildSettings.shared.needStubs {
-            tLink = "sberbankid?client_id=9f80261c-3455-4942-be48-cd1b2a2d7ba5&state=R2V4T23OA16&scope=openid+name+birthdate+priority_doc+mobile&noncecode_challenge_method=S256&code_challenge=lsme-Q-_tdwJmBr-02e0_GRqYCakqBEpH1VMKyc6_7Y&redirect_uri=sberPayExampleapp://sberidauth" // swiftlint:disable:this line_length
-        } else {
-            tLink = "sberbankid?client_id=9f80261c-3455-4942-be48-cd1b2a2d7ba5&state=R2V4T23OA16&nonce=daij2i323l&scope=openid+name+birthdate+priority_doc+mobile&noncecode_challenge_method=S256&code_challenge=lsme-Q-_tdwJmBr-02e0_GRqYCakqBEpH1VMKyc6_7Y&redirect_uri=sberPayExampleapp://sberidauth" // swiftlint:disable:this line_length
-        }
-        return URL(string: url + tLink)
+        return URL(string: url + link)
     }
     
     // MARK: - Вспомогательные методы
