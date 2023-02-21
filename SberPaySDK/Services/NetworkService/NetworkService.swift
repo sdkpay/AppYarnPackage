@@ -22,28 +22,38 @@ var ServerURL: URL {
 }
 
 protocol NetworkService: AnyObject {
-    func request(_ target: TargetType, completion: @escaping (Result<Void, SDKError>) -> Void)
-    func request<T>(_ target: TargetType, to: T.Type, completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable
+    func request(_ target: TargetType, retryCount: Int, completion: @escaping (Result<Void, SDKError>) -> Void)
+    func request<T>(_ target: TargetType, to: T.Type, retryCount: Int, completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable
     func cancelTask()
 }
 
+extension NetworkService {
+    func request(_ target: TargetType, retryCount: Int = 1, completion: @escaping (Result<Void, SDKError>) -> Void) {
+        request(target, retryCount: retryCount, completion: completion)
+    }
+    func request<T>(_ target: TargetType, to: T.Type, retryCount: Int = 1, completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
+        request(target, to: to, retryCount: retryCount, completion: completion)
+    }
+}
+
 final class DefaultNetworkService: NetworkService, ResponseDecoder {
+    
     private let provider: NetworkProvider
     
     init(provider: NetworkProvider) {
         self.provider = provider
     }
 
-    func request(_ target: TargetType, completion: @escaping (Result<Void, SDKError>) -> Void) {
-        provider.request(target) { data, response, error in
+    func request(_ target: TargetType, retryCount: Int = 1, completion: @escaping (Result<Void, SDKError>) -> Void) {
+        provider.request(target, retryCount: retryCount) { data, response, error in
             SBLogger.logRequestCompleted(target, response: response, data: data)
             let result = self.decodeResponse(data: data, response: response, error: error)
             completion(result)
         }
     }
     
-    func request<T>(_ target: TargetType, to: T.Type, completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
-        provider.request(target) { data, response, error in
+    func request<T>(_ target: TargetType, to: T.Type, retryCount: Int = 1, completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
+        provider.request(target, retryCount: retryCount) { data, response, error in
             SBLogger.logRequestCompleted(target, response: response, data: data)
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
             completion(result)

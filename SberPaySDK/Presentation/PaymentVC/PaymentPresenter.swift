@@ -89,7 +89,8 @@ final class PaymentPresenter: PaymentPresenting {
     private func configViews() {
         guard let user = user else { return }
 
-        view?.configShopInfo(with: user.merchantName, cost: user.orderAmount.amount.price)
+        view?.configShopInfo(with: user.merchantName,
+                             cost: user.orderAmount.amount.price(with: user.orderAmount.currency))
         view?.configProfileView(with: user.userInfo)
 
         if let selectedCard = selectedCard {
@@ -123,7 +124,6 @@ final class PaymentPresenter: PaymentPresenting {
         view?.showLoading(with: .Loading.tryToPayTitle)
         personalMetricsService.getUserData { [weak self] deviceInfo in
             if let deviceInfo = deviceInfo {
-                SBLogger.log(.biZone + deviceInfo)
                 self?.getPaymentToken(with: deviceInfo)
             } else {
                 self?.manager.completionWithError(error: .personalInfo)
@@ -136,7 +136,7 @@ final class PaymentPresenter: PaymentPresenting {
               let paymentId = selectedCard?.paymentId,
               let authInfo = manager.authInfo
         else { return }
-        network.request(PaymentTarget.getPaymentToken(sessionId: String(sessionId),
+        network.request(PaymentTarget.getPaymentToken(sessionId: sessionId,
                                                       deviceInfo: deviceInfo,
                                                       paymentId: String(paymentId),
                                                       apiKey: authInfo.apiKey,
@@ -167,7 +167,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func pay(with token: String) {
-        network.request(PaymentTarget.getPaymentOrder) { [weak self] result in
+        network.request(PaymentTarget.getPaymentOrder, retryCount: 4) { [weak self] result in
             switch result {
             case .success:
                 self?.view?.showAlert(with: .success, completion: {

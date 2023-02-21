@@ -42,7 +42,7 @@ enum HTTPTask {
 
 // MARK: - NetworkProvider
 protocol NetworkProvider {
-    func request(_ target: TargetType, completion: @escaping NetworkProviderCompletion)
+    func request(_ target: TargetType, retryCount: Int, completion: @escaping NetworkProviderCompletion)
     func cancel()
 }
 
@@ -66,12 +66,13 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                              delegateQueue: nil)
     }
     
-    func request(_ target: TargetType, completion: @escaping NetworkProviderCompletion) {
-      _request(target: target, completion: completion)
+    func request(_ target: TargetType, retryCount: Int = 1, completion: @escaping NetworkProviderCompletion) {
+        _request(target: target, retryCount: retryCount, completion: completion)
     }
 
     private func _request(retry: Int = 1,
                           target: TargetType,
+                          retryCount: Int,
                           completion: @escaping NetworkProviderCompletion) {
         do {
             let request = try self.buildRequest(from: target)
@@ -84,9 +85,10 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                     // DEBUG
                     if let error = error,
                        error._code == 404,
-                       retry < 5 {
-                        self._request(retry: (retry + 1),
+                       retry < 4 {
+                        self._request(retry: retry + 1,
                                       target: target,
+                                      retryCount: retryCount,
                                       completion: completion)
                     } else {
                         completion(data, response, error)

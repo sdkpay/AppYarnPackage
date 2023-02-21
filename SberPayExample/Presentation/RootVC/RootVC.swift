@@ -60,6 +60,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         super.viewDidLoad()
         prepareData()
         setupUI()
+        title = "Debug"
     }
     
     private var key: String {

@@ -29,8 +29,17 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     
     func getUserData(completion: @escaping (String?) -> Void) {
         DispatchQueue.global().async { [weak self] in
-            completion(self?.provider?.report(.mixedWithCoord))
+            guard let data = self?.provider?.report(.mixedWithCoord) else {
+                completion(nil)
+                return
+            }
+            SBLogger.log(.biZone + data)
+            completion(self?.formatString(data))
         }
+    }
+    
+    private func formatString(_ metrics: String) -> String {
+        metrics.replacingOccurrences(of: "\n", with: "")
     }
     
     private func config() {

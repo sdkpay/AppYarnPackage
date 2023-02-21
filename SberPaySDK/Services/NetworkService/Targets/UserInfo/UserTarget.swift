@@ -9,7 +9,6 @@ import Foundation
 
 enum UserTarget {
     case getListCards(redirectUri: String,
-                      apiKey: String,
                       authCode: String,
                       sessionId: String,
                       state: String,
@@ -41,7 +40,6 @@ extension UserTarget: TargetType {
     var task: HTTPTask {
         switch self {
         case let .getListCards(redirectUri: redirectUri,
-                               apiKey: apiKey,
                                authCode: authCode,
                                sessionId: sessionId,
                                state: state,
@@ -49,7 +47,6 @@ extension UserTarget: TargetType {
                                orderId: orderId):
             var params = [
                 "redirectUri": redirectUri,
-                "apiKey": apiKey,
                 "authCode": authCode,
                 "sessionId": sessionId,
                 "state": state

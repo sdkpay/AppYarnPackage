@@ -44,7 +44,6 @@ final class DefaultUserService: UserService {
               let state = authManager.state
         else { return }
         network.request(UserTarget.getListCards(redirectUri: authInfo.redirectUri,
-                                                apiKey: authInfo.apiKey,
                                                 authCode: authCode,
                                                 sessionId: sessionId,
                                                 state: state,

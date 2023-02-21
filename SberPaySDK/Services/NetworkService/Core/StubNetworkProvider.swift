@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class StubNetworkProvider: NSObject, NetworkProvider {
+final class StubNetworkProvider: NSObject, NetworkProvider {    
     private let delayedSeconds: Int
     private var dispatchWorkItem: DispatchWorkItem?
 
@@ -17,6 +17,7 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
     }
     
     func request(_ route: TargetType,
+                 retryCount: Int,
                  completion: @escaping NetworkProviderCompletion) {
         let response = HTTPURLResponse(url: ServerURL,
                                        statusCode: 200,
