@@ -48,6 +48,9 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         if let apiKey = authManager.apiKey {
             headers[.Headers.authorization] = apiKey
         }
+        if let lang = authManager.lang {
+            headers[.Headers.lang] = lang
+        }
         return headers
     }
     

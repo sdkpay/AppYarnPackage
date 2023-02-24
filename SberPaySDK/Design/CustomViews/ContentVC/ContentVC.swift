@@ -85,10 +85,6 @@ class ContentVC: UIViewController {
             profileView.topAnchor.constraint(equalTo: logoImage.topAnchor)
         ])
     }
-
-    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        super.dismiss(animated: flag, completion: completion)
-    }
 }
 
 // ContentVC + Loading

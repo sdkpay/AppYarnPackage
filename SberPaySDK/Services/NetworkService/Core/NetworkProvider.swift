@@ -82,9 +82,10 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                     if let response = response {
                         self.saveGeobalancingData(from: response)
                     }
-                    // DEBUG
-                    if let error = error,
-                       error._code == 404,
+
+                    if retryCount != 1,
+                       let error = error,
+                       error._code == -1001,
                        retry < 4 {
                         self._request(retry: retry + 1,
                                       target: target,
@@ -114,7 +115,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         request.httpMethod = route.httpMethod.rawValue
         switch route.task {
         case .request:
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            addHeaders(request: &request, headers: nil)
         case let .requestWithParameters(urlParameters, bodyParameters):
             addHeaders(request: &request, headers: nil)
             try configureParameters(request: &request, bodyParameters: bodyParameters, urlParameters: urlParameters)
@@ -144,8 +145,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         var baseHeaders = HTTPHeaders()
         baseHeaders[String.Headers.rqUID] = String.generateRandom(with: 32)
         baseHeaders[String.Headers.localTime] = "\(Date())"
-        // DEBUG
-        baseHeaders[String.Headers.lang] = "RU"
+
         for head in requestManager.headers {
             baseHeaders[head.key] = head.value
         }

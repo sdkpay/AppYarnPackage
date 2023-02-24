@@ -6,7 +6,7 @@
     },
     "orderAmount": {
         "amount": 123456789,
-        "currency": "RUB"
+        "currency": 643
     },
     "paymentToolInfo": [
         {
@@ -20,7 +20,7 @@
             "cardLogoUrl": "https:\\cardlogo1.jpeg",
             "amountData": {
                 "amount": 15000,
-                "currency": "RUB"
+                "currency": 643
             }
         },
         {
@@ -34,7 +34,7 @@
             "cardLogoUrl": "https:\\cardlogo2.jpeg",
             "amountData": {
                 "amount": 15000000,
-                "currency": "RUB"
+                "currency": 643
             }
         }
     ],

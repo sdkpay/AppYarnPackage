@@ -19,6 +19,7 @@ protocol AuthManager {
     var sessionId: String? { get set }
     var authCode: String? { get set }
     var state: String? { get set }
+    var lang: String? { get set }
 }
 
 final class DefaultAuthManager: AuthManager {
@@ -26,4 +27,5 @@ final class DefaultAuthManager: AuthManager {
     var sessionId: String?
     var authCode: String?
     var state: String?
+    var lang: String?
 }

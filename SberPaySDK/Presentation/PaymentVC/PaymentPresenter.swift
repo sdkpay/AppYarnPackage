@@ -14,14 +14,13 @@ protocol PaymentPresenting {
 }
 
 final class PaymentPresenter: PaymentPresenting {
-    private let manager: SDKManager
     private let analytics: AnalyticsService
     private let router: PaymentRouting
     private let userService: UserService
-    private let network: NetworkService
-    private let authManager: AuthManager
-    private let personalMetricsService: PersonalMetricsService
+    private let paymentService: PaymentService
     private let locationManager: LocationManager
+    private let manager: SDKManager
+    
     private var selectedCard: PaymentToolInfo?
     private var user: User?
 
@@ -31,24 +30,22 @@ final class PaymentPresenter: PaymentPresenting {
          manager: SDKManager,
          userService: UserService,
          analytics: AnalyticsService,
-         authManager: AuthManager,
-         network: NetworkService,
-         personalMetricsService: PersonalMetricsService,
+         paymentService: PaymentService,
          locationManager: LocationManager) {
-        self.manager = manager
-        self.analytics = analytics
         self.router = router
         self.userService = userService
-        self.network = network
-        self.authManager = authManager
+        self.manager = manager
+        self.analytics = analytics
+        self.paymentService = paymentService
         self.locationManager = locationManager
-        self.personalMetricsService = personalMetricsService
     }
     
     func viewDidLoad() {
         if let user = userService.user {
             self.user = user
-            selectedCard = user.paymentToolInfo.first(where: { $0.priorityCard })
+            selectedCard = user.paymentToolInfo
+                .first(where: { $0.priorityCard })
+            ?? user.paymentToolInfo.first
             configViews()
         } else {
             getUser()
@@ -57,10 +54,30 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func payButtonTapped() {
-        getMetrics()
         analytics.sendEvent(.PayConfirmedByUser)
         let permission = locationManager.locationEnabled ? [AnalyticsValue.Location.rawValue] : []
         analytics.sendEvent(.Permissions, with: permission)
+        pay()
+    }
+    
+    private func pay() {
+        view?.showLoading(with: .Loading.tryToPayTitle)
+        guard let paymentId = selectedCard?.paymentId else { return }
+        paymentService.tryToPay(paymentId: paymentId) { [weak self] error in
+            if let error = error {
+                self?.view?.showAlert(with: .failure()) {
+                    self?.view?.dismiss(animated: true, completion: {
+                        self?.manager.completionPay(with: error)
+                    })
+                }
+            } else {
+                self?.view?.showAlert(with: .success, completion: {
+                    self?.view?.dismiss(animated: true, completion: {
+                        self?.manager.completionPay(with: nil)
+                    })
+                })
+            }
+        }
     }
     
     func cancelTapped() {
@@ -80,7 +97,8 @@ final class PaymentPresenter: PaymentPresenting {
             case .failure(let error):
                 self?.view?.showAlert(with: .failure(),
                                       completion: {
-                    self?.manager.completionWithError(error: error)
+                    self?.view?.dismiss(animated: true, completion: {  self?.manager.completionWithError(error: error)
+                    })
                 })
             }
         }
@@ -117,70 +135,6 @@ final class PaymentPresenter: PaymentPresenting {
                     self.manager.completionWithError(error: .noCards)
                 })
             })
-        }
-    }
-    
-    private func getMetrics() {
-        view?.showLoading(with: .Loading.tryToPayTitle)
-        personalMetricsService.getUserData { [weak self] deviceInfo in
-            if let deviceInfo = deviceInfo {
-                self?.getPaymentToken(with: deviceInfo)
-            } else {
-                self?.manager.completionWithError(error: .personalInfo)
-            }
-        }
-    }
-    
-    private func getPaymentToken(with deviceInfo: String) {
-        guard let sessionId = authManager.sessionId,
-              let paymentId = selectedCard?.paymentId,
-              let authInfo = manager.authInfo
-        else { return }
-        network.request(PaymentTarget.getPaymentToken(sessionId: sessionId,
-                                                      deviceInfo: deviceInfo,
-                                                      paymentId: String(paymentId),
-                                                      apiKey: authInfo.apiKey,
-                                                      userName: authInfo.clientName,
-                                                      merchantLogin: authInfo.clientId ?? "",
-                                                      orderId: authInfo.orderId),
-                        to: PaymentTokenModel.self) { [weak self] result in
-            guard let self = self else { return }
-            self.userService.clearData()
-            switch result {
-            case .success(let result):
-                switch self.manager.payStrategy {
-                case .auto:
-                    self.pay(with: result.paymentToken)
-                case .manual:
-                    self.view?.showAlert(with: .failure()) {
-                        self.view?.dismiss(animated: true, completion: {
-                            self.manager.completionPaymentToken(with: result.paymentToken)
-                        })
-                    }
-                }
-            case .failure(let error):
-                self.view?.showAlert(with: .failure()) {
-                    self.manager.completionWithError(error: error)
-                }
-            }
-        }
-    }
-    
-    private func pay(with token: String) {
-        network.request(PaymentTarget.getPaymentOrder, retryCount: 4) { [weak self] result in
-            switch result {
-            case .success:
-                self?.view?.showAlert(with: .success, completion: {
-                    self?.manager.completionPay(with: nil)
-                })
-            case .failure(let error):
-                self?.manager.completionPay(with: error)
-                self?.view?.showAlert(with: .failure()) {
-                    self?.view?.dismiss(animated: true, completion: {
-                        self?.manager.completionPay(with: nil)
-                    })
-                }
-            }
         }
     }
 }

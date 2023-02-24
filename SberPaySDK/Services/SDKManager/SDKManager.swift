@@ -7,19 +7,6 @@
 
 import UIKit
 
-struct AuthInfo {
-    /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
-    let apiKey: String
-    /// Идентификатора плательщика в вашей системе
-    let clientName: String
-    /// Сумма операции в минорных единицах
-    let orderId: String
-    /// clientId
-    let clientId: String?
-    /// clientId
-    let redirectUri: String
-}
-
 enum PayStrategy {
     case auto
     case manual
@@ -35,14 +22,16 @@ final class SDKManagerAssembly: Assembly {
 }
 
 protocol SDKManager {
-    var paymentTokenRequest: SBPaymentTokenRequest? { get }
     var newStart: Bool { get }
     var payStrategy: PayStrategy { get }
     var authInfo: AuthInfo? { get }
+    var payHandler: Action? { get set }
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion)
     func configWithOrderId(paymentRequest: SBFullPaymentRequest,
                            completion: @escaping PayCompletion)
+    func pay(with paymentRequest: SBPaymentRequest,
+             completion: @escaping PayCompletion)
     func completionPaymentToken(with paymentToken: String?,
                                 paymentTokenId: String?,
                                 tokenExpiration: Int)
@@ -62,11 +51,15 @@ extension SDKManager {
 
 final class DefaultSDKManager: SDKManager {
     private var authManager: AuthManager
+
     private var paymentCompletion: PayCompletion?
     private var paymentTokenCompletion: PaymentTokenCompletion?
-    private(set) var paymentTokenRequest: SBPaymentTokenRequest?
-    private(set) var fullPaymentRequest: SBFullPaymentRequest?
+
     private(set) var authInfo: AuthInfo?
+    private(set) var payInfo: PayInfo?
+    
+    var payHandler: Action?
+
     private(set) var payStrategy: PayStrategy = .manual
     private(set) var newStart = true
     
@@ -76,46 +69,29 @@ final class DefaultSDKManager: SDKManager {
 
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion) {
-
-       // Проверяем есть ли уже созданный запрос
-        if let oldRequest = self.paymentTokenRequest,
-           // Сравниваем новый запрос с предидущим
-           oldRequest.orderNumber == paymentTokenRequest.orderNumber {
-            newStart = false
-        } else {
-            newStart = true
-        }
-
+        newStart = isNewStart(orderId: paymentTokenRequest.orderNumber)
         payStrategy = .manual
-        self.paymentTokenRequest = paymentTokenRequest
-        authInfo = AuthInfo(apiKey: paymentTokenRequest.apiKey,
-                            clientName: paymentTokenRequest.clientName,
-                            orderId: paymentTokenRequest.orderNumber,
-                            clientId: paymentTokenRequest.clientId,
-                            redirectUri: paymentTokenRequest.redirectUri)
+        authInfo = AuthInfo(paymentTokenRequest: paymentTokenRequest)
         authManager.apiKey = paymentTokenRequest.apiKey
+        authManager.lang = paymentTokenRequest.language
         self.paymentTokenCompletion = completion
     }
     
     func configWithOrderId(paymentRequest: SBFullPaymentRequest,
                            completion: @escaping PayCompletion) {
-        // Проверяем есть ли уже созданный запрос
-         if let oldRequest = self.fullPaymentRequest,
-            // Сравниваем новый запрос с предидущим
-            oldRequest.orderId == paymentRequest.orderId {
-             newStart = false
-         } else {
-             newStart = true
-         }
+        newStart = isNewStart(orderId: paymentRequest.orderId)
         payStrategy = .auto
-        fullPaymentRequest = paymentRequest
-        authInfo = AuthInfo(apiKey: paymentRequest.apiKey,
-                            clientName: paymentRequest.clientName,
-                            orderId: paymentRequest.orderId,
-                            clientId: paymentRequest.clientId,
-                            redirectUri: paymentRequest.redirectUri)
+        authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
         authManager.apiKey = paymentRequest.apiKey
+        authManager.lang = paymentRequest.language
         self.paymentCompletion = completion
+    }
+    
+    func pay(with paymentRequest: SBPaymentRequest,
+             completion: @escaping PayCompletion) {
+        payInfo = PayInfo(paymentRequest: paymentRequest)
+        paymentCompletion = completion
+        payHandler?()
     }
     
     func completionWithError(error: SDKError) {
@@ -126,8 +102,13 @@ final class DefaultSDKManager: SDKManager {
             paymentCompletion?(SBPError(errorState: error))
             paymentCompletion = nil
         case .manual:
-            paymentTokenCompletion?(responce)
-            paymentTokenCompletion = nil
+            if payInfo == nil {
+                paymentTokenCompletion?(responce)
+                paymentTokenCompletion = nil
+            } else {
+                paymentCompletion?(SBPError(errorState: error))
+                paymentCompletion = nil
+            }
         }
     }
     
@@ -148,5 +129,16 @@ final class DefaultSDKManager: SDKManager {
             paymentCompletion?(nil)
         }
         paymentCompletion = nil
+    }
+    
+    private func isNewStart(orderId: String) -> Bool {
+        // Проверяем есть ли уже созданный запрос
+         if let authInfo = self.authInfo,
+            // Сравниваем новый запрос с предидущим
+            authInfo.orderId == orderId {
+             return false
+         } else {
+             return true
+         }
     }
 }

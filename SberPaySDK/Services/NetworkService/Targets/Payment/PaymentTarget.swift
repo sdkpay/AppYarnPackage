@@ -11,11 +11,13 @@ enum PaymentTarget {
     case getPaymentToken(sessionId: String,
                          deviceInfo: String,
                          paymentId: String,
-                         apiKey: String,
-                         userName: String,
-                         merchantLogin: String,
+                         userName: String?,
+                         merchantLogin: String?,
                          orderId: String)
-    case getPaymentOrder
+    case getPaymentOrder(operationId: String,
+                         orderId: String,
+                         merchantLogin: String?,
+                         paymentToken: String)
 }
 
 extension PaymentTarget: TargetType {
@@ -40,22 +42,37 @@ extension PaymentTarget: TargetType {
         case let .getPaymentToken(sessionId: sessionId,
                                   deviceInfo: deviceInfo,
                                   paymentId: paymentId,
-                                  apiKey: apiKey,
                                   userName: userName,
                                   merchantLogin: merchantLogin,
                                   orderId: orderId):
-            let params = [
+            var params = [
                 "sessionId": sessionId,
                 "deviceInfo": deviceInfo,
                 "paymentId": paymentId,
-                "apiKey": apiKey,
-                "userName": userName,
-                "merchantLogin": merchantLogin,
                 "orderId": orderId
             ]
+            
+            if let merchantLogin = merchantLogin {
+                params["merchantLogin"] = merchantLogin
+            }
+            if let userName = userName {
+                params["userName"] = userName
+            }
             return .requestWithParameters(nil, bodyParameters: params)
-        case .getPaymentOrder:
-            return .requestWithParameters(nil, bodyParameters: nil)
+        case let .getPaymentOrder(operationId: operationId,
+                                  orderId: orderId,
+                                  merchantLogin: merchantLogin,
+                                  paymentToken: paymentToken):
+            var params = [
+                "operationId": operationId,
+                "orderId": orderId,
+                "paymentToken": paymentToken
+            ]
+    
+            if let merchantLogin = merchantLogin {
+                params["merchantLogin"] = merchantLogin
+            }
+            return .requestWithParameters(nil, bodyParameters: params)
         }
     }
     
@@ -68,8 +85,7 @@ extension PaymentTarget: TargetType {
         case .getPaymentToken:
             return StubbedResponse.paymentToken.data
         case .getPaymentOrder:
-                // DEBUG
-            return StubbedResponse.listCards.data
+            return StubbedResponse.paymentOrderSDK.data
         }
     }
 }

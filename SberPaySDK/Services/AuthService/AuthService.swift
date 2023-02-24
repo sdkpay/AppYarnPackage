@@ -140,7 +140,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func authURL(link: String) -> URL? {
         guard let url = selectedBank?.link else { return nil }
-        return URL(string: url + link)
+      return URL(string: url + link)
     }
     
     // MARK: - Вспомогательные методы

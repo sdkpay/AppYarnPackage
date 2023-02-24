@@ -35,7 +35,8 @@ final class DefaultSBPayService: SBPayService {
         SDKManagerAssembly(),
         AuthServiceAssembly(),
         UserServiceAssembly(),
-        LocationManagerAssembly()
+        LocationManagerAssembly(),
+        PaymentServiceAssembly()
     ]
     
     private func registerServices() {
@@ -72,7 +73,9 @@ final class DefaultSBPayService: SBPayService {
     }
     
     func pay(with paymentRequest: SBPaymentRequest,
-             completion: @escaping (_ error: SBPError?) -> Void) {
+             completion: @escaping PayCompletion) {
+        let manager: SDKManager = locator.resolve()
+        manager.pay(with: paymentRequest, completion: completion)
     }
     
     func completePayment(paymentSuccess: Bool,
