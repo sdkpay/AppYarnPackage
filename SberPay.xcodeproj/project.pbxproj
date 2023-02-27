@@ -132,7 +132,7 @@
 		44BD272F29A895A2001ECF54 /* PayInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BD272E29A895A2001ECF54 /* PayInfo.swift */; };
 		44BD273229A8A463001ECF54 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BD273129A8A463001ECF54 /* PaymentService.swift */; };
 		44C2A04829222E18000D894A /* ObjcCartVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2A04729222E18000D894A /* ObjcCartVC.m */; };
-		44C2A04B29223430000D894A /* SegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C2A04A29223430000D894A /* SegmentedControl.swift */; };
+		44C2A04B29223430000D894A /* SegmentedControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C2A04A29223430000D894A /* SegmentedControlCell.swift */; };
 		44C651052930E102008F1C29 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651042930E102008F1C29 /* LoadingView.swift */; };
 		44C651092930E721008F1C29 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651082930E721008F1C29 /* AlertView.swift */; };
 		44C6510C2934E327008F1C29 /* SBPaymentTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510B2934E327008F1C29 /* SBPaymentTokenResponse.swift */; };
@@ -314,7 +314,7 @@
 		44C2A04629222E17000D894A /* SberPayExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SberPayExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		44C2A04729222E18000D894A /* ObjcCartVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjcCartVC.m; sourceTree = "<group>"; };
 		44C2A04929222E76000D894A /* ObjcCartVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcCartVC.h; sourceTree = "<group>"; };
-		44C2A04A29223430000D894A /* SegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControl.swift; sourceTree = "<group>"; };
+		44C2A04A29223430000D894A /* SegmentedControlCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlCell.swift; sourceTree = "<group>"; };
 		44C651042930E102008F1C29 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		44C651082930E721008F1C29 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		44C6510B2934E327008F1C29 /* SBPaymentTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPaymentTokenResponse.swift; sourceTree = "<group>"; };
@@ -898,7 +898,7 @@
 			children = (
 				44717235291A458F005EDF32 /* RootVC.swift */,
 				444A13BC291BB1FD00C9FBE0 /* RootCell.swift */,
-				44C2A04A29223430000D894A /* SegmentedControl.swift */,
+				44C2A04A29223430000D894A /* SegmentedControlCell.swift */,
 			);
 			path = RootVC;
 			sourceTree = "<group>";
@@ -1470,7 +1470,7 @@
 				44C2A04829222E18000D894A /* ObjcCartVC.m in Sources */,
 				44717236291A458F005EDF32 /* RootVC.swift in Sources */,
 				4471721529193B21005EDF32 /* AppDelegate.swift in Sources */,
-				44C2A04B29223430000D894A /* SegmentedControl.swift in Sources */,
+				44C2A04B29223430000D894A /* SegmentedControlCell.swift in Sources */,
 				447172302919466E005EDF32 /* CartCell.swift in Sources */,
 				444A13BE291BB52500C9FBE0 /* RootCell.swift in Sources */,
 			);
@@ -1689,8 +1689,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				NEED_STUBS = NO;
 				ONLY_ACTIVE_ARCH = YES;
+				PROD_VERSION = NO;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1746,8 +1746,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				NEED_STUBS = NO;
 				ONLY_ACTIVE_ARCH = YES;
+				PROD_VERSION = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1792,6 +1792,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp.debug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROD_VERSION = NO;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1842,6 +1843,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROD_VERSION = NO;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PayTestProvision;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1854,7 +1856,7 @@
 			};
 			name = Release;
 		};
-		4496792629A3539C00EC3439 /* Debug-Stubs */ = {
+		4496792629A3539C00EC3439 /* Debug-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1909,15 +1911,15 @@
 				LD_RUNPATH_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				NEED_STUBS = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROD_VERSION = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = "Debug-Stubs";
+			name = "Debug-Prod";
 		};
-		4496792729A3539C00EC3439 /* Debug-Stubs */ = {
+		4496792729A3539C00EC3439 /* Debug-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1954,6 +1956,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp.debug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROD_VERSION = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1964,9 +1967,9 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = "Debug-Stubs";
+			name = "Debug-Prod";
 		};
-		4496792829A3539C00EC3439 /* Debug-Stubs */ = {
+		4496792829A3539C00EC3439 /* Debug-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -2011,9 +2014,9 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = "Debug-Stubs";
+			name = "Debug-Prod";
 		};
-		4496792929A3539C00EC3439 /* Debug-Stubs */ = {
+		4496792929A3539C00EC3439 /* Debug-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -2027,18 +2030,18 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = "Debug-Stubs";
+			name = "Debug-Prod";
 		};
-		4496792A29A3539C00EC3439 /* Debug-Stubs */ = {
+		4496792A29A3539C00EC3439 /* Debug-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C23RGTGY52;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = "Debug-Stubs";
+			name = "Debug-Prod";
 		};
-		4496792B29A353AB00EC3439 /* Release-Stubs */ = {
+		4496792B29A353AB00EC3439 /* Release-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2087,16 +2090,16 @@
 				LD_RUNPATH_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				NEED_STUBS = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROD_VERSION = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = "Release-Stubs";
+			name = "Release-Prod";
 		};
-		4496792C29A353AB00EC3439 /* Release-Stubs */ = {
+		4496792C29A353AB00EC3439 /* Release-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -2134,6 +2137,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROD_VERSION = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = PayTestProvision;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -2144,9 +2148,9 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = "Release-Stubs";
+			name = "Release-Prod";
 		};
-		4496792D29A353AB00EC3439 /* Release-Stubs */ = {
+		4496792D29A353AB00EC3439 /* Release-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
@@ -2192,9 +2196,9 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = "Release-Stubs";
+			name = "Release-Prod";
 		};
-		4496792E29A353AB00EC3439 /* Release-Stubs */ = {
+		4496792E29A353AB00EC3439 /* Release-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -2208,16 +2212,16 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = "Release-Stubs";
+			name = "Release-Prod";
 		};
-		4496792F29A353AB00EC3439 /* Release-Stubs */ = {
+		4496792F29A353AB00EC3439 /* Release-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C23RGTGY52;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = "Release-Stubs";
+			name = "Release-Prod";
 		};
 		44A0B5B4293DC3F7007AB3FD /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2258,9 +2262,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				444A13B2291BA96100C9FBE0 /* Debug */,
-				4496792829A3539C00EC3439 /* Debug-Stubs */,
+				4496792829A3539C00EC3439 /* Debug-Prod */,
 				444A13B3291BA96100C9FBE0 /* Release */,
-				4496792D29A353AB00EC3439 /* Release-Stubs */,
+				4496792D29A353AB00EC3439 /* Release-Prod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2269,9 +2273,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				44601D58298FDCD1006D9A8E /* Debug */,
-				4496792A29A3539C00EC3439 /* Debug-Stubs */,
+				4496792A29A3539C00EC3439 /* Debug-Prod */,
 				44601D59298FDCD1006D9A8E /* Release */,
-				4496792F29A353AB00EC3439 /* Release-Stubs */,
+				4496792F29A353AB00EC3439 /* Release-Prod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2280,9 +2284,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4471722329193B23005EDF32 /* Debug */,
-				4496792629A3539C00EC3439 /* Debug-Stubs */,
+				4496792629A3539C00EC3439 /* Debug-Prod */,
 				4471722429193B23005EDF32 /* Release */,
-				4496792B29A353AB00EC3439 /* Release-Stubs */,
+				4496792B29A353AB00EC3439 /* Release-Prod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2291,9 +2295,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4471722629193B23005EDF32 /* Debug */,
-				4496792729A3539C00EC3439 /* Debug-Stubs */,
+				4496792729A3539C00EC3439 /* Debug-Prod */,
 				4471722729193B23005EDF32 /* Release */,
-				4496792C29A353AB00EC3439 /* Release-Stubs */,
+				4496792C29A353AB00EC3439 /* Release-Prod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2302,9 +2306,9 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				44A0B5B4293DC3F7007AB3FD /* Debug */,
-				4496792929A3539C00EC3439 /* Debug-Stubs */,
+				4496792929A3539C00EC3439 /* Debug-Prod */,
 				44A0B5B5293DC3F7007AB3FD /* Release */,
-				4496792E29A353AB00EC3439 /* Release-Stubs */,
+				4496792E29A353AB00EC3439 /* Release-Prod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

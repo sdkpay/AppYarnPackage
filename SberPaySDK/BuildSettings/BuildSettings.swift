@@ -8,9 +8,8 @@
 import Foundation
 
 final class BuildSettings {
-    static let shared = BuildSettings()
-    private init() {}
-    
     var needStubs = false
     var ssl = true
+
+    static let shared = BuildSettings()
 }

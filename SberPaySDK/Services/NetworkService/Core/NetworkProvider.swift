@@ -105,7 +105,10 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     }
 
     func cancel() {
-        self.task?.cancel()
+        task?.cancel()
+        guard let task = task,
+              let request = task.currentRequest else { return }
+        SBLogger.requestCancelled(request)
     }
 
     private func buildRequest(from route: TargetType) throws -> URLRequest {

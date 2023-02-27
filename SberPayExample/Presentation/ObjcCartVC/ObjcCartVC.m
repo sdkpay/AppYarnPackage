@@ -11,6 +11,13 @@
 
 @interface ObjcCartVC ()
 
+@property (assign, nonatomic) NSInteger* totalCost;
+@property (assign, nonatomic) NSString* apiKey;
+@property (assign, nonatomic) NSString* orderId;
+@property (assign, nonatomic) BOOL autoMode;
+@property (assign, nonatomic) BOOL mocksOn;
+@property (assign, nonatomic) BOOL sslOn;
+
 @end
 
 @implementation ObjcCartVC
@@ -22,6 +29,25 @@
     if ([SBPay isReadyForSberPay]) {
         [self setupSBPayButton];
     }
+}
+
+- (instancetype)initWithTotalCost:(NSInteger *)totalCost
+                           apiKey:(NSString *)apiKey
+                          orderId:(NSString *)orderId
+                         autoMode:(BOOL *)autoMode
+                          mocksOn:(BOOL *)mocksOn
+                            sslOn:(BOOL *)sslOn {
+    self = [super init];
+    if (self) {
+        self.totalCost = totalCost;
+        self.apiKey = apiKey;
+        self.orderId = orderId;
+        self.autoMode = autoMode;
+        self.mocksOn = mocksOn;
+        self.sslOn = sslOn;
+    }
+    
+    return self;
 }
 
 - (void)setupSBPayButton {
@@ -40,13 +66,13 @@
     if (SBPay.isReadyForSberPay) {
         
     }
-    SBPaymentTokenRequest *requestModel = [[SBPaymentTokenRequest alloc] initWithApiKey:@""
+    SBPaymentTokenRequest *requestModel = [[SBPaymentTokenRequest alloc] initWithApiKey:_apiKey
                                                                                clientId:@""
                                                                              clientName: @"Test shop"
-                                                                                 amount:1
+                                                                                 amount:*(_totalCost)
                                                                                currency:@""
                                                                             mobilePhone:@""
-                                                                            orderNumber:@""
+                                                                            orderNumber:_orderId
                                                                        orderDescription:@""
                                                                                language:@""
                                                                        recurrentEnabled:YES

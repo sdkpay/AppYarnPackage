@@ -73,6 +73,18 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
+    static func requestCancelled(_ request: URLRequest) {
+        log(
+            """
+            🚫 Request cancelled
+               path: \(request.url?.absoluteString ?? "None")
+               headers: \(headers(request.allHTTPHeaderFields))
+               httpMethod: \(request.httpMethod ?? "None")
+               body: \(stringToLog(from: request.httpBody))
+            """
+        )
+    }
+    
     static func responseDecodedWithError<T>(for type: T.Type,
                                             decodingError: DecodingError) where T: Codable {
         switch decodingError {

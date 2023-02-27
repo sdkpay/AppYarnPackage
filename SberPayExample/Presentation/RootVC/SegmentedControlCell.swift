@@ -1,5 +1,5 @@
 //
-//  SegmentedControl.swift
+//  SegmentedControlCell.swift
 //  SberPayExample
 //
 //  Created by Alexander Ipatov on 14.11.2022.
@@ -50,21 +50,28 @@ final class SegmentedControlCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var selectedItem: ((Bool) -> Void)?
+    private var selectedItem: ((String) -> Void)?
+    private var items: [String]?
     
-    func config(title: String, items: [String], selected: Int, selectedItem: @escaping (Bool) -> Void) {
+    func config(title: String,
+                items: [String],
+                selected: String,
+                selectedItem: @escaping (String) -> Void) {
         titleLabel.text = title
         self.selectedItem = selectedItem
+        self.items = items
+        segmentedControl.removeAllSegments()
         for (index, item) in items.enumerated() {
-            segmentedControl.insertSegment(withTitle: item, at: index, animated: true)
+            segmentedControl.insertSegment(withTitle: item, at: index, animated: false)
         }
-        segmentedControl.selectedSegmentIndex = selected
+        segmentedControl.selectedSegmentIndex = items.firstIndex(of: selected) ?? 0
         setupUI()
     }
     
     @objc
     private func valueChanged() {
-        selectedItem?(segmentedControl.selectedSegmentIndex == 1)
+        guard let items = items else { return }
+        selectedItem?(items[segmentedControl.selectedSegmentIndex])
     }
     
     func setupUI() {

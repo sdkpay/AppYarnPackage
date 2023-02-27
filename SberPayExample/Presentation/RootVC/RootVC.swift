@@ -14,12 +14,99 @@ private extension CGFloat {
     static let sideMargin = 20.0
 }
 
+enum Config: Int, CaseIterable, Codable {
+    case apiKey, cost, orderId, lang, mode, mocks, ssl
+    
+    var title: String {
+        switch self {
+        case .apiKey:
+            return "ApiKey:"
+        case .cost:
+            return "Cost:"
+        case .orderId:
+            return "OdredId:"
+        case .lang:
+            return "Lang:"
+        case .mode:
+            return "Pay mode:"
+        case .mocks:
+            return "Mocks:"
+        case .ssl:
+            return "SSL:"
+        }
+    }
+    
+    var items: [String]? {
+        switch self {
+        case .lang:
+            return ["Swift", "Obj-C"]
+        case .mode:
+            return ["Manual", "Auto"]
+        case .mocks:
+            return ["On", "Off"]
+        case .ssl:
+            return ["On", "Off"]
+        default:
+            return nil
+        }
+    }
+}
+
+struct ConfigValues: Codable {
+    var apiKey = "AFhdqaX970inj42EoOVuw+kAAAAAAAAADH8u5FkDlopXBsahjOkZA1CcQwTaKaUMQB/H1JNtlz7fSTFdvOcWXXvpgvzCkJDHyRrfKuxYc8p4wP5kcZN+ua3bxgqRjGQLNxI2b9askeQvt63cZNivX3EDIJz6Ywlk0omNVxAlneT7Z1Do/OSkelsZa5zVwVZbYV0yQVSz" // swiftlint:disable:this line_length
+    var cost = "2000"
+    var orderId = "9580e34a-54fe-4380-b9c4-70c65cd06b23"
+    var lang = "Swift"
+    var mode = "Auto"
+    var mocks = "Off"
+    var ssl = "On"
+    
+    func getValue(for type: Config) -> String {
+        switch type {
+        case .apiKey:
+            return apiKey
+        case .cost:
+            return cost
+        case .orderId:
+            return orderId
+        case .lang:
+            return lang
+        case .mode:
+            return mode
+        case .mocks:
+            return mocks
+        case .ssl:
+            return ssl
+        }
+    }
+    
+    mutating func setValue(value: String, for type: Config) {
+        switch type {
+        case .apiKey:
+            apiKey = value
+        case .cost:
+            cost = value
+        case .orderId:
+            orderId = value
+        case .lang:
+            lang = value
+        case .mode:
+            mode = value
+        case .mocks:
+            mocks = value
+        case .ssl:
+            ssl = value
+        }
+    }
+}
+
 final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private enum Params: Int, CaseIterable {
         case apiKey, cost, orderId, lang, mode, mocks, ssl
     }
     
-    private var cellsData = [(type: Params, title: String, value: Any)]()
+    private var cellConfig = Config.allCases
+    private var values = ConfigValues()
     
     private lazy var tableView: UITableView = {
         let view = UITableView()
@@ -58,68 +145,61 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configNav()
         prepareData()
         setupUI()
         title = "Debug"
     }
     
-    private var key: String {
-      "AFhdqaX970inj42EoOVuw+kAAAAAAAAADH8u5FkDlopXBsahjOkZA1CcQwTaKaUMQB/H1JNtlz7fSTFdvOcWXXvpgvzCkJDHyRrfKuxYc8p4wP5kcZN+ua3bxgqRjGQLNxI2b9askeQvt63cZNivX3EDIJz6Ywlk0omNVxAlneT7Z1Do/OSkelsZa5zVwVZbYV0yQVSz" // swiftlint:disable:this line_length
-    }
-    
     private func prepareData() {
-        cellsData = [
-            (.apiKey, "ApiKey:", key),
-            (.cost, "Cost:", "2000"),
-            (.orderId, "OdredId:", "9580e34a-54fe-4380-b9c4-70c65cd06b23"),
-            (.lang, "Lang:", false),
-            (.mode, "Pay mode:", false),
-            (.mocks, "Mocks:", false),
-            (.ssl, "SSL", true)
-        ]
+        values = getConfig()
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellData = cellsData[indexPath.row]
-        if cellData.type == .lang || cellData.type == .mode || cellData.type == .mocks || cellData.type == .ssl {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: SegmentedControlCell.reuseID) as? SegmentedControlCell else {
-                return UITableViewCell()
-            }
-            var items: [String] = []
-            var selected = 0
-            if cellData.type == .lang {
-                items = ["Swift", "Obj-C"]
-            } else if cellData.type == .mode {
-                items = ["Manual", "Auto"]
-            } else if cellData.type == .mocks {
-                items = ["Off", "On"]
-            } else if cellData.type == .ssl {
-                items = ["Off", "On"]
-                selected = 1
-            }
-            
-            cell.config(title: cellData.title,
-                        items: items,
-                        selected: selected) { [weak self] value in
-                self?.cellsData[indexPath.row].value = value
-            }
-            return cell
-        } else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: RootCell.reuseID) as? RootCell else {
-                return UITableViewCell()
-            }
-            let cellData = cellsData[indexPath.row]
-            cell.config(with: cellData.title,
-                        value: cellData.value as? String ?? "",
-                        keyboardType: cellData.type == .cost ? .decimalPad : .default) { [weak self] value in
-                self?.cellsData[indexPath.row].value = value
-            }
-            return cell
+    private func configNav() {
+        if #available(iOS 13.0, *) {
+            let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh,
+                                                target: self,
+                                                action: #selector(cleareConfig))
+            navigationItem.rightBarButtonItem = refreshButton
         }
     }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if cellConfig[indexPath.row].items != nil {
+            return configSwitchCell(for: indexPath)
+        } else {
+            return configStringCell(for: indexPath)
+        }
+    }
+    
+    func configStringCell(for indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: RootCell.reuseID) as? RootCell else {
+            return UITableViewCell()
+        }
+        let data = cellConfig[indexPath.row]
+        cell.config(with: data.title,
+                    value: values.getValue(for: data),
+                    keyboardType: data == .cost ? .decimalPad : .default) { [weak self] value in
+            self?.values.setValue(value: value, for: data)
+        }
+        return cell
+    }
+    
+    func configSwitchCell(for indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SegmentedControlCell.reuseID) as? SegmentedControlCell else {
+            return UITableViewCell()
+        }
+        let data = cellConfig[indexPath.row]
+        cell.config(title: data.title,
+                    items: data.items ?? [],
+                    selected: values.getValue(for: data)) { [weak self] value in
+            self?.values.setValue(value: value, for: data)
+        }
+        return cell
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        cellsData.count
+        cellConfig.count
     }
     
     private func setupUI() {
@@ -189,28 +269,45 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     @objc
+    private func cleareConfig() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "ConfigValues")
+        values = getConfig()
+        tableView.reloadData()
+    }
+
+    @objc
     private func showCart() {
-        guard let cost = Int(cellsData.first(where: { $0.type == .cost })?.value as? String ?? "0"),
-              let apiKey = cellsData.first(where: { $0.type == .apiKey })?.value as? String,
-              let orderId = cellsData.first(where: { $0.type == .orderId })?.value as? String,
-              let objSelected = cellsData.first(where: { $0.type == .lang })?.value as? Bool,
-              let autoMode = cellsData.first(where: { $0.type == .mode })?.value as? Bool,
-              let mocksOn = cellsData.first(where: { $0.type == .mocks })?.value as? Bool,
-              let sslOn = cellsData.first(where: { $0.type == .ssl })?.value as? Bool else {
-            return
-        }
         let vc: UIViewController
-        if objSelected {
+        
+        if values.lang == "Obj-C" {
             vc = ObjcCartVC()
         } else {
-            vc = CartVC(totalCost: cost,
-                        apiKey: apiKey,
-                        orderId: orderId,
-                        autoMode: autoMode,
-                        mocksOn: mocksOn,
-                        sslOn: sslOn)
+            vc = CartVC(totalCost: Int(values.cost) ?? 0,
+                        apiKey: values.apiKey,
+                        orderId: values.orderId,
+                        autoMode: values.mode == "Auto",
+                        mocksOn: values.mocks == "On",
+                        sslOn: values.ssl == "On")
         }
+        saveConfig()
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func saveConfig() {
+        let defaults = UserDefaults.standard
+        guard let encoded = try? JSONEncoder().encode(values) else { return }
+        defaults.set(encoded, forKey: "ConfigValues")
+    }
+    
+    private func getConfig() -> ConfigValues {
+        let defaults = UserDefaults.standard
+        if let data = defaults.value(forKey: "ConfigValues") as? Data,
+           let decoded = try? JSONDecoder().decode(ConfigValues.self, from: data) {
+            return decoded
+        } else {
+            return ConfigValues()
+        }
     }
     
     private func showAlert(with title: String? = nil, text: String? = nil) {

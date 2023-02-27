@@ -14,8 +14,8 @@ protocol PaymentPresenting {
 }
 
 final class PaymentPresenter: PaymentPresenting {
-    private let analytics: AnalyticsService
     private let router: PaymentRouting
+    private let analytics: AnalyticsService
     private let userService: UserService
     private let paymentService: PaymentService
     private let locationManager: LocationManager
@@ -97,7 +97,8 @@ final class PaymentPresenter: PaymentPresenting {
             case .failure(let error):
                 self?.view?.showAlert(with: .failure(),
                                       completion: {
-                    self?.view?.dismiss(animated: true, completion: {  self?.manager.completionWithError(error: error)
+                    self?.view?.dismiss(animated: true,
+                                        completion: { self?.manager.completionWithError(error: error)
                     })
                 })
             }
