@@ -322,8 +322,6 @@
 		44C6510F2934E37F008F1C29 /* SBPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPError.swift; sourceTree = "<group>"; };
 		44C651112934E393008F1C29 /* SBPaymentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPaymentRequest.swift; sourceTree = "<group>"; };
 		44D5361A2926198400B99463 /* UIViewController+Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Container.swift"; sourceTree = "<group>"; };
-		44D758562975191A005D2EA4 /* Fingerprint.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Fingerprint.xcframework; path = "../../Downloads/BZ.SDK.Fingerprint.v1.4.11 5/bin/XCFramework/Fingerprint.xcframework"; sourceTree = "<group>"; };
-		44D7585A29751A70005D2EA4 /* BizoneCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = BizoneCore.xcframework; path = "../../Downloads/BZ.SDK.Fingerprint.v1.4.11 5/bin/XCFramework/BizoneCore.xcframework"; sourceTree = "<group>"; };
 		44D7585E29751C9A005D2EA4 /* PersonalMetricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalMetricsService.swift; sourceTree = "<group>"; };
 		44D898D42936487900550FC6 /* String+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Random.swift"; sourceTree = "<group>"; };
 		44D898D72937449B00550FC6 /* SDKManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKManager.swift; sourceTree = "<group>"; };
@@ -932,9 +930,7 @@
 			isa = PBXGroup;
 			children = (
 				44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */,
-				44D7585A29751A70005D2EA4 /* BizoneCore.xcframework */,
 				44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */,
-				44D758562975191A005D2EA4 /* Fingerprint.xcframework */,
 				441B7903296FEE990093138D /* libresolv.9.tbd */,
 			);
 			name = Frameworks;
