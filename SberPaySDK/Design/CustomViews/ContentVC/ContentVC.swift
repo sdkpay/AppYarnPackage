@@ -29,7 +29,6 @@ class ContentVC: UIViewController {
     }
 
     private var loadingView: LoadingView?
-    private var alertView: AlertView?
 
     lazy var logoImage: UIImageView = {
         let view = UIImageView()
@@ -134,40 +133,20 @@ extension ContentVC {
 
 // ContentVC + Alert
 extension ContentVC {
-    func showAlert(with alertState: AlertState,
-                   animate: Bool = true,
-                   buttonTitle: String? = nil,
-                   completion: @escaping Action) {
-        let alertView = AlertView()
+    func showAlert(with alertModel: AlertViewModel) {
         view.subviews.forEach { view in
                 if view != stickImageView {
                     view.isHidden = true
                 }
         }
-        alertView.config(buttonTitle: buttonTitle, with: alertState)
+        let alertView = AlertView(with: alertModel)
         view.addSubview(alertView)
         alertView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            alertView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            alertView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             alertView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            alertView.topAnchor.constraint(equalTo: view.topAnchor),
             alertView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         ])
         view.bringSubviewToFront(stickImageView)
-        self.alertView = alertView
-        self.alertView?.show(animate: animate, with: completion)
-    }
-    
-    func hideAlert(animationCompletion: Action? = nil) {
-        view.subviews.forEach({ $0.isHidden = false })
-        UIView.animate(withDuration: .animationDuration,
-                       delay: 0) {
-            self.alertView?.alpha = 0
-        } completion: { [weak self] _ in
-            animationCompletion?()
-            self?.alertView?.removeFromSuperview()
-            self?.alertView = nil
-            self?.isLoading = false
-        }
     }
 }

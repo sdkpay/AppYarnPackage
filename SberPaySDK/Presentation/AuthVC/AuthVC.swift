@@ -81,10 +81,10 @@ final class AuthVC: ContentVC, IAuthVC {
         
         banksStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            banksStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: .banksSpacing),
+            banksStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             banksStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
             banksStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            banksStack.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -.bottomMargin)
+            banksStack.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
 }

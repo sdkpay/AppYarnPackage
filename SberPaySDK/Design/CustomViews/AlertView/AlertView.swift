@@ -8,22 +8,11 @@
 import UIKit
 import AVFoundation
 
-enum AlertState {
-    case success
-    case failure(text: String? = nil)
-    
-    var soundPath: String {
-        switch self {
-        case .success:
-            return "poz.mp3"
-        case .failure:
-            return "neg.mp3"
-        }
-    }
-}
-
 private extension CGFloat {
     static let imageWidth = 80.0
+    static let topMargin = 52.0
+    static let buttonsMargin = 32.0
+    static let bottomMargin = 66.0
 }
 
 private extension TimeInterval {
@@ -32,10 +21,9 @@ private extension TimeInterval {
 }
 
 final class AlertView: UIView {
-    private lazy var imageView = UIImageView()
     private var audioPlayer: AVAudioPlayer?
-    private var state: AlertState?
-    private var needButton = false
+    
+    private lazy var imageView = UIImageView()
 
     private lazy var alertTitle: UILabel = {
         let view = UILabel()
@@ -46,89 +34,57 @@ final class AlertView: UIView {
         return view
     }()
     
-    private lazy var alertStack: UIStackView = {
+    private lazy var buttonsStack: UIStackView = {
         let view = UIStackView()
         view.spacing = .margin
         view.axis = .vertical
-        view.alignment = .center
+        view.alignment = .fill
         return view
     }()
     
-    private lazy var button = DefaultButton(buttonAppearance: .info)
+    private var model: AlertViewModel
 
-    init() {
+    init(with model: AlertViewModel) {
+        self.model = model
         super.init(frame: .zero)
-        setupUI()
+        configUI()
+        completion()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    func config(buttonTitle: String?, with state: AlertState) {
-        self.state = state
-        backgroundColor = .backgroundPrimary
-
-        switch state {
-        case .success:
-            imageView.image = .Common.success
-            alertTitle.text = .Alert.alertPaySuccessTitle
-        case .failure(let text):
-            imageView.image = .Common.failure
-            if let text = text {
-                alertTitle.text = text
-            } else {
-                alertTitle.text = String(stringLiteral: .Alert.alertErrorMainTitle)
+    
+    private func completion() {
+        playFeedback()
+        playSound()
+        if model.buttons.isEmpty {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration) { [weak self] in
+                self?.model.completion()
             }
         }
-        if alertTitle.text != nil {
-            alertStack.addArrangedSubview(alertTitle)
-        }
+    }
 
-        if let buttonTitle = buttonTitle {
-            needButton = true
-            button.setTitle(buttonTitle, for: .normal)
-            alertStack.addArrangedSubview(button)
-        }
+    private func configUI() {
+        imageView.image = model.image
+        alertTitle.text = model.title
 
-        UIView.animate(withDuration: .animationDuration,
-                       delay: 0) { [weak self] in
-            guard let self = self else { return }
-            self.alpha = 1
+        for item in model.buttons {
+            let button = DefaultButton(buttonAppearance: item.type)
+            button.setTitle(item.title, for: .normal)
+            button.addAction(item.action)
+            buttonsStack.addArrangedSubview(button)
+            
+            button.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                button.heightAnchor.constraint(equalToConstant: .defaultButtonHeight)
+            ])
         }
+        setupUI()
     }
     
-    func show(animate: Bool, with completion: @escaping Action) {
-        if animate {
-            UIView.animate(withDuration: .animationDuration,
-                           delay: 0) { [weak self] in
-                guard let self = self else { return }
-                self.alpha = 1
-            } completion: { [weak self] _ in
-                self?.showCompleted(with: completion)
-            }
-        } else {
-            showCompleted(with: completion)
-        }
-    }
-    
-    private func showCompleted(with completion: @escaping Action) {
-        if let state = state {
-            self.playFeedback(for: state)
-            self.playSound(for: state)
-        }
-        if needButton {
-            button.addAction(completion)
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration,
-                                          execute: {
-                completion()
-            })
-        }
-    }
-    
-    private func playSound(for state: AlertState) {
-        guard let path = Bundle.sdkBundle.path(forResource: state.soundPath,
+    private func playSound() {
+        guard let path = Bundle.sdkBundle.path(forResource: model.sound,
                                                ofType: nil) else { return }
         let url = URL(fileURLWithPath: path)
         do {
@@ -141,34 +97,37 @@ final class AlertView: UIView {
         }
     }
     
-    private func playFeedback(for state: AlertState) {
-        var feedBack: UINotificationFeedbackGenerator.FeedbackType
-        switch state {
-        case .success:
-            feedBack = .success
-        case .failure:
-            feedBack = .warning
-        }
-        UINotificationFeedbackGenerator().notificationOccurred(feedBack)
+    private func playFeedback() {
+        UINotificationFeedbackGenerator().notificationOccurred(model.feedBack)
     }
     
     func setupUI() {
         isUserInteractionEnabled = true
-        alpha = 0
-
+        addSubview(imageView)
+        addSubview(alertTitle)
+        addSubview(buttonsStack)
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: topAnchor),
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageView.widthAnchor.constraint(equalToConstant: .imageWidth),
             imageView.heightAnchor.constraint(equalToConstant: .imageWidth)
         ])
-
-        addSubview(alertStack)
-        alertStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        alertTitle.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            alertStack.centerYAnchor.constraint(equalTo: centerYAnchor),
-            alertStack.centerXAnchor.constraint(equalTo: centerXAnchor),
-            alertStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
-            alertStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin)
+            alertTitle.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: .margin),
+            alertTitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
+            alertTitle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin)
         ])
-        alertStack.addArrangedSubview(imageView)
+        
+        buttonsStack.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            buttonsStack.topAnchor.constraint(equalTo: alertTitle.bottomAnchor, constant: .buttonsMargin),
+            buttonsStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
+            buttonsStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin),
+            buttonsStack.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
     }
 }

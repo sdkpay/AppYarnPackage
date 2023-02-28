@@ -17,6 +17,8 @@ extension String {
         static let okTitle = String(stringLiteral: "ok.title")
         /// Вернуться к заказу
         static let returnTitle = String(stringLiteral: "return.title")
+        /// Попробовать ещё раз
+        static let tryTitle = String(stringLiteral: "try.title")
     }
 
     enum Auth {
@@ -56,5 +58,9 @@ extension String {
         static let alertPaySuccessTitle = String(stringLiteral: "alert.pay.success.title")
         /// Нет подходящих карт. Вернитесь к заказу\nи выберите другой способ оплаты.
         static let alertPayNoCardsTitle = String(stringLiteral: "alert.pay.no.cards.title")
+        /// Обрабатываем оплату. Следите за статусом в Истории приложения СберБанк Онлайн.
+        static let alertPayWaitingTitle = String(stringLiteral: "alert.pay.waiting.title")
+        /// Нет интернета. Проверьте подключение и попробуйте ещё раз.
+        static let alertPayNoInternetTitle = String(stringLiteral: "alert.pay.no.internet.title")
     }
 }

@@ -24,9 +24,9 @@ extension PaymentTarget: TargetType {
     var path: String {
         switch self {
         case .getPaymentToken:
-            return "sdk-gateway/v1/paymentToken"
+            return "/paymentToken"
         case .getPaymentOrder:
-            return "sdk-gateway/v1/paymentOrderSDK"
+            return "/paymentOrderSDK"
         }
     }
     

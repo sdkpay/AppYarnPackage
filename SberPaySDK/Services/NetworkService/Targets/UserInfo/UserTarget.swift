@@ -21,10 +21,10 @@ extension UserTarget: TargetType {
     var path: String {
         switch self {
         case .getListCards:
-            return "sdk-gateway/v1/listCards"
+            return "/listCards"
         case .checkSession:
             // DEBUG
-            return "sdk-gateway/v1/sessionId"
+            return "/sessionId"
         }
     }
     

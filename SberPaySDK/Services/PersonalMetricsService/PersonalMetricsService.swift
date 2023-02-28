@@ -17,6 +17,7 @@ final class PersonalMetricsServiceAssembly: Assembly {
 
 protocol PersonalMetricsService {
     func getUserData(completion: @escaping (String?) -> Void)
+    func integrityCheck(completion: @escaping (Bool) -> Void)
 }
 
 final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
@@ -25,6 +26,31 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     override init() {
         super.init()
         config()
+    }
+    
+    func integrityCheck(completion: @escaping (Bool) -> Void) {
+        DispatchQueue.global().async { [weak self] in
+            guard let data = self?.provider?.report(.mixedWithCoord) else {
+                completion(false)
+                return
+            }
+            SBLogger.log(.biZone + data)
+            // Строку с данными конвертируем в словать
+            let dataDictionary = self?.convertToDictionary(text: data)
+            // Значение присутствия эмулятора
+            let emulator = dataDictionary?["Emulator"] as? Int
+            // Значениие Root detector
+            let сompromised = dataDictionary?["Compromised"] as? Int
+            // Проверяем значение
+            if let emulator = emulator,
+               let сompromised = сompromised,
+               сompromised == 0,
+               emulator == 0 {
+                completion(true)
+            } else {
+                completion(false)
+            }
+        }
     }
     
     func getUserData(completion: @escaping (String?) -> Void) {
@@ -49,5 +75,16 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
         config.useRSAAppkey = false
         config.useAdvertiserID = false
         provider = FPSDKFactory.create(withConfiguration: config)
+    }
+    
+    private func convertToDictionary(text: String) -> [String: Any]? {
+        if let data = text.data(using: .utf8) {
+            do {
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return nil
     }
 }

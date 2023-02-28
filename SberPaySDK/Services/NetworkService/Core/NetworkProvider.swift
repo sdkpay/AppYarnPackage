@@ -105,9 +105,10 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     }
 
     func cancel() {
-        task?.cancel()
         guard let task = task,
+              !task.progress.isFinished,
               let request = task.currentRequest else { return }
+        task.cancel()
         SBLogger.requestCancelled(request)
     }
 

@@ -17,6 +17,7 @@ final class AuthPresenter: AuthPresenting {
     private let authService: AuthService
     private let sdkManager: SDKManager
     private let userService: UserService
+    private let alertService: AlertService
 
     weak var view: (IAuthVC & ContentVC)?
     
@@ -24,12 +25,14 @@ final class AuthPresenter: AuthPresenting {
          authService: AuthService,
          sdkManager: SDKManager,
          analytics: AnalyticsService,
-         userService: UserService) {
+         userService: UserService,
+         alertService: AlertService) {
         self.analytics = analytics
         self.router = router
         self.authService = authService
         self.sdkManager = sdkManager
         self.userService = userService
+        self.alertService = alertService
     }
     
     deinit {
@@ -60,9 +63,21 @@ final class AuthPresenter: AuthPresenting {
                     self?.configAuthSettings()
                 }
             case .failure(let error):
-                self?.view?.showAlert(with: .failure(), completion: {
-                    self?.sdkManager.completionWithError(error: error)
-                })
+                if error.represents(.noInternetConnection) {
+                    self?.alertService.showNoInternet(retry: {
+                        print("tapped")
+                    },
+                                                      cancel: {
+                        print("tapped")
+                    })
+                } else {
+                    self?.alertService.showAlert(with: .Alert.alertErrorMainTitle,
+                                                 state: .failure,
+                                                 buttons: [],
+                                                 completion: {
+                        print("end")
+                    })
+                }
             }
         }
     }
@@ -101,12 +116,25 @@ final class AuthPresenter: AuthPresenting {
             self.view?.hideLoading()
             self.removeObserver()
             if let error = error {
-                self.view?.showAlert(with: .failure()) {
-                    self.view?.dismiss(animated: true, completion: {
-                        self.analytics.sendEvent(.BankAppAuthFailed)
-                        self.sdkManager.completionWithError(error: error)
-                    })
-                }
+                self.analytics.sendEvent(.BankAppAuthFailed)
+                if error.represents(.noInternetConnection) {
+                    self.alertService.showNoInternet(retry: {
+                        self.openSberId()
+                    },
+                                                     cancel: {
+                        self.view?.dismiss(animated: true, completion: {
+                            self.sdkManager.completionWithError(error: error)
+                        })
+                    }) } else {
+                        self.alertService.showAlert(with: .Alert.alertErrorMainTitle,
+                                                    state: .failure,
+                                                    buttons: [],
+                                                    completion: {
+                            self.view?.dismiss(animated: true, completion: {
+                                self.sdkManager.completionWithError(error: error)
+                            })
+                        })
+                    }
             } else {
                 self.analytics.sendEvent(.BankAppAuthSuccess)
                 self.router.presentPayment()

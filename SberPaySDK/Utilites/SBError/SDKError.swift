@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SDKError: Error {
+enum SDKError: Error {
     case noInternetConnection
     case noData
     case badResponseWithStatus(code: Int)
@@ -38,5 +38,9 @@ public enum SDKError: Error {
         default:
             return localizedDescription
         }
+    }
+    
+    func represents(_ error: SDKError) -> Bool {
+        self.description == error.description
     }
 }

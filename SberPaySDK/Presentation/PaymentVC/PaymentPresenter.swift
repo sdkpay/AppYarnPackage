@@ -20,6 +20,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let paymentService: PaymentService
     private let locationManager: LocationManager
     private let manager: SDKManager
+    private let alertService: AlertService
     
     private var selectedCard: PaymentToolInfo?
     private var user: User?
@@ -31,13 +32,15 @@ final class PaymentPresenter: PaymentPresenting {
          userService: UserService,
          analytics: AnalyticsService,
          paymentService: PaymentService,
-         locationManager: LocationManager) {
+         locationManager: LocationManager,
+         alertService: AlertService) {
         self.router = router
         self.userService = userService
         self.manager = manager
         self.analytics = analytics
         self.paymentService = paymentService
         self.locationManager = locationManager
+        self.alertService = alertService
     }
     
     func viewDidLoad() {
@@ -65,13 +68,29 @@ final class PaymentPresenter: PaymentPresenting {
         guard let paymentId = selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId) { [weak self] error in
             if let error = error {
-                self?.view?.showAlert(with: .failure()) {
-                    self?.view?.dismiss(animated: true, completion: {
-                        self?.manager.completionPay(with: error)
-                    })
-                }
+                if error.represents(.noInternetConnection) {
+                    self?.alertService.showNoInternet(retry: {
+                        self?.pay()
+                    },
+                                                     cancel: {
+                        self?.view?.dismiss(animated: true, completion: {
+                            self?.manager.completionPay(with: error)
+                        })
+                    }) } else {
+                        self?.alertService.showAlert(with: .Alert.alertErrorMainTitle,
+                                                     state: .failure,
+                                                     buttons: [],
+                                                     completion: {
+                            self?.view?.dismiss(animated: true, completion: {
+                                self?.manager.completionPay(with: error)
+                            })
+                        })
+                    }
             } else {
-                self?.view?.showAlert(with: .success, completion: {
+                self?.alertService.showAlert(with: .Alert.alertPaySuccessTitle,
+                                             state: .failure,
+                                             buttons: [],
+                                             completion: {
                     self?.view?.dismiss(animated: true, completion: {
                         self?.manager.completionPay(with: nil)
                     })
@@ -95,12 +114,24 @@ final class PaymentPresenter: PaymentPresenting {
                 self?.selectedCard = user.paymentToolInfo.first(where: { $0.priorityCard })
                 self?.configViews()
             case .failure(let error):
-                self?.view?.showAlert(with: .failure(),
-                                      completion: {
-                    self?.view?.dismiss(animated: true,
-                                        completion: { self?.manager.completionWithError(error: error)
-                    })
-                })
+                if error.represents(.noInternetConnection) {
+                    self?.alertService.showNoInternet(retry: {
+                        self?.pay()
+                    },
+                                                     cancel: {
+                        self?.view?.dismiss(animated: true, completion: {
+                            self?.manager.completionPay(with: error)
+                        })
+                    }) } else {
+                        self?.alertService.showAlert(with: .Alert.alertErrorMainTitle,
+                                                     state: .failure,
+                                                     buttons: [],
+                                                     completion: {
+                            self?.view?.dismiss(animated: true, completion: {
+                                self?.manager.completionPay(with: error)
+                            })
+                        })
+                    }
             }
         }
     }
@@ -128,14 +159,22 @@ final class PaymentPresenter: PaymentPresenting {
                 })
             }
         } else {
-            view?.showAlert(with: .failure(text: .Alert.alertPayNoCardsTitle),
-                            animate: false,
-                            buttonTitle: .Common.returnTitle,
-                            completion: {
-                self.view?.dismiss(animated: true, completion: {
+            var buttons: [(title: String,
+                           type: DefaultButtonAppearance,
+                           action: Action,
+                           closeButton: Bool)] = []
+            buttons.append((title: .Common.returnTitle,
+                            type: .full,
+                            action: {
+                self.view?.dismiss(animated: true,
+                                   completion: {
                     self.manager.completionWithError(error: .noCards)
                 })
-            })
+            }, closeButton: true))
+            alertService.showAlert(with: .Alert.alertPayNoCardsTitle,
+                                   state: .failure,
+                                   buttons: buttons,
+                                   completion: {})
         }
     }
 }

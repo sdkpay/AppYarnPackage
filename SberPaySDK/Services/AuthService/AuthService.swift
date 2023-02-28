@@ -12,7 +12,7 @@ final class AuthServiceAssembly: Assembly {
         let service: AuthService = DefaultAuthService(network: container.resolve(),
                                                       sdkManager: container.resolve(),
                                                       analytics: container.resolve(),
-                                                      authManager: container.resolve())
+                                                      authManager: container.resolve(), personalMetricsService: container.resolve())
         container.register(service: service)
     }
 }
@@ -32,6 +32,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private let network: NetworkService
     private let sdkManager: SDKManager
     private var authManager: AuthManager
+    private var personalMetricsService: PersonalMetricsService
 
     var avaliableBanks: [BankApp] {
         BankApp.allCases.filter({ canOpen(link: $0.link) })
@@ -55,11 +56,13 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     init(network: NetworkService,
          sdkManager: SDKManager,
          analytics: AnalyticsService,
-         authManager: AuthManager) {
+         authManager: AuthManager,
+         personalMetricsService: PersonalMetricsService) {
         self.analytics = analytics
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
+        self.personalMetricsService = personalMetricsService
     }
 
     func selectBank(_ app: BankApp) {
@@ -67,6 +70,19 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
     
     func tryToAuth(completion: @escaping (SDKError?) -> Void) {
+        // Проверка на целостность
+        personalMetricsService.integrityCheck { [weak self] result in
+            if result {
+                // Запрос на получение сессии
+                self?.authRequest(completion: completion)
+            } else {
+                // Ошибка авторизации
+                completion(.personalInfo)
+            }
+        }
+    }
+    
+    private func authRequest(completion: @escaping (SDKError?) -> Void) {
         guard let request = sdkManager.authInfo else { return }
         network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
                                                 merchantLogin: request.clientName,
