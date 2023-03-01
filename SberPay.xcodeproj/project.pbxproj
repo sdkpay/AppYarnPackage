@@ -582,7 +582,6 @@
 		444A13B7291BA9BD00C9FBE0 /* Design */ = {
 			isa = PBXGroup;
 			children = (
-				44890674297A7CEF002CDBAD /* ProfileView */,
 				4479ECD829476EB8009B3AB8 /* Style */,
 				445CB085292CA08500F50047 /* Fonts */,
 				445CB076292BC55200F50047 /* Gallery */,
@@ -595,6 +594,7 @@
 		444A13B8291BAF6400C9FBE0 /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				44890674297A7CEF002CDBAD /* ProfileView */,
 				4496792329A2375400EC3439 /* ContentView */,
 				445CB094292CC19100F50047 /* ContentVC */,
 				44F9FD4E295AFAD700FE4B9F /* ContentNC */,
