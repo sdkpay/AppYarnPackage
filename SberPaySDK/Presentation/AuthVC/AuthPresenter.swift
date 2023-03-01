@@ -64,19 +64,17 @@ final class AuthPresenter: AuthPresenting {
                 }
             case .failure(let error):
                 if error.represents(.noInternetConnection) {
-                    self?.alertService.showNoInternet(retry: {
-                        print("tapped")
+                    self?.alertService.showNoInternet(on: self?.view,
+                                                      retry: {
+                        self?.checkSession()
                     },
                                                       cancel: {
-                        print("tapped")
+                        self?.dismissWithError(error)
                     })
                 } else {
-                    self?.alertService.showAlert(with: .Alert.alertErrorMainTitle,
-                                                 state: .failure,
-                                                 buttons: [],
-                                                 completion: {
-                        print("end")
-                    })
+                    self?.alertService.showDefaultError(on: self?.view) {
+                        self?.dismissWithError(error)
+                    }
                 }
             }
         }
@@ -106,7 +104,7 @@ final class AuthPresenter: AuthPresenting {
     
     private func getAccessSberPay() {
         let text = authService.selectedBank == .sber ? String.Loading.toSberTitle : String.Loading.toSbolTitle
-       view?.showLoading(with: text)
+        view?.showLoading(with: text)
         openSberId()
     }
     
@@ -118,21 +116,13 @@ final class AuthPresenter: AuthPresenting {
             if let error = error {
                 self.analytics.sendEvent(.BankAppAuthFailed)
                 if error.represents(.noInternetConnection) {
-                    self.alertService.showNoInternet(retry: {
+                    self.alertService.showNoInternet(on: self.view, retry: {
                         self.openSberId()
-                    },
-                                                     cancel: {
-                        self.view?.dismiss(animated: true, completion: {
-                            self.sdkManager.completionWithError(error: error)
-                        })
+                    }, cancel: {
+                        self.dismissWithError(error)
                     }) } else {
-                        self.alertService.showAlert(with: .Alert.alertErrorMainTitle,
-                                                    state: .failure,
-                                                    buttons: [],
-                                                    completion: {
-                            self.view?.dismiss(animated: true, completion: {
-                                self.sdkManager.completionWithError(error: error)
-                            })
+                        self.alertService.showDefaultError(on: self.view, completion: {
+                            self.dismissWithError(error)
                         })
                     }
             } else {
@@ -140,6 +130,12 @@ final class AuthPresenter: AuthPresenting {
                 self.router.presentPayment()
             }
         }
+    }
+    
+    private func dismissWithError(_ error: SDKError) {
+        view?.dismiss(animated: true, completion: { [weak self] in
+            self?.sdkManager.completionWithError(error: error)
+        })
     }
     
     @objc

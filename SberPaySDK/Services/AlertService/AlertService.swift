@@ -12,8 +12,7 @@ struct AlertViewModel {
     let title: String
     let buttons: [(title: String,
                    type: DefaultButtonAppearance,
-                   action: Action,
-                   closeButton: Bool)]
+                   action: Action)]
     let sound: String
     let feedBack: UINotificationFeedbackGenerator.FeedbackType
     let completion: Action
@@ -73,14 +72,15 @@ final class AlertServiceAssembly: Assembly {
 }
 
 protocol AlertService {
-    func showAlert(with text: String,
+    func showAlert(on view: ContentVC?,
+                   with text: String,
                    state: AlertState,
                    buttons: [(title: String,
                               type: DefaultButtonAppearance,
-                              action: Action,
-                              closeButton: Bool)],
+                              action: Action)],
                    completion: @escaping Action)
-    func showNoInternet(retry: @escaping Action, cancel: @escaping Action)
+    func showNoInternet(on view: ContentVC?, retry: @escaping Action, cancel: @escaping Action)
+    func showDefaultError(on view: ContentVC?, completion: @escaping Action)
 }
 
 final class DefaultAlertService: AlertService {
@@ -97,12 +97,12 @@ final class DefaultAlertService: AlertService {
         return nc.topViewController as? ContentVC
     }
     
-    func showAlert(with text: String,
+    func showAlert(on view: ContentVC?,
+                   with text: String,
                    state: AlertState,
                    buttons: [(title: String,
                               type: DefaultButtonAppearance,
-                              action: Action,
-                              closeButton: Bool)],
+                              action: Action)],
                    completion: @escaping Action) {
         let model = AlertViewModel(image: state.image,
                                    title: text,
@@ -110,23 +110,29 @@ final class DefaultAlertService: AlertService {
                                    sound: state.soundPath,
                                    feedBack: state.feedBack,
                                    completion: completion)
-        vc?.showAlert(with: model)
+        view?.showAlert(with: model)
     }
     
-    func showNoInternet(retry: @escaping Action, cancel: @escaping Action) {
+    func showDefaultError(on view: ContentVC?, completion: @escaping Action) {
+        showAlert(on: view,
+                  with: .Alert.alertErrorMainTitle,
+                  state: .failure,
+                  buttons: [],
+                  completion: completion)
+    }
+    
+    func showNoInternet(on view: ContentVC?, retry: @escaping Action, cancel: @escaping Action) {
         var buttons: [(title: String,
                        type: DefaultButtonAppearance,
-                       action: Action,
-                       closeButton: Bool)] = []
+                       action: Action)] = []
                buttons.append((title: .Common.tryTitle,
                                type: .full,
-                               action: retry,
-                               closeButton: false))
+                               action: retry))
                buttons.append((title: .Common.cancelTitle,
                                type: .cancel,
-                               action: cancel,
-                               closeButton: true))
-        showAlert(with: .Alert.alertPayNoInternetTitle,
+                               action: cancel))
+        showAlert(on: view,
+                  with: .Alert.alertPayNoInternetTitle,
                   state: .failure,
                   buttons: buttons,
                   completion: cancel)

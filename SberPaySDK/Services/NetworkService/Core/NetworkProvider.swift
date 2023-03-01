@@ -66,7 +66,9 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                              delegateQueue: nil)
     }
     
-    func request(_ target: TargetType, retryCount: Int = 1, completion: @escaping NetworkProviderCompletion) {
+    func request(_ target: TargetType,
+                 retryCount: Int = 1,
+                 completion: @escaping NetworkProviderCompletion) {
         _request(target: target, retryCount: retryCount, completion: completion)
     }
 
@@ -105,11 +107,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     }
 
     func cancel() {
-        guard let task = task,
-              !task.progress.isFinished,
-              let request = task.currentRequest else { return }
-        task.cancel()
-        SBLogger.requestCancelled(request)
+        task?.cancel()
     }
 
     private func buildRequest(from route: TargetType) throws -> URLRequest {
@@ -166,7 +164,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private func saveGeobalancingData(from response: URLResponse) {
         guard let response = response as? HTTPURLResponse else { return }
         let headers = response.allHeaderFields
-        requestManager.cookie = headers[String.Headers.cookie] as? String
+        requestManager.cookie = headers[String.Headers.setCookie] as? String
         requestManager.pod = headers[String.Headers.pod] as? String
     }
 }

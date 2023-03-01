@@ -58,13 +58,16 @@ final class DefaultStartupService: StartupService {
         guard let locator = locator
         else { return }
         let service: AlertService = locator.resolve()
+        
         if paymentSuccess {
-            service.showAlert(with: .Alert.alertPaySuccessTitle,
+            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+                              with: .Alert.alertPaySuccessTitle,
                               state: .success,
                               buttons: [],
                               completion: completion)
         } else {
-            service.showAlert(with: .Alert.alertErrorMainTitle,
+            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+                              with: .Alert.alertErrorMainTitle,
                               state: .failure,
                               buttons: [],
                               completion: completion)
