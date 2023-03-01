@@ -69,7 +69,7 @@ final class DefaultSDKManager: SDKManager {
 
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion) {
-        newStart = isNewStart(orderId: paymentTokenRequest.orderNumber)
+        newStart = isNewStart(orderId: paymentTokenRequest.orderNumber ?? "")
         payStrategy = .manual
         authInfo = AuthInfo(paymentTokenRequest: paymentTokenRequest)
         authManager.apiKey = paymentTokenRequest.apiKey

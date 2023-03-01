@@ -15,7 +15,7 @@ private extension CGFloat {
 }
 
 enum Config: Int, CaseIterable, Codable {
-    case apiKey, cost, orderId, lang, mode, mocks, ssl
+    case apiKey, cost, orderId, configMethod, lang, mode, mocks, ssl
     
     var title: String {
         switch self {
@@ -25,6 +25,8 @@ enum Config: Int, CaseIterable, Codable {
             return "Cost:"
         case .orderId:
             return "OdredId:"
+        case .configMethod:
+            return "Config request method:"
         case .lang:
             return "Lang:"
         case .mode:
@@ -46,6 +48,8 @@ enum Config: Int, CaseIterable, Codable {
             return ["On", "Off"]
         case .ssl:
             return ["On", "Off"]
+        case .configMethod:
+            return ["OrderId", "Purchase"]
         default:
             return nil
         }
@@ -55,6 +59,7 @@ enum Config: Int, CaseIterable, Codable {
 struct ConfigValues: Codable {
     var apiKey = "AFhdqaX970inj42EoOVuw+kAAAAAAAAADH8u5FkDlopXBsahjOkZA1CcQwTaKaUMQB/H1JNtlz7fSTFdvOcWXXvpgvzCkJDHyRrfKuxYc8p4wP5kcZN+ua3bxgqRjGQLNxI2b9askeQvt63cZNivX3EDIJz6Ywlk0omNVxAlneT7Z1Do/OSkelsZa5zVwVZbYV0yQVSz" // swiftlint:disable:this line_length
     var cost = "2000"
+    var configMethod = "orderId"
     var orderId = "9580e34a-54fe-4380-b9c4-70c65cd06b23"
     var lang = "Swift"
     var mode = "Auto"
@@ -69,6 +74,8 @@ struct ConfigValues: Codable {
             return cost
         case .orderId:
             return orderId
+        case .configMethod:
+            return configMethod
         case .lang:
             return lang
         case .mode:
@@ -96,6 +103,8 @@ struct ConfigValues: Codable {
             mocks = value
         case .ssl:
             ssl = value
+        case .configMethod:
+            configMethod = value
         }
     }
 }
@@ -283,6 +292,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                         apiKey: values.apiKey,
                         orderId: values.orderId,
                         autoMode: values.mode == "Auto",
+                        purchase: values.configMethod == "Purchase",
                         mocksOn: values.mocks == "On",
                         sslOn: values.ssl == "On")
         }

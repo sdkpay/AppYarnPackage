@@ -13,11 +13,15 @@ struct AuthInfo {
     /// Идентификатора плательщика в вашей системе
     let clientName: String
     /// Сумма операции в минорных единицах
-    let orderId: String
+    let orderId: String?
     /// clientId
     let clientId: String?
     /// redirectUri
     let redirectUri: String
+    /// redirectUri
+    let amount: Int?
+    let currency: String?
+    let orderNumber: String?
     
     init(fullPaymentRequest: SBFullPaymentRequest) {
         self.apiKey = fullPaymentRequest.apiKey
@@ -25,13 +29,19 @@ struct AuthInfo {
         self.orderId = fullPaymentRequest.orderId
         self.clientId = fullPaymentRequest.clientId
         self.redirectUri = fullPaymentRequest.redirectUri
+        self.amount = fullPaymentRequest.amount
+        self.currency = fullPaymentRequest.currency
+        self.orderNumber = nil
     }
     
     init(paymentTokenRequest: SBPaymentTokenRequest) {
         self.apiKey = paymentTokenRequest.apiKey
         self.clientName = paymentTokenRequest.clientName
-        self.orderId = paymentTokenRequest.orderNumber
+        self.orderId = paymentTokenRequest.orderId
+        self.orderNumber = paymentTokenRequest.orderNumber
         self.clientId = paymentTokenRequest.clientId
         self.redirectUri = paymentTokenRequest.redirectUri
+        self.amount = paymentTokenRequest.amount
+        self.currency = paymentTokenRequest.currency
     }
 }

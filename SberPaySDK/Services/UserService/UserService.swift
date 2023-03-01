@@ -48,7 +48,10 @@ final class DefaultUserService: UserService {
                                                 sessionId: sessionId,
                                                 state: state,
                                                 merchantLogin: authInfo.clientName,
-                                                orderId: authInfo.orderId),
+                                                orderId: authInfo.orderId,
+                                                amount: authInfo.amount,
+                                                currency: authInfo.currency,
+                                                orderNumber: authInfo.orderNumber),
                         to: User.self) { [weak self] result in
             switch result {
             case .success(let user):

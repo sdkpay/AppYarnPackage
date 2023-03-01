@@ -16,13 +16,15 @@ public final class SBPaymentTokenRequest: NSObject {
     /// Название магазина клиента
     let clientName: String
     /// Сумма операции в минорных единицах
-    let amount: Int
+    let amount: Int?
     /// Цифровой код валюты операции согласно ISO 4217
-    let currency: String
+    let currency: String?
     /// Номер мобильного телефона Плательщика, если имеется в вашей системе
     let mobilePhone: String?
     /// Уникальный номер (идентификатор) заказа в системе Клиента.
-    let orderNumber: String
+    let orderNumber: String?
+    /// Идентификатор заказа на стороне банка
+    let orderId: String?
     /// Описание к заказу
     let orderDescription: String?
     /// Выбранный язык локализации интерфейсов
@@ -42,8 +44,9 @@ public final class SBPaymentTokenRequest: NSObject {
                 clientName: String,
                 amount: Int,
                 currency: String,
+                orderId: String? = nil,
                 mobilePhone: String? = nil,
-                orderNumber: String,
+                orderNumber: String? = nil,
                 orderDescription: String? = nil,
                 language: String? = nil,
                 recurrentEnabled: Bool,
@@ -59,6 +62,7 @@ public final class SBPaymentTokenRequest: NSObject {
         self.orderNumber = orderNumber
         self.orderDescription = orderDescription
         self.language = language
+        self.orderId = orderId
         self.recurrentEnabled = recurrentEnabled
         self.recurrentExipiry = recurrentExipiry
         self.recurrentFrequency = recurrentFrequency
