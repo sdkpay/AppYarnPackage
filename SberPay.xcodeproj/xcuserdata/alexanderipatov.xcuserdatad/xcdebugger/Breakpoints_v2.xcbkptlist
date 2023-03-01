@@ -7,16 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "DA5A3494-8874-4535-9A8C-238D140CB079"
+            uuid = "AD471062-90CC-43CC-A2BD-D429963F5DE2"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SberPaySDK/Services/PaymentService/PaymentService.swift"
+            filePath = "SberPaySDK/Services/NetworkService/Core/NetworkProvider.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "tryToPay(paymentId:completion:)"
+            startingLineNumber = "97"
+            endingLineNumber = "97"
+            landmarkName = "_request(retry:target:retryCount:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

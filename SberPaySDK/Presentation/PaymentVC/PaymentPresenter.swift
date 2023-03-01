@@ -69,26 +69,20 @@ final class PaymentPresenter: PaymentPresenting {
         paymentService.tryToPay(paymentId: paymentId) { [weak self] error in
             if let error = error {
                 if error.represents(.noInternetConnection) {
-                    self?.alertService.showNoInternet(on: self?.view, retry: {
-                        self?.pay()
-                    },
-                                                     cancel: {
-                        self?.dismissWithError(error)
-                    }) } else if error.represents(.timeOut) {
-                        self?.configForWaiting()
-                    } else {
-                        self?.dismissWithError(error)
-                    }
+                    self?.alertService.show(on: self?.view,
+                                            type: .noInternet(retry: { self?.pay() },
+                                                              completion: { self?.dismissWithError(error) }))
+                } else if error.represents(.timeOut) {
+                    self?.configForWaiting()
+                } else {
+                    self?.dismissWithError(error)
+                }
             } else {
-                self?.alertService.showAlert(on: self?.view,
-                                             with: .Alert.alertPaySuccessTitle,
-                                             state: .failure,
-                                             buttons: [],
-                                             completion: {
+                self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
                     self?.view?.dismiss(animated: true, completion: {
                         self?.sdkManager.completionPay(with: nil)
                     })
-                })
+                }))
             }
         }
     }
@@ -109,16 +103,13 @@ final class PaymentPresenter: PaymentPresenting {
                 self?.configViews()
             case .failure(let error):
                 if error.represents(.noInternetConnection) {
-                    self?.alertService.showNoInternet(on: self?.view, retry: {
-                        self?.pay()
-                    }, cancel: {
-                        self?.dismissWithError(error)
-                    })
+                    self?.alertService.show(on: self?.view,
+                                            type: .noInternet(retry: { self?.pay() },
+                                                              completion: { self?.dismissWithError(error) }))
                 } else {
-                        self?.alertService.showDefaultError(on: self?.view, completion: {
-                            self?.dismissWithError(error)
-                        })
-                    }
+                    self?.alertService.show(on: self?.view,
+                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
+                }
             }
         }
     }

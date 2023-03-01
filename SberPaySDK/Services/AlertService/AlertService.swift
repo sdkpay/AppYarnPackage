@@ -64,6 +64,12 @@ enum AlertState {
     }
 }
 
+enum AlertType {
+    case paySuccess(completion: Action)
+    case defaultError(completion: Action)
+    case noInternet(retry: Action, completion: Action)
+}
+
 final class AlertServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         let service: AlertService = DefaultAlertService(locator: container)
@@ -79,8 +85,7 @@ protocol AlertService {
                               type: DefaultButtonAppearance,
                               action: Action)],
                    completion: @escaping Action)
-    func showNoInternet(on view: ContentVC?, retry: @escaping Action, cancel: @escaping Action)
-    func showDefaultError(on view: ContentVC?, completion: @escaping Action)
+    func show(on view: ContentVC?, type: AlertType)
 }
 
 final class DefaultAlertService: AlertService {
@@ -113,28 +118,35 @@ final class DefaultAlertService: AlertService {
         view?.showAlert(with: model)
     }
     
-    func showDefaultError(on view: ContentVC?, completion: @escaping Action) {
-        showAlert(on: view,
-                  with: .Alert.alertErrorMainTitle,
-                  state: .failure,
-                  buttons: [],
-                  completion: completion)
-    }
-    
-    func showNoInternet(on view: ContentVC?, retry: @escaping Action, cancel: @escaping Action) {
-        var buttons: [(title: String,
-                       type: DefaultButtonAppearance,
-                       action: Action)] = []
-               buttons.append((title: .Common.tryTitle,
-                               type: .full,
-                               action: retry))
-               buttons.append((title: .Common.cancelTitle,
-                               type: .cancel,
-                               action: cancel))
-        showAlert(on: view,
-                  with: .Alert.alertPayNoInternetTitle,
-                  state: .failure,
-                  buttons: buttons,
-                  completion: cancel)
+    func show(on view: ContentVC?, type: AlertType) {
+        switch type {
+        case .paySuccess(let completion):
+            showAlert(on: view,
+                      with: .Alert.alertPaySuccessTitle,
+                      state: .success,
+                      buttons: [],
+                      completion: completion)
+        case .defaultError(let completion):
+            showAlert(on: view,
+                      with: .Alert.alertErrorMainTitle,
+                      state: .failure,
+                      buttons: [],
+                      completion: completion)
+        case let .noInternet(retry, completion):
+            var buttons: [(title: String,
+                           type: DefaultButtonAppearance,
+                           action: Action)] = []
+                   buttons.append((title: .Common.tryTitle,
+                                   type: .full,
+                                   action: retry))
+                   buttons.append((title: .Common.cancelTitle,
+                                   type: .cancel,
+                                   action: completion))
+            showAlert(on: view,
+                      with: .Alert.alertPayNoInternetTitle,
+                      state: .failure,
+                      buttons: [],
+                      completion: completion)
+        }
     }
 }

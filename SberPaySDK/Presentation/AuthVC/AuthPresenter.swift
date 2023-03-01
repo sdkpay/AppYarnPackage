@@ -64,17 +64,12 @@ final class AuthPresenter: AuthPresenting {
                 }
             case .failure(let error):
                 if error.represents(.noInternetConnection) {
-                    self?.alertService.showNoInternet(on: self?.view,
-                                                      retry: {
-                        self?.checkSession()
-                    },
-                                                      cancel: {
-                        self?.dismissWithError(error)
-                    })
+                    self?.alertService.show(on: self?.view,
+                                            type: .noInternet(retry: { self?.checkSession() },
+                                                              completion: { self?.dismissWithError(error) }))
                 } else {
-                    self?.alertService.showDefaultError(on: self?.view) {
-                        self?.dismissWithError(error)
-                    }
+                    self?.alertService.show(on: self?.view,
+                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
                 }
             }
         }
@@ -116,15 +111,13 @@ final class AuthPresenter: AuthPresenting {
             if let error = error {
                 self.analytics.sendEvent(.BankAppAuthFailed)
                 if error.represents(.noInternetConnection) {
-                    self.alertService.showNoInternet(on: self.view, retry: {
-                        self.openSberId()
-                    }, cancel: {
-                        self.dismissWithError(error)
-                    }) } else {
-                        self.alertService.showDefaultError(on: self.view, completion: {
-                            self.dismissWithError(error)
-                        })
-                    }
+                    self.alertService.show(on: self.view,
+                                           type: .noInternet(retry: { self.openSberId() },
+                                                             completion: { self.dismissWithError(error) }))
+                } else {
+                    self.alertService.show(on: self.view,
+                                           type: .defaultError(completion: { self.dismissWithError(error) }))
+                }
             } else {
                 self.analytics.sendEvent(.BankAppAuthSuccess)
                 self.router.presentPayment()
