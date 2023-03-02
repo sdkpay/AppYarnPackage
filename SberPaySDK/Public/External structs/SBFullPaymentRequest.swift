@@ -18,7 +18,7 @@ public final class SBFullPaymentRequest: NSObject {
     /// Сумма операции в минорных единицах
     let amount: Int
     /// Цифровой код валюты операции согласно ISO 4217
-    let currency: Int
+    let currency: String?
     /// Номер мобильного телефона Плательщика, если имеется в вашей системе
     let mobilePhone: String?
     /// Уникальный номер (идентификатор) заказа в системе Клиента.
@@ -35,7 +35,7 @@ public final class SBFullPaymentRequest: NSObject {
                 clientId: String? = nil,
                 clientName: String,
                 amount: Int,
-                currency: Int,
+                currency: String? = nil, 
                 mobilePhone: String? = nil,
                 orderId: String,
                 orderDescription: String? = nil,

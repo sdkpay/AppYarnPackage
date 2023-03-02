@@ -21,6 +21,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private let orderId: String
     private let mocksOn: Bool
     private let sslOn: Bool
+    private let purchase: Bool
     
     private lazy var tableView: UITableView = {
         let view = UITableView()
@@ -69,6 +70,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
          apiKey: String,
          orderId: String,
          autoMode: Bool,
+         purchase: Bool,
          mocksOn: Bool,
          sslOn: Bool) {
         self.totalCost = totalCost
@@ -77,6 +79,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.autoMode = autoMode
         self.mocksOn = mocksOn
         self.sslOn = sslOn
+        self.purchase = purchase
         super.init(nibName: nil, bundle: nil)
         SBPay.debugConfig(mocks: mocksOn, ssl: sslOn)
     }
@@ -154,7 +157,11 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         if autoMode {
             autoPay()
         } else {
-            getPaymentToken()
+            if purchase {
+                paymentTokenWithPerchase()
+            } else {
+                getPaymentToken()
+            }
         }
     }
     
@@ -179,11 +186,38 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
     }
     
+    private func paymentTokenWithPerchase() {
+        let request = SBPaymentTokenRequest(apiKey: apiKey,
+                                            clientId: "Test shop",
+                                            clientName: "Test shop",
+                                            amount: totalCost,
+                                            currency: "643",
+                                            orderId: nil,
+                                            mobilePhone: nil,
+                                            orderNumber: orderId,
+                                            orderDescription: nil,
+                                            language: nil,
+                                            recurrentEnabled: false,
+                                            recurrentExipiry: "",
+                                            recurrentFrequency: 0,
+                                            redirectUri: "sberPayExampleapp://sberidauth")
+        SBPay.getPaymentToken(with: request) { response in
+            if let error = response.error {
+                // Обработка ошибки
+                print("\(error.errorDescription) - описание ошибки")
+            } else {
+                // Обработка успешно полученных данных...
+                guard let paymentToken = response.paymentToken else { return }
+                self.pay(with: paymentToken)
+            }
+        }
+    }
+    
     private func autoPay() {
         let request = SBFullPaymentRequest(apiKey: apiKey,
                                            clientName: "Test shop",
                                            amount: totalCost,
-                                           currency: 643,
+                                           currency: "643",
                                            orderId: orderId,
                                            redirectUri: "sberPayExampleapp://sberidauth")
         SBPay.payWithOrderId(paymentRequest: request) { error in

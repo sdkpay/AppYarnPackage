@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>prodVersion</key>
-	<string>$(PROD_VERSION)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -33,5 +31,7 @@
 	</dict>
 	<key>UIFileSharingEnabled</key>
 	<true/>
+	<key>prodVersion</key>
+	<string>$(PROD_VERSION)</string>
 </dict>
 </plist>

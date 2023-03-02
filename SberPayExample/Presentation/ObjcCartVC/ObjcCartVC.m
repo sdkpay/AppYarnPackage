@@ -68,18 +68,19 @@
     }
     SBPaymentTokenRequest *requestModel = [[SBPaymentTokenRequest alloc] initWithApiKey:_apiKey
                                                                                clientId:@""
-                                                                             clientName: @"Test shop"
+                                                                             clientName:@"Test shop"
                                                                                  amount:*(_totalCost)
                                                                                currency:@""
+                                                                                orderId:_orderId
                                                                             mobilePhone:@""
-                                                                            orderNumber:_orderId
+                                                                            orderNumber:@""
                                                                        orderDescription:@""
                                                                                language:@""
-                                                                       recurrentEnabled:YES
+                                                                       recurrentEnabled:false
                                                                        recurrentExipiry:@""
                                                                      recurrentFrequency:1
                                                                             redirectUri:@"sberPayExampleapp"];
-    
+
     [SBPay getPaymentTokenWith: requestModel  completion:^(SBPaymentTokenResponse * _Nonnull response) {
         if (response.error) {
             // Обработка ошибки
@@ -111,7 +112,7 @@
                                      clientId: @"123123"
                                      clientName: @"Test shop"
                                      amount: 123123
-                                     currency: 643
+                                     currency: @"643"
                                      mobilePhone: nil
                                      orderId: @"12312312"
                                      orderDescription:nil

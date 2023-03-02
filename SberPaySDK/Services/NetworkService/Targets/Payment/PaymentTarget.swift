@@ -13,11 +13,11 @@ enum PaymentTarget {
                          paymentId: String,
                          userName: String?,
                          merchantLogin: String?,
-                         orderId: String)
+                         orderId: String?)
     case getPaymentOrder(operationId: String,
-                         orderId: String,
+                         orderId: String?,
                          merchantLogin: String?,
-                         paymentToken: String)
+                         paymentToken: String?)
 }
 
 extension PaymentTarget: TargetType {
@@ -48,9 +48,12 @@ extension PaymentTarget: TargetType {
             var params = [
                 "sessionId": sessionId,
                 "deviceInfo": deviceInfo,
-                "paymentId": paymentId,
-                "orderId": orderId
+                "paymentId": paymentId
             ]
+            
+            if let orderId = orderId {
+                params["orderId"] = orderId
+            }
             
             if let merchantLogin = merchantLogin {
                 params["merchantLogin"] = merchantLogin
@@ -64,10 +67,16 @@ extension PaymentTarget: TargetType {
                                   merchantLogin: merchantLogin,
                                   paymentToken: paymentToken):
             var params = [
-                "operationId": operationId,
-                "orderId": orderId,
-                "paymentToken": paymentToken
+                "operationId": operationId
             ]
+            
+            if let paymentToken = paymentToken {
+                params["paymentToken"] = paymentToken
+            }
+            
+            if let orderId = orderId {
+                params["orderId"] = orderId
+            }
     
             if let merchantLogin = merchantLogin {
                 params["merchantLogin"] = merchantLogin

@@ -86,7 +86,10 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         guard let request = sdkManager.authInfo else { return }
         network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
                                                 merchantLogin: request.clientName,
-                                                orderId: request.orderId),
+                                                orderId: request.orderId,
+                                                amount: request.amount,
+                                                currency: request.currency,
+                                                orderNumber: request.orderNumber),
                         to: AuthModel.self) { [weak self] result in
             self?.authСompletion = completion
             switch result {
