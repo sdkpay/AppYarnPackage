@@ -23,6 +23,10 @@ extension ResponseDecoder {
                                     response: URLResponse?,
                                     error: Error?,
                                     type: T.Type) -> Result<T, SDKError> {
+        if let error = error as? NSError,
+            error._code == -1001 {
+            return .failure(.timeOut)
+        }
         guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
         guard let data = data else { return .failure(.noData) }
         if let errorText = checkServerError(data: data) { return .failure(.errorFromServer(text: errorText)) }

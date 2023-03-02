@@ -22,7 +22,6 @@ class ContentTableView: UITableView {
     }()
 
     private func fixHeight() {
-//        isScrollEnabled = contentSize.height > .vcMaxHeight
         tableHeightConstraint.constant = contentSize.height > .vcMaxHeight ? .vcMaxHeight : contentSize.height
     }
 

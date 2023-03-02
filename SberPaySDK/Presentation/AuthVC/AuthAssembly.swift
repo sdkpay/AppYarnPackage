@@ -32,7 +32,8 @@ final class AuthAssembly {
                       authService: locator.resolve(),
                       sdkManager: locator.resolve(),
                       analytics: locator.resolve(),
-                      userService: locator.resolve())
+                      userService: locator.resolve(),
+                      alertService: locator.resolve())
     }
 
     private func moduleView(presenter: AuthPresenter) -> ContentVC & IAuthVC {

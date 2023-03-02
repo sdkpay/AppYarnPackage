@@ -10,6 +10,7 @@ import Foundation
 extension String {
     enum Headers {
         static let cookie = "Cookie"
+        static let setCookie = "Set-Cookie"
         static let pod = "x-pod-sticky"
         static let rqUID = "RqUID"
         static let localTime = "UserTm"

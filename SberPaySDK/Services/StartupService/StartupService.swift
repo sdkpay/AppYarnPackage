@@ -55,10 +55,22 @@ final class DefaultStartupService: StartupService {
     
     func completePayment(paymentSuccess: Bool,
                          completion: @escaping Action) {
-        // DEBUG
-        guard let topVC = sdkWindow?.topVC as? ContentVC else { return }
-        topVC.showAlert(with: paymentSuccess ? .success : .failure()) {
-            completion()
+        guard let locator = locator
+        else { return }
+        let service: AlertService = locator.resolve()
+        
+        if paymentSuccess {
+            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+                              with: .Alert.alertPaySuccessTitle,
+                              state: .success,
+                              buttons: [],
+                              completion: completion)
+        } else {
+            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+                              with: .Alert.alertErrorMainTitle,
+                              state: .failure,
+                              buttons: [],
+                              completion: completion)
         }
         closeSdk()
     }

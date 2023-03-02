@@ -101,10 +101,6 @@ struct ConfigValues: Codable {
 }
 
 final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    private enum Params: Int, CaseIterable {
-        case apiKey, cost, orderId, lang, mode, mocks, ssl
-    }
-    
     private var cellConfig = Config.allCases
     private var values = ConfigValues()
     

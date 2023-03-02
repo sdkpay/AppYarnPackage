@@ -19,7 +19,8 @@ final class PaymentPresenter: PaymentPresenting {
     private let userService: UserService
     private let paymentService: PaymentService
     private let locationManager: LocationManager
-    private let manager: SDKManager
+    private let sdkManager: SDKManager
+    private let alertService: AlertService
     
     private var selectedCard: PaymentToolInfo?
     private var user: User?
@@ -31,13 +32,15 @@ final class PaymentPresenter: PaymentPresenting {
          userService: UserService,
          analytics: AnalyticsService,
          paymentService: PaymentService,
-         locationManager: LocationManager) {
+         locationManager: LocationManager,
+         alertService: AlertService) {
         self.router = router
         self.userService = userService
-        self.manager = manager
+        self.sdkManager = manager
         self.analytics = analytics
         self.paymentService = paymentService
         self.locationManager = locationManager
+        self.alertService = alertService
     }
     
     func viewDidLoad() {
@@ -65,24 +68,28 @@ final class PaymentPresenter: PaymentPresenting {
         guard let paymentId = selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId) { [weak self] error in
             if let error = error {
-                self?.view?.showAlert(with: .failure()) {
-                    self?.view?.dismiss(animated: true, completion: {
-                        self?.manager.completionPay(with: error)
-                    })
+                if error.represents(.noInternetConnection) {
+                    self?.alertService.show(on: self?.view,
+                                            type: .noInternet(retry: { self?.pay() },
+                                                              completion: { self?.dismissWithError(error) }))
+                } else if error.represents(.timeOut) {
+                    self?.configForWaiting()
+                } else {
+                    self?.dismissWithError(error)
                 }
             } else {
-                self?.view?.showAlert(with: .success, completion: {
+                self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
                     self?.view?.dismiss(animated: true, completion: {
-                        self?.manager.completionPay(with: nil)
+                        self?.sdkManager.completionPay(with: nil)
                     })
-                })
+                }))
             }
         }
     }
     
     func cancelTapped() {
         view?.dismiss(animated: true, completion: { [weak self] in
-            self?.manager.completionWithError(error: .cancelled)
+            self?.sdkManager.completionWithError(error: .cancelled)
         })
     }
     
@@ -95,47 +102,87 @@ final class PaymentPresenter: PaymentPresenting {
                 self?.selectedCard = user.paymentToolInfo.first(where: { $0.priorityCard })
                 self?.configViews()
             case .failure(let error):
-                self?.view?.showAlert(with: .failure(),
-                                      completion: {
-                    self?.view?.dismiss(animated: true,
-                                        completion: { self?.manager.completionWithError(error: error)
-                    })
-                })
+                if error.represents(.noInternetConnection) {
+                    self?.alertService.show(on: self?.view,
+                                            type: .noInternet(retry: { self?.pay() },
+                                                              completion: { self?.dismissWithError(error) }))
+                } else {
+                    self?.alertService.show(on: self?.view,
+                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
+                }
             }
         }
     }
 
     private func configViews() {
         guard let user = user else { return }
-
+        
         view?.configShopInfo(with: user.merchantName,
                              cost: user.orderAmount.amount.price(with: user.orderAmount.currency))
         view?.configProfileView(with: user.userInfo)
-
+        
         if let selectedCard = selectedCard {
-            view?.hideLoading()
-            view?.configCardView(with: selectedCard.productName,
-                                 cardInfo: selectedCard.cardNumber.card,
-                                 cardIconURL: selectedCard.cardLogoUrl,
-                                 needArrow: user.paymentToolInfo.count > 1) { [weak self] in
-                self?.router.presentCards(cards: user.paymentToolInfo,
-                                          selectedId: selectedCard.paymentId,
-                                          selectedCard: { [weak self] card in
-                    if user.paymentToolInfo.count > 1 {
-                        self?.selectedCard = card
-                        self?.configViews()
-                    }
-                })
-            }
+            configWithCard(user: user, selectedCard: selectedCard)
         } else {
-            view?.showAlert(with: .failure(text: .Alert.alertPayNoCardsTitle),
-                            animate: false,
-                            buttonTitle: .Common.returnTitle,
-                            completion: {
-                self.view?.dismiss(animated: true, completion: {
-                    self.manager.completionWithError(error: .noCards)
-                })
+            configWithNoCards()
+        }
+    }
+    
+    private func configWithCard(user: User, selectedCard: PaymentToolInfo) {
+        view?.hideLoading()
+        view?.configCardView(with: selectedCard.productName,
+                             cardInfo: selectedCard.cardNumber.card,
+                             cardIconURL: selectedCard.cardLogoUrl,
+                             needArrow: user.paymentToolInfo.count > 1) { [weak self] in
+            self?.router.presentCards(cards: user.paymentToolInfo,
+                                      selectedId: selectedCard.paymentId,
+                                      selectedCard: { [weak self] card in
+                if user.paymentToolInfo.count > 1 {
+                    self?.selectedCard = card
+                    self?.configViews()
+                }
             })
         }
+    }
+    
+    private func configWithNoCards() {
+        var buttons: [(title: String,
+                       type: DefaultButtonAppearance,
+                       action: Action)] = []
+        buttons.append((title: .Common.returnTitle,
+                        type: .full,
+                        action: {
+            self.view?.dismiss(animated: true,
+                               completion: {
+                self.sdkManager.completionWithError(error: .noCards)
+            })
+        }))
+        alertService.showAlert(on: self.view,
+                               with: .Alert.alertPayNoCardsTitle,
+                               state: .failure,
+                               buttons: buttons,
+                               completion: {})
+    }
+    
+    private func configForWaiting() {
+        var buttons: [(title: String,
+                       type: DefaultButtonAppearance,
+                       action: Action)] = []
+        buttons.append((title: .Common.okTitle,
+                        type: .full,
+                        action: {
+            self.dismissWithError(.waiting)
+        }))
+        alertService.showAlert(on: view,
+                               with: .Alert.alertPayWaitingTitle,
+                               state: .waiting,
+                               buttons: buttons,
+                               completion: {})
+    }
+    
+    private func dismissWithError(_ error: SDKError) {
+        view?.dismiss(animated: true, completion: { [weak self] in
+            self?.sdkManager.completionWithError(error: error)
+        })
     }
 }

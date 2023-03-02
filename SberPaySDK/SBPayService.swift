@@ -32,6 +32,7 @@ final class DefaultSBPayService: SBPayService {
         AuthManagerAssembly(),
         BaseRequestManagerAssembly(),
         NetworkServiceAssembly(),
+        AlertServiceAssembly(),
         SDKManagerAssembly(),
         AuthServiceAssembly(),
         UserServiceAssembly(),
