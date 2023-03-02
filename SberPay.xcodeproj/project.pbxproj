@@ -279,6 +279,8 @@
 		44834C69292E16EA000A32B2 /* AuthAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAssembly.swift; sourceTree = "<group>"; };
 		44834C71292E32E8000A32B2 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		44834C83292E4285000A32B2 /* info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = info.plist; path = SberPaySDK/SupportingFiles/info.plist; sourceTree = SOURCE_ROOT; };
+		448807C329B091CC0011FC20 /* SberPayExampleDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SberPayExampleDebug.entitlements; sourceTree = "<group>"; };
+		448807C429B091D30011FC20 /* SberPayExampleDebug-Prod.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "SberPayExampleDebug-Prod.entitlements"; sourceTree = "<group>"; };
 		44890675297A7D0B002CDBAD /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		4496792429A2375F00EC3439 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4498008B29AD247C008E808A /* AlertService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertService.swift; sourceTree = "<group>"; };
@@ -839,6 +841,8 @@
 		4471721329193B21005EDF32 /* SberPayExample */ = {
 			isa = PBXGroup;
 			children = (
+				448807C429B091D30011FC20 /* SberPayExampleDebug-Prod.entitlements */,
+				448807C329B091CC0011FC20 /* SberPayExampleDebug.entitlements */,
 				44602757295444BE00EC9DE8 /* SberPayExample.entitlements */,
 				4471721429193B21005EDF32 /* AppDelegate.swift */,
 				4471722929193FF6005EDF32 /* Presentation */,
@@ -1770,11 +1774,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExampleDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 24;
-				DEVELOPMENT_TEAM = V2Q8G2U9C4;
+				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1798,7 +1802,7 @@
 					"$(PROJECT_DIR)/SberPayExample",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp.debug;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROD_VERSION = NO;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1934,11 +1938,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "SberPayExample/SberPayExampleDebug-Prod.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 24;
-				DEVELOPMENT_TEAM = V2Q8G2U9C4;
+				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1962,7 +1966,7 @@
 					"$(PROJECT_DIR)/SberPayExample",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp.debug;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROD_VERSION = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
