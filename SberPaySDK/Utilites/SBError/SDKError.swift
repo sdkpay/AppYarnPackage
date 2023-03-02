@@ -18,7 +18,6 @@ enum SDKError: Error {
     case errorFromServer(text: String)
     case noCards
     case cancelled
-    case waiting
     case timeOut
     
     // DEBUG

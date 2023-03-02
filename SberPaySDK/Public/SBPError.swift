@@ -28,8 +28,6 @@ public class SBPError: NSObject {
             }
         case .cancelled:
             errorDescription = .Error.errorClose
-        case .waiting:
-            errorDescription = .Error.errorTimeout
         case .timeOut:
             errorDescription = .Error.errorTimeout
         }
