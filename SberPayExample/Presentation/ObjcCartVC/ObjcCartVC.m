@@ -95,13 +95,17 @@
     SBPaymentRequest *request = [[SBPaymentRequest alloc] initWithApiKey: @""
                                                                  orderId: @""
                                                             paymentToken: @""];
-    
-    [SBPay payWith:request completion:^(SBPError * _Nullable error) {
-        if (error) {
-            // Обработка ошибки
-            NSLog(@"%@ - описание ошибки", error.errorDescription);
-        } else {
-            // Успешный результат
+    [SBPay payWith:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
+        switch(state) {
+            case 0:
+                NSLog(@"Успешный результат");
+                break;
+            case 1:
+                NSLog(@"Необходимо проверить статус оплаты");
+                break;
+            case 2:
+                NSLog(@"%@ - описание ошибки", info);
+                break;
         }
     }];
 }
@@ -119,19 +123,24 @@
                                      language:nil
                                      redirectUri: @"sberPayExampleapp://sberidauth"
     ];
-    [SBPay payWithOrderIdWithPaymentRequest:request completion:^(SBPError * _Nullable error) {
-        if (error) {
-            // Обработка ошибки
-            NSLog(@"%@ - описание ошибки", error.errorDescription);
-        } else {
-            // Успешный результат
+    [SBPay payWithOrderIdWithPaymentRequest:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
+        switch(state) {
+            case 0:
+                NSLog(@"Успешный результат");
+                break;
+            case 1:
+                NSLog(@"Необходимо проверить статус оплаты");
+                break;
+            case 2:
+                NSLog(@"%@ - описание ошибки", info);
+                break;
         }
     }];
 }
 
 -(void)completePayment {
-    [SBPay completePaymentWithPaymentSuccess:YES completion:^{
-            // Блок отработает после закрытия окна SDK
+    [SBPay completePaymentWithPaymentState: 0 completion:^{
+        // Блок отработает после закрытия окна SDK
     }];
 }
 

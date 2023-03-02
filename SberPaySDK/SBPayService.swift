@@ -8,16 +8,17 @@
 import UIKit
 
 typealias PaymentTokenCompletion = (SBPaymentTokenResponse) -> Void
+typealias PaymentCompletion = (_ state: SBPayState, _ info: String) -> Void
 
 protocol SBPayService {
     var isReadyForSberPay: Bool { get }
     func getPaymentToken(with request: SBPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion)
     func pay(with paymentRequest: SBPaymentRequest,
-             completion: @escaping (_ error: SBPError?) -> Void)
+             completion: @escaping PaymentCompletion)
     func payWithOrderId(paymentRequest: SBFullPaymentRequest,
-                        completion: @escaping (_ error: SBPError?) -> Void)
-    func completePayment(paymentSuccess: Bool,
+                        completion: @escaping PaymentCompletion)
+    func completePayment(paymentSuccess: SBPayState,
                          completion: @escaping Action)
     func getResponseFrom(_ url: URL)
 }
@@ -74,18 +75,18 @@ final class DefaultSBPayService: SBPayService {
     }
     
     func pay(with paymentRequest: SBPaymentRequest,
-             completion: @escaping PayCompletion) {
+             completion: @escaping PaymentCompletion) {
         let manager: SDKManager = locator.resolve()
         manager.pay(with: paymentRequest, completion: completion)
     }
     
-    func completePayment(paymentSuccess: Bool,
+    func completePayment(paymentSuccess: SBPayState,
                          completion: @escaping Action) {
         startService.completePayment(paymentSuccess: paymentSuccess, completion: completion)
     }
     
     func payWithOrderId(paymentRequest: SBFullPaymentRequest,
-                        completion: @escaping PayCompletion) {
+                        completion: @escaping PaymentCompletion) {
         let manager: SDKManager = locator.resolve()
         manager.configWithOrderId(paymentRequest: paymentRequest,
                                   completion: completion)

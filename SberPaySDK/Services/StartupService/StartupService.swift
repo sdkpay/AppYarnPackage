@@ -11,7 +11,7 @@ let closeSDKNotification = "CloseSDK"
 
 protocol StartupService {
     func openInitialScreen(with locator: LocatorService)
-    func completePayment(paymentSuccess: Bool,
+    func completePayment(paymentSuccess: SBPayState,
                          completion: @escaping Action)
 }
 
@@ -53,25 +53,39 @@ final class DefaultStartupService: StartupService {
         sdkWindow = nil
     }
     
-    func completePayment(paymentSuccess: Bool,
+    func completePayment(paymentSuccess: SBPayState,
                          completion: @escaping Action) {
         guard let locator = locator
         else { return }
         let service: AlertService = locator.resolve()
         
-        if paymentSuccess {
+        switch paymentSuccess {
+        case .success:
             service.showAlert(on: sdkWindow?.topVC as? ContentVC,
                               with: .Alert.alertPaySuccessTitle,
                               state: .success,
                               buttons: [],
                               completion: completion)
-        } else {
+        case .waiting:
+            var buttons: [(title: String,
+                           type: DefaultButtonAppearance,
+                           action: Action)] = []
+            buttons.append((title: .Common.okTitle,
+                            type: .full,
+                            action: completion))
+            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+                              with: .Alert.alertPayWaitingTitle,
+                              state: .waiting,
+                              buttons: buttons,
+                              completion: {})
+        case .error:
             service.showAlert(on: sdkWindow?.topVC as? ContentVC,
                               with: .Alert.alertErrorMainTitle,
                               state: .failure,
                               buttons: [],
                               completion: completion)
         }
+    
         closeSdk()
     }
 }

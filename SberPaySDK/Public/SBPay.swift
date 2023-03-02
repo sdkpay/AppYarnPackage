@@ -34,7 +34,7 @@ public final class SBPay: NSObject {
      */
     @objc
     public static func pay(with paymentRequest: SBPaymentRequest,
-                           completion: @escaping (_ error: SBPError?) -> Void) {
+                           completion: @escaping (_ state: SBPayState, _ info: String) -> Void) {
         payService?.pay(with: paymentRequest, completion: completion)
     }
     
@@ -43,7 +43,7 @@ public final class SBPay: NSObject {
      */
     @objc
     public static func payWithOrderId(paymentRequest: SBFullPaymentRequest,
-                                      completion: @escaping (_ error: SBPError?) -> Void) {
+                                      completion: @escaping (_ state: SBPayState, _ info: String) -> Void) {
         payService?.payWithOrderId(paymentRequest: paymentRequest, completion: completion)
     }
     
@@ -51,9 +51,9 @@ public final class SBPay: NSObject {
      Метод для завершения оплаты и закрытия окна SDK
      */
     @objc
-    public static func completePayment(paymentSuccess: Bool,
+    public static func completePayment(paymentState: SBPayState,
                                        completion: @escaping () -> Void) {
-        payService?.completePayment(paymentSuccess: paymentSuccess, completion: completion)
+        payService?.completePayment(paymentSuccess: paymentState, completion: completion)
     }
     
     /**

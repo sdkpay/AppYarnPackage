@@ -80,7 +80,7 @@ final class PaymentPresenter: PaymentPresenting {
             } else {
                 self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
                     self?.view?.dismiss(animated: true, completion: {
-                        self?.sdkManager.completionPay(with: nil)
+                        self?.sdkManager.completionPay(with: .success)
                     })
                 }))
             }
@@ -171,7 +171,9 @@ final class PaymentPresenter: PaymentPresenting {
         buttons.append((title: .Common.okTitle,
                         type: .full,
                         action: {
-            self.dismissWithError(.waiting)
+            self.view?.dismiss(animated: true, completion: { [weak self] in
+                self?.sdkManager.completionPay(with: .waiting)
+            })
         }))
         alertService.showAlert(on: view,
                                with: .Alert.alertPayWaitingTitle,
