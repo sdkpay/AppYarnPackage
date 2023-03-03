@@ -53,6 +53,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkSession() {
+        view?.hideAlert()
         view?.showLoading()
         userService.checkUserSession { [weak self] result in
             switch result {
@@ -99,6 +100,7 @@ final class AuthPresenter: AuthPresenting {
     
     private func getAccessSberPay() {
         let text = authService.selectedBank == .sber ? String.Loading.toSberTitle : String.Loading.toSbolTitle
+        view?.hideAlert()
         view?.showLoading(with: text)
         openSberId()
     }
@@ -112,7 +114,7 @@ final class AuthPresenter: AuthPresenting {
                 self.analytics.sendEvent(.BankAppAuthFailed)
                 if error.represents(.noInternetConnection) {
                     self.alertService.show(on: self.view,
-                                           type: .noInternet(retry: { self.openSberId() },
+                                           type: .noInternet(retry: { self.getAccessSberPay() },
                                                              completion: { self.dismissWithError(error) }))
                 } else {
                     self.alertService.show(on: self.view,

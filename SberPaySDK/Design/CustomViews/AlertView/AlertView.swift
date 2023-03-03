@@ -17,7 +17,7 @@ private extension CGFloat {
 
 private extension TimeInterval {
     static let animationDuration: TimeInterval = 0.25
-    static let completionDuration: TimeInterval = 2.25
+    static let completionDuration: TimeInterval = 4.25
 }
 
 final class AlertView: UIView {

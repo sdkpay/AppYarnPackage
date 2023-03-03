@@ -64,6 +64,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func pay() {
+        view?.hideAlert()
         view?.showLoading(with: .Loading.tryToPayTitle)
         guard let paymentId = selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId) { [weak self] error in
@@ -94,6 +95,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func getUser() {
+        view?.hideAlert()
         view?.showLoading(animate: false)
         userService.getUser { [weak self] result in
             switch result {
@@ -104,7 +106,7 @@ final class PaymentPresenter: PaymentPresenting {
             case .failure(let error):
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.pay() },
+                                            type: .noInternet(retry: { self?.getUser() },
                                                               completion: { self?.dismissWithError(error) }))
                 } else {
                     self?.alertService.show(on: self?.view,

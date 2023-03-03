@@ -145,7 +145,7 @@ final class DefaultAlertService: AlertService {
             showAlert(on: view,
                       with: .Alert.alertPayNoInternetTitle,
                       state: .failure,
-                      buttons: [],
+                      buttons: buttons,
                       completion: completion)
         }
     }
