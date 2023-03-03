@@ -103,7 +103,7 @@ final class PaymentPresenter: PaymentPresenting {
             switch result {
             case .success(let user):
                 self?.user = user
-                self?.selectedCard = user.paymentToolInfo.first(where: { $0.priorityCard })
+                self?.selectedCard = user.paymentToolInfo.first(where: { $0.priorityCard }) ?? user.paymentToolInfo.first
                 self?.configViews()
             case .failure(let error):
                 if error.represents(.noInternetConnection) {
@@ -138,13 +138,12 @@ final class PaymentPresenter: PaymentPresenting {
                              cardInfo: selectedCard.cardNumber.card,
                              cardIconURL: selectedCard.cardLogoUrl,
                              needArrow: user.paymentToolInfo.count > 1) { [weak self] in
+            guard user.paymentToolInfo.count > 1 else { return }
             self?.router.presentCards(cards: user.paymentToolInfo,
                                       selectedId: selectedCard.paymentId,
                                       selectedCard: { [weak self] card in
-                if user.paymentToolInfo.count > 1 {
-                    self?.selectedCard = card
-                    self?.configViews()
-                }
+                self?.selectedCard = card
+                self?.configViews()
             })
         }
     }

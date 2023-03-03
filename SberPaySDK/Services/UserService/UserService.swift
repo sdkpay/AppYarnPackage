@@ -28,7 +28,7 @@ final class DefaultUserService: UserService {
     private(set) var user: User?
     private let sdkManager: SDKManager
     private let authManager: AuthManager
-
+    
     init(network: NetworkService,
          sdkManager: SDKManager,
          authManager: AuthManager) {
@@ -36,24 +36,24 @@ final class DefaultUserService: UserService {
         self.sdkManager = sdkManager
         self.authManager = authManager
     }
-
+    
     func getUser(completion: @escaping (Result<User, SDKError>) -> Void) {
         guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId,
               let authCode = authManager.authCode,
               let state = authManager.state
         else { return }
-                
+        
         network.request(UserTarget.getListCards(redirectUri: authInfo.redirectUri,
-                                                  authCode: authCode,
-                                                  sessionId: sessionId,
-                                                  state: state,
-                                                  merchantLogin: authInfo.clientName,
-                                                  orderId: authInfo.orderId,
-                                                  amount: authInfo.amount,
-                                                  currency: authInfo.currency,
-                                                  orderNumber: authInfo.orderNumber),
-                          to: User.self) { [weak self] result in
+                                                authCode: authCode,
+                                                sessionId: sessionId,
+                                                state: state,
+                                                merchantLogin: authInfo.clientName,
+                                                orderId: authInfo.orderId,
+                                                amount: authInfo.amount,
+                                                currency: authInfo.currency,
+                                                orderNumber: authInfo.orderNumber),
+                        to: User.self) { [weak self] result in
             switch result {
             case .success(let user):
                 self?.user = user

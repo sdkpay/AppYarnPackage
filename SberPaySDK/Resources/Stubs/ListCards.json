@@ -5,165 +5,25 @@
   },
   "merchantName" : "Денежка плюс",
   "logoUrl" : "https:\/\/test.stat.online.sberbank.ru\/SBERBANKID\/icons\/781000013690.png",
-  "sessionId" : "683986317587116032",
+  "sessionId" : "684026134282772480",
   "paymentToolInfo" : [
     {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817810038116229943",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard.png",
-      "productName" : "MasterCard Standard",
+      "paymentSourceType" : "DebitCard",
+      "financialProductId" : "40817810038110194647",
+      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
+      "productName" : "MasterCard Сберкарта",
       "paymentId" : 0,
-      "cardNumber" : "533669D115AF8433",
+      "cardNumber" : "5228602E599E1526",
       "amountData" : {
-        "amount" : 56913710.299999997,
-        "currency" : "RUR"
-      },
-      "priorityCard" : true,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817810638250231996",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard.png",
-      "productName" : "MasterCard Standard",
-      "paymentId" : 1,
-      "cardNumber" : "5469381E6DB74348",
-      "amountData" : {
-        "amount" : 409505.57000000001,
+        "amount" : -20,
         "currency" : "RUR"
       },
       "priorityCard" : false,
       "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817810338250232017",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir.png",
-      "productName" : "МИР Стандарт",
-      "paymentId" : 2,
-      "cardNumber" : "2202209CA7DD7904",
-      "amountData" : {
-        "amount" : 69085,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MIR"
-    },
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817810938250232019",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_platinum.png",
-      "productName" : "MasterCard Platinum",
-      "paymentId" : 3,
-      "cardNumber" : "547927C27B920700",
-      "amountData" : {
-        "amount" : 22821.150000000001,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817810838116232046",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard.png",
-      "productName" : "MasterCard Standard",
-      "paymentId" : 4,
-      "cardNumber" : "546938457B672732",
-      "amountData" : {
-        "amount" : 0,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817810838260145733",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard.png",
-      "productName" : "MasterCard Standard",
-      "paymentId" : 5,
-      "cardNumber" : "546938151EBF1646",
-      "amountData" : {
-        "amount" : -450,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817810238260148709",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard.png",
-      "productName" : "MasterCard Standard",
-      "paymentId" : 6,
-      "cardNumber" : "54693832608E8920",
-      "amountData" : {
-        "amount" : -450,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817810838260153288",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard.png",
-      "productName" : "MasterCard Standard",
-      "paymentId" : 7,
-      "cardNumber" : "546938C194545773",
-      "amountData" : {
-        "amount" : -450,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817810638260148655",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_platinum.png",
-      "productName" : "MasterCard Platinum",
-      "paymentId" : 8,
-      "cardNumber" : "54792735E9390428",
-      "amountData" : {
-        "amount" : -4900,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817978538251111675",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_platinum.png",
-      "productName" : "MasterCard Platinum",
-      "paymentId" : 9,
-      "cardNumber" : "547927A903DA3241",
-      "amountData" : {
-        "amount" : 69800,
-        "currency" : "EUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817840338251105168",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa_gold.png",
-      "productName" : "Visa Gold",
-      "paymentId" : 10,
-      "cardNumber" : "427938B014BF9127",
-      "amountData" : {
-        "amount" : 69800,
-        "currency" : "USD"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "VISA"
     }
   ],
   "userInfo" : {
-    "firstName" : "АНДРЕЕВ",
-    "lastName" : "А."
+    "firstName" : "ЕВГЕНИЙ",
+    "lastName" : "К."
   }
 }
