@@ -134,7 +134,7 @@
 }
 
 -(void)completePayment {
-    [SBPay completePaymentWithPaymentState: 0 completion:^{
+    [SBPay completePaymentWithPaymentState: SBPayStateSuccess completion:^{
         // Блок отработает после закрытия окна SDK
     }];
 }

@@ -189,14 +189,14 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func paymentTokenWithPerchase() {
         let request = SBPaymentTokenRequest(apiKey: apiKey,
-                                             redirectUri: "sberPayExampleapp://sberidauth",
-                                             clientName: "Test shop",
-                                             amount: totalCost,
-                                             currency: "643",
-                                             mobilePhone: nil,
-                                             orderNumber: orderId,
-                                             recurrentEnabled: false,
-                                             recurrentFrequency: 0)
+                                            redirectUri: "sberPayExampleapp://sberidauth",
+                                            clientName: "Test shop",
+                                            amount: totalCost,
+                                            currency: "643",
+                                            mobilePhone: nil,
+                                            orderNumber: orderId,
+                                            recurrentEnabled: false,
+                                            recurrentFrequency: 0)
         SBPay.getPaymentToken(with: request) { response in
             if let error = response.error {
                 // Обработка ошибки

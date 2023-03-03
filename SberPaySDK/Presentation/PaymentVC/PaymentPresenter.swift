@@ -134,7 +134,7 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func configWithCard(user: User, selectedCard: PaymentToolInfo) {
         view?.hideLoading()
-        view?.configCardView(with: selectedCard.productName,
+        view?.configCardView(with: selectedCard.productName ?? "",
                              cardInfo: selectedCard.cardNumber.card,
                              cardIconURL: selectedCard.cardLogoUrl,
                              needArrow: user.paymentToolInfo.count > 1) { [weak self] in
