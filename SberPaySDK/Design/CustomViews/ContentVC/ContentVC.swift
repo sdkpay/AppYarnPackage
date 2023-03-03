@@ -89,7 +89,9 @@ class ContentVC: UIViewController {
 
 // ContentVC + Loading
 extension ContentVC {
-    func showLoading(with text: String? = nil, animate: Bool = true) {
+    func showLoading(with text: String? = nil,
+                     animate: Bool = true,
+                     skippable: Bool = true) {
         view.subviews.forEach { view in
                 if view != stickImageView {
                     view.isHidden = true

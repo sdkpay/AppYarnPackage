@@ -17,6 +17,7 @@ private extension CGFloat {
 
 protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String)
+    func userInteraction(_ value: Bool)
     func configCardView(with cardName: String,
                         cardInfo: String,
                         cardIconURL: String?,
@@ -105,6 +106,11 @@ final class PaymentVC: ContentVC, IPaymentVC {
                             cardIconURL: cardIconURL,
                             needArrow: needArrow,
                             action: action)
+    }
+    
+    func userInteraction(_ value: Bool) {
+        view.isUserInteractionEnabled = value
+        contentNavigationController?.view.isUserInteractionEnabled = value
     }
     
     private func setupUI() {
