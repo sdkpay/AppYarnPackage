@@ -44,20 +44,20 @@ extension UserTarget: TargetType {
         switch self {
             
         case let .getListCards(redirectUri: redirectUri,
-                                authCode: authCode,
-                                sessionId: sessionId,
-                                state: state,
-                                merchantLogin: merchantLogin,
-                                orderId: orderId,
-                                amount: amount,
-                                currency: currency,
-                                orderNumber: orderNumber):
-             var params: [String: Any] = [
-                 "redirectUri": redirectUri,
-                 "authCode": authCode,
-                 "sessionId": sessionId,
-                 "state": state
-             ]
+                               authCode: authCode,
+                               sessionId: sessionId,
+                               state: state,
+                               merchantLogin: merchantLogin,
+                               orderId: orderId,
+                               amount: amount,
+                               currency: currency,
+                               orderNumber: orderNumber):
+            var params: [String: Any] = [
+                "redirectUri": redirectUri,
+                "authCode": authCode,
+                "sessionId": sessionId,
+                "state": state
+            ]
             
             if let merchantLogin = merchantLogin {
                 params["merchantLogin"] = merchantLogin
@@ -100,5 +100,4 @@ extension UserTarget: TargetType {
             return StubbedResponse.validSession.data
         }
     }
-    
 }
