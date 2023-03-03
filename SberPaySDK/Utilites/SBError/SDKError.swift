@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum SDKError: Error {
+enum SDKError: Error, Hashable {
     case noInternetConnection
     case noData
     case badResponseWithStatus(code: Int)
@@ -18,31 +18,9 @@ enum SDKError: Error {
     case errorFromServer(text: String)
     case noCards
     case cancelled
-    case waiting
     case timeOut
     
-    // DEBUG
-    // Несогласованные тексты ошибок
-    var description: String {
-        switch self {
-        case .noInternetConnection:
-            return "Нет интернет соединения."
-        case .noData:
-            return "Данные не получены."
-        case .errorFromServer(let text):
-            return text
-        case .badDataFromSBOL:
-            return "Неверный ответ от приложения банка."
-        case .unauthorizedClient:
-            return "Источник запроса не зарегистрирован в банке."
-        case .cancelled:
-            return "Пользователь закрыл SberPay."
-        default:
-            return localizedDescription
-        }
-    }
-    
     func represents(_ error: SDKError) -> Bool {
-        self.description == error.description
+        self == error
     }
 }

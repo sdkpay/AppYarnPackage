@@ -216,12 +216,16 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                            currency: "643",
                                            orderId: orderId,
                                            redirectUri: "sberPayExampleapp://sberidauth")
-        SBPay.payWithOrderId(paymentRequest: request) { error in
-            if let error = error {
-                // Обработка ошибки
-                print("\(error.errorDescription) - описание ошибки")
-            } else {
-                // Успешный результат
+        SBPay.payWithOrderId(paymentRequest: request) { state, info  in
+            switch state {
+            case .success:
+                print("Успешный результат")
+            case .waiting:
+                print("Необходимо проверить статус оплаты")
+            case .error:
+                print("\(info) - описание ошибки")
+            @unknown default:
+                print("Неопределенная ошибка")
             }
         }
     }
@@ -230,19 +234,23 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let request = SBPaymentRequest(apiKey: apiKey,
                                        orderId: "213132",
                                        paymentToken: "")
-        
-        SBPay.pay(with: request) { error in
-            if let error = error {
-                // Обработка ошибки
-                print("\(error.errorDescription) - описание ошибки")
-            } else {
-                // Успешный результат
+        SBPay.pay(with: request) { state, info  in
+            switch state {
+            case .success:
+                print("Успешный результат")
+            case .waiting:
+                print("Необходимо проверить статус оплаты")
+            case .error:
+                print("\(info) - описание ошибки")
+            @unknown default:
+                print("Неопределенная ошибка")
             }
         }
     }
     
     private func completePayment() {
-        SBPay.completePayment(paymentSuccess: true) {
+        SBPay.completePayment(paymentState: .success) {
+            // Действия после закрытия шторки
         }
     }
 }

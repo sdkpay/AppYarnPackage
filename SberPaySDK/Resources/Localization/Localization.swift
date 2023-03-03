@@ -41,6 +41,17 @@ extension String {
         /// Выберите карту для оплаты
         static let cardsTitle = String(stringLiteral: "cards.title")
     }
+
+    enum Error {
+        /// Системная или внутренняя ошибка.
+        static let errorSystem = String(stringLiteral: "error.system")
+        /// Некорректный формат запроса/ответа.
+        static let errorFormat = String(stringLiteral: "error.format")
+        /// Клиент закрыл SDK.
+        static let errorClose = String(stringLiteral: "error.close")
+        /// Истек таймаут ожидания ответа с сервера.
+        static let errorTimeout = String(stringLiteral: "error.timeout")
+    }
     
     enum Loading {
         /// Переходим в СберБанк Онлайн для авторизации

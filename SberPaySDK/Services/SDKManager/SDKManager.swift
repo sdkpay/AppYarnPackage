@@ -12,8 +12,6 @@ enum PayStrategy {
     case manual
 }
 
-typealias PayCompletion = (SBPError?) -> Void
-
 final class SDKManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         let service: SDKManager = DefaultSDKManager(authManager: container.resolve())
@@ -29,14 +27,14 @@ protocol SDKManager {
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion)
     func configWithOrderId(paymentRequest: SBFullPaymentRequest,
-                           completion: @escaping PayCompletion)
+                           completion: @escaping PaymentCompletion)
     func pay(with paymentRequest: SBPaymentRequest,
-             completion: @escaping PayCompletion)
+             completion: @escaping PaymentCompletion)
     func completionPaymentToken(with paymentToken: String?,
                                 paymentTokenId: String?,
                                 tokenExpiration: Int)
     func completionWithError(error: SDKError)
-    func completionPay(with error: SDKError?)
+    func completionPay(with state: SBPayState)
 }
 
 extension SDKManager {
@@ -52,7 +50,7 @@ extension SDKManager {
 final class DefaultSDKManager: SDKManager {
     private var authManager: AuthManager
 
-    private var paymentCompletion: PayCompletion?
+    private var paymentCompletion: PaymentCompletion?
     private var paymentTokenCompletion: PaymentTokenCompletion?
 
     private(set) var authInfo: AuthInfo?
@@ -78,7 +76,7 @@ final class DefaultSDKManager: SDKManager {
     }
     
     func configWithOrderId(paymentRequest: SBFullPaymentRequest,
-                           completion: @escaping PayCompletion) {
+                           completion: @escaping PaymentCompletion) {
         newStart = isNewStart(orderId: paymentRequest.orderId)
         payStrategy = .auto
         authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
@@ -88,7 +86,7 @@ final class DefaultSDKManager: SDKManager {
     }
     
     func pay(with paymentRequest: SBPaymentRequest,
-             completion: @escaping PayCompletion) {
+             completion: @escaping PaymentCompletion) {
         payInfo = PayInfo(paymentRequest: paymentRequest)
         paymentCompletion = completion
         payHandler?()
@@ -99,14 +97,14 @@ final class DefaultSDKManager: SDKManager {
         responce.error = SBPError(errorState: error)
         switch payStrategy {
         case .auto:
-            paymentCompletion?(SBPError(errorState: error))
+            paymentCompletion?(.error, SBPError(errorState: error).errorDescription)
             paymentCompletion = nil
         case .manual:
             if payInfo == nil {
                 paymentTokenCompletion?(responce)
                 paymentTokenCompletion = nil
             } else {
-                paymentCompletion?(SBPError(errorState: error))
+                paymentCompletion?(.error, SBPError(errorState: error).errorDescription)
                 paymentCompletion = nil
             }
         }
@@ -122,11 +120,14 @@ final class DefaultSDKManager: SDKManager {
         paymentTokenCompletion?(responce)
     }
     
-    func completionPay(with error: SDKError? = nil) {
-        if let error = error {
-            paymentCompletion?(SBPError(errorState: error))
-        } else {
-            paymentCompletion?(nil)
+    func completionPay(with state: SBPayState) {
+        switch state {
+        case .success:
+            paymentCompletion?(.success, .Alert.alertPaySuccessTitle)
+        case .waiting:
+            paymentCompletion?(.waiting, .Alert.alertPayWaitingTitle)
+        case .error:
+            paymentCompletion?(.error, .Alert.alertErrorMainTitle)
         }
         paymentCompletion = nil
     }

@@ -29,6 +29,7 @@ class ContentVC: UIViewController {
     }
 
     private var loadingView: LoadingView?
+    private var alertView: AlertView?
 
     lazy var logoImage: UIImageView = {
         let view = UIImageView()
@@ -140,6 +141,7 @@ extension ContentVC {
                 }
         }
         let alertView = AlertView(with: alertModel)
+        self.alertView = alertView
         view.addSubview(alertView)
         alertView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -148,5 +150,11 @@ extension ContentVC {
             alertView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         ])
         view.bringSubviewToFront(stickImageView)
+    }
+    
+    func hideAlert() {
+        guard let alertView = alertView else { return }
+        alertView.removeFromSuperview()
+        self.alertView = nil
     }
 }

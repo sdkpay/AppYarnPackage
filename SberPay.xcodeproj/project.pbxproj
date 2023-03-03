@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */; };
 		440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3AC295C304300B84E05 /* AnalyticsService.swift */; };
 		4416E424291E21C300284972 /* SDKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E423291E21C300284972 /* SDKError.swift */; };
@@ -201,6 +202,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTableView.swift; sourceTree = "<group>"; };
 		440DB3AC295C304300B84E05 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		4416E423291E21C300284972 /* SDKError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKError.swift; sourceTree = "<group>"; };
@@ -406,6 +408,7 @@
 				44C6510B2934E327008F1C29 /* SBPaymentTokenResponse.swift */,
 				44C651112934E393008F1C29 /* SBPaymentRequest.swift */,
 				44C6510D2934E33E008F1C29 /* SBPaymentTokenRequest.swift */,
+				218A8A1029B0DEF7006A0626 /* SBPayState.swift */,
 			);
 			path = "External structs";
 			sourceTree = "<group>";
@@ -1417,6 +1420,7 @@
 				445CB090292CBEEF00F50047 /* UIButton+Background.swift in Sources */,
 				4464DF8C291D0452000C9B45 /* NetworkProvider.swift in Sources */,
 				442A45E0298059F900EC3D73 /* UserService.swift in Sources */,
+				218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */,
 				4464DF99291D3DB7000C9B45 /* AuthModel.swift in Sources */,
 				445CB075292BC3EF00F50047 /* UIImage+Bundle.swift in Sources */,
 				44F9FD4B295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift in Sources */,
@@ -1777,7 +1781,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExampleDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1827,7 +1831,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1941,7 +1945,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SberPayExample/SberPayExampleDebug-Prod.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2121,7 +2125,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 25;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
