@@ -67,19 +67,14 @@
         
     }
     SBPaymentTokenRequest *requestModel = [[SBPaymentTokenRequest alloc] initWithApiKey:_apiKey
-                                                                               clientId:@""
+                                                                            redirectUri:@"sberPayExampleapp"
                                                                              clientName:@"Test shop"
                                                                                  amount:*(_totalCost)
                                                                                currency:@""
-                                                                                orderId:_orderId
                                                                             mobilePhone:@""
                                                                             orderNumber:@""
-                                                                       orderDescription:@""
-                                                                               language:@""
                                                                        recurrentEnabled:false
-                                                                       recurrentExipiry:@""
-                                                                     recurrentFrequency:1
-                                                                            redirectUri:@"sberPayExampleapp"];
+                                                                     recurrentFrequency:1];
 
     [SBPay getPaymentTokenWith: requestModel  completion:^(SBPaymentTokenResponse * _Nonnull response) {
         if (response.error) {
@@ -97,13 +92,13 @@
                                                             paymentToken: @""];
     [SBPay payWith:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
         switch(state) {
-            case 0:
+            case SBPayStateSuccess:
                 NSLog(@"Успешный результат");
                 break;
-            case 1:
+            case SBPayStateWaiting:
                 NSLog(@"Необходимо проверить статус оплаты");
                 break;
-            case 2:
+            case SBPayStateError:
                 NSLog(@"%@ - описание ошибки", info);
                 break;
         }
@@ -125,13 +120,13 @@
     ];
     [SBPay payWithOrderIdWithPaymentRequest:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
         switch(state) {
-            case 0:
+            case SBPayStateSuccess:
                 NSLog(@"Успешный результат");
                 break;
-            case 1:
+            case SBPayStateWaiting:
                 NSLog(@"Необходимо проверить статус оплаты");
                 break;
-            case 2:
+            case SBPayStateError:
                 NSLog(@"%@ - описание ошибки", info);
                 break;
         }
