@@ -12,7 +12,8 @@ final class AuthServiceAssembly: Assembly {
         let service: AuthService = DefaultAuthService(network: container.resolve(),
                                                       sdkManager: container.resolve(),
                                                       analytics: container.resolve(),
-                                                      authManager: container.resolve(), personalMetricsService: container.resolve())
+                                                      authManager: container.resolve(),
+                                                      personalMetricsService: container.resolve())
         container.register(service: service)
     }
 }
@@ -33,7 +34,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private let sdkManager: SDKManager
     private var authManager: AuthManager
     private var personalMetricsService: PersonalMetricsService
-
+    
     var avaliableBanks: [BankApp] {
         BankApp.allCases.filter({ canOpen(link: $0.link) })
     }
@@ -64,7 +65,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.authManager = authManager
         self.personalMetricsService = personalMetricsService
     }
-
+    
     func selectBank(_ app: BankApp) {
         selectedBank = app
     }
@@ -85,21 +86,12 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private func authRequest(completion: @escaping (SDKError?) -> Void) {
         guard let request = sdkManager.authInfo else { return }
         
-        var authTarget: AuthTarget
-        
-        if let orderId = request.orderId {
-            authTarget = AuthTarget.getSessionIdByDefault(redirectUri: request.redirectUri,
-                                                          merchantLogin: request.clientName,
-                                                          orderId: orderId)
-        } else {
-            authTarget = AuthTarget.getSessionIdByPurchase(redirectUri: request.redirectUri,
-                                                           merchantLogin: request.clientName,
-                                                           amount: request.amount ?? 0,
-                                                           currency: request.currency ?? "",
-                                                           orderNumber: request.orderNumber ?? "")
-        }
-        
-        network.request(authTarget,
+        network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
+                                                merchantLogin: request.clientName,
+                                                orderId: request.orderId,
+                                                amount: request.amount,
+                                                currency: request.currency,
+                                                orderNumber: request.orderNumber),
                         to: AuthModel.self) { [weak self] result in
             self?.authСompletion = completion
             switch result {
@@ -153,7 +145,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             return _selectedBank
         }
     }
-
+    
     // MARK: - Методы авторизации через sberid
     private func sberIdAuth(with model: AuthModel) {
         guard let link = authURL(link: model.deeplink) else {
@@ -169,11 +161,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func authURL(link: String) -> URL? {
         guard let url = selectedBank?.link else { return nil }
-      return URL(string: url + link)
+        return URL(string: url + link)
     }
     
     // MARK: - Вспомогательные методы
-
+    
     private func canOpen(link: String) -> Bool {
         guard let url = URL(string: link) else { return false }
         return UIApplication.shared.canOpenURL(url)

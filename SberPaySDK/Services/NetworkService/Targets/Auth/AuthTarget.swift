@@ -8,28 +8,25 @@
 import Foundation
 
 enum AuthTarget {
-    case getSessionIdByDefault(redirectUri: String,
+    case getSessionId(redirectUri: String,
                       merchantLogin: String?,
-                      orderId: String)
-    
-    case getSessionIdByPurchase(redirectUri: String,
-                                merchantLogin: String?,
-                                amount: Int,
-                                currency: String,
-                                orderNumber: String)
+                      orderId: String?,
+                      amount: Int?,
+                      currency: String?,
+                      orderNumber: String?)
 }
 
 extension AuthTarget: TargetType {
     var path: String {
         switch self {
-        case .getSessionIdByDefault, .getSessionIdByPurchase:
+        case .getSessionId:
             return "/sessionId"
         }
     }
     
     var httpMethod: HTTPMethod {
         switch self {
-        case .getSessionIdByDefault, .getSessionIdByPurchase:
+        case .getSessionId:
             return .post
         }
     }
@@ -37,44 +34,36 @@ extension AuthTarget: TargetType {
     var task: HTTPTask {
         switch self {
         
-        case let .getSessionIdByPurchase(redirectUri: redirectUri,
-                                         merchantLogin: merchantLogin,
-                                         amount: amount,
-                                         currency: currency,
-                                         orderNumber: orderNumber):
-            var params = getParameters(redirectUri: redirectUri, merchantLogin: merchantLogin)
-            
-            let purchaceParams: [String: Any] = [
-                "amount": amount,
-                "currency": currency,
-                "orderNumber": orderNumber
+        case let .getSessionId(redirectUri: redirectUri,
+                                merchantLogin: merchantLogin,
+                                orderId: orderId,
+                                amount: amount,
+                                currency: currency,
+                                orderNumber: orderNumber):
+             var params: [String: Any] = [
+                 "redirectUri": redirectUri
             ]
-            params["purchase"] = purchaceParams
-            
-            return .requestWithParameters(nil, bodyParameters: params)
-        case let .getSessionIdByDefault(redirectUri: redirectUri,
-                               merchantLogin: merchantLogin,
-                               orderId: orderId):
-
-            var params = getParameters(redirectUri: redirectUri, merchantLogin: merchantLogin)
-            params["orderId"] = orderId
-            
+                 
+            if let merchantLogin = merchantLogin {
+                 params["merchantLogin"] = merchantLogin
+             }
+             if let orderId = orderId {
+                 params["orderId"] = orderId
+             }
+             if let amount = amount,
+                amount != 0,
+                let currency = currency,
+                let orderNumber = orderNumber {
+                 let purchaceParams: [String: Any] = [
+                     "amount": amount,
+                     "currency": currency,
+                     "orderNumber": orderNumber
+                 ]
+                 params["purchase"] = purchaceParams
+             }
 
             return .requestWithParameters(nil, bodyParameters: params)
         }
-    }
-    
-    private func getParameters(redirectUri: String,
-                               merchantLogin: String?) -> [String: Any] {
-        
-        var params: [String: Any] = [
-            "redirectUri": redirectUri
-        ]
-        if let merchantLogin = merchantLogin {
-            params["merchantLogin"] = merchantLogin
-        }
-        
-        return params
     }
     
     var headers: HTTPHeaders? {
@@ -83,7 +72,7 @@ extension AuthTarget: TargetType {
     
     var sampleData: Data? {
         switch self {
-        case .getSessionIdByDefault, .getSessionIdByPurchase:
+        case .getSessionId:
             return StubbedResponse.auth.data
         }
     }
