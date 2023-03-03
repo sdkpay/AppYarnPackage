@@ -167,13 +167,14 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func getPaymentToken() {
         let request = SBPaymentTokenRequest(apiKey: apiKey,
+                                            redirectUri: "sberPayExampleapp://sberidauth",
                                             clientName: "Test shop",
                                             amount: totalCost,
                                             currency: "RUB",
+                                            mobilePhone: "899678476549",
                                             orderNumber: orderId,
                                             recurrentEnabled: true,
-                                            recurrentFrequency: 1,
-                                            redirectUri: "sberPayExampleapp://sberidauth")
+                                            recurrentFrequency: 1)
         SBPay.getPaymentToken(with: request) { response in
             if let error = response.error {
                 // Обработка ошибки
@@ -188,19 +189,14 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func paymentTokenWithPerchase() {
         let request = SBPaymentTokenRequest(apiKey: apiKey,
-                                            clientId: "Test shop",
-                                            clientName: "Test shop",
-                                            amount: totalCost,
-                                            currency: "643",
-                                            orderId: nil,
-                                            mobilePhone: nil,
-                                            orderNumber: orderId,
-                                            orderDescription: nil,
-                                            language: nil,
-                                            recurrentEnabled: false,
-                                            recurrentExipiry: "",
-                                            recurrentFrequency: 0,
-                                            redirectUri: "sberPayExampleapp://sberidauth")
+                                             redirectUri: "sberPayExampleapp://sberidauth",
+                                             clientName: "Test shop",
+                                             amount: totalCost,
+                                             currency: "643",
+                                             mobilePhone: nil,
+                                             orderNumber: orderId,
+                                             recurrentEnabled: false,
+                                             recurrentFrequency: 0)
         SBPay.getPaymentToken(with: request) { response in
             if let error = response.error {
                 // Обработка ошибки

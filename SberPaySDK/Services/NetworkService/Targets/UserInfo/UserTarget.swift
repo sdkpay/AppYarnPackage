@@ -9,14 +9,14 @@ import Foundation
 
 enum UserTarget {
     case getListCards(redirectUri: String,
-                      authCode: String,
-                      sessionId: String,
-                      state: String,
-                      merchantLogin: String?,
-                      orderId: String?,
-                      amount: Int?,
-                      currency: String?,
-                      orderNumber: String?)
+                        authCode: String,
+                        sessionId: String,
+                        state: String,
+                        merchantLogin: String?,
+                        orderId: String?,
+                        amount: Int?,
+                        currency: String?,
+                        orderNumber: String?)
     case checkSession(sessionId: String)
 }
 
@@ -42,21 +42,23 @@ extension UserTarget: TargetType {
     
     var task: HTTPTask {
         switch self {
+            
         case let .getListCards(redirectUri: redirectUri,
-                               authCode: authCode,
-                               sessionId: sessionId,
-                               state: state,
-                               merchantLogin: merchantLogin,
-                               orderId: orderId,
-                               amount: amount,
-                               currency: currency,
-                               orderNumber: orderNumber):
-            var params: [String: Any] = [
-                "redirectUri": redirectUri,
-                "authCode": authCode,
-                "sessionId": sessionId,
-                "state": state
-            ]
+                                authCode: authCode,
+                                sessionId: sessionId,
+                                state: state,
+                                merchantLogin: merchantLogin,
+                                orderId: orderId,
+                                amount: amount,
+                                currency: currency,
+                                orderNumber: orderNumber):
+             var params: [String: Any] = [
+                 "redirectUri": redirectUri,
+                 "authCode": authCode,
+                 "sessionId": sessionId,
+                 "state": state
+             ]
+            
             if let merchantLogin = merchantLogin {
                 params["merchantLogin"] = merchantLogin
             }
@@ -64,6 +66,7 @@ extension UserTarget: TargetType {
                 params["orderId"] = orderId
             }
             if let amount = amount,
+               amount != 0,
                let currency = currency,
                let orderNumber = orderNumber {
                 let purchaceParams: [String: Any] = [
@@ -73,6 +76,9 @@ extension UserTarget: TargetType {
                 ]
                 params["purchase"] = purchaceParams
             }
+            
+            params["orderId"] = orderId
+            
             return .requestWithParametersAndHeaders(nil, bodyParameters: params)
         case .checkSession(sessionId: let sessionId):
             let params = [
@@ -81,7 +87,7 @@ extension UserTarget: TargetType {
             return .requestWithParameters(params)
         }
     }
-
+    
     var headers: HTTPHeaders? {
         return nil
     }
@@ -94,4 +100,5 @@ extension UserTarget: TargetType {
             return StubbedResponse.validSession.data
         }
     }
+    
 }

@@ -33,31 +33,35 @@ extension AuthTarget: TargetType {
     
     var task: HTTPTask {
         switch self {
+        
         case let .getSessionId(redirectUri: redirectUri,
-                               merchantLogin: merchantLogin,
-                               orderId: orderId,
-                               amount: amount,
-                               currency: currency,
-                               orderNumber: orderNumber):
-            var params: [String: Any] = [
-                "redirectUri": redirectUri
+                                merchantLogin: merchantLogin,
+                                orderId: orderId,
+                                amount: amount,
+                                currency: currency,
+                                orderNumber: orderNumber):
+             var params: [String: Any] = [
+                 "redirectUri": redirectUri
             ]
+                 
             if let merchantLogin = merchantLogin {
-                params["merchantLogin"] = merchantLogin
-            }
-            if let orderId = orderId {
-                params["orderId"] = orderId
-            }
-            if let amount = amount,
-               let currency = currency,
-               let orderNumber = orderNumber {
-                let purchaceParams: [String: Any] = [
-                    "amount": amount,
-                    "currency": currency,
-                    "orderNumber": orderNumber
-                ]
-                params["purchase"] = purchaceParams
-            }
+                 params["merchantLogin"] = merchantLogin
+             }
+             if let orderId = orderId {
+                 params["orderId"] = orderId
+             }
+             if let amount = amount,
+                amount != 0,
+                let currency = currency,
+                let orderNumber = orderNumber {
+                 let purchaceParams: [String: Any] = [
+                     "amount": amount,
+                     "currency": currency,
+                     "orderNumber": orderNumber
+                 ]
+                 params["purchase"] = purchaceParams
+             }
+
             return .requestWithParameters(nil, bodyParameters: params)
         }
     }

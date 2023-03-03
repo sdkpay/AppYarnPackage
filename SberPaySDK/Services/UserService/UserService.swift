@@ -43,16 +43,17 @@ final class DefaultUserService: UserService {
               let authCode = authManager.authCode,
               let state = authManager.state
         else { return }
+                
         network.request(UserTarget.getListCards(redirectUri: authInfo.redirectUri,
-                                                authCode: authCode,
-                                                sessionId: sessionId,
-                                                state: state,
-                                                merchantLogin: authInfo.clientName,
-                                                orderId: authInfo.orderId,
-                                                amount: authInfo.amount,
-                                                currency: authInfo.currency,
-                                                orderNumber: authInfo.orderNumber),
-                        to: User.self) { [weak self] result in
+                                                  authCode: authCode,
+                                                  sessionId: sessionId,
+                                                  state: state,
+                                                  merchantLogin: authInfo.clientName,
+                                                  orderId: authInfo.orderId,
+                                                  amount: authInfo.amount,
+                                                  currency: authInfo.currency,
+                                                  orderNumber: authInfo.orderNumber),
+                          to: User.self) { [weak self] result in
             switch result {
             case .success(let user):
                 self?.user = user
