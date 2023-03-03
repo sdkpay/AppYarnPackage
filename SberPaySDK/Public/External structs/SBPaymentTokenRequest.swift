@@ -39,20 +39,20 @@ public final class SBPaymentTokenRequest: NSObject {
     let redirectUri: String
     
     @objc
-    public init(apiKey: String,
-                clientId: String? = nil,
-                clientName: String,
-                amount: Int,
-                currency: String,
-                orderId: String? = nil,
-                mobilePhone: String? = nil,
-                orderNumber: String? = nil,
-                orderDescription: String? = nil,
-                language: String? = nil,
-                recurrentEnabled: Bool,
-                recurrentExipiry: String? = nil,
-                recurrentFrequency: Int,
-                redirectUri: String) {
+    init(apiKey: String,
+         clientId: String? = nil,
+         clientName: String,
+         amount: Int = 0,
+         currency: String? = nil,
+         orderId: String? = nil,
+         mobilePhone: String? = nil,
+         orderNumber: String? = nil,
+         orderDescription: String? = nil,
+         language: String? = nil,
+         recurrentEnabled: Bool,
+         recurrentExipiry: String? = nil,
+         recurrentFrequency: Int,
+         redirectUri: String) {
         self.apiKey = apiKey
         self.clientId = clientId
         self.clientName = clientName
@@ -72,23 +72,41 @@ public final class SBPaymentTokenRequest: NSObject {
     @objc
     public convenience init(apiKey: String,
                             clientName: String,
-                            amount: Int,
-                            currency: String,
-                            orderNumber: String,
+                            orderId: String,
                             recurrentEnabled: Bool,
                             recurrentFrequency: Int,
                             redirectUri: String) {
         self.init(apiKey: apiKey,
                   clientId: nil,
                   clientName: clientName,
-                  amount: amount,
-                  currency: currency,
+                  currency: nil,
                   mobilePhone: nil,
-                  orderNumber: orderNumber,
+                  orderNumber: orderId,
                   orderDescription: nil,
                   language: nil,
                   recurrentEnabled: recurrentEnabled,
                   recurrentExipiry: nil,
+                  recurrentFrequency: recurrentFrequency,
+                  redirectUri: redirectUri)
+    }
+    
+    @objc
+    public convenience init(apiKey: String,
+                            redirectUri: String,
+                            clientName: String,
+                            amount: Int,
+                            currency: String,
+                            mobilePhone: String?,
+                            orderNumber: String,
+                            recurrentEnabled: Bool,
+                            recurrentFrequency: Int) {
+        self.init(apiKey: apiKey,
+                  clientName: clientName,
+                  amount: amount,
+                  currency: currency,
+                  mobilePhone: mobilePhone,
+                  orderNumber: orderNumber,
+                  recurrentEnabled: recurrentEnabled,
                   recurrentFrequency: recurrentFrequency,
                   redirectUri: redirectUri)
     }

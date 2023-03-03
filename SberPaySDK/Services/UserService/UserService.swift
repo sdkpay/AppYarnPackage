@@ -43,16 +43,28 @@ final class DefaultUserService: UserService {
               let authCode = authManager.authCode,
               let state = authManager.state
         else { return }
-        network.request(UserTarget.getListCards(redirectUri: authInfo.redirectUri,
-                                                authCode: authCode,
-                                                sessionId: sessionId,
-                                                state: state,
-                                                merchantLogin: authInfo.clientName,
-                                                orderId: authInfo.orderId,
-                                                amount: authInfo.amount,
-                                                currency: authInfo.currency,
-                                                orderNumber: authInfo.orderNumber),
-                        to: User.self) { [weak self] result in
+        
+        var userTarget: UserTarget
+        
+        if let orderId = authInfo.orderId {
+            userTarget = UserTarget.getListCardsByDefault(redirectUri: authInfo.redirectUri,
+                                                          authCode: authCode,
+                                                          sessionId: sessionId,
+                                                          state: state,
+                                                          merchantLogin: authInfo.clientName,
+                                                          orderId: orderId)
+        } else {
+            userTarget = UserTarget.getListCardsByPachase(redirectUri: authInfo.redirectUri,
+                                                          authCode: authCode,
+                                                          sessionId: sessionId,
+                                                          state: state,
+                                                          merchantLogin: authInfo.clientName,
+                                                          amount: authInfo.amount ?? 0,
+                                                          currency: authInfo.currency ?? "",
+                                                          orderNumber: authInfo.orderNumber ?? "")
+        }
+        
+        network.request(userTarget, to: User.self) { [weak self] result in
             switch result {
             case .success(let user):
                 self?.user = user
