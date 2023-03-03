@@ -18,7 +18,7 @@ struct User: Codable {
 
 struct OrderAmount: Codable {
     let amount: Int
-    let currency: Int
+    let currency: String
 }
 
 struct PaymentToolInfo: Codable {
@@ -30,7 +30,6 @@ struct PaymentToolInfo: Codable {
     let cardNumber: String
     let paymentSystemType: String
     let cardLogoUrl: String
-    let amountData: OrderAmount
 }
 
 struct UserInfo: Codable {
