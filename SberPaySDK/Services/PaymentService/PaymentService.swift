@@ -63,7 +63,10 @@ final class DefaultPaymentService: PaymentService {
                                                       paymentId: String(paymentId),
                                                       userName: authInfo.clientName,
                                                       merchantLogin: authInfo.clientId,
-                                                      orderId: authInfo.orderId),
+                                                      orderId: authInfo.orderId,
+                                                      amount: authInfo.amount,
+                                                      currency: authInfo.currency,
+                                                      orderNumber: authInfo.orderNumber),
                         to: PaymentTokenModel.self) { [weak self] result in
             guard let self = self else { return }
             self.userService.clearData()

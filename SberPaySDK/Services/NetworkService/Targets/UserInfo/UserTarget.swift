@@ -26,8 +26,7 @@ extension UserTarget: TargetType {
         case .getListCards:
             return "/listCards"
         case .checkSession:
-            // DEBUG
-            return "/sessionId"
+            return "/statusSession"
         }
     }
     
