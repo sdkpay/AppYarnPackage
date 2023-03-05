@@ -7,6 +7,10 @@
 
 import UIKit
 
+extension Int {
+    static let dimmViewTag = 911
+}
+
 final class CoverPresentationController: UIPresentationController {
     override var shouldPresentInFullscreen: Bool { false }
     
@@ -14,6 +18,7 @@ final class CoverPresentationController: UIPresentationController {
         let view = UIView()
         view.backgroundColor = .black.withAlphaComponent(0.2)
         view.addGestureRecognizer(tapRecognizer)
+        view.tag = .dimmViewTag
         return view
     }()
     

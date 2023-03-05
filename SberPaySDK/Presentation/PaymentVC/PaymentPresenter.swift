@@ -64,12 +64,12 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func pay() {
-        view?.userInteraction(false)
+        view?.userInteractionsEnabled = false
         view?.hideAlert()
         view?.showLoading(with: .Loading.tryToPayTitle)
         guard let paymentId = selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId) { [weak self] error in
-            self?.view?.userInteraction(true)
+            self?.view?.userInteractionsEnabled = true
             if let error = error {
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,

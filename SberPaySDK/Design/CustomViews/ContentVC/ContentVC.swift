@@ -27,6 +27,13 @@ class ContentVC: UIViewController {
     var contentNavigationController: ContentNC? {
         parent as? ContentNC
     }
+    
+    var userInteractionsEnabled = true {
+        didSet {
+            view.window?.viewWithTag(.dimmViewTag)?.isUserInteractionEnabled = userInteractionsEnabled
+            contentNavigationController?.view.isUserInteractionEnabled = userInteractionsEnabled
+        }
+    }
 
     private var loadingView: LoadingView?
     private var alertView: AlertView?
@@ -90,8 +97,7 @@ class ContentVC: UIViewController {
 // ContentVC + Loading
 extension ContentVC {
     func showLoading(with text: String? = nil,
-                     animate: Bool = true,
-                     skippable: Bool = true) {
+                     animate: Bool = true) {
         view.subviews.forEach { view in
                 if view != stickImageView {
                     view.isHidden = true
