@@ -176,7 +176,7 @@ extension DefaultNetworkProvider: URLSessionDelegate {
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         if !BuildSettings.shared.ssl {
-            completionHandler(.cancelAuthenticationChallenge, nil)
+            completionHandler(.performDefaultHandling, nil)
             return
         }
         if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {

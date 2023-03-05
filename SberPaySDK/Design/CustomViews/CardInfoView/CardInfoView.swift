@@ -34,6 +34,7 @@ final class CardInfoView: ContentView {
     
     private var cardIconView: UIImageView = {
         let view = UIImageView()
+        view.contentMode = .scaleToFill
         view.image = .Cards.stockCard
         return view
     }()
@@ -61,12 +62,11 @@ final class CardInfoView: ContentView {
         subtitleLabel.text = cardInfo
         self.needArrow = needArrow
         self.action = action
-
-        ImageDownloadService.shared.downloadImage(with: cardIconURL,
-                                                  completionHandler: { [weak self] icon, _ in
+        ImageDownloader.shared.downloadImage(with: cardIconURL,
+                                             completionHandler: { [weak self] icon, _ in
             self?.cardIconView.image = icon
         }, placeholderImage: .Cards.stockCard)
-
+        
         setupUI()
     }
 

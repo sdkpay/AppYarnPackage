@@ -7,13 +7,28 @@
 
 import UIKit
 
-final class ImageDownloadService {
-    static let shared = ImageDownloadService()
+final class ImageDownloader: NSObject {
+    static let shared = ImageDownloader()
 
+    private var session: URLSession?
     private var cachedImages = [String: UIImage]()
     private var imagesDownloadTasks = [String: URLSessionDataTask]()
     private let serialQueueForImages = DispatchQueue(label: "images.queue", attributes: .concurrent)
     private let serialQueueForDataTasks = DispatchQueue(label: "dataTasks.queue", attributes: .concurrent)
+    
+    private lazy var certificate: Data? = {
+        guard let fileDer = Bundle(for: SBPay.self).path(forResource: "cms-res",
+                                                         ofType: "der")
+        else { return nil }
+        return NSData(contentsOfFile: fileDer) as? Data
+    }()
+    
+    override init() {
+        super.init()
+        session = URLSession(configuration: .default,
+                             delegate: self,
+                             delegateQueue: nil)
+    }
 
     func downloadImage(with imageUrlString: String?,
                        completionHandler: @escaping (UIImage?, Bool) -> Void,
@@ -36,7 +51,7 @@ final class ImageDownloadService {
                 return
             }
 
-            let task = URLSession.shared.dataTask(with: url) { data, _, error in
+            let task = session?.dataTask(with: url) { data, _, error in
                 guard let data = data else {
                     return
                 }
@@ -60,7 +75,7 @@ final class ImageDownloadService {
             self.serialQueueForDataTasks.sync(flags: .barrier) {
                 imagesDownloadTasks[imageUrlString] = task
             }
-            task.resume()
+            task?.resume()
         }
     }
 
@@ -83,5 +98,32 @@ final class ImageDownloadService {
         serialQueueForDataTasks.sync {
             return imagesDownloadTasks[urlString]
         }
+    }
+}
+
+extension ImageDownloader: URLSessionDelegate {
+    func urlSession(_ session: URLSession,
+                    didReceive challenge: URLAuthenticationChallenge,
+                    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+            if let serverTrust = challenge.protectionSpace.serverTrust {
+                if let serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0) {
+                    let serverCertificateData = SecCertificateCopyData(serverCertificate)
+                    let data = CFDataGetBytePtr(serverCertificateData)
+                    let size = CFDataGetLength(serverCertificateData)
+                    let certFromHost = NSData(bytes: data, length: size)
+                    if let localCert = certificate,
+                       certFromHost.isEqual(to: localCert) {
+                        completionHandler(.useCredential,
+                                          URLCredential(trust: serverTrust))
+                        return
+                    } else {
+                        completionHandler(.cancelAuthenticationChallenge, nil)
+                        return
+                    }
+                }
+            }
+        }
+        completionHandler(.cancelAuthenticationChallenge, nil)
     }
 }

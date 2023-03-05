@@ -76,8 +76,8 @@ final class CardCell: UITableViewCell {
         checkImageView.image = model.selected ? .Common.checkSelected : .Common.checkDeselected
         titleLabel.text = model.title
         cardLabel.text = model.number
-        ImageDownloadService.shared.downloadImage(with: model.cardURL,
-                                                  completionHandler: { [weak self] icon, _ in
+        ImageDownloader.shared.downloadImage(with: model.cardURL,
+                                             completionHandler: { [weak self] icon, _ in
             self?.cardIconView.image = icon
         }, placeholderImage: .Cards.stockCard)
     }

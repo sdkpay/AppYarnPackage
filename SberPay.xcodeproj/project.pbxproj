@@ -116,6 +116,7 @@
 		44A3126329813D110099EB76 /* PaymentRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A3126229813D110099EB76 /* PaymentRouter.swift */; };
 		44A31268298156C30099EB76 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A31267298156C30099EB76 /* String+Extensions.swift */; };
 		44A438F429900EEE00CA04FC /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 44A438F329900EEE00CA04FC /* Dynatrace-Static */; };
+		44A5A46129B4A38900C01420 /* cms-res.der in Resources */ = {isa = PBXBuildFile; fileRef = 44A5A46029B4A38900C01420 /* cms-res.der */; };
 		44A70AEA299A4F37009A0F34 /* ImageDownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A70AE9299A4F37009A0F34 /* ImageDownloadService.swift */; };
 		44AC79C0299E32B40043FA4E /* BizoneCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */; };
 		44AC79C1299E32B40043FA4E /* BizoneCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -302,6 +303,7 @@
 		44A3126029813ABB0099EB76 /* AuthRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouter.swift; sourceTree = "<group>"; };
 		44A3126229813D110099EB76 /* PaymentRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRouter.swift; sourceTree = "<group>"; };
 		44A31267298156C30099EB76 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		44A5A46029B4A38900C01420 /* cms-res.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cms-res.der"; sourceTree = "<group>"; };
 		44A70AE9299A4F37009A0F34 /* ImageDownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloadService.swift; sourceTree = "<group>"; };
 		44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = BizoneCore.xcframework; sourceTree = "<group>"; };
 		44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Fingerprint.xcframework; sourceTree = "<group>"; };
@@ -396,6 +398,7 @@
 		440DB3AE295C645300B84E05 /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
+				44A5A46029B4A38900C01420 /* cms-res.der */,
 				443D83AA295D8F31002605AA /* ecomtest.sberbank.ru.der */,
 			);
 			path = Certificates;
@@ -1301,6 +1304,7 @@
 				445CB07F292C9D9500F50047 /* SB Sans Text.ttf in Resources */,
 				44A31251298103F10099EB76 /* ListCards.json in Resources */,
 				4421B76E299ABC8500DD7881 /* neg.mp3 in Resources */,
+				44A5A46129B4A38900C01420 /* cms-res.der in Resources */,
 				4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */,
 				442A45CE297FEE8000EC3D73 /* Auth.json in Resources */,
 				445CB073292BBB1400F50047 /* Assets.xcassets in Resources */,
