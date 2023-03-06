@@ -60,7 +60,7 @@ final class DefaultPaymentService: PaymentService {
         else { return }
         network.request(PaymentTarget.getPaymentToken(sessionId: sessionId,
                                                       deviceInfo: deviceInfo,
-                                                      paymentId: String(paymentId),
+                                                      paymentId: paymentId,
                                                       merchantLogin: authInfo.merchantLogin,
                                                       orderId: authInfo.orderId,
                                                       amount: authInfo.amount,

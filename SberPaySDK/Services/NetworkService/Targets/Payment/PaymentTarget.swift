@@ -10,7 +10,7 @@ import Foundation
 enum PaymentTarget {
     case getPaymentToken(sessionId: String,
                          deviceInfo: String,
-                         paymentId: String,
+                         paymentId: Int,
                          merchantLogin: String?,
                          orderId: String?,
                          amount: Int?,
