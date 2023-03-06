@@ -78,7 +78,8 @@ final class PaymentPresenter: PaymentPresenting {
                 } else if error.represents(.timeOut) {
                     self?.configForWaiting()
                 } else {
-                    self?.dismissWithError(error)
+                    self?.alertService.show(on: self?.view,
+                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
                 }
             } else {
                 self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
