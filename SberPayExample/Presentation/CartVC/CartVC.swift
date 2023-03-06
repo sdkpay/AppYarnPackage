@@ -167,14 +167,9 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func getPaymentToken() {
         let request = SBPaymentTokenRequest(apiKey: apiKey,
-                                            redirectUri: "sberPayExampleapp://sberidauth",
-                                            clientName: "Test shop",
-                                            amount: totalCost,
-                                            currency: "RUB",
-                                            mobilePhone: "899678476549",
-                                            orderNumber: orderId,
-                                            recurrentEnabled: true,
-                                            recurrentFrequency: 1)
+                                            merchantLogin: "Test shop",
+                                            orderId: orderId,
+                                            redirectUri: "sberPayExampleapp://sberidauth")
         SBPay.getPaymentToken(with: request) { response in
             if let error = response.error {
                 // Обработка ошибки
@@ -190,13 +185,13 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private func paymentTokenWithPerchase() {
         let request = SBPaymentTokenRequest(apiKey: apiKey,
                                             redirectUri: "sberPayExampleapp://sberidauth",
-                                            clientName: "Test shop",
+                                            merchantLogin: "Test shop",
                                             amount: totalCost,
                                             currency: "643",
                                             mobilePhone: nil,
                                             orderNumber: orderId,
-                                            recurrentEnabled: false,
-                                            recurrentFrequency: 0)
+                                            recurrentExipiry: "20230821",
+                                            recurrentFrequency: 2)
         SBPay.getPaymentToken(with: request) { response in
             if let error = response.error {
                 // Обработка ошибки
@@ -211,7 +206,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func autoPay() {
         let request = SBFullPaymentRequest(apiKey: apiKey,
-                                           clientName: "Test shop",
+                                           merchantLogin: "Test shop",
                                            amount: totalCost,
                                            currency: "643",
                                            orderId: orderId,

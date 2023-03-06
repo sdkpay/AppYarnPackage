@@ -61,12 +61,13 @@ final class DefaultPaymentService: PaymentService {
         network.request(PaymentTarget.getPaymentToken(sessionId: sessionId,
                                                       deviceInfo: deviceInfo,
                                                       paymentId: String(paymentId),
-                                                      userName: authInfo.clientName,
-                                                      merchantLogin: authInfo.clientId,
+                                                      merchantLogin: authInfo.merchantLogin,
                                                       orderId: authInfo.orderId,
                                                       amount: authInfo.amount,
                                                       currency: authInfo.currency,
-                                                      orderNumber: authInfo.orderNumber),
+                                                      orderNumber: authInfo.orderNumber,
+                                                      expiry: authInfo.expiry,
+                                                      frequency: authInfo.frequency),
                         to: PaymentTokenModel.self) { [weak self] result in
             guard let self = self else { return }
             self.userService.clearData()
@@ -92,7 +93,7 @@ final class DefaultPaymentService: PaymentService {
         guard let authInfo = sdkManager.authInfo else { return }
         network.request(PaymentTarget.getPaymentOrder(operationId: .generateRandom(with: 36),
                                                       orderId: authInfo.orderId,
-                                                      merchantLogin: authInfo.clientName,
+                                                      merchantLogin: authInfo.merchantLogin,
                                                       paymentToken: token),
                         to: PaymentOrderModel.self,
                         retryCount: 4) { result in
