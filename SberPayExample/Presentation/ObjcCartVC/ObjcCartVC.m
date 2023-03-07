@@ -108,13 +108,8 @@
 -(void)fullPay {
     SBFullPaymentRequest *request = [[SBFullPaymentRequest alloc]
                                      initWithApiKey: @"awdawdawdajkdmdkladmka"
-                                     clientId: @"123123"
                                      merchantLogin: @"Test shop"
-                                     amount: 123123
-                                     currency: @"643"
-                                     mobilePhone: nil
                                      orderId: @"12312312"
-                                     orderDescription:nil
                                      language:nil
                                      redirectUri: @"sberPayExampleapp://sberidauth"
     ];

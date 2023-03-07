@@ -11,7 +11,6 @@ struct AuthInfo {
     let apiKey: String
     let merchantLogin: String?
     let orderId: String?
-    let clientId: String?
     let redirectUri: String
     let amount: Int?
     let currency: String?
@@ -23,10 +22,9 @@ struct AuthInfo {
         self.apiKey = fullPaymentRequest.apiKey
         self.merchantLogin = fullPaymentRequest.merchantLogin
         self.orderId = fullPaymentRequest.orderId
-        self.clientId = fullPaymentRequest.clientId
         self.redirectUri = fullPaymentRequest.redirectUri
-        self.amount = fullPaymentRequest.amount
-        self.currency = fullPaymentRequest.currency
+        self.amount = nil
+        self.currency = nil
         self.orderNumber = nil
         self.expiry = nil
         self.frequency = nil
@@ -37,7 +35,6 @@ struct AuthInfo {
         self.merchantLogin = paymentTokenRequest.merchantLogin
         self.orderId = paymentTokenRequest.orderId
         self.orderNumber = paymentTokenRequest.orderNumber
-        self.clientId = paymentTokenRequest.clientId
         self.redirectUri = paymentTokenRequest.redirectUri
         self.amount = paymentTokenRequest.amount
         self.currency = paymentTokenRequest.currency
