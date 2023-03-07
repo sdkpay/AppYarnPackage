@@ -176,7 +176,6 @@ enum SBLogger: ResponseDecoder {
             """
             ➡️ Merchant called GetPaymentToken
                apiKey: \(params.apiKey)
-               clientId: \(params.clientId ?? "none")
                merchantLogin: \(params.merchantLogin ?? "none")
                amount: \(params.amount ?? 0)
                currency: \(params.currency ?? "none")

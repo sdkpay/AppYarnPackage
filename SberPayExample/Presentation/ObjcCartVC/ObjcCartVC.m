@@ -108,7 +108,6 @@
 -(void)fullPay {
     SBFullPaymentRequest *request = [[SBFullPaymentRequest alloc]
                                      initWithApiKey: @"awdawdawdajkdmdkladmka"
-                                     clientId: @"123123"
                                      merchantLogin: @"Test shop"
                                      amount: 123123
                                      currency: @"643"
