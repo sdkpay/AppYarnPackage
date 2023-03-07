@@ -11,8 +11,6 @@ import Foundation
 public final class SBFullPaymentRequest: NSObject {
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     let apiKey: String
-    /// Идентификатора плательщика в вашей системе
-    let clientId: String?
     /// Логин дочернего партнера
     let merchantLogin: String?
     /// Сумма операции в минорных единицах
@@ -32,7 +30,6 @@ public final class SBFullPaymentRequest: NSObject {
 
     @objc
     public init(apiKey: String,
-                clientId: String? = nil,
                 merchantLogin: String? = nil,
                 amount: Int,
                 currency: String? = nil, 
@@ -42,7 +39,6 @@ public final class SBFullPaymentRequest: NSObject {
                 language: String? = nil,
                 redirectUri: String) {
         self.apiKey = apiKey
-        self.clientId = clientId
         self.merchantLogin = merchantLogin
         self.amount = amount
         self.currency = currency

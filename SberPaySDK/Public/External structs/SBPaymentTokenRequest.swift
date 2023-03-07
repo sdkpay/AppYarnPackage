@@ -11,8 +11,6 @@ import Foundation
 public final class SBPaymentTokenRequest: NSObject {
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     let apiKey: String
-    /// Идентификатора плательщика в вашей системе
-    let clientId: String?
     /// Логин дочернего партнера
     let merchantLogin: String?
     /// Сумма операции в минорных единицах
@@ -38,7 +36,6 @@ public final class SBPaymentTokenRequest: NSObject {
     
     @objc
     init(apiKey: String,
-         clientId: String? = nil,
          merchantLogin: String?,
          amount: Int = 0,
          currency: String? = nil,
@@ -51,7 +48,6 @@ public final class SBPaymentTokenRequest: NSObject {
          recurrentFrequency: Int,
          redirectUri: String) {
         self.apiKey = apiKey
-        self.clientId = clientId
         self.merchantLogin = merchantLogin
         self.amount = amount
         self.currency = currency
