@@ -11,10 +11,8 @@ import Foundation
 public final class SBPaymentTokenRequest: NSObject {
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     let apiKey: String
-    /// Идентификатора плательщика в вашей системе
-    let clientId: String?
-    /// Название магазина клиента
-    let clientName: String
+    /// Логин дочернего партнера
+    let merchantLogin: String?
     /// Сумма операции в минорных единицах
     let amount: Int?
     /// Цифровой код валюты операции согласно ISO 4217
@@ -29,8 +27,6 @@ public final class SBPaymentTokenRequest: NSObject {
     let orderDescription: String?
     /// Выбранный язык локализации интерфейсов
     let language: String?
-    /// Параметр создания платежного токена для реккурентных платежей
-    let recurrentEnabled: Bool
     /// Дата прекращения действия рекуррентных платежей (формат YYYYMMDD)
     let recurrentExipiry: String?
     /// Период рекуррентных платежей в днях (натуральное число в пределах от 1 до 28)
@@ -40,8 +36,7 @@ public final class SBPaymentTokenRequest: NSObject {
     
     @objc
     init(apiKey: String,
-         clientId: String? = nil,
-         clientName: String,
+         merchantLogin: String?,
          amount: Int = 0,
          currency: String? = nil,
          orderId: String? = nil,
@@ -49,13 +44,11 @@ public final class SBPaymentTokenRequest: NSObject {
          orderNumber: String? = nil,
          orderDescription: String? = nil,
          language: String? = nil,
-         recurrentEnabled: Bool,
          recurrentExipiry: String? = nil,
          recurrentFrequency: Int,
          redirectUri: String) {
         self.apiKey = apiKey
-        self.clientId = clientId
-        self.clientName = clientName
+        self.merchantLogin = merchantLogin
         self.amount = amount
         self.currency = currency
         self.mobilePhone = mobilePhone
@@ -63,50 +56,48 @@ public final class SBPaymentTokenRequest: NSObject {
         self.orderDescription = orderDescription
         self.language = language
         self.orderId = orderId
-        self.recurrentEnabled = recurrentEnabled
         self.recurrentExipiry = recurrentExipiry
         self.recurrentFrequency = recurrentFrequency
         self.redirectUri = redirectUri
     }
     
+    // With orderId
     @objc
     public convenience init(apiKey: String,
-                            clientName: String,
+                            merchantLogin: String?,
                             orderId: String,
-                            recurrentEnabled: Bool,
-                            recurrentFrequency: Int,
                             redirectUri: String) {
         self.init(apiKey: apiKey,
-                  clientId: nil,
-                  clientName: clientName,
+                  merchantLogin: merchantLogin,
                   currency: nil,
+                  orderId: orderId,
                   mobilePhone: nil,
-                  orderNumber: orderId,
+                  orderNumber: nil,
                   orderDescription: nil,
                   language: nil,
-                  recurrentEnabled: recurrentEnabled,
                   recurrentExipiry: nil,
-                  recurrentFrequency: recurrentFrequency,
+                  recurrentFrequency: 0,
                   redirectUri: redirectUri)
     }
     
+    // With purchase
     @objc
     public convenience init(apiKey: String,
                             redirectUri: String,
-                            clientName: String,
+                            merchantLogin: String?,
                             amount: Int,
                             currency: String,
                             mobilePhone: String?,
                             orderNumber: String,
-                            recurrentEnabled: Bool,
+                            recurrentExipiry: String,
                             recurrentFrequency: Int) {
         self.init(apiKey: apiKey,
-                  clientName: clientName,
+                  merchantLogin: merchantLogin,
                   amount: amount,
                   currency: currency,
                   mobilePhone: mobilePhone,
                   orderNumber: orderNumber,
-                  recurrentEnabled: recurrentEnabled,
+                  recurrentExipiry: recurrentExipiry,
                   recurrentFrequency: recurrentFrequency,
                   redirectUri: redirectUri)
     }

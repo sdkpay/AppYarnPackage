@@ -68,13 +68,13 @@
     }
     SBPaymentTokenRequest *requestModel = [[SBPaymentTokenRequest alloc] initWithApiKey:_apiKey
                                                                             redirectUri:@"sberPayExampleapp"
-                                                                             clientName:@"Test shop"
+                                                                          merchantLogin:@"Test shop"
                                                                                  amount:*(_totalCost)
                                                                                currency:@""
                                                                             mobilePhone:@""
                                                                             orderNumber:@""
-                                                                       recurrentEnabled:false
-                                                                     recurrentFrequency:1];
+                                                                       recurrentExipiry:@""
+                                                                     recurrentFrequency:0];
 
     [SBPay getPaymentTokenWith: requestModel  completion:^(SBPaymentTokenResponse * _Nonnull response) {
         if (response.error) {
@@ -108,13 +108,8 @@
 -(void)fullPay {
     SBFullPaymentRequest *request = [[SBFullPaymentRequest alloc]
                                      initWithApiKey: @"awdawdawdajkdmdkladmka"
-                                     clientId: @"123123"
-                                     clientName: @"Test shop"
-                                     amount: 123123
-                                     currency: @"643"
-                                     mobilePhone: nil
+                                     merchantLogin: @"Test shop"
                                      orderId: @"12312312"
-                                     orderDescription:nil
                                      language:nil
                                      redirectUri: @"sberPayExampleapp://sberidauth"
     ];

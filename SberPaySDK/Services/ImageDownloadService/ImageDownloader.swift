@@ -11,6 +11,7 @@ enum ImageDownloaderError {
     case urlIsNil
     case invalidURL
     case dataIsNil
+    case imageNotCreated
     case networkError(Error)
 }
 
@@ -83,6 +84,9 @@ final class ImageDownloader: NSObject {
                     return
                 }
                 guard let image = UIImage(data: data) else {
+                    SBLogger.logDownloadImageWithError(with: .imageNotCreated,
+                                                       urlString: imageUrlString,
+                                                       placeholder: placeholderImage)
                     return
                 }
                 self.serialQueueForImages.sync(flags: .barrier) {

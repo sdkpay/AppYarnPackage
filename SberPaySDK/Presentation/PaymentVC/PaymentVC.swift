@@ -57,7 +57,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
         return view
     }()
     
-    private lazy var cartImageView: UIImageView = {
+    private lazy var logoImageView: UIImageView = {
        let view = UIImageView()
         view.image = .Payment.cart
         return view
@@ -88,6 +88,12 @@ final class PaymentVC: ContentVC, IPaymentVC {
         super.viewDidLoad()
         setupUI()
         presenter.viewDidLoad()
+        
+        ImageDownloader.shared.downloadImage(with: "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
+                                             completionHandler: { image, _ in
+            self.logoImageView.image = image
+        },
+                                             placeholderImage: .Payment.cart)
     }
     
     func configShopInfo(with shop: String, cost: String) {
@@ -110,7 +116,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
     private func setupUI() {
         view.addSubview(cancelButton)
         view.addSubview(payButton)
-        view.addSubview(cartImageView)
+        view.addSubview(logoImageView)
         view.addSubview(purchaseInfoStack)
         view.addSubview(cardInfoView)
 
@@ -140,18 +146,18 @@ final class PaymentVC: ContentVC, IPaymentVC {
         purchaseInfoStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             purchaseInfoStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
-            purchaseInfoStack.trailingAnchor.constraint(equalTo: cartImageView.leadingAnchor, constant: -.margin),
+            purchaseInfoStack.trailingAnchor.constraint(equalTo: logoImageView.leadingAnchor, constant: -.margin),
             purchaseInfoStack.bottomAnchor.constraint(equalTo: cardInfoView.topAnchor, constant: -.buttonsMargin),
             purchaseInfoStack.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: .topMargin),
             purchaseInfoStack.heightAnchor.constraint(equalToConstant: .cartWidth)
         ])
         
-        cartImageView.translatesAutoresizingMaskIntoConstraints = false
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cartImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            cartImageView.centerYAnchor.constraint(equalTo: purchaseInfoStack.centerYAnchor),
-            cartImageView.widthAnchor.constraint(equalToConstant: .cartWidth),
-            cartImageView.heightAnchor.constraint(equalToConstant: .cartWidth)
+            logoImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
+            logoImageView.centerYAnchor.constraint(equalTo: purchaseInfoStack.centerYAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: .cartWidth),
+            logoImageView.heightAnchor.constraint(equalToConstant: .cartWidth)
         ])
     }
 }

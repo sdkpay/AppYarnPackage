@@ -16,7 +16,9 @@ enum UserTarget {
                         orderId: String?,
                         amount: Int?,
                         currency: String?,
-                        orderNumber: String?)
+                        orderNumber: String?,
+                        expiry: String?,
+                        frequency: Int?)
     case checkSession(sessionId: String)
 }
 
@@ -50,7 +52,9 @@ extension UserTarget: TargetType {
                                orderId: orderId,
                                amount: amount,
                                currency: currency,
-                               orderNumber: orderNumber):
+                               orderNumber: orderNumber,
+                               expiry: expiry,
+                               frequency: frequency):
             var params: [String: Any] = [
                 "redirectUri": redirectUri,
                 "authCode": authCode,
@@ -68,11 +72,24 @@ extension UserTarget: TargetType {
                amount != 0,
                let currency = currency,
                let orderNumber = orderNumber {
-                let purchaceParams: [String: Any] = [
+                var purchaceParams: [String: Any] = [
                     "amount": amount,
                     "currency": currency,
                     "orderNumber": orderNumber
                 ]
+                
+                if let expiry = expiry,
+                    let frequency = frequency,
+                   frequency != 0 {
+                    let recurrent: [String: Any] = [
+                        "enabled": true,
+                        "expiry": expiry,
+                        "frequency": frequency
+                    ]
+                    
+                    purchaceParams["recurrent"] = recurrent
+                }
+                
                 params["purchase"] = purchaceParams
             }
             

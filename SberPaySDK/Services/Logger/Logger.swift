@@ -176,15 +176,13 @@ enum SBLogger: ResponseDecoder {
             """
             ➡️ Merchant called GetPaymentToken
                apiKey: \(params.apiKey)
-               clientId: \(params.clientId ?? "none")
-               clientName: \(params.clientName)
+               merchantLogin: \(params.merchantLogin ?? "none")
                amount: \(params.amount ?? 0)
                currency: \(params.currency ?? "none")
                mobilePhone: \(params.mobilePhone ?? "none")
                orderNumber: \(params.orderNumber ?? "none")
                orderDescription: \(params.orderDescription ?? "none")
                language: \(params.language ?? "none")
-               recurrentEnabled: \(params.recurrentEnabled)
                recurrentExipiry: \(params.recurrentExipiry ?? "none")
                recurrentFrequency: \(params.recurrentFrequency)
                redirectUri: \(params.redirectUri)
@@ -231,19 +229,25 @@ enum SBLogger: ResponseDecoder {
         case .invalidURL:
             log(
                 """
-                  🔴 URL in unsupported format \(urlString), placeholder: \(placeholder?.assetName)
+                🔴 URL in unsupported format \(urlString), placeholder: \(placeholder?.assetName)
                 """
             )
         case .dataIsNil:
             log(
                 """
-                  🔴 Data is nil by url \(urlString), placeholder: \(placeholder?.assetName)
+                🔴 Data is nil by url \(urlString), placeholder: \(placeholder?.assetName)
                 """
             )
         case .networkError(let error):
             log(
                 """
-                  🔴 Dowload completed with error: \(error.localizedDescription), placeholder: \(placeholder?.assetName)
+                🔴 Dowload completed with error: \(error.localizedDescription), placeholder: \(placeholder?.assetName)
+                """
+            )
+        case .imageNotCreated:
+            log(
+                """
+                🔴 Image not created by url \(urlString), placeholder: \(placeholder?.assetName)
                 """
             )
         }

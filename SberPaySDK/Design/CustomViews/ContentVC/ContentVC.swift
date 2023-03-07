@@ -63,10 +63,6 @@ class ContentVC: UIViewController {
         profileView.isHidden = false
         profileView.config(with: userInfo)
     }
-    
-    func configureLogoImage(image: UIImage?) {
-        logoImage.image = image
-    }
 
     func configUI() {
         profileView.isHidden = true
