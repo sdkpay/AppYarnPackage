@@ -1,11 +1,18 @@
 //
-//  ImageDownloadService.swift
+//  ImageDownloader.swift
 //  SberPaySDK
 //
 //  Created by Alexander Ipatov on 13.02.2023.
 //
 
 import UIKit
+
+enum ImageDownloaderError {
+    case urlIsNil
+    case invalidURL
+    case dataIsNil
+    case networkError(Error)
+}
 
 final class ImageDownloader: NSObject {
     static let shared = ImageDownloader()
@@ -35,14 +42,22 @@ final class ImageDownloader: NSObject {
                        placeholderImage: UIImage?) {
 
         guard let imageUrlString = imageUrlString else {
+            SBLogger.logDownloadImageWithError(with: .urlIsNil,
+                                               placeholder: placeholderImage)
             completionHandler(placeholderImage, true)
             return
         }
+        
+        SBLogger.logStartDownloadingImage(with: imageUrlString)
 
         if let image = getCachedImageFrom(urlString: imageUrlString) {
+            SBLogger.logDownloadImageFromCache(with: imageUrlString)
             completionHandler(image, true)
         } else {
             guard let url = URL(string: imageUrlString) else {
+                SBLogger.logDownloadImageWithError(with: .invalidURL,
+                                                   urlString: imageUrlString,
+                                                   placeholder: placeholderImage)
                 completionHandler(placeholderImage, true)
                 return
             }
@@ -51,24 +66,34 @@ final class ImageDownloader: NSObject {
                 return
             }
 
-            let task = session?.dataTask(with: url) { data, _, error in
+            let task = session?.dataTask(with: url) { data, response, error in
                 guard let data = data else {
+                    SBLogger.logDownloadImageWithError(with: .dataIsNil,
+                                                       urlString: imageUrlString,
+                                                       placeholder: placeholderImage)
                     return
                 }
-                if error != nil {
+                if let error = error {
+                    SBLogger.logDownloadImageWithError(with: .networkError(error),
+                                                       urlString: imageUrlString,
+                                                       placeholder: placeholderImage)
                     DispatchQueue.main.async {
                         completionHandler(placeholderImage, true)
                     }
                     return
                 }
-                let image = UIImage(data: data)
+                guard let image = UIImage(data: data) else {
+                    return
+                }
                 self.serialQueueForImages.sync(flags: .barrier) {
                     self.cachedImages[imageUrlString] = image
                 }
                 _ = self.serialQueueForDataTasks.sync(flags: .barrier) {
                     self.imagesDownloadTasks.removeValue(forKey: imageUrlString)
                 }
+                
                 DispatchQueue.main.async {
+                    SBLogger.logDownloadImageWithSuccess()
                     completionHandler(image, false)
                 }
             }

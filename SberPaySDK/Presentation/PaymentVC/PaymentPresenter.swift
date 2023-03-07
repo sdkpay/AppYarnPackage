@@ -124,6 +124,11 @@ final class PaymentPresenter: PaymentPresenting {
         view?.configShopInfo(with: user.merchantName,
                              cost: user.orderAmount.amount.price(with: Int(user.orderAmount.currency)))
         view?.configProfileView(with: user.userInfo)
+        ImageDownloader.shared.downloadImage(with: "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
+                                             completionHandler: { image, _ in
+            self.view?.configureLogoImage(image: image)
+        },
+                                             placeholderImage: .Payment.cart)
         
         if let selectedCard = selectedCard {
             configWithCard(user: user, selectedCard: selectedCard)

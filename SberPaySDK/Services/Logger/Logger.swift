@@ -204,6 +204,59 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
+    static func logDownloadImageFromCache(with urlString: String) {
+        log(
+            """
+            💿 Download image from cache by url \(urlString)
+            """
+        )
+    }
+    
+    static func logStartDownloadingImage(with urlString: String?) {
+        log(
+            """
+            🟢 Start downloading image by string: \(urlString)
+            """
+        )
+    }
+    
+    static func logDownloadImageWithError(with error: ImageDownloaderError, urlString: String? = nil, placeholder: UIImage?) {
+        switch error {
+        case .urlIsNil:
+            log(
+                """
+                  🔴 Not URL Image String, placeholder: \(placeholder?.assetName)
+                """
+            )
+        case .invalidURL:
+            log(
+                """
+                  🔴 URL in unsupported format \(urlString), placeholder: \(placeholder?.assetName)
+                """
+            )
+        case .dataIsNil:
+            log(
+                """
+                  🔴 Data is nil by url \(urlString), placeholder: \(placeholder?.assetName)
+                """
+            )
+        case .networkError(let error):
+            log(
+                """
+                  🔴 Dowload completed with error: \(error.localizedDescription), placeholder: \(placeholder?.assetName)
+                """
+            )
+        }
+    }
+    
+    static func logDownloadImageWithSuccess() {
+        log(
+            """
+            🟢 Download image with success
+            """
+        )
+    }
+    
     static func stringToLog(from data: Data?) -> NSString {
         if let data = data,
             let decoded = data.prettyPrintedJSONString {
