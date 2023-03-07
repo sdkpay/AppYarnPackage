@@ -23,8 +23,8 @@ struct AuthInfo {
         self.merchantLogin = fullPaymentRequest.merchantLogin
         self.orderId = fullPaymentRequest.orderId
         self.redirectUri = fullPaymentRequest.redirectUri
-        self.amount = fullPaymentRequest.amount
-        self.currency = fullPaymentRequest.currency
+        self.amount = nil
+        self.currency = nil
         self.orderNumber = nil
         self.expiry = nil
         self.frequency = nil

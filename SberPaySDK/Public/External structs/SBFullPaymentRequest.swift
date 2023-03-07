@@ -13,16 +13,8 @@ public final class SBFullPaymentRequest: NSObject {
     let apiKey: String
     /// Логин дочернего партнера
     let merchantLogin: String?
-    /// Сумма операции в минорных единицах
-    let amount: Int
-    /// Цифровой код валюты операции согласно ISO 4217
-    let currency: String?
-    /// Номер мобильного телефона Плательщика, если имеется в вашей системе
-    let mobilePhone: String?
     /// Уникальный номер (идентификатор) заказа в системе Клиента.
     let orderId: String
-    /// Описание к заказу
-    let orderDescription: String?
     /// Выбранный язык локализации интерфейсов
     let language: String?
     /// Параметр создания платежного токена для реккурентных платежей
@@ -31,20 +23,12 @@ public final class SBFullPaymentRequest: NSObject {
     @objc
     public init(apiKey: String,
                 merchantLogin: String? = nil,
-                amount: Int,
-                currency: String? = nil, 
-                mobilePhone: String? = nil,
                 orderId: String,
-                orderDescription: String? = nil,
                 language: String? = nil,
                 redirectUri: String) {
         self.apiKey = apiKey
         self.merchantLogin = merchantLogin
-        self.amount = amount
-        self.currency = currency
-        self.mobilePhone = mobilePhone
         self.orderId = orderId
-        self.orderDescription = orderDescription
         self.language = language
         self.redirectUri = redirectUri
     }
