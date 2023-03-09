@@ -97,7 +97,7 @@ final class ImageDownloader: NSObject {
                 }
                 
                 DispatchQueue.main.async {
-                    SBLogger.logDownloadImageWithSuccess()
+                    SBLogger.logDownloadImageWithSuccess(with: imageUrlString)
                     completionHandler(image, false)
                 }
             }

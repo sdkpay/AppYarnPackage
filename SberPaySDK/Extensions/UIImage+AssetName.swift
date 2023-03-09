@@ -8,7 +8,6 @@
 import UIKit
 
 extension UIImage {
-
     var assetName: String? {
         imageAsset?.value(forKey: "assetName") as? String
     }
