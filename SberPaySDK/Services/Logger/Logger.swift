@@ -219,7 +219,9 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
-    static func logDownloadImageWithError(with error: ImageDownloaderError, urlString: String? = nil, placeholder: UIImage?) {
+    static func logDownloadImageWithError(with error: ImageDownloaderError,
+                                          urlString: String? = nil,
+                                          placeholder: UIImage?) {
         switch error {
         case .urlIsNil:
             log(
