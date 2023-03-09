@@ -22,6 +22,10 @@
 
 /* Begin PBXBuildFile section */
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
+		21EBD7A829BA1C5B00C39C03 /* BizoneCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7A729BA1C5B00C39C03 /* BizoneCore.framework */; };
+		21EBD7A929BA1C5B00C39C03 /* BizoneCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7A729BA1C5B00C39C03 /* BizoneCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		21EBD7AC29BA1C5F00C39C03 /* Fingerprint.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7AB29BA1C5F00C39C03 /* Fingerprint.framework */; };
+		21EBD7AD29BA1C5F00C39C03 /* Fingerprint.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7AB29BA1C5F00C39C03 /* Fingerprint.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */; };
 		440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3AC295C304300B84E05 /* AnalyticsService.swift */; };
 		4416E424291E21C300284972 /* SDKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E423291E21C300284972 /* SDKError.swift */; };
@@ -117,10 +121,6 @@
 		44A31268298156C30099EB76 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A31267298156C30099EB76 /* String+Extensions.swift */; };
 		44A438F429900EEE00CA04FC /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 44A438F329900EEE00CA04FC /* Dynatrace-Static */; };
 		44A5A46129B4A38900C01420 /* cms-res.der in Resources */ = {isa = PBXBuildFile; fileRef = 44A5A46029B4A38900C01420 /* cms-res.der */; };
-		44AC79C0299E32B40043FA4E /* BizoneCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */; };
-		44AC79C1299E32B40043FA4E /* BizoneCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		44AC79C4299E32B90043FA4E /* Fingerprint.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */; };
-		44AC79C5299E32B90043FA4E /* Fingerprint.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		44AC79C8299E32ED0043FA4E /* FingerprintWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AC79C7299E32ED0043FA4E /* FingerprintWrapper.h */; };
 		44AC79CA299E32F30043FA4E /* libMobileSDKLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C9299E32F30043FA4E /* libMobileSDKLib.a */; };
 		44AC79CC299FE9A50043FA4E /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AC79CB299FE9A50043FA4E /* Data+Extension.swift */; };
@@ -178,6 +178,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		21EBD7AA29BA1C5C00C39C03 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				21EBD7A929BA1C5B00C39C03 /* BizoneCore.framework in Embed Frameworks */,
+				21EBD7AD29BA1C5F00C39C03 /* Fingerprint.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		444A13B1291BA96100C9FBE0 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -189,22 +201,12 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		44AC79C2299E32B40043FA4E /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				44AC79C5299E32B90043FA4E /* Fingerprint.xcframework in Embed Frameworks */,
-				44AC79C1299E32B40043FA4E /* BizoneCore.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
+		21EBD7A729BA1C5B00C39C03 /* BizoneCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BizoneCore.framework; sourceTree = "<group>"; };
+		21EBD7AB29BA1C5F00C39C03 /* Fingerprint.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fingerprint.framework; sourceTree = "<group>"; };
 		440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTableView.swift; sourceTree = "<group>"; };
 		440DB3AC295C304300B84E05 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		4416E423291E21C300284972 /* SDKError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKError.swift; sourceTree = "<group>"; };
@@ -305,8 +307,6 @@
 		44A3126229813D110099EB76 /* PaymentRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRouter.swift; sourceTree = "<group>"; };
 		44A31267298156C30099EB76 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		44A5A46029B4A38900C01420 /* cms-res.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cms-res.der"; sourceTree = "<group>"; };
-		44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = BizoneCore.xcframework; sourceTree = "<group>"; };
-		44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Fingerprint.xcframework; sourceTree = "<group>"; };
 		44AC79C7299E32ED0043FA4E /* FingerprintWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FingerprintWrapper.h; sourceTree = "<group>"; };
 		44AC79C9299E32F30043FA4E /* libMobileSDKLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMobileSDKLib.a; sourceTree = "<group>"; };
 		44AC79CB299FE9A50043FA4E /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
@@ -353,11 +353,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				44AC79C4299E32B90043FA4E /* Fingerprint.xcframework in Frameworks */,
-				44AC79C0299E32B40043FA4E /* BizoneCore.xcframework in Frameworks */,
 				44AC79CA299E32F30043FA4E /* libMobileSDKLib.a in Frameworks */,
 				44A438F429900EEE00CA04FC /* Dynatrace-Static in Frameworks */,
 				441B7904296FEE990093138D /* libresolv.9.tbd in Frameworks */,
+				21EBD7AC29BA1C5F00C39C03 /* Fingerprint.framework in Frameworks */,
+				21EBD7A829BA1C5B00C39C03 /* BizoneCore.framework in Frameworks */,
 				441B791829700BEB0093138D /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -944,8 +944,8 @@
 		44834C73292E366D000A32B2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */,
-				44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */,
+				21EBD7AB29BA1C5F00C39C03 /* Fingerprint.framework */,
+				21EBD7A729BA1C5B00C39C03 /* BizoneCore.framework */,
 				441B7903296FEE990093138D /* libresolv.9.tbd */,
 			);
 			name = Frameworks;
@@ -1192,7 +1192,7 @@
 				444A13A6291BA96100C9FBE0 /* Frameworks */,
 				444A13A7291BA96100C9FBE0 /* Resources */,
 				444A13F0291CEDC200C9FBE0 /* Swiftlint */,
-				44AC79C2299E32B40043FA4E /* Embed Frameworks */,
+				21EBD7AA29BA1C5C00C39C03 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1560,7 +1560,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SberPaySDK/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -1608,7 +1611,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EXCLUDED_ARCHS = "";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SberPaySDK/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -2008,7 +2014,10 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SberPaySDK/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -2190,7 +2199,10 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EXCLUDED_ARCHS = "";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SberPaySDK/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
