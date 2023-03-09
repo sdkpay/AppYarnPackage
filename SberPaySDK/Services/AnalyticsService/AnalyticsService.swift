@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import DynatraceStatic
+@_implementationOnly import DynatraceStatic
 
 final class AnalyticsServiceAssembly: Assembly {
     func register(in locator: LocatorService) {
