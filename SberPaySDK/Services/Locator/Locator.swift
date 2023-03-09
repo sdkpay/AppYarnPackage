@@ -20,11 +20,13 @@ final class DefaultLocatorService: LocatorService {
     func register<T>(service: T) {
         let key = typeName(T.self)
         services[key] = service
+        SBLogger.logLocatorRegister(key)
     }
 
     func resolve<T>() -> T {
         let key = typeName(T.self)
         if let result = services[key] as? T {
+            SBLogger.logLocatorResolve(key)
             return result
         } else {
             fatalError("Cannot resolve dependency")

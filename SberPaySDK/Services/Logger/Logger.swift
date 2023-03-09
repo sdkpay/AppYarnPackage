@@ -274,6 +274,22 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
+    static func logLocatorRegister(_ key: String) {
+        log(
+            """
+            ☑️ Locator register service: \(key)
+            """
+        )
+    }
+    
+    static func logLocatorResolve(_ key: String) {
+        log(
+            """
+            🔘 Locator resolve service: \(key)
+            """
+        )
+    }
+    
     static func stringToLog(from data: Data?) -> NSString {
         if let data = data,
            let decoded = data.prettyPrintedJSONString {
