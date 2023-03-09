@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Group 207.png",
+      "filename" : "ds_mc_36_default.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Group 207@2x.png",
+      "filename" : "ds_mc_36_default@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Group 207@3x.png",
+      "filename" : "ds_mc_36_default@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

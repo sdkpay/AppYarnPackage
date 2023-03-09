@@ -9,10 +9,7 @@ import UIKit
 
 private extension CGFloat {
     static let arrowWidth = 24.0
-    static let leadingMargin = 20.0
-    static let cardWidth = 28.0
-    static let cardHeight = 20.0
-    static let noCardHeight = 36.0
+    static let cardWidth = 36.0
 }
 
 final class CardInfoView: ContentView {
@@ -32,7 +29,7 @@ final class CardInfoView: ContentView {
         return view
     }()
     
-    private var cardIconView: UIImageView = {
+    private lazy var cardIconView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleToFill
         view.image = .Cards.stockCard
@@ -74,10 +71,10 @@ final class CardInfoView: ContentView {
         addSubview(cardIconView)
         cardIconView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cardIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .leadingMargin),
+            cardIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
             cardIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
             cardIconView.widthAnchor.constraint(equalToConstant: .cardWidth),
-            cardIconView.heightAnchor.constraint(equalToConstant: .cardHeight)
+            cardIconView.heightAnchor.constraint(equalToConstant: .cardWidth)
         ])
 
         addSubview(cardInfoStack)

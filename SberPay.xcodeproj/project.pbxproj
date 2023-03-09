@@ -156,8 +156,8 @@
 		44F9FD5F295AFCAC00FE4B9F /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD58295AFCAC00FE4B9F /* CGPoint+Extension.swift */; };
 		44F9FD60295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD59295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift */; };
 		44F9FD61295AFCAC00FE4B9F /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */; };
-		AEEB601E29B72AEE00D1E1D2 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB601D29B72AEE00D1E1D2 /* ImageDownloader.swift */; };
-		AEEB602029B72B2600D1E1D2 /* UIImage+AssetName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB601F29B72B2600D1E1D2 /* UIImage+AssetName.swift */; };
+		AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */; };
+		AEEB602429B9B55E00D1E1D2 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -344,8 +344,8 @@
 		44F9FD58295AFCAC00FE4B9F /* CGPoint+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
 		44F9FD59295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIPanGestureRecognizer+Extension.swift"; sourceTree = "<group>"; };
 		44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
-		AEEB601D29B72AEE00D1E1D2 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
-		AEEB601F29B72B2600D1E1D2 /* UIImage+AssetName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetName.swift"; sourceTree = "<group>"; };
+		AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetName.swift"; sourceTree = "<group>"; };
+		AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1005,7 +1005,7 @@
 		44A70AE8299A4F07009A0F34 /* ImageDownloadService */ = {
 			isa = PBXGroup;
 			children = (
-				AEEB601D29B72AEE00D1E1D2 /* ImageDownloader.swift */,
+				AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */,
 			);
 			path = ImageDownloadService;
 			sourceTree = "<group>";
@@ -1086,7 +1086,7 @@
 		44D536192926196200B99463 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				AEEB601F29B72B2600D1E1D2 /* UIImage+AssetName.swift */,
+				AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */,
 				44D5361A2926198400B99463 /* UIViewController+Container.swift */,
 				445CB065292BB3E300F50047 /* String+Localized.swift */,
 				445CB074292BC3EF00F50047 /* UIImage+Bundle.swift */,
@@ -1391,7 +1391,7 @@
 				44BD273229A8A463001ECF54 /* PaymentService.swift in Sources */,
 				4464DF94291D283C000C9B45 /* AuthTarget.swift in Sources */,
 				44C6510E2934E33E008F1C29 /* SBPaymentTokenRequest.swift in Sources */,
-				AEEB602029B72B2600D1E1D2 /* UIImage+AssetName.swift in Sources */,
+				AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */,
 				44A0B5BD293DF282007AB3FD /* CardsPresenter.swift in Sources */,
 				445CB0A2292E119800F50047 /* PaymentAssembly.swift in Sources */,
 				44AC79CE299FEB5B0043FA4E /* Collection+Extension.swift in Sources */,
@@ -1414,8 +1414,8 @@
 				44BD272929A7AD89001ECF54 /* PaymentOrderModel.swift in Sources */,
 				4473D6C92940653300802446 /* BankView.swift in Sources */,
 				4464DF9D291D8E4C000C9B45 /* SBPay.swift in Sources */,
+				AEEB602429B9B55E00D1E1D2 /* ImageDownloader.swift in Sources */,
 				445CB09B292DFF5100F50047 /* PaymentPresenter.swift in Sources */,
-				AEEB601E29B72AEE00D1E1D2 /* ImageDownloader.swift in Sources */,
 				44533D2129852A2A0041FAA9 /* AuthManager.swift in Sources */,
 				4416E437291FA90900284972 /* StartupService.swift in Sources */,
 				44BD272D29A8958D001ECF54 /* AuthInfo.swift in Sources */,
@@ -1789,8 +1789,8 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExampleDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
-				DEVELOPMENT_TEAM = M75K88WRB9;
+				CURRENT_PROJECT_VERSION = 31;
+				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1814,7 +1814,7 @@
 					"$(PROJECT_DIR)/SberPayExample",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya12.PayTestApp;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROD_VERSION = NO;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1839,7 +1839,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 31;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1953,8 +1953,8 @@
 				CODE_SIGN_ENTITLEMENTS = "SberPayExample/SberPayExampleDebug-Prod.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
-				DEVELOPMENT_TEAM = M75K88WRB9;
+				CURRENT_PROJECT_VERSION = 31;
+				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1978,7 +1978,7 @@
 					"$(PROJECT_DIR)/SberPayExample",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya12.PayTestApp;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROD_VERSION = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2133,7 +2133,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 31;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (

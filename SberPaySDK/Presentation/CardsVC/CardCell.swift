@@ -18,9 +18,7 @@ private extension CGFloat {
     static let topMargin = 12.0
     static let corner = 8.0
     static let checkWidth = 20.0
-    static let cardWidth = 28.0
-    static let cardHeight = 20.0
-    static let leadingMargin = 20.0
+    static let cardWidth = 36.0
 }
 
 final class CardCell: UITableViewCell {
@@ -100,10 +98,10 @@ final class CardCell: UITableViewCell {
         containerView.addSubview(cardIconView)
         cardIconView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cardIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .leadingMargin),
+            cardIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
             cardIconView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             cardIconView.widthAnchor.constraint(equalToConstant: .cardWidth),
-            cardIconView.heightAnchor.constraint(equalToConstant: .cardHeight)
+            cardIconView.heightAnchor.constraint(equalToConstant: .cardWidth)
         ])
         
         containerView.addSubview(cardInfoStack)
