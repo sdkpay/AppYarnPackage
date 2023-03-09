@@ -125,7 +125,7 @@ final class PaymentPresenter: PaymentPresenting {
         view?.configShopInfo(with: user.merchantName,
                              cost: user.orderAmount.amount.price(with: Int(user.orderAmount.currency)))
         view?.configProfileView(with: user.userInfo)
-        
+
         if let selectedCard = selectedCard {
             configWithCard(user: user, selectedCard: selectedCard)
         } else {

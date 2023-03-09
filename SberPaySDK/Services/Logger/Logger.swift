@@ -16,7 +16,7 @@ extension String {
 
 enum SBLogger: ResponseDecoder {
     private static var logger = Log()
-
+    
     static func log(_ massage: String) {
         print(massage)
         print("\n\(Date()) \n\(massage)", to: &logger)
@@ -154,21 +154,21 @@ enum SBLogger: ResponseDecoder {
     
     static func logResponseFromSbolCompleted(_ parameters: [String: String]) {
         log(
-           """
+            """
             ✅ Response from Sbol with success
                response:
             \(parameters.json)
             """
-       )
+        )
     }
     
     static func logResponseFromSbolFailed(_ url: URL, error: String) {
         log(
-           """
+            """
             ❗️Response from Sbol with error: \(error)
               url: \(url.absoluteString)
             """
-       )
+        )
     }
     
     static func logRequestPaymentToken(with params: SBPaymentTokenRequest) {
@@ -202,9 +202,81 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
+    static func logDownloadImageFromCache(with urlString: String) {
+        log(
+            """
+            💿 Download image from cache by url \(urlString)
+            """
+        )
+    }
+    
+    static func logStartDownloadingImage(with urlString: String?) {
+        log(
+            """
+            🟢 Start downloading image
+               by string: \(urlString ?? "")
+            """
+        )
+    }
+    
+    static func logDownloadImageWithError(with error: ImageDownloaderError,
+                                          urlString: String? = nil,
+                                          placeholder: UIImage?) {
+        switch error {
+        case .urlIsNil:
+            log(
+                """
+                🔴 Not URL Image String,
+                   placeholder: \(placeholder?.assetName ?? "")
+                """
+            )
+        case .invalidURL:
+            log(
+                """
+                🔴 URL in unsupported format
+                   \(urlString ?? ""),
+                   placeholder: \(placeholder?.assetName ?? "")
+                """
+            )
+        case .dataIsNil:
+            log(
+                """
+                🔴 Data is nil by url
+                   \(urlString ?? ""),
+                   placeholder: \(placeholder?.assetName ?? "")
+                """
+            )
+        case .networkError(let error):
+            log(
+                """
+                🔴 Dowload completed with error:
+                   \(error.localizedDescription),
+                   placeholder: \(placeholder?.assetName ?? "")
+                """
+            )
+        case .imageNotCreated:
+            log(
+                """
+                🔴 Image not created by url
+                   \(urlString ?? ""),
+                   placeholder: \(placeholder?.assetName ?? "")
+                """
+            )
+        }
+    }
+    
+    static func logDownloadImageWithSuccess(with urlString: String) {
+        log(
+            """
+            🟢 Download image with success by string:
+               \(urlString)
+            """
+        )
+    }
+    
     static func stringToLog(from data: Data?) -> NSString {
         if let data = data,
-            let decoded = data.prettyPrintedJSONString {
+           let decoded = data.prettyPrintedJSONString {
             return decoded
         }
         return "None"
@@ -212,7 +284,7 @@ enum SBLogger: ResponseDecoder {
     
     private static func headers(_ headers: [String: String]?) -> String {
         if let headers = headers,
-            !headers.isEmpty {
+           !headers.isEmpty {
             return headers.json
         } else {
             return "None"
