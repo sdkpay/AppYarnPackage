@@ -16,6 +16,7 @@ enum AuthTarget {
                       orderNumber: String?,
                       expiry: String?,
                       frequency: Int?)
+    case checkSession(sessionId: String)
 }
 
 extension AuthTarget: TargetType {
@@ -23,6 +24,8 @@ extension AuthTarget: TargetType {
         switch self {
         case .getSessionId:
             return "/sessionId"
+        case .checkSession:
+            return "/statusSession"
         }
     }
     
@@ -30,6 +33,8 @@ extension AuthTarget: TargetType {
         switch self {
         case .getSessionId:
             return .post
+        case .checkSession:
+            return .get
         }
     }
     
@@ -80,6 +85,11 @@ extension AuthTarget: TargetType {
             }
             
             return .requestWithParameters(nil, bodyParameters: params)
+        case .checkSession(sessionId: let sessionId):
+            let params = [
+                "sessionId": sessionId
+            ]
+            return .requestWithParameters(params)
         }
     }
     
@@ -91,6 +101,8 @@ extension AuthTarget: TargetType {
         switch self {
         case .getSessionId:
             return StubbedResponse.auth.data
+        case .checkSession:
+            return StubbedResponse.validSession.data
         }
     }
 }

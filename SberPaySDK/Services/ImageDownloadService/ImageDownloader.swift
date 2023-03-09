@@ -67,7 +67,7 @@ final class ImageDownloader: NSObject {
                 return
             }
 
-            let task = session?.dataTask(with: url) { data, response, error in
+            let task = session?.dataTask(with: url) { data, _, error in
                 guard let data = data else {
                     SBLogger.logDownloadImageWithError(with: .dataIsNil,
                                                        urlString: imageUrlString,

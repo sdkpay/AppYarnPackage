@@ -67,9 +67,10 @@ final class DefaultSDKManager: SDKManager {
 
     func config(paymentTokenRequest: SBPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion) {
-        newStart = isNewStart(orderId: paymentTokenRequest.orderNumber ?? "")
+        let authInfo = AuthInfo(paymentTokenRequest: paymentTokenRequest)
+        newStart = isNewStart(check: authInfo)
+        if newStart { self.authInfo = authInfo }
         payStrategy = .manual
-        authInfo = AuthInfo(paymentTokenRequest: paymentTokenRequest)
         authManager.apiKey = paymentTokenRequest.apiKey
         authManager.lang = paymentTokenRequest.language
         self.paymentTokenCompletion = completion
@@ -77,9 +78,10 @@ final class DefaultSDKManager: SDKManager {
     
     func configWithOrderId(paymentRequest: SBFullPaymentRequest,
                            completion: @escaping PaymentCompletion) {
-        newStart = isNewStart(orderId: paymentRequest.orderId)
+        let authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
+        newStart = isNewStart(check: authInfo)
+        if newStart { self.authInfo = authInfo }
         payStrategy = .auto
-        authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
         authManager.apiKey = paymentRequest.apiKey
         authManager.lang = paymentRequest.language
         self.paymentCompletion = completion
@@ -132,14 +134,10 @@ final class DefaultSDKManager: SDKManager {
         paymentCompletion = nil
     }
     
-    private func isNewStart(orderId: String) -> Bool {
-        // Проверяем есть ли уже созданный запрос
-         if let authInfo = self.authInfo,
-            // Сравниваем новый запрос с предидущим
-            authInfo.orderId == orderId {
-             return false
-         } else {
-             return true
-         }
+    private func isNewStart(check authInfo: AuthInfo) -> Bool {
+        // Проверяем наличие сохраненной информации о запросе
+        guard let savedInfo = self.authInfo else { return true }
+        // Сравниваем новый запрос с сохраненным
+        return authInfo != savedInfo
     }
 }

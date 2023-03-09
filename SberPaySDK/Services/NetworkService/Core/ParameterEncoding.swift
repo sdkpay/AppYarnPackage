@@ -20,7 +20,6 @@ enum EncoderError: String, Error {
 }
 
 // MARK: - URLParameterEncoder
-
 struct URLParameterEncoder: ParameterEncoder {
     static func encode(urlRequest: inout URLRequest, with parameters: NetworkParameters) throws {
         guard let url = urlRequest.url else { throw EncoderError.missingUrl }
@@ -42,7 +41,6 @@ struct URLParameterEncoder: ParameterEncoder {
 }
 
 // MARK: - JSONParameterEncoder
-
 struct JSONParameterEncoder: ParameterEncoder {
     static func encode(urlRequest: inout URLRequest, with parameters: NetworkParameters) throws {
         do {
