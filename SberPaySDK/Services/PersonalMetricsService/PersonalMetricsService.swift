@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Fingerprint
+@_implementationOnly import Fingerprint
 
 final class PersonalMetricsServiceAssembly: Assembly {
     func register(in container: LocatorService) {

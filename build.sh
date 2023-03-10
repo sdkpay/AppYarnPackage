@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -r ./build/*
+
 xcodebuild archive \
     -scheme SberPay \
     -archivePath "./build/ios.xcarchive" \

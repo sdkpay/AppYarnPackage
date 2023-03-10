@@ -151,8 +151,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             totalCostLabel.topAnchor.constraint(equalTo: paymentView.topAnchor)
         ])
     }
-    
-    @objc
+
     private func sberPayButtonTapped() {
         if autoMode {
             autoPay()
