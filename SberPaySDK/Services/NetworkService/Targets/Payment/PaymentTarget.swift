@@ -21,6 +21,7 @@ enum PaymentTarget {
     case getPaymentOrder(operationId: String,
                          orderId: String?,
                          merchantLogin: String?,
+                         ipAddress: String?,
                          paymentToken: String?)
 }
 
@@ -95,8 +96,9 @@ extension PaymentTarget: TargetType {
         case let .getPaymentOrder(operationId: operationId,
                                   orderId: orderId,
                                   merchantLogin: merchantLogin,
+                                  ipAddress: ipAddress,
                                   paymentToken: paymentToken):
-            var params = [
+            var params: [String: Any] = [
                 "operationId": operationId
             ]
             
@@ -110,6 +112,13 @@ extension PaymentTarget: TargetType {
     
             if let merchantLogin = merchantLogin {
                 params["merchantLogin"] = merchantLogin
+            }
+            
+            if let ipAddress = ipAddress {
+                let jsonParams = [
+                    "ip": ipAddress
+                ]
+                params["jsonParams"] = jsonParams
             }
             return .requestWithParameters(nil, bodyParameters: params)
         }

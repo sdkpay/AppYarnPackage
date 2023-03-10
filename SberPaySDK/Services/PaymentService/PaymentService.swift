@@ -99,6 +99,7 @@ final class DefaultPaymentService: PaymentService {
         network.request(PaymentTarget.getPaymentOrder(operationId: .generateRandom(with: 36),
                                                       orderId: authInfo.orderId,
                                                       merchantLogin: authInfo.merchantLogin,
+                                                      ipAddress: personalMetricsService.ipAddress,
                                                       paymentToken: token),
                         to: PaymentOrderModel.self,
                         retryCount: 4) { result in
