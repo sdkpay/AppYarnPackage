@@ -6,20 +6,6 @@
 	objectVersion = 55;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		44601D56298FDCD1006D9A8E /* Aggregate */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 44601D57298FDCD1006D9A8E /* Build configuration list for PBXAggregateTarget "Aggregate" */;
-			buildPhases = (
-				44601D5A298FDCD8006D9A8E /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = Aggregate;
-			productName = Aggregate;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		219CCB9B29BB071B00BA360B /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
@@ -1237,9 +1223,6 @@
 						CreatedOnToolsVersion = 14.0;
 						LastSwiftMigration = 1400;
 					};
-					44601D56298FDCD1006D9A8E = {
-						CreatedOnToolsVersion = 14.0;
-					};
 					4471721029193B21005EDF32 = {
 						CreatedOnToolsVersion = 14.0;
 						LastSwiftMigration = 1400;
@@ -1270,7 +1253,6 @@
 				4471721029193B21005EDF32 /* SberPayExample */,
 				444A13A8291BA96100C9FBE0 /* SberPaySDK */,
 				44A0B5AC293DC3F7007AB3FD /* SberPaySDKTests */,
-				44601D56298FDCD1006D9A8E /* Aggregate */,
 			);
 		};
 /* End PBXProject section */
@@ -1335,24 +1317,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		44601D5A298FDCD8006D9A8E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "echo \"project\"\n# 1) Открываем \"${PROJECT_DIR}\"\nif [ \"true\" == ${ALREADYINVOKED:-false} ]\nthen\necho \"RECURSION: Detected, stopping\"\nelse\nexport ALREADYINVOKED=\"true\"\n\nUNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-iosuniversal\n\n# 2) Переходим (либо создаем) папку с выходными файлами\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n\n# 3) Билдим для устройства и симулятора\necho \"iphone\"\nxcodebuild -target \"${TARGET_NAME}\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphoneos  BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" build\n\necho \"iphonesim\"\nxcodebuild -target \"${TARGET_NAME}\" -configuration ${CONFIGURATION} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" build\n\n# 4) Копируем из папки Debug-iphoneos в папку universal\necho \"universal\"\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_OUTPUTFOLDER}/\"\n\n# 5) Копируем swift modules\necho \"iphone simulator path\"\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule\"\nfi\n\n# 6) С помощью lipo создаем universal framework\necho \"lipo create\"\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n\necho \"end\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1624,24 +1588,6 @@
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		44601D58298FDCD1006D9A8E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C23RGTGY52;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		44601D59298FDCD1006D9A8E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C23RGTGY52;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -2048,15 +1994,6 @@
 			};
 			name = "Debug-Prod";
 		};
-		4496792A29A3539C00EC3439 /* Debug-Prod */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C23RGTGY52;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = "Debug-Prod";
-		};
 		4496792B29A353AB00EC3439 /* Release-Prod */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2235,15 +2172,6 @@
 			};
 			name = "Release-Prod";
 		};
-		4496792F29A353AB00EC3439 /* Release-Prod */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C23RGTGY52;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = "Release-Prod";
-		};
 		44A0B5B4293DC3F7007AB3FD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2286,17 +2214,6 @@
 				4496792829A3539C00EC3439 /* Debug-Prod */,
 				444A13B3291BA96100C9FBE0 /* Release */,
 				4496792D29A353AB00EC3439 /* Release-Prod */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		44601D57298FDCD1006D9A8E /* Build configuration list for PBXAggregateTarget "Aggregate" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				44601D58298FDCD1006D9A8E /* Debug */,
-				4496792A29A3539C00EC3439 /* Debug-Prod */,
-				44601D59298FDCD1006D9A8E /* Release */,
-				4496792F29A353AB00EC3439 /* Release-Prod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

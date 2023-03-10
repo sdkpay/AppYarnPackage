@@ -349,15 +349,17 @@ enum SBLogger: ResponseDecoder {
     }
     
     static func log(obj: Any,
+                    name: String = "Custom log",
                     functionName: String = #function,
                     fileName: String = #file,
                     lineNumber: Int = #line) {
         log(
             """
-            class: \(String(describing: type(of: obj)))
-            functionName: \(functionName)
-            fileName: \(fileName)
-            lineNumber: \(lineNumber)
+            📄 Log name: \(name)
+               class: \(String(describing: type(of: obj)))
+               functionName: \(functionName)
+               fileName: \(fileName)
+               lineNumber: \(lineNumber)
             """
         )
     }
