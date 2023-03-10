@@ -38,6 +38,11 @@ final class DefaultPaymentService: PaymentService {
         self.userService = userService
         self.sdkManager = sdkManager
         self.personalMetricsService = personalMetricsService
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     func tryToPay(paymentId: Int, completion: @escaping (SDKError?) -> Void) {

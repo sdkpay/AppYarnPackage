@@ -93,6 +93,11 @@ final class DefaultAlertService: AlertService {
     
     init(locator: LocatorService) {
         self.locator = locator
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     private var vc: ContentVC? {

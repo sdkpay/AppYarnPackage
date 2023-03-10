@@ -14,6 +14,18 @@ extension String {
     static let userReturned = "🔙 User returned by himself"
 }
 
+enum SBObjectState {
+    case start(obj: Any)
+    case stop(obj: Any)
+}
+
+enum SBLoggerViewState {
+    case didLoad(view: Any)
+    case willAppear(view: Any)
+    case didAppear(view: Any)
+    case didDissapear(view: Any)
+}
+
 enum SBLogger: ResponseDecoder {
     private static var logger = Log()
     
@@ -286,6 +298,66 @@ enum SBLogger: ResponseDecoder {
         log(
             """
             🔘 Locator resolve service: \(key)
+            """
+        )
+    }
+    
+    static func log(_ state: SBObjectState) {
+        switch state {
+        case .start(let obj):
+            log(
+                """
+                ❇️ Service \(String(describing: type(of: obj))) inited
+                """
+            )
+        case .stop(let obj):
+            log(
+                """
+                ❎ Service \(String(describing: type(of: obj))) deinit
+                """
+            )
+        }
+    }
+    
+    static func log(_ state: SBLoggerViewState) {
+        switch state {
+        case .didLoad(let view):
+            log(
+                """
+                🛠 ViewDidLoad \(String(describing: type(of: view)))
+                """
+            )
+        case .willAppear(let view):
+            log(
+                """
+                📱 ViewWillAppear \(String(describing: type(of: view)))
+                """
+            )
+        case .didAppear(let view):
+            log(
+                """
+                📲 ViewDidAppear \(String(describing: type(of: view)))
+                """
+            )
+        case .didDissapear(view: let view):
+            log(
+                """
+                📵 ViewDidDissapear \(String(describing: type(of: view)))
+                """
+            )
+        }
+    }
+    
+    static func log(obj: Any,
+                    functionName: String = #function,
+                    fileName: String = #file,
+                    lineNumber: Int = #line) {
+        log(
+            """
+            class: \(String(describing: type(of: obj)))
+            functionName: \(functionName)
+            fileName: \(fileName)
+            lineNumber: \(lineNumber)
             """
         )
     }

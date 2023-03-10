@@ -63,6 +63,11 @@ final class DefaultSDKManager: SDKManager {
     
     init(authManager: AuthManager) {
         self.authManager = authManager
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
 
     func config(paymentTokenRequest: SBPaymentTokenRequest,

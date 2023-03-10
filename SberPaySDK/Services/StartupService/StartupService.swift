@@ -30,6 +30,7 @@ final class DefaultStartupService: StartupService {
                                                selector: #selector(closeSdk),
                                                name: Notification.Name(closeSDKNotification),
                                                object: nil)
+        SBLogger.log(.start(obj: self))
     }
     
     private func setupWindows() {
@@ -39,6 +40,10 @@ final class DefaultStartupService: StartupService {
             sdkWindow?.windowLevel = UIWindow.Level.alert + 1
             sdkWindow?.makeKeyAndVisible()
         }
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     @objc

@@ -64,6 +64,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.sdkManager = sdkManager
         self.authManager = authManager
         self.personalMetricsService = personalMetricsService
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     func selectBank(_ app: BankApp) {

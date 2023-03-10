@@ -26,6 +26,11 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     override init() {
         super.init()
         config()
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     func integrityCheck(completion: @escaping (Bool) -> Void) {

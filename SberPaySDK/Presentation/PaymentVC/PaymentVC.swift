@@ -94,6 +94,17 @@ final class PaymentVC: ContentVC, IPaymentVC {
             self.logoImageView.image = image
         },
                                              placeholderImage: .Payment.cart)
+        SBLogger.log(.didLoad(view: self))
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        SBLogger.log(.didAppear(view: self))
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        SBLogger.log(.didDissapear(view: self))
     }
     
     func configShopInfo(with shop: String, cost: String) {

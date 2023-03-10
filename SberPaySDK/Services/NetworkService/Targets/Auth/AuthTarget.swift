@@ -25,7 +25,7 @@ extension AuthTarget: TargetType {
         case .getSessionId:
             return "/sessionId"
         case .checkSession:
-            return "/statusSession"
+            return "/sessionStatus"
         }
     }
     

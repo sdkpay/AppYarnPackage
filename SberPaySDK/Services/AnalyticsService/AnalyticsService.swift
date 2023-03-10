@@ -86,6 +86,11 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     override init() {
         super.init()
         configDynatrace()
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     private func configDynatrace() {

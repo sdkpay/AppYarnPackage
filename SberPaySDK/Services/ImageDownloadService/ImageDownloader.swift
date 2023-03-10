@@ -36,6 +36,11 @@ final class ImageDownloader: NSObject {
         session = URLSession(configuration: .default,
                              delegate: self,
                              delegateQueue: nil)
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
 
     func downloadImage(with imageUrlString: String?,

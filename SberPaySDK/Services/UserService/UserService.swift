@@ -35,6 +35,11 @@ final class DefaultUserService: UserService {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     func getUser(completion: @escaping (Result<User, SDKError>) -> Void) {
