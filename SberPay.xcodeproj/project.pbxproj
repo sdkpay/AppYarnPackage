@@ -6,27 +6,15 @@
 	objectVersion = 55;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		44601D56298FDCD1006D9A8E /* Aggregate */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 44601D57298FDCD1006D9A8E /* Build configuration list for PBXAggregateTarget "Aggregate" */;
-			buildPhases = (
-				44601D5A298FDCD8006D9A8E /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = Aggregate;
-			productName = Aggregate;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
+		219CCB9B29BB071B00BA360B /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
+		219CCB9D29BB075E00BA360B /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 219CCB9C29BB075E00BA360B /* FingerprintPackage */; };
+		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
 		440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */; };
 		440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3AC295C304300B84E05 /* AnalyticsService.swift */; };
 		4416E424291E21C300284972 /* SDKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E423291E21C300284972 /* SDKError.swift */; };
 		4416E437291FA90900284972 /* StartupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E436291FA90900284972 /* StartupService.swift */; };
-		441B7904296FEE990093138D /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 441B7903296FEE990093138D /* libresolv.9.tbd */; };
 		441B791829700BEB0093138D /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 441B791729700BEB0093138D /* Lottie */; };
 		4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76B299ABC7800DD7881 /* poz.mp3 */; };
 		4421B76E299ABC8500DD7881 /* neg.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76D299ABC8500DD7881 /* neg.mp3 */; };
@@ -117,12 +105,6 @@
 		44A31268298156C30099EB76 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A31267298156C30099EB76 /* String+Extensions.swift */; };
 		44A438F429900EEE00CA04FC /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 44A438F329900EEE00CA04FC /* Dynatrace-Static */; };
 		44A5A46129B4A38900C01420 /* cms-res.der in Resources */ = {isa = PBXBuildFile; fileRef = 44A5A46029B4A38900C01420 /* cms-res.der */; };
-		44AC79C0299E32B40043FA4E /* BizoneCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */; };
-		44AC79C1299E32B40043FA4E /* BizoneCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		44AC79C4299E32B90043FA4E /* Fingerprint.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */; };
-		44AC79C5299E32B90043FA4E /* Fingerprint.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		44AC79C8299E32ED0043FA4E /* FingerprintWrapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AC79C7299E32ED0043FA4E /* FingerprintWrapper.h */; };
-		44AC79CA299E32F30043FA4E /* libMobileSDKLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44AC79C9299E32F30043FA4E /* libMobileSDKLib.a */; };
 		44AC79CC299FE9A50043FA4E /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AC79CB299FE9A50043FA4E /* Data+Extension.swift */; };
 		44AC79CE299FEB5B0043FA4E /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AC79CD299FEB5B0043FA4E /* Collection+Extension.swift */; };
 		44B821FD2923810C00C06C51 /* TransparentWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B821FC2923810C00C06C51 /* TransparentWindow.swift */; };
@@ -178,6 +160,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		21EBD7AA29BA1C5C00C39C03 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		444A13B1291BA96100C9FBE0 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -189,27 +181,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		44AC79C2299E32B40043FA4E /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				44AC79C5299E32B90043FA4E /* Fingerprint.xcframework in Embed Frameworks */,
-				44AC79C1299E32B40043FA4E /* BizoneCore.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
+		219CCBFA29BB0E5400BA360B /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
+		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
 		440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTableView.swift; sourceTree = "<group>"; };
 		440DB3AC295C304300B84E05 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		4416E423291E21C300284972 /* SDKError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKError.swift; sourceTree = "<group>"; };
 		4416E436291FA90900284972 /* StartupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupService.swift; sourceTree = "<group>"; };
-		441B7903296FEE990093138D /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
 		4421B76B299ABC7800DD7881 /* poz.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = poz.mp3; sourceTree = "<group>"; };
 		4421B76D299ABC8500DD7881 /* neg.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = neg.mp3; sourceTree = "<group>"; };
 		442A45C8297FE80D00EC3D73 /* StubNetworkProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubNetworkProvider.swift; sourceTree = "<group>"; };
@@ -305,10 +287,6 @@
 		44A3126229813D110099EB76 /* PaymentRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRouter.swift; sourceTree = "<group>"; };
 		44A31267298156C30099EB76 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		44A5A46029B4A38900C01420 /* cms-res.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cms-res.der"; sourceTree = "<group>"; };
-		44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = BizoneCore.xcframework; sourceTree = "<group>"; };
-		44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Fingerprint.xcframework; sourceTree = "<group>"; };
-		44AC79C7299E32ED0043FA4E /* FingerprintWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FingerprintWrapper.h; sourceTree = "<group>"; };
-		44AC79C9299E32F30043FA4E /* libMobileSDKLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMobileSDKLib.a; sourceTree = "<group>"; };
 		44AC79CB299FE9A50043FA4E /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		44AC79CD299FEB5B0043FA4E /* Collection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extension.swift"; sourceTree = "<group>"; };
 		44B821FC2923810C00C06C51 /* TransparentWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentWindow.swift; sourceTree = "<group>"; };
@@ -353,11 +331,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				44AC79C4299E32B90043FA4E /* Fingerprint.xcframework in Frameworks */,
-				44AC79C0299E32B40043FA4E /* BizoneCore.xcframework in Frameworks */,
-				44AC79CA299E32F30043FA4E /* libMobileSDKLib.a in Frameworks */,
+				219CCB9B29BB071B00BA360B /* libresolv.9.tbd in Frameworks */,
 				44A438F429900EEE00CA04FC /* Dynatrace-Static in Frameworks */,
-				441B7904296FEE990093138D /* libresolv.9.tbd in Frameworks */,
+				219CCB9D29BB075E00BA360B /* FingerprintPackage in Frameworks */,
 				441B791829700BEB0093138D /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -537,8 +513,6 @@
 		444A13AA291BA96100C9FBE0 /* SberPaySDK */ = {
 			isa = PBXGroup;
 			children = (
-				44AC79C9299E32F30043FA4E /* libMobileSDKLib.a */,
-				44AC79C6299E32ED0043FA4E /* libMobileSDKLib */,
 				44533D1F29852A1C0041FAA9 /* Managers */,
 				442A45D3298049A100EC3D73 /* BuildSettings */,
 				44B822012923897D00C06C51 /* SBPayService.swift */,
@@ -944,9 +918,8 @@
 		44834C73292E366D000A32B2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				44AC79C3299E32B90043FA4E /* Fingerprint.xcframework */,
-				44AC79BF299E32B40043FA4E /* BizoneCore.xcframework */,
-				441B7903296FEE990093138D /* libresolv.9.tbd */,
+				219CCBFA29BB0E5400BA360B /* FingerprintPackage */,
+				21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1008,14 +981,6 @@
 				AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */,
 			);
 			path = ImageDownloadService;
-			sourceTree = "<group>";
-		};
-		44AC79C6299E32ED0043FA4E /* libMobileSDKLib */ = {
-			isa = PBXGroup;
-			children = (
-				44AC79C7299E32ED0043FA4E /* FingerprintWrapper.h */,
-			);
-			path = libMobileSDKLib;
 			sourceTree = "<group>";
 		};
 		44B821FB292380E100C06C51 /* TransparantWindow */ = {
@@ -1102,6 +1067,7 @@
 				44A31267298156C30099EB76 /* String+Extensions.swift */,
 				44AC79CB299FE9A50043FA4E /* Data+Extension.swift */,
 				44AC79CD299FEB5B0043FA4E /* Collection+Extension.swift */,
+				219CCC0529BB61D200BA360B /* Date+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1176,7 +1142,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				444A13AC291BA96100C9FBE0 /* SberPaySDK.h in Headers */,
-				44AC79C8299E32ED0043FA4E /* FingerprintWrapper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1192,7 +1157,7 @@
 				444A13A6291BA96100C9FBE0 /* Frameworks */,
 				444A13A7291BA96100C9FBE0 /* Resources */,
 				444A13F0291CEDC200C9FBE0 /* Swiftlint */,
-				44AC79C2299E32B40043FA4E /* Embed Frameworks */,
+				21EBD7AA29BA1C5C00C39C03 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1202,6 +1167,7 @@
 			packageProductDependencies = (
 				441B791729700BEB0093138D /* Lottie */,
 				44A438F329900EEE00CA04FC /* Dynatrace-Static */,
+				219CCB9C29BB075E00BA360B /* FingerprintPackage */,
 			);
 			productName = SberPaySDK;
 			productReference = 444A13A9291BA96100C9FBE0 /* SberPaySDK.framework */;
@@ -1260,9 +1226,6 @@
 						CreatedOnToolsVersion = 14.0;
 						LastSwiftMigration = 1400;
 					};
-					44601D56298FDCD1006D9A8E = {
-						CreatedOnToolsVersion = 14.0;
-					};
 					4471721029193B21005EDF32 = {
 						CreatedOnToolsVersion = 14.0;
 						LastSwiftMigration = 1400;
@@ -1293,7 +1256,6 @@
 				4471721029193B21005EDF32 /* SberPayExample */,
 				444A13A8291BA96100C9FBE0 /* SberPaySDK */,
 				44A0B5AC293DC3F7007AB3FD /* SberPaySDKTests */,
-				44601D56298FDCD1006D9A8E /* Aggregate */,
 			);
 		};
 /* End PBXProject section */
@@ -1358,24 +1320,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		44601D5A298FDCD8006D9A8E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "echo \"project\"\n# 1) Открываем \"${PROJECT_DIR}\"\nif [ \"true\" == ${ALREADYINVOKED:-false} ]\nthen\necho \"RECURSION: Detected, stopping\"\nelse\nexport ALREADYINVOKED=\"true\"\n\nUNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-iosuniversal\n\n# 2) Переходим (либо создаем) папку с выходными файлами\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n\n# 3) Билдим для устройства и симулятора\necho \"iphone\"\nxcodebuild -target \"${TARGET_NAME}\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphoneos  BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" build\n\necho \"iphonesim\"\nxcodebuild -target \"${TARGET_NAME}\" -configuration ${CONFIGURATION} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" build\n\n# 4) Копируем из папки Debug-iphoneos в папку universal\necho \"universal\"\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_OUTPUTFOLDER}/\"\n\n# 5) Копируем swift modules\necho \"iphone simulator path\"\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule\"\nfi\n\n# 6) С помощью lipo создаем universal framework\necho \"lipo create\"\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n\necho \"end\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1473,6 +1417,7 @@
 				44499BED296EB4A500B6A582 /* Bundle+Extensions.swift in Sources */,
 				44B821FD2923810C00C06C51 /* TransparentWindow.swift in Sources */,
 				4498008C29AD247C008E808A /* AlertService.swift in Sources */,
+				219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */,
 				445CB078292BC56900F50047 /* Gallery.swift in Sources */,
 				44B822022923897D00C06C51 /* SBPayService.swift in Sources */,
 				4473D6CB294083DA00802446 /* BankApps.swift in Sources */,
@@ -1560,7 +1505,11 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(BUILT_PRODUCTS_DIR)/Dynatrace-Static",
+				);
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SberPaySDK/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -1574,6 +1523,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SberPaySDK",
+					"$(BUILT_PRODUCTS_DIR)/Dynatrace-Static",
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-ObjC";
@@ -1608,7 +1558,11 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EXCLUDED_ARCHS = "";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(BUILT_PRODUCTS_DIR)/Dynatrace-Static",
+				);
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SberPaySDK/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -1622,6 +1576,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SberPaySDK",
+					"$(BUILT_PRODUCTS_DIR)/Dynatrace-Static",
 				);
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1637,24 +1592,6 @@
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		44601D58298FDCD1006D9A8E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C23RGTGY52;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		44601D59298FDCD1006D9A8E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C23RGTGY52;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1789,7 +1726,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExampleDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1839,7 +1776,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1953,7 +1890,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SberPayExample/SberPayExampleDebug-Prod.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2008,7 +1945,11 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(BUILT_PRODUCTS_DIR)/Dynatrace-Static",
+				);
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SberPaySDK/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -2022,6 +1963,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SberPaySDK",
+					"$(BUILT_PRODUCTS_DIR)/Dynatrace-Static",
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "-ObjC";
@@ -2053,15 +1995,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = "Debug-Prod";
-		};
-		4496792A29A3539C00EC3439 /* Debug-Prod */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C23RGTGY52;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = "Debug-Prod";
 		};
@@ -2133,7 +2066,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2190,7 +2123,11 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EXCLUDED_ARCHS = "";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(BUILT_PRODUCTS_DIR)/Dynatrace-Static",
+				);
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = SberPaySDK/SupportingFiles/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -2204,6 +2141,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/SberPaySDK",
+					"$(BUILT_PRODUCTS_DIR)/Dynatrace-Static",
 				);
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -2235,15 +2173,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = "Release-Prod";
-		};
-		4496792F29A353AB00EC3439 /* Release-Prod */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = C23RGTGY52;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = "Release-Prod";
 		};
@@ -2289,17 +2218,6 @@
 				4496792829A3539C00EC3439 /* Debug-Prod */,
 				444A13B3291BA96100C9FBE0 /* Release */,
 				4496792D29A353AB00EC3439 /* Release-Prod */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		44601D57298FDCD1006D9A8E /* Build configuration list for PBXAggregateTarget "Aggregate" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				44601D58298FDCD1006D9A8E /* Debug */,
-				4496792A29A3539C00EC3439 /* Debug-Prod */,
-				44601D59298FDCD1006D9A8E /* Release */,
-				4496792F29A353AB00EC3439 /* Release-Prod */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2359,6 +2277,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		219CCB9C29BB075E00BA360B /* FingerprintPackage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FingerprintPackage;
+		};
 		441B791729700BEB0093138D /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 44B7F0252948F2B9005203FE /* XCRemoteSwiftPackageReference "lottie-ios" */;

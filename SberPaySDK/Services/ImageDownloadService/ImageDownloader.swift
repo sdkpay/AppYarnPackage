@@ -36,6 +36,11 @@ final class ImageDownloader: NSObject {
         session = URLSession(configuration: .default,
                              delegate: self,
                              delegateQueue: nil)
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
 
     func downloadImage(with imageUrlString: String?,
@@ -67,7 +72,7 @@ final class ImageDownloader: NSObject {
                 return
             }
 
-            let task = session?.dataTask(with: url) { data, response, error in
+            let task = session?.dataTask(with: url) { data, _, error in
                 guard let data = data else {
                     SBLogger.logDownloadImageWithError(with: .dataIsNil,
                                                        urlString: imageUrlString,

@@ -52,6 +52,17 @@ final class CardsVC: ContentVC, ICardsVC {
         super.viewDidLoad()
         presenter.viewDidLoad()
         setupUI()
+        SBLogger.log(.didLoad(view: self))
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        SBLogger.log(.didAppear(view: self))
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        SBLogger.log(.didDissapear(view: self))
     }
     
     private func setupUI() {

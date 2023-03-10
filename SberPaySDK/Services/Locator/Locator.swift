@@ -20,6 +20,7 @@ final class DefaultLocatorService: LocatorService {
     func register<T>(service: T) {
         let key = typeName(T.self)
         services[key] = service
+        SBLogger.logLocatorRegister(key)
     }
 
     func resolve<T>() -> T {

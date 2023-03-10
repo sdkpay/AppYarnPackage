@@ -33,12 +33,15 @@ final class DefaultStartupService: StartupService {
     }
     
     private func setupWindows() {
-        guard let appWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
         if sdkWindow == nil {
-            sdkWindow = TransparentWindow(frame: appWindow.bounds)
+            sdkWindow = TransparentWindow(frame: UIScreen.main.bounds)
             sdkWindow?.windowLevel = UIWindow.Level.alert + 1
             sdkWindow?.makeKeyAndVisible()
         }
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     @objc

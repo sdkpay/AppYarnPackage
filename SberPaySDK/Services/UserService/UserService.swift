@@ -35,6 +35,11 @@ final class DefaultUserService: UserService {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     func getUser(completion: @escaping (Result<User, SDKError>) -> Void) {
@@ -68,7 +73,7 @@ final class DefaultUserService: UserService {
     
     func checkUserSession(completion: @escaping (Result<ValidSessionModel, SDKError>) -> Void) {
         guard let sessionId = authManager.sessionId else { return }
-        network.request(UserTarget.checkSession(sessionId: String(sessionId)),
+        network.request(AuthTarget.checkSession(sessionId: sessionId),
                         to: ValidSessionModel.self,
                         completion: completion)
     }

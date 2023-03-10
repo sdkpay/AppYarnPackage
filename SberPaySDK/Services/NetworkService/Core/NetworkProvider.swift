@@ -146,7 +146,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private func addHeaders(request: inout URLRequest, headers: HTTPHeaders?) {
         var baseHeaders = HTTPHeaders()
         baseHeaders[String.Headers.rqUID] = String.generateRandom(with: 32)
-        baseHeaders[String.Headers.localTime] = "\(Date())"
+        baseHeaders[String.Headers.localTime] = Date().rfcFormatted
 
         for head in requestManager.headers {
             baseHeaders[head.key] = head.value

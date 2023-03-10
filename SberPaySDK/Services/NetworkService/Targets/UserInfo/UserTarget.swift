@@ -19,7 +19,6 @@ enum UserTarget {
                         orderNumber: String?,
                         expiry: String?,
                         frequency: Int?)
-    case checkSession(sessionId: String)
 }
 
 extension UserTarget: TargetType {
@@ -27,8 +26,6 @@ extension UserTarget: TargetType {
         switch self {
         case .getListCards:
             return "/listCards"
-        case .checkSession:
-            return "/statusSession"
         }
     }
     
@@ -36,14 +33,11 @@ extension UserTarget: TargetType {
         switch self {
         case .getListCards:
             return .post
-        case .checkSession:
-            return .get
         }
     }
     
     var task: HTTPTask {
         switch self {
-            
         case let .getListCards(redirectUri: redirectUri,
                                authCode: authCode,
                                sessionId: sessionId,
@@ -96,11 +90,6 @@ extension UserTarget: TargetType {
             params["orderId"] = orderId
             
             return .requestWithParametersAndHeaders(nil, bodyParameters: params)
-        case .checkSession(sessionId: let sessionId):
-            let params = [
-                "sessionId": sessionId
-            ]
-            return .requestWithParameters(params)
         }
     }
     
@@ -112,8 +101,6 @@ extension UserTarget: TargetType {
         switch self {
         case .getListCards:
             return StubbedResponse.listCards.data
-        case .checkSession:
-            return StubbedResponse.validSession.data
         }
     }
 }

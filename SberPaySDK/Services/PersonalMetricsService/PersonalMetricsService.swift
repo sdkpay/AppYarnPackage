@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Fingerprint
+@_implementationOnly import Fingerprint
 
 final class PersonalMetricsServiceAssembly: Assembly {
     func register(in container: LocatorService) {
@@ -16,16 +16,23 @@ final class PersonalMetricsServiceAssembly: Assembly {
 }
 
 protocol PersonalMetricsService {
+    var ipAddress: String? { get }
     func getUserData(completion: @escaping (String?) -> Void)
     func integrityCheck(completion: @escaping (Bool) -> Void)
 }
 
 final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     private var provider: FPReportProviderProtocol?
+    private(set) var ipAddress: String?
     
     override init() {
         super.init()
         config()
+        SBLogger.log(.start(obj: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     func integrityCheck(completion: @escaping (Bool) -> Void) {
@@ -60,6 +67,8 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
                 return
             }
             SBLogger.log(.biZone + data)
+            let dataDictionary = self?.convertToDictionary(text: data)
+            self?.ipAddress = dataDictionary?["LocalIPv4"] as? String
             completion(self?.formatString(data))
         }
     }

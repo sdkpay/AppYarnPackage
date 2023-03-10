@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AuthInfo {
+struct AuthInfo: Hashable {
     let apiKey: String
     let merchantLogin: String?
     let orderId: String?
