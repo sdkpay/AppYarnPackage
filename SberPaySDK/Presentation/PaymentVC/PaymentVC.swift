@@ -133,9 +133,10 @@ final class PaymentVC: ContentVC, IPaymentVC {
 
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -.bottomMargin),
+            cancelButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -.bottomMargin),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
             cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
+            cancelButton.heightAnchor.constraint(equalToConstant: .defaultButtonHeight),
         ])
         
         payButton.translatesAutoresizingMaskIntoConstraints = false
