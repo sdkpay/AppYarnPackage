@@ -19,7 +19,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private let apiKey: String
     private let autoMode: Bool
     private let orderId: String
-    private let mocksOn: Bool
+    private let network: NetworkState
     private let sslOn: Bool
     private let purchase: Bool
     
@@ -71,17 +71,17 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
          orderId: String,
          autoMode: Bool,
          purchase: Bool,
-         mocksOn: Bool,
+         network: NetworkState,
          sslOn: Bool) {
         self.totalCost = totalCost
         self.apiKey = apiKey
         self.orderId = orderId
         self.autoMode = autoMode
-        self.mocksOn = mocksOn
+        self.network = network
         self.sslOn = sslOn
         self.purchase = purchase
         super.init(nibName: nil, bundle: nil)
-        SBPay.debugConfig(mocks: mocksOn, ssl: sslOn)
+        SBPay.debugConfig(network: network, ssl: sslOn)
     }
     
     required init?(coder: NSCoder) {

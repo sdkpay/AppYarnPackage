@@ -7,8 +7,12 @@
 
 import Foundation
 
+public enum NetworkState: String, CaseIterable, Codable {
+    case Test, Prod, Local
+}
+
 final class BuildSettings {
-    var needStubs = false
+    var networkState = NetworkState.Prod
     var ssl = true
 
     static let shared = BuildSettings()

@@ -67,9 +67,9 @@ public final class SBPay: NSObject {
     /**
      Метод для установки моков, только для тестовых версий
      */
-    @objc
-    public static func debugConfig(mocks: Bool, ssl: Bool) {
-        BuildSettings.shared.needStubs = mocks
+
+    public static func debugConfig(network: NetworkState, ssl: Bool) {
+        BuildSettings.shared.networkState = network
         BuildSettings.shared.ssl = ssl
     }
 }

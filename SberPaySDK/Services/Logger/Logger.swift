@@ -51,15 +51,17 @@ enum SBLogger: ResponseDecoder {
                                     data: Data?) {
         let url = ServerURL.appendingPathComponent(target.path)
         var code = "None"
-        if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-            code = String(statusCode)
+        var headers = "None"
+        if let response = response as? HTTPURLResponse {
+            code = String(response.statusCode)
+            headers = response.allHeaderFields.json
         }
         if code != "200" {
             log(
                 """
                 ❗️Request failed with code \(code)
                   path: \(url)
-                  headers: \(headers(target.headers))
+                  headers: \(headers)
                   httpMethod: \(target.httpMethod)
                   response: \(stringToLog(from: data))
                 """
@@ -69,7 +71,7 @@ enum SBLogger: ResponseDecoder {
             """
             ✅ Request successed with code \(code)
                path: \(url)
-               headers: \(headers(target.headers))
+               headers: \(headers)
                httpMethod: \(target.httpMethod)
                response: \(stringToLog(from: data))
             """

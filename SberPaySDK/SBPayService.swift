@@ -70,7 +70,7 @@ final class DefaultSBPayService: SBPayService {
             SBLogger.logResponsePaymentToken(with: response)
             completion(response)
         })
-        SBLogger.log("📃 Stubs enabled - \(BuildSettings.shared.needStubs)")
+        SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
         startService.openInitialScreen(with: locator)
     }
     
@@ -90,6 +90,7 @@ final class DefaultSBPayService: SBPayService {
         let manager: SDKManager = locator.resolve()
         manager.configWithOrderId(paymentRequest: paymentRequest,
                                   completion: completion)
+        SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
         startService.openInitialScreen(with: locator)
     }
 
