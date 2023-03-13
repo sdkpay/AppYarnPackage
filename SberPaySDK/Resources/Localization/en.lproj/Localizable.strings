@@ -1,0 +1,43 @@
+/* 
+  Localizable.strings
+  SberPay
+
+  Created by Alexander Ipatov on 21.11.2022.
+  
+*/
+// Common
+"pay.title" = "Оплатить";
+"cancel.title" = "Отменить";
+"ok.title" = "Понятно";
+"return.title" = "К способам оплаты";
+"try.title" = "Попробовать ещё раз";
+
+// Auth
+"auth.title" = "Выберите приложение для авторизации в СберБанке";
+"sber.title" = "СберБанк Онлайн";
+"sbol.title" = "СБОЛ";
+
+// Payment
+"payment.noCards.title" = "Нет карт для оплаты";
+"payment.noCards.subtitle" = "Выберите другой способ";
+
+// Cards
+"cards.title" = "Выберите карту для оплаты";
+
+// Error
+"error.system" = "Системная или внутренняя ошибка.";
+"error.format" = "Некорректный формат запроса/ответа.";
+"error.close" = "Клиент закрыл SDK.";
+"error.timeout" = "Истек таймаут ожидания ответа с сервера.";
+
+// Loading
+"toSber.title" = "Переходим в СберБанк Онлайн для авторизации";
+"toSbol.title" = "Переходим в СБОЛ для авторизации";
+"try.to.pay.title" = "Проводим оплату...";
+
+// Alert
+"alert.error.main.title" = "Не получилось оплатить.\nПожалуйста, выберите другой способ";
+"alert.pay.success.title" = "Успешно оплатили";
+"alert.pay.no.cards.title" = "Нет подходящих карт. Вернитесь к заказу\nи выберите другой способ оплаты.";
+"alert.pay.waiting.title" = "Обрабатываем оплату. Следите за статусом в Истории приложения СберБанк Онлайн.";
+"alert.pay.no.internet.title" = "Нет интернета. Проверьте подключение и попробуйте ещё раз.";
