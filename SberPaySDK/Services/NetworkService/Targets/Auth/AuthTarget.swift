@@ -102,7 +102,7 @@ extension AuthTarget: TargetType {
         case .getSessionId:
             return StubbedResponse.auth.data
         case .checkSession:
-            return StubbedResponse.validSession.data
+            return nil
         }
     }
 }
