@@ -57,20 +57,15 @@ final class AuthPresenter: AuthPresenting {
         view?.showLoading()
         userService.checkUserSession { [weak self] result in
             switch result {
-            case .success(let result):
-                if result.statusSession {
-                    self?.router.presentPayment()
-                } else {
-                    self?.configAuthSettings()
-                }
+            case .success:
+                self?.router.presentPayment()
             case .failure(let error):
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
                                             type: .noInternet(retry: { self?.checkSession() },
                                                               completion: { self?.dismissWithError(error) }))
                 } else {
-                    self?.alertService.show(on: self?.view,
-                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
+                    self?.configAuthSettings()
                 }
             }
         }
