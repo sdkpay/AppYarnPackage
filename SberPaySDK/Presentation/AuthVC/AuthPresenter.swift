@@ -134,7 +134,11 @@ final class AuthPresenter: AuthPresenting {
         // от банковского приложения и перешел самостоятельно
         view?.hideLoading()
         SBLogger.log(.userReturned)
-        showBanksStack()
+        if authService.avaliableBanks.count > 1 {
+            showBanksStack()
+        } else {
+            dismissWithError(.cancelled)
+        }
     }
     
     private func removeObserver() {
