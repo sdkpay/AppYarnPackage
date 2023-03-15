@@ -9,7 +9,6 @@ import UIKit
 
 private extension CGFloat {
     static let loaderWidth = 80.0
-    static let animationDuration = 0.25
 }
 
 final class LoadingView: UIView {
@@ -79,7 +78,7 @@ final class LoadingView: UIView {
     
     func show(animate: Bool = true) {
         if animate {
-            UIView.animate(withDuration: CGFloat.animationDuration,
+            UIView.animate(withDuration: 0.25,
                            delay: 0) { [weak self] in
                 guard let self = self else { return }
                 self.alpha = 1

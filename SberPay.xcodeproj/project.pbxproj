@@ -137,6 +137,7 @@
 		44F9FD5F295AFCAC00FE4B9F /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD58295AFCAC00FE4B9F /* CGPoint+Extension.swift */; };
 		44F9FD60295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD59295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift */; };
 		44F9FD61295AFCAC00FE4B9F /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */; };
+		AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB0059B29C09F72002C9AB9 /* Loader.swift */; };
 		AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */; };
 		AEEB602429B9B55E00D1E1D2 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */; };
 /* End PBXBuildFile section */
@@ -320,6 +321,7 @@
 		44F9FD58295AFCAC00FE4B9F /* CGPoint+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
 		44F9FD59295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIPanGestureRecognizer+Extension.swift"; sourceTree = "<group>"; };
 		44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
+		AEB0059B29C09F72002C9AB9 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
 		AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetName.swift"; sourceTree = "<group>"; };
 		AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -510,6 +512,7 @@
 		444A13AA291BA96100C9FBE0 /* SberPaySDK */ = {
 			isa = PBXGroup;
 			children = (
+				AEB0059929C09F3F002C9AB9 /* Helpers */,
 				44533D1F29852A1C0041FAA9 /* Managers */,
 				442A45D3298049A100EC3D73 /* BuildSettings */,
 				44B822012923897D00C06C51 /* SBPayService.swift */,
@@ -1131,6 +1134,22 @@
 			path = ContentNC;
 			sourceTree = "<group>";
 		};
+		AEB0059929C09F3F002C9AB9 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				AEB0059A29C09F60002C9AB9 /* UI */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		AEB0059A29C09F60002C9AB9 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				AEB0059B29C09F72002C9AB9 /* Loader.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1418,6 +1437,7 @@
 				44B822022923897D00C06C51 /* SBPayService.swift in Sources */,
 				4473D6CB294083DA00802446 /* BankApps.swift in Sources */,
 				442A45DA29804E0C00EC3D73 /* UserModel.swift in Sources */,
+				AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */,
 				44F9FD51295AFAD700FE4B9F /* ContentNC.swift in Sources */,
 				44A31254298108330099EB76 /* Locator.swift in Sources */,
 				4479ECDA29476EEF009B3AB8 /* Style.swift in Sources */,

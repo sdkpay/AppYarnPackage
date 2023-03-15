@@ -65,8 +65,10 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func pay() {
         view?.userInteractionsEnabled = false
-        view?.hideAlert()
-        view?.showLoading(with: .Loading.tryToPayTitle)
+        DispatchQueue.main.async {
+            self.view?.hideAlert()
+            self.view?.showLoading(with: .Loading.tryToPayTitle)
+        }
         guard let paymentId = selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId) { [weak self] error in
             self?.view?.userInteractionsEnabled = true
@@ -98,8 +100,10 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func getUser() {
-        view?.hideAlert()
-        view?.showLoading(animate: false)
+        DispatchQueue.main.async {
+            self.view?.hideAlert()
+            self.view?.showLoading(animate: false)
+        }
         userService.getUser { [weak self] result in
             switch result {
             case .success(let user):
