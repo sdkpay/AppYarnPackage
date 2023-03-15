@@ -53,8 +53,12 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkSession() {
-        view?.hideAlert()
-        view?.showLoading()
+        DispatchQueue.main.async {  [weak self] in
+            guard let self = self else { return }
+            self.view?.hideAlert()
+            self.view?.showLoading()
+        }
+       
         userService.checkUserSession { [weak self] result in
             switch result {
             case .success:
@@ -95,15 +99,22 @@ final class AuthPresenter: AuthPresenting {
     
     private func getAccessSberPay() {
         let text = authService.selectedBank == .sber ? String.Loading.toSberTitle : String.Loading.toSbolTitle
-        view?.hideAlert()
-        view?.showLoading(with: text)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.view?.hideAlert()
+            self.view?.showLoading(with: text)
+        }
+       
         openSberId()
     }
     
     private func openSberId() {
         authService.tryToAuth { [weak self] error in
             guard let self = self else { return }
-            self.view?.hideLoading()
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.view?.hideLoading()
+            }
             self.removeObserver()
             if let error = error {
                 self.analytics.sendEvent(.BankAppAuthFailed)
@@ -132,7 +143,10 @@ final class AuthPresenter: AuthPresenting {
     private func applicationDidBecomeActive() {
         // Если пользователь не смог получить обратный редирект
         // от банковского приложения и перешел самостоятельно
-        view?.hideLoading()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.view?.hideLoading()
+        }
         SBLogger.log(.userReturned)
         if authService.avaliableBanks.count > 1 {
             showBanksStack()

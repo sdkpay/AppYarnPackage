@@ -65,10 +65,16 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func pay() {
         view?.userInteractionsEnabled = false
-        view?.hideAlert()
-        view?.showLoading(with: .Loading.tryToPayTitle)
+        DispatchQueue.main.async {
+            self.view?.hideAlert()
+            self.view?.showLoading(with: .Loading.tryToPayTitle)
+        }
         guard let paymentId = selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId) { [weak self] error in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.view?.hideLoading()
+            }
             self?.view?.userInteractionsEnabled = true
             if let error = error {
                 if error.represents(.noInternetConnection) {
@@ -98,8 +104,10 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func getUser() {
-        view?.hideAlert()
-        view?.showLoading(animate: false)
+        DispatchQueue.main.async {
+            self.view?.hideAlert()
+            self.view?.showLoading(animate: false)
+        }
         userService.getUser { [weak self] result in
             switch result {
             case .success(let user):
@@ -134,7 +142,10 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func configWithCard(user: User, selectedCard: PaymentToolInfo) {
-        view?.hideLoading()
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.view?.hideLoading()
+        }
         view?.configCardView(with: selectedCard.productName ?? "",
                              cardInfo: selectedCard.cardNumber.card,
                              cardIconURL: selectedCard.cardLogoUrl,

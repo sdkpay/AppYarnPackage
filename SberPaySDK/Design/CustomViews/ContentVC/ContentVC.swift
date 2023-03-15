@@ -22,7 +22,6 @@ private extension TimeInterval {
 }
 
 class ContentVC: UIViewController {
-    var isLoading = false
     
     var contentNavigationController: ContentNC? {
         parent as? ContentNC
@@ -35,7 +34,6 @@ class ContentVC: UIViewController {
         }
     }
 
-    private var loadingView: LoadingView?
     private var alertView: AlertView?
 
     lazy var logoImage: UIImageView = {
@@ -98,45 +96,15 @@ class ContentVC: UIViewController {
 extension ContentVC {
     func showLoading(with text: String? = nil,
                      animate: Bool = true) {
-        view.subviews.forEach { view in
-                if view != stickImageView {
-                    view.isHidden = true
-                }
-        }
-        let loadingView = LoadingView(with: text)
-        view.addSubview(loadingView)
-        loadingView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            loadingView.topAnchor.constraint(equalTo: view.topAnchor),
-            loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        ])
-        view.bringSubviewToFront(loadingView)
-        view.bringSubviewToFront(stickImageView)
-        view.layoutIfNeeded()
-        self.loadingView = loadingView
-        self.loadingView?.show(animate: animate)
+        Loader(text: text)
+            .animated(with: animate)
+            .show()
     }
     
-    func hideLoading(animate: Bool = true, animationCompletion: Action? = nil) {
-        view.subviews.forEach({ $0.isHidden = false })
-        if animate {
-            UIView.animate(withDuration: .animationDuration,
-                           delay: 0) {
-                self.loadingView?.alpha = 0
-            } completion: { _ in
-                self.loadingView?.removeFromSuperview()
-                self.loadingView = nil
-                self.isLoading = false
-                animationCompletion?()
-            }
-        } else {
-            self.loadingView?.removeFromSuperview()
-            self.loadingView = nil
-            self.isLoading = false
-            animationCompletion?()
-        }
+    func hideLoading(animate: Bool = true) {
+        Loader()
+            .animated(with: animate)
+            .hide()
     }
 }
 
