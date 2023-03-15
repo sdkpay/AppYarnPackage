@@ -111,7 +111,10 @@ final class AuthPresenter: AuthPresenting {
     private func openSberId() {
         authService.tryToAuth { [weak self] error in
             guard let self = self else { return }
-            self.view?.hideLoading()
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.view?.hideLoading()
+            }
             self.removeObserver()
             if let error = error {
                 self.analytics.sendEvent(.BankAppAuthFailed)

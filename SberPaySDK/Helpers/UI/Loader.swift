@@ -47,7 +47,6 @@ struct Loader {
             subview.topAnchor.constraint(equalTo: view.topAnchor)
         ])
         
-    
         subview.layoutIfNeeded()
         subview.show(animate: isNeedToAnimate)
         return self

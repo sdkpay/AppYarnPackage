@@ -9,6 +9,9 @@ import UIKit
 
 private extension CGFloat {
     static let loaderWidth = 80.0
+    static let stickTopMargin = 8.0
+    static let stickWidth = 38.0
+    static let stickHeight = 4.0
 }
 
 final class LoadingView: UIView {
@@ -24,6 +27,13 @@ final class LoadingView: UIView {
         view.numberOfLines = 0
         view.textColor = .textPrimory
         view.textAlignment = .center
+        return view
+    }()
+    
+    private lazy var stickImageView: UIImageView = {
+       let view = UIImageView()
+        view.image = .Common.stick
+        view.contentMode = .scaleAspectFill
         return view
     }()
     
@@ -74,6 +84,15 @@ final class LoadingView: UIView {
             loadingStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin)
         ])
         loadingStack.addArrangedSubview(loadingImageView)
+        
+        addSubview(stickImageView)
+        stickImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            stickImageView.widthAnchor.constraint(equalToConstant: .stickWidth),
+            stickImageView.heightAnchor.constraint(equalToConstant: .stickHeight),
+            stickImageView.topAnchor.constraint(equalTo: topAnchor, constant: .stickTopMargin),
+            stickImageView.centerXAnchor.constraint(equalTo: centerXAnchor)
+        ])
     }
     
     func show(animate: Bool = true) {

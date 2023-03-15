@@ -34,7 +34,6 @@ class ContentVC: UIViewController {
         }
     }
 
-    private var loadingView: LoadingView?
     private var alertView: AlertView?
 
     lazy var logoImage: UIImageView = {
