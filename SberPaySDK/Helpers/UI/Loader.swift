@@ -13,7 +13,7 @@ fileprivate extension CGFloat {
 
 struct Loader {
     private var window: UIWindow? {
-        return UIApplication.shared.keyWindow ?? UIApplication.shared.windows.last as? TransparentWindow
+        return UIApplication.shared.keyWindow ?? UIApplication.shared.windows.last
     }
     
     private let text: String?
