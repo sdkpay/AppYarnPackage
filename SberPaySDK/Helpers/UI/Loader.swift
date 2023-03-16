@@ -7,7 +7,7 @@
 
 import UIKit
 
-fileprivate extension CGFloat {
+private extension TimeInterval {
     static let animationDuration = 0.25
 }
 
@@ -60,7 +60,7 @@ struct Loader {
         }
         
         if isNeedToAnimate {
-            UIView.animate(withDuration: CGFloat.animationDuration,
+            UIView.animate(withDuration: .animationDuration,
                            delay: 0) {
                 subview.alpha = 0
             } completion: { _ in
@@ -69,8 +69,6 @@ struct Loader {
         } else {
             subview.removeFromSuperview()
         }
-        
         return self
     }
 }
-

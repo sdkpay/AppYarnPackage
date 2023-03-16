@@ -8,16 +8,14 @@
 import UIKit
 
 extension UIFont {
-    private static var fontsRegistered = false
-
+    static func defaultFount(with size: CGFloat) -> UIFont { .systemFont(ofSize: size) }
+    
     static func registerFontsIfNeeded() {
-        guard !fontsRegistered,
-                let fontURLs = Bundle(for: SBPay.self).urls(forResourcesWithExtension: "ttf",
-                                                            subdirectory: nil)
+        guard let fontURLs = Bundle.sdkBundle.urls(forResourcesWithExtension: "ttf",
+                                                   subdirectory: nil)
         else { return }
-
+        
         fontURLs.forEach({ CTFontManagerRegisterFontsForURL($0 as CFURL,
                                                             .process, nil) })
-        fontsRegistered = true
     }
 }

@@ -11,6 +11,7 @@ typealias PaymentTokenCompletion = (SBPaymentTokenResponse) -> Void
 typealias PaymentCompletion = (_ state: SBPayState, _ info: String) -> Void
 
 protocol SBPayService {
+    func setup()
     var isReadyForSberPay: Bool { get }
     func getPaymentToken(with request: SBPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion)
@@ -45,6 +46,10 @@ final class DefaultSBPayService: SBPayService {
         for assembly in assemblies {
             assembly.register(in: locator)
         }
+    }
+    
+    func setup() {
+        UIFont.registerFontsIfNeeded()
     }
     
     var isReadyForSberPay: Bool {

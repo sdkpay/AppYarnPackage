@@ -17,6 +17,7 @@ private extension CGFloat {
     static var shadowOpacity = 0.3
 }
 
+@IBDesignable
 public final class SBPButton: UIView {
     @objc
     public var tapAction: Action?
@@ -57,8 +58,15 @@ public final class SBPButton: UIView {
     }()
 
     public init() {
-        UIFont.registerFontsIfNeeded()
         super.init(frame: .zero)
+        setupUI()
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        }
+    }
+    
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
         setupUI()
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
@@ -68,10 +76,6 @@ public final class SBPButton: UIView {
     @objc
     private func handleTap(sender: UIGestureRecognizer) {
         tapAction?()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     private func setupUI() {

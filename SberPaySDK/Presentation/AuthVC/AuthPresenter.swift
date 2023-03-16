@@ -56,7 +56,7 @@ final class AuthPresenter: AuthPresenting {
         DispatchQueue.main.async {  [weak self] in
             guard let self = self else { return }
             self.view?.hideAlert()
-            self.view?.showLoading()
+            self.view?.showLoading(animate: false)
         }
        
         userService.checkUserSession { [weak self] result in

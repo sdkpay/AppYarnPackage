@@ -10,6 +10,12 @@ import UIKit
 @objc
 public final class SBPay: NSObject {
     private static var payService: SBPayService? = DefaultSBPayService()
+    
+    @objc
+    public static func setup() {
+        payService?.setup()
+    }
+    
     /**
      Проверяет наличие установленного МП СБОЛ или Сбербанк Онлайн на устройстве
     
