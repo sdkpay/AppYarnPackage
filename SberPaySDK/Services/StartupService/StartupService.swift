@@ -10,7 +10,8 @@ import UIKit
 let closeSDKNotification = "CloseSDK"
 
 protocol StartupService {
-    func openInitialScreen(with locator: LocatorService)
+    func openInitialScreen(with viewController: UIViewController,
+                           with locator: LocatorService)
     func completePayment(paymentSuccess: SBPayState,
                          completion: @escaping Action)
 }
@@ -18,12 +19,14 @@ protocol StartupService {
 final class DefaultStartupService: StartupService {
     private var sdkWindow: TransparentWindow?
     private var locator: LocatorService?
-    
-    func openInitialScreen(with locator: LocatorService) {
-        setupWindows()
-        guard let sdkWindow = sdkWindow else { return }
+    private var rootController: RootVC?
+
+    func openInitialScreen(with viewController: UIViewController,
+                           with locator: LocatorService) {
+        let rootVC = RootAssembly(locator: locator).createModule()
+        rootController = rootVC
+        setupWindows(viewController: viewController, locator: locator, rootVC: rootVC)
         self.locator = locator
-        sdkWindow.rootViewController = RootAssembly(locator: locator).createModule()
         let analytics: AnalyticsService = locator.resolve()
         analytics.sendEvent(.BankAppFound)
         NotificationCenter.default.addObserver(self,
@@ -32,12 +35,18 @@ final class DefaultStartupService: StartupService {
                                                object: nil)
     }
     
-    private func setupWindows() {
-        if sdkWindow == nil {
+    private func setupWindows(viewController: UIViewController,
+                              locator: LocatorService,
+                              rootVC: UIViewController) {
+        if #available(iOS 13.0, *), UIApplication.shared.supportsMultipleScenes {
+            viewController.present(rootVC, animated: true)
+        } else {
             sdkWindow = TransparentWindow(frame: UIScreen.main.bounds)
             sdkWindow?.windowLevel = UIWindow.Level.alert + 1
+            sdkWindow?.rootViewController = rootVC
             sdkWindow?.makeKeyAndVisible()
         }
+       
     }
     
     deinit {
@@ -53,6 +62,7 @@ final class DefaultStartupService: StartupService {
         manager.completionWithError(error: .cancelled)
         let analytics: AnalyticsService = locator.resolve()
         analytics.sendEvent(.ManuallyClosed)
+        rootController?.dismiss(animated: true)
         sdkWindow = nil
     }
     

@@ -76,8 +76,8 @@
                                                                             orderNumber:@""
                                                                        recurrentExipiry:@""
                                                                      recurrentFrequency:0];
-
-    [SBPay getPaymentTokenWith: requestModel  completion:^(SBPaymentTokenResponse * _Nonnull response) {
+    
+    [SBPay getPaymentTokenWith:self with:requestModel completion:^(SBPaymentTokenResponse * _Nonnull response) {
         if (response.error) {
             // Обработка ошибки
             NSLog(@"%@ - описание ошибки", response.error.errorDescription);
@@ -114,7 +114,8 @@
                                      language:nil
                                      redirectUri: @"sberPayExampleapp://sberidauth"
     ];
-    [SBPay payWithOrderIdWithPaymentRequest:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
+    
+    [SBPay payWithOrderIdWithViewController:self paymentRequest:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
         switch(state) {
             case SBPayStateSuccess:
                 NSLog(@"Успешный результат");
