@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIApplication{
+extension UIApplication {
     var topViewController: UIViewController? {
         if keyWindow?.rootViewController == nil {
             return keyWindow?.rootViewController
