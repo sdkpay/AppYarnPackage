@@ -38,16 +38,15 @@ final class DefaultStartupService: StartupService {
     private func setupWindows(viewController: UIViewController,
                               locator: LocatorService,
                               rootVC: UIViewController) {
-//        if #available(iOS 13.0, *), UIApplication.shared.supportsMultipleScenes {
-//            rootController.present(viewController, animated: true)
-//        } else {
-//            sdkWindow = TransparentWindow(frame: UIScreen.main.bounds)
-//            sdkWindow?.windowLevel = UIWindow.Level.alert + 1
-//            sdkWindow?.makeKeyAndVisible()
-//        }
-
-        rootController?.modalPresentationStyle = .custom
-        viewController.present(rootController!, animated: true)
+        if #available(iOS 13.0, *), UIApplication.shared.supportsMultipleScenes {
+            viewController.present(rootVC, animated: true)
+        } else {
+            sdkWindow = TransparentWindow(frame: UIScreen.main.bounds)
+            sdkWindow?.windowLevel = UIWindow.Level.alert + 1
+            sdkWindow?.rootViewController = rootVC
+            sdkWindow?.makeKeyAndVisible()
+        }
+       
     }
     
     deinit {

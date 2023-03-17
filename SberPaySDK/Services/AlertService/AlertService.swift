@@ -101,10 +101,19 @@ final class DefaultAlertService: AlertService {
     }
     
     private var vc: ContentVC? {
-        guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) as? TransparentWindow,
-              let nc = window.topVC as? ContentNC
-        else { return nil }
-        return nc.topViewController as? ContentVC
+        var navigationController: ContentNC
+        if #available(iOS 13.0, *), UIApplication.shared.supportsMultipleScenes {
+            guard let nc = UIApplication.shared.topViewController as? ContentNC
+            else { return nil }
+            navigationController = nc
+        } else {
+            guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) as? TransparentWindow,
+                  let nc = window.topVC as? ContentNC
+            else { return nil }
+            navigationController = nc
+        }
+        
+        return navigationController.topViewController as? ContentVC
     }
     
     func showAlert(on view: ContentVC?,

@@ -137,6 +137,7 @@
 		44F9FD5F295AFCAC00FE4B9F /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD58295AFCAC00FE4B9F /* CGPoint+Extension.swift */; };
 		44F9FD60295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD59295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift */; };
 		44F9FD61295AFCAC00FE4B9F /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */; };
+		AE4D3FA729C48AF000962DD6 /* UIAplication+TopViewContriller.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */; };
 		AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB0059B29C09F72002C9AB9 /* Loader.swift */; };
 		AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */; };
 		AEEB602429B9B55E00D1E1D2 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */; };
@@ -321,6 +322,7 @@
 		44F9FD58295AFCAC00FE4B9F /* CGPoint+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
 		44F9FD59295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIPanGestureRecognizer+Extension.swift"; sourceTree = "<group>"; };
 		44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
+		AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAplication+TopViewContriller.swift"; sourceTree = "<group>"; };
 		AEB0059B29C09F72002C9AB9 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
 		AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetName.swift"; sourceTree = "<group>"; };
 		AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
@@ -1068,6 +1070,7 @@
 				44AC79CB299FE9A50043FA4E /* Data+Extension.swift */,
 				44AC79CD299FEB5B0043FA4E /* Collection+Extension.swift */,
 				219CCC0529BB61D200BA360B /* Date+Extension.swift */,
+				AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1364,6 +1367,7 @@
 				442A45DD29804E2E00EC3D73 /* UserTarget.swift in Sources */,
 				44676ACB296DD52A00D9DFAE /* AppSettings.swift in Sources */,
 				44AC79CC299FE9A50043FA4E /* Data+Extension.swift in Sources */,
+				AE4D3FA729C48AF000962DD6 /* UIAplication+TopViewContriller.swift in Sources */,
 				44A3125C298135F10099EB76 /* RootRouter.swift in Sources */,
 				445CB08E292CBA4F00F50047 /* DefaultButton.swift in Sources */,
 				44A0B5B9293DF25E007AB3FD /* CardsAssembly.swift in Sources */,

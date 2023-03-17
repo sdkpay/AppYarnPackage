@@ -31,9 +31,7 @@ struct Loader {
     
     @discardableResult
     func show() -> Loader {
-        guard let window = self.window else {
-            return self
-        }
+        guard let _ = self.window else { return self }
 
         let rootView = getRootView()
         let subview = LoadingView(with: text)
@@ -78,39 +76,12 @@ struct Loader {
     }
     
     private func getRootView() -> UIView? {
-        var rootView: UIView
-        
         if #available(iOS 13.0, *), UIApplication.shared.supportsMultipleScenes {
             guard let view = UIApplication.shared.topViewController?.view else { return nil }
-            rootView = view
+            return view
         } else {
             guard let view = (window as? TransparentWindow)?.topVC?.view else { return nil }
-            rootView = view
+            return view
         }
-        
-        return rootView
-    }
-}
-
-extension UIApplication{
-    var topViewController: UIViewController? {
-        if keyWindow?.rootViewController == nil {
-            return keyWindow?.rootViewController
-        }
-        
-        var pointedViewController = keyWindow?.rootViewController
-        
-        while pointedViewController?.presentedViewController != nil {
-            switch pointedViewController?.presentedViewController {
-            case let navagationController as UINavigationController:
-                pointedViewController = navagationController.viewControllers.last
-            case let tabBarController as UITabBarController:
-                pointedViewController = tabBarController.selectedViewController
-            default:
-                pointedViewController = pointedViewController?.presentedViewController
-            }
-        }
-        return pointedViewController
-        
     }
 }
