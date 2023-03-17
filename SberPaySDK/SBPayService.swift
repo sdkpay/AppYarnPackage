@@ -53,6 +53,7 @@ final class DefaultSBPayService: SBPayService {
     }
     
     var isReadyForSberPay: Bool {
+        SBLogger.log(.version)
         registerServices()
         // Для симулятора всегда true для удобства разработки
             #if targetEnvironment(simulator)

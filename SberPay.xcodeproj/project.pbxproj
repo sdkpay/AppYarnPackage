@@ -11,6 +11,7 @@
 		219CCB9B29BB071B00BA360B /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		219CCB9D29BB075E00BA360B /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 219CCB9C29BB075E00BA360B /* FingerprintPackage */; };
 		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
+		21BA175229C46E3C001C2CEE /* Tread+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BA175129C46E3C001C2CEE /* Tread+Extension.swift */; };
 		440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */; };
 		440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3AC295C304300B84E05 /* AnalyticsService.swift */; };
 		4416E424291E21C300284972 /* SDKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E423291E21C300284972 /* SDKError.swift */; };
@@ -188,6 +189,7 @@
 		219CCBFA29BB0E5400BA360B /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		219CCC0D29BF1B3B00BA360B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		21BA175129C46E3C001C2CEE /* Tread+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tread+Extension.swift"; sourceTree = "<group>"; };
 		21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
 		440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTableView.swift; sourceTree = "<group>"; };
 		440DB3AC295C304300B84E05 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
@@ -1069,6 +1071,7 @@
 				44AC79CB299FE9A50043FA4E /* Data+Extension.swift */,
 				44AC79CD299FEB5B0043FA4E /* Collection+Extension.swift */,
 				219CCC0529BB61D200BA360B /* Date+Extension.swift */,
+				21BA175129C46E3C001C2CEE /* Tread+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1344,6 +1347,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21BA175229C46E3C001C2CEE /* Tread+Extension.swift in Sources */,
 				449D51382971481A00497E82 /* Localization.swift in Sources */,
 				443666CF298BFC3E005119A2 /* ValidSessionModel.swift in Sources */,
 				445CB089292CA2B200F50047 /* UIFont+Bundle.swift in Sources */,

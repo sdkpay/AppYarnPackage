@@ -367,6 +367,23 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
+    static func logThread(obj: Any,
+                          thread: Thread = .current,
+                          functionName: String = #function,
+                          fileName: String = #file,
+                          lineNumber: Int = #line) {
+        log(
+            """
+            🗄 Thread info for functionName: \(functionName)
+               thread: \(thread.threadName)
+               queue: \(thread.queueName)
+               class: \(String(describing: type(of: obj)))
+               fileName: \(fileName)
+               lineNumber: \(lineNumber)
+            """
+        )
+    }
+    
     static func stringToLog(from data: Data?) -> NSString {
         if let data = data,
            let decoded = data.prettyPrintedJSONString {

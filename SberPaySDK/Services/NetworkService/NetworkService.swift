@@ -27,9 +27,9 @@ var ServerURL: URL {
     var urlString: String
     
     switch BuildSettings.shared.networkState {
-    case .Test, .Local:
+    case .Test:
         urlString = "https://ucexvyy1j5.api.quickmocker.com"
-    case .Prod:
+    case .Prod, .Local:
         urlString = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
     }
     return URL(string: urlString)!

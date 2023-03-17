@@ -63,7 +63,7 @@ struct ConfigValues: Codable {
     var orderId = "d9f4ccf2-6f68-4e46-916f-850058b670a3"
     var lang = "Swift"
     var mode = "Auto"
-    var network = NetworkState.Local
+    var network = NetworkState.Prod
     var ssl = "On"
     
     func getValue(for type: Config) -> String {
@@ -153,7 +153,9 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         configNav()
         prepareData()
         setupUI()
-        title = "Debug"
+        let ver = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "No info"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "No info"
+        title = "🔨 \(ver)(\(build))"
     }
     
     private func prepareData() {

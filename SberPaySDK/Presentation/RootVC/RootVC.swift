@@ -17,7 +17,6 @@ final class RootVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        SBLogger.log(.version)
         SBLogger.log(.start)
         SBLogger.log(.didAppear(view: self))
         presenter.viewDidLoad()
