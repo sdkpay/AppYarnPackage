@@ -9,6 +9,6 @@ import UIKit
 
 extension String {
     init(stringLiteral value: StringLiteralType) {
-        self = NSLocalizedString(value, bundle: Bundle(for: SBPay.self), comment: "")
+        self = NSLocalizedString(value, bundle: Bundle.sdkBundle, comment: "")
     }
 }

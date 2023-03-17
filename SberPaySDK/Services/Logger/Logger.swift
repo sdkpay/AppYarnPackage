@@ -8,6 +8,7 @@
 import UIKit
 
 extension String {
+    static let version = "🔨 Version: \(Bundle.appVersion) build: \(Bundle.appBuild)"
     static let start = "🚀 SDK started"
     static let close = "❌ SDK closed"
     static let biZone = "📡 BiZone fingerprint:\n"
@@ -51,15 +52,17 @@ enum SBLogger: ResponseDecoder {
                                     data: Data?) {
         let url = ServerURL.appendingPathComponent(target.path)
         var code = "None"
-        if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-            code = String(statusCode)
+        var headers = "None"
+        if let response = response as? HTTPURLResponse {
+            code = String(response.statusCode)
+            headers = response.allHeaderFields.json
         }
         if code != "200" {
             log(
                 """
                 ❗️Request failed with code \(code)
                   path: \(url)
-                  headers: \(headers(target.headers))
+                  headers: \(headers)
                   httpMethod: \(target.httpMethod)
                   response: \(stringToLog(from: data))
                 """
@@ -69,7 +72,7 @@ enum SBLogger: ResponseDecoder {
             """
             ✅ Request successed with code \(code)
                path: \(url)
-               headers: \(headers(target.headers))
+               headers: \(headers)
                httpMethod: \(target.httpMethod)
                response: \(stringToLog(from: data))
             """
@@ -358,6 +361,23 @@ enum SBLogger: ResponseDecoder {
             📄 Log name: \(name)
                class: \(String(describing: type(of: obj)))
                functionName: \(functionName)
+               fileName: \(fileName)
+               lineNumber: \(lineNumber)
+            """
+        )
+    }
+    
+    static func logThread(obj: Any,
+                          thread: Thread = .current,
+                          functionName: String = #function,
+                          fileName: String = #file,
+                          lineNumber: Int = #line) {
+        log(
+            """
+            🗄 Thread info for functionName: \(functionName)
+               thread: \(thread.threadName)
+               queue: \(thread.queueName)
+               class: \(String(describing: type(of: obj)))
                fileName: \(fileName)
                lineNumber: \(lineNumber)
             """

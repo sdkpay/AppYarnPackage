@@ -11,6 +11,7 @@ typealias PaymentTokenCompletion = (SBPaymentTokenResponse) -> Void
 typealias PaymentCompletion = (_ state: SBPayState, _ info: String) -> Void
 
 protocol SBPayService {
+    func setup()
     var isReadyForSberPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SBPaymentTokenRequest,
@@ -50,7 +51,12 @@ final class DefaultSBPayService: SBPayService {
         }
     }
     
+    func setup() {
+        UIFont.registerFontsIfNeeded()
+    }
+    
     var isReadyForSberPay: Bool {
+        SBLogger.log(.version)
         registerServices()
         // Для симулятора всегда true для удобства разработки
             #if targetEnvironment(simulator)
@@ -74,8 +80,8 @@ final class DefaultSBPayService: SBPayService {
             SBLogger.logResponsePaymentToken(with: response)
             completion(response)
         })
-        SBLogger.log("📃 Stubs enabled - \(BuildSettings.shared.needStubs)")
         startService.openInitialScreen(with: viewController, with: locator)
+        SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
     }
     
     func pay(with paymentRequest: SBPaymentRequest,
@@ -95,6 +101,7 @@ final class DefaultSBPayService: SBPayService {
         let manager: SDKManager = locator.resolve()
         manager.configWithOrderId(paymentRequest: paymentRequest,
                                   completion: completion)
+        SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
         startService.openInitialScreen(with: viewController,
                                        with: locator)
     }

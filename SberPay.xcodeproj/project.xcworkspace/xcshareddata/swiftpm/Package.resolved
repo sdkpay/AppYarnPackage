@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/airbnb/lottie-ios.git",
       "state" : {
-        "revision" : "a4622b4d6fdbe76cc5487bc27e84029abaf07217",
-        "version" : "4.0.1"
+        "revision" : "4e51b71c6ef1b645c9a83de112d627c919143137",
+        "version" : "4.1.3"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Dynatrace/swift-mobile-sdk.git",
       "state" : {
-        "revision" : "b48c0245ecc18ae53ad948640dd816c2d8ff9453",
-        "version" : "8.259.1"
+        "revision" : "82910661e53377632ec2847456b5418fc9eb6176",
+        "version" : "8.261.1"
       }
     }
   ],

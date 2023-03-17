@@ -15,7 +15,7 @@ private extension CGFloat {
 }
 
 enum Config: Int, CaseIterable, Codable {
-    case apiKey, cost, orderId, configMethod, lang, mode, mocks, ssl
+    case apiKey, cost, orderId, configMethod, lang, mode, network, ssl
     
     var title: String {
         switch self {
@@ -31,8 +31,8 @@ enum Config: Int, CaseIterable, Codable {
             return "Lang:"
         case .mode:
             return "Pay mode:"
-        case .mocks:
-            return "Mocks:"
+        case .network:
+            return "Network mode:"
         case .ssl:
             return "SSL:"
         }
@@ -44,8 +44,8 @@ enum Config: Int, CaseIterable, Codable {
             return ["Swift", "Obj-C"]
         case .mode:
             return ["Manual", "Auto"]
-        case .mocks:
-            return ["On", "Off"]
+        case .network:
+            return NetworkState.allCases.map({ $0.rawValue })
         case .ssl:
             return ["On", "Off"]
         case .configMethod:
@@ -63,7 +63,7 @@ struct ConfigValues: Codable {
     var orderId = "d9f4ccf2-6f68-4e46-916f-850058b670a3"
     var lang = "Swift"
     var mode = "Auto"
-    var mocks = "Off"
+    var network = NetworkState.Prod
     var ssl = "On"
     
     func getValue(for type: Config) -> String {
@@ -80,8 +80,8 @@ struct ConfigValues: Codable {
             return lang
         case .mode:
             return mode
-        case .mocks:
-            return mocks
+        case .network:
+            return network.rawValue
         case .ssl:
             return ssl
         }
@@ -99,8 +99,8 @@ struct ConfigValues: Codable {
             lang = value
         case .mode:
             mode = value
-        case .mocks:
-            mocks = value
+        case .network:
+            network = NetworkState(rawValue: value) ?? .Prod
         case .ssl:
             ssl = value
         case .configMethod:
@@ -153,7 +153,9 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         configNav()
         prepareData()
         setupUI()
-        title = "Debug"
+        let ver = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "No info"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "No info"
+        title = "🔨 \(ver)(\(build))"
     }
     
     private func prepareData() {
@@ -293,7 +295,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                         orderId: values.orderId,
                         autoMode: values.mode == "Auto",
                         purchase: values.configMethod == "Purchase",
-                        mocksOn: values.mocks == "On",
+                        network: values.network,
                         sslOn: values.ssl == "On")
         }
         saveConfig()

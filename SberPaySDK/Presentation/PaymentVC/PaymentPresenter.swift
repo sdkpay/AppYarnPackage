@@ -113,7 +113,9 @@ final class PaymentPresenter: PaymentPresenting {
             case .success(let user):
                 self?.user = user
                 self?.selectedCard = user.paymentToolInfo.first(where: { $0.priorityCard }) ?? user.paymentToolInfo.first
-                self?.configViews()
+                DispatchQueue.main.async { [weak self] in
+                    self?.configViews()
+                }
             case .failure(let error):
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
@@ -142,10 +144,8 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func configWithCard(user: User, selectedCard: PaymentToolInfo) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.view?.hideLoading()
-        }
+        SBLogger.logThread(obj: self)
+        view?.hideLoading()
         view?.configCardView(with: selectedCard.productName ?? "",
                              cardInfo: selectedCard.cardNumber.card,
                              cardIconURL: selectedCard.cardLogoUrl,

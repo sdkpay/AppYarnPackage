@@ -9,15 +9,29 @@ import UIKit
 
 final class NetworkServiceAssembly: Assembly {
     func register(in container: LocatorService) {
-        let provider: NetworkProvider = BuildSettings.shared.needStubs ?
-        StubNetworkProvider(delayedSeconds: 2) : DefaultNetworkProvider(requestManager: container.resolve())
+        var provider: NetworkProvider
+
+        switch BuildSettings.shared.networkState {
+        case .Prod, .Test:
+            provider = DefaultNetworkProvider(requestManager: container.resolve())
+        case .Local:
+            provider = StubNetworkProvider(delayedSeconds: 2)
+        }
+
         let service: NetworkService = DefaultNetworkService(provider: provider)
         container.register(service: service)
     }
 }
 
 var ServerURL: URL {
-    let urlString = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    var urlString: String
+    
+    switch BuildSettings.shared.networkState {
+    case .Test:
+        urlString = "https://ucexvyy1j5.api.quickmocker.com"
+    case .Prod, .Local:
+        urlString = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    }
     return URL(string: urlString)!
 }
 

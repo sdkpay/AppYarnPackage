@@ -56,7 +56,7 @@ final class AuthPresenter: AuthPresenting {
         DispatchQueue.main.async {  [weak self] in
             guard let self = self else { return }
             self.view?.hideAlert()
-            self.view?.showLoading()
+            self.view?.showLoading(animate: false)
         }
        
         userService.checkUserSession { [weak self] result in
@@ -148,7 +148,11 @@ final class AuthPresenter: AuthPresenting {
             self.view?.hideLoading()
         }
         SBLogger.log(.userReturned)
-        showBanksStack()
+        if authService.avaliableBanks.count > 1 {
+            showBanksStack()
+        } else {
+            dismissWithError(.cancelled)
+        }
     }
     
     private func removeObserver() {
