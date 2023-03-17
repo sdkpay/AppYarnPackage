@@ -101,6 +101,6 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         ]
         Dynatrace.startup(withConfig: startupDictionary as [String: Any])
         Dynatrace.identifyUser(Bundle.main.displayName)
-        sendEvent(.SDKVersion, with: [Bundle.curentSdkVersion])
+        sendEvent(.SDKVersion, with: [Bundle.sdkVersion])
     }
 }

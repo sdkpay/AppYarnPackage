@@ -8,6 +8,7 @@
 import UIKit
 
 extension String {
+    static let version = "🔨 Version: \(Bundle.appVersion) build: \(Bundle.appBuild)"
     static let start = "🚀 SDK started"
     static let close = "❌ SDK closed"
     static let biZone = "📡 BiZone fingerprint:\n"
