@@ -169,7 +169,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             merchantLogin: "Test shop",
                                             orderId: orderId,
                                             redirectUri: "sberPayExampleapp://sberidauth")
-        SBPay.getPaymentToken(with: request) { response in
+        SBPay.getPaymentToken(with: self, with: request) { response in
             if let error = response.error {
                 // Обработка ошибки
                 print("\(error.errorDescription) - описание ошибки")
@@ -191,7 +191,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             orderNumber: orderId,
                                             recurrentExipiry: "20230821",
                                             recurrentFrequency: 2)
-        SBPay.getPaymentToken(with: request) { response in
+        SBPay.getPaymentToken(with: self, with: request) { response in
             if let error = response.error {
                 // Обработка ошибки
                 print("\(error.errorDescription) - описание ошибки")
@@ -208,7 +208,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                            merchantLogin: "Test shop",
                                            orderId: orderId,
                                            redirectUri: "sberPayExampleapp://sberidauth")
-        SBPay.payWithOrderId(paymentRequest: request) { state, info  in
+        SBPay.payWithOrderId(viewController: self, paymentRequest: request) { state, info  in
             switch state {
             case .success:
                 print("Успешный результат")

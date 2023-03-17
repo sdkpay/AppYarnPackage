@@ -24,9 +24,10 @@ public final class SBPay: NSObject {
      Метод получения PaymentToken
      */
     @objc
-    public static func getPaymentToken(with paymentTokenRequest: SBPaymentTokenRequest,
+    public static func getPaymentToken(with viewController: UIViewController,
+                                       with paymentTokenRequest: SBPaymentTokenRequest,
                                        completion: @escaping (SBPaymentTokenResponse) -> Void) {
-        payService?.getPaymentToken(with: paymentTokenRequest, completion: completion)
+        payService?.getPaymentToken(with: viewController, with: paymentTokenRequest, completion: completion)
     }
     
     /**
@@ -42,9 +43,10 @@ public final class SBPay: NSObject {
      Единый метод для оплаты
      */
     @objc
-    public static func payWithOrderId(paymentRequest: SBFullPaymentRequest,
+    public static func payWithOrderId(viewController: UIViewController,
+                                      paymentRequest: SBFullPaymentRequest,
                                       completion: @escaping (_ state: SBPayState, _ info: String) -> Void) {
-        payService?.payWithOrderId(paymentRequest: paymentRequest, completion: completion)
+        payService?.payWithOrderId(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }
     
     /**

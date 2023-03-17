@@ -34,17 +34,19 @@ struct Loader {
         guard let window = self.window else {
             return self
         }
-        
+
+        let rootView = getRootView()
         let subview = LoadingView(with: text)
+        guard let rootView = rootView else { return self }
+        
         subview.translatesAutoresizingMaskIntoConstraints = false
-        guard let view = (window as? TransparentWindow)?.topVC?.view else { return self }
-        view.addSubview(subview)
+        rootView.addSubview(subview)
         
         NSLayoutConstraint.activate([
-            subview.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            subview.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            subview.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            subview.topAnchor.constraint(equalTo: view.topAnchor)
+            subview.bottomAnchor.constraint(equalTo: rootView.bottomAnchor),
+            subview.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
+            subview.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
+            subview.topAnchor.constraint(equalTo: rootView.topAnchor)
         ])
         
         subview.layoutIfNeeded()
@@ -54,8 +56,10 @@ struct Loader {
     
     @discardableResult
     func hide() -> Loader {
-        guard let view = (window as? TransparentWindow)?.topVC?.view else { return self }
-        guard let subview = view.subviews.first(where: { $0 is LoadingView }) as? LoadingView  else {
+        
+       let rootView = getRootView()
+        
+        guard let subview = rootView?.subviews.first(where: { $0 is LoadingView }) as? LoadingView  else {
             return self
         }
         
@@ -72,5 +76,41 @@ struct Loader {
         
         return self
     }
+    
+    private func getRootView() -> UIView? {
+        var rootView: UIView
+        
+        if #available(iOS 13.0, *), UIApplication.shared.supportsMultipleScenes {
+            guard let view = UIApplication.shared.topViewController?.view else { return nil }
+            rootView = view
+        } else {
+            guard let view = (window as? TransparentWindow)?.topVC?.view else { return nil }
+            rootView = view
+        }
+        
+        return rootView
+    }
 }
 
+extension UIApplication{
+    var topViewController: UIViewController? {
+        if keyWindow?.rootViewController == nil {
+            return keyWindow?.rootViewController
+        }
+        
+        var pointedViewController = keyWindow?.rootViewController
+        
+        while pointedViewController?.presentedViewController != nil {
+            switch pointedViewController?.presentedViewController {
+            case let navagationController as UINavigationController:
+                pointedViewController = navagationController.viewControllers.last
+            case let tabBarController as UITabBarController:
+                pointedViewController = tabBarController.selectedViewController
+            default:
+                pointedViewController = pointedViewController?.presentedViewController
+            }
+        }
+        return pointedViewController
+        
+    }
+}

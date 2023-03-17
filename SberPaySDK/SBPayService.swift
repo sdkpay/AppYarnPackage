@@ -12,11 +12,13 @@ typealias PaymentCompletion = (_ state: SBPayState, _ info: String) -> Void
 
 protocol SBPayService {
     var isReadyForSberPay: Bool { get }
-    func getPaymentToken(with request: SBPaymentTokenRequest,
+    func getPaymentToken(with viewController: UIViewController,
+                         with request: SBPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion)
     func pay(with paymentRequest: SBPaymentRequest,
              completion: @escaping PaymentCompletion)
-    func payWithOrderId(paymentRequest: SBFullPaymentRequest,
+    func payWithOrderId(with viewController: UIViewController,
+                        paymentRequest: SBFullPaymentRequest,
                         completion: @escaping PaymentCompletion)
     func completePayment(paymentSuccess: SBPayState,
                          completion: @escaping Action)
@@ -24,6 +26,7 @@ protocol SBPayService {
 }
 
 final class DefaultSBPayService: SBPayService {
+    
     private lazy var startService: StartupService = DefaultStartupService()
     private lazy var locator: LocatorService = DefaultLocatorService()
 
@@ -62,7 +65,8 @@ final class DefaultSBPayService: SBPayService {
             #endif
     }
 
-    func getPaymentToken(with request: SBPaymentTokenRequest,
+    func getPaymentToken(with viewController: UIViewController,
+                         with request: SBPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
         SBLogger.logRequestPaymentToken(with: request)
         let manager: SDKManager = locator.resolve()
@@ -71,7 +75,7 @@ final class DefaultSBPayService: SBPayService {
             completion(response)
         })
         SBLogger.log("📃 Stubs enabled - \(BuildSettings.shared.needStubs)")
-        startService.openInitialScreen(with: locator)
+        startService.openInitialScreen(with: viewController, with: locator)
     }
     
     func pay(with paymentRequest: SBPaymentRequest,
@@ -85,12 +89,14 @@ final class DefaultSBPayService: SBPayService {
         startService.completePayment(paymentSuccess: paymentSuccess, completion: completion)
     }
     
-    func payWithOrderId(paymentRequest: SBFullPaymentRequest,
+    func payWithOrderId(with viewController: UIViewController,
+                        paymentRequest: SBFullPaymentRequest,
                         completion: @escaping PaymentCompletion) {
         let manager: SDKManager = locator.resolve()
         manager.configWithOrderId(paymentRequest: paymentRequest,
                                   completion: completion)
-        startService.openInitialScreen(with: locator)
+        startService.openInitialScreen(with: viewController,
+                                       with: locator)
     }
 
     func getResponseFrom(_ url: URL) {
