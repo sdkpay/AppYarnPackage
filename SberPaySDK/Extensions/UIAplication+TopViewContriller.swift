@@ -26,6 +26,5 @@ extension UIApplication {
             }
         }
         return pointedViewController
-        
     }
 }

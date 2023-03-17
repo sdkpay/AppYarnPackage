@@ -31,7 +31,7 @@ struct Loader {
     
     @discardableResult
     func show() -> Loader {
-        guard let _ = self.window else { return self }
+        guard window != nil else { return self }
 
         let rootView = getRootView()
         let subview = LoadingView(with: text)

@@ -46,7 +46,6 @@ final class DefaultStartupService: StartupService {
             sdkWindow?.rootViewController = rootVC
             sdkWindow?.makeKeyAndVisible()
         }
-       
     }
     
     deinit {
