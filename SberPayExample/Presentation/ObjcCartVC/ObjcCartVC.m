@@ -45,6 +45,7 @@
         self.autoMode = autoMode;
         self.mocksOn = mocksOn;
         self.sslOn = sslOn;
+        [SBPay setup];
     }
     
     return self;
