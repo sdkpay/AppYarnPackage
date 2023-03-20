@@ -7,6 +7,12 @@
 
 import Foundation
 
+private enum Constants {
+    static let retryCount = 4
+    static let timeoutInterval: TimeInterval = 20.0
+    static let lengthUIID = 32
+}
+
 typealias NetworkProviderCompletion = (_ data: Data?,
                                        _ response: URLResponse?,
                                        _ error: Error?) -> Void
@@ -87,8 +93,8 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
 
                     if retryCount != 1,
                        let error = error,
-                       error._code == -1001,
-                       retry < 4 {
+                       error._code == URLError.Code.timedOut.rawValue,
+                       retry < Constants.retryCount {
                         self._request(retry: retry + 1,
                                       target: target,
                                       retryCount: retryCount,
@@ -113,7 +119,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private func buildRequest(from route: TargetType) throws -> URLRequest {
         var request = URLRequest(url: ServerURL.appendingPathComponent(route.path),
                                  cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
-                                 timeoutInterval: 20.0)
+                                 timeoutInterval: Constants.timeoutInterval)
         request.httpMethod = route.httpMethod.rawValue
         switch route.task {
         case .request:
@@ -145,7 +151,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     
     private func addHeaders(request: inout URLRequest, headers: HTTPHeaders?) {
         var baseHeaders = HTTPHeaders()
-        baseHeaders[String.Headers.rqUID] = String.generateRandom(with: 32)
+        baseHeaders[String.Headers.rqUID] = String.generateRandom(with: Constants.lengthUIID)
         baseHeaders[String.Headers.localTime] = Date().rfcFormatted
 
         for head in requestManager.headers {
