@@ -208,7 +208,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                            merchantLogin: "Test shop",
                                            orderId: orderId,
                                            redirectUri: "sberPayExampleapp://sberidauth")
-        SBPay.payWithOrderId(viewController: self, paymentRequest: request) { state, info  in
+        SBPay.payWithOrderId(with: self, with: request) { state, info  in
             switch state {
             case .success:
                 print("Успешный результат")

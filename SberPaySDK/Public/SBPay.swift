@@ -49,8 +49,8 @@ public final class SBPay: NSObject {
      Единый метод для оплаты
      */
     @objc
-    public static func payWithOrderId(viewController: UIViewController,
-                                      paymentRequest: SBFullPaymentRequest,
+    public static func payWithOrderId(with viewController: UIViewController,
+                                      with paymentRequest: SBFullPaymentRequest,
                                       completion: @escaping (_ state: SBPayState, _ info: String) -> Void) {
         payService?.payWithOrderId(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }

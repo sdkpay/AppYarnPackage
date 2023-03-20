@@ -114,8 +114,7 @@
                                      language:nil
                                      redirectUri: @"sberPayExampleapp://sberidauth"
     ];
-    
-    [SBPay payWithOrderIdWithViewController:self paymentRequest:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
+    [SBPay payWithOrderIdWith:self with:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
         switch(state) {
             case SBPayStateSuccess:
                 NSLog(@"Успешный результат");
