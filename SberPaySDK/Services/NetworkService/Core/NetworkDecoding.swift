@@ -24,7 +24,7 @@ extension ResponseDecoder {
                                     error: Error?,
                                     type: T.Type) -> Result<T, SDKError> {
         if let error = error as? NSError,
-            error._code == -1001 {
+            error._code == URLError.Code.timedOut.rawValue {
             return .failure(.timeOut)
         }
         guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
