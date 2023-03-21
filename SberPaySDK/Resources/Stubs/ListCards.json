@@ -5,17 +5,59 @@
   },
   "merchantName" : "Денежка плюс",
   "logoUrl" : "https:\/\/test.stat.online.sberbank.ru\/SBERBANKID\/icons\/781000013690.png",
-  "sessionId" : "684026134282772480",
+  "sessionId" : "689072247511674880",
   "paymentToolInfo" : [
     {
+      "paymentSourceType" : "OverdraftCard",
+      "financialProductId" : "40817810138260194280",
+      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
+      "productName" : "Visa Classic",
+      "paymentId" : 0,
+      "cardNumber" : "6478",
+      "amountData" : {
+        "amount" : 9819645.9499999993,
+        "currency" : "RUR"
+      },
+      "priorityCard" : true,
+      "paymentSystemType" : "VISA"
+    },
+    {
       "paymentSourceType" : "DebitCard",
-      "financialProductId" : "40817810038110194647",
+      "financialProductId" : "40817810938260220011",
+      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
+      "productName" : "МИР Сберкарта",
+      "paymentId" : 1,
+      "cardNumber" : "8817",
+      "amountData" : {
+        "amount" : 1899950,
+        "currency" : "RUR"
+      },
+      "priorityCard" : false,
+      "paymentSystemType" : "MIR"
+    },
+    {
+      "paymentSourceType" : "DebitCard",
+      "financialProductId" : "40817810338260194323",
+      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
+      "productName" : "МИР Сберкарта",
+      "paymentId" : 2,
+      "cardNumber" : "1723",
+      "amountData" : {
+        "amount" : 1000006,
+        "currency" : "RUR"
+      },
+      "priorityCard" : false,
+      "paymentSystemType" : "MIR"
+    },
+    {
+      "paymentSourceType" : "DebitCard",
+      "financialProductId" : "40817810638260194311",
       "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
       "productName" : "MasterCard Сберкарта",
-      "paymentId" : 0,
-      "cardNumber" : "5228602E599E1526",
+      "paymentId" : 3,
+      "cardNumber" : "1966",
       "amountData" : {
-        "amount" : -20,
+        "amount" : 998688.94999999995,
         "currency" : "RUR"
       },
       "priorityCard" : false,
@@ -23,7 +65,7 @@
     }
   ],
   "userInfo" : {
-    "firstName" : "ЕВГЕНИЙ",
-    "lastName" : "К."
+    "firstName" : "СЕРГЕЙ",
+    "lastName" : "Ч."
   }
 }

@@ -19,6 +19,21 @@ struct Loader {
     private let text: String?
     private var isNeedToAnimate = false
     
+    private var topVC: ContentVC? {
+        var navigationController: ContentNC
+        if #available(iOS 13.0, *), UIApplication.shared.supportsMultipleScenes {
+            guard let nc = UIApplication.shared.topViewController as? ContentNC
+            else { return nil }
+            navigationController = nc
+        } else {
+            guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) as? TransparentWindow,
+                  let nc = window.topVC as? ContentNC
+            else { return nil }
+            navigationController = nc
+        }
+        return navigationController.topViewController as? ContentVC
+    }
+    
     init(text: String? = nil) {
         self.text = text
     }
@@ -32,10 +47,8 @@ struct Loader {
     @discardableResult
     func show() -> Loader {
         guard window != nil else { return self }
-
-        let rootView = getRootView()
         let subview = LoadingView(with: text)
-        guard let rootView = rootView else { return self }
+        guard let rootView = topVC?.view else { return self }
         
         subview.translatesAutoresizingMaskIntoConstraints = false
         rootView.addSubview(subview)
@@ -54,10 +67,7 @@ struct Loader {
     
     @discardableResult
     func hide() -> Loader {
-        
-       let rootView = getRootView()
-        
-        guard let subview = rootView?.subviews.first(where: { $0 is LoadingView }) as? LoadingView  else {
+        guard let subview = topVC?.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView  else {
             return self
         }
         
@@ -72,15 +82,5 @@ struct Loader {
             subview.removeFromSuperview()
         }
         return self
-    }
-    
-    private func getRootView() -> UIView? {
-        if #available(iOS 13.0, *), UIApplication.shared.supportsMultipleScenes {
-            guard let view = UIApplication.shared.topViewController?.view else { return nil }
-            return view
-        } else {
-            guard let view = (window as? TransparentWindow)?.topVC?.view else { return nil }
-            return view
-        }
     }
 }

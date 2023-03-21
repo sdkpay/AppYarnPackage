@@ -12,7 +12,7 @@ private extension CGFloat {
     static let cardWidth = 36.0
 }
 
-final class CardInfoView: ContentView {
+final class CardInfoView: ContentView, ShimmeringView {
     private var needArrow = false
 
     private lazy var titleLabel: UILabel = {
@@ -32,7 +32,6 @@ final class CardInfoView: ContentView {
     private lazy var cardIconView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleToFill
-        view.image = .Cards.stockCard
         return view
     }()
     
@@ -49,7 +48,13 @@ final class CardInfoView: ContentView {
         view.addArrangedSubview(subtitleLabel)
         return view
     }()
-
+    
+    var shimmeringItems: [UIView] {
+        [
+            cardIconView
+        ]
+    }
+    
     func config(with title: String,
                 cardInfo: String,
                 cardIconURL: String?,
@@ -59,14 +64,14 @@ final class CardInfoView: ContentView {
         subtitleLabel.text = cardInfo
         self.needArrow = needArrow
         self.action = action
-        ImageDownloader.shared.downloadImage(with: cardIconURL,
-                                             completionHandler: { [weak self] icon, _ in
-            self?.cardIconView.image = icon
-        }, placeholderImage: .Cards.stockCard)
-        
+//        ImageDownloader.shared.downloadImage(with: cardIconURL,
+//                                             completionHandler: { [weak self] icon, _ in
+//            self?.cardIconView.image = icon
+//        }, placeholderImage: .Cards.stockCard)
+//
         setupUI()
     }
-
+    
     private func setupUI() {
         addSubview(cardIconView)
         cardIconView.translatesAutoresizingMaskIntoConstraints = false

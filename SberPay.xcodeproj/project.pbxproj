@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21253D0829C85345004ED82D /* UIView+Shimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D0729C85345004ED82D /* UIView+Shimmer.swift */; };
+		21253D0B29C867EA004ED82D /* ShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D0A29C867EA004ED82D /* ShimmeringView.swift */; };
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		219CCB9B29BB071B00BA360B /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		219CCB9D29BB075E00BA360B /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 219CCB9C29BB075E00BA360B /* FingerprintPackage */; };
@@ -186,6 +188,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		21253D0729C85345004ED82D /* UIView+Shimmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmer.swift"; sourceTree = "<group>"; };
+		21253D0A29C867EA004ED82D /* ShimmeringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringView.swift; sourceTree = "<group>"; };
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		219CCBFA29BB0E5400BA360B /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -362,6 +366,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		21253D0929C867BA004ED82D /* Shimmer */ = {
+			isa = PBXGroup;
+			children = (
+				21253D0A29C867EA004ED82D /* ShimmeringView.swift */,
+			);
+			path = Shimmer;
+			sourceTree = "<group>";
+		};
 		440DB3A8295C1C6200B84E05 /* ContentTableView */ = {
 			isa = PBXGroup;
 			children = (
@@ -571,6 +583,7 @@
 		444A13B7291BA9BD00C9FBE0 /* Design */ = {
 			isa = PBXGroup;
 			children = (
+				21253D0929C867BA004ED82D /* Shimmer */,
 				4479ECD829476EB8009B3AB8 /* Style */,
 				445CB085292CA08500F50047 /* Fonts */,
 				445CB076292BC55200F50047 /* Gallery */,
@@ -1075,6 +1088,7 @@
 				219CCC0529BB61D200BA360B /* Date+Extension.swift */,
 				AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */,
 				21BA175129C46E3C001C2CEE /* Tread+Extension.swift */,
+				21253D0729C85345004ED82D /* UIView+Shimmer.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1361,6 +1375,7 @@
 				AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */,
 				44A0B5BD293DF282007AB3FD /* CardsPresenter.swift in Sources */,
 				445CB0A2292E119800F50047 /* PaymentAssembly.swift in Sources */,
+				21253D0829C85345004ED82D /* UIView+Shimmer.swift in Sources */,
 				44AC79CE299FEB5B0043FA4E /* Collection+Extension.swift in Sources */,
 				445CB096292CC1A800F50047 /* ContentVC.swift in Sources */,
 				44D8ABD2295EC4D20080FF1D /* Logger.swift in Sources */,
@@ -1442,6 +1457,7 @@
 				44B821FD2923810C00C06C51 /* TransparentWindow.swift in Sources */,
 				4498008C29AD247C008E808A /* AlertService.swift in Sources */,
 				219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */,
+				21253D0B29C867EA004ED82D /* ShimmeringView.swift in Sources */,
 				445CB078292BC56900F50047 /* Gallery.swift in Sources */,
 				44B822022923897D00C06C51 /* SBPayService.swift in Sources */,
 				4473D6CB294083DA00802446 /* BankApps.swift in Sources */,

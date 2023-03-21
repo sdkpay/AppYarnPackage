@@ -38,7 +38,8 @@ final class PaymentVC: ContentVC, IPaymentVC {
         let view = DefaultButton(buttonAppearance: .cancel)
         view.setTitle(String(stringLiteral: .Common.cancelTitle), for: .normal)
         view.addAction { [weak self] in
-            self?.presenter.cancelTapped()
+      //      self?.presenter.cancelTapped()
+            self?.view.shimmering()
         }
         return view
     }()
@@ -59,7 +60,6 @@ final class PaymentVC: ContentVC, IPaymentVC {
     
     private lazy var logoImageView: UIImageView = {
        let view = UIImageView()
-        view.image = .Payment.cart
         return view
     }()
     
@@ -88,17 +88,22 @@ final class PaymentVC: ContentVC, IPaymentVC {
         super.viewDidLoad()
         setupUI()
         presenter.viewDidLoad()
-        
-        ImageDownloader.shared.downloadImage(with: "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
-                                             completionHandler: { image, _ in
-            self.logoImageView.image = image
-        },
-                                             placeholderImage: .Payment.cart)
+//        ImageDownloader.shared.downloadImage(with: "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
+//                                             completionHandler: { image, _ in
+//            self.logoImageView.image = image
+//        },
+//                                             placeholderImage: .Payment.cart)
         SBLogger.log(.didLoad(view: self))
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+      //  view.shimmering()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        view.shimmering()
         SBLogger.log(.didAppear(view: self))
     }
     
@@ -106,7 +111,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
         super.viewDidDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
     }
-    
+
     func configShopInfo(with shop: String, cost: String) {
         shopLabel.text = shop
         costLabel.text = cost

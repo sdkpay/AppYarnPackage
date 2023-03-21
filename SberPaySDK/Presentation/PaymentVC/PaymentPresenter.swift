@@ -106,7 +106,7 @@ final class PaymentPresenter: PaymentPresenting {
     private func getUser() {
         DispatchQueue.main.async {
             self.view?.hideAlert()
-            self.view?.showLoading(animate: false)
+      //      self.view?.showLoading(animate: false)
         }
         userService.getUser { [weak self] result in
             switch result {
