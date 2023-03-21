@@ -99,10 +99,6 @@ extension CardsVC: UITableViewDataSource {
         cell.config(with: model)
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-   //     cell.setShimmeringAnimation(<#T##animate: Bool##Bool#>)
-    }
 }
 
 extension CardsVC: UITableViewDelegate {

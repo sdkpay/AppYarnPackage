@@ -62,6 +62,76 @@
       },
       "priorityCard" : false,
       "paymentSystemType" : "MASTERCARD"
+    },
+    {
+      "paymentSourceType" : "DebitCard",
+      "financialProductId" : "40817810638260194311",
+      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
+      "productName" : "MasterCard Сберкарта",
+      "paymentId" : 4,
+      "cardNumber" : "1916",
+      "amountData" : {
+        "amount" : 998688.94999999995,
+        "currency" : "RUR"
+      },
+      "priorityCard" : false,
+      "paymentSystemType" : "MASTERCARD"
+    },
+    {
+      "paymentSourceType" : "DebitCard",
+      "financialProductId" : "40817810638260194311",
+      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
+      "productName" : "MasterCard Сберкарта",
+      "paymentId" : 5,
+      "cardNumber" : "1233",
+      "amountData" : {
+        "amount" : 998688.94999999995,
+        "currency" : "RUR"
+      },
+      "priorityCard" : false,
+      "paymentSystemType" : "MASTERCARD"
+    },
+    {
+      "paymentSourceType" : "DebitCard",
+      "financialProductId" : "40817810638260194311",
+      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
+      "productName" : "MasterCard Сберкарта",
+      "paymentId" : 6,
+      "cardNumber" : "1203",
+      "amountData" : {
+        "amount" : 998688.94999999995,
+        "currency" : "RUR"
+      },
+      "priorityCard" : false,
+      "paymentSystemType" : "MASTERCARD"
+    },
+    {
+      "paymentSourceType" : "DebitCard",
+      "financialProductId" : "40817810638260194311",
+      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
+      "productName" : "MasterCard Сберкарта",
+      "paymentId" : 7,
+      "cardNumber" : "0003",
+      "amountData" : {
+        "amount" : 998688.94999999995,
+        "currency" : "RUR"
+      },
+      "priorityCard" : false,
+      "paymentSystemType" : "MASTERCARD"
+    },
+    {
+      "paymentSourceType" : "DebitCard",
+      "financialProductId" : "40817810638260194311",
+      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
+      "productName" : "MasterCard Сберкарта",
+      "paymentId" : 8,
+      "cardNumber" : "0423",
+      "amountData" : {
+        "amount" : 998688.94999999995,
+        "currency" : "RUR"
+      },
+      "priorityCard" : false,
+      "paymentSystemType" : "MASTERCARD"
     }
   ],
   "userInfo" : {

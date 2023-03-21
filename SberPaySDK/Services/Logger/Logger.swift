@@ -228,7 +228,7 @@ enum SBLogger: ResponseDecoder {
     static func logStartDownloadingImage(with urlString: String?) {
         log(
             """
-            🟢 Start downloading image by string:
+            🌐 Start downloading image by string:
                \(urlString ?? "")
             """
         )

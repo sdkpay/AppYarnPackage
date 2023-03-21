@@ -106,7 +106,7 @@ final class PaymentPresenter: PaymentPresenting {
     private func getUser() {
         DispatchQueue.main.async {
             self.view?.hideAlert()
-      //      self.view?.showLoading(animate: false)
+            self.view?.showLoading(animate: false)
         }
         userService.getUser { [weak self] result in
             switch result {
@@ -133,7 +133,8 @@ final class PaymentPresenter: PaymentPresenting {
         guard let user = user else { return }
         
         view?.configShopInfo(with: user.merchantName,
-                             cost: user.orderAmount.amount.price(with: Int(user.orderAmount.currency)))
+                             cost: user.orderAmount.amount.price(with: Int(user.orderAmount.currency)),
+                             iconURL: user.logoUrl)
         view?.configProfileView(with: user.userInfo)
 
         if let selectedCard = selectedCard {
@@ -150,12 +151,12 @@ final class PaymentPresenter: PaymentPresenting {
                              cardInfo: selectedCard.cardNumber.card,
                              cardIconURL: selectedCard.cardLogoUrl,
                              needArrow: user.paymentToolInfo.count > 1) { [weak self] in
-            guard user.paymentToolInfo.count > 1 else { return }
+         //   guard user.paymentToolInfo.count > 1 else { return }
             self?.router.presentCards(cards: user.paymentToolInfo,
                                       selectedId: selectedCard.paymentId,
                                       selectedCard: { [weak self] card in
                 self?.selectedCard = card
-                self?.configViews()
+                self?.configWithCard(user: user, selectedCard: card)
             })
         }
     }

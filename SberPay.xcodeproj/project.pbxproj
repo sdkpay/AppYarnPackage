@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		21253D0829C85345004ED82D /* UIView+Shimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D0729C85345004ED82D /* UIView+Shimmer.swift */; };
-		21253D0B29C867EA004ED82D /* ShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D0A29C867EA004ED82D /* ShimmeringView.swift */; };
+		21253D1B29C9B20B004ED82D /* SBShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1329C9B20B004ED82D /* SBShimmeringView.swift */; };
+		21253D1C29C9B20B004ED82D /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1529C9B20B004ED82D /* UIView+Extensions.swift */; };
+		21253D1D29C9B20B004ED82D /* UIView+Shimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1629C9B20B004ED82D /* UIView+Shimmer.swift */; };
+		21253D1E29C9B20B004ED82D /* UIView+Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1729C9B20B004ED82D /* UIView+Template.swift */; };
+		21253D2129C9E761004ED82D /* Shimmer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D2029C9E761004ED82D /* Shimmer+Extensions.swift */; };
+		21253D2329CA3152004ED82D /* UIImageView+Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D2229CA3152004ED82D /* UIImageView+Download.swift */; };
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		219CCB9B29BB071B00BA360B /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		219CCB9D29BB075E00BA360B /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 219CCB9C29BB075E00BA360B /* FingerprintPackage */; };
@@ -188,8 +192,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		21253D0729C85345004ED82D /* UIView+Shimmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmer.swift"; sourceTree = "<group>"; };
-		21253D0A29C867EA004ED82D /* ShimmeringView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShimmeringView.swift; sourceTree = "<group>"; };
+		21253D1329C9B20B004ED82D /* SBShimmeringView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBShimmeringView.swift; sourceTree = "<group>"; };
+		21253D1529C9B20B004ED82D /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		21253D1629C9B20B004ED82D /* UIView+Shimmer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmer.swift"; sourceTree = "<group>"; };
+		21253D1729C9B20B004ED82D /* UIView+Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Template.swift"; sourceTree = "<group>"; };
+		21253D2029C9E761004ED82D /* Shimmer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shimmer+Extensions.swift"; sourceTree = "<group>"; };
+		21253D2229CA3152004ED82D /* UIImageView+Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Download.swift"; sourceTree = "<group>"; };
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		219CCBFA29BB0E5400BA360B /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -366,10 +374,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		21253D0929C867BA004ED82D /* Shimmer */ = {
+		21253D1429C9B20B004ED82D /* UIView+Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				21253D0A29C867EA004ED82D /* ShimmeringView.swift */,
+				21253D1529C9B20B004ED82D /* UIView+Extensions.swift */,
+				21253D1629C9B20B004ED82D /* UIView+Shimmer.swift */,
+				21253D1729C9B20B004ED82D /* UIView+Template.swift */,
+			);
+			path = "UIView+Extensions";
+			sourceTree = "<group>";
+		};
+		21253D1F29C9E746004ED82D /* Shimmer */ = {
+			isa = PBXGroup;
+			children = (
+				44E581802939D24E00BDEC4E /* SBShimmer */,
+				21253D2029C9E761004ED82D /* Shimmer+Extensions.swift */,
 			);
 			path = Shimmer;
 			sourceTree = "<group>";
@@ -535,10 +554,10 @@
 				44B822012923897D00C06C51 /* SBPayService.swift */,
 				44676AC9296DD51E00D9DFAE /* AppSettings */,
 				44C6510A2934E2F5008F1C29 /* Public */,
-				44E581802939D24E00BDEC4E /* Models */,
 				44D536192926196200B99463 /* Extensions */,
 				4416E429291F9C7200284972 /* Navigation */,
 				4416E425291E22E600284972 /* Presentation */,
+				44E581832939D26E00BDEC4E /* BankModel */,
 				444A13B7291BA9BD00C9FBE0 /* Design */,
 				4416E421291E21B000284972 /* Utilites */,
 				444A13B6291BA9A100C9FBE0 /* Resources */,
@@ -583,7 +602,7 @@
 		444A13B7291BA9BD00C9FBE0 /* Design */ = {
 			isa = PBXGroup;
 			children = (
-				21253D0929C867BA004ED82D /* Shimmer */,
+				21253D1F29C9E746004ED82D /* Shimmer */,
 				4479ECD829476EB8009B3AB8 /* Style */,
 				445CB085292CA08500F50047 /* Fonts */,
 				445CB076292BC55200F50047 /* Gallery */,
@@ -1088,7 +1107,7 @@
 				219CCC0529BB61D200BA360B /* Date+Extension.swift */,
 				AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */,
 				21BA175129C46E3C001C2CEE /* Tread+Extension.swift */,
-				21253D0729C85345004ED82D /* UIView+Shimmer.swift */,
+				21253D2229CA3152004ED82D /* UIImageView+Download.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1117,19 +1136,20 @@
 			path = Logger;
 			sourceTree = "<group>";
 		};
-		44E581802939D24E00BDEC4E /* Models */ = {
+		44E581802939D24E00BDEC4E /* SBShimmer */ = {
 			isa = PBXGroup;
 			children = (
-				44E581832939D26E00BDEC4E /* BankModel */,
-				44BD272C29A8958D001ECF54 /* AuthInfo.swift */,
-				44BD272E29A895A2001ECF54 /* PayInfo.swift */,
+				21253D1329C9B20B004ED82D /* SBShimmeringView.swift */,
+				21253D1429C9B20B004ED82D /* UIView+Extensions */,
 			);
-			path = Models;
+			path = SBShimmer;
 			sourceTree = "<group>";
 		};
 		44E581832939D26E00BDEC4E /* BankModel */ = {
 			isa = PBXGroup;
 			children = (
+				44BD272E29A895A2001ECF54 /* PayInfo.swift */,
+				44BD272C29A8958D001ECF54 /* AuthInfo.swift */,
 				44E581812939D25A00BDEC4E /* BankModel.swift */,
 			);
 			path = BankModel;
@@ -1375,11 +1395,11 @@
 				AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */,
 				44A0B5BD293DF282007AB3FD /* CardsPresenter.swift in Sources */,
 				445CB0A2292E119800F50047 /* PaymentAssembly.swift in Sources */,
-				21253D0829C85345004ED82D /* UIView+Shimmer.swift in Sources */,
 				44AC79CE299FEB5B0043FA4E /* Collection+Extension.swift in Sources */,
 				445CB096292CC1A800F50047 /* ContentVC.swift in Sources */,
 				44D8ABD2295EC4D20080FF1D /* Logger.swift in Sources */,
 				44834C72292E32E8000A32B2 /* AuthService.swift in Sources */,
+				21253D2129C9E761004ED82D /* Shimmer+Extensions.swift in Sources */,
 				44F9FD4A295AFAB800FE4B9F /* CoverPresentAnimatedTransitioning.swift in Sources */,
 				44C651052930E102008F1C29 /* LoadingView.swift in Sources */,
 				4464DF89291D01F4000C9B45 /* NetworkService.swift in Sources */,
@@ -1405,6 +1425,7 @@
 				44D898D52936487900550FC6 /* String+Random.swift in Sources */,
 				44E581822939D25A00BDEC4E /* BankModel.swift in Sources */,
 				4464DF90291D0DE3000C9B45 /* NetworkDecoding.swift in Sources */,
+				21253D1C29C9B20B004ED82D /* UIView+Extensions.swift in Sources */,
 				445CB06F292BBA7100F50047 /* Palette.swift in Sources */,
 				44A0B5BF293E05CC007AB3FD /* CardCell.swift in Sources */,
 				4473D6CD29409A8D00802446 /* UserDefaults+Extension.swift in Sources */,
@@ -1413,6 +1434,7 @@
 				442A45E0298059F900EC3D73 /* UserService.swift in Sources */,
 				218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */,
 				4464DF99291D3DB7000C9B45 /* AuthModel.swift in Sources */,
+				21253D1B29C9B20B004ED82D /* SBShimmeringView.swift in Sources */,
 				445CB075292BC3EF00F50047 /* UIImage+Bundle.swift in Sources */,
 				44F9FD4B295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift in Sources */,
 				445D018B2994F375006458AD /* BaseRequestManager.swift in Sources */,
@@ -1442,8 +1464,11 @@
 				44C651102934E37F008F1C29 /* SBPError.swift in Sources */,
 				440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */,
 				442A45C9297FE80D00EC3D73 /* StubNetworkProvider.swift in Sources */,
+				21253D1D29C9B20B004ED82D /* UIView+Shimmer.swift in Sources */,
 				442A45D5298049BC00EC3D73 /* BuildSettings.swift in Sources */,
 				44C6510C2934E327008F1C29 /* SBPaymentTokenResponse.swift in Sources */,
+				21253D1E29C9B20B004ED82D /* UIView+Template.swift in Sources */,
+				21253D2329CA3152004ED82D /* UIImageView+Download.swift in Sources */,
 				44A3126129813ABB0099EB76 /* AuthRouter.swift in Sources */,
 				44533D1E298521380041FAA9 /* PaymentTokenModel.swift in Sources */,
 				445CB066292BB3E300F50047 /* String+Localized.swift in Sources */,
@@ -1457,7 +1482,6 @@
 				44B821FD2923810C00C06C51 /* TransparentWindow.swift in Sources */,
 				4498008C29AD247C008E808A /* AlertService.swift in Sources */,
 				219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */,
-				21253D0B29C867EA004ED82D /* ShimmeringView.swift in Sources */,
 				445CB078292BC56900F50047 /* Gallery.swift in Sources */,
 				44B822022923897D00C06C51 /* SBPayService.swift in Sources */,
 				4473D6CB294083DA00802446 /* BankApps.swift in Sources */,

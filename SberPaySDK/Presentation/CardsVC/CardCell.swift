@@ -21,7 +21,7 @@ private extension CGFloat {
     static let cardWidth = 36.0
 }
 
-final class CardCell: UITableViewCell, ShimmeringView {
+final class CardCell: UITableViewCell {
     static var reuseId: String { "CardCell" }
     
     private lazy var containerView: UIView = {
@@ -56,12 +56,6 @@ final class CardCell: UITableViewCell, ShimmeringView {
         return view
     }()
     
-    var shimmeringItems: [UIView] {
-        [
-            cardIconView
-        ]
-    }
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -76,10 +70,7 @@ final class CardCell: UITableViewCell, ShimmeringView {
         checkImageView.image = model.selected ? .Common.checkSelected : .Common.checkDeselected
         titleLabel.text = model.title
         cardLabel.text = model.number
-//        ImageDownloader.shared.downloadImage(with: model.cardURL,
-//                                             completionHandler: { [weak self] icon, _ in
-//            self?.cardIconView.image = icon
-//        }, placeholderImage: .Cards.stockCard)
+        cardIconView.downloadImage(from: model.cardURL, placeholder: .Cards.stockCard)
     }
     
     private func setupUI() {

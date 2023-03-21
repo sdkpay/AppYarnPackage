@@ -68,15 +68,14 @@ final class ImageDownloader: NSObject {
                 return
             }
 
-            if getDataTaskFrom(urlString: imageUrlString) != nil {
-                return
-            }
-
             let task = session?.dataTask(with: url) { data, _, error in
                 guard let data = data else {
                     SBLogger.logDownloadImageWithError(with: .dataIsNil,
                                                        urlString: imageUrlString,
                                                        placeholder: placeholderImage)
+                    DispatchQueue.main.async {
+                        completionHandler(placeholderImage, true)
+                    }
                     return
                 }
                 if let error = error {
@@ -92,6 +91,9 @@ final class ImageDownloader: NSObject {
                     SBLogger.logDownloadImageWithError(with: .imageNotCreated,
                                                        urlString: imageUrlString,
                                                        placeholder: placeholderImage)
+                    DispatchQueue.main.async {
+                        completionHandler(placeholderImage, true)
+                    }
                     return
                 }
                 self.serialQueueForImages.sync(flags: .barrier) {

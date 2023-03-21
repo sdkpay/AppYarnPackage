@@ -12,7 +12,7 @@ private extension CGFloat {
     static let cardWidth = 36.0
 }
 
-final class CardInfoView: ContentView, ShimmeringView {
+final class CardInfoView: ContentView, SBShimmeringView {
     private var needArrow = false
 
     private lazy var titleLabel: UILabel = {
@@ -49,12 +49,6 @@ final class CardInfoView: ContentView, ShimmeringView {
         return view
     }()
     
-    var shimmeringItems: [UIView] {
-        [
-            cardIconView
-        ]
-    }
-    
     func config(with title: String,
                 cardInfo: String,
                 cardIconURL: String?,
@@ -64,12 +58,8 @@ final class CardInfoView: ContentView, ShimmeringView {
         subtitleLabel.text = cardInfo
         self.needArrow = needArrow
         self.action = action
-//        ImageDownloader.shared.downloadImage(with: cardIconURL,
-//                                             completionHandler: { [weak self] icon, _ in
-//            self?.cardIconView.image = icon
-//        }, placeholderImage: .Cards.stockCard)
-//
         setupUI()
+        cardIconView.downloadImage(from: cardIconURL)
     }
     
     private func setupUI() {
