@@ -51,6 +51,7 @@ final class LoadingView: UIView {
         animation.toValue = 2 * Double.pi
         animation.duration = 1
         animation.repeatCount = .infinity
+        animation.isRemovedOnCompletion = false
         return animation
     }()
     

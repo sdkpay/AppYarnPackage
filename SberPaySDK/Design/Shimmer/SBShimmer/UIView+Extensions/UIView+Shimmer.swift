@@ -37,6 +37,7 @@ extension UIView {
         animation.toValue = [1.0, 1.5, 2.0]
         animation.repeatCount = .infinity
         animation.duration = 1.25
+        animation.isRemovedOnCompletion = false
         gradientLayer.add(animation, forKey: animation.keyPath)
     }
 }
