@@ -81,7 +81,7 @@ final class PaymentPresenter: PaymentPresenting {
                     self?.alertService.show(on: self?.view,
                                             type: .noInternet(retry: { self?.pay() },
                                                               completion: { self?.dismissWithError(error) }))
-                } else if error.represents(.timeOut) || error.represents(.badResponseWithStatus(code: .unknownPayState)) {
+                } else if error.represents(.timeOut) || !error.represents(.badResponseWithStatus(code: .errorFormat)) {
                     self?.configForWaiting()
                 } else {
                     self?.alertService.show(on: self?.view,
@@ -151,7 +151,7 @@ final class PaymentPresenter: PaymentPresenting {
                              cardInfo: selectedCard.cardNumber.card,
                              cardIconURL: selectedCard.cardLogoUrl,
                              needArrow: user.paymentToolInfo.count > 1) { [weak self] in
-         //   guard user.paymentToolInfo.count > 1 else { return }
+            guard user.paymentToolInfo.count > 1 else { return }
             self?.router.presentCards(cards: user.paymentToolInfo,
                                       selectedId: selectedCard.paymentId,
                                       selectedCard: { [weak self] card in
