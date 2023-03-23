@@ -20,3 +20,4 @@ xcodebuild -create-xcframework \
     -framework "./build/ios.xcarchive/Products/Library/Frameworks/SberPaySDK.framework" \
     -framework "./build/ios_sim.xcarchive/Products/Library/Frameworks/SberPaySDK.framework" \
     -output "./build/SberPaySDK.xcframework"
+open "./build"
