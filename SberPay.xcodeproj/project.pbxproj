@@ -13,16 +13,15 @@
 		21253D1E29C9B20B004ED82D /* UIView+Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1729C9B20B004ED82D /* UIView+Template.swift */; };
 		21253D2129C9E761004ED82D /* Shimmer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D2029C9E761004ED82D /* Shimmer+Extensions.swift */; };
 		21253D2329CA3152004ED82D /* UIImageView+Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D2229CA3152004ED82D /* UIImageView+Download.swift */; };
+		214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 214E9C4A29CC4B09009DF5FE /* FingerprintPackage */; };
+		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
-		219CCB9B29BB071B00BA360B /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
-		219CCB9D29BB075E00BA360B /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 219CCB9C29BB075E00BA360B /* FingerprintPackage */; };
 		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
 		21BA175229C46E3C001C2CEE /* Tread+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BA175129C46E3C001C2CEE /* Tread+Extension.swift */; };
 		440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */; };
 		440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3AC295C304300B84E05 /* AnalyticsService.swift */; };
 		4416E424291E21C300284972 /* SDKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E423291E21C300284972 /* SDKError.swift */; };
 		4416E437291FA90900284972 /* StartupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E436291FA90900284972 /* StartupService.swift */; };
-		441B791829700BEB0093138D /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 441B791729700BEB0093138D /* Lottie */; };
 		4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76B299ABC7800DD7881 /* poz.mp3 */; };
 		4421B76E299ABC8500DD7881 /* neg.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76D299ABC8500DD7881 /* neg.mp3 */; };
 		442A45C9297FE80D00EC3D73 /* StubNetworkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442A45C8297FE80D00EC3D73 /* StubNetworkProvider.swift */; };
@@ -198,8 +197,8 @@
 		21253D1729C9B20B004ED82D /* UIView+Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Template.swift"; sourceTree = "<group>"; };
 		21253D2029C9E761004ED82D /* Shimmer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shimmer+Extensions.swift"; sourceTree = "<group>"; };
 		21253D2229CA3152004ED82D /* UIImageView+Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Download.swift"; sourceTree = "<group>"; };
+		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
-		219CCBFA29BB0E5400BA360B /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		219CCC0D29BF1B3B00BA360B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		21BA175129C46E3C001C2CEE /* Tread+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tread+Extension.swift"; sourceTree = "<group>"; };
@@ -348,10 +347,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				219CCB9B29BB071B00BA360B /* libresolv.9.tbd in Frameworks */,
+				214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */,
+				214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */,
 				44A438F429900EEE00CA04FC /* Dynatrace-Static in Frameworks */,
-				219CCB9D29BB075E00BA360B /* FingerprintPackage in Frameworks */,
-				441B791829700BEB0093138D /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,6 +389,14 @@
 				21253D2029C9E761004ED82D /* Shimmer+Extensions.swift */,
 			);
 			path = Shimmer;
+			sourceTree = "<group>";
+		};
+		214E9C4829CC4AF5009DF5FE /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				214E9C4929CC4AF5009DF5FE /* FingerprintPackage */,
+			);
+			name = Packages;
 			sourceTree = "<group>";
 		};
 		440DB3A8295C1C6200B84E05 /* ContentTableView */ = {
@@ -843,6 +849,7 @@
 				4471721329193B21005EDF32 /* SberPayExample */,
 				44A0B5AE293DC3F7007AB3FD /* SberPaySDKTests */,
 				4471721229193B21005EDF32 /* Products */,
+				214E9C4829CC4AF5009DF5FE /* Packages */,
 				44834C73292E366D000A32B2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -955,7 +962,6 @@
 		44834C73292E366D000A32B2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				219CCBFA29BB0E5400BA360B /* FingerprintPackage */,
 				21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */,
 			);
 			name = Frameworks;
@@ -1222,9 +1228,8 @@
 			);
 			name = SberPaySDK;
 			packageProductDependencies = (
-				441B791729700BEB0093138D /* Lottie */,
 				44A438F329900EEE00CA04FC /* Dynatrace-Static */,
-				219CCB9C29BB075E00BA360B /* FingerprintPackage */,
+				214E9C4A29CC4B09009DF5FE /* FingerprintPackage */,
 			);
 			productName = SberPaySDK;
 			productReference = 444A13A9291BA96100C9FBE0 /* SberPaySDK.framework */;
@@ -1303,7 +1308,6 @@
 			);
 			mainGroup = 4471720829193B21005EDF32;
 			packageReferences = (
-				44B7F0252948F2B9005203FE /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				44A438F229900EEE00CA04FC /* XCRemoteSwiftPackageReference "swift-mobile-sdk" */,
 			);
 			productRefGroup = 4471721229193B21005EDF32 /* Products */;
@@ -2332,25 +2336,12 @@
 				minimumVersion = 8.0.0;
 			};
 		};
-		44B7F0252948F2B9005203FE /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		219CCB9C29BB075E00BA360B /* FingerprintPackage */ = {
+		214E9C4A29CC4B09009DF5FE /* FingerprintPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FingerprintPackage;
-		};
-		441B791729700BEB0093138D /* Lottie */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 44B7F0252948F2B9005203FE /* XCRemoteSwiftPackageReference "lottie-ios" */;
-			productName = Lottie;
 		};
 		44A438F329900EEE00CA04FC /* Dynatrace-Static */ = {
 			isa = XCSwiftPackageProductDependency;
