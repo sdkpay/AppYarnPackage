@@ -548,10 +548,10 @@
 		444A13AA291BA96100C9FBE0 /* SberPaySDK */ = {
 			isa = PBXGroup;
 			children = (
+				44B822012923897D00C06C51 /* SBPayService.swift */,
 				AEB0059929C09F3F002C9AB9 /* Helpers */,
 				44533D1F29852A1C0041FAA9 /* Managers */,
 				442A45D3298049A100EC3D73 /* BuildSettings */,
-				44B822012923897D00C06C51 /* SBPayService.swift */,
 				44676AC9296DD51E00D9DFAE /* AppSettings */,
 				44C6510A2934E2F5008F1C29 /* Public */,
 				44D536192926196200B99463 /* Extensions */,

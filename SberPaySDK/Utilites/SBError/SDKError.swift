@@ -7,10 +7,17 @@
 
 import Foundation
 
+enum StatusCode: Int {
+    case unknownPayState = 423
+    case errorFormat = 400
+    case errorSystem = 500
+    case unowned
+}
+
 enum SDKError: Error, Hashable {
     case noInternetConnection
     case noData
-    case badResponseWithStatus(code: Int)
+    case badResponseWithStatus(code: StatusCode)
     case failDecode
     case badDataFromSBOL
     case unauthorizedClient

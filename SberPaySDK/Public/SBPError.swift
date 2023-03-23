@@ -21,10 +21,10 @@ public class SBPError: NSObject {
         case .noData, .failDecode, .errorFromServer:
             errorDescription = .Error.errorFormat
         case .badResponseWithStatus(let code):
-            if code == 400 {
-                errorDescription = .Error.errorSystem
-            } else if code == 500 {
+            if code == .errorFormat {
                 errorDescription = .Error.errorFormat
+            } else if code == .errorSystem {
+                errorDescription = .Error.errorSystem
             }
         case .cancelled:
             errorDescription = .Error.errorClose

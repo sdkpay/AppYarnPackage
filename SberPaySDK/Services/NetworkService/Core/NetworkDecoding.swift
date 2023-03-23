@@ -29,8 +29,10 @@ extension ResponseDecoder {
         }
         guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
         guard let data = data else { return .failure(.noData) }
+        guard (200...299).contains(response.statusCode) else {
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+        }
         if let errorText = checkServerError(data: data) { return .failure(.errorFromServer(text: errorText)) }
-        guard (200...299).contains(response.statusCode) else { return .failure(.badResponseWithStatus(code: response.statusCode)) }
         do {
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(type, from: data)
@@ -50,8 +52,10 @@ extension ResponseDecoder {
                         error: Error?) -> Result<Void, SDKError> {
         guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
         guard let data = data else { return .failure(.noData) }
+        guard (200...299).contains(response.statusCode) else {
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+        }
         if let errorText = checkServerError(data: data) { return .failure(.errorFromServer(text: errorText)) }
-        guard (200...299).contains(response.statusCode) else { return .failure(.badResponseWithStatus(code: response.statusCode)) }
         return .success(())
     }
     
