@@ -81,7 +81,7 @@ final class PaymentPresenter: PaymentPresenting {
                     self?.alertService.show(on: self?.view,
                                             type: .noInternet(retry: { self?.pay() },
                                                               completion: { self?.dismissWithError(error) }))
-                } else if error.represents(.timeOut) || !error.represents(.badResponseWithStatus(code: .errorFormat)) {
+                } else if error.represents(.timeOut) || error.represents(.badResponseWithStatus(code: .unowned)) {
                     self?.configForWaiting()
                 } else {
                     self?.alertService.show(on: self?.view,
