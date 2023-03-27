@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		211DF37229D1C0DD0038A951 /* SB Sans Text Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB080292C9DA300F50047 /* SB Sans Text Medium.ttf */; };
 		21253D1B29C9B20B004ED82D /* SBShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1329C9B20B004ED82D /* SBShimmeringView.swift */; };
 		21253D1C29C9B20B004ED82D /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1529C9B20B004ED82D /* UIView+Extensions.swift */; };
 		21253D1D29C9B20B004ED82D /* UIView+Shimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1629C9B20B004ED82D /* UIView+Shimmer.swift */; };
@@ -1324,6 +1325,7 @@
 				44A31251298103F10099EB76 /* ListCards.json in Resources */,
 				4421B76E299ABC8500DD7881 /* neg.mp3 in Resources */,
 				44A5A46129B4A38900C01420 /* cms-res.der in Resources */,
+				211DF37229D1C0DD0038A951 /* SB Sans Text Medium.ttf in Resources */,
 				4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */,
 				442A45CE297FEE8000EC3D73 /* Auth.json in Resources */,
 				445CB073292BBB1400F50047 /* Assets.xcassets in Resources */,

@@ -384,6 +384,22 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
+    static func logFontRegistration(url: URL, result: Bool) {
+        if result {
+            log(
+                """
+                ✒️✅ Font \(url.lastPathComponent) registered
+                """
+            )
+        } else {
+            log(
+                """
+                ✒️❌ Font \(url.lastPathComponent) not registered
+                """
+            )
+        }
+    }
+    
     static func stringToLog(from data: Data?) -> NSString {
         if let data = data,
            let decoded = data.prettyPrintedJSONString {
