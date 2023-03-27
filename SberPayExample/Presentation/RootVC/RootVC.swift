@@ -1,12 +1,12 @@
 //
 //  RootVC.swift
-//  SberPay
+//  SPay
 //
 //  Created by Alexander Ipatov on 08.11.2022.
 //
 
 import UIKit
-import SberPaySDK
+import SPaySdk
 
 private extension CGFloat {
     static let buttonHeight = 40.0

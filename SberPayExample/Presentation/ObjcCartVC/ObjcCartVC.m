@@ -1,13 +1,13 @@
 //
 //  ObjcCartVC.m
-//  SberPayExample
+//  SPayExample
 //
 //  Created by Alexander Ipatov on 14.11.2022.
 //
 
 #import <UIKit/UIKit.h>
 #import "ObjcCartVC.h"
-#import "SberPaySDK.h"
+#import "SPaySdk.h"
 
 @interface ObjcCartVC ()
 
@@ -26,7 +26,7 @@
     [super viewDidLoad];
     self.navigationItem.title = @"Objc";
     self.view.backgroundColor = UIColor.whiteColor;
-    if ([SBPay isReadyForSberPay]) {
+    if ([SBPay isReadyForSPay]) {
         [self setupSBPayButton];
     }
 }
@@ -64,7 +64,7 @@
 }
 
 -(void)sbButtonTapped {
-    if (SBPay.isReadyForSberPay) {
+    if (SBPay.isReadyForSPay) {
         
     }
     SBPaymentTokenRequest *requestModel = [[SBPaymentTokenRequest alloc] initWithApiKey:_apiKey

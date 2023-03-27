@@ -1,6 +1,6 @@
 //
 //  RootCell.swift
-//  SberPaySDK
+//  SPaySdk
 //
 //  Created by Alexander Ipatov on 09.11.2022.
 //

@@ -1,0 +1,126 @@
+//
+//  NetworkDecoding.swift
+//  SPaySdk
+//
+//  Created by Alexander Ipatov on 10.11.2022.
+//
+
+import Foundation
+
+protocol ResponseDecoder {
+    func decodeResponse<T: Codable>(data: Data?,
+                                    response: URLResponse?,
+                                    error: Error?,
+                                    type: T.Type) -> Result<T, SDKError>
+    func decodeResponse(data: Data?,
+                        response: URLResponse?,
+                        error: Error?) -> Result<Void, SDKError>
+    func decodeParametersFrom(url: URL) -> Result<BankModel, SDKError>
+}
+
+extension ResponseDecoder {
+    func decodeResponse<T: Codable>(data: Data?,
+                                    response: URLResponse?,
+                                    error: Error?,
+                                    type: T.Type) -> Result<T, SDKError> {
+        if let error = error as? NSError,
+            error._code == URLError.Code.timedOut.rawValue {
+            return .failure(.timeOut)
+        }
+        guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
+        guard let data = data else { return .failure(.noData) }
+        guard (200...299).contains(response.statusCode) else {
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+        }
+        if let errorText = checkServerError(data: data) { return .failure(.errorFromServer(text: errorText)) }
+        do {
+            let decoder = JSONDecoder()
+            let decodedData = try decoder.decode(type, from: data)
+            SBLogger.responseDecodedWithSuccess(for: type)
+            return .success(decodedData)
+        } catch let error as DecodingError {
+            SBLogger.responseDecodedWithError(for: type, decodingError: error)
+            return .failure(.failDecode)
+        } catch {
+            print("error: ", error)
+            return .failure(.failDecode)
+        }
+    }
+    
+    func decodeResponse(data: Data?,
+                        response: URLResponse?,
+                        error: Error?) -> Result<Void, SDKError> {
+        guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
+        guard let data = data else { return .failure(.noData) }
+        guard (200...299).contains(response.statusCode) else {
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+        }
+        if let errorText = checkServerError(data: data) { return .failure(.errorFromServer(text: errorText)) }
+        return .success(())
+    }
+    
+    func decodeParametersFrom(url: URL) -> Result<BankModel, SDKError> {
+        guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            return .failure(.badDataFromSBOL)
+        }
+        guard let queryItems = urlComponents.queryItems else { return .failure(.badDataFromSBOL) }
+        var parameters = [String: String]()
+        queryItems.forEach {
+            if let value = $0.value {
+                parameters[$0.name] = value
+            }
+        }
+        if let error = parameters["error"] {
+            SBLogger.logResponseFromSbolFailed(url, error: error)
+            return .failure(checkBankError(error: error))
+        }
+        SBLogger.logResponseFromSbolCompleted(parameters)
+        return .success(BankModel(dictionary: parameters))
+    }
+    
+    private func checkBankError(error: String) -> SDKError {
+        if error == "unauthorized_client" {
+            return .unauthorizedClient
+        } else {
+            return .badDataFromSBOL
+        }
+    }
+    
+    private func checkServerError(data: Data) -> String? {
+        do {
+            if let json = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary,
+               let message = json["description"] as? String {
+                return message
+            } else {
+                return nil
+            }
+        } catch {
+            return nil
+        }
+    }
+}
+
+// MARK: - KeyCodingStrategy
+
+struct AnyCodingKey: CodingKey {
+    var stringValue: String
+    var intValue: Int?
+    
+    init(_ base: CodingKey) {
+        self.init(stringValue: base.stringValue, intValue: base.intValue)
+    }
+    
+    init(stringValue: String) {
+        self.stringValue = stringValue
+    }
+    
+    init(intValue: Int) {
+        self.stringValue = "\(intValue)"
+        self.intValue = intValue
+    }
+    
+    init(stringValue: String, intValue: Int?) {
+        self.stringValue = stringValue
+        self.intValue = intValue
+    }
+}

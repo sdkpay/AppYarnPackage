@@ -1,11 +1,11 @@
 //
-//  SberPaySDKTests.swift
-//  SberPaySDKTests
+//  SPaySdkTests.swift
+//  SPaySdkSDKTests
 //
 //  Created by Alexander Ipatov on 05.12.2022.
 //
 
 import XCTest
 
-final class SberPaySDKTests: XCTestCase {
+final class SPaySdkTests: XCTestCase {
 }

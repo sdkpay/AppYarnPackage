@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SberPaySDK
+import SPaySdk
 
 private extension CGFloat {
     static let paymentHeight = 200.0
@@ -52,10 +52,10 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         return view
     }()
     
-    private lazy var sberPayButton: SBPButton = {
+    private lazy var sPayButton: SBPButton = {
         let view = SBPButton()
         view.tapAction = {
-            self.sberPayButtonTapped()
+            self.sPayButtonTapped()
         }
         return view
     }()
@@ -124,15 +124,15 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             paymentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        if SBPay.isReadyForSberPay {
-            paymentView.addSubview(sberPayButton)
-            sberPayButton.translatesAutoresizingMaskIntoConstraints = false
+        if SBPay.isReadyForSPay {
+            paymentView.addSubview(sPayButton)
+            sPayButton.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                sberPayButton.leadingAnchor.constraint(equalTo: paymentView.leadingAnchor,
+                sPayButton.leadingAnchor.constraint(equalTo: paymentView.leadingAnchor,
                                                        constant: .margin),
-                sberPayButton.trailingAnchor.constraint(equalTo: paymentView.trailingAnchor,
+                sPayButton.trailingAnchor.constraint(equalTo: paymentView.trailingAnchor,
                                                         constant: -.margin),
-                sberPayButton.bottomAnchor.constraint(equalTo: paymentView.bottomAnchor,
+                sPayButton.bottomAnchor.constraint(equalTo: paymentView.bottomAnchor,
                                                       constant: -.bottomMargin)
             ])
         }
@@ -152,7 +152,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         ])
     }
 
-    private func sberPayButtonTapped() {
+    private func sPayButtonTapped() {
         if autoMode {
             autoPay()
         } else {
