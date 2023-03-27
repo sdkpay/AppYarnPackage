@@ -39,7 +39,7 @@
 		442A45E0298059F900EC3D73 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442A45DF298059F900EC3D73 /* UserService.swift */; };
 		443666C8298BBE98005119A2 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443666C7298BBE98005119A2 /* LocationManager.swift */; };
 		443666CF298BFC3E005119A2 /* ValidSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443666CE298BFC3E005119A2 /* ValidSessionModel.swift */; };
-		443D83AB295D8F31002605AA /* ecomtest.sberbank.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 443D83AA295D8F31002605AA /* ecomtest.sberbank.ru.der */; };
+		443D83AB295D8F31002605AA /* ecomtest.s.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 443D83AA295D8F31002605AA /* ecomtest.s.ru.der */; };
 		44499BED296EB4A500B6A582 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */; };
 		444A13AF291BA96100C9FBE0 /* SPaySdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdk.framework */; };
 		444A13B0291BA96100C9FBE0 /* SPaySdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -219,7 +219,7 @@
 		442A45DF298059F900EC3D73 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		443666C7298BBE98005119A2 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		443666CE298BFC3E005119A2 /* ValidSessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidSessionModel.swift; sourceTree = "<group>"; };
-		443D83AA295D8F31002605AA /* ecomtest.sberbank.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ecomtest.sberbank.ru.der; sourceTree = "<group>"; };
+		443D83AA295D8F31002605AA /* ecomtest.s.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ecomtest.s.ru.der; sourceTree = "<group>"; };
 		44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		444A13A9291BA96100C9FBE0 /* SPaySdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		444A13AB291BA96100C9FBE0 /* SPaySdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPaySdk.h; sourceTree = "<group>"; };
@@ -447,7 +447,7 @@
 			isa = PBXGroup;
 			children = (
 				44A5A46029B4A38900C01420 /* cms-res.der */,
-				443D83AA295D8F31002605AA /* ecomtest.sberbank.ru.der */,
+				443D83AA295D8F31002605AA /* ecomtest.s.ru.der */,
 			);
 			path = Certificates;
 			sourceTree = "<group>";
@@ -1367,7 +1367,7 @@
 				4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */,
 				442A45CE297FEE8000EC3D73 /* Auth.json in Resources */,
 				445CB073292BBB1400F50047 /* Assets.xcassets in Resources */,
-				443D83AB295D8F31002605AA /* ecomtest.sberbank.ru.der in Resources */,
+				443D83AB295D8F31002605AA /* ecomtest.s.ru.der in Resources */,
 				44BD272B29A7AE38001ECF54 /* PaymentOrderSDK.json in Resources */,
 				445CB06B292BB99F00F50047 /* Localizable.strings in Resources */,
 				445CB07D292C9D2C00F50047 /* SB Sans Text Semibold.ttf in Resources */,
