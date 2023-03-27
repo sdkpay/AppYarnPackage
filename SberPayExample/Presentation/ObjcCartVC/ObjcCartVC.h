@@ -1,6 +1,6 @@
 //
 //  ObjcCartVC.h
-//  SberPayExample
+//  SPayExample
 //
 //  Created by Alexander Ipatov on 14.11.2022.
 //

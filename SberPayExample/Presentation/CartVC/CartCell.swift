@@ -1,6 +1,6 @@
 //
 //  CartCell.swift
-//  SberPay
+//  SPay
 //
 //  Created by Alexander Ipatov on 07.11.2022.
 //

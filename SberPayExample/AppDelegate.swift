@@ -1,12 +1,12 @@
 //
 //  AppDelegate.swift
-//  SberPay
+//  SPaySdk
 //
 //  Created by Alexander Ipatov on 07.11.2022.
 //
 
 import UIKit
-import SberPaySDK
+import SPaySdk
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
