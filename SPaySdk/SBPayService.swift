@@ -37,6 +37,7 @@ final class DefaultSBPayService: SBPayService {
         AuthManagerAssembly(),
         BaseRequestManagerAssembly(),
         NetworkServiceAssembly(),
+        RemoteConfigServiceAssembly(),
         AlertServiceAssembly(),
         SDKManagerAssembly(),
         AuthServiceAssembly(),
@@ -53,6 +54,9 @@ final class DefaultSBPayService: SBPayService {
     
     func setup() {
         UIFont.registerFontsIfNeeded()
+        registerServices()
+        let remoteConfigService: RemoteConfigService = locator.resolve()
+        remoteConfigService.getConfig()
     }
     
     var isReadyForSPay: Bool {

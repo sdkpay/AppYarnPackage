@@ -22,9 +22,9 @@ protocol AuthService {
     func tryToAuth(completion: @escaping (SDKError?) -> Void)
     func completeAuth(with url: URL)
     func removeSavedBank()
-    var selectedBank: BankApp? { get set }
-    func selectBank(_ app: BankApp)
-    var avaliableBanks: [BankApp] { get }
+    var selectedBank: BankAppModel? { get set }
+    func selectBank(_ app: BankAppModel)
+    var avaliableBanks: [BankAppModel] { get }
 }
 
 final class DefaultAuthService: AuthService, ResponseDecoder {
@@ -35,13 +35,13 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var authManager: AuthManager
     private var personalMetricsService: PersonalMetricsService
     
-    var avaliableBanks: [BankApp] {
-        BankApp.allCases.filter({ canOpen(link: $0.link) })
+    var avaliableBanks: [BankAppModel] {
+        bankModels.filter({ canOpen(link: $0.link) })
     }
     
-    private var _selectedBank: BankApp?
+    private var _selectedBank: BankAppModel?
     
-    var selectedBank: BankApp? {
+    var selectedBank: BankAppModel? {
         get {
             if let bankApp = getSelectedBank(),
                canOpen(link: bankApp.link) {
@@ -71,7 +71,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         SBLogger.log(.stop(obj: self))
     }
     
-    func selectBank(_ app: BankApp) {
+    func selectBank(_ app: BankAppModel) {
         selectedBank = app
     }
     
@@ -126,14 +126,14 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     func removeSavedBank() {
         SBLogger.log("🗑 Remove value for key: selectedBank")
-        UserDefaults.standard.removeObject(forKey: "selectedBank")
+        UserDefaults.removeValue(for: .selectedBank)
     }
     
     private func saveSelectedBank() {
-        UserDefaults.bankApp = _selectedBank?.rawValue
+        UserDefaults.bankApp = _selectedBank?.name
     }
     
-    private func getSelectedBank() -> BankApp? {
+    private func getSelectedBank() -> BankAppModel? {
         // Проверяем есть ли выбранное приложение
         if let selectedBank = _selectedBank {
             return selectedBank
@@ -141,7 +141,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         if avaliableBanks.count > 1 {
             // Если больше 1 то смотрим на сохраненный банк
             if let savedBank = UserDefaults.bankApp {
-                _selectedBank = BankApp(rawValue: savedBank)
+                _selectedBank = bankModels.first(where: { $0.name == savedBank })
                 return _selectedBank
             } else {
                 return nil
@@ -176,5 +176,23 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private func canOpen(link: String) -> Bool {
         guard let url = URL(string: link) else { return false }
         return UIApplication.shared.canOpenURL(url)
+    }
+    
+    private var bankModels: [BankAppModel] {
+        guard let localized = UserDefaults.localization else { return [] }
+        guard let links = UserDefaults.schemas else { return [] }
+        guard let images = UserDefaults.images else { return [] }
+
+        var models = [BankAppModel]()
+        models.append(BankAppModel(name: localized.firstApp,
+                                   link: links.authLinkFirstApp,
+                                   icon: images.firstAppIcon,
+                                   loadTitle: localized.loadToFirstApp))
+        models.append(BankAppModel(name: localized.secondApp,
+                                   link: links.authLinkSecondApp,
+                                   icon: images.secondAppIcon,
+                                   loadTitle: localized.loadToSecondApp))
+        
+        return models
     }
 }

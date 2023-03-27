@@ -90,7 +90,7 @@ final class AuthPresenter: AuthPresenting {
     
     private func showBanksStack() {
         authService.removeSavedBank()
-        view?.configBanksStack(selected: { [weak self] bank in
+        view?.configBanksStack(banks: authService.avaliableBanks, selected: { [weak self] bank in
             self?.authService.selectBank(bank)
             self?.getAccessSPay()
         })
@@ -98,11 +98,10 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func getAccessSPay() {
-        let text = authService.selectedBank == .sber ? String.Loading.toSTitle : String.Loading.toSbolTitle
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.view?.hideAlert()
-            self.view?.showLoading(with: text)
+            self.view?.showLoading(with: self.authService.selectedBank?.loadTitle)
         }
        
         openSId()

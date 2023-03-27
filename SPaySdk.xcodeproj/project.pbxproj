@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		211DF36429D18B220038A951 /* UIImage+base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36329D18B220038A951 /* UIImage+base64.swift */; };
+		211DF36629D18CCF0038A951 /* RemoteConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 211DF36529D18CCF0038A951 /* RemoteConfig.json */; };
+		211DF36B29D18CF30038A951 /* ConfigTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36829D18CF30038A951 /* ConfigTarget.swift */; };
+		211DF36C29D18CF30038A951 /* ConfigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36A29D18CF30038A951 /* ConfigModel.swift */; };
+		211DF37029D18D0C0038A951 /* BankAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36E29D18D0C0038A951 /* BankAppModel.swift */; };
+		211DF37129D18D0C0038A951 /* RemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36F29D18D0C0038A951 /* RemoteConfigService.swift */; };
 		21253D1B29C9B20B004ED82D /* SBShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1329C9B20B004ED82D /* SBShimmeringView.swift */; };
 		21253D1C29C9B20B004ED82D /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1529C9B20B004ED82D /* UIView+Extensions.swift */; };
 		21253D1D29C9B20B004ED82D /* UIView+Shimmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1629C9B20B004ED82D /* UIView+Shimmer.swift */; };
@@ -83,7 +89,6 @@
 		447172302919466E005EDF32 /* CartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471722F2919466E005EDF32 /* CartCell.swift */; };
 		44717236291A458F005EDF32 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44717235291A458F005EDF32 /* RootVC.swift */; };
 		4473D6C92940653300802446 /* BankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6C82940653300802446 /* BankView.swift */; };
-		4473D6CB294083DA00802446 /* BankApps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6CA294083DA00802446 /* BankApps.swift */; };
 		4473D6CD29409A8D00802446 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6CC29409A8D00802446 /* UserDefaults+Extension.swift */; };
 		4479ECDA29476EEF009B3AB8 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4479ECD929476EEF009B3AB8 /* Style.swift */; };
 		44834C6A292E16EA000A32B2 /* AuthAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44834C69292E16EA000A32B2 /* AuthAssembly.swift */; };
@@ -181,6 +186,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		211DF36329D18B220038A951 /* UIImage+base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+base64.swift"; sourceTree = "<group>"; };
+		211DF36529D18CCF0038A951 /* RemoteConfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RemoteConfig.json; sourceTree = "<group>"; };
+		211DF36829D18CF30038A951 /* ConfigTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigTarget.swift; sourceTree = "<group>"; };
+		211DF36A29D18CF30038A951 /* ConfigModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigModel.swift; sourceTree = "<group>"; };
+		211DF36E29D18D0C0038A951 /* BankAppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BankAppModel.swift; sourceTree = "<group>"; };
+		211DF36F29D18D0C0038A951 /* RemoteConfigService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteConfigService.swift; sourceTree = "<group>"; };
 		21253D1329C9B20B004ED82D /* SBShimmeringView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBShimmeringView.swift; sourceTree = "<group>"; };
 		21253D1529C9B20B004ED82D /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		21253D1629C9B20B004ED82D /* UIView+Shimmer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmer.swift"; sourceTree = "<group>"; };
@@ -263,7 +274,6 @@
 		4471722F2919466E005EDF32 /* CartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCell.swift; sourceTree = "<group>"; };
 		44717235291A458F005EDF32 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootVC.swift; sourceTree = "<group>"; };
 		4473D6C82940653300802446 /* BankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankView.swift; sourceTree = "<group>"; };
-		4473D6CA294083DA00802446 /* BankApps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankApps.swift; sourceTree = "<group>"; };
 		4473D6CC29409A8D00802446 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
 		4479ECD929476EEF009B3AB8 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		44834C69292E16EA000A32B2 /* AuthAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAssembly.swift; sourceTree = "<group>"; };
@@ -364,6 +374,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		211DF36729D18CF30038A951 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				211DF36829D18CF30038A951 /* ConfigTarget.swift */,
+				211DF36929D18CF30038A951 /* Model */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		211DF36929D18CF30038A951 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				211DF36A29D18CF30038A951 /* ConfigModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		211DF36D29D18D0C0038A951 /* RemoteConfigService */ = {
+			isa = PBXGroup;
+			children = (
+				211DF36E29D18D0C0038A951 /* BankAppModel.swift */,
+				211DF36F29D18D0C0038A951 /* RemoteConfigService.swift */,
+			);
+			path = RemoteConfigService;
+			sourceTree = "<group>";
+		};
 		21253D1429C9B20B004ED82D /* UIView+Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -486,6 +522,7 @@
 			children = (
 				442A45CB297FEE1500EC3D73 /* StubbedResponse.swift */,
 				442A45CD297FEE8000EC3D73 /* Auth.json */,
+				211DF36529D18CCF0038A951 /* RemoteConfig.json */,
 				44A31250298103F10099EB76 /* ListCards.json */,
 				44533D1B29851C0D0041FAA9 /* PaymentToken.json */,
 				44BD272A29A7AE38001ECF54 /* PaymentOrderSDK.json */,
@@ -568,6 +605,7 @@
 		444A13B5291BA98B00C9FBE0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				211DF36D29D18D0C0038A951 /* RemoteConfigService */,
 				4498008A29AD246E008E808A /* AlertService */,
 				44BD273029A8A44E001ECF54 /* PaymentService */,
 				44A70AE8299A4F07009A0F34 /* ImageDownloadService */,
@@ -791,6 +829,7 @@
 		4464DF91291D2725000C9B45 /* Targets */ = {
 			isa = PBXGroup;
 			children = (
+				211DF36729D18CF30038A951 /* Config */,
 				44533D172985194A0041FAA9 /* Payment */,
 				442A45D829804E0000EC3D73 /* UserInfo */,
 				4464DF92291D2747000C9B45 /* Auth */,
@@ -947,7 +986,6 @@
 			isa = PBXGroup;
 			children = (
 				44834C71292E32E8000A32B2 /* AuthService.swift */,
-				4473D6CA294083DA00802446 /* BankApps.swift */,
 			);
 			path = AuthService;
 			sourceTree = "<group>";
@@ -1108,6 +1146,7 @@
 				AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */,
 				21BA175129C46E3C001C2CEE /* Tread+Extension.swift */,
 				21253D2229CA3152004ED82D /* UIImageView+Download.swift */,
+				211DF36329D18B220038A951 /* UIImage+base64.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1322,6 +1361,7 @@
 				444A13F3291CF1C100C9FBE0 /* .swiftlint.yml in Resources */,
 				445CB07F292C9D9500F50047 /* SB Sans Text.ttf in Resources */,
 				44A31251298103F10099EB76 /* ListCards.json in Resources */,
+				211DF36629D18CCF0038A951 /* RemoteConfig.json in Resources */,
 				4421B76E299ABC8500DD7881 /* neg.mp3 in Resources */,
 				44A5A46129B4A38900C01420 /* cms-res.der in Resources */,
 				4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */,
@@ -1418,6 +1458,7 @@
 				445CB09B292DFF5100F50047 /* PaymentPresenter.swift in Sources */,
 				44533D2129852A2A0041FAA9 /* AuthManager.swift in Sources */,
 				4416E437291FA90900284972 /* StartupService.swift in Sources */,
+				211DF36B29D18CF30038A951 /* ConfigTarget.swift in Sources */,
 				44BD272D29A8958D001ECF54 /* AuthInfo.swift in Sources */,
 				44D898D52936487900550FC6 /* String+Random.swift in Sources */,
 				44E581822939D25A00BDEC4E /* BankModel.swift in Sources */,
@@ -1431,9 +1472,11 @@
 				442A45E0298059F900EC3D73 /* UserService.swift in Sources */,
 				218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */,
 				4464DF99291D3DB7000C9B45 /* AuthModel.swift in Sources */,
+				211DF37029D18D0C0038A951 /* BankAppModel.swift in Sources */,
 				21253D1B29C9B20B004ED82D /* SBShimmeringView.swift in Sources */,
 				445CB075292BC3EF00F50047 /* UIImage+Bundle.swift in Sources */,
 				44F9FD4B295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift in Sources */,
+				211DF37129D18D0C0038A951 /* RemoteConfigService.swift in Sources */,
 				445D018B2994F375006458AD /* BaseRequestManager.swift in Sources */,
 				4416E424291E21C300284972 /* SDKError.swift in Sources */,
 				44A31268298156C30099EB76 /* String+Extensions.swift in Sources */,
@@ -1469,11 +1512,13 @@
 				44A3126129813ABB0099EB76 /* AuthRouter.swift in Sources */,
 				44533D1E298521380041FAA9 /* PaymentTokenModel.swift in Sources */,
 				445CB066292BB3E300F50047 /* String+Localized.swift in Sources */,
+				211DF36C29D18CF30038A951 /* ConfigModel.swift in Sources */,
 				44F9FD4D295AFAB800FE4B9F /* CoverPresentationController.swift in Sources */,
 				44BD272F29A895A2001ECF54 /* PayInfo.swift in Sources */,
 				445CB09E292E056B00F50047 /* AuthVC.swift in Sources */,
 				4464DF8E291D0D2E000C9B45 /* ParameterEncoding.swift in Sources */,
 				44F9FD5F295AFCAC00FE4B9F /* CGPoint+Extension.swift in Sources */,
+				211DF36429D18B220038A951 /* UIImage+base64.swift in Sources */,
 				44F9FD61295AFCAC00FE4B9F /* CGFloat+Extension.swift in Sources */,
 				44499BED296EB4A500B6A582 /* Bundle+Extensions.swift in Sources */,
 				44B821FD2923810C00C06C51 /* TransparentWindow.swift in Sources */,
@@ -1481,7 +1526,6 @@
 				219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */,
 				445CB078292BC56900F50047 /* Gallery.swift in Sources */,
 				44B822022923897D00C06C51 /* SBPayService.swift in Sources */,
-				4473D6CB294083DA00802446 /* BankApps.swift in Sources */,
 				442A45DA29804E0C00EC3D73 /* UserModel.swift in Sources */,
 				AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */,
 				44F9FD51295AFAD700FE4B9F /* ContentNC.swift in Sources */,

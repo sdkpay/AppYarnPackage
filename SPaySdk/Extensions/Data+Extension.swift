@@ -16,3 +16,15 @@ extension Data {
         return prettyPrintedString
     }
 }
+
+extension Encodable {
+    var data: Data? {
+        try? JSONEncoder().encode(self)
+    }
+}
+
+extension Data {
+    func decode<T: Codable> (to type: T.Type) -> T? {
+        try? JSONDecoder().decode(T.self, from: self)
+    }
+}

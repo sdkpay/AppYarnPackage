@@ -129,11 +129,11 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             sPayButton.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 sPayButton.leadingAnchor.constraint(equalTo: paymentView.leadingAnchor,
-                                                       constant: .margin),
+                                                    constant: .margin),
                 sPayButton.trailingAnchor.constraint(equalTo: paymentView.trailingAnchor,
-                                                        constant: -.margin),
+                                                     constant: -.margin),
                 sPayButton.bottomAnchor.constraint(equalTo: paymentView.bottomAnchor,
-                                                      constant: -.bottomMargin)
+                                                   constant: -.bottomMargin)
             ])
         }
         
@@ -151,7 +151,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             totalCostLabel.topAnchor.constraint(equalTo: paymentView.topAnchor)
         ])
     }
-
+    
     private func sPayButtonTapped() {
         if autoMode {
             autoPay()
