@@ -9,6 +9,6 @@ import UIKit
 
 extension UIImage {
     convenience init?(_ named: String) {
-        self.init(named: named, in: Bundle(for: SBPay.self), compatibleWith: nil)
+        self.init(named: named, in: Bundle(for: SPay.self), compatibleWith: nil)
     }
 }

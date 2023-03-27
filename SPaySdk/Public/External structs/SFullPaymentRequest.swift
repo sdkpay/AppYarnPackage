@@ -7,8 +7,8 @@
 
 import Foundation
 
-@objc(SBFullPaymentRequest)
-public final class SBFullPaymentRequest: NSObject {
+@objc(SFullPaymentRequest)
+public final class SFullPaymentRequest: NSObject {
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     let apiKey: String
     /// Логин дочернего партнера

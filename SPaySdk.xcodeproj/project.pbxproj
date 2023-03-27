@@ -71,7 +71,7 @@
 		445CB0A0292E057E00F50047 /* AuthPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445CB09F292E057E00F50047 /* AuthPresenter.swift */; };
 		445CB0A2292E119800F50047 /* PaymentAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445CB0A1292E119800F50047 /* PaymentAssembly.swift */; };
 		445D018B2994F375006458AD /* BaseRequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445D018A2994F375006458AD /* BaseRequestManager.swift */; };
-		445D018D29950BB2006458AD /* SBFullPaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445D018C29950BB2006458AD /* SBFullPaymentRequest.swift */; };
+		445D018D29950BB2006458AD /* SFullPaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445D018C29950BB2006458AD /* SFullPaymentRequest.swift */; };
 		4460275929548A2700EC9DE8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4460275829548A2700EC9DE8 /* GoogleService-Info.plist */; };
 		4464DF89291D01F4000C9B45 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF88291D01F4000C9B45 /* NetworkService.swift */; };
 		4464DF8C291D0452000C9B45 /* NetworkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF8B291D0452000C9B45 /* NetworkProvider.swift */; };
@@ -79,7 +79,7 @@
 		4464DF90291D0DE3000C9B45 /* NetworkDecoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF8F291D0DE3000C9B45 /* NetworkDecoding.swift */; };
 		4464DF94291D283C000C9B45 /* AuthTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF93291D283C000C9B45 /* AuthTarget.swift */; };
 		4464DF99291D3DB7000C9B45 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF98291D3DB7000C9B45 /* AuthModel.swift */; };
-		4464DF9D291D8E4C000C9B45 /* SBPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF9C291D8E4C000C9B45 /* SBPay.swift */; };
+		4464DF9D291D8E4C000C9B45 /* SPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF9C291D8E4C000C9B45 /* SPay.swift */; };
 		44676ACB296DD52A00D9DFAE /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44676ACA296DD52A00D9DFAE /* AppSettings.swift */; };
 		4471721529193B21005EDF32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471721429193B21005EDF32 /* AppDelegate.swift */; };
 		4471721929193B21005EDF32 /* CartVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471721829193B21005EDF32 /* CartVC.swift */; };
@@ -127,10 +127,10 @@
 		44C2A04B29223430000D894A /* SegmentedControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C2A04A29223430000D894A /* SegmentedControlCell.swift */; };
 		44C651052930E102008F1C29 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651042930E102008F1C29 /* LoadingView.swift */; };
 		44C651092930E721008F1C29 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651082930E721008F1C29 /* AlertView.swift */; };
-		44C6510C2934E327008F1C29 /* SBPaymentTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510B2934E327008F1C29 /* SBPaymentTokenResponse.swift */; };
-		44C6510E2934E33E008F1C29 /* SBPaymentTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510D2934E33E008F1C29 /* SBPaymentTokenRequest.swift */; };
+		44C6510C2934E327008F1C29 /* SPaymentTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510B2934E327008F1C29 /* SPaymentTokenResponse.swift */; };
+		44C6510E2934E33E008F1C29 /* SPaymentTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510D2934E33E008F1C29 /* SPaymentTokenRequest.swift */; };
 		44C651102934E37F008F1C29 /* SBPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510F2934E37F008F1C29 /* SBPError.swift */; };
-		44C651122934E393008F1C29 /* SBPaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651112934E393008F1C29 /* SBPaymentRequest.swift */; };
+		44C651122934E393008F1C29 /* SPaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651112934E393008F1C29 /* SPaymentRequest.swift */; };
 		44D5361B2926198400B99463 /* UIViewController+Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D5361A2926198400B99463 /* UIViewController+Container.swift */; };
 		44D7585F29751C9A005D2EA4 /* PersonalMetricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D7585E29751C9A005D2EA4 /* PersonalMetricsService.swift */; };
 		44D898D52936487900550FC6 /* String+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D898D42936487900550FC6 /* String+Random.swift */; };
@@ -253,7 +253,7 @@
 		445CB09F292E057E00F50047 /* AuthPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPresenter.swift; sourceTree = "<group>"; };
 		445CB0A1292E119800F50047 /* PaymentAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAssembly.swift; sourceTree = "<group>"; };
 		445D018A2994F375006458AD /* BaseRequestManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRequestManager.swift; sourceTree = "<group>"; };
-		445D018C29950BB2006458AD /* SBFullPaymentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBFullPaymentRequest.swift; sourceTree = "<group>"; };
+		445D018C29950BB2006458AD /* SFullPaymentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFullPaymentRequest.swift; sourceTree = "<group>"; };
 		44602757295444BE00EC9DE8 /* SberPayExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SberPayExample.entitlements; sourceTree = "<group>"; };
 		4460275829548A2700EC9DE8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4464DF88291D01F4000C9B45 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -262,7 +262,7 @@
 		4464DF8F291D0DE3000C9B45 /* NetworkDecoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDecoding.swift; sourceTree = "<group>"; };
 		4464DF93291D283C000C9B45 /* AuthTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTarget.swift; sourceTree = "<group>"; };
 		4464DF98291D3DB7000C9B45 /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
-		4464DF9C291D8E4C000C9B45 /* SBPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPay.swift; sourceTree = "<group>"; };
+		4464DF9C291D8E4C000C9B45 /* SPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPay.swift; sourceTree = "<group>"; };
 		44676ACA296DD52A00D9DFAE /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		4471721129193B21005EDF32 /* SPaySdkExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SPaySdkExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4471721429193B21005EDF32 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -317,10 +317,10 @@
 		44C2A04A29223430000D894A /* SegmentedControlCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlCell.swift; sourceTree = "<group>"; };
 		44C651042930E102008F1C29 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		44C651082930E721008F1C29 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
-		44C6510B2934E327008F1C29 /* SBPaymentTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPaymentTokenResponse.swift; sourceTree = "<group>"; };
-		44C6510D2934E33E008F1C29 /* SBPaymentTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPaymentTokenRequest.swift; sourceTree = "<group>"; };
+		44C6510B2934E327008F1C29 /* SPaymentTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPaymentTokenResponse.swift; sourceTree = "<group>"; };
+		44C6510D2934E33E008F1C29 /* SPaymentTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPaymentTokenRequest.swift; sourceTree = "<group>"; };
 		44C6510F2934E37F008F1C29 /* SBPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPError.swift; sourceTree = "<group>"; };
-		44C651112934E393008F1C29 /* SBPaymentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPaymentRequest.swift; sourceTree = "<group>"; };
+		44C651112934E393008F1C29 /* SPaymentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPaymentRequest.swift; sourceTree = "<group>"; };
 		44D5361A2926198400B99463 /* UIViewController+Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Container.swift"; sourceTree = "<group>"; };
 		44D7585E29751C9A005D2EA4 /* PersonalMetricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalMetricsService.swift; sourceTree = "<group>"; };
 		44D898D42936487900550FC6 /* String+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Random.swift"; sourceTree = "<group>"; };
@@ -455,10 +455,10 @@
 		4412F4D32996966300350CBD /* External structs */ = {
 			isa = PBXGroup;
 			children = (
-				445D018C29950BB2006458AD /* SBFullPaymentRequest.swift */,
-				44C6510B2934E327008F1C29 /* SBPaymentTokenResponse.swift */,
-				44C651112934E393008F1C29 /* SBPaymentRequest.swift */,
-				44C6510D2934E33E008F1C29 /* SBPaymentTokenRequest.swift */,
+				445D018C29950BB2006458AD /* SFullPaymentRequest.swift */,
+				44C6510B2934E327008F1C29 /* SPaymentTokenResponse.swift */,
+				44C651112934E393008F1C29 /* SPaymentRequest.swift */,
+				44C6510D2934E33E008F1C29 /* SPaymentTokenRequest.swift */,
 				218A8A1029B0DEF7006A0626 /* SBPayState.swift */,
 			);
 			path = "External structs";
@@ -1116,7 +1116,7 @@
 			children = (
 				4412F4D32996966300350CBD /* External structs */,
 				444A13AB291BA96100C9FBE0 /* SPaySdk.h */,
-				4464DF9C291D8E4C000C9B45 /* SBPay.swift */,
+				4464DF9C291D8E4C000C9B45 /* SPay.swift */,
 				44C6510F2934E37F008F1C29 /* SBPError.swift */,
 				444A13B9291BAFA100C9FBE0 /* SBPButton */,
 			);
@@ -1428,7 +1428,7 @@
 				44C651092930E721008F1C29 /* AlertView.swift in Sources */,
 				44BD273229A8A463001ECF54 /* PaymentService.swift in Sources */,
 				4464DF94291D283C000C9B45 /* AuthTarget.swift in Sources */,
-				44C6510E2934E33E008F1C29 /* SBPaymentTokenRequest.swift in Sources */,
+				44C6510E2934E33E008F1C29 /* SPaymentTokenRequest.swift in Sources */,
 				AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */,
 				44A0B5BD293DF282007AB3FD /* CardsPresenter.swift in Sources */,
 				445CB0A2292E119800F50047 /* PaymentAssembly.swift in Sources */,
@@ -1448,12 +1448,12 @@
 				44A3125C298135F10099EB76 /* RootRouter.swift in Sources */,
 				445CB08E292CBA4F00F50047 /* DefaultButton.swift in Sources */,
 				44A0B5B9293DF25E007AB3FD /* CardsAssembly.swift in Sources */,
-				44C651122934E393008F1C29 /* SBPaymentRequest.swift in Sources */,
+				44C651122934E393008F1C29 /* SPaymentRequest.swift in Sources */,
 				4496792529A2375F00EC3439 /* ContentView.swift in Sources */,
 				440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */,
 				44BD272929A7AD89001ECF54 /* PaymentOrderModel.swift in Sources */,
 				4473D6C92940653300802446 /* BankView.swift in Sources */,
-				4464DF9D291D8E4C000C9B45 /* SBPay.swift in Sources */,
+				4464DF9D291D8E4C000C9B45 /* SPay.swift in Sources */,
 				AEEB602429B9B55E00D1E1D2 /* ImageDownloader.swift in Sources */,
 				445CB09B292DFF5100F50047 /* PaymentPresenter.swift in Sources */,
 				44533D2129852A2A0041FAA9 /* AuthManager.swift in Sources */,
@@ -1497,7 +1497,7 @@
 				44B8220A2923D79900C06C51 /* RootVC.swift in Sources */,
 				44F9FD49295AFAB800FE4B9F /* CoverTransitioningDelegate.swift in Sources */,
 				44533D192985196D0041FAA9 /* PaymentTarget.swift in Sources */,
-				445D018D29950BB2006458AD /* SBFullPaymentRequest.swift in Sources */,
+				445D018D29950BB2006458AD /* SFullPaymentRequest.swift in Sources */,
 				445CB087292CA0A800F50047 /* Fonts.swift in Sources */,
 				445CB099292CDC1200F50047 /* CardInfoView.swift in Sources */,
 				445CB093292CC08400F50047 /* PaymentVC.swift in Sources */,
@@ -1506,7 +1506,7 @@
 				442A45C9297FE80D00EC3D73 /* StubNetworkProvider.swift in Sources */,
 				21253D1D29C9B20B004ED82D /* UIView+Shimmer.swift in Sources */,
 				442A45D5298049BC00EC3D73 /* BuildSettings.swift in Sources */,
-				44C6510C2934E327008F1C29 /* SBPaymentTokenResponse.swift in Sources */,
+				44C6510C2934E327008F1C29 /* SPaymentTokenResponse.swift in Sources */,
 				21253D1E29C9B20B004ED82D /* UIView+Template.swift in Sources */,
 				21253D2329CA3152004ED82D /* UIImageView+Download.swift in Sources */,
 				44A3126129813ABB0099EB76 /* AuthRouter.swift in Sources */,

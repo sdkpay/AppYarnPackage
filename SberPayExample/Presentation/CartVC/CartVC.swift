@@ -81,7 +81,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.sslOn = sslOn
         self.purchase = purchase
         super.init(nibName: nil, bundle: nil)
-        SBPay.debugConfig(network: network, ssl: sslOn)
+        SPay.debugConfig(network: network, ssl: sslOn)
     }
     
     required init?(coder: NSCoder) {
@@ -124,7 +124,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             paymentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
-        if SBPay.isReadyForSPay {
+        if SPay.isReadyForSPay {
             paymentView.addSubview(sPayButton)
             sPayButton.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
@@ -165,11 +165,11 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func getPaymentToken() {
-        let request = SBPaymentTokenRequest(apiKey: apiKey,
+        let request = SPaymentTokenRequest(apiKey: apiKey,
                                             merchantLogin: "Test shop",
                                             orderId: orderId,
                                             redirectUri: "sberPayExampleapp://sberidauth")
-        SBPay.getPaymentToken(with: self, with: request) { response in
+        SPay.getPaymentToken(with: self, with: request) { response in
             if let error = response.error {
                 // Обработка ошибки
                 print("\(error.errorDescription) - описание ошибки")
@@ -182,7 +182,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func paymentTokenWithPerchase() {
-        let request = SBPaymentTokenRequest(apiKey: apiKey,
+        let request = SPaymentTokenRequest(apiKey: apiKey,
                                             redirectUri: "sberPayExampleapp://sberidauth",
                                             merchantLogin: "Test shop",
                                             amount: totalCost,
@@ -191,7 +191,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                             orderNumber: orderId,
                                             recurrentExipiry: "20230821",
                                             recurrentFrequency: 2)
-        SBPay.getPaymentToken(with: self, with: request) { response in
+        SPay.getPaymentToken(with: self, with: request) { response in
             if let error = response.error {
                 // Обработка ошибки
                 print("\(error.errorDescription) - описание ошибки")
@@ -204,11 +204,11 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func autoPay() {
-        let request = SBFullPaymentRequest(apiKey: apiKey,
+        let request = SFullPaymentRequest(apiKey: apiKey,
                                            merchantLogin: "Test shop",
                                            orderId: orderId,
                                            redirectUri: "sberPayExampleapp://sberidauth")
-        SBPay.payWithOrderId(with: self, with: request) { state, info  in
+        SPay.payWithOrderId(with: self, with: request) { state, info  in
             switch state {
             case .success:
                 print("Успешный результат")
@@ -223,10 +223,10 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func pay(with token: String) {
-        let request = SBPaymentRequest(apiKey: apiKey,
+        let request = SPaymentRequest(apiKey: apiKey,
                                        orderId: "213132",
                                        paymentToken: "")
-        SBPay.pay(with: request) { state, info  in
+        SPay.pay(with: request) { state, info  in
             switch state {
             case .success:
                 print("Успешный результат")
@@ -241,7 +241,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func completePayment() {
-        SBPay.completePayment(paymentState: .success) {
+        SPay.completePayment(paymentState: .success) {
             // Действия после закрытия шторки
         }
     }

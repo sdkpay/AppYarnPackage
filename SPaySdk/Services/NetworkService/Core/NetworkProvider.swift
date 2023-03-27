@@ -58,7 +58,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private var requestManager: BaseRequestManager
      
     private lazy var certificate: Data? = {
-        guard let fileDer = Bundle(for: SBPay.self).path(forResource: "ecomtest.s.ru",
+        guard let fileDer = Bundle(for: SPay.self).path(forResource: "ecomtest.s.ru",
                                                          ofType: "der")
         else { return nil }
         return NSData(contentsOfFile: fileDer) as? Data

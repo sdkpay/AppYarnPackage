@@ -18,7 +18,7 @@ struct AuthInfo: Hashable {
     let expiry: String?
     let frequency: Int?
     
-    init(fullPaymentRequest: SBFullPaymentRequest) {
+    init(fullPaymentRequest: SFullPaymentRequest) {
         self.apiKey = fullPaymentRequest.apiKey
         self.merchantLogin = fullPaymentRequest.merchantLogin
         self.orderId = fullPaymentRequest.orderId
@@ -30,7 +30,7 @@ struct AuthInfo: Hashable {
         self.frequency = nil
     }
     
-    init(paymentTokenRequest: SBPaymentTokenRequest) {
+    init(paymentTokenRequest: SPaymentTokenRequest) {
         self.apiKey = paymentTokenRequest.apiKey
         self.merchantLogin = paymentTokenRequest.merchantLogin
         self.orderId = paymentTokenRequest.orderId

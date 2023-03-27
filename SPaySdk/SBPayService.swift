@@ -7,19 +7,19 @@
 
 import UIKit
 
-typealias PaymentTokenCompletion = (SBPaymentTokenResponse) -> Void
+typealias PaymentTokenCompletion = (SPaymentTokenResponse) -> Void
 typealias PaymentCompletion = (_ state: SBPayState, _ info: String) -> Void
 
 protocol SBPayService {
     func setup()
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
-                         with request: SBPaymentTokenRequest,
+                         with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion)
-    func pay(with paymentRequest: SBPaymentRequest,
+    func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
     func payWithOrderId(with viewController: UIViewController,
-                        paymentRequest: SBFullPaymentRequest,
+                        paymentRequest: SFullPaymentRequest,
                         completion: @escaping PaymentCompletion)
     func completePayment(paymentSuccess: SBPayState,
                          completion: @escaping Action)
@@ -76,7 +76,7 @@ final class DefaultSBPayService: SBPayService {
     }
 
     func getPaymentToken(with viewController: UIViewController,
-                         with request: SBPaymentTokenRequest,
+                         with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
         SBLogger.logRequestPaymentToken(with: request)
         let manager: SDKManager = locator.resolve()
@@ -88,7 +88,7 @@ final class DefaultSBPayService: SBPayService {
         SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
     }
     
-    func pay(with paymentRequest: SBPaymentRequest,
+    func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
         let manager: SDKManager = locator.resolve()
         manager.pay(with: paymentRequest, completion: completion)
@@ -100,7 +100,7 @@ final class DefaultSBPayService: SBPayService {
     }
     
     func payWithOrderId(with viewController: UIViewController,
-                        paymentRequest: SBFullPaymentRequest,
+                        paymentRequest: SFullPaymentRequest,
                         completion: @escaping PaymentCompletion) {
         let manager: SDKManager = locator.resolve()
         manager.configWithOrderId(paymentRequest: paymentRequest,

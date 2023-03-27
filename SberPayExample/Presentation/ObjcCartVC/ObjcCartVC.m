@@ -26,7 +26,7 @@
     [super viewDidLoad];
     self.navigationItem.title = @"Objc";
     self.view.backgroundColor = UIColor.whiteColor;
-    if ([SBPay isReadyForSPay]) {
+    if ([SPay isReadyForSPay]) {
         [self setupSBPayButton];
     }
 }
@@ -45,7 +45,7 @@
         self.autoMode = autoMode;
         self.mocksOn = mocksOn;
         self.sslOn = sslOn;
-        [SBPay setup];
+        [SPay setup];
     }
     
     return self;
@@ -64,20 +64,20 @@
 }
 
 -(void)sbButtonTapped {
-    if (SBPay.isReadyForSPay) {
+    if (SPay.isReadyForSPay) {
         
     }
-    SBPaymentTokenRequest *requestModel = [[SBPaymentTokenRequest alloc] initWithApiKey:_apiKey
-                                                                            redirectUri:@"sberPayExampleapp"
-                                                                          merchantLogin:@"Test shop"
-                                                                                 amount:*(_totalCost)
-                                                                               currency:@""
-                                                                            mobilePhone:@""
-                                                                            orderNumber:@""
-                                                                       recurrentExipiry:@""
-                                                                     recurrentFrequency:0];
+    SPaymentTokenRequest *requestModel = [[SPaymentTokenRequest alloc] initWithApiKey:_apiKey
+                                                                          redirectUri:@"sberPayExampleapp"
+                                                                        merchantLogin:@"Test shop"
+                                                                               amount:*(_totalCost)
+                                                                             currency:@""
+                                                                          mobilePhone:@""
+                                                                          orderNumber:@""
+                                                                     recurrentExipiry:@""
+                                                                   recurrentFrequency:0];
     
-    [SBPay getPaymentTokenWith:self with:requestModel completion:^(SBPaymentTokenResponse * _Nonnull response) {
+    [SPay getPaymentTokenWith:self with:requestModel completion:^(SPaymentTokenResponse * _Nonnull response) {
         if (response.error) {
             // Обработка ошибки
             NSLog(@"%@ - описание ошибки", response.error.errorDescription);
@@ -88,10 +88,10 @@
 }
 
 -(void)pay {
-    SBPaymentRequest *request = [[SBPaymentRequest alloc] initWithApiKey: @""
-                                                                 orderId: @""
-                                                            paymentToken: @""];
-    [SBPay payWith:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
+    SPaymentRequest *request = [[SPaymentRequest alloc] initWithApiKey: @""
+                                                               orderId: @""
+                                                          paymentToken: @""];
+    [SPay payWith:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
         switch(state) {
             case SBPayStateSuccess:
                 NSLog(@"Успешный результат");
@@ -107,14 +107,14 @@
 }
 
 -(void)fullPay {
-    SBFullPaymentRequest *request = [[SBFullPaymentRequest alloc]
-                                     initWithApiKey: @"awdawdawdajkdmdkladmka"
-                                     merchantLogin: @"Test shop"
-                                     orderId: @"12312312"
-                                     language:nil
-                                     redirectUri: @"sberPayExampleapp://sberidauth"
+    SFullPaymentRequest *request = [[SFullPaymentRequest alloc]
+                                    initWithApiKey: @"awdawdawdajkdmdkladmka"
+                                    merchantLogin: @"Test shop"
+                                    orderId: @"12312312"
+                                    language:nil
+                                    redirectUri: @"sberPayExampleapp://sberidauth"
     ];
-    [SBPay payWithOrderIdWith:self with:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
+    [SPay payWithOrderIdWith:self with:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
         switch(state) {
             case SBPayStateSuccess:
                 NSLog(@"Успешный результат");
@@ -130,7 +130,7 @@
 }
 
 -(void)completePayment {
-    [SBPay completePaymentWithPaymentState: SBPayStateSuccess completion:^{
+    [SPay completePaymentWithPaymentState: SBPayStateSuccess completion:^{
         // Блок отработает после закрытия окна SDK
     }];
 }

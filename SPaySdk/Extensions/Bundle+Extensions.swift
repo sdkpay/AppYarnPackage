@@ -14,7 +14,7 @@ extension Bundle {
     }
     
     static var sdkBundle: Bundle = {
-        return Bundle(for: SBPay.self)
+        return Bundle(for: SPay.self)
     }()
 
     static var sdkVersion: String {

@@ -17,7 +17,7 @@ struct PayInfo {
     /// Идентификатор платежного токена, полученный от SDK.
     let paymentTokenId: String?
     
-    init(paymentRequest: SBPaymentRequest) {
+    init(paymentRequest: SPaymentRequest) {
         self.apiKey = paymentRequest.apiKey
         self.orderId = paymentRequest.orderId
         self.paymentToken = paymentRequest.paymentToken

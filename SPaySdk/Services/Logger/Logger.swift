@@ -186,7 +186,7 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
-    static func logRequestPaymentToken(with params: SBPaymentTokenRequest) {
+    static func logRequestPaymentToken(with params: SPaymentTokenRequest) {
         log(
             """
             ➡️ Merchant called GetPaymentToken
@@ -205,7 +205,7 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
-    static func logResponsePaymentToken(with params: SBPaymentTokenResponse) {
+    static func logResponsePaymentToken(with params: SPaymentTokenResponse) {
         log(
             """
             ↩️ Merchant get GetPaymentToken response

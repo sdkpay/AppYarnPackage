@@ -7,8 +7,8 @@
 
 import Foundation
 
-@objc(SBPaymentTokenResponse)
-public final class SBPaymentTokenResponse: NSObject {
+@objc(SPaymentTokenResponse)
+public final class SPaymentTokenResponse: NSObject {
     /// Платежный токен. Отсутствует, если заполнен paymentTokenId
     @objc public var paymentToken: String?
     /// Идентификатор платежного токена. Отсутствует, если заполнен paymentToken

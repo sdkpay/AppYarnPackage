@@ -25,7 +25,7 @@ final class ImageDownloader: NSObject {
     private let serialQueueForDataTasks = DispatchQueue(label: "dataTasks.queue", attributes: .concurrent)
     
     private lazy var certificate: Data? = {
-        guard let fileDer = Bundle(for: SBPay.self).path(forResource: "cms-res",
+        guard let fileDer = Bundle(for: SPay.self).path(forResource: "cms-res",
                                                          ofType: "der")
         else { return nil }
         return NSData(contentsOfFile: fileDer) as? Data

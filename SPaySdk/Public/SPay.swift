@@ -8,7 +8,7 @@
 import UIKit
 
 @objc
-public final class SBPay: NSObject {
+public final class SPay: NSObject {
     private static var payService: SBPayService? = DefaultSBPayService()
     
     @objc
@@ -31,8 +31,8 @@ public final class SBPay: NSObject {
      */
     @objc
     public static func getPaymentToken(with viewController: UIViewController,
-                                       with paymentTokenRequest: SBPaymentTokenRequest,
-                                       completion: @escaping (SBPaymentTokenResponse) -> Void) {
+                                       with paymentTokenRequest: SPaymentTokenRequest,
+                                       completion: @escaping (SPaymentTokenResponse) -> Void) {
         payService?.getPaymentToken(with: viewController, with: paymentTokenRequest, completion: completion)
     }
     
@@ -40,7 +40,7 @@ public final class SBPay: NSObject {
      Метод для оплаты
      */
     @objc
-    public static func pay(with paymentRequest: SBPaymentRequest,
+    public static func pay(with paymentRequest: SPaymentRequest,
                            completion: @escaping (_ state: SBPayState, _ info: String) -> Void) {
         payService?.pay(with: paymentRequest, completion: completion)
     }
@@ -50,7 +50,7 @@ public final class SBPay: NSObject {
      */
     @objc
     public static func payWithOrderId(with viewController: UIViewController,
-                                      with paymentRequest: SBFullPaymentRequest,
+                                      with paymentRequest: SFullPaymentRequest,
                                       completion: @escaping (_ state: SBPayState, _ info: String) -> Void) {
         payService?.payWithOrderId(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }

@@ -24,11 +24,11 @@ protocol SDKManager {
     var payStrategy: PayStrategy { get }
     var authInfo: AuthInfo? { get }
     var payHandler: Action? { get set }
-    func config(paymentTokenRequest: SBPaymentTokenRequest,
+    func config(paymentTokenRequest: SPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion)
-    func configWithOrderId(paymentRequest: SBFullPaymentRequest,
+    func configWithOrderId(paymentRequest: SFullPaymentRequest,
                            completion: @escaping PaymentCompletion)
-    func pay(with paymentRequest: SBPaymentRequest,
+    func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
     func completionPaymentToken(with paymentToken: String?,
                                 paymentTokenId: String?,
@@ -70,7 +70,7 @@ final class DefaultSDKManager: SDKManager {
         SBLogger.log(.stop(obj: self))
     }
 
-    func config(paymentTokenRequest: SBPaymentTokenRequest,
+    func config(paymentTokenRequest: SPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion) {
         let authInfo = AuthInfo(paymentTokenRequest: paymentTokenRequest)
         newStart = isNewStart(check: authInfo)
@@ -81,7 +81,7 @@ final class DefaultSDKManager: SDKManager {
         self.paymentTokenCompletion = completion
     }
     
-    func configWithOrderId(paymentRequest: SBFullPaymentRequest,
+    func configWithOrderId(paymentRequest: SFullPaymentRequest,
                            completion: @escaping PaymentCompletion) {
         let authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
         newStart = isNewStart(check: authInfo)
@@ -92,7 +92,7 @@ final class DefaultSDKManager: SDKManager {
         self.paymentCompletion = completion
     }
     
-    func pay(with paymentRequest: SBPaymentRequest,
+    func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
         payInfo = PayInfo(paymentRequest: paymentRequest)
         paymentCompletion = completion
@@ -100,7 +100,7 @@ final class DefaultSDKManager: SDKManager {
     }
     
     func completionWithError(error: SDKError) {
-        let responce = SBPaymentTokenResponse()
+        let responce = SPaymentTokenResponse()
         responce.error = SBPError(errorState: error)
         switch payStrategy {
         case .auto:
@@ -120,7 +120,7 @@ final class DefaultSDKManager: SDKManager {
     func completionPaymentToken(with paymentToken: String? = nil,
                                 paymentTokenId: String? = nil,
                                 tokenExpiration: Int = 0) {
-        let responce = SBPaymentTokenResponse(paymentToken: paymentToken,
+        let responce = SPaymentTokenResponse(paymentToken: paymentToken,
                                               paymentTokenId: paymentTokenId,
                                               tokenExpiration: tokenExpiration,
                                               error: nil)

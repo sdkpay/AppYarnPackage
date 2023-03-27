@@ -17,8 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
         let config = getConfig()
-        SBPay.debugConfig(network: config.network, ssl: config.ssl == "On")
-        SBPay.setup()
+        SPay.debugConfig(network: config.network, ssl: config.ssl == "On")
+        SPay.setup()
         startupService.setupInitialState(with: window)
         return true
     }
@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         if url.scheme == "sberPayExampleapp" && url.host == "sberidauth" {
-            SBPay.getAuthURL(url)
+            SPay.getAuthURL(url)
         }
         return true
     }
