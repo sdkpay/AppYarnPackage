@@ -15,12 +15,14 @@ private extension CGFloat {
 }
 
 enum Config: Int, CaseIterable, Codable {
-    case apiKey, cost, orderId, configMethod, lang, mode, network, ssl
+    case apiKey, merchantLogin, cost, orderId, configMethod, lang, mode, network, ssl
     
     var title: String {
         switch self {
         case .apiKey:
             return "ApiKey:"
+        case .merchantLogin:
+            return "MerchantLogin:"
         case .cost:
             return "Cost:"
         case .orderId:
@@ -57,8 +59,9 @@ enum Config: Int, CaseIterable, Codable {
 }
 
 struct ConfigValues: Codable {
-    var apiKey = "AFhdqaX970inj42EoOVuw+kAAAAAAAAADH8u5FkDlopXBsahjOkZA1CcQwTaKaUMQB/H1JNtlz7fSTFdvOcWXXvpgvzCkJDHyRrfKuxYc8p4wP5kcZN+ua3bxgqRjGQLNxI2b9askeQvt63cZNivX3EDIJz6Ywlk0omNVxAlneT7Z1Do/OSkelsZa5zVwVZbYV0yQVSz" // swiftlint:disable:this line_length
+    var apiKey = "APgWA9brxUPpgEz/Qj0dHR4AAAAAAAAADDR8ezdUy7tW0Vvns+yzeJ8FMyClHvqjIdqYmXxYJ3MXG+CaM15S/073vf1A3RoXNTrl1DPxKEkvPBetfoURU7DBI0bkqayEmRROmV6Yu7vlgTwnyJt+88884H7yezp8lEkQ4/dRVlQgYChKGC1Hyi25i9I1TMA+SgxudCUwWMLJ7t7BgQ8wMgCAsLY=" // swiftlint:disable:this line_length
     var cost = "2000"
+    var merchantLogin = "test_sberpay"
     var configMethod = "orderId"
     var orderId = "d9f4ccf2-6f68-4e46-916f-850058b670a3"
     var lang = "Swift"
@@ -70,6 +73,8 @@ struct ConfigValues: Codable {
         switch type {
         case .apiKey:
             return apiKey
+        case .merchantLogin:
+            return merchantLogin
         case .cost:
             return cost
         case .orderId:
@@ -91,6 +96,8 @@ struct ConfigValues: Codable {
         switch type {
         case .apiKey:
             apiKey = value
+        case .merchantLogin:
+            merchantLogin = value
         case .cost:
             cost = value
         case .orderId:
@@ -293,6 +300,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             vc = CartVC(totalCost: Int(values.cost) ?? 0,
                         apiKey: values.apiKey,
                         orderId: values.orderId,
+                        merchantLogin: values.merchantLogin,
                         autoMode: values.mode == "Auto",
                         purchase: values.configMethod == "Purchase",
                         network: values.network,

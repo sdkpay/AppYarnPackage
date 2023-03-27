@@ -17,6 +17,7 @@ private extension CGFloat {
 final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private let totalCost: Int
     private let apiKey: String
+    private let merchantLogin: String
     private let autoMode: Bool
     private let orderId: String
     private let network: NetworkState
@@ -69,6 +70,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     init(totalCost: Int,
          apiKey: String,
          orderId: String,
+         merchantLogin: String,
          autoMode: Bool,
          purchase: Bool,
          network: NetworkState,
@@ -80,6 +82,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.network = network
         self.sslOn = sslOn
         self.purchase = purchase
+        self.merchantLogin = merchantLogin
         super.init(nibName: nil, bundle: nil)
         SBPay.debugConfig(network: network, ssl: sslOn)
     }
@@ -129,11 +132,11 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             sPayButton.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 sPayButton.leadingAnchor.constraint(equalTo: paymentView.leadingAnchor,
-                                                       constant: .margin),
+                                                    constant: .margin),
                 sPayButton.trailingAnchor.constraint(equalTo: paymentView.trailingAnchor,
-                                                        constant: -.margin),
+                                                     constant: -.margin),
                 sPayButton.bottomAnchor.constraint(equalTo: paymentView.bottomAnchor,
-                                                      constant: -.bottomMargin)
+                                                   constant: -.bottomMargin)
             ])
         }
         
@@ -184,7 +187,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private func paymentTokenWithPerchase() {
         let request = SBPaymentTokenRequest(apiKey: apiKey,
                                             redirectUri: "sberPayExampleapp://sberidauth",
-                                            merchantLogin: "Test shop",
+                                            merchantLogin: merchantLogin,
                                             amount: totalCost,
                                             currency: "643",
                                             mobilePhone: nil,
@@ -205,7 +208,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func autoPay() {
         let request = SBFullPaymentRequest(apiKey: apiKey,
-                                           merchantLogin: "Test shop",
+                                           merchantLogin: merchantLogin,
                                            orderId: orderId,
                                            redirectUri: "sberPayExampleapp://sberidauth")
         SBPay.payWithOrderId(with: self, with: request) { state, info  in
