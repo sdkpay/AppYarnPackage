@@ -107,7 +107,11 @@ final class DefaultPaymentService: PaymentService {
             case .success:
                 completion(nil)
             case .failure(let error):
-                completion(error)
+                if !error.represents(.badResponseWithStatus(code: .errorFormat)) {
+                    completion(SDKError.badResponseWithStatus(code: .unowned))
+                } else {
+                    completion(error)
+                }
             }
         }
     }
