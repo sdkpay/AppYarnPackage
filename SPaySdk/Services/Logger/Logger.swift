@@ -27,12 +27,24 @@ enum SBLoggerViewState {
     case didDissapear(view: Any)
 }
 
+enum LogLevel {
+    case merchant
+    case debug
+}
+
 enum SBLogger: ResponseDecoder {
     private static var logger = Log()
     
-    static func log(_ massage: String) {
-        print(massage)
-        print("\n\(Date()) \n\(massage)", to: &logger)
+    static func log(level: LogLevel = .debug, _ massage: String) {
+        switch level {
+        case .merchant:
+            print(massage)
+        case .debug:
+            if RemoteConfig.shared.needLogs {
+                print(massage)
+                print("\n\(Date()) \n\(massage)", to: &logger)
+            }
+        }
     }
     
     static func logRequestStarted(_ request: URLRequest) {
@@ -190,7 +202,6 @@ enum SBLogger: ResponseDecoder {
         log(
             """
             ➡️ Merchant called GetPaymentToken
-               apiKey: \(params.apiKey)
                merchantLogin: \(params.merchantLogin ?? "none")
                amount: \(params.amount ?? 0)
                currency: \(params.currency ?? "none")

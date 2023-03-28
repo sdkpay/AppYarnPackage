@@ -27,7 +27,7 @@ enum StubbedResponse {
     
     private func stubbedResponse(_ filename: String) -> Data! {
         let path = Bundle(for: SPay.self).path(forResource: filename,
-                                                ofType: "json")
+                                               ofType: "json")
         do {
             return try Data(contentsOf: URL(fileURLWithPath: path!))
         } catch {

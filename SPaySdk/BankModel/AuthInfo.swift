@@ -8,7 +8,6 @@
 import Foundation
 
 struct AuthInfo: Hashable {
-    let apiKey: String
     let merchantLogin: String?
     let orderId: String?
     let redirectUri: String
@@ -19,7 +18,6 @@ struct AuthInfo: Hashable {
     let frequency: Int?
     
     init(fullPaymentRequest: SFullPaymentRequest) {
-        self.apiKey = fullPaymentRequest.apiKey
         self.merchantLogin = fullPaymentRequest.merchantLogin
         self.orderId = fullPaymentRequest.orderId
         self.redirectUri = fullPaymentRequest.redirectUri
@@ -31,7 +29,6 @@ struct AuthInfo: Hashable {
     }
     
     init(paymentTokenRequest: SPaymentTokenRequest) {
-        self.apiKey = paymentTokenRequest.apiKey
         self.merchantLogin = paymentTokenRequest.merchantLogin
         self.orderId = paymentTokenRequest.orderId
         self.orderNumber = paymentTokenRequest.orderNumber

@@ -24,9 +24,11 @@ protocol SDKManager {
     var payStrategy: PayStrategy { get }
     var authInfo: AuthInfo? { get }
     var payHandler: Action? { get set }
-    func config(paymentTokenRequest: SPaymentTokenRequest,
+    func config(apiKey: String,
+                paymentTokenRequest: SPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion)
-    func configWithOrderId(paymentRequest: SFullPaymentRequest,
+    func configWithOrderId(apiKey: String,
+                           paymentRequest: SFullPaymentRequest,
                            completion: @escaping PaymentCompletion)
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
@@ -70,24 +72,26 @@ final class DefaultSDKManager: SDKManager {
         SBLogger.log(.stop(obj: self))
     }
 
-    func config(paymentTokenRequest: SPaymentTokenRequest,
+    func config(apiKey: String,
+                paymentTokenRequest: SPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion) {
         let authInfo = AuthInfo(paymentTokenRequest: paymentTokenRequest)
         newStart = isNewStart(check: authInfo)
         if newStart { self.authInfo = authInfo }
         payStrategy = .manual
-        authManager.apiKey = paymentTokenRequest.apiKey
+        authManager.apiKey = apiKey
         authManager.lang = paymentTokenRequest.language
         self.paymentTokenCompletion = completion
     }
     
-    func configWithOrderId(paymentRequest: SFullPaymentRequest,
+    func configWithOrderId(apiKey: String,
+                           paymentRequest: SFullPaymentRequest,
                            completion: @escaping PaymentCompletion) {
         let authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
         newStart = isNewStart(check: authInfo)
         if newStart { self.authInfo = authInfo }
         payStrategy = .auto
-        authManager.apiKey = paymentRequest.apiKey
+        authManager.apiKey = apiKey
         authManager.lang = paymentRequest.language
         self.paymentCompletion = completion
     }
@@ -121,9 +125,9 @@ final class DefaultSDKManager: SDKManager {
                                 paymentTokenId: String? = nil,
                                 tokenExpiration: Int = 0) {
         let responce = SPaymentTokenResponse(paymentToken: paymentToken,
-                                              paymentTokenId: paymentTokenId,
-                                              tokenExpiration: tokenExpiration,
-                                              error: nil)
+                                             paymentTokenId: paymentTokenId,
+                                             tokenExpiration: tokenExpiration,
+                                             error: nil)
         paymentTokenCompletion?(responce)
     }
     

@@ -11,7 +11,7 @@ typealias PaymentTokenCompletion = (SPaymentTokenResponse) -> Void
 typealias PaymentCompletion = (_ state: SBPayState, _ info: String) -> Void
 
 protocol SBPayService {
-    func setup()
+    func setup(apiKey: String)
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
@@ -27,9 +27,10 @@ protocol SBPayService {
 }
 
 final class DefaultSBPayService: SBPayService {
-    
+
     private lazy var startService: StartupService = DefaultStartupService()
     private lazy var locator: LocatorService = DefaultLocatorService()
+    private var apiKey: String?
 
     private var assemblies: [Assembly] = [
         AnalyticsServiceAssembly(),
@@ -52,11 +53,12 @@ final class DefaultSBPayService: SBPayService {
         }
     }
     
-    func setup() {
+    func setup(apiKey: String) {
+        self.apiKey = apiKey
         UIFont.registerFontsIfNeeded()
         registerServices()
         let remoteConfigService: RemoteConfigService = locator.resolve()
-        remoteConfigService.getConfig()
+        remoteConfigService.getConfig(with: apiKey)
     }
     
     var isReadyForSPay: Bool {
@@ -80,7 +82,10 @@ final class DefaultSBPayService: SBPayService {
                          completion: @escaping PaymentTokenCompletion) {
         SBLogger.logRequestPaymentToken(with: request)
         let manager: SDKManager = locator.resolve()
-        manager.config(paymentTokenRequest: request, completion: { response in
+        guard let apiKey = apiKey else { return assertionFailure(.MerchantAlert.alertApiKey) }
+        manager.config(apiKey: apiKey,
+                       paymentTokenRequest: request,
+                       completion: { response in
             SBLogger.logResponsePaymentToken(with: response)
             completion(response)
         })
@@ -103,7 +108,9 @@ final class DefaultSBPayService: SBPayService {
                         paymentRequest: SFullPaymentRequest,
                         completion: @escaping PaymentCompletion) {
         let manager: SDKManager = locator.resolve()
-        manager.configWithOrderId(paymentRequest: paymentRequest,
+        guard let apiKey = apiKey else { return assertionFailure(.MerchantAlert.alertVersion) }
+        manager.configWithOrderId(apiKey: apiKey,
+                                  paymentRequest: paymentRequest,
                                   completion: completion)
         SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
         startService.openInitialScreen(with: viewController,

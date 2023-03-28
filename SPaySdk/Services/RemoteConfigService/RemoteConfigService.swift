@@ -15,23 +15,27 @@ final class RemoteConfigServiceAssembly: Assembly {
 }
 
 protocol RemoteConfigService {
-    func getConfig()
+    func getConfig(with apiKey: String)
 }
 
 final class DefaultRemoteConfigService: RemoteConfigService {
     private let network: NetworkService
-    
+    private var apiKey: String?
+
     init(network: NetworkService) {
         self.network = network
     }
     
-    func getConfig() {
+    func getConfig(with apiKey: String) {
+        self.apiKey = apiKey
         network.request(ConfigTarget.getConfig,
                         to: ConfigModel.self,
                         retryCount: 5) { [weak self] result in
             switch result {
             case .success(let config):
                 self?.saveConfig(config)
+                self?.checkWhiteLogList(apikeys: config.apikey)
+                self?.checkVersion(version: config.version)
             case .failure(let error):
                 print(error)
             }
@@ -42,5 +46,17 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
         UserDefaults.images = value.images
+    }
+    
+    private func checkWhiteLogList(apikeys: [String]) {
+        guard let apiKey = apiKey else { return }
+        RemoteConfig.shared.needLogs = apikeys.contains(apiKey)
+    }
+    
+    private func checkVersion(version: String) {
+        let currentVesion = Bundle.sdkVersion
+        if version != currentVesion {
+            SBLogger.log(level: .merchant, .MerchantAlert.alertVersion)
+        }
     }
 }

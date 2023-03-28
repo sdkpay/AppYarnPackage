@@ -26,7 +26,7 @@ final class ImageDownloader: NSObject {
     
     private lazy var certificate: Data? = {
         guard let fileDer = Bundle(for: SPay.self).path(forResource: "cms-res",
-                                                         ofType: "der")
+                                                        ofType: "der")
         else { return nil }
         return NSData(contentsOfFile: fileDer) as? Data
     }()

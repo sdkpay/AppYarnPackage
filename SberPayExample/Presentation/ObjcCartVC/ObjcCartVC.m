@@ -45,7 +45,6 @@
         self.autoMode = autoMode;
         self.mocksOn = mocksOn;
         self.sslOn = sslOn;
-        [SPay setup];
     }
     
     return self;
@@ -67,8 +66,7 @@
     if (SPay.isReadyForSPay) {
         
     }
-    SPaymentTokenRequest *requestModel = [[SPaymentTokenRequest alloc] initWithApiKey:_apiKey
-                                                                          redirectUri:@"sberPayExampleapp"
+    SPaymentTokenRequest *requestModel = [[SPaymentTokenRequest alloc] initWithRedirectUri:@"sberPayExampleapp"
                                                                         merchantLogin:@"Test shop"
                                                                                amount:*(_totalCost)
                                                                              currency:@""
@@ -88,8 +86,7 @@
 }
 
 -(void)pay {
-    SPaymentRequest *request = [[SPaymentRequest alloc] initWithApiKey: @""
-                                                               orderId: @""
+    SPaymentRequest *request = [[SPaymentRequest alloc] initWithOrderId: @""
                                                           paymentToken: @""];
     [SPay payWith:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
         switch(state) {

@@ -9,8 +9,6 @@ import Foundation
 
 @objc(SPaymentRequest)
 public final class SPaymentRequest: NSObject {
-    /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
-    let apiKey: String
     /// Уникальный номер (идентификатор) заказа в Платежном шлюзе Банка.
     let orderId: String
     /// Платежный токен, полученный от SDK.
@@ -19,32 +17,26 @@ public final class SPaymentRequest: NSObject {
     let paymentTokenId: String?
     
     @objc
-    init(apiKey: String,
-         orderId: String,
+    init(orderId: String,
          paymentToken: String?,
          paymentTokenId: String?) {
-        self.apiKey = apiKey
         self.orderId = orderId
         self.paymentToken = paymentToken
         self.paymentTokenId = paymentTokenId
     }
     
     @objc
-    public convenience init(apiKey: String,
-                            orderId: String,
+    public convenience init(orderId: String,
                             paymentToken: String) {
-        self.init(apiKey: apiKey,
-                  orderId: orderId,
+        self.init(orderId: orderId,
                   paymentToken: paymentToken,
                   paymentTokenId: nil)
     }
     
     @objc
-    public convenience init(apiKey: String,
-                            orderId: String,
+    public convenience init(orderId: String,
                             paymentTokenId: String) {
-        self.init(apiKey: apiKey,
-                  orderId: orderId,
+        self.init(orderId: orderId,
                   paymentToken: nil,
                   paymentTokenId: paymentTokenId)
     }

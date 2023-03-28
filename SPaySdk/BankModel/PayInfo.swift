@@ -8,8 +8,6 @@
 import Foundation
 
 struct PayInfo {
-    /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
-    let apiKey: String
     /// Уникальный номер (идентификатор) заказа в Платежном шлюзе Банка.
     let orderId: String
     /// Платежный токен, полученный от SDK.
@@ -18,7 +16,6 @@ struct PayInfo {
     let paymentTokenId: String?
     
     init(paymentRequest: SPaymentRequest) {
-        self.apiKey = paymentRequest.apiKey
         self.orderId = paymentRequest.orderId
         self.paymentToken = paymentRequest.paymentToken
         self.paymentTokenId = paymentRequest.paymentTokenId

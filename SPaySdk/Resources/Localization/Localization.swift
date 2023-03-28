@@ -74,4 +74,9 @@ extension String {
         /// Нет интернета. Проверьте подключение и попробуйте ещё раз.
         static let alertPayNoInternetTitle = String(stringLiteral: "alert.pay.no.internet.title")
     }
+    
+    enum MerchantAlert {
+        static let alertApiKey = String(stringLiteral: "merchant.alert.apikey")
+        static let alertVersion = String(stringLiteral: "merchant.alert.version")
+    }
 }

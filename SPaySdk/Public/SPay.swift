@@ -11,9 +11,10 @@ import UIKit
 public final class SPay: NSObject {
     private static var payService: SBPayService? = DefaultSBPayService()
     
+    /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     @objc
-    public static func setup() {
-        payService?.setup()
+    public static func setup(apiKey: String) {
+        payService?.setup(apiKey: apiKey)
     }
     
     /**

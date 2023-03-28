@@ -23,7 +23,7 @@ struct UserDefault<Value: Codable> {
     var wrappedValue: Value? {
         get {
             let data = container.object(forKey: key.rawValue) as? Data ?? Data()
-            var value = data.decode(to: Value.self)
+            let value = data.decode(to: Value.self)
             SBLogger.log("⬆️ Get value: '\((value as? String) ?? "none")' from key: '\(key.rawValue)'")
             return value
         }

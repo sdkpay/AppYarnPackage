@@ -9,8 +9,6 @@ import Foundation
 
 @objc(SPaymentTokenRequest)
 public final class SPaymentTokenRequest: NSObject {
-    /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
-    let apiKey: String
     /// Логин дочернего партнера
     let merchantLogin: String?
     /// Сумма операции в минорных единицах
@@ -35,8 +33,7 @@ public final class SPaymentTokenRequest: NSObject {
     let redirectUri: String
     
     @objc
-    init(apiKey: String,
-         merchantLogin: String?,
+    init(merchantLogin: String?,
          amount: Int = 0,
          currency: String? = nil,
          orderId: String? = nil,
@@ -47,7 +44,6 @@ public final class SPaymentTokenRequest: NSObject {
          recurrentExipiry: String? = nil,
          recurrentFrequency: Int,
          redirectUri: String) {
-        self.apiKey = apiKey
         self.merchantLogin = merchantLogin
         self.amount = amount
         self.currency = currency
@@ -63,12 +59,10 @@ public final class SPaymentTokenRequest: NSObject {
     
     // With orderId
     @objc
-    public convenience init(apiKey: String,
-                            merchantLogin: String?,
+    public convenience init(merchantLogin: String?,
                             orderId: String,
                             redirectUri: String) {
-        self.init(apiKey: apiKey,
-                  merchantLogin: merchantLogin,
+        self.init(merchantLogin: merchantLogin,
                   currency: nil,
                   orderId: orderId,
                   mobilePhone: nil,
@@ -82,8 +76,7 @@ public final class SPaymentTokenRequest: NSObject {
     
     // With purchase
     @objc
-    public convenience init(apiKey: String,
-                            redirectUri: String,
+    public convenience init(redirectUri: String,
                             merchantLogin: String?,
                             amount: Int,
                             currency: String,
@@ -91,8 +84,7 @@ public final class SPaymentTokenRequest: NSObject {
                             orderNumber: String,
                             recurrentExipiry: String,
                             recurrentFrequency: Int) {
-        self.init(apiKey: apiKey,
-                  merchantLogin: merchantLogin,
+        self.init(merchantLogin: merchantLogin,
                   amount: amount,
                   currency: currency,
                   mobilePhone: mobilePhone,

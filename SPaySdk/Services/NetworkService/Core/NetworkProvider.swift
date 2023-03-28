@@ -56,10 +56,10 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private var task: URLSessionTask?
     private var session: URLSession?
     private var requestManager: BaseRequestManager
-     
+    
     private lazy var certificate: Data? = {
         guard let fileDer = Bundle(for: SPay.self).path(forResource: "ecomtest.s.ru",
-                                                         ofType: "der")
+                                                        ofType: "der")
         else { return nil }
         return NSData(contentsOfFile: fileDer) as? Data
     }()

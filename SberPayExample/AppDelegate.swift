@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = window
         let config = getConfig()
         SPay.debugConfig(network: config.network, ssl: config.ssl == "On")
-        SPay.setup()
+        SPay.setup(apiKey: config.apiKey)
         startupService.setupInitialState(with: window)
         return true
     }
