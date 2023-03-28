@@ -63,7 +63,7 @@ struct ConfigValues: Codable {
     var cost = "2000"
     var merchantLogin = "test_sberpay"
     var configMethod = "orderId"
-    var orderId = "d9f4ccf2-6f68-4e46-916f-850058b670a3"
+    var orderId = "a8c8dc9136924b858f3d1de2c028abda"
     var lang = "Swift"
     var mode = "Auto"
     var network = NetworkState.Prod

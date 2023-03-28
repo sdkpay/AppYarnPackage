@@ -16,7 +16,7 @@ extension UIFont {
         else { return }
         
         fontURLs.forEach { font in
-            var result = CTFontManagerRegisterFontsForURL(font as CFURL,
+            let result = CTFontManagerRegisterFontsForURL(font as CFURL,
                                                           .process,
                                                           nil)
             SBLogger.logFontRegistration(url: font, result: result)

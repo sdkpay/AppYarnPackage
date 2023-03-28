@@ -8,5 +8,6 @@
 import Foundation
 
 struct PaymentOrderModel: Codable {
-    let operationId: String
+    let operationId: String?
+    let errorCode: String?
 }
