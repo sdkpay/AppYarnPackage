@@ -9,8 +9,6 @@ import Foundation
 
 @objc(SFullPaymentRequest)
 public final class SFullPaymentRequest: NSObject {
-    /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
-    let apiKey: String
     /// Логин дочернего партнера
     let merchantLogin: String?
     /// Уникальный номер (идентификатор) заказа в системе Клиента.
@@ -21,12 +19,10 @@ public final class SFullPaymentRequest: NSObject {
     let redirectUri: String
 
     @objc
-    public init(apiKey: String,
-                merchantLogin: String? = nil,
+    public init(merchantLogin: String? = nil,
                 orderId: String,
                 language: String? = nil,
                 redirectUri: String) {
-        self.apiKey = apiKey
         self.merchantLogin = merchantLogin
         self.orderId = orderId
         self.language = language

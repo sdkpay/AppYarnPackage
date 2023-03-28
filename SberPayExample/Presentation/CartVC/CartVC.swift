@@ -202,8 +202,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func autoPay() {
-        let request = SFullPaymentRequest(apiKey: apiKey,
-                                          merchantLogin: "Test shop",
+        let request = SFullPaymentRequest(merchantLogin: "Test shop",
                                           orderId: orderId,
                                           redirectUri: "sberPayExampleapp://sberidauth")
         SPay.payWithOrderId(with: self, with: request) { state, info  in

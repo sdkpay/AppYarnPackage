@@ -104,13 +104,10 @@
 }
 
 -(void)fullPay {
-    SFullPaymentRequest *request = [[SFullPaymentRequest alloc]
-                                    initWithApiKey: @"awdawdawdajkdmdkladmka"
-                                    merchantLogin: @"Test shop"
-                                    orderId: @"12312312"
-                                    language:nil
-                                    redirectUri: @"sberPayExampleapp://sberidauth"
-    ];
+    SFullPaymentRequest *request = [[SFullPaymentRequest alloc] initWithMerchantLogin: @"Test shop"
+                                                                              orderId:@"12312312"
+                                                                             language:nil
+                                                                          redirectUri:@"sberPayExampleapp://sberidauth"];
     [SPay payWithOrderIdWith:self with:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
         switch(state) {
             case SBPayStateSuccess:
