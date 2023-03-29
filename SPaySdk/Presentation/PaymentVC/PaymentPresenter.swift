@@ -192,7 +192,7 @@ final class PaymentPresenter: PaymentPresenting {
             })
         }))
         alertService.showAlert(on: view,
-                               with: .Alert.alertPayWaitingTitle,
+                               with: .localization?.payWaiting ?? "",
                                state: .waiting,
                                buttons: buttons,
                                completion: {})

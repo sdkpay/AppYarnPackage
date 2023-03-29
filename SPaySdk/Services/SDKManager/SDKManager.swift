@@ -136,7 +136,7 @@ final class DefaultSDKManager: SDKManager {
         case .success:
             paymentCompletion?(.success, .Alert.alertPaySuccessTitle)
         case .waiting:
-            paymentCompletion?(.waiting, .Alert.alertPayWaitingTitle)
+            paymentCompletion?(.waiting, .localization?.payWaiting ?? "")
         case .error:
             paymentCompletion?(.error, .Alert.alertErrorMainTitle)
         }

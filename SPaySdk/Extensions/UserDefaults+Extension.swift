@@ -43,15 +43,29 @@ extension UserDefaults {
 }
 
 extension UserDefaults {
-    @UserDefault(key: .selectedBank, defaultValue: "")
+    @UserDefault(key: .selectedBank, defaultValue: "foo")
     static var bankApp: String?
     
-    @UserDefault(key: .localization, defaultValue: nil)
+    @UserDefault(key: .localization,
+                 defaultValue: Localization(authTitle: "foo",
+                                            firstApp: "foo",
+                                            secondApp: "foo",
+                                            loadToFirstApp: "foo",
+                                            loadToSecondApp: "foo",
+                                            payWaiting: "foo"))
     static var localization: Localization?
     
-    @UserDefault(key: .schemas, defaultValue: nil)
+    @UserDefault(key: .schemas,
+                 defaultValue: Schemas(authLinkFirstApp: "foo",
+                                       authLinkSecondApp: "foo",
+                                       payLinkFirstApp: "foo",
+                                       payLinkSecondApp: "foo"))
     static var schemas: Schemas?
     
-    @UserDefault(key: .images, defaultValue: nil)
+    @UserDefault(key: .images,
+                 defaultValue: Images(firstAppIcon: "foo",
+                                      secondAppIcon: "foo",
+                                      logoIcon: "foo",
+                                      logoClear: "foo"))
     static var images: Images?
 }
