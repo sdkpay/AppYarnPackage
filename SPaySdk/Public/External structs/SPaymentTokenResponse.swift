@@ -16,13 +16,13 @@ public final class SPaymentTokenResponse: NSObject {
     /// Срок действия платежного токена в формате UNIX (POSIX) времени
     @objc public var tokenExpiration: Int
     /// Ошибка получения токена
-    @objc public var error: SBPError?
+    @objc public var error: SPError?
     
     @objc
     public init(paymentToken: String? = nil,
                 paymentTokenId: String? = nil,
                 tokenExpiration: Int = 0,
-                error: SBPError? = nil) {
+                error: SPError? = nil) {
         self.paymentToken = paymentToken
         self.paymentTokenId = paymentTokenId
         self.tokenExpiration = tokenExpiration

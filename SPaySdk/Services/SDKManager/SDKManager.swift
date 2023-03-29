@@ -36,7 +36,7 @@ protocol SDKManager {
                                 paymentTokenId: String?,
                                 tokenExpiration: Int)
     func completionWithError(error: SDKError)
-    func completionPay(with state: SBPayState)
+    func completionPay(with state: SPayState)
 }
 
 extension SDKManager {
@@ -105,17 +105,17 @@ final class DefaultSDKManager: SDKManager {
     
     func completionWithError(error: SDKError) {
         let responce = SPaymentTokenResponse()
-        responce.error = SBPError(errorState: error)
+        responce.error = SPError(errorState: error)
         switch payStrategy {
         case .auto:
-            paymentCompletion?(.error, SBPError(errorState: error).errorDescription)
+            paymentCompletion?(.error, SPError(errorState: error).errorDescription)
             paymentCompletion = nil
         case .manual:
             if payInfo == nil {
                 paymentTokenCompletion?(responce)
                 paymentTokenCompletion = nil
             } else {
-                paymentCompletion?(.error, SBPError(errorState: error).errorDescription)
+                paymentCompletion?(.error, SPError(errorState: error).errorDescription)
                 paymentCompletion = nil
             }
         }
@@ -131,7 +131,7 @@ final class DefaultSDKManager: SDKManager {
         paymentTokenCompletion?(responce)
     }
     
-    func completionPay(with state: SBPayState) {
+    func completionPay(with state: SPayState) {
         switch state {
         case .success:
             paymentCompletion?(.success, .Alert.alertPaySuccessTitle)

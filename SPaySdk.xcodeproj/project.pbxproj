@@ -44,7 +44,7 @@
 		44499BED296EB4A500B6A582 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */; };
 		444A13AF291BA96100C9FBE0 /* SPaySdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdk.framework */; };
 		444A13B0291BA96100C9FBE0 /* SPaySdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		444A13BB291BAFDA00C9FBE0 /* SBPButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444A13BA291BAFDA00C9FBE0 /* SBPButton.swift */; };
+		444A13BB291BAFDA00C9FBE0 /* SPButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444A13BA291BAFDA00C9FBE0 /* SPButton.swift */; };
 		444A13BE291BB52500C9FBE0 /* RootCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444A13BC291BB1FD00C9FBE0 /* RootCell.swift */; };
 		444A13F3291CF1C100C9FBE0 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 444A13F1291CF1C100C9FBE0 /* .swiftlint.yml */; };
 		44533D192985196D0041FAA9 /* PaymentTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44533D182985196D0041FAA9 /* PaymentTarget.swift */; };
@@ -130,7 +130,7 @@
 		44C651092930E721008F1C29 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651082930E721008F1C29 /* AlertView.swift */; };
 		44C6510C2934E327008F1C29 /* SPaymentTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510B2934E327008F1C29 /* SPaymentTokenResponse.swift */; };
 		44C6510E2934E33E008F1C29 /* SPaymentTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510D2934E33E008F1C29 /* SPaymentTokenRequest.swift */; };
-		44C651102934E37F008F1C29 /* SBPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510F2934E37F008F1C29 /* SBPError.swift */; };
+		44C651102934E37F008F1C29 /* SPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510F2934E37F008F1C29 /* SPError.swift */; };
 		44C651122934E393008F1C29 /* SPaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651112934E393008F1C29 /* SPaymentRequest.swift */; };
 		44D5361B2926198400B99463 /* UIViewController+Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D5361A2926198400B99463 /* UIViewController+Container.swift */; };
 		44D7585F29751C9A005D2EA4 /* PersonalMetricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D7585E29751C9A005D2EA4 /* PersonalMetricsService.swift */; };
@@ -225,7 +225,7 @@
 		44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		444A13A9291BA96100C9FBE0 /* SPaySdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		444A13AB291BA96100C9FBE0 /* SPaySdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPaySdk.h; sourceTree = "<group>"; };
-		444A13BA291BAFDA00C9FBE0 /* SBPButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPButton.swift; sourceTree = "<group>"; };
+		444A13BA291BAFDA00C9FBE0 /* SPButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPButton.swift; sourceTree = "<group>"; };
 		444A13BC291BB1FD00C9FBE0 /* RootCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCell.swift; sourceTree = "<group>"; };
 		444A13F1291CF1C100C9FBE0 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		44533D182985196D0041FAA9 /* PaymentTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTarget.swift; sourceTree = "<group>"; };
@@ -321,7 +321,7 @@
 		44C651082930E721008F1C29 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		44C6510B2934E327008F1C29 /* SPaymentTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPaymentTokenResponse.swift; sourceTree = "<group>"; };
 		44C6510D2934E33E008F1C29 /* SPaymentTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPaymentTokenRequest.swift; sourceTree = "<group>"; };
-		44C6510F2934E37F008F1C29 /* SBPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPError.swift; sourceTree = "<group>"; };
+		44C6510F2934E37F008F1C29 /* SPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPError.swift; sourceTree = "<group>"; };
 		44C651112934E393008F1C29 /* SPaymentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPaymentRequest.swift; sourceTree = "<group>"; };
 		44D5361A2926198400B99463 /* UIViewController+Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Container.swift"; sourceTree = "<group>"; };
 		44D7585E29751C9A005D2EA4 /* PersonalMetricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalMetricsService.swift; sourceTree = "<group>"; };
@@ -668,12 +668,12 @@
 			path = CustomViews;
 			sourceTree = "<group>";
 		};
-		444A13B9291BAFA100C9FBE0 /* SBPButton */ = {
+		444A13B9291BAFA100C9FBE0 /* SPButton */ = {
 			isa = PBXGroup;
 			children = (
-				444A13BA291BAFDA00C9FBE0 /* SBPButton.swift */,
+				444A13BA291BAFDA00C9FBE0 /* SPButton.swift */,
 			);
-			path = SBPButton;
+			path = SPButton;
 			sourceTree = "<group>";
 		};
 		44533D172985194A0041FAA9 /* Payment */ = {
@@ -1120,8 +1120,8 @@
 				4412F4D32996966300350CBD /* External structs */,
 				444A13AB291BA96100C9FBE0 /* SPaySdk.h */,
 				4464DF9C291D8E4C000C9B45 /* SPay.swift */,
-				44C6510F2934E37F008F1C29 /* SBPError.swift */,
-				444A13B9291BAFA100C9FBE0 /* SBPButton */,
+				44C6510F2934E37F008F1C29 /* SPError.swift */,
+				444A13B9291BAFA100C9FBE0 /* SPButton */,
 			);
 			path = Public;
 			sourceTree = "<group>";
@@ -1505,7 +1505,7 @@
 				445CB087292CA0A800F50047 /* Fonts.swift in Sources */,
 				445CB099292CDC1200F50047 /* CardInfoView.swift in Sources */,
 				445CB093292CC08400F50047 /* PaymentVC.swift in Sources */,
-				44C651102934E37F008F1C29 /* SBPError.swift in Sources */,
+				44C651102934E37F008F1C29 /* SPError.swift in Sources */,
 				440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */,
 				442A45C9297FE80D00EC3D73 /* StubNetworkProvider.swift in Sources */,
 				21253D1D29C9B20B004ED82D /* UIView+Shimmer.swift in Sources */,
@@ -1536,7 +1536,7 @@
 				44A31254298108330099EB76 /* Locator.swift in Sources */,
 				4479ECDA29476EEF009B3AB8 /* Style.swift in Sources */,
 				44D898D82937449B00550FC6 /* SDKManager.swift in Sources */,
-				444A13BB291BAFDA00C9FBE0 /* SBPButton.swift in Sources */,
+				444A13BB291BAFDA00C9FBE0 /* SPButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

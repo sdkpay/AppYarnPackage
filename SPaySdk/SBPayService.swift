@@ -8,7 +8,7 @@
 import UIKit
 
 typealias PaymentTokenCompletion = (SPaymentTokenResponse) -> Void
-typealias PaymentCompletion = (_ state: SBPayState, _ info: String) -> Void
+typealias PaymentCompletion = (_ state: SPayState, _ info: String) -> Void
 
 protocol SBPayService {
     func setup(apiKey: String)
@@ -21,7 +21,7 @@ protocol SBPayService {
     func payWithOrderId(with viewController: UIViewController,
                         paymentRequest: SFullPaymentRequest,
                         completion: @escaping PaymentCompletion)
-    func completePayment(paymentSuccess: SBPayState,
+    func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
     func getResponseFrom(_ url: URL)
 }
@@ -99,7 +99,7 @@ final class DefaultSBPayService: SBPayService {
         manager.pay(with: paymentRequest, completion: completion)
     }
     
-    func completePayment(paymentSuccess: SBPayState,
+    func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action) {
         startService.completePayment(paymentSuccess: paymentSuccess, completion: completion)
     }

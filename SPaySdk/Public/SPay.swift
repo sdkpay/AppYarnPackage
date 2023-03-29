@@ -42,7 +42,7 @@ public final class SPay: NSObject {
      */
     @objc
     public static func pay(with paymentRequest: SPaymentRequest,
-                           completion: @escaping (_ state: SBPayState, _ info: String) -> Void) {
+                           completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
         payService?.pay(with: paymentRequest, completion: completion)
     }
     
@@ -52,7 +52,7 @@ public final class SPay: NSObject {
     @objc
     public static func payWithOrderId(with viewController: UIViewController,
                                       with paymentRequest: SFullPaymentRequest,
-                                      completion: @escaping (_ state: SBPayState, _ info: String) -> Void) {
+                                      completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
         payService?.payWithOrderId(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }
     
@@ -60,7 +60,7 @@ public final class SPay: NSObject {
      Метод для завершения оплаты и закрытия окна SDK
      */
     @objc
-    public static func completePayment(paymentState: SBPayState,
+    public static func completePayment(paymentState: SPayState,
                                        completion: @escaping () -> Void) {
         payService?.completePayment(paymentSuccess: paymentState, completion: completion)
     }

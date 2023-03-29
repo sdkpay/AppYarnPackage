@@ -8,7 +8,7 @@
 import Foundation
 
 @objc
-public enum SBPayState: Int {
+public enum SPayState: Int {
     case success = 0
     case waiting
     case error

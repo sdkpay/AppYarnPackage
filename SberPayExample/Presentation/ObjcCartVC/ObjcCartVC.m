@@ -88,15 +88,15 @@
 -(void)pay {
     SPaymentRequest *request = [[SPaymentRequest alloc] initWithOrderId: @""
                                                           paymentToken: @""];
-    [SPay payWith:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
+    [SPay payWith:request completion:^(enum SPayState state, NSString * _Nonnull info) {
         switch(state) {
-            case SBPayStateSuccess:
+            case SPayStateSuccess:
                 NSLog(@"Успешный результат");
                 break;
-            case SBPayStateWaiting:
+            case SPayStateWaiting:
                 NSLog(@"Необходимо проверить статус оплаты");
                 break;
-            case SBPayStateError:
+            case SPayStateError:
                 NSLog(@"%@ - описание ошибки", info);
                 break;
         }
@@ -108,15 +108,15 @@
                                                                               orderId:@"12312312"
                                                                              language:nil
                                                                           redirectUri:@"sberPayExampleapp://sberidauth"];
-    [SPay payWithOrderIdWith:self with:request completion:^(enum SBPayState state, NSString * _Nonnull info) {
+    [SPay payWithOrderIdWith:self with:request completion:^(enum SPayState state, NSString * _Nonnull info) {
         switch(state) {
-            case SBPayStateSuccess:
+            case SPayStateSuccess:
                 NSLog(@"Успешный результат");
                 break;
-            case SBPayStateWaiting:
+            case SPayStateWaiting:
                 NSLog(@"Необходимо проверить статус оплаты");
                 break;
-            case SBPayStateError:
+            case SPayStateError:
                 NSLog(@"%@ - описание ошибки", info);
                 break;
         }
@@ -124,7 +124,7 @@
 }
 
 -(void)completePayment {
-    [SPay completePaymentWithPaymentState: SBPayStateSuccess completion:^{
+    [SPay completePaymentWithPaymentState: SPayStateSuccess completion:^{
         // Блок отработает после закрытия окна SDK
     }];
 }

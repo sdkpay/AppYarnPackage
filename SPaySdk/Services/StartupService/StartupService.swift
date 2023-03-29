@@ -12,7 +12,7 @@ let closeSDKNotification = "CloseSDK"
 protocol StartupService {
     func openInitialScreen(with viewController: UIViewController,
                            with locator: LocatorService)
-    func completePayment(paymentSuccess: SBPayState,
+    func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
 }
 
@@ -65,7 +65,7 @@ final class DefaultStartupService: StartupService {
         sdkWindow = nil
     }
     
-    func completePayment(paymentSuccess: SBPayState,
+    func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action) {
         guard let locator = locator
         else { return }
