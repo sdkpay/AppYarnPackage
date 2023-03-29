@@ -21,10 +21,6 @@ extension UIImage {
         static let warningAlert = UIImage("Warning_alert")
         static let waiting = UIImage("Waiting")
     }
-    enum Auth {
-        static let sberIcon = UIImage("Sber_icon")
-        static let sbolIcon = UIImage("Sbol_icon")
-    }
     enum Payment {
         static let arrow = UIImage("Arrow")
         static let cart = UIImage("Cart")

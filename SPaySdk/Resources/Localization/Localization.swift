@@ -20,15 +20,6 @@ extension String {
         /// Попробовать ещё раз
         static let tryTitle = String(stringLiteral: "try.title")
     }
-
-    enum Auth {
-        /// Выберите приложение для авторизации в СберБанке
-        static let authTitle = String(stringLiteral: "auth.title")
-        /// СберБанк Онлайн
-        static let sTitle = String(stringLiteral: "s.title")
-        /// СБОЛ
-        static let sbolTitle = String(stringLiteral: "sbol.title")
-    }
     
     enum Payment {
         /// Нет карт для оплаты
@@ -54,10 +45,6 @@ extension String {
     }
     
     enum Loading {
-        /// Переходим в СберБанк Онлайн для авторизации
-        static let toSTitle = String(stringLiteral: "toS.title")
-        /// Переходим в СБОЛ для авторизации
-        static let toSbolTitle = String(stringLiteral: "toSbol.title")
         ///  Проводим оплату...
         static let tryToPayTitle = String(stringLiteral: "try.to.pay.title")
     }
@@ -69,8 +56,6 @@ extension String {
         static let alertPaySuccessTitle = String(stringLiteral: "alert.pay.success.title")
         /// Нет подходящих карт. Вернитесь к заказу\nи выберите другой способ оплаты.
         static let alertPayNoCardsTitle = String(stringLiteral: "alert.pay.no.cards.title")
-        /// Обрабатываем оплату. Следите за статусом в Истории приложения СберБанк Онлайн.
-        static let alertPayWaitingTitle = String(stringLiteral: "alert.pay.waiting.title")
         /// Нет интернета. Проверьте подключение и попробуйте ещё раз.
         static let alertPayNoInternetTitle = String(stringLiteral: "alert.pay.no.internet.title")
     }

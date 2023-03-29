@@ -18,8 +18,6 @@ public final class SPay: NSObject {
     }
     
     /**
-     Проверяет наличие установленного МП СБОЛ или Сбербанк Онлайн на устройстве
-    
      Требуется задать LSApplicationQueriesSchemes в Info.plist
      */
     @objc
@@ -66,7 +64,7 @@ public final class SPay: NSObject {
     }
     
     /**
-     Метод для авторизации SBOL необходимо интегрировать в AppDelegate
+     Метод для авторизации банка необходимо интегрировать в AppDelegate
      */
     @objc
     public static func getAuthURL(_ url: URL) {

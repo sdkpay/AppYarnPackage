@@ -24,7 +24,7 @@ final class AuthVC: ContentVC, IAuthVC {
         view.font = .bodi2
         view.textColor = .textSecondary
         view.numberOfLines = 0
-        view.text = String(stringLiteral: .Auth.authTitle)
+        view.text = .localization?.authTitle
         return view
     }()
     
