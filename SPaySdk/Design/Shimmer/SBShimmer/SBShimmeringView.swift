@@ -8,8 +8,8 @@
 import UIKit
 
 extension UIColor {
-    static let lightShimmer = UIColor(red: 216 / 255, green: 216 / 255, blue: 216 / 255, alpha: 1.0)
-    static let darkShimmer = UIColor(red: 51 / 255, green: 51 / 255, blue: 51 / 255, alpha: 1.0)
+    static let lightShimmer = UIColor(red: 224 / 255, green: 224 / 255, blue: 224 / 255, alpha: 1.0)
+    static let darkShimmer = UIColor(red: 48 / 255, green: 48 / 255, blue: 48 / 255, alpha: 1.0)
 }
 
 public protocol SBShimmeringView where Self: UIView {
