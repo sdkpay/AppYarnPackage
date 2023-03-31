@@ -19,6 +19,8 @@ protocol IAuthVC {
 }
 
 final class AuthVC: ContentVC, IAuthVC {
+    private let timeManager = OptimizationCheсkerManager()
+    
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.font = .bodi2
@@ -39,6 +41,7 @@ final class AuthVC: ContentVC, IAuthVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        timeManager.endTraking(String(describing: self))
         setupUI()
         presenter.viewDidLoad()
         SBLogger.log(.didLoad(view: self))
@@ -55,6 +58,7 @@ final class AuthVC: ContentVC, IAuthVC {
     }
     
     init(_ presenter: AuthPresenting) {
+        timeManager.startTraking()
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }

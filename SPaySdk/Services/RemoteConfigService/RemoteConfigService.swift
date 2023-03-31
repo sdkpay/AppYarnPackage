@@ -20,6 +20,7 @@ protocol RemoteConfigService {
 
 final class DefaultRemoteConfigService: RemoteConfigService {
     private let network: NetworkService
+    private let optimizationManager = OptimizationCheсkerManager()
     private var apiKey: String?
 
     init(network: NetworkService) {
@@ -43,6 +44,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     }
     
     private func saveConfig(_ value: ConfigModel) {
+        optimizationManager.checkSavedDataSize(object: value)
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
         UserDefaults.images = value.images

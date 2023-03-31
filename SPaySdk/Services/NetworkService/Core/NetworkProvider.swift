@@ -207,3 +207,11 @@ extension DefaultNetworkProvider: URLSessionDelegate {
         completionHandler(.cancelAuthenticationChallenge, nil)
     }
 }
+
+extension DefaultNetworkProvider: URLSessionDataDelegate {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
+        for metric in metrics.transactionMetrics {
+            print(metric)
+        }
+    }
+}

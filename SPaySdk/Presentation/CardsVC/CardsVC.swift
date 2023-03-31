@@ -17,6 +17,7 @@ private extension CGFloat {
 protocol ICardsVC { }
 
 final class CardsVC: ContentVC, ICardsVC {
+    private var timeManager = OptimizationCheсkerManager()
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.font = .bodi2
@@ -41,6 +42,7 @@ final class CardsVC: ContentVC, ICardsVC {
     
     init(_ presenter: CardsPresenting) {
         self.presenter = presenter
+        timeManager.startTraking()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -50,6 +52,7 @@ final class CardsVC: ContentVC, ICardsVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        timeManager.endTraking(String(describing: self))
         presenter.viewDidLoad()
         setupUI()
         SBLogger.log(.didLoad(view: self))

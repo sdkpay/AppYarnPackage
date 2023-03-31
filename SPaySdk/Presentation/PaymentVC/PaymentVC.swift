@@ -25,6 +25,8 @@ protocol IPaymentVC {
 }
 
 final class PaymentVC: ContentVC, IPaymentVC {
+    private let timeManager = OptimizationCheсkerManager()
+    
     private lazy var payButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
         view.setTitle(String(stringLiteral: .Common.payTitle), for: .normal)
@@ -75,6 +77,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
     private var presenter: PaymentPresenting
     
     init(_ presenter: PaymentPresenting) {
+        timeManager.startTraking()
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -85,6 +88,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        timeManager.endTraking(String(describing: self))
         setupUI()
         presenter.viewDidLoad()
         SBLogger.log(.didLoad(view: self))
