@@ -24,6 +24,7 @@
 		21440DB829D5B68200E3803E /* LogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB729D5B68200E3803E /* LogPresenter.swift */; };
 		21440DBA29D5EE1F00E3803E /* SearchInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB929D5EE1F00E3803E /* SearchInputView.swift */; };
 		21440DBC29D6B27800E3803E /* LoggableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DBB29D6B27800E3803E /* LoggableVC.swift */; };
+		21440DBF29D6F5D500E3803E /* String+Ranges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DBE29D6F5D500E3803E /* String+Ranges.swift */; };
 		214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 214E9C4A29CC4B09009DF5FE /* FingerprintPackage */; };
 		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
@@ -209,6 +210,7 @@
 		21440DB729D5B68200E3803E /* LogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogPresenter.swift; sourceTree = "<group>"; };
 		21440DB929D5EE1F00E3803E /* SearchInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchInputView.swift; sourceTree = "<group>"; };
 		21440DBB29D6B27800E3803E /* LoggableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggableVC.swift; sourceTree = "<group>"; };
+		21440DBE29D6F5D500E3803E /* String+Ranges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ranges.swift"; sourceTree = "<group>"; };
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -1181,6 +1183,7 @@
 				21BA175129C46E3C001C2CEE /* Tread+Extension.swift */,
 				21253D2229CA3152004ED82D /* UIImageView+Download.swift */,
 				211DF36329D18B220038A951 /* UIImage+base64.swift */,
+				21440DBE29D6F5D500E3803E /* String+Ranges.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1539,6 +1542,7 @@
 				445CB087292CA0A800F50047 /* Fonts.swift in Sources */,
 				445CB099292CDC1200F50047 /* CardInfoView.swift in Sources */,
 				445CB093292CC08400F50047 /* PaymentVC.swift in Sources */,
+				21440DBF29D6F5D500E3803E /* String+Ranges.swift in Sources */,
 				44C651102934E37F008F1C29 /* SPError.swift in Sources */,
 				440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */,
 				442A45C9297FE80D00EC3D73 /* StubNetworkProvider.swift in Sources */,

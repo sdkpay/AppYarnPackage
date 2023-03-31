@@ -7,6 +7,10 @@
 
 import UIKit
 
+private extension String {
+    static let noLogs = "Логи не найдены"
+}
+
 protocol LogPresenting {
     func viewDidLoad()
     func settingTapped()
@@ -24,10 +28,7 @@ final class LogPresenter: LogPresenting {
             .appendingPathComponent("log.txt")
     }
     
-    var logContent: String? {
-        guard let logPath = logPath else { return nil }
-        return try? String(contentsOf: logPath)
-    }
+    var logContent: String?
     
     private var searchRanges: [NSRange] = []
     private var currentRangeIndex = 0
@@ -35,11 +36,17 @@ final class LogPresenter: LogPresenting {
     weak var view: (UIViewController & ILogVC)?
     
     func viewDidLoad() {
+        getLogString()
         showAllText()
     }
     
+    private func getLogString() {
+        guard let logPath = logPath else { return }
+        logContent = try? String(contentsOf: logPath)
+    }
+    
     private func showAllText() {
-        let text = logContent ?? "Логи не найдены"
+        let text = logContent ?? .noLogs
         view?.setText(text)
     }
     
@@ -48,21 +55,17 @@ final class LogPresenter: LogPresenting {
     }
 
     func upTapped() {
-        guard currentRangeIndex - 1 > 0 else { return }
-        let index = currentRangeIndex - 1
-        currentRangeIndex = index
-        let range = searchRanges[index]
-        view?.scrollTo(range)
-        view?.setResultsNum(current: currentRangeIndex + 1, count: searchRanges.count)
+        guard currentRangeIndex - 1 >= 0 else { return }
+        currentRangeIndex -= 1
+        let range = searchRanges[currentRangeIndex]
+        scrollToRange(range: range)
     }
     
     func downTapped() {
-        guard currentRangeIndex + 1 <= searchRanges.count else { return }
-        let index = currentRangeIndex + 1
-        currentRangeIndex = index
-        let range = searchRanges[index]
-        view?.scrollTo(range)
-        view?.setResultsNum(current: currentRangeIndex + 1, count: searchRanges.count)
+        guard currentRangeIndex + 1 <= searchRanges.count - 1 else { return }
+        currentRangeIndex += 1
+        let range = searchRanges[currentRangeIndex]
+        scrollToRange(range: range)
     }
     
     func searchTextUpdated(_ text: String) {
@@ -73,35 +76,16 @@ final class LogPresenter: LogPresenting {
         }
         guard let logContent = logContent else { return }
         searchRanges = logContent.ranges(of: text, options: [.regularExpression, .caseInsensitive])
+        currentRangeIndex = 0
         if let firstRange = searchRanges.first {
-            view?.scrollTo(firstRange)
-            view?.setResultsNum(current: currentRangeIndex + 1, count: searchRanges.count)
+            scrollToRange(range: firstRange)
         } else {
-            view?.setResultsNum(current: currentRangeIndex, count: searchRanges.count)
+            view?.setResultsNum(current: 0, count: searchRanges.count)
         }
     }
-}
-
-extension String {
-    func ranges(of substring: String,
-                options: CompareOptions = [],
-                locale: Locale? = nil) -> [NSRange] {
-            var ranges: [Range<Index>] = []
-            while ranges.last.map({ $0.upperBound < self.endIndex }) ?? true,
-                  let range = self.range(of: substring,
-                                         options: options,
-                                         range: (ranges.last?.upperBound ?? self.startIndex)..<self.endIndex,
-                                         locale: locale) {
-                ranges.append(range)
-            }
-        return ranges.map({ NSRange(range: $0, originalText: self) })
-    }
-}
-
-extension NSRange {
-    public init(range: Range<String.Index>,
-                originalText: String) {
-        self.init(location: range.lowerBound.utf16Offset(in: originalText),
-                  length: range.upperBound.utf16Offset(in: originalText) - range.lowerBound.utf16Offset(in: originalText))
+    
+    private func scrollToRange(range: NSRange) {
+        view?.scrollTo(range)
+        view?.setResultsNum(current: currentRangeIndex + 1, count: searchRanges.count)
     }
 }

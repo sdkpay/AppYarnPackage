@@ -14,13 +14,23 @@ protocol ILogVC {
     func hideResultsNum()
 }
 
+private extension TimeInterval {
+    static let keyboardAnimateDuration = 0.5
+}
+
+private extension String {
+    static let title = "Логи"
+    static let searchPlaceholder = "Нажмите для поиска по тексту"
+}
+
 final class LogVC: UIViewController, ILogVC {
     private let presenter: LogPresenting
+    private var bottomAnchor: NSLayoutConstraint?
 
     private lazy var textView: UITextView = {
         let view = UITextView()
         view.isEditable = false
-        view.textColor = .black
+        view.textColor = .textPrimory
         return view
     }()
     
@@ -39,7 +49,7 @@ final class LogVC: UIViewController, ILogVC {
         let search = UISearchController(searchResultsController: nil)
         search.searchBar.delegate = self
         search.searchBar.searchBarStyle = .minimal
-        search.searchBar.placeholder = "Нажмите для поиска по тексту"
+        search.searchBar.placeholder = .searchPlaceholder
         search.searchBar.inputAccessoryView = searchView
         return search
     }()
@@ -59,6 +69,14 @@ final class LogVC: UIViewController, ILogVC {
         setupNavVC()
         setupUI()
         SBLogger.log(.didLoad(view: self))
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -72,7 +90,7 @@ final class LogVC: UIViewController, ILogVC {
     }
     
     private func setupNavVC() {
-        title = "Logs"
+        title = .title
         navigationController?.navigationBar.backgroundColor = .backgroundSecondary
         
         let settingsButton = UIBarButtonItem(barButtonSystemItem: .compose,
@@ -101,27 +119,43 @@ final class LogVC: UIViewController, ILogVC {
     }
     
     func scrollTo(_ range: NSRange) {
-        textView.selectedRange = range
         textView.scrollRangeToVisible(range)
-        let rect = textView.layoutManager.boundingRect(forGlyphRange: range, in: textView.textContainer)
-        let topTextInset = textView.textContainerInset.top
-        let contentOffset = CGPoint(x: 0, y: topTextInset + rect.origin.y)
-
-        textView.setContentOffset(contentOffset, animated: true)
         textView.highlight(range: range)
     }
-    
+
     private func setupUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .backgroundPrimary
         
         view.addSubview(textView)
         textView.translatesAutoresizingMaskIntoConstraints = false
+        bottomAnchor = textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        bottomAnchor?.isActive = true
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: view.topAnchor),
             textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            textView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            textView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
+    }
+    
+    @objc
+    private func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            bottomAnchor?.isActive = false
+            bottomAnchor?.constant = -keyboardSize.height
+            bottomAnchor?.isActive = true
+            UIView.animate(withDuration: .keyboardAnimateDuration) {
+              self.view.layoutIfNeeded()
+           }
+        }
+    }
+    
+    @objc
+    private func keyboardWillHide() {
+        bottomAnchor?.constant = .zero
+        bottomAnchor?.isActive = true
+        UIView.animate(withDuration: .keyboardAnimateDuration) {
+           self.view.layoutIfNeeded()
+        }
     }
 }
 
