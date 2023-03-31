@@ -29,8 +29,8 @@ final class LogPresenter: LogPresenting {
         return try? String(contentsOf: logPath)
     }
     
-    private var searchRanges: [Range<String.Index>] = []
-    private var currentRangeIndex = 1
+    private var searchRanges: [NSRange] = []
+    private var currentRangeIndex = 0
 
     weak var view: (UIViewController & ILogVC)?
     
@@ -39,54 +39,53 @@ final class LogPresenter: LogPresenting {
     }
     
     private func showAllText() {
-        let text = logContent ?? "Логи пусты милорд"
+        let text = logContent ?? "Логи не найдены"
         view?.setText(text)
     }
     
     func settingTapped() {
+        // TODO: добавить разбивку на группы
     }
-    
+
     func upTapped() {
         guard currentRangeIndex - 1 > 0 else { return }
-        guard let logContent = logContent else { return }
         let index = currentRangeIndex - 1
         currentRangeIndex = index
         let range = searchRanges[index]
-        let nsRange = NSRange(range: range, originalText: logContent)
-        view?.scrollToText(nsRange)
-        view?.setResultsNum(current: currentRangeIndex, count: searchRanges.count)
+        view?.scrollTo(range)
+        view?.setResultsNum(current: currentRangeIndex + 1, count: searchRanges.count)
     }
     
     func downTapped() {
         guard currentRangeIndex + 1 <= searchRanges.count else { return }
-        guard let logContent = logContent else { return }
         let index = currentRangeIndex + 1
         currentRangeIndex = index
         let range = searchRanges[index]
-        let nsRange = NSRange(range: range, originalText: logContent)
-        view?.scrollToText(nsRange)
-        view?.setResultsNum(current: currentRangeIndex, count: searchRanges.count)
+        view?.scrollTo(range)
+        view?.setResultsNum(current: currentRangeIndex + 1, count: searchRanges.count)
     }
     
     func searchTextUpdated(_ text: String) {
         guard !text.isEmpty else {
             showAllText()
+            view?.hideResultsNum()
             return
         }
         guard let logContent = logContent else { return }
         searchRanges = logContent.ranges(of: text, options: [.regularExpression, .caseInsensitive])
-        guard let firstRange = searchRanges.first else { return }
-        let nsRange = NSRange(range: firstRange, originalText: logContent)
-        view?.scrollToText(nsRange)
-        view?.setResultsNum(current: 1, count: searchRanges.count)
-    }
-    
-    func updateSearchCountLabel() {
+        if let firstRange = searchRanges.first {
+            view?.scrollTo(firstRange)
+            view?.setResultsNum(current: currentRangeIndex + 1, count: searchRanges.count)
+        } else {
+            view?.setResultsNum(current: currentRangeIndex, count: searchRanges.count)
+        }
     }
 }
 
 extension String {
-    func ranges(of substring: String, options: CompareOptions = [], locale: Locale? = nil) -> [Range<Index>] {
+    func ranges(of substring: String,
+                options: CompareOptions = [],
+                locale: Locale? = nil) -> [NSRange] {
             var ranges: [Range<Index>] = []
             while ranges.last.map({ $0.upperBound < self.endIndex }) ?? true,
                   let range = self.range(of: substring,
@@ -95,7 +94,7 @@ extension String {
                                          locale: locale) {
                 ranges.append(range)
             }
-            return ranges
+        return ranges.map({ NSRange(range: $0, originalText: self) })
     }
 }
 

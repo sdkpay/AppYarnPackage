@@ -21,9 +21,7 @@ private extension TimeInterval {
     static let animationDuration = 0.25
 }
 
-class ContentVC: UIViewController {
-    private var logoTapCount = 0
-    
+class ContentVC: LoggableVC {
     var contentNavigationController: ContentNC? {
         parent as? ContentNC
     }
@@ -56,22 +54,11 @@ class ContentVC: UIViewController {
         super.viewDidLoad()
         setupForContainer()
         configUI()
-        let gr = UITapGestureRecognizer(target: self, action: #selector(logoImageTapped))
-        view.addGestureRecognizer(gr)
     }
     
     func configProfileView(with userInfo: UserInfo) {
         profileView.isHidden = false
         profileView.config(with: userInfo)
-    }
-    
-    @objc
-    private func logoImageTapped() {
-        logoTapCount += 1
-        guard logoTapCount >= 5 else { return }
-        let logModule = LogAssembly().createModule()
-        present(logModule, animated: true)
-        logoTapCount = 0
     }
 
     func configUI() {

@@ -67,7 +67,12 @@ final class SearchInputView: UIView {
     }
     
     func setResultsNum(current: Int, count: Int) {
+        countLabel.isHidden = false
         countLabel.text = "Найдено \(current) из \(count)"
+    }
+    
+    func hideResultsNum() {
+        countLabel.isHidden = true
     }
     
     func setupUI() {

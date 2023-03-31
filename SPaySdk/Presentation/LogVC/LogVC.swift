@@ -9,8 +9,9 @@ import UIKit
 
 protocol ILogVC {
     func setText(_ text: String)
-    func scrollToText(_ range: NSRange)
+    func scrollTo(_ range: NSRange)
     func setResultsNum(current: Int, count: Int)
+    func hideResultsNum()
 }
 
 final class LogVC: UIViewController, ILogVC {
@@ -84,12 +85,7 @@ final class LogVC: UIViewController, ILogVC {
     
     @objc
     private func settingTapped() {
-        presenter.settingTapped()
-    }
-    
-    @objc
-    private func nextTapped() {
-        presenter.settingTapped()
+        self.presenter.downTapped()
     }
     
     func setText(_ text: String) {
@@ -100,9 +96,18 @@ final class LogVC: UIViewController, ILogVC {
         searchView.setResultsNum(current: current, count: count)
     }
     
-    func scrollToText(_ range: NSRange) {
+    func hideResultsNum() {
+        searchView.hideResultsNum()
+    }
+    
+    func scrollTo(_ range: NSRange) {
         textView.selectedRange = range
         textView.scrollRangeToVisible(range)
+        let rect = textView.layoutManager.boundingRect(forGlyphRange: range, in: textView.textContainer)
+        let topTextInset = textView.textContainerInset.top
+        let contentOffset = CGPoint(x: 0, y: topTextInset + rect.origin.y)
+
+        textView.setContentOffset(contentOffset, animated: true)
         textView.highlight(range: range)
     }
     

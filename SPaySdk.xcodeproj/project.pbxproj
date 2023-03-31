@@ -23,6 +23,7 @@
 		21440DB629D5B67200E3803E /* LogVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB529D5B67200E3803E /* LogVC.swift */; };
 		21440DB829D5B68200E3803E /* LogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB729D5B68200E3803E /* LogPresenter.swift */; };
 		21440DBA29D5EE1F00E3803E /* SearchInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB929D5EE1F00E3803E /* SearchInputView.swift */; };
+		21440DBC29D6B27800E3803E /* LoggableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DBB29D6B27800E3803E /* LoggableVC.swift */; };
 		214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 214E9C4A29CC4B09009DF5FE /* FingerprintPackage */; };
 		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
@@ -207,6 +208,7 @@
 		21440DB529D5B67200E3803E /* LogVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogVC.swift; sourceTree = "<group>"; };
 		21440DB729D5B68200E3803E /* LogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogPresenter.swift; sourceTree = "<group>"; };
 		21440DB929D5EE1F00E3803E /* SearchInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchInputView.swift; sourceTree = "<group>"; };
+		21440DBB29D6B27800E3803E /* LoggableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggableVC.swift; sourceTree = "<group>"; };
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -439,6 +441,14 @@
 				21440DB929D5EE1F00E3803E /* SearchInputView.swift */,
 			);
 			path = LogVC;
+			sourceTree = "<group>";
+		};
+		21440DBD29D6B32100E3803E /* LoggableVC */ = {
+			isa = PBXGroup;
+			children = (
+				21440DBB29D6B27800E3803E /* LoggableVC.swift */,
+			);
+			path = LoggableVC;
 			sourceTree = "<group>";
 		};
 		214E9C4829CC4AF5009DF5FE /* Packages */ = {
@@ -684,6 +694,7 @@
 				44C651072930E70F008F1C29 /* AlertView */,
 				445CB097292CDBFA00F50047 /* CardInfoView */,
 				445CB08A292CB9B300F50047 /* Buttons */,
+				21440DBD29D6B32100E3803E /* LoggableVC */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -1475,6 +1486,7 @@
 				445CB08E292CBA4F00F50047 /* DefaultButton.swift in Sources */,
 				44A0B5B9293DF25E007AB3FD /* CardsAssembly.swift in Sources */,
 				44C651122934E393008F1C29 /* SPaymentRequest.swift in Sources */,
+				21440DBC29D6B27800E3803E /* LoggableVC.swift in Sources */,
 				4496792529A2375F00EC3439 /* ContentView.swift in Sources */,
 				440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */,
 				44BD272929A7AD89001ECF54 /* PaymentOrderModel.swift in Sources */,
