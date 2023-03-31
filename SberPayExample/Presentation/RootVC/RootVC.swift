@@ -179,12 +179,10 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func configNav() {
-        if #available(iOS 13.0, *) {
-            let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh,
-                                                target: self,
-                                                action: #selector(cleareConfig))
-            navigationItem.rightBarButtonItem = refreshButton
-        }
+        let refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh,
+                                            target: self,
+                                            action: #selector(cleareConfig))
+        navigationItem.rightBarButtonItem = refreshButton
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

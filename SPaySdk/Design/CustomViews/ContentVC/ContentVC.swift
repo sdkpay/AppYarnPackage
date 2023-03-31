@@ -21,8 +21,7 @@ private extension TimeInterval {
     static let animationDuration = 0.25
 }
 
-class ContentVC: UIViewController {
-    
+class ContentVC: LoggableVC {
     var contentNavigationController: ContentNC? {
         parent as? ContentNC
     }

@@ -19,6 +19,11 @@
 		21253D1E29C9B20B004ED82D /* UIView+Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1729C9B20B004ED82D /* UIView+Template.swift */; };
 		21253D2129C9E761004ED82D /* Shimmer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D2029C9E761004ED82D /* Shimmer+Extensions.swift */; };
 		21253D2329CA3152004ED82D /* UIImageView+Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D2229CA3152004ED82D /* UIImageView+Download.swift */; };
+		21440DB429D5B66300E3803E /* LogAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB329D5B66300E3803E /* LogAssembly.swift */; };
+		21440DB629D5B67200E3803E /* LogVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB529D5B67200E3803E /* LogVC.swift */; };
+		21440DB829D5B68200E3803E /* LogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB729D5B68200E3803E /* LogPresenter.swift */; };
+		21440DBA29D5EE1F00E3803E /* SearchInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB929D5EE1F00E3803E /* SearchInputView.swift */; };
+		21440DBC29D6B27800E3803E /* LoggableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DBB29D6B27800E3803E /* LoggableVC.swift */; };
 		214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 214E9C4A29CC4B09009DF5FE /* FingerprintPackage */; };
 		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
@@ -200,6 +205,11 @@
 		21253D1729C9B20B004ED82D /* UIView+Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Template.swift"; sourceTree = "<group>"; };
 		21253D2029C9E761004ED82D /* Shimmer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shimmer+Extensions.swift"; sourceTree = "<group>"; };
 		21253D2229CA3152004ED82D /* UIImageView+Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Download.swift"; sourceTree = "<group>"; };
+		21440DB329D5B66300E3803E /* LogAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogAssembly.swift; sourceTree = "<group>"; };
+		21440DB529D5B67200E3803E /* LogVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogVC.swift; sourceTree = "<group>"; };
+		21440DB729D5B68200E3803E /* LogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogPresenter.swift; sourceTree = "<group>"; };
+		21440DB929D5EE1F00E3803E /* SearchInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchInputView.swift; sourceTree = "<group>"; };
+		21440DBB29D6B27800E3803E /* LoggableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggableVC.swift; sourceTree = "<group>"; };
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -424,6 +434,25 @@
 			path = Shimmer;
 			sourceTree = "<group>";
 		};
+		21440DB229D5B64000E3803E /* LogVC */ = {
+			isa = PBXGroup;
+			children = (
+				21440DB329D5B66300E3803E /* LogAssembly.swift */,
+				21440DB529D5B67200E3803E /* LogVC.swift */,
+				21440DB729D5B68200E3803E /* LogPresenter.swift */,
+				21440DB929D5EE1F00E3803E /* SearchInputView.swift */,
+			);
+			path = LogVC;
+			sourceTree = "<group>";
+		};
+		21440DBD29D6B32100E3803E /* LoggableVC */ = {
+			isa = PBXGroup;
+			children = (
+				21440DBB29D6B27800E3803E /* LoggableVC.swift */,
+			);
+			path = LoggableVC;
+			sourceTree = "<group>";
+		};
 		214E9C4829CC4AF5009DF5FE /* Packages */ = {
 			isa = PBXGroup;
 			children = (
@@ -488,6 +517,7 @@
 		4416E425291E22E600284972 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				21440DB229D5B64000E3803E /* LogVC */,
 				44A0B5B7293DF244007AB3FD /* CardsVC */,
 				445CB09C292E053A00F50047 /* AuthVC */,
 				445CB091292CC07300F50047 /* PaymentVC */,
@@ -666,6 +696,7 @@
 				44C651072930E70F008F1C29 /* AlertView */,
 				445CB097292CDBFA00F50047 /* CardInfoView */,
 				445CB08A292CB9B300F50047 /* Buttons */,
+				21440DBD29D6B32100E3803E /* LoggableVC */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -1443,10 +1474,12 @@
 				445CB096292CC1A800F50047 /* ContentVC.swift in Sources */,
 				44D8ABD2295EC4D20080FF1D /* Logger.swift in Sources */,
 				44834C72292E32E8000A32B2 /* AuthService.swift in Sources */,
+				21440DB429D5B66300E3803E /* LogAssembly.swift in Sources */,
 				21253D2129C9E761004ED82D /* Shimmer+Extensions.swift in Sources */,
 				44F9FD4A295AFAB800FE4B9F /* CoverPresentAnimatedTransitioning.swift in Sources */,
 				44C651052930E102008F1C29 /* LoadingView.swift in Sources */,
 				4464DF89291D01F4000C9B45 /* NetworkService.swift in Sources */,
+				21440DB629D5B67200E3803E /* LogVC.swift in Sources */,
 				44F9FD4C295AFAB800FE4B9F /* CoverTransitionDriver.swift in Sources */,
 				442A45DD29804E2E00EC3D73 /* UserTarget.swift in Sources */,
 				44676ACB296DD52A00D9DFAE /* AppSettings.swift in Sources */,
@@ -1456,6 +1489,7 @@
 				445CB08E292CBA4F00F50047 /* DefaultButton.swift in Sources */,
 				44A0B5B9293DF25E007AB3FD /* CardsAssembly.swift in Sources */,
 				44C651122934E393008F1C29 /* SPaymentRequest.swift in Sources */,
+				21440DBC29D6B27800E3803E /* LoggableVC.swift in Sources */,
 				4496792529A2375F00EC3439 /* ContentView.swift in Sources */,
 				440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */,
 				44BD272929A7AD89001ECF54 /* PaymentOrderModel.swift in Sources */,
@@ -1533,10 +1567,12 @@
 				219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */,
 				445CB078292BC56900F50047 /* Gallery.swift in Sources */,
 				AEF1EFA529D6A670008E6653 /* OptimizationCheсkerManager.swift in Sources */,
+				21440DB829D5B68200E3803E /* LogPresenter.swift in Sources */,
 				44B822022923897D00C06C51 /* SBPayService.swift in Sources */,
 				442A45DA29804E0C00EC3D73 /* UserModel.swift in Sources */,
 				AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */,
 				44F9FD51295AFAD700FE4B9F /* ContentNC.swift in Sources */,
+				21440DBA29D5EE1F00E3803E /* SearchInputView.swift in Sources */,
 				44A31254298108330099EB76 /* Locator.swift in Sources */,
 				4479ECDA29476EEF009B3AB8 /* Style.swift in Sources */,
 				44D898D82937449B00550FC6 /* SDKManager.swift in Sources */,
