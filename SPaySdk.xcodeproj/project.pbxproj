@@ -160,9 +160,6 @@
 		AEEB602429B9B55E00D1E1D2 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */; };
 		AEF1EFA529D6A670008E6653 /* OptimizationCheсkerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1EFA429D6A670008E6653 /* OptimizationCheсkerManager.swift */; };
 		AEF1EFA929D6DFA3008E6653 /* NetworkMonitorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1EFA829D6DFA3008E6653 /* NetworkMonitorManager.swift */; };
-		AEF1EFAD29D6EA53008E6653 /* Metric.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1EFAC29D6EA53008E6653 /* Metric.swift */; };
-		AEF1EFAF29D6EA88008E6653 /* Rendere.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1EFAE29D6EA88008E6653 /* Rendere.swift */; };
-		AEF1EFB129D6EAA5008E6653 /* SessionMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1EFB029D6EAA5008E6653 /* SessionMetrics.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -361,9 +358,6 @@
 		AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
 		AEF1EFA429D6A670008E6653 /* OptimizationCheсkerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OptimizationCheсkerManager.swift"; sourceTree = "<group>"; };
 		AEF1EFA829D6DFA3008E6653 /* NetworkMonitorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorManager.swift; sourceTree = "<group>"; };
-		AEF1EFAC29D6EA53008E6653 /* Metric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metric.swift; sourceTree = "<group>"; };
-		AEF1EFAE29D6EA88008E6653 /* Rendere.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rendere.swift; sourceTree = "<group>"; };
-		AEF1EFB029D6EAA5008E6653 /* SessionMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMetrics.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1264,9 +1258,6 @@
 				AEB0059A29C09F60002C9AB9 /* UI */,
 				AEF1EFA429D6A670008E6653 /* OptimizationCheсkerManager.swift */,
 				AEF1EFA829D6DFA3008E6653 /* NetworkMonitorManager.swift */,
-				AEF1EFAC29D6EA53008E6653 /* Metric.swift */,
-				AEF1EFAE29D6EA88008E6653 /* Rendere.swift */,
-				AEF1EFB029D6EAA5008E6653 /* SessionMetrics.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1554,7 +1545,6 @@
 				445D018D29950BB2006458AD /* SFullPaymentRequest.swift in Sources */,
 				445CB087292CA0A800F50047 /* Fonts.swift in Sources */,
 				445CB099292CDC1200F50047 /* CardInfoView.swift in Sources */,
-				AEF1EFAD29D6EA53008E6653 /* Metric.swift in Sources */,
 				445CB093292CC08400F50047 /* PaymentVC.swift in Sources */,
 				44C651102934E37F008F1C29 /* SPError.swift in Sources */,
 				440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */,
@@ -1571,7 +1561,6 @@
 				44F9FD4D295AFAB800FE4B9F /* CoverPresentationController.swift in Sources */,
 				44BD272F29A895A2001ECF54 /* PayInfo.swift in Sources */,
 				445CB09E292E056B00F50047 /* AuthVC.swift in Sources */,
-				AEF1EFAF29D6EA88008E6653 /* Rendere.swift in Sources */,
 				4464DF8E291D0D2E000C9B45 /* ParameterEncoding.swift in Sources */,
 				44F9FD5F295AFCAC00FE4B9F /* CGPoint+Extension.swift in Sources */,
 				211DF36429D18B220038A951 /* UIImage+base64.swift in Sources */,
@@ -1587,7 +1576,6 @@
 				442A45DA29804E0C00EC3D73 /* UserModel.swift in Sources */,
 				AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */,
 				44F9FD51295AFAD700FE4B9F /* ContentNC.swift in Sources */,
-				AEF1EFB129D6EAA5008E6653 /* SessionMetrics.swift in Sources */,
 				21440DBA29D5EE1F00E3803E /* SearchInputView.swift in Sources */,
 				44A31254298108330099EB76 /* Locator.swift in Sources */,
 				4479ECDA29476EEF009B3AB8 /* Style.swift in Sources */,
