@@ -9,7 +9,8 @@ import Foundation
 
 final class RemoteConfigServiceAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: RemoteConfigService = DefaultRemoteConfigService(network: container.resolve())
+        let service: RemoteConfigService = DefaultRemoteConfigService(network: container.resolve(),
+                                                                      analytics: container.resolve())
         container.register(service: service)
     }
 }
@@ -22,9 +23,11 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private let network: NetworkService
     private let optimizationManager = OptimizationCheсkerManager()
     private var apiKey: String?
+    private let analytics: AnalyticsService
 
-    init(network: NetworkService) {
+    init(network: NetworkService, analytics: AnalyticsService) {
         self.network = network
+        self.analytics = analytics
     }
     
     func getConfig(with apiKey: String) {
@@ -44,7 +47,9 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     }
     
     private func saveConfig(_ value: ConfigModel) {
-        optimizationManager.checkSavedDataSize(object: value)
+        optimizationManager.checkSavedDataSize(object: value) {
+            self.analytics.sendEvent(.DataSize, with: [$0])
+        }
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
         UserDefaults.images = value.images

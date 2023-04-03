@@ -50,6 +50,10 @@ enum AnalyticsEvent: String {
     case ManuallyClosed
     /// Пермиссии данные пользоватлем к моменту оплаты
     case Permissions
+    ///  Размер загруженных локальных данных
+    case DataSize
+    ///  Время, необходимое для запуск SDK
+    case StartTime
 }
 
 enum AnalyticsValue: String {

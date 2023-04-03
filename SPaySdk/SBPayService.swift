@@ -28,7 +28,7 @@ protocol SBPayService {
 
 final class DefaultSBPayService: SBPayService {
 
-    private lazy var startService: StartupService = DefaultStartupService()
+    private lazy var startService: StartupService = DefaultStartupService(timeManager: timeManager)
     private lazy var locator: LocatorService = DefaultLocatorService()
     private var apiKey: String?
     private let timeManager = OptimizationCheсkerManager()
@@ -110,6 +110,7 @@ final class DefaultSBPayService: SBPayService {
                         completion: @escaping PaymentCompletion) {
         let manager: SDKManager = locator.resolve()
         timeManager.startCheckingCPULoad()
+        timeManager.startContectionTypeChecking()
         guard let apiKey = apiKey else { return assertionFailure(.MerchantAlert.alertVersion) }
         manager.configWithOrderId(apiKey: apiKey,
                                   paymentRequest: paymentRequest,
@@ -117,7 +118,10 @@ final class DefaultSBPayService: SBPayService {
         SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
         startService.openInitialScreen(with: viewController,
                                        with: locator)
-        timeManager.stopCheckingCPULoad()
+        timeManager.stopCheckingCPULoad() {
+            let analyticsService: AnalyticsService = self.locator.resolve()
+            analyticsService.sendEvent(.StartTime, with: [$0])
+        }
     }
 
     func getResponseFrom(_ url: URL) {

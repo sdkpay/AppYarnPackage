@@ -10,48 +10,56 @@ import UIKit
 import Dispatch
 
 final class OptimizationCheсkerManager {
-    private var startTime: CFAbsoluteTime?
-    private var startTimeCPUCheking: UInt64?
-    private var networkDataSize: Int?
+    private(set) var startTime: CFAbsoluteTime?
+    private(set) var startTimeCPUCheking: UInt64?
+    private(set) var networkDataSize: Int?
+    private let networkMonitorManager = NetworkMonitorManager()
     
     func startTraking() {
         startTime = CFAbsoluteTimeGetCurrent()
     }
     
-    func checkSavedDataSize(object: Codable) {
+    func checkSavedDataSize(object: Codable, clouser: (Int) -> ()) {
         let size = MemoryLayout.size(ofValue: object)
-        print("Amount of downloaded data is \(size)")
+        clouser(size)
+        SBLogger.logSavedData(size)
     }
     
-    func checkNetworkDataSize(object: Date) {
+    func checkNetworkDataSize(object: Data?) {
+        guard let object else { return }
         let size = MemoryLayout.size(ofValue: object)
         networkDataSize = networkDataSize == nil ? size : networkDataSize! + size
+        SBLogger.logNetworkDownloadingDataSize(networkDataSize ?? 0)
     }
     
-    func stopNetworkDataChecking() {
-        guard let networkDataSize else { return }
-        print("Amount of network data is \(networkDataSize)")
+    func startContectionTypeChecking() {
+        networkMonitorManager.startMonitoring()
+    }
+    
+    func stopContectionTypeChecking() {
+        networkMonitorManager.stopMonitoring()
     }
     
     func startCheckingCPULoad() {
-        let startTimeCPUCheking = mach_absolute_time()
+        startTimeCPUCheking = mach_absolute_time()
     }
     
-    func stopCheckingCPULoad() {
+    func stopCheckingCPULoad(clouser: (Double) -> () ) {
         let endTime = mach_absolute_time()
         guard let startTimeCPUCheking else { return }
         let elapsedTicks = endTime - startTimeCPUCheking
         var timebaseInfo = mach_timebase_info_data_t()
         mach_timebase_info(&timebaseInfo)
         let elapsedSeconds = Double(elapsedTicks) * Double(timebaseInfo.numer) / Double(timebaseInfo.denom) / Double(NSEC_PER_SEC)
-        print("Общее время запуска SDK = \(elapsedSeconds) секунд")
+        SBLogger.logStartSdkTime(elapsedSeconds)
     }
     
-    func endTraking(_ classDescription: String) {
-        var endTime = CFAbsoluteTimeGetCurrent()
+    func endTraking(_ classDescription: String, clouser: (String) -> ()) {
+        let endTime = CFAbsoluteTimeGetCurrent()
         guard let startTime else { return }
         let launchTime = endTime - startTime
-        print("Общее время запуска экрана \(classDescription): \(launchTime) секунд")
+        clouser("\(launchTime)")
+        SBLogger.logScreenDownloadTime(launchTime, screen: classDescription)
     }
     
     private func hostCPULoadInfo() -> host_cpu_load_info? {

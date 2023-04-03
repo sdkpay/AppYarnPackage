@@ -113,8 +113,6 @@ struct ConfigValues: Codable {
 final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private var cellConfig = Config.allCases
     private var values = ConfigValues()
-    private var startTime: CFAbsoluteTime?
-    private var endTime: CFAbsoluteTime?
     
     private lazy var tableView: UITableView = {
         let view = UITableView()
@@ -153,20 +151,15 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        endTime = CFAbsoluteTimeGetCurrent()
         configNav()
         prepareData()
         setupUI()
         let ver = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "No info"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "No info"
         title = "🔨 \(ver)(\(build))"
-        guard let endTime, let startTime else { return }
-        let launchTime = endTime - startTime
-        print("Общее время запуска экана \(String(describing: self)): \(launchTime) секунд")
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        startTime = CFAbsoluteTimeGetCurrent()
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     

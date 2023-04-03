@@ -18,6 +18,7 @@ final class AuthPresenter: AuthPresenting {
     private let sdkManager: SDKManager
     private let userService: UserService
     private let alertService: AlertService
+    private let timeManager: OptimizationCheсkerManager
 
     weak var view: (IAuthVC & ContentVC)?
     
@@ -26,13 +27,16 @@ final class AuthPresenter: AuthPresenting {
          sdkManager: SDKManager,
          analytics: AnalyticsService,
          userService: UserService,
-         alertService: AlertService) {
+         alertService: AlertService,
+         timeManager: OptimizationCheсkerManager) {
         self.analytics = analytics
         self.router = router
         self.authService = authService
         self.sdkManager = sdkManager
         self.userService = userService
         self.alertService = alertService
+        self.timeManager = timeManager
+        self.timeManager.startTraking()
     }
     
     deinit {
@@ -40,7 +44,9 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
-        analytics.sendEvent(.AuthViewAppeared)
+        timeManager.endTraking(AuthVC.self.description()) {
+            analytics.sendEvent(.AuthViewAppeared, with: [$0])
+        }
         checkNewStart()
     }
     

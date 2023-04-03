@@ -20,6 +20,11 @@ final class DefaultStartupService: StartupService {
     private var sdkWindow: TransparentWindow?
     private var locator: LocatorService?
     private var rootController: RootVC?
+    private let timeManager: OptimizationCheсkerManager?
+    
+    init(timeManager: OptimizationCheсkerManager) {
+        self.timeManager = timeManager
+    }
 
     func openInitialScreen(with viewController: UIViewController,
                            with locator: LocatorService) {
@@ -29,6 +34,7 @@ final class DefaultStartupService: StartupService {
         self.locator = locator
         let analytics: AnalyticsService = locator.resolve()
         analytics.sendEvent(.BankAppFound)
+        setenv("CFNETWORK_DIAGNOSTICS", "3", 1)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(closeSdk),
                                                name: Notification.Name(closeSDKNotification),
@@ -63,6 +69,7 @@ final class DefaultStartupService: StartupService {
         analytics.sendEvent(.ManuallyClosed)
         rootController?.dismiss(animated: true)
         sdkWindow = nil
+        timeManager?.stopContectionTypeChecking()
     }
     
     func completePayment(paymentSuccess: SPayState,

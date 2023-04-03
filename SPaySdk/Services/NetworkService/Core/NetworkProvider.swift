@@ -56,6 +56,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private var task: URLSessionTask?
     private var session: URLSession?
     private var requestManager: BaseRequestManager
+    private let timeManager = OptimizationCheсkerManager()
     
     private lazy var certificate: Data? = {
         guard let fileDer = Bundle(for: SPay.self).path(forResource: "ecomtest.s.ru",
@@ -86,6 +87,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
             let request = try self.buildRequest(from: target)
             SBLogger.logRequestStarted(request)
             task = session?.dataTask(with: request, completionHandler: { data, response, error in
+                self.timeManager.checkNetworkDataSize(object: data)
                 DispatchQueue.main.async {
                     if let response = response {
                         self.saveGeobalancingData(from: response)
@@ -205,13 +207,5 @@ extension DefaultNetworkProvider: URLSessionDelegate {
             }
         }
         completionHandler(.cancelAuthenticationChallenge, nil)
-    }
-}
-
-extension DefaultNetworkProvider: URLSessionDataDelegate {
-    func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
-        for metric in metrics.transactionMetrics {
-            print(metric)
-        }
     }
 }
