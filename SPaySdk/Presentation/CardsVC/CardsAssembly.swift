@@ -30,6 +30,7 @@ final class CardsAssembly {
                                        analytics: locator.resolve(),
                                        cards: cards,
                                        selectedId: selectedId,
+                                       timeManager: OptimizationCheсkerManager(),
                                        selectedCard: selectedCard)
         return presenter
     }

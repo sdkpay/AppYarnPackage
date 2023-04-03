@@ -159,6 +159,8 @@
 		AEE5575A29CFAD470015BDD6 /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = AEE5575929CFAD470015BDD6 /* Dynatrace-Static */; };
 		AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */; };
 		AEEB602429B9B55E00D1E1D2 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */; };
+		AEF1EFA529D6A670008E6653 /* OptimizationCheсkerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1EFA429D6A670008E6653 /* OptimizationCheсkerManager.swift */; };
+		AEF1EFA929D6DFA3008E6653 /* NetworkMonitorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1EFA829D6DFA3008E6653 /* NetworkMonitorManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -356,6 +358,8 @@
 		AEB0059B29C09F72002C9AB9 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
 		AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetName.swift"; sourceTree = "<group>"; };
 		AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
+		AEF1EFA429D6A670008E6653 /* OptimizationCheсkerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OptimizationCheсkerManager.swift"; sourceTree = "<group>"; };
+		AEF1EFA829D6DFA3008E6653 /* NetworkMonitorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1247,6 +1251,8 @@
 			isa = PBXGroup;
 			children = (
 				AEB0059A29C09F60002C9AB9 /* UI */,
+				AEF1EFA429D6A670008E6653 /* OptimizationCheсkerManager.swift */,
+				AEF1EFA829D6DFA3008E6653 /* NetworkMonitorManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1469,6 +1475,7 @@
 				21440DB429D5B66300E3803E /* LogAssembly.swift in Sources */,
 				21253D2129C9E761004ED82D /* Shimmer+Extensions.swift in Sources */,
 				44F9FD4A295AFAB800FE4B9F /* CoverPresentAnimatedTransitioning.swift in Sources */,
+				AEF1EFA929D6DFA3008E6653 /* NetworkMonitorManager.swift in Sources */,
 				44C651052930E102008F1C29 /* LoadingView.swift in Sources */,
 				4464DF89291D01F4000C9B45 /* NetworkService.swift in Sources */,
 				21440DB629D5B67200E3803E /* LogVC.swift in Sources */,
@@ -1559,6 +1566,7 @@
 				4498008C29AD247C008E808A /* AlertService.swift in Sources */,
 				219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */,
 				445CB078292BC56900F50047 /* Gallery.swift in Sources */,
+				AEF1EFA529D6A670008E6653 /* OptimizationCheсkerManager.swift in Sources */,
 				21440DB829D5B68200E3803E /* LogPresenter.swift in Sources */,
 				44B822022923897D00C06C51 /* SBPayService.swift in Sources */,
 				442A45DA29804E0C00EC3D73 /* UserModel.swift in Sources */,

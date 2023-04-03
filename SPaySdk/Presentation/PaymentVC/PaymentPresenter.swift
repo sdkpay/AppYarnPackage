@@ -21,6 +21,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let locationManager: LocationManager
     private let sdkManager: SDKManager
     private let alertService: AlertService
+    private let timeManager: OptimizationCheсkerManager
     
     private var selectedCard: PaymentToolInfo?
     private var user: User?
@@ -33,7 +34,9 @@ final class PaymentPresenter: PaymentPresenting {
          analytics: AnalyticsService,
          paymentService: PaymentService,
          locationManager: LocationManager,
-         alertService: AlertService) {
+         alertService: AlertService,
+         timeManager: OptimizationCheсkerManager
+    ) {
         self.router = router
         self.userService = userService
         self.sdkManager = manager
@@ -41,6 +44,8 @@ final class PaymentPresenter: PaymentPresenting {
         self.paymentService = paymentService
         self.locationManager = locationManager
         self.alertService = alertService
+        self.timeManager = timeManager
+        self.timeManager.startTraking()
     }
     
     func viewDidLoad() {
@@ -53,7 +58,9 @@ final class PaymentPresenter: PaymentPresenting {
         } else {
             getUser()
         }
-        analytics.sendEvent(.PayViewAppeared)
+        timeManager.endTraking(PaymentVC.self.description()) {
+            self.analytics.sendEvent(.PayViewAppeared, with: [$0])
+        }
     }
     
     func payButtonTapped() {

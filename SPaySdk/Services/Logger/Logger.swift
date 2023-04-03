@@ -347,6 +347,48 @@ enum SBLogger: ResponseDecoder {
         )
     }
     
+    static func logSavedData(_ size: Int) {
+        log(
+            """
+            ⬇️ Saved data by size = \(size) byte
+            """
+        )
+    }
+    
+    static func logCurrenConnectionType(_ type: String) {
+        log(
+            """
+            💎 Current connection type = \(type)
+            """
+        )
+    }
+    
+    static func logStartSdkTime(_ time: Double) {
+        let seconds = String(format: "%.4f", time)
+        log(
+            """
+            ⏰ Start SDK time = \(seconds)
+            """
+        )
+    }
+    
+    static func logScreenDownloadTime(_ time: Double, screen: String) {
+        let seconds = String(format: "%.4f", time)
+        log(
+            """
+            ⏱️ Screen \(screen) download time = \(seconds) second
+            """
+        )
+    }
+    
+    static func logNetworkDownloadingDataSize(_ size: Int) {
+        log(
+            """
+            💽 Network data size = \(size) bytes
+            """
+        )
+    }
+    
     static func log(_ state: SBObjectState) {
         switch state {
         case .start(let obj):

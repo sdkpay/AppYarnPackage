@@ -18,7 +18,7 @@ protocol IAuthVC {
                           selected: @escaping (BankAppModel) -> Void)
 }
 
-final class AuthVC: ContentVC, IAuthVC {
+final class AuthVC: ContentVC, IAuthVC {    
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.font = .bodi2

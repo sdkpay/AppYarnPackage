@@ -69,6 +69,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
     func request<T>(_ target: TargetType, to: T.Type, retryCount: Int = 1, completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
         provider.request(target, retryCount: retryCount) { data, response, error in
             SBLogger.logRequestCompleted(target, response: response, data: data)
+            MemoryLayout.size(ofValue: data)
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
             completion(result)
         }

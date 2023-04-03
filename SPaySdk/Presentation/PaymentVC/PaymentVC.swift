@@ -24,7 +24,7 @@ protocol IPaymentVC {
                         action: @escaping Action)
 }
 
-final class PaymentVC: ContentVC, IPaymentVC {
+final class PaymentVC: ContentVC, IPaymentVC {    
     private lazy var payButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
         view.setTitle(String(stringLiteral: .Common.payTitle), for: .normal)

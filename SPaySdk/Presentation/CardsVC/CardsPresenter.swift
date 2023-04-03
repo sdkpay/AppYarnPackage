@@ -20,6 +20,7 @@ final class CardsPresenter: CardsPresenting {
     private let cards: [PaymentToolInfo]
     private let selectedCard: (PaymentToolInfo) -> Void
     private let selectedId: Int
+    private var timeManager: OptimizationCheсkerManager
 
     weak var view: (ICardsVC & ContentVC)?
     
@@ -31,17 +32,22 @@ final class CardsPresenter: CardsPresenting {
          analytics: AnalyticsService,
          cards: [PaymentToolInfo],
          selectedId: Int,
+         timeManager: OptimizationCheсkerManager,
          selectedCard: @escaping (PaymentToolInfo) -> Void) {
         self.analytics = analytics
         self.userService = userService
         self.cards = cards
         self.selectedCard = selectedCard
         self.selectedId = selectedId
+        self.timeManager = timeManager
+        self.timeManager.startTraking()
     }
     
     func viewDidLoad() {
         configViews()
-        analytics.sendEvent(.CardsViewAppeared)
+        timeManager.endTraking(CardsVC.self.description()) {
+            analytics.sendEvent(.CardsViewAppeared, with: [$0])
+        }
     }
 
     func model(for indexPath: IndexPath) -> CardCellModel {
