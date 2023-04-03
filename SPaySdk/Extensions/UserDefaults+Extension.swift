@@ -24,14 +24,16 @@ struct UserDefault<Value: Codable> {
         get {
             let data = container.object(forKey: key.rawValue) as? Data ?? Data()
             let value = data.decode(to: Value.self)
-            SBLogger.log("⬆️ Get value: '\((value as? String) ?? "none")' from key: '\(key.rawValue)'")
+            SBLogger.log(level: .debug(level: .storage),
+                         "⬆️ Get value: '\((value as? String) ?? "none")' from key: '\(key.rawValue)'")
             return value
         }
         set {
             guard let data = newValue.data else { return }
             container.set(data, forKey: key.rawValue)
             guard let newValue = newValue else { return }
-            SBLogger.log("⬇️ Set value: '\(newValue)' for key: '\(key.rawValue)'")
+            SBLogger.log(level: .debug(level: .storage),
+                         "⬇️ Set value: '\(newValue)' for key: '\(key.rawValue)'")
         }
     }
 }

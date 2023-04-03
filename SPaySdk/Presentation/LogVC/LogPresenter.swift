@@ -9,6 +9,7 @@ import UIKit
 
 private extension String {
     static let noLogs = "Логи не найдены"
+    static let title = "Логи"
 }
 
 protocol LogPresenting {
@@ -28,30 +29,33 @@ final class LogPresenter: LogPresenting {
             .appendingPathComponent("log.txt")
     }
     
-    var logContent: String?
-    
+    private var logContent: [String] = []
+    private var filteredLogContent: [String] = []
     private var searchRanges: [NSRange] = []
+    private var logLevel: DebugLogLevel?
     private var currentRangeIndex = 0
 
     weak var view: (UIViewController & ILogVC)?
     
     func viewDidLoad() {
+        view?.title = .title
         getLogString()
         showAllText()
     }
     
     private func getLogString() {
         guard let logPath = logPath else { return }
-        logContent = try? String(contentsOf: logPath)
+        let logContentString = try? String(contentsOf: logPath)
+        logContent = logContentString?.components(separatedBy: ["|"]) ?? []
     }
     
     private func showAllText() {
-        let text = logContent ?? .noLogs
+        let text = logContent.isEmpty ? .noLogs : logContent.joined(separator: "\n")
         view?.setText(text)
     }
     
     func settingTapped() {
-        // TODO: добавить разбивку на группы
+        presentLogLevelPicker()
     }
 
     func upTapped() {
@@ -74,8 +78,10 @@ final class LogPresenter: LogPresenting {
             view?.hideResultsNum()
             return
         }
-        guard let logContent = logContent else { return }
-        searchRanges = logContent.ranges(of: text, options: [.regularExpression, .caseInsensitive])
+        let content = logLevel == nil ? logContent : filteredLogContent
+        searchRanges = content
+            .joined(separator: "\n")
+            .ranges(of: text, options: [.regularExpression, .caseInsensitive])
         currentRangeIndex = 0
         if let firstRange = searchRanges.first {
             scrollToRange(range: firstRange)
@@ -87,5 +93,23 @@ final class LogPresenter: LogPresenting {
     private func scrollToRange(range: NSRange) {
         view?.scrollTo(range)
         view?.setResultsNum(current: currentRangeIndex + 1, count: searchRanges.count)
+    }
+
+    private func presentLogLevelPicker() {
+        let alertVC = LogLevelAlertVC { [weak self] level in
+            self?.logLevel = level
+            self?.view?.title = self?.logLevel?.rawValue ?? .title
+            self?.filterLogs()
+        }
+        view?.present(alertVC, animated: true)
+    }
+    
+    private func filterLogs() {
+        if let logLevel = logLevel {
+            filteredLogContent = logContent.filter({ $0.hasPrefix(logLevel.rawValue) })
+            view?.setText(filteredLogContent.joined(separator: "\n"))
+        } else {
+            view?.setText(logContent.joined(separator: "\n"))
+        }
     }
 }

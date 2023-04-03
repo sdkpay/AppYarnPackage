@@ -19,7 +19,6 @@ private extension TimeInterval {
 }
 
 private extension String {
-    static let title = "Логи"
     static let searchPlaceholder = "Нажмите для поиска по тексту"
 }
 
@@ -79,6 +78,11 @@ final class LogVC: UIViewController, ILogVC {
                                                object: nil)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        textView.setContentOffset(.zero, animated: true)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         SBLogger.log(.didAppear(view: self))
@@ -90,7 +94,6 @@ final class LogVC: UIViewController, ILogVC {
     }
     
     private func setupNavVC() {
-        title = .title
         navigationController?.navigationBar.backgroundColor = .backgroundSecondary
         
         let settingsButton = UIBarButtonItem(barButtonSystemItem: .compose,
@@ -103,7 +106,7 @@ final class LogVC: UIViewController, ILogVC {
     
     @objc
     private func settingTapped() {
-        self.presenter.downTapped()
+        presenter.settingTapped()
     }
     
     func setText(_ text: String) {
@@ -131,7 +134,7 @@ final class LogVC: UIViewController, ILogVC {
         bottomAnchor = textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         bottomAnchor?.isActive = true
         NSLayoutConstraint.activate([
-            textView.topAnchor.constraint(equalTo: view.topAnchor),
+            textView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
             textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             textView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
@@ -144,8 +147,8 @@ final class LogVC: UIViewController, ILogVC {
             bottomAnchor?.constant = -keyboardSize.height
             bottomAnchor?.isActive = true
             UIView.animate(withDuration: .keyboardAnimateDuration) {
-              self.view.layoutIfNeeded()
-           }
+                self.view.layoutIfNeeded()
+            }
         }
     }
     

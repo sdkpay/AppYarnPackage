@@ -29,34 +29,41 @@ enum SBLoggerViewState {
 
 enum LogLevel {
     case merchant
-    case debug
+    case debug(level: DebugLogLevel)
+}
+
+enum DebugLogLevel: String, CaseIterable {
+    case bank = "Auth"
+    case network = "Network"
+    case lifeCycle = "LifeCycle"
+    case storage = "Storage"
+    case defaultLevel = "Default"
 }
 
 enum SBLogger: ResponseDecoder {
     private static var logger = Log()
     
-    static func log(level: LogLevel = .debug, _ massage: String) {
+    static func log(level: LogLevel = .debug(level: .defaultLevel), _ massage: String) {
         switch level {
         case .merchant:
+            NSLog(massage)
+        case let .debug(level: level):
+            guard RemoteConfig.shared.needLogs else { return }
             print(massage)
-        case .debug:
-            if RemoteConfig.shared.needLogs {
-                print(massage)
-                print("\n\(Date()) \n\(massage)", to: &logger)
-            }
+            print("|\(level.rawValue) \(Date()) \n\(massage)", to: &logger)
         }
     }
     
     static func logRequestStarted(_ request: URLRequest) {
         log(
+            level: .debug(level: .network),
             """
             ⏱ Request in progress
                path: \(request.url?.absoluteString ?? "None")
                headers: \(headers(request.allHTTPHeaderFields))
                httpMethod: \(request.httpMethod ?? "None")
                body: \(stringToLog(from: request.httpBody))
-            """
-        )
+            """)
     }
     
     static func logRequestCompleted(_ target: TargetType,
@@ -71,6 +78,7 @@ enum SBLogger: ResponseDecoder {
         }
         if code != "200" {
             log(
+                level: .debug(level: .network),
                 """
                 ❗️Request failed with code \(code)
                   path: \(url)
@@ -81,6 +89,7 @@ enum SBLogger: ResponseDecoder {
             )
         } else {
             log(
+                level: .debug(level: .network),
             """
             ✅ Request successed with code \(code)
                path: \(url)
@@ -94,6 +103,7 @@ enum SBLogger: ResponseDecoder {
     
     static func responseDecodedWithSuccess<T>(for type: T.Type) where T: Codable {
         log(
+            level: .debug(level: .network),
             """
             🟢 Response decoded to type \(type)
             """
@@ -102,6 +112,7 @@ enum SBLogger: ResponseDecoder {
     
     static func requestCancelled(_ request: URLRequest) {
         log(
+            level: .debug(level: .network),
             """
             🚫 Request cancelled
                path: \(request.url?.absoluteString ?? "None")
@@ -117,6 +128,7 @@ enum SBLogger: ResponseDecoder {
         switch decodingError {
         case let .typeMismatch(t, context):
             log(
+                level: .debug(level: .network),
                 """
                 🔴 The response could not be decoded for \(type)
                    error: Type '\(t)' mismatch: \(context.debugDescription)
@@ -125,6 +137,7 @@ enum SBLogger: ResponseDecoder {
             )
         case let .valueNotFound(value, context):
             log(
+                level: .debug(level: .network),
                 """
                 🔴 The response could not be decoded for \(type)
                    error: Type '\(value)' mismatch: \(context.debugDescription)
@@ -133,6 +146,7 @@ enum SBLogger: ResponseDecoder {
             )
         case let .keyNotFound(codingKey, _):
             log(
+                level: .debug(level: .network),
                 """
                 🔴 The response could not be decoded for \(type)
                    error: Key '\(codingKey.stringValue)' not found
@@ -140,6 +154,7 @@ enum SBLogger: ResponseDecoder {
             )
         case .dataCorrupted(let context):
             log(
+                level: .debug(level: .network),
                 """
                 🔴 The response could not be decoded for \(type)
                    error: DataCorrupted
@@ -148,6 +163,7 @@ enum SBLogger: ResponseDecoder {
             )
         @unknown default:
             log(
+                level: .debug(level: .network),
                 """
                 🔴 The response could not be decoded for \(type)
                    error: unknown decode error
@@ -170,6 +186,7 @@ enum SBLogger: ResponseDecoder {
             }
         }
         log(
+            level: .debug(level: .bank),
             """
             ⏱ Request to Sbol in progress
                parameters:
@@ -181,6 +198,7 @@ enum SBLogger: ResponseDecoder {
     
     static func logResponseFromSbolCompleted(_ parameters: [String: String]) {
         log(
+            level: .debug(level: .bank),
             """
             ✅ Response from Sbol with success
                response:
@@ -191,6 +209,7 @@ enum SBLogger: ResponseDecoder {
     
     static func logResponseFromSbolFailed(_ url: URL, error: String) {
         log(
+            level: .debug(level: .bank),
             """
             ❗️Response from Sbol with error: \(error)
               url: \(url.absoluteString)
@@ -200,6 +219,7 @@ enum SBLogger: ResponseDecoder {
     
     static func logRequestPaymentToken(with params: SPaymentTokenRequest) {
         log(
+            level: .debug(level: .defaultLevel),
             """
             ➡️ Merchant called GetPaymentToken
                merchantLogin: \(params.merchantLogin ?? "none")
@@ -218,6 +238,7 @@ enum SBLogger: ResponseDecoder {
     
     static func logResponsePaymentToken(with params: SPaymentTokenResponse) {
         log(
+            level: .debug(level: .defaultLevel),
             """
             ↩️ Merchant get GetPaymentToken response
                paymentToken: \(params.paymentToken ?? "none")
@@ -230,6 +251,7 @@ enum SBLogger: ResponseDecoder {
     
     static func logDownloadImageFromCache(with urlString: String) {
         log(
+            level: .debug(level: .network),
             """
             💿 Download image from cache by url \(urlString)
             """
@@ -238,6 +260,7 @@ enum SBLogger: ResponseDecoder {
     
     static func logStartDownloadingImage(with urlString: String?) {
         log(
+            level: .debug(level: .network),
             """
             🌐 Start downloading image by string:
                \(urlString ?? "")
@@ -251,6 +274,7 @@ enum SBLogger: ResponseDecoder {
         switch error {
         case .urlIsNil:
             log(
+                level: .debug(level: .network),
                 """
                 🔴 Not URL Image String,
                    placeholder: \(placeholder?.assetName ?? "")
@@ -258,6 +282,7 @@ enum SBLogger: ResponseDecoder {
             )
         case .invalidURL:
             log(
+                level: .debug(level: .network),
                 """
                 🔴 URL in unsupported format
                    \(urlString ?? ""),
@@ -266,6 +291,7 @@ enum SBLogger: ResponseDecoder {
             )
         case .dataIsNil:
             log(
+                level: .debug(level: .network),
                 """
                 🔴 Data is nil by url
                    \(urlString ?? ""),
@@ -274,6 +300,7 @@ enum SBLogger: ResponseDecoder {
             )
         case .networkError(let error):
             log(
+                level: .debug(level: .network),
                 """
                 🔴 Dowload completed with error:
                    \(error.localizedDescription),
@@ -282,6 +309,7 @@ enum SBLogger: ResponseDecoder {
             )
         case .imageNotCreated:
             log(
+                level: .debug(level: .network),
                 """
                 🔴 Image not created by url
                    \(urlString ?? ""),
@@ -293,6 +321,7 @@ enum SBLogger: ResponseDecoder {
     
     static func logDownloadImageWithSuccess(with urlString: String) {
         log(
+            level: .debug(level: .network),
             """
             🟢 Download image with success by string:
                \(urlString)
@@ -302,6 +331,7 @@ enum SBLogger: ResponseDecoder {
     
     static func logLocatorRegister(_ key: String) {
         log(
+            level: .debug(level: .lifeCycle),
             """
             ☑️ Locator register service: \(key)
             """
@@ -310,6 +340,7 @@ enum SBLogger: ResponseDecoder {
     
     static func logLocatorResolve(_ key: String) {
         log(
+            level: .debug(level: .lifeCycle),
             """
             🔘 Locator resolve service: \(key)
             """
@@ -320,12 +351,14 @@ enum SBLogger: ResponseDecoder {
         switch state {
         case .start(let obj):
             log(
+                level: .debug(level: .lifeCycle),
                 """
                 ❇️ Service \(String(describing: type(of: obj))) inited
                 """
             )
         case .stop(let obj):
             log(
+                level: .debug(level: .lifeCycle),
                 """
                 ❎ Service \(String(describing: type(of: obj))) deinit
                 """
@@ -337,24 +370,28 @@ enum SBLogger: ResponseDecoder {
         switch state {
         case .didLoad(let view):
             log(
+                level: .debug(level: .lifeCycle),
                 """
                 🛠 ViewDidLoad \(String(describing: type(of: view)))
                 """
             )
         case .willAppear(let view):
             log(
+                level: .debug(level: .lifeCycle),
                 """
                 📱 ViewWillAppear \(String(describing: type(of: view)))
                 """
             )
         case .didAppear(let view):
             log(
+                level: .debug(level: .lifeCycle),
                 """
                 📲 ViewDidAppear \(String(describing: type(of: view)))
                 """
             )
         case .didDissapear(view: let view):
             log(
+                level: .debug(level: .lifeCycle),
                 """
                 📵 ViewDidDissapear \(String(describing: type(of: view)))
                 """
@@ -368,6 +405,7 @@ enum SBLogger: ResponseDecoder {
                     fileName: String = #file,
                     lineNumber: Int = #line) {
         log(
+            level: .debug(level: .defaultLevel),
             """
             📄 Log name: \(name)
                class: \(String(describing: type(of: obj)))
@@ -384,6 +422,7 @@ enum SBLogger: ResponseDecoder {
                           fileName: String = #file,
                           lineNumber: Int = #line) {
         log(
+            level: .debug(level: .defaultLevel),
             """
             🗄 Thread info for functionName: \(functionName)
                thread: \(thread.threadName)
