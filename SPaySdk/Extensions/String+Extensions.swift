@@ -16,4 +16,6 @@ extension String {
     static let localization = UserDefaults.localization
     static let schemas = UserDefaults.schemas
     static let images = UserDefaults.images
+    static let dynatraceUrl = UserDefaults.bankApp
+    static let dynatraceId = UserDefaults.bankApp
 }

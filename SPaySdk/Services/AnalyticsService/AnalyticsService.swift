@@ -59,6 +59,7 @@ enum AnalyticsValue: String {
 protocol AnalyticsService {
     func sendEvent(_ event: AnalyticsEvent)
     func sendEvent<T>(_ event: AnalyticsEvent, with value: [T])
+    func config()
 }
 
 final class DefaultAnalyticsService: NSObject, AnalyticsService {
@@ -85,7 +86,6 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
 
     override init() {
         super.init()
-        configDynatrace()
         SBLogger.log(.start(obj: self))
     }
     
@@ -93,11 +93,11 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         SBLogger.log(.stop(obj: self))
     }
     
-    private func configDynatrace() {
+    func config() {
         let startupDictionary: [String: Any?] = [
-            kDTXApplicationID: AppSettings.dynatraceId,
-            kDTXBeaconURL: AppSettings.dynatraceUrl,
-            kDTXLogLevel: AppSettings.dynatraceLogLevel
+            kDTXApplicationID: String.dynatraceId,
+            kDTXBeaconURL: String.dynatraceUrl,
+            kDTXLogLevel: "OFF"
         ]
         Dynatrace.startup(withConfig: startupDictionary as [String: Any])
         Dynatrace.identifyUser(Bundle.main.displayName)

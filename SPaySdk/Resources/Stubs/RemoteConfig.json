@@ -12,7 +12,9 @@
         "authLinkFirstApp":"sberbankidexternallogin://",
         "authLinkSecondApp":"sbolidexternallogin://",
         "payLinkFirstApp":"sberpay://invoicing/v2",
-        "payLinkSecondApp":"sbolpay://invoicing/v2"
+        "payLinkSecondApp":"sbolpay://invoicing/v2",
+        "dynatraceUrl":"https://vito.sbrf.ru:443/mbeacon/7e4bdb68-cd47-4ecc-b649-69eb5cd44c91",
+        "dynatraceId": "656e76e7-76f4-40ca-86bf-39db12cbc857"
     },
     "apikey":["1","2"],
     "images":{

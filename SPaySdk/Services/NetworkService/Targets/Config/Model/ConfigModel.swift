@@ -32,6 +32,8 @@ struct Schemas: Codable {
     let authLinkSecondApp: String
     let payLinkFirstApp: String
     let payLinkSecondApp: String
+    let dynatraceUrl: String
+    let dynatraceId: String
 }
 
 // MARK: - Images

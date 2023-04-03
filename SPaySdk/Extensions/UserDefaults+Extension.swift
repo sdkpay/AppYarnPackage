@@ -61,7 +61,9 @@ extension UserDefaults {
                  defaultValue: Schemas(authLinkFirstApp: "foo",
                                        authLinkSecondApp: "foo",
                                        payLinkFirstApp: "foo",
-                                       payLinkSecondApp: "foo"))
+                                       payLinkSecondApp: "foo",
+                                       dynatraceUrl: "foo",
+                                       dynatraceId: "foo"))
     static var schemas: Schemas?
     
     @UserDefault(key: .images,

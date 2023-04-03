@@ -58,7 +58,11 @@ final class DefaultSBPayService: SBPayService {
         UIFont.registerFontsIfNeeded()
         registerServices()
         let remoteConfigService: RemoteConfigService = locator.resolve()
-        remoteConfigService.getConfig(with: apiKey)
+        remoteConfigService.getConfig(with: apiKey) { [weak self] error in
+            guard let self = self, error != nil else { return }
+            let analyticsService: AnalyticsService = self.locator.resolve()
+            analyticsService.config()
+        }
     }
     
     var isReadyForSPay: Bool {

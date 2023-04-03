@@ -15,7 +15,7 @@ final class RemoteConfigServiceAssembly: Assembly {
 }
 
 protocol RemoteConfigService {
-    func getConfig(with apiKey: String)
+    func getConfig(with apiKey: String, completion: @escaping (SDKError?) -> Void)
 }
 
 final class DefaultRemoteConfigService: RemoteConfigService {
@@ -26,7 +26,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.network = network
     }
     
-    func getConfig(with apiKey: String) {
+    func getConfig(with apiKey: String, completion: @escaping (SDKError?) -> Void) {
         self.apiKey = apiKey
         network.request(ConfigTarget.getConfig,
                         to: ConfigModel.self,
@@ -36,8 +36,9 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                 self?.saveConfig(config)
                 self?.checkWhiteLogList(apikeys: config.apikey)
                 self?.checkVersion(version: config.version)
+                completion(nil)
             case .failure(let error):
-                print(error)
+                completion(error)
             }
         }
     }

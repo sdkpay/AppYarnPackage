@@ -88,7 +88,6 @@
 		4464DF94291D283C000C9B45 /* AuthTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF93291D283C000C9B45 /* AuthTarget.swift */; };
 		4464DF99291D3DB7000C9B45 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF98291D3DB7000C9B45 /* AuthModel.swift */; };
 		4464DF9D291D8E4C000C9B45 /* SPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF9C291D8E4C000C9B45 /* SPay.swift */; };
-		44676ACB296DD52A00D9DFAE /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44676ACA296DD52A00D9DFAE /* AppSettings.swift */; };
 		4471721529193B21005EDF32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471721429193B21005EDF32 /* AppDelegate.swift */; };
 		4471721929193B21005EDF32 /* CartVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471721829193B21005EDF32 /* CartVC.swift */; };
 		4471721E29193B23005EDF32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4471721D29193B23005EDF32 /* Assets.xcassets */; };
@@ -279,7 +278,6 @@
 		4464DF93291D283C000C9B45 /* AuthTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTarget.swift; sourceTree = "<group>"; };
 		4464DF98291D3DB7000C9B45 /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
 		4464DF9C291D8E4C000C9B45 /* SPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPay.swift; sourceTree = "<group>"; };
-		44676ACA296DD52A00D9DFAE /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		4471721129193B21005EDF32 /* SPaySdkExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SPaySdkExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4471721429193B21005EDF32 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4471721829193B21005EDF32 /* CartVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartVC.swift; sourceTree = "<group>"; };
@@ -625,7 +623,6 @@
 				AEB0059929C09F3F002C9AB9 /* Helpers */,
 				44533D1F29852A1C0041FAA9 /* Managers */,
 				442A45D3298049A100EC3D73 /* BuildSettings */,
-				44676AC9296DD51E00D9DFAE /* AppSettings */,
 				44C6510A2934E2F5008F1C29 /* Public */,
 				44D536192926196200B99463 /* Extensions */,
 				4416E429291F9C7200284972 /* Navigation */,
@@ -901,14 +898,6 @@
 				4464DF88291D01F4000C9B45 /* NetworkService.swift */,
 			);
 			path = NetworkService;
-			sourceTree = "<group>";
-		};
-		44676AC9296DD51E00D9DFAE /* AppSettings */ = {
-			isa = PBXGroup;
-			children = (
-				44676ACA296DD52A00D9DFAE /* AppSettings.swift */,
-			);
-			path = AppSettings;
 			sourceTree = "<group>";
 		};
 		4471720829193B21005EDF32 = {
@@ -1485,7 +1474,6 @@
 				21440DB629D5B67200E3803E /* LogVC.swift in Sources */,
 				44F9FD4C295AFAB800FE4B9F /* CoverTransitionDriver.swift in Sources */,
 				442A45DD29804E2E00EC3D73 /* UserTarget.swift in Sources */,
-				44676ACB296DD52A00D9DFAE /* AppSettings.swift in Sources */,
 				44AC79CC299FE9A50043FA4E /* Data+Extension.swift in Sources */,
 				AE4D3FA729C48AF000962DD6 /* UIAplication+TopViewContriller.swift in Sources */,
 				44A3125C298135F10099EB76 /* RootRouter.swift in Sources */,
