@@ -158,15 +158,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "No info"
         title = "🔨 \(ver)(\(build))"
     }
-    
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
     private func prepareData() {
         values = getConfig()
     }
