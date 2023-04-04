@@ -19,7 +19,7 @@ final class OptimizationCheсkerManager {
         startTime = CFAbsoluteTimeGetCurrent()
     }
     
-    func checkSavedDataSize(object: Codable, clouser: (Int) -> ()) {
+    func checkSavedDataSize(object: Codable, clouser: (Int) -> Void) {
         let size = MemoryLayout.size(ofValue: object)
         clouser(size)
         SBLogger.logSavedData(size)
@@ -44,7 +44,7 @@ final class OptimizationCheсkerManager {
         startTimeCPUCheking = mach_absolute_time()
     }
     
-    func stopCheckingCPULoad(clouser: (Double) -> () ) {
+    func stopCheckingCPULoad(clouser: (Double) -> Void) {
         let endTime = mach_absolute_time()
         guard let startTimeCPUCheking else { return }
         let elapsedTicks = endTime - startTimeCPUCheking
@@ -54,7 +54,7 @@ final class OptimizationCheсkerManager {
         SBLogger.logStartSdkTime(elapsedSeconds)
     }
     
-    func endTraking(_ classDescription: String, clouser: (String) -> ()) {
+    func endTraking(_ classDescription: String, clouser: (String) -> Void) {
         let endTime = CFAbsoluteTimeGetCurrent()
         guard let startTime else { return }
         let launchTime = endTime - startTime
@@ -63,7 +63,7 @@ final class OptimizationCheсkerManager {
     }
     
     private func hostCPULoadInfo() -> host_cpu_load_info? {
-        let HOST_CPU_LOAD_INFO_COUNT = MemoryLayout<host_cpu_load_info>.stride/MemoryLayout<integer_t>.stride
+        let HOST_CPU_LOAD_INFO_COUNT = MemoryLayout<host_cpu_load_info>.stride / MemoryLayout<integer_t>.stride
         var size = mach_msg_type_number_t(HOST_CPU_LOAD_INFO_COUNT)
         var cpuLoadInfo = host_cpu_load_info()
         

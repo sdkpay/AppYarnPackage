@@ -19,11 +19,10 @@ extension NWInterface.InterfaceType: CaseIterable {
     ]
 }
 
-
 final class NetworkMonitorManager {
     
     private let queue = DispatchQueue(label: "NetworkConnectivityMonitor")
-    private let monitor: NWPathMonitor = NWPathMonitor()
+    private let monitor = NWPathMonitor()
         
     func startMonitoring() {
         monitor.pathUpdateHandler = { path in
@@ -32,7 +31,7 @@ final class NetworkMonitorManager {
             self.printConnectionType(type: currentConnectionType)
         }
         monitor.start(queue: queue)
-        }
+    }
     
     func stopMonitoring() {
         monitor.cancel()
@@ -57,5 +56,4 @@ final class NetworkMonitorManager {
         
         SBLogger.logCurrenConnectionType("\(currentConnectionType)")
     }
-    
 }

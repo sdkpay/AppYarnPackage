@@ -122,7 +122,7 @@ final class DefaultSBPayService: SBPayService {
         SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
         startService.openInitialScreen(with: viewController,
                                        with: locator)
-        timeManager.stopCheckingCPULoad() {
+        timeManager.stopCheckingCPULoad {
             let analyticsService: AnalyticsService = self.locator.resolve()
             analyticsService.sendEvent(.StartTime, with: [$0])
         }
