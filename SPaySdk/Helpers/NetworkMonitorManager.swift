@@ -26,7 +26,7 @@ final class NetworkMonitorManager {
         
     func startMonitoring() {
         monitor.pathUpdateHandler = { path in
-            let currentConnectionType = NWInterface.InterfaceType.allCases.filter { path.usesInterfaceType($0) }.first
+            let currentConnectionType = NWInterface.InterfaceType.allCases.first(where: { path.usesInterfaceType($0) })
             guard let currentConnectionType else { return }
             self.printConnectionType(type: currentConnectionType)
         }

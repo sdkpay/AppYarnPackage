@@ -90,7 +90,7 @@ enum SBLogger: ResponseDecoder {
         } else {
             log(
                 level: .debug(level: .network),
-            """
+                """
             ✅ Request successed with code \(code)
                path: \(url)
                headers: \(headers)
