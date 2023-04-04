@@ -26,7 +26,7 @@ final class LogPresenter: LogPresenting {
         return fm.urls(for: .documentDirectory,
                        in: .userDomainMask)[0]
             .appendingPathComponent("SBPayLogs")
-            .appendingPathComponent("log.txt")
+            .appendingPathComponent("log_\(SBLogger.dateString).txt")
     }
     
     private var logContent: [String] = []
