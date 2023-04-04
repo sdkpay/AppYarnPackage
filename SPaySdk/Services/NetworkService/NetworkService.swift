@@ -12,7 +12,7 @@ final class NetworkServiceAssembly: Assembly {
         var provider: NetworkProvider
 
         switch BuildSettings.shared.networkState {
-        case .Prod, .Test:
+        case .Prod, .Test, .Psi:
             provider = DefaultNetworkProvider(requestManager: container.resolve())
         case .Local:
             provider = StubNetworkProvider(delayedSeconds: 2)
@@ -29,8 +29,12 @@ var ServerURL: URL {
     switch BuildSettings.shared.networkState {
     case .Test:
         urlString = "https://ucexvyy1j5.api.quickmocker.com"
-    case .Prod, .Local:
+    case .Local:
         urlString = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    case .Prod:
+        urlString = "gate1.spaymentsplus.ru"
+    case .Psi:
+        urlString = "psi.gate1.spaymentsplus.ru"
     }
     return URL(string: urlString)!
 }

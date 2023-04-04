@@ -46,7 +46,7 @@ enum Config: Int, CaseIterable, Codable {
         case .mode:
             return ["Manual", "Auto"]
         case .network:
-            return NetworkState.allCases.map({ $0.rawValue })
+            return [NetworkState.Test.rawValue]
         case .ssl:
             return ["On", "Off"]
         case .configMethod:
@@ -119,6 +119,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         view.separatorStyle = .none
         view.register(RootCell.self, forCellReuseIdentifier: RootCell.reuseID)
         view.register(SegmentedControlCell.self, forCellReuseIdentifier: SegmentedControlCell.reuseID)
+        view.register(NetworkTypeCell.self, forCellReuseIdentifier: NetworkTypeCell.reuseID)
         view.delegate = self
         view.dataSource = self
         view.backgroundColor = .white
@@ -180,11 +181,22 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if cellConfig[indexPath.row].items != nil {
+        if cellConfig[indexPath.row] == .network {
+            return configButtonCell(for: indexPath)
+        } else if cellConfig[indexPath.row].items != nil {
             return configSwitchCell(for: indexPath)
         } else {
             return configStringCell(for: indexPath)
         }
+    }
+    
+    func configButtonCell(for indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: NetworkTypeCell.reuseID) as? NetworkTypeCell else { return UITableViewCell() }
+        let data = cellConfig[indexPath.row]
+        cell.config(title: data.title, itemTitle: values.getValue(for: data)) {
+            self.showNetworkTypeAlert()
+        }
+        return cell
     }
     
     func configStringCell(for indexPath: IndexPath) -> UITableViewCell {
@@ -193,8 +205,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         let data = cellConfig[indexPath.row]
         cell.config(with: data.title,
-                    value: values.getValue(for: data),
-                    keyboardType: data == .cost ? .decimalPad : .default) { [weak self] value in
+                    value: values.getValue(for: data)) { [weak self] value in
             self?.values.setValue(value: value, for: data)
         }
         return cell
@@ -349,6 +360,20 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                       message: text,
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+        present(alert, animated: true)
+    }
+    
+    private func showNetworkTypeAlert() {
+        let alert = UIAlertController(title: Config.network.title,
+                                      message: nil,
+                                      preferredStyle: .actionSheet)
+        NetworkState.allCases.forEach {
+            let action = UIAlertAction(title: $0.rawValue, style: .default) {
+                self.values.setValue(value: $0.title ?? "", for: .network)
+                self.tableView.reloadData()
+            }
+            alert.addAction(action)
+        }
         present(alert, animated: true)
     }
     

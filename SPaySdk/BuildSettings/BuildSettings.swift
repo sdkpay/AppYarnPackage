@@ -8,7 +8,7 @@
 import Foundation
 
 public enum NetworkState: String, CaseIterable, Codable {
-    case Test, Prod, Local
+    case Test, Prod, Local, Psi
 }
 
 final class BuildSettings {
