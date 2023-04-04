@@ -164,9 +164,15 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         configNav()
         prepareData()
         setupUI()
+        setupTitle()
+    }
+    
+    private func setupTitle() {
         let ver = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "No info"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "No info"
-        title = "🔨 \(ver)(\(build))"
+        let attributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
+        navigationController?.navigationBar.titleTextAttributes = attributes
+        title = "🔨 \(ver)(\(build)) - \(values.getValue(for: .network))"
     }
 
     private func prepareData() {
@@ -370,6 +376,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         NetworkState.allCases.forEach {
             let action = UIAlertAction(title: $0.rawValue, style: .default) {
                 self.values.setValue(value: $0.title ?? "", for: .network)
+                self.setupTitle()
                 self.tableView.reloadData()
             }
             alert.addAction(action)
