@@ -11,7 +11,7 @@ typealias PaymentTokenCompletion = (SPaymentTokenResponse) -> Void
 typealias PaymentCompletion = (_ state: SPayState, _ info: String) -> Void
 
 protocol SBPayService {
-    func setup(apiKey: String)
+    func setup(apiKey: String, completion: Action?)
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
@@ -24,6 +24,12 @@ protocol SBPayService {
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
     func getResponseFrom(_ url: URL)
+}
+
+extension SBPayService {
+    func setup(apiKey: String, completion: Action? = nil) {
+        setup(apiKey: apiKey, completion: completion)
+    }
 }
 
 final class DefaultSBPayService: SBPayService {
@@ -54,12 +60,13 @@ final class DefaultSBPayService: SBPayService {
         }
     }
     
-    func setup(apiKey: String) {
+    func setup(apiKey: String, completion: Action? = nil) {
         self.apiKey = apiKey
         UIFont.registerFontsIfNeeded()
         registerServices()
         let remoteConfigService: RemoteConfigService = locator.resolve()
         remoteConfigService.getConfig(with: apiKey) { [weak self] error in
+            completion?()
             guard let self = self, error != nil else { return }
             let analyticsService: AnalyticsService = self.locator.resolve()
             analyticsService.config()
