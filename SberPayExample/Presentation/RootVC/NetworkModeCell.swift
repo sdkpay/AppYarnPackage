@@ -1,8 +1,8 @@
 //
-//  SegmentedControlCell.swift
-//  SPayExample
+//  NetworkTypeCell.swift
+//  SPaySdkExample
 //
-//  Created by Alexander Ipatov on 14.11.2022.
+//  Created by Арсений on 04.04.2023.
 //
 
 import UIKit
@@ -12,8 +12,9 @@ private extension CGFloat {
     static let sideMargin = 20.0
 }
 
-final class SegmentedControlCell: UITableViewCell {
-    static var reuseID: String { "SegmentedControl" }
+final class ButtonTypeCell: UITableViewCell {
+    static var reuseID: String { "ButtonTypeCell" }
+    private var buttonDidSelect: (() -> Void)?
     
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
@@ -23,13 +24,14 @@ final class SegmentedControlCell: UITableViewCell {
         return view
     }()
     
-    private lazy var segmentedControl: UISegmentedControl = {
-        let view = UISegmentedControl()
-        view.tintColor = .black
-        view.backgroundColor = .black
-        view.selectedSegmentIndex = 0
-        view.tintColor = .darkGray
-        view.addTarget(self, action: #selector(valueChanged), for: .valueChanged)
+    private lazy var selectedModeButton: UIButton = {
+        let view = UIButton(type: .system)
+        view.tintColor = .white
+        view.backgroundColor = .darkGray
+        view.layer.borderColor = UIColor.black.cgColor
+        view.layer.borderWidth = 2
+        view.layer.cornerRadius = 8
+        view.addTarget(self, action: #selector(buttonWasSelected), for: .touchUpInside)
         return view
     }()
     
@@ -39,13 +41,14 @@ final class SegmentedControlCell: UITableViewCell {
         view.axis = .vertical
         view.spacing = 10
         view.addArrangedSubview(titleLabel)
-        view.addArrangedSubview(segmentedControl)
+        view.addArrangedSubview(selectedModeButton)
         return view
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
+        backgroundColor = .white
         setupUI()
     }
     
@@ -53,31 +56,7 @@ final class SegmentedControlCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var selectedItem: ((String) -> Void)?
-    private var items: [String]?
-    
-    func config(title: String,
-                items: [String],
-                selected: String,
-                selectedItem: @escaping (String) -> Void) {
-        titleLabel.text = title
-        self.selectedItem = selectedItem
-        self.items = items
-        segmentedControl.removeAllSegments()
-        for (index, item) in items.enumerated() {
-            segmentedControl.insertSegment(withTitle: item, at: index, animated: false)
-        }
-        segmentedControl.selectedSegmentIndex = items.firstIndex(of: selected) ?? 0
-    }
-    
-    @objc
-    private func valueChanged() {
-        guard let items = items else { return }
-        selectedItem?(items[segmentedControl.selectedSegmentIndex])
-    }
-    
-    func setupUI() {
-        backgroundColor = .white
+    private func setupUI() {
         contentView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -90,5 +69,16 @@ final class SegmentedControlCell: UITableViewCell {
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
                                               constant: -.topMargin)
         ])
+    }
+    
+    func config(title: String, itemTitle: String, buttonDidSelect: @escaping () -> ()) {
+        titleLabel.text = title
+        selectedModeButton.setTitle(itemTitle, for: .normal)
+        self.buttonDidSelect = buttonDidSelect
+    }
+    
+    @objc
+    private func buttonWasSelected() {
+        buttonDidSelect?()
     }
 }

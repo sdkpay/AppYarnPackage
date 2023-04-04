@@ -53,7 +53,6 @@ final class RootCell: UITableViewCell {
     
     func config(with title: String,
                 value: String,
-                keyboardType: UIKeyboardType,
                 valueChanged: @escaping (String) -> Void) {
         titleLabel.text = title
         textField.text = value
