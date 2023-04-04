@@ -289,7 +289,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private func removeLogs() {
         let fm = FileManager.default
         let paths = fm.urls(for: .documentDirectory,
-                           in: .userDomainMask)
+                            in: .userDomainMask)
         let logs = paths.compactMap { $0.appendingPathComponent("SBPayLogs") }
         
         do {
@@ -298,7 +298,6 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         } catch {
             showAlert(text: error.localizedDescription)
         }
-
     }
     
     private func removeItems(urls: [URL], fm: FileManager) throws {

@@ -71,7 +71,7 @@ final class ButtonTypeCell: UITableViewCell {
         ])
     }
     
-    func config(title: String, itemTitle: String, buttonDidSelect: @escaping () -> ()) {
+    func config(title: String, itemTitle: String, buttonDidSelect: @escaping () -> Void) {
         titleLabel.text = title
         selectedModeButton.setTitle(itemTitle, for: .normal)
         self.buttonDidSelect = buttonDidSelect

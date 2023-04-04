@@ -16,9 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
-        let config = getConfig()
-        SPay.debugConfig(network: config.network, ssl: config.ssl == "On")
-        SPay.setup(apiKey: config.apiKey)
         startupService.setupInitialState(with: window)
         return true
     }
@@ -30,15 +27,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             SPay.getAuthURL(url)
         }
         return true
-    }
-    
-    private func getConfig() -> ConfigValues {
-        let defaults = UserDefaults.standard
-        if let data = defaults.value(forKey: "ConfigValues") as? Data,
-           let decoded = try? JSONDecoder().decode(ConfigValues.self, from: data) {
-            return decoded
-        } else {
-            return ConfigValues()
-        }
     }
 }
