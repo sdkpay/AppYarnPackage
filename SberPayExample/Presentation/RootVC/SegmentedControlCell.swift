@@ -25,10 +25,9 @@ final class SegmentedControlCell: UITableViewCell {
     
     private lazy var segmentedControl: UISegmentedControl = {
         let view = UISegmentedControl()
-        view.tintColor = .black
-        view.backgroundColor = .black
+        view.backgroundColor = .darkGray
         view.selectedSegmentIndex = 0
-        view.tintColor = .darkGray
+        view.tintColor = .white
         view.addTarget(self, action: #selector(valueChanged), for: .valueChanged)
         return view
     }()

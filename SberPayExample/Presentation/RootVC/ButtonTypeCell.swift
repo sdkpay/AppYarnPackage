@@ -26,7 +26,7 @@ final class ButtonTypeCell: UITableViewCell {
     
     private lazy var selectedModeButton: UIButton = {
         let view = UIButton(type: .system)
-        view.tintColor = .white
+        view.setTitleColor(.white, for: .normal)
         view.backgroundColor = .darkGray
         view.layer.borderColor = UIColor.black.cgColor
         view.layer.borderWidth = 2
