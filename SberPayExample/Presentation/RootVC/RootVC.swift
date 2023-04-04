@@ -46,7 +46,7 @@ enum Config: Int, CaseIterable, Codable {
         case .mode:
             return ["Manual", "Auto"]
         case .network:
-            return [NetworkState.Test.rawValue]
+            return [NetworkState.Mocker.rawValue]
         case .ssl:
             return ["On", "Off"]
         case .configMethod:
@@ -64,7 +64,7 @@ struct ConfigValues: Codable {
     var orderId = "d9f4ccf2-6f68-4e46-916f-850058b670a3"
     var lang = "Swift"
     var mode = "Auto"
-    var network = NetworkState.Prod
+    var network = NetworkState.Prom
     var ssl = "On"
     
     func getValue(for type: Config) -> String {
@@ -101,7 +101,7 @@ struct ConfigValues: Codable {
         case .mode:
             mode = value
         case .network:
-            network = NetworkState(rawValue: value) ?? .Prod
+            network = NetworkState(rawValue: value) ?? .Prom
         case .ssl:
             ssl = value
         case .configMethod:
@@ -119,7 +119,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         view.separatorStyle = .none
         view.register(RootCell.self, forCellReuseIdentifier: RootCell.reuseID)
         view.register(SegmentedControlCell.self, forCellReuseIdentifier: SegmentedControlCell.reuseID)
-        view.register(NetworkTypeCell.self, forCellReuseIdentifier: NetworkTypeCell.reuseID)
+        view.register(ButtonTypeCell.self, forCellReuseIdentifier: ButtonTypeCell.reuseID)
         view.delegate = self
         view.dataSource = self
         view.backgroundColor = .white
@@ -191,7 +191,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func configButtonCell(for indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: NetworkTypeCell.reuseID) as? NetworkTypeCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ButtonTypeCell.reuseID) as? ButtonTypeCell else { return UITableViewCell() }
         let data = cellConfig[indexPath.row]
         cell.config(title: data.title, itemTitle: values.getValue(for: data)) {
             self.showNetworkTypeAlert()

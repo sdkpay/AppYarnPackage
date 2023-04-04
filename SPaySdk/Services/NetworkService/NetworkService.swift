@@ -12,7 +12,7 @@ final class NetworkServiceAssembly: Assembly {
         var provider: NetworkProvider
 
         switch BuildSettings.shared.networkState {
-        case .Prod, .Test, .Psi:
+        case .Prom, .Mocker, .Psi, .Ift:
             provider = DefaultNetworkProvider(requestManager: container.resolve())
         case .Local:
             provider = StubNetworkProvider(delayedSeconds: 2)
@@ -27,14 +27,16 @@ var ServerURL: URL {
     var urlString: String
     
     switch BuildSettings.shared.networkState {
-    case .Test:
+    case .Mocker:
         urlString = "https://ucexvyy1j5.api.quickmocker.com"
-    case .Local:
+    case .Ift:
         urlString = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
-    case .Prod:
-        urlString = "gate1.spaymentsplus.ru"
+    case .Prom:
+        urlString = "prom.gate1.spaymentsplus.ru"
     case .Psi:
         urlString = "psi.gate1.spaymentsplus.ru"
+    case .Local:
+        urlString = "sbolidexternallogin://sberbankid?client_id=9f80261c-3455-4942-be48-cd1b2a2d7ba5&state=a2V9T2l1316&scope=openid&code_challenge_method=S256&code_challenge=lsme-Q-_tdwJmBr-02e0_GRqYCakqBEpH1VMKyc6_7Y&redirect_uri=sberPayExampleapp://sberidauth&nonce=323S344daA2Mj"
     }
     return URL(string: urlString)!
 }

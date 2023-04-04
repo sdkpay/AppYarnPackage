@@ -8,11 +8,11 @@
 import Foundation
 
 public enum NetworkState: String, CaseIterable, Codable {
-    case Test, Prod, Local, Psi
+    case Mocker, Prom, Ift, Psi, Local
 }
 
 final class BuildSettings {
-    var networkState = NetworkState.Prod
+    var networkState = NetworkState.Prom
     var ssl = true
 
     static let shared = BuildSettings()

@@ -12,8 +12,8 @@ private extension CGFloat {
     static let sideMargin = 20.0
 }
 
-final class NetworkTypeCell: UITableViewCell {
-    static var reuseID: String { "NetworkTypeCell" }
+final class ButtonTypeCell: UITableViewCell {
+    static var reuseID: String { "ButtonTypeCell" }
     private var buttonDidSelect: (() -> Void)?
     
     private lazy var titleLabel: UILabel = {
