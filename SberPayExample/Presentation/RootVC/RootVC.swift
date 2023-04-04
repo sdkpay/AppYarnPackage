@@ -141,6 +141,15 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         return button
     }()
     
+    private lazy var loader: UIActivityIndicatorView = {
+        let view = UIActivityIndicatorView(style: .whiteLarge)
+        view.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
+        view.backgroundColor = .gray
+        view.layer.cornerRadius = 10
+        view.center = view.center
+        return view
+    }()
+    
     private lazy var removeLogsButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.blue, for: .normal)
@@ -295,6 +304,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 
     @objc
     private func showCart() {
+        addLoader()
+        loader.startAnimating()
         let vc: UIViewController
         
         if values.lang == "Obj-C" {
@@ -309,7 +320,12 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                         sslOn: values.ssl == "On")
         }
         saveConfig()
-        navigationController?.pushViewController(vc, animated: true)
+
+        SPay.debugConfig(network: values.network, ssl: values.ssl == "On")
+        SPay.setup(apiKey: values.apiKey) {
+            self.loader.stopAnimating()
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     private func saveConfig() {
@@ -334,5 +350,13 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
         present(alert, animated: true)
+    }
+    
+    private func addLoader() {
+        loader.center = view.center
+        self.view.addSubview(loader)
+        self.view.bringSubviewToFront(loader)
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        loader.startAnimating()
     }
 }

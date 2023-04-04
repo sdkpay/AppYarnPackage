@@ -91,7 +91,7 @@ struct SBLogger: ResponseDecoder {
         } else {
             log(
                 level: .debug(level: .network),
-            """
+                """
             ✅ Request successed with code \(code)
                path: \(url)
                headers: \(headers)
@@ -350,6 +350,7 @@ struct SBLogger: ResponseDecoder {
     
     static func logSavedData(_ size: Int) {
         log(
+            level: .debug(level: .storage),
             """
             ⬇️ Saved data by size = \(size) byte
             """
@@ -358,6 +359,7 @@ struct SBLogger: ResponseDecoder {
     
     static func logCurrenConnectionType(_ type: String) {
         log(
+            level: .debug(level: .lifeCycle),
             """
             💎 Current connection type = \(type)
             """
@@ -367,6 +369,7 @@ struct SBLogger: ResponseDecoder {
     static func logStartSdkTime(_ time: Double) {
         let seconds = String(format: "%.4f", time)
         log(
+            level: .debug(level: .lifeCycle),
             """
             ⏰ Start SDK time = \(seconds)
             """
@@ -376,6 +379,7 @@ struct SBLogger: ResponseDecoder {
     static func logScreenDownloadTime(_ time: Double, screen: String) {
         let seconds = String(format: "%.4f", time)
         log(
+            level: .debug(level: .lifeCycle),
             """
             ⏱️ Screen \(screen) download time = \(seconds) second
             """
@@ -384,6 +388,7 @@ struct SBLogger: ResponseDecoder {
     
     static func logNetworkDownloadingDataSize(_ size: Int) {
         log(
+            level: .debug(level: .network),
             """
             💽 Network data size = \(size) bytes
             """

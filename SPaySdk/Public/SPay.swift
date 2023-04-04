@@ -13,8 +13,8 @@ public final class SPay: NSObject {
     
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     @objc
-    public static func setup(apiKey: String) {
-        payService?.setup(apiKey: apiKey)
+    public static func setup(apiKey: String, completion: Action? = nil) {
+        payService?.setup(apiKey: apiKey, completion: completion)
     }
     
     /**
