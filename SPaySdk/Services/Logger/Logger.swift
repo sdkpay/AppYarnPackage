@@ -40,8 +40,9 @@ enum DebugLogLevel: String, CaseIterable {
     case defaultLevel = "Default"
 }
 
-enum SBLogger: ResponseDecoder {
+struct SBLogger: ResponseDecoder {
     private static var logger = Log()
+    static var dateString = ""
     
     static func log(level: LogLevel = .debug(level: .defaultLevel), _ massage: String) {
         switch level {
@@ -506,7 +507,7 @@ struct Log: TextOutputStream {
                            in: .userDomainMask)[0]
             .appendingPathComponent("SBPayLogs")
         try? fm.createDirectory(atPath: path.path, withIntermediateDirectories: true)
-        let log = path.appendingPathComponent("log.txt")
+        let log = path.appendingPathComponent("log_\(SBLogger.dateString).txt")
         if let handle = try? FileHandle(forWritingTo: log) {
             handle.seekToEndOfFile()
             handle.write(string.data(using: .utf8) ?? Data())

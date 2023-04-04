@@ -63,6 +63,9 @@ final class DefaultSBPayService: SBPayService {
     func setup(apiKey: String, completion: Action? = nil) {
         self.apiKey = apiKey
         UIFont.registerFontsIfNeeded()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+        SBLogger.dateString = dateFormatter.string(from: Date())
         registerServices()
         let remoteConfigService: RemoteConfigService = locator.resolve()
         remoteConfigService.getConfig(with: apiKey) { [weak self] error in

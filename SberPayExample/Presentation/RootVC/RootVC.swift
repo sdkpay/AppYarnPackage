@@ -271,15 +271,26 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     @objc
     private func removeLogs() {
         let fm = FileManager.default
-        let path = fm.urls(for: .documentDirectory,
-                           in: .userDomainMask)[0]
-            .appendingPathComponent("SBPayLogs")
-        let log = path.appendingPathComponent("log.txt")
+        let paths = fm.urls(for: .documentDirectory,
+                           in: .userDomainMask)
+        let logs = paths.compactMap { $0.appendingPathComponent("SBPayLogs") }
+        
         do {
-            try fm.removeItem(at: log)
+            try removeItems(urls: logs, fm: fm)
             showAlert(text: "Logs deleted")
         } catch {
             showAlert(text: error.localizedDescription)
+        }
+
+    }
+    
+    private func removeItems(urls: [URL], fm: FileManager) throws {
+        try urls.forEach {
+            do {
+                try fm.removeItem(at: $0)
+            } catch {
+                throw error
+            }
         }
     }
     
