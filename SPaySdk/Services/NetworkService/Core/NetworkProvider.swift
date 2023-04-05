@@ -57,24 +57,10 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private var session: URLSession?
     private var requestManager: BaseRequestManager
     private let timeManager = OptimizationCheсkerManager()
-    
-    private lazy var certificate: Data? = {
-        var fileDer: String?
-        switch BuildSettings.shared.networkState {
-        case .Psi:
-            fileDer = Bundle(for: SPay.self).path(forResource: "psigate1",
-                                                  ofType: "der")
-        case .Ift:
-            fileDer = Bundle(for: SPay.self).path(forResource: "ecomtest.s.ru",
-                                                  ofType: "der")
-        default:
-            fileDer = Bundle(for: SPay.self).path(forResource: "ecomtest.s.ru",
-                                                  ofType: "der")
-        }
-        return NSData(contentsOfFile: fileDer!) as? Data
-    }()
-    
+
     init(requestManager: BaseRequestManager) {
+        SBLogger.log(level: .debug(level: .network),
+                     "#️⃣ SSL certificates: \(Certificates.allCases.map({ $0.rawValue }).json)")
         self.requestManager = requestManager
         super.init()
         session = URLSession(configuration: .default,
@@ -192,29 +178,6 @@ extension DefaultNetworkProvider: URLSessionDelegate {
     func urlSession(_ session: URLSession,
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        if !BuildSettings.shared.ssl || BuildSettings.shared.networkState == .Psi {
-            completionHandler(.performDefaultHandling, nil)
-            return
-        }
-        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-            if let serverTrust = challenge.protectionSpace.serverTrust {
-                if let serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0) {
-                    let serverCertificateData = SecCertificateCopyData(serverCertificate)
-                    let data = CFDataGetBytePtr(serverCertificateData)
-                    let size = CFDataGetLength(serverCertificateData)
-                    let certFromHost = NSData(bytes: data, length: size)
-                    if let localCert = certificate,
-                       certFromHost.isEqual(to: localCert) {
-                        completionHandler(.useCredential,
-                                          URLCredential(trust: serverTrust))
-                        return
-                    } else {
-                        completionHandler(.cancelAuthenticationChallenge, nil)
-                        return
-                    }
-                }
-            }
-        }
-        completionHandler(.cancelAuthenticationChallenge, nil)
+        CertificateValidator.validate(challenge: challenge, completionHandler: completionHandler)
     }
 }

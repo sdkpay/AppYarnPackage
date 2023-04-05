@@ -28,7 +28,6 @@ final class LogVC: UIViewController, ILogVC {
 
     private lazy var textView: UITextView = {
         let view = UITextView()
-        view.isEditable = false
         view.textColor = .textPrimory
         return view
     }()

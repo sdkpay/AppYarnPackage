@@ -23,14 +23,7 @@ final class ImageDownloader: NSObject {
     private var imagesDownloadTasks = [String: URLSessionDataTask]()
     private let serialQueueForImages = DispatchQueue(label: "images.queue", attributes: .concurrent)
     private let serialQueueForDataTasks = DispatchQueue(label: "dataTasks.queue", attributes: .concurrent)
-    
-    private lazy var certificate: Data? = {
-        guard let fileDer = Bundle(for: SPay.self).path(forResource: "cms-res",
-                                                        ofType: "der")
-        else { return nil }
-        return NSData(contentsOfFile: fileDer) as? Data
-    }()
-    
+
     override init() {
         super.init()
         session = URLSession(configuration: .default,
@@ -141,25 +134,6 @@ extension ImageDownloader: URLSessionDelegate {
     func urlSession(_ session: URLSession,
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-            if let serverTrust = challenge.protectionSpace.serverTrust {
-                if let serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0) {
-                    let serverCertificateData = SecCertificateCopyData(serverCertificate)
-                    let data = CFDataGetBytePtr(serverCertificateData)
-                    let size = CFDataGetLength(serverCertificateData)
-                    let certFromHost = NSData(bytes: data, length: size)
-                    if let localCert = certificate,
-                       certFromHost.isEqual(to: localCert) {
-                        completionHandler(.useCredential,
-                                          URLCredential(trust: serverTrust))
-                        return
-                    } else {
-                        completionHandler(.cancelAuthenticationChallenge, nil)
-                        return
-                    }
-                }
-            }
-        }
-        completionHandler(.cancelAuthenticationChallenge, nil)
+        CertificateValidator.validate(challenge: challenge, completionHandler: completionHandler)
     }
 }
