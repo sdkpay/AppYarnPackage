@@ -172,6 +172,9 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         prepareData()
         setupUI()
         setupTitle()
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = .light
+        } 
     }
     
     private func setupTitle() {

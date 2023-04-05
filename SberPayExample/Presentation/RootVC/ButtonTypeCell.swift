@@ -26,9 +26,8 @@ final class ButtonTypeCell: UITableViewCell {
     
     private lazy var selectedModeButton: UIButton = {
         let view = UIButton(type: .system)
-        view.setTitleColor(.white, for: .normal)
-        view.backgroundColor = .darkGray
-        view.layer.borderColor = UIColor.black.cgColor
+        view.setTitleColor(.black, for: .normal)
+        view.layer.borderColor = UIColor.lightGray.cgColor
         view.layer.borderWidth = 2
         view.layer.cornerRadius = 8
         view.addTarget(self, action: #selector(buttonWasSelected), for: .touchUpInside)

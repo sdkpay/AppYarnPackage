@@ -8,7 +8,7 @@
 import Foundation
 
 public enum NetworkState: String, CaseIterable, Codable {
-    case Mocker, Prom, Ift, Psi, Local
+    case Mocker = "Моккер", Prom = "ПРОМ", Ift = "ИФТ", Psi = "ПСИ", Local = "СТАБЫ"
 }
 
 final class BuildSettings {
