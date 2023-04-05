@@ -59,10 +59,19 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private let timeManager = OptimizationCheсkerManager()
     
     private lazy var certificate: Data? = {
-        guard let fileDer = Bundle(for: SPay.self).path(forResource: "ecomtest.s.ru",
-                                                        ofType: "der")
-        else { return nil }
-        return NSData(contentsOfFile: fileDer) as? Data
+        var fileDer: String?
+        switch BuildSettings.shared.networkState {
+        case .Psi:
+            fileDer = Bundle(for: SPay.self).path(forResource: "psigate1",
+                                                  ofType: "der")
+        case .Ift:
+            fileDer = Bundle(for: SPay.self).path(forResource: "ecomtest.s.ru",
+                                                  ofType: "der")
+        default:
+            fileDer = Bundle(for: SPay.self).path(forResource: "ecomtest.s.ru",
+                                                  ofType: "der")
+        }
+        return NSData(contentsOfFile: fileDer!) as? Data
     }()
     
     init(requestManager: BaseRequestManager) {
@@ -183,7 +192,7 @@ extension DefaultNetworkProvider: URLSessionDelegate {
     func urlSession(_ session: URLSession,
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        if !BuildSettings.shared.ssl {
+        if !BuildSettings.shared.ssl || BuildSettings.shared.networkState == .Psi {
             completionHandler(.performDefaultHandling, nil)
             return
         }

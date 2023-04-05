@@ -28,6 +28,7 @@
 		21440DBF29D6F5D500E3803E /* String+Ranges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DBE29D6F5D500E3803E /* String+Ranges.swift */; };
 		214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 214E9C4A29CC4B09009DF5FE /* FingerprintPackage */; };
 		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
+		2181477C29DDA32200D3E48F /* psigate1.der in Resources */ = {isa = PBXBuildFile; fileRef = 2181477B29DDA32200D3E48F /* psigate1.der */; };
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		2197F38129DAD9CD0032F356 /* LogLevelAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */; };
 		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
@@ -216,6 +217,7 @@
 		21440DBB29D6B27800E3803E /* LoggableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggableVC.swift; sourceTree = "<group>"; };
 		21440DBE29D6F5D500E3803E /* String+Ranges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ranges.swift"; sourceTree = "<group>"; };
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
+		2181477B29DDA32200D3E48F /* psigate1.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = psigate1.der; sourceTree = "<group>"; };
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevelAlertVC.swift; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -488,6 +490,7 @@
 		440DB3AE295C645300B84E05 /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
+				2181477B29DDA32200D3E48F /* psigate1.der */,
 				44A5A46029B4A38900C01420 /* cms-res.der */,
 				443D83AA295D8F31002605AA /* ecomtest.s.ru.der */,
 			);
@@ -1400,6 +1403,7 @@
 				444A13F3291CF1C100C9FBE0 /* .swiftlint.yml in Resources */,
 				445CB07F292C9D9500F50047 /* SB Sans Text.ttf in Resources */,
 				44A31251298103F10099EB76 /* ListCards.json in Resources */,
+				2181477C29DDA32200D3E48F /* psigate1.der in Resources */,
 				211DF36629D18CCF0038A951 /* RemoteConfig.json in Resources */,
 				4421B76E299ABC8500DD7881 /* neg.mp3 in Resources */,
 				44A5A46129B4A38900C01420 /* cms-res.der in Resources */,
@@ -1882,7 +1886,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExampleDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1932,7 +1936,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2046,7 +2050,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SberPayExample/SberPayExampleDebug-Prod.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2222,7 +2226,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
