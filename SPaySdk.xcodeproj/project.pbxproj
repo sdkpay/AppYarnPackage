@@ -146,6 +146,7 @@
 		44D898D82937449B00550FC6 /* SDKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D898D72937449B00550FC6 /* SDKManager.swift */; };
 		44D8ABD2295EC4D20080FF1D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D8ABD1295EC4D20080FF1D /* Logger.swift */; };
 		44E581822939D25A00BDEC4E /* BankModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E581812939D25A00BDEC4E /* BankModel.swift */; };
+		44F676E129DDACA8000E8B95 /* Russian_Trusted_Root_CA.der in Resources */ = {isa = PBXBuildFile; fileRef = 44F676E029DDACA8000E8B95 /* Russian_Trusted_Root_CA.der */; };
 		44F9FD49295AFAB800FE4B9F /* CoverTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD44295AFAB800FE4B9F /* CoverTransitioningDelegate.swift */; };
 		44F9FD4A295AFAB800FE4B9F /* CoverPresentAnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD45295AFAB800FE4B9F /* CoverPresentAnimatedTransitioning.swift */; };
 		44F9FD4B295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD46295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift */; };
@@ -347,6 +348,7 @@
 		44D898D72937449B00550FC6 /* SDKManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKManager.swift; sourceTree = "<group>"; };
 		44D8ABD1295EC4D20080FF1D /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		44E581812939D25A00BDEC4E /* BankModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankModel.swift; sourceTree = "<group>"; };
+		44F676E029DDACA8000E8B95 /* Russian_Trusted_Root_CA.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = Russian_Trusted_Root_CA.der; sourceTree = "<group>"; };
 		44F9FD44295AFAB800FE4B9F /* CoverTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoverTransitioningDelegate.swift; sourceTree = "<group>"; };
 		44F9FD45295AFAB800FE4B9F /* CoverPresentAnimatedTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoverPresentAnimatedTransitioning.swift; sourceTree = "<group>"; };
 		44F9FD46295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoverDismissAnimatedTransitioning.swift; sourceTree = "<group>"; };
@@ -490,6 +492,7 @@
 		440DB3AE295C645300B84E05 /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
+				44F676E029DDACA8000E8B95 /* Russian_Trusted_Root_CA.der */,
 				2181477B29DDA32200D3E48F /* psigate1.der */,
 				44A5A46029B4A38900C01420 /* cms-res.der */,
 				443D83AA295D8F31002605AA /* ecomtest.s.ru.der */,
@@ -1410,6 +1413,7 @@
 				211DF37229D1C0DD0038A951 /* SB Sans Text Medium.ttf in Resources */,
 				4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */,
 				442A45CE297FEE8000EC3D73 /* Auth.json in Resources */,
+				44F676E129DDACA8000E8B95 /* Russian_Trusted_Root_CA.der in Resources */,
 				445CB073292BBB1400F50047 /* Assets.xcassets in Resources */,
 				443D83AB295D8F31002605AA /* ecomtest.s.ru.der in Resources */,
 				44BD272B29A7AE38001ECF54 /* PaymentOrderSDK.json in Resources */,
