@@ -1882,7 +1882,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExampleDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1932,7 +1932,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2046,7 +2046,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SberPayExample/SberPayExampleDebug-Prod.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2222,7 +2222,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 40;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
