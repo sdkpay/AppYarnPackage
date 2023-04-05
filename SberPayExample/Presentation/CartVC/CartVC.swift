@@ -168,7 +168,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func getPaymentToken() {
-        let request = SPaymentTokenRequest(merchantLogin: "Test shop",
+        let request = SPaymentTokenRequest(merchantLogin: merchantLogin,
                                            orderId: orderId,
                                            redirectUri: "sberPayExampleapp://sberidauth")
         SPay.getPaymentToken(with: self, with: request) { response in
@@ -185,7 +185,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func paymentTokenWithPerchase() {
         let request = SPaymentTokenRequest(redirectUri: "sberPayExampleapp://sberidauth",
-                                           merchantLogin: "Test shop",
+                                           merchantLogin: merchantLogin,
                                            amount: totalCost,
                                            currency: "643",
                                            mobilePhone: nil,
@@ -205,7 +205,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func autoPay() {
-        let request = SFullPaymentRequest(merchantLogin: "Test shop",
+        let request = SFullPaymentRequest(merchantLogin: merchantLogin,
                                           orderId: orderId,
                                           redirectUri: "sberPayExampleapp://sberidauth")
         SPay.payWithOrderId(with: self, with: request) { state, info  in

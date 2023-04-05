@@ -68,9 +68,9 @@ final class DefaultSBPayService: SBPayService {
         SBLogger.dateString = dateFormatter.string(from: Date())
         registerServices()
         let remoteConfigService: RemoteConfigService = locator.resolve()
-        remoteConfigService.getConfig(with: apiKey) { [weak self] error in
+        remoteConfigService.getConfig(with: apiKey) { error in
             completion?()
-            guard let self = self, error != nil else { return }
+            guard error == nil else { return }
             let analyticsService: AnalyticsService = self.locator.resolve()
             analyticsService.config()
         }
