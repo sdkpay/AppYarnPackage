@@ -15,7 +15,11 @@ extension UIFont {
                                                    subdirectory: nil)
         else { return }
         
-        fontURLs.forEach({ CTFontManagerRegisterFontsForURL($0 as CFURL,
-                                                            .process, nil) })
+        fontURLs.forEach { font in
+            let result = CTFontManagerRegisterFontsForURL(font as CFURL,
+                                                          .process,
+                                                          nil)
+            SBLogger.logFontRegistration(url: font, result: result)
+        }
     }
 }

@@ -31,7 +31,7 @@ extension PaymentTarget: TargetType {
         case .getPaymentToken:
             return "/paymentToken"
         case .getPaymentOrder:
-            return "/paymentOrderSDK"
+            return "/paymentOrder"
         }
     }
     
@@ -120,6 +120,8 @@ extension PaymentTarget: TargetType {
                 ]
                 params["jsonParams"] = jsonParams
             }
+            
+            params["operationId"] = String.generateRandom(with: 36)
             return .requestWithParameters(nil, bodyParameters: params)
         }
     }

@@ -24,8 +24,8 @@ extension UIView {
         gradientLayer.cornerRadius = min(bounds.height / 2, 5)
         gradientLayer.startPoint = CGPoint(x: 0.0, y: 1.0)
         gradientLayer.endPoint = CGPoint(x: 1.0, y: 1.0)
-        let gradientColorOne = viewBackgroundColor.withAlphaComponent(0.5).cgColor
-        let gradientColorTwo = viewBackgroundColor.withAlphaComponent(0.8).cgColor
+        let gradientColorOne = viewBackgroundColor.withAlphaComponent(0.3).cgColor
+        let gradientColorTwo = viewBackgroundColor.withAlphaComponent(0.6).cgColor
         gradientLayer.colors = [gradientColorOne, gradientColorTwo, gradientColorOne]
         gradientLayer.locations = [0.0, 0.5, 1.0]
         layer.addSublayer(gradientLayer)
@@ -36,7 +36,7 @@ extension UIView {
         animation.fromValue = [-1.0, -0.5, 0.0]
         animation.toValue = [1.0, 1.5, 2.0]
         animation.repeatCount = .infinity
-        animation.duration = 1.25
+        animation.duration = 1.2
         animation.isRemovedOnCompletion = false
         gradientLayer.add(animation, forKey: animation.keyPath)
     }

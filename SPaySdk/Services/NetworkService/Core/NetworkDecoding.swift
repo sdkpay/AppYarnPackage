@@ -89,7 +89,9 @@ extension ResponseDecoder {
     private func checkServerError(data: Data) -> String? {
         do {
             if let json = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary,
-               let message = json["description"] as? String {
+               let message = json["description"] as? String,
+               let errorCode = json["errorCode"] as? String,
+               errorCode != "0" {
                 return message
             } else {
                 return nil

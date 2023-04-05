@@ -17,6 +17,7 @@ private extension CGFloat {
 final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private let totalCost: Int
     private let apiKey: String
+    private let merchantLogin: String
     private let autoMode: Bool
     private let orderId: String
     private let network: NetworkState
@@ -69,6 +70,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     init(totalCost: Int,
          apiKey: String,
          orderId: String,
+         merchantLogin: String,
          autoMode: Bool,
          purchase: Bool,
          network: NetworkState,
@@ -80,6 +82,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.network = network
         self.sslOn = sslOn
         self.purchase = purchase
+        self.merchantLogin = merchantLogin
         super.init(nibName: nil, bundle: nil)
         SPay.debugConfig(network: network, ssl: sslOn)
     }
