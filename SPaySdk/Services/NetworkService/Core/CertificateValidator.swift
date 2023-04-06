@@ -8,7 +8,7 @@
 import Foundation
 
 enum CertificateValidator {
-    private static var sertificates: [Data] {
+    private static var certificates: [Data] {
         Certificates.allCases.compactMap({ $0.data })
     }
     
@@ -28,7 +28,7 @@ enum CertificateValidator {
     
         if let serverCertificate = SecTrustGetCertificateAtIndex(trust, 0) {
             let serverCertificateData = SecCertificateCopyData(serverCertificate) as Data
-            if sertificates.contains(serverCertificateData) {
+            if certificates.contains(serverCertificateData) {
                 SBLogger.log(level: .debug(level: .network), "#️⃣ SSL pinning прошел успешно")
                 completionHandler(.useCredential, URLCredential(trust: trust))
                 return

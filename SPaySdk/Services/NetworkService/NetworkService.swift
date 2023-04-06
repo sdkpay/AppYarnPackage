@@ -36,7 +36,7 @@ var ServerURL: URL {
     case .Psi:
         urlString = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
     case .Local:
-        urlString = "sbolidexternallogin://sberbankid?client_id=9f80261c-3455-4942-be48-cd1b2a2d7ba5&state=a2V9T2l1316&scope=openid&code_challenge_method=S256&code_challenge=lsme-Q-_tdwJmBr-02e0_GRqYCakqBEpH1VMKyc6_7Y&redirect_uri=sberPayExampleapp://sberidauth&nonce=323S344daA2Mj"
+        urlString = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
     }
     return URL(string: urlString)!
 }
