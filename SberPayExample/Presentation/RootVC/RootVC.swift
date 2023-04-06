@@ -220,10 +220,12 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             return UITableViewCell()
         }
         let data = cellConfig[indexPath.row]
-        cell.config(with: data.title,
-                    value: values.getValue(for: data)) { [weak self] value in
+        cell.config(with: data.title, value: values.getValue(for: data), isButtonShowed: data == .orderId) { [weak self] value in
             self?.values.setValue(value: value, for: data)
+        } buttonDidTap: {
+            self.generateOrderID()
         }
+        
         return cell
     }
     
@@ -400,5 +402,17 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.view.bringSubviewToFront(loader)
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         loader.startAnimating()
+    }
+    
+    private func generateOrderID() {
+        addLoader()
+        RequestHeandler(path: Endpoints.path.rawValue)
+            .response { [weak self ]model in
+                guard let self else { return }
+                guard let orderID = model?.orderId else { return }
+                self.values.setValue(value: orderID, for: .orderId)
+                self.tableView.reloadData()
+                self.loader.stopAnimating()
+            }
     }
 }
