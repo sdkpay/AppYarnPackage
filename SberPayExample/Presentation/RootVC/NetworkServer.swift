@@ -7,55 +7,23 @@
 
 import UIKit
 
-struct ResponseModel: Decodable {
-    var orderId: String
-}
 
-enum Endpoints: String {
-    case path = "https://sb03.tst.rbstest.ru/payment/rest/register.do"
-    case userName = "781000012764-20162559-api"
-    case password = "sberbankIFT1"
-    case amount = "16500"
-    case returnUrl = "https://sberbank.ru"
+// MARK: - Empty
+struct ResponseModel: Codable {
+    let externalParams: ExternalParams
     
-    static var orderNumber: String = {
-        return String(Int.random(in: 0...99999999999))
-    }()
-    
-    var description: String {
-        switch self {
-        case .path:
-            return "path"
-        case .userName:
-            return "userName"
-        case .password:
-            return "password"
-        case .amount:
-            return "amount"
-        case .returnUrl:
-            return "returnUrl"
-        }
+    struct ExternalParams: Codable {
+        let sbolBankInvoiceId: String
     }
 }
+
+// MARK: - ExternalParams
 
 struct RequestHeandler {
-    private var path: String
-    
-    init(path: String) {
-        self.path = path
-    }
-    
     func response(clouser: @escaping (ResponseModel?) -> ()) {
-        let items = [
-            URLQueryItem(name: Endpoints.userName.description, value: Endpoints.userName.rawValue),
-            URLQueryItem(name: "orderNumber", value: Endpoints.orderNumber),
-            URLQueryItem(name: Endpoints.password.description, value: Endpoints.password.rawValue),
-            URLQueryItem(name: Endpoints.amount.description, value: Endpoints.amount.rawValue),
-            URLQueryItem(name: Endpoints.returnUrl.description, value: Endpoints.returnUrl.rawValue),
-        ]
-        var urlComp = URLComponents(string: path)
-        urlComp?.queryItems = items
-        guard let urlComp, let url = urlComp.url else {
+        let orderNumber = String(arc4random())
+        let url = "https://sb03.tst.rbstest.ru/payment/rest/register.do?returnUrl=https://sberbank.ru&amount=16500&orderBundle=%7B%22cartItems%22:%7B%22items%22:[%7B%22tax%22:%7B%22taxType%22:0%7D,%22itemAmount%22:16500,%22positionId%22:1,%22quantity%22:%7B%22value%22:165,%22measure%22:%22%D0%A1%E2%80%9A%22%7D,%22itemCode%22:%22130163%22,%22itemPrice%22:100,%22name%22:%2215%22%7D]%7D%7D&jsonParams=%7B%22app2app%22:%22true%22,%22app.osType%22:%22android%22,%22app.deepLink%22:%22https://sberbank.ru%22%7D&userName=781000012764-20162559-api&password=sberbankIFT1&sessionTimeoutSecs=600000&orderNumber=\(orderNumber)"
+        guard let url = URL(string: url) else {
             assertionFailure("urlComp is not allowed")
             clouser(nil)
             return
@@ -68,6 +36,7 @@ struct RequestHeandler {
                     clouser(nil)
                     return
                 }
+                
                 let result = decode(data: data)
                 clouser(result)
             }
