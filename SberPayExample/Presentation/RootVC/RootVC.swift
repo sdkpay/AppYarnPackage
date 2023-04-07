@@ -406,11 +406,14 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func generateOrderID() {
         addLoader()
-        RequestHeandler(path: Endpoints.path.rawValue)
-            .response { [weak self ]model in
-                guard let self else { return }
-                guard let orderID = model?.orderId else { return }
-                self.values.setValue(value: orderID, for: .orderId)
+        RequestHeandler()
+            .response { [weak self] model in
+                guard let sbolBankInvoiceID = model?.externalParams.sbolBankInvoiceId,
+                      let self else {
+                    self?.loader.stopAnimating()
+                    return
+                }
+                self.values.setValue(value: sbolBankInvoiceID, for: .orderId)
                 self.tableView.reloadData()
                 self.loader.stopAnimating()
             }
