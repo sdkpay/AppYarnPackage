@@ -40,7 +40,6 @@ enum Endpoints: String {
 
 struct RequestHeandler {
     private var path: String
-    private var headers: HTTPHeades = [:]
     
     init(path: String) {
         self.path = path
