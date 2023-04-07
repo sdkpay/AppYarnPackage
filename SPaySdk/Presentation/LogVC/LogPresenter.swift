@@ -18,10 +18,12 @@ protocol LogPresenting {
     func upTapped()
     func downTapped()
     func searchTextUpdated(_ text: String)
+    func getLogPath() -> URL?
 }
 
 final class LogPresenter: LogPresenting {
-    private var logPath: URL? {
+    
+    var logPath: URL? {
         let fm = FileManager.default
         return fm.urls(for: .documentDirectory,
                        in: .userDomainMask)[0]
@@ -70,6 +72,10 @@ final class LogPresenter: LogPresenting {
         currentRangeIndex += 1
         let range = searchRanges[currentRangeIndex]
         scrollToRange(range: range)
+    }
+    
+    func getLogPath() -> URL? {
+        return logPath
     }
     
     func searchTextUpdated(_ text: String) {
