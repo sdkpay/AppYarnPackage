@@ -98,6 +98,10 @@ final class LogVC: UIViewController, ILogVC {
         let settingsButton = UIBarButtonItem(barButtonSystemItem: .compose,
                                              target: self,
                                              action: #selector(settingTapped))
+        let shareButton =  UIBarButtonItem(barButtonSystemItem: .action,
+                                           target: self,
+                                           action: #selector(shareButtonDidTap))
+        navigationItem.rightBarButtonItem = shareButton
         navigationItem.leftBarButtonItem = settingsButton
         navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.searchController = searchController
@@ -123,6 +127,13 @@ final class LogVC: UIViewController, ILogVC {
     func scrollTo(_ range: NSRange) {
         textView.scrollRangeToVisible(range)
         textView.highlight(range: range)
+    }
+    
+    private func showShareScreen() {
+        guard let path = presenter.getLogPath() else { return }
+        let activityViewController =  UIActivityViewController(activityItems: [path],
+                                                               applicationActivities: nil)
+        present(activityViewController, animated: true)
     }
 
     private func setupUI() {
@@ -158,6 +169,11 @@ final class LogVC: UIViewController, ILogVC {
         UIView.animate(withDuration: .keyboardAnimateDuration) {
            self.view.layoutIfNeeded()
         }
+    }
+    
+    @objc
+    private func shareButtonDidTap() {
+        showShareScreen()
     }
 }
 

@@ -159,6 +159,7 @@
 		44F9FD61295AFCAC00FE4B9F /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */; };
 		AE4D3FA729C48AF000962DD6 /* UIAplication+TopViewContriller.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */; };
 		AE4D867329DC4546005C8092 /* ButtonTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867229DC4546005C8092 /* ButtonTypeCell.swift */; };
+		AE4D867529DDA195005C8092 /* NetworkServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867429DDA195005C8092 /* NetworkServer.swift */; };
 		AE5F906429CFA60C003ED648 /* SPaySdk.h in Headers */ = {isa = PBXBuildFile; fileRef = AE5F906329CFA60C003ED648 /* SPaySdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB0059B29C09F72002C9AB9 /* Loader.swift */; };
 		AEE5575A29CFAD470015BDD6 /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = AEE5575929CFAD470015BDD6 /* Dynatrace-Static */; };
@@ -362,6 +363,7 @@
 		44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
 		AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAplication+TopViewContriller.swift"; sourceTree = "<group>"; };
 		AE4D867229DC4546005C8092 /* ButtonTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonTypeCell.swift; sourceTree = "<group>"; };
+		AE4D867429DDA195005C8092 /* NetworkServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServer.swift; sourceTree = "<group>"; };
 		AE5F906329CFA60C003ED648 /* SPaySdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SPaySdk.h; path = SPaySdk/Public/SPaySdk.h; sourceTree = "<group>"; };
 		AE5F906529CFA9A0003ED648 /* BizoneCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = BizoneCore.xcframework; path = FingerprintPackage/BizoneCore.xcframework; sourceTree = "<group>"; };
 		AEB0059B29C09F72002C9AB9 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
@@ -1007,6 +1009,7 @@
 				444A13BC291BB1FD00C9FBE0 /* RootCell.swift */,
 				44C2A04A29223430000D894A /* SegmentedControlCell.swift */,
 				AE4D867229DC4546005C8092 /* ButtonTypeCell.swift */,
+				AE4D867429DDA195005C8092 /* NetworkServer.swift */,
 			);
 			path = RootVC;
 			sourceTree = "<group>";
@@ -1602,6 +1605,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4471722D291941EA005EDF32 /* StartupService.swift in Sources */,
+				AE4D867529DDA195005C8092 /* NetworkServer.swift in Sources */,
 				4471721929193B21005EDF32 /* CartVC.swift in Sources */,
 				44C2A04829222E18000D894A /* ObjcCartVC.m in Sources */,
 				44717236291A458F005EDF32 /* RootVC.swift in Sources */,
