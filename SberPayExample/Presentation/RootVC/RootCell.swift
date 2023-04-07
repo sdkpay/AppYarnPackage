@@ -14,7 +14,7 @@ private extension CGFloat {
 
 final class RootCell: UITableViewCell {
     static var reuseID: String { "RootCell" }
-    
+
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .black
@@ -26,7 +26,19 @@ final class RootCell: UITableViewCell {
         view.textColor = .black
         view.backgroundColor = .white
         view.borderStyle = .roundedRect
+        view.clearButtonMode = .whileEditing
+        view.font = UIFont.systemFont(ofSize: 16)
         view.addTarget(self, action: #selector(textChanged), for: .allEditingEvents)
+        return view
+    }()
+    
+    private lazy var refreshButton: UIButton = {
+        let view = UIButton(type: .system)
+        if #available(iOS 13.0, *) {
+            view.setImage(UIImage(systemName: "goforward"), for: .normal)
+        }
+        view.addTarget(self, action: #selector(refreshButtonDidTap), for: .touchUpInside)
+        view.tintColor = .black
         return view
     }()
     
@@ -50,14 +62,19 @@ final class RootCell: UITableViewCell {
     }
     
     private var valueChanged: ((String) -> Void)?
+    private var buttonDidTap: (() -> Void)?
+
     
     func config(with title: String,
                 value: String,
-                valueChanged: @escaping (String) -> Void) {
+                isButtonShowed: Bool = false,
+                valueChanged: @escaping (String) -> Void,
+                buttonDidTap: (() -> Void)? = nil) {
         titleLabel.text = title
         textField.text = value
         self.valueChanged = valueChanged
-        setupUI()
+        self.buttonDidTap = buttonDidTap
+        setupUI(isButtonShowed: isButtonShowed)
     }
     
     @objc
@@ -65,19 +82,48 @@ final class RootCell: UITableViewCell {
         valueChanged?(textField.text ?? "")
     }
     
-    func setupUI() {
+    func setupUI(isButtonShowed: Bool) {
+        contentView.subviews.forEach { $0.removeFromSuperview() }
         contentView.addSubview(stackView)
+        if isButtonShowed {
+            contentView.addSubview(refreshButton)
+        }
         backgroundColor = .white
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor,
-                                           constant: .topMargin),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
-                                               constant: .sideMargin),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
-                                                constant: -.sideMargin),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
-                                              constant: -.topMargin)
-        ])
+        refreshButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        if isButtonShowed {
+            NSLayoutConstraint.activate([
+                refreshButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
+                                                        constant: -.sideMargin),
+                refreshButton.widthAnchor.constraint(equalToConstant: 25),
+                refreshButton.heightAnchor.constraint(equalToConstant: 25),
+                stackView.topAnchor.constraint(equalTo: contentView.topAnchor,
+                                               constant: .topMargin),
+                stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
+                                                   constant: .sideMargin),
+                stackView.trailingAnchor.constraint(equalTo: refreshButton.leadingAnchor,
+                                                    constant: -4),
+                stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
+                                                  constant: -.topMargin),
+                refreshButton.lastBaselineAnchor.constraint(equalTo: stackView.lastBaselineAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                stackView.topAnchor.constraint(equalTo: contentView.topAnchor,
+                                               constant: .topMargin),
+                stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
+                                                   constant: .sideMargin),
+                stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
+                                                    constant: -.sideMargin),
+                stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
+                                                  constant: -.topMargin)
+            ])
+        }
+    }
+    
+    @objc
+    private func refreshButtonDidTap() {
+        buttonDidTap?()
     }
 }
