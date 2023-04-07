@@ -63,7 +63,6 @@ final class RootCell: UITableViewCell {
     
     private var valueChanged: ((String) -> Void)?
     private var buttonDidTap: (() -> Void)?
-
     
     func config(with title: String,
                 value: String,
