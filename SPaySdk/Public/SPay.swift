@@ -70,13 +70,4 @@ public final class SPay: NSObject {
     public static func getAuthURL(_ url: URL) {
         payService?.getResponseFrom(url)
     }
-    
-    /**
-     Метод для установки моков, только для тестовых версий
-     */
-
-    public static func debugConfig(network: NetworkState, ssl: Bool) {
-        BuildSettings.shared.networkState = network
-        BuildSettings.shared.ssl = ssl
-    }
 }

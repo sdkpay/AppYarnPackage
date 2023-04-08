@@ -1,23 +1,50 @@
 #!/bin/bash
 
-rm -r ./build/*
+PRINT_COUNT=1
+ROW_STRING="==========================================="
 
-xcodebuild archive \
-    -scheme SberPay \
+printStep() {
+    echo "${ROW_STRING}"
+    echo "$PRINT_COUNT." $1
+    echo "${ROW_STRING}"
+    let "PRINT_COUNT+=1"
+}
+
+clear() {
+    printStep "Clear build folder"
+    rm -r ./build/*
+}
+
+buildDevice() {
+    printStep "Build framework for device"
+    xcodebuild archive \
+    -scheme SPaySdkPROD \
     -archivePath "./build/ios.xcarchive" \
     -sdk iphoneos \
     ONLY_ACTIVE_ARCH=NO \
     SKIP_INSTALL=NO
+}
 
-xcodebuild archive \
-    -scheme SberPay \
+buildSim() {
+    printStep "Build framework for sim"
+    xcodebuild archive \
+    -scheme SPaySdkPROD \
     -archivePath "./build/ios_sim.xcarchive" \
     -sdk iphonesimulator \
-     ONLY_ACTIVE_ARCH=NO \
+    ONLY_ACTIVE_ARCH=NO \
     SKIP_INSTALL=NO
+}
 
-xcodebuild -create-xcframework \
-    -framework "./build/ios.xcarchive/Products/Library/Frameworks/SberPaySDK.framework" \
-    -framework "./build/ios_sim.xcarchive/Products/Library/Frameworks/SberPaySDK.framework" \
-    -output "./build/SberPaySDK.xcframework"
-open "./build"
+createXCFramework() {
+    printStep "Create XCFramework"
+    xcodebuild -create-xcframework \
+    -framework "./build/ios.xcarchive/Products/Library/Frameworks/SPaySdk-prod.framework" \
+    -framework "./build/ios_sim.xcarchive/Products/Library/Frameworks/SPaySdk-prod.framework" \
+    -output "./build/SPaySdk.xcframework"
+    open "./build"
+}
+
+clear
+buildDevice
+buildSim
+createXCFramework

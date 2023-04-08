@@ -84,7 +84,6 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.purchase = purchase
         self.merchantLogin = merchantLogin
         super.init(nibName: nil, bundle: nil)
-        SPay.debugConfig(network: network, ssl: sslOn)
     }
     
     required init?(coder: NSCoder) {

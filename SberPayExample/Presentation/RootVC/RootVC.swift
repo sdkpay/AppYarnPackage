@@ -353,7 +353,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         saveConfig()
 
-        SPay.debugConfig(network: values.network, ssl: values.ssl == "On")
+        SPayDebug.debugConfig(network: values.network, ssl: values.ssl == "On")
         SPay.setup(apiKey: values.apiKey) {
             self.loader.stopAnimating()
             self.navigationController?.pushViewController(vc, animated: true)
