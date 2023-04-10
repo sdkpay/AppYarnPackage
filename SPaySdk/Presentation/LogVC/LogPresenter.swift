@@ -17,13 +17,12 @@ protocol LogPresenting {
     func settingTapped()
     func upTapped()
     func downTapped()
+    func shareTapped()
     func searchTextUpdated(_ text: String)
-    func getLogPath() -> URL?
 }
 
 final class LogPresenter: LogPresenting {
-    
-    var logPath: URL? {
+    private var logPath: URL? {
         let fm = FileManager.default
         return fm.urls(for: .documentDirectory,
                        in: .userDomainMask)[0]
@@ -108,6 +107,13 @@ final class LogPresenter: LogPresenting {
             self?.filterLogs()
         }
         view?.present(alertVC, animated: true)
+    }
+    
+    func shareTapped() {
+        guard let path = getLogPath() else { return }
+        let activityViewController = UIActivityViewController(activityItems: [path],
+                                                              applicationActivities: nil)
+        view?.present(activityViewController, animated: true)
     }
     
     private func filterLogs() {

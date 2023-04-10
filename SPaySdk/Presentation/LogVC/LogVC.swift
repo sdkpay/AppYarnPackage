@@ -12,6 +12,7 @@ protocol ILogVC {
     func scrollTo(_ range: NSRange)
     func setResultsNum(current: Int, count: Int)
     func hideResultsNum()
+    
 }
 
 private extension TimeInterval {
@@ -98,9 +99,9 @@ final class LogVC: UIViewController, ILogVC {
         let settingsButton = UIBarButtonItem(barButtonSystemItem: .compose,
                                              target: self,
                                              action: #selector(settingTapped))
-        let shareButton =  UIBarButtonItem(barButtonSystemItem: .action,
-                                           target: self,
-                                           action: #selector(shareButtonDidTap))
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .action,
+                                          target: self,
+                                          action: #selector(shareButtonDidTap))
         navigationItem.rightBarButtonItem = shareButton
         navigationItem.leftBarButtonItem = settingsButton
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -129,13 +130,6 @@ final class LogVC: UIViewController, ILogVC {
         textView.highlight(range: range)
     }
     
-    private func showShareScreen() {
-        guard let path = presenter.getLogPath() else { return }
-        let activityViewController =  UIActivityViewController(activityItems: [path],
-                                                               applicationActivities: nil)
-        present(activityViewController, animated: true)
-    }
-
     private func setupUI() {
         view.backgroundColor = .backgroundPrimary
         
@@ -173,7 +167,7 @@ final class LogVC: UIViewController, ILogVC {
     
     @objc
     private func shareButtonDidTap() {
-        showShareScreen()
+        presenter.shareTapped()
     }
 }
 
