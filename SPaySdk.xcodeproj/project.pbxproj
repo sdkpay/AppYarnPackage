@@ -304,6 +304,19 @@
 		AE4D3FA729C48AF000962DD6 /* UIAplication+TopViewContriller.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */; };
 		AE4D867329DC4546005C8092 /* ButtonTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867229DC4546005C8092 /* ButtonTypeCell.swift */; };
 		AE4D867529DDA195005C8092 /* NetworkServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867429DDA195005C8092 /* NetworkServer.swift */; };
+		AE4D867A29E5339C005C8092 /* SBOffset.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867929E5339C005C8092 /* SBOffset.swift */; };
+		AE4D867C29E533F2005C8092 /* UIView+Horisontal+Vertical.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867B29E533F2005C8092 /* UIView+Horisontal+Vertical.swift */; };
+		AE4D867E29E53411005C8092 /* UIView+Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867D29E53411005C8092 /* UIView+Size.swift */; };
+		AE4D868029E5343B005C8092 /* UIView+Center.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867F29E5343B005C8092 /* UIView+Center.swift */; };
+		AE4D868229E53457005C8092 /* SBAxis.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868129E53457005C8092 /* SBAxis.swift */; };
+		AE4D868429E5346B005C8092 /* SBEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868329E5346B005C8092 /* SBEdge.swift */; };
+		AE4D868629E5347C005C8092 /* SBEdgeGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868529E5347C005C8092 /* SBEdgeGroup.swift */; };
+		AE4D868829E5348F005C8092 /* SBGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868729E5348F005C8092 /* SBGuide.swift */; };
+		AE4D868A29E534B4005C8092 /* SBSuperviewGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868929E534B4005C8092 /* SBSuperviewGuide.swift */; };
+		AE4D868C29E534D0005C8092 /* UIEdgeInsets+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868B29E534D0005C8092 /* UIEdgeInsets+Extension.swift */; };
+		AE4D868E29E53507005C8092 /* UIView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868D29E53507005C8092 /* UIView+Add.swift */; };
+		AE4D869029E53999005C8092 /* UIView+TouchEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868F29E53999005C8092 /* UIView+TouchEdge.swift */; };
+		AE4D869229E539C4005C8092 /* UIView+Touch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D869129E539C4005C8092 /* UIView+Touch.swift */; };
 		AE5F906429CFA60C003ED648 /* SPaySdk.h in Headers */ = {isa = PBXBuildFile; fileRef = AE5F906329CFA60C003ED648 /* SPaySdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB0059B29C09F72002C9AB9 /* Loader.swift */; };
 		AEE5575A29CFAD470015BDD6 /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = AEE5575929CFAD470015BDD6 /* Dynatrace-Static */; };
@@ -511,6 +524,19 @@
 		AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAplication+TopViewContriller.swift"; sourceTree = "<group>"; };
 		AE4D867229DC4546005C8092 /* ButtonTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonTypeCell.swift; sourceTree = "<group>"; };
 		AE4D867429DDA195005C8092 /* NetworkServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServer.swift; sourceTree = "<group>"; };
+		AE4D867929E5339C005C8092 /* SBOffset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOffset.swift; sourceTree = "<group>"; };
+		AE4D867B29E533F2005C8092 /* UIView+Horisontal+Vertical.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Horisontal+Vertical.swift"; sourceTree = "<group>"; };
+		AE4D867D29E53411005C8092 /* UIView+Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Size.swift"; sourceTree = "<group>"; };
+		AE4D867F29E5343B005C8092 /* UIView+Center.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Center.swift"; sourceTree = "<group>"; };
+		AE4D868129E53457005C8092 /* SBAxis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBAxis.swift; sourceTree = "<group>"; };
+		AE4D868329E5346B005C8092 /* SBEdge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEdge.swift; sourceTree = "<group>"; };
+		AE4D868529E5347C005C8092 /* SBEdgeGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBEdgeGroup.swift; sourceTree = "<group>"; };
+		AE4D868729E5348F005C8092 /* SBGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBGuide.swift; sourceTree = "<group>"; };
+		AE4D868929E534B4005C8092 /* SBSuperviewGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBSuperviewGuide.swift; sourceTree = "<group>"; };
+		AE4D868B29E534D0005C8092 /* UIEdgeInsets+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIEdgeInsets+Extension.swift"; sourceTree = "<group>"; };
+		AE4D868D29E53507005C8092 /* UIView+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Add.swift"; sourceTree = "<group>"; };
+		AE4D868F29E53999005C8092 /* UIView+TouchEdge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+TouchEdge.swift"; sourceTree = "<group>"; };
+		AE4D869129E539C4005C8092 /* UIView+Touch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Touch.swift"; sourceTree = "<group>"; };
 		AE5F906329CFA60C003ED648 /* SPaySdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SPaySdk.h; path = SPaySdk/Public/SPaySdk.h; sourceTree = "<group>"; };
 		AE5F906529CFA9A0003ED648 /* BizoneCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = BizoneCore.xcframework; path = FingerprintPackage/BizoneCore.xcframework; sourceTree = "<group>"; };
 		AEB0059B29C09F72002C9AB9 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
@@ -1423,9 +1449,30 @@
 			path = ContentNC;
 			sourceTree = "<group>";
 		};
+		AE4D867629E125A2005C8092 /* SBLayout */ = {
+			isa = PBXGroup;
+			children = (
+				AE4D869129E539C4005C8092 /* UIView+Touch.swift */,
+				AE4D868B29E534D0005C8092 /* UIEdgeInsets+Extension.swift */,
+				AE4D868F29E53999005C8092 /* UIView+TouchEdge.swift */,
+				AE4D868D29E53507005C8092 /* UIView+Add.swift */,
+				AE4D868529E5347C005C8092 /* SBEdgeGroup.swift */,
+				AE4D867929E5339C005C8092 /* SBOffset.swift */,
+				AE4D867B29E533F2005C8092 /* UIView+Horisontal+Vertical.swift */,
+				AE4D867D29E53411005C8092 /* UIView+Size.swift */,
+				AE4D867F29E5343B005C8092 /* UIView+Center.swift */,
+				AE4D868129E53457005C8092 /* SBAxis.swift */,
+				AE4D868329E5346B005C8092 /* SBEdge.swift */,
+				AE4D868729E5348F005C8092 /* SBGuide.swift */,
+				AE4D868929E534B4005C8092 /* SBSuperviewGuide.swift */,
+			);
+			path = SBLayout;
+			sourceTree = "<group>";
+		};
 		AEB0059929C09F3F002C9AB9 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				AE4D867629E125A2005C8092 /* SBLayout */,
 				AEB0059A29C09F60002C9AB9 /* UI */,
 				AEF1EFA429D6A670008E6653 /* OptimizationCheсkerManager.swift */,
 				AEF1EFA829D6DFA3008E6653 /* NetworkMonitorManager.swift */,
@@ -1845,6 +1892,7 @@
 				445CB089292CA2B200F50047 /* UIFont+Bundle.swift in Sources */,
 				44C651092930E721008F1C29 /* AlertView.swift in Sources */,
 				44BD273229A8A463001ECF54 /* PaymentService.swift in Sources */,
+				AE4D867E29E53411005C8092 /* UIView+Size.swift in Sources */,
 				4464DF94291D283C000C9B45 /* AuthTarget.swift in Sources */,
 				44C6510E2934E33E008F1C29 /* SPaymentTokenRequest.swift in Sources */,
 				AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */,
@@ -1858,8 +1906,10 @@
 				21440DB429D5B66300E3803E /* LogAssembly.swift in Sources */,
 				21253D2129C9E761004ED82D /* Shimmer+Extensions.swift in Sources */,
 				44F9FD4A295AFAB800FE4B9F /* CoverPresentAnimatedTransitioning.swift in Sources */,
+				AE4D869029E53999005C8092 /* UIView+TouchEdge.swift in Sources */,
 				AEF1EFA929D6DFA3008E6653 /* NetworkMonitorManager.swift in Sources */,
 				44C651052930E102008F1C29 /* LoadingView.swift in Sources */,
+				AE4D867C29E533F2005C8092 /* UIView+Horisontal+Vertical.swift in Sources */,
 				4464DF89291D01F4000C9B45 /* NetworkService.swift in Sources */,
 				21440DB629D5B67200E3803E /* LogVC.swift in Sources */,
 				44F9FD4C295AFAB800FE4B9F /* CoverTransitionDriver.swift in Sources */,
@@ -1876,6 +1926,7 @@
 				440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */,
 				44BD272929A7AD89001ECF54 /* PaymentOrderModel.swift in Sources */,
 				4473D6C92940653300802446 /* BankView.swift in Sources */,
+				AE4D868429E5346B005C8092 /* SBEdge.swift in Sources */,
 				4464DF9D291D8E4C000C9B45 /* SPay.swift in Sources */,
 				AEEB602429B9B55E00D1E1D2 /* ImageDownloader.swift in Sources */,
 				445CB09B292DFF5100F50047 /* PaymentPresenter.swift in Sources */,
@@ -1888,6 +1939,7 @@
 				4464DF90291D0DE3000C9B45 /* NetworkDecoding.swift in Sources */,
 				21253D1C29C9B20B004ED82D /* UIView+Extensions.swift in Sources */,
 				445CB06F292BBA7100F50047 /* Palette.swift in Sources */,
+				AE4D868029E5343B005C8092 /* UIView+Center.swift in Sources */,
 				44A0B5BF293E05CC007AB3FD /* CardCell.swift in Sources */,
 				4473D6CD29409A8D00802446 /* UserDefaults+Extension.swift in Sources */,
 				445CB090292CBEEF00F50047 /* UIButton+Background.swift in Sources */,
@@ -1901,7 +1953,10 @@
 				21253D1B29C9B20B004ED82D /* SBShimmeringView.swift in Sources */,
 				445CB075292BC3EF00F50047 /* UIImage+Bundle.swift in Sources */,
 				44F9FD4B295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift in Sources */,
+				AE4D868A29E534B4005C8092 /* SBSuperviewGuide.swift in Sources */,
 				211DF37129D18D0C0038A951 /* RemoteConfigService.swift in Sources */,
+				AE4D868229E53457005C8092 /* SBAxis.swift in Sources */,
+				AE4D867A29E5339C005C8092 /* SBOffset.swift in Sources */,
 				445D018B2994F375006458AD /* BaseRequestManager.swift in Sources */,
 				4416E424291E21C300284972 /* SDKError.swift in Sources */,
 				44A31268298156C30099EB76 /* String+Extensions.swift in Sources */,
@@ -1914,11 +1969,14 @@
 				44A3125A298135B70099EB76 /* RootAssembly.swift in Sources */,
 				445CB0A0292E057E00F50047 /* AuthPresenter.swift in Sources */,
 				44890676297A7D0B002CDBAD /* ProfileView.swift in Sources */,
+				AE4D868C29E534D0005C8092 /* UIEdgeInsets+Extension.swift in Sources */,
+				AE4D868629E5347C005C8092 /* SBEdgeGroup.swift in Sources */,
 				44834C6A292E16EA000A32B2 /* AuthAssembly.swift in Sources */,
 				44F9FD60295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift in Sources */,
 				445CB08C292CB9D000F50047 /* ActionButton.swift in Sources */,
 				44A0B5BB293DF267007AB3FD /* CardsVC.swift in Sources */,
 				44A3126329813D110099EB76 /* PaymentRouter.swift in Sources */,
+				AE4D868E29E53507005C8092 /* UIView+Add.swift in Sources */,
 				44B8220A2923D79900C06C51 /* RootVC.swift in Sources */,
 				44F9FD49295AFAB800FE4B9F /* CoverTransitioningDelegate.swift in Sources */,
 				44533D192985196D0041FAA9 /* PaymentTarget.swift in Sources */,
@@ -1939,7 +1997,9 @@
 				44533D1E298521380041FAA9 /* PaymentTokenModel.swift in Sources */,
 				445CB066292BB3E300F50047 /* String+Localized.swift in Sources */,
 				211DF36C29D18CF30038A951 /* ConfigModel.swift in Sources */,
+				AE4D868829E5348F005C8092 /* SBGuide.swift in Sources */,
 				44F9FD4D295AFAB800FE4B9F /* CoverPresentationController.swift in Sources */,
+				AE4D869229E539C4005C8092 /* UIView+Touch.swift in Sources */,
 				44BD272F29A895A2001ECF54 /* PayInfo.swift in Sources */,
 				445CB09E292E056B00F50047 /* AuthVC.swift in Sources */,
 				4464DF8E291D0D2E000C9B45 /* ParameterEncoding.swift in Sources */,
