@@ -105,13 +105,6 @@ final class LogVC: UIViewController, ILogVC {
         navigationItem.leftBarButtonItem = settingsButton
         navigationItem.hidesSearchBarWhenScrolling = false
         navigationItem.searchController = searchController
-        
-        let view = UIView()
-        
-        view
-            .add(toSuperview: self.searchView)
-            .centerInSuperview()
-            .size(.equal, toSquareWithSide: 50)
     }
     
     @objc
