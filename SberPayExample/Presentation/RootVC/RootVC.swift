@@ -410,7 +410,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private func generateOrderID() {
         addLoader()
         RequestHeandler()
-            .response { [weak self] model in
+            .response(schemaType: .sberbankIFT) { [weak self] model in
                 guard let sbolBankInvoiceID = model?.externalParams.sbolBankInvoiceId,
                       let self else {
                     self?.loader.stopAnimating()
