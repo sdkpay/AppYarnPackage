@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ObjcCartVC.h"
-#import "SPaySdk.h"
+#import "SPaySdkDEBUG.h"
 
 @interface ObjcCartVC ()
 

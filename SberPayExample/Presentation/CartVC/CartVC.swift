@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SPaySdk
+import SPaySdkDEBUG
 
 private extension CGFloat {
     static let paymentHeight = 200.0

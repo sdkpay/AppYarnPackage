@@ -28,6 +28,7 @@
 		21440DBF29D6F5D500E3803E /* String+Ranges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DBE29D6F5D500E3803E /* String+Ranges.swift */; };
 		214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 214E9C4A29CC4B09009DF5FE /* FingerprintPackage */; };
 		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
+		2160A02429E6FC6700B72F40 /* SPaySdkDEBUG.h in Headers */ = {isa = PBXBuildFile; fileRef = 2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		2197F38129DAD9CD0032F356 /* LogLevelAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */; };
 		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
@@ -197,8 +198,8 @@
 		443666CF298BFC3E005119A2 /* ValidSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443666CE298BFC3E005119A2 /* ValidSessionModel.swift */; };
 		443D83AB295D8F31002605AA /* ecomtest.s.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 443D83AA295D8F31002605AA /* ecomtest.s.ru.der */; };
 		44499BED296EB4A500B6A582 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */; };
-		444A13AF291BA96100C9FBE0 /* SPaySdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdk.framework */; };
-		444A13B0291BA96100C9FBE0 /* SPaySdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		444A13AF291BA96100C9FBE0 /* SPaySdkDEBUG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */; };
+		444A13B0291BA96100C9FBE0 /* SPaySdkDEBUG.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		444A13BB291BAFDA00C9FBE0 /* SPButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444A13BA291BAFDA00C9FBE0 /* SPButton.swift */; };
 		444A13BE291BB52500C9FBE0 /* RootCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444A13BC291BB1FD00C9FBE0 /* RootCell.swift */; };
 		444A13F3291CF1C100C9FBE0 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 444A13F1291CF1C100C9FBE0 /* .swiftlint.yml */; };
@@ -253,7 +254,7 @@
 		4498008C29AD247C008E808A /* AlertService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4498008B29AD247C008E808A /* AlertService.swift */; };
 		449D51382971481A00497E82 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449D51372971481A00497E82 /* Localization.swift */; };
 		44A0B5B0293DC3F7007AB3FD /* SberPaySDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A0B5AF293DC3F7007AB3FD /* SberPaySDKTests.swift */; };
-		44A0B5B1293DC3F7007AB3FD /* SPaySdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdk.framework */; platformFilter = ios; };
+		44A0B5B1293DC3F7007AB3FD /* SPaySdkDEBUG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */; platformFilter = ios; };
 		44A0B5B9293DF25E007AB3FD /* CardsAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A0B5B8293DF25E007AB3FD /* CardsAssembly.swift */; };
 		44A0B5BB293DF267007AB3FD /* CardsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A0B5BA293DF267007AB3FD /* CardsVC.swift */; };
 		44A0B5BD293DF282007AB3FD /* CardsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A0B5BC293DF282007AB3FD /* CardsPresenter.swift */; };
@@ -317,7 +318,6 @@
 		AE4D868E29E53507005C8092 /* UIView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868D29E53507005C8092 /* UIView+Add.swift */; };
 		AE4D869029E53999005C8092 /* UIView+TouchEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868F29E53999005C8092 /* UIView+TouchEdge.swift */; };
 		AE4D869229E539C4005C8092 /* UIView+Touch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D869129E539C4005C8092 /* UIView+Touch.swift */; };
-		AE5F906429CFA60C003ED648 /* SPaySdk.h in Headers */ = {isa = PBXBuildFile; fileRef = AE5F906329CFA60C003ED648 /* SPaySdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB0059B29C09F72002C9AB9 /* Loader.swift */; };
 		AEE5575A29CFAD470015BDD6 /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = AEE5575929CFAD470015BDD6 /* Dynatrace-Static */; };
 		AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */; };
@@ -350,7 +350,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				444A13B0291BA96100C9FBE0 /* SPaySdk.framework in Embed Frameworks */,
+				444A13B0291BA96100C9FBE0 /* SPaySdkDEBUG.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,6 +377,7 @@
 		21440DBB29D6B27800E3803E /* LoggableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggableVC.swift; sourceTree = "<group>"; };
 		21440DBE29D6F5D500E3803E /* String+Ranges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ranges.swift"; sourceTree = "<group>"; };
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
+		2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPaySdkDEBUG.h; path = SPaySdk/Public/SPaySdkDEBUG.h; sourceTree = "<group>"; };
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevelAlertVC.swift; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -387,7 +388,7 @@
 		21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateValidator.swift; sourceTree = "<group>"; };
 		21BA175129C46E3C001C2CEE /* Tread+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tread+Extension.swift"; sourceTree = "<group>"; };
 		21EB4CCF29E163DA006541B0 /* SPayDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPayDebug.swift; sourceTree = "<group>"; };
-		21EB4D6F29E16405006541B0 /* SPaySdk-prod.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "SPaySdk-prod.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		21EB4D6F29E16405006541B0 /* SPaySdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		21EB4D7029E16405006541B0 /* info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "info-prod.plist"; path = "SPaySdk/SupportingFiles/info-prod.plist"; sourceTree = SOURCE_ROOT; };
 		21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
 		440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTableView.swift; sourceTree = "<group>"; };
@@ -407,7 +408,7 @@
 		443666CE298BFC3E005119A2 /* ValidSessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidSessionModel.swift; sourceTree = "<group>"; };
 		443D83AA295D8F31002605AA /* ecomtest.s.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ecomtest.s.ru.der; sourceTree = "<group>"; };
 		44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
-		444A13A9291BA96100C9FBE0 /* SPaySdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdkDEBUG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		444A13AB291BA96100C9FBE0 /* SPaySdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPaySdk.h; sourceTree = "<group>"; };
 		444A13BA291BAFDA00C9FBE0 /* SPButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPButton.swift; sourceTree = "<group>"; };
 		444A13BC291BB1FD00C9FBE0 /* RootCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCell.swift; sourceTree = "<group>"; };
@@ -571,7 +572,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				444A13AF291BA96100C9FBE0 /* SPaySdk.framework in Frameworks */,
+				444A13AF291BA96100C9FBE0 /* SPaySdkDEBUG.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,7 +580,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				44A0B5B1293DC3F7007AB3FD /* SPaySdk.framework in Frameworks */,
+				44A0B5B1293DC3F7007AB3FD /* SPaySdkDEBUG.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1105,6 +1106,7 @@
 		4471720829193B21005EDF32 = {
 			isa = PBXGroup;
 			children = (
+				2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */,
 				AE5F906329CFA60C003ED648 /* SPaySdk.h */,
 				444A13F1291CF1C100C9FBE0 /* .swiftlint.yml */,
 				444A13AA291BA96100C9FBE0 /* SPaySdk */,
@@ -1120,9 +1122,9 @@
 			isa = PBXGroup;
 			children = (
 				4471721129193B21005EDF32 /* SPaySdkExample.app */,
-				444A13A9291BA96100C9FBE0 /* SPaySdk.framework */,
+				444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */,
 				44A0B5AD293DC3F7007AB3FD /* SPaySdkSDKTests.xctest */,
-				21EB4D6F29E16405006541B0 /* SPaySdk-prod.framework */,
+				21EB4D6F29E16405006541B0 /* SPaySdk.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1503,16 +1505,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE5F906429CFA60C003ED648 /* SPaySdk.h in Headers */,
+				2160A02429E6FC6700B72F40 /* SPaySdkDEBUG.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		21EB4CD129E16405006541B0 /* SPaySdk-prod */ = {
+		21EB4CD129E16405006541B0 /* SPaySdk */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 21EB4D6A29E16405006541B0 /* Build configuration list for PBXNativeTarget "SPaySdk-prod" */;
+			buildConfigurationList = 21EB4D6A29E16405006541B0 /* Build configuration list for PBXNativeTarget "SPaySdk" */;
 			buildPhases = (
 				21EB4CD529E16405006541B0 /* Headers */,
 				21EB4CD729E16405006541B0 /* Sources */,
@@ -1524,18 +1526,18 @@
 			);
 			dependencies = (
 			);
-			name = "SPaySdk-prod";
+			name = SPaySdk;
 			packageProductDependencies = (
 				21EB4CD229E16405006541B0 /* FingerprintPackage */,
 				21EB4CD329E16405006541B0 /* Dynatrace-Static */,
 			);
 			productName = SPaySdk;
-			productReference = 21EB4D6F29E16405006541B0 /* SPaySdk-prod.framework */;
+			productReference = 21EB4D6F29E16405006541B0 /* SPaySdk.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		444A13A8291BA96100C9FBE0 /* SPaySdk */ = {
+		444A13A8291BA96100C9FBE0 /* SPaySdkDEBUG */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 444A13B4291BA96100C9FBE0 /* Build configuration list for PBXNativeTarget "SPaySdk" */;
+			buildConfigurationList = 444A13B4291BA96100C9FBE0 /* Build configuration list for PBXNativeTarget "SPaySdkDEBUG" */;
 			buildPhases = (
 				444A13A4291BA96100C9FBE0 /* Headers */,
 				444A13A5291BA96100C9FBE0 /* Sources */,
@@ -1547,13 +1549,13 @@
 			);
 			dependencies = (
 			);
-			name = SPaySdk;
+			name = SPaySdkDEBUG;
 			packageProductDependencies = (
 				214E9C4A29CC4B09009DF5FE /* FingerprintPackage */,
 				AEE5575929CFAD470015BDD6 /* Dynatrace-Static */,
 			);
 			productName = SPaySdk;
-			productReference = 444A13A9291BA96100C9FBE0 /* SPaySdk.framework */;
+			productReference = 444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		4471721029193B21005EDF32 /* SPaySdkExample */ = {
@@ -1636,8 +1638,8 @@
 			projectRoot = "";
 			targets = (
 				4471721029193B21005EDF32 /* SPaySdkExample */,
-				444A13A8291BA96100C9FBE0 /* SPaySdk */,
-				21EB4CD129E16405006541B0 /* SPaySdk-prod */,
+				444A13A8291BA96100C9FBE0 /* SPaySdkDEBUG */,
+				21EB4CD129E16405006541B0 /* SPaySdk */,
 				44A0B5AC293DC3F7007AB3FD /* SPaySdkSDKTests */,
 			);
 		};
@@ -2055,13 +2057,13 @@
 /* Begin PBXTargetDependency section */
 		444A13AE291BA96100C9FBE0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 444A13A8291BA96100C9FBE0 /* SPaySdk */;
+			target = 444A13A8291BA96100C9FBE0 /* SPaySdkDEBUG */;
 			targetProxy = 444A13AD291BA96100C9FBE0 /* PBXContainerItemProxy */;
 		};
 		44A0B5B3293DC3F7007AB3FD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
-			target = 444A13A8291BA96100C9FBE0 /* SPaySdk */;
+			target = 444A13A8291BA96100C9FBE0 /* SPaySdkDEBUG */;
 			targetProxy = 44A0B5B2293DC3F7007AB3FD /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -3015,7 +3017,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		21EB4D6A29E16405006541B0 /* Build configuration list for PBXNativeTarget "SPaySdk-prod" */ = {
+		21EB4D6A29E16405006541B0 /* Build configuration list for PBXNativeTarget "SPaySdk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				21EB4D6B29E16405006541B0 /* Debug */,
@@ -3026,7 +3028,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		444A13B4291BA96100C9FBE0 /* Build configuration list for PBXNativeTarget "SPaySdk" */ = {
+		444A13B4291BA96100C9FBE0 /* Build configuration list for PBXNativeTarget "SPaySdkDEBUG" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				444A13B2291BA96100C9FBE0 /* Debug */,

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SPaySdk
+import SPaySdkDEBUG
 
 final class StartupService {
     func setupInitialState(with window: UIWindow) {

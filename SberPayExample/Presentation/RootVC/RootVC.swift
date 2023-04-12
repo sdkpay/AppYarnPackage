@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SPaySdk
+import SPaySdkDEBUG
 import CoreFoundation
 
 private extension CGFloat {

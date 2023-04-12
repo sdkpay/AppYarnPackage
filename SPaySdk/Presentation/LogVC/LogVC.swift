@@ -12,7 +12,6 @@ protocol ILogVC {
     func scrollTo(_ range: NSRange)
     func setResultsNum(current: Int, count: Int)
     func hideResultsNum()
-    
 }
 
 private extension TimeInterval {

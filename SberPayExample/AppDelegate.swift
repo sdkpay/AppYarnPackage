@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SPaySdk
+import SPaySdkDEBUG
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

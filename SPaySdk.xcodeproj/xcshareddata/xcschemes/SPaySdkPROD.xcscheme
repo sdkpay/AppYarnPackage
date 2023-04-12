@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "21EB4CD129E16405006541B0"
-               BuildableName = "SPaySdk-prod.framework"
-               BlueprintName = "SPaySdk-prod"
+               BuildableName = "SPaySdk.framework"
+               BlueprintName = "SPaySdk"
                ReferencedContainer = "container:SPaySdk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -51,8 +51,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "21EB4CD129E16405006541B0"
-            BuildableName = "SPaySdk-prod.framework"
-            BlueprintName = "SPaySdk-prod"
+            BuildableName = "SPaySdk.framework"
+            BlueprintName = "SPaySdk"
             ReferencedContainer = "container:SPaySdk.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

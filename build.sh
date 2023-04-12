@@ -38,8 +38,8 @@ buildSim() {
 createXCFramework() {
     printStep "Create XCFramework"
     xcodebuild -create-xcframework \
-    -framework "./build/ios.xcarchive/Products/Library/Frameworks/SPaySdk-prod.framework" \
-    -framework "./build/ios_sim.xcarchive/Products/Library/Frameworks/SPaySdk-prod.framework" \
+    -framework "./build/ios.xcarchive/Products/Library/Frameworks/SPaySdk.framework" \
+    -framework "./build/ios_sim.xcarchive/Products/Library/Frameworks/SPaySdk.framework" \
     -output "./build/SPaySdk.xcframework"
     open "./build"
 }
