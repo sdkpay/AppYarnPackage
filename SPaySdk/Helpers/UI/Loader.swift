@@ -67,7 +67,7 @@ struct Loader {
     
     @discardableResult
     func hide() -> Loader {
-        guard let subview = topVC?.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView  else {
+        guard let subview = topVC?.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView else {
             return self
         }
         
