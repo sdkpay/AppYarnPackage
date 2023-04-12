@@ -44,7 +44,7 @@ final class DefaultStartupService: StartupService {
     private func setupWindows(viewController: UIViewController,
                               locator: LocatorService,
                               rootVC: UIViewController) {
-        if #available(iOS 13.0, *), UIApplication.shared.supportsMultipleScenes {
+        if #available(iOS 13.0, *) {
             viewController.present(rootVC, animated: true)
         } else {
             sdkWindow = TransparentWindow(frame: UIScreen.main.bounds)
