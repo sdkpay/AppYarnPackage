@@ -68,6 +68,7 @@ final class AuthPresenter: AuthPresenting {
         userService.checkUserSession { [weak self] result in
             switch result {
             case .success:
+                self?.view?.showViews(false)
                 self?.router.presentPayment()
             case .failure(let error):
                 if error.represents(.noInternetConnection) {
@@ -132,6 +133,7 @@ final class AuthPresenter: AuthPresenting {
                                            type: .defaultError(completion: { self.dismissWithError(error) }))
                 }
             } else {
+                self.view?.showViews(false)
                 self.analytics.sendEvent(.BankAppAuthSuccess)
                 self.router.presentPayment()
             }

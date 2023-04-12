@@ -16,6 +16,7 @@ private extension CGFloat {
 protocol IAuthVC {
     func configBanksStack(banks: [BankAppModel],
                           selected: @escaping (BankAppModel) -> Void)
+    func showViews(_ value: Bool)
 }
 
 final class AuthVC: ContentVC, IAuthVC {    
@@ -74,6 +75,10 @@ final class AuthVC: ContentVC, IAuthVC {
             }
             banksStack.addArrangedSubview(bankView)
         }
+    }
+    
+    func showViews(_ value: Bool) {
+        view.subviews.forEach({ $0.isHidden = !value })
     }
     
     private func setupUI() {

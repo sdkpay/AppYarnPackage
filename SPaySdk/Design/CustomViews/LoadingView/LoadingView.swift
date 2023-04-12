@@ -14,6 +14,11 @@ private extension CGFloat {
     static let stickHeight = 4.0
 }
 
+private extension TimeInterval {
+    static let delay: TimeInterval = 0.1
+    static let animationDuration = 0.25
+}
+
 final class LoadingView: UIView {
     private lazy var loadingImageView: UIImageView = {
         let view = UIImageView()
@@ -72,6 +77,7 @@ final class LoadingView: UIView {
         backgroundColor = .backgroundPrimary
         isUserInteractionEnabled = true
         alpha = 0
+        loadingStack.isHidden = true
         NSLayoutConstraint.activate([
             loadingImageView.widthAnchor.constraint(equalToConstant: .loaderWidth),
             loadingImageView.heightAnchor.constraint(equalToConstant: .loaderWidth)
@@ -97,9 +103,12 @@ final class LoadingView: UIView {
     }
     
     func show(animate: Bool = true) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .delay, execute: {
+            self.loadingStack.isHidden = false
+        })
         if animate {
             UIView.animate(withDuration: 0.25,
-                           delay: 0) { [weak self] in
+                           delay: .delay) { [weak self] in
                 guard let self = self else { return }
                 self.alpha = 1
             } completion: { _ in
