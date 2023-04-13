@@ -37,7 +37,8 @@ public extension UIView {
 public extension UIView {
     
     @discardableResult
-    func centerInView(_ anotherView: UIView, axis: SBAxis,
+    func centerInView(_ anotherView: UIView,
+                      axis: SBAxis,
                       withOffset offset: CGFloat = .zero,
                       priority: UILayoutPriority = .required) -> Self {
         translatesAutoresizingMaskIntoConstraints = false
@@ -46,10 +47,10 @@ public extension UIView {
         case .x, .horizontal:
             let constraint = NSLayoutConstraint(item: self,
                                                 attribute: .centerX,
-                relatedBy: .equal,
-                toItem: anotherView,
-                attribute: .centerX,
-                multiplier: 1.0, constant: offset
+                                                relatedBy: .equal,
+                                                toItem: anotherView,
+                                                attribute: .centerX,
+                                                multiplier: 1.0, constant: offset
             )
             constraint.priority = priority
             constraint.isActive = true
@@ -57,10 +58,10 @@ public extension UIView {
         case .y, .vertical:
             let constraint = NSLayoutConstraint(item: self,
                                                 attribute: .centerY,
-                relatedBy: .equal,
-                toItem: anotherView,
-                attribute: .centerY,
-                multiplier: 1.0, constant: offset
+                                                relatedBy: .equal,
+                                                toItem: anotherView,
+                                                attribute: .centerY,
+                                                multiplier: 1.0, constant: offset
             )
             constraint.priority = priority
             constraint.isActive = true

@@ -12,7 +12,7 @@ public extension UIView {
     func touch(topTo top: NSLayoutYAxisAnchor? = nil,
                leftTo left: NSLayoutXAxisAnchor? = nil,
                bottomTo bottom: NSLayoutYAxisAnchor? = nil,
-               rightTo right : NSLayoutXAxisAnchor? = nil,
+               rightTo right: NSLayoutXAxisAnchor? = nil,
                withInsets insets: UIEdgeInsets = .zero,
                priority: UILayoutPriority = .required) -> Self {
         guard top != nil || left != nil || bottom != nil || right != nil else { return self }

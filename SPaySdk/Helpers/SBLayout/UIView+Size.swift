@@ -42,21 +42,25 @@ public extension UIView {
     }
     
     @discardableResult
-    func width(_ relation: NSLayoutConstraint.Relation, to width: CGFloat,
+    func width(_ relation: NSLayoutConstraint.Relation,
+               to width: CGFloat,
                priority: UILayoutPriority = .required) -> Self {
         self.width(width, usingRelation: relation, priority: priority)
         return self
     }
     
     @discardableResult
-    func height(_ relation: NSLayoutConstraint.Relation, to height: CGFloat,
+    func height(_ relation: NSLayoutConstraint.Relation,
+                to height: CGFloat,
                 priority: UILayoutPriority = .required) -> Self {
         self.height(height, usingRelation: relation, priority: priority)
         return self
     }
     
     @discardableResult
-    func size(_ relation: NSLayoutConstraint.Relation, to size: CGSize, priority: UILayoutPriority = .required) -> Self {
+    func size(_ relation: NSLayoutConstraint.Relation,
+              to size: CGSize,
+              priority: UILayoutPriority = .required) -> Self {
         self.size(size, usingRelation: relation, priority: priority)
     }
     
@@ -98,7 +102,8 @@ public extension UIView {
         translatesAutoresizingMaskIntoConstraints = false
         
         let constraint = NSLayoutConstraint(
-            item: self, attribute: .height,
+            item: self,
+            attribute: .height,
             relatedBy: relation,
             toItem: nil, attribute: .notAnAttribute,
             multiplier: 1.0, constant: height
