@@ -58,7 +58,8 @@ public extension UIView {
             item: self, attribute: edge.convertedToNSLayoutAttribute,
             relatedBy: relation,
             toItem: anotherView, attribute: pinningEdge.convertedToNSLayoutAttribute,
-            multiplier: 1.0, constant: inset * edge.directionalMultiplier
+            multiplier: 1.0,
+            constant: inset * edge.directionalMultiplier
         )
         constraint.priority = priority
         constraint.isActive = true
@@ -192,8 +193,10 @@ public extension UIView {
         let constraint = NSLayoutConstraint(
             item: self, attribute: edge.convertedToNSLayoutAttribute,
             relatedBy: relation,
-            toItem: layoutGuide, attribute: pinningEdge.convertedToNSLayoutAttribute,
-            multiplier: 1.0, constant: inset * edge.directionalMultiplier
+            toItem: layoutGuide,
+            attribute: pinningEdge.convertedToNSLayoutAttribute,
+            multiplier: 1.0,
+            constant: inset * edge.directionalMultiplier
         )
         constraint.priority = priority
         constraint.isActive = true
