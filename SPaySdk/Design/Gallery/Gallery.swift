@@ -20,6 +20,7 @@ extension UIImage {
         static let warning = UIImage("Warning")
         static let warningAlert = UIImage("Warning_alert")
         static let waiting = UIImage("Waiting")
+        static let checkAgreementSelected = UIImage("Check_agreement_selected")
     }
     enum Payment {
         static let arrow = UIImage("Arrow")
