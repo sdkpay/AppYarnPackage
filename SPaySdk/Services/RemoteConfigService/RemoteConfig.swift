@@ -9,7 +9,6 @@ import Foundation
 
 final class RemoteConfig {
     static let shared = RemoteConfig()
-    
-    // DEBUG = false
-    var needLogs = true
+
+    var needLogs = false
 }

@@ -20,6 +20,7 @@
 		21253D1E29C9B20B004ED82D /* UIView+Template.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1729C9B20B004ED82D /* UIView+Template.swift */; };
 		21253D2129C9E761004ED82D /* Shimmer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D2029C9E761004ED82D /* Shimmer+Extensions.swift */; };
 		21253D2329CA3152004ED82D /* UIImageView+Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D2229CA3152004ED82D /* UIImageView+Download.swift */; };
+		212EF31A29ED20940047A7E3 /* RemoteConfigDEBUG.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EF31829ED206D0047A7E3 /* RemoteConfigDEBUG.swift */; };
 		21440DB429D5B66300E3803E /* LogAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB329D5B66300E3803E /* LogAssembly.swift */; };
 		21440DB629D5B67200E3803E /* LogVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB529D5B67200E3803E /* LogVC.swift */; };
 		21440DB829D5B68200E3803E /* LogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DB729D5B68200E3803E /* LogPresenter.swift */; };
@@ -32,7 +33,6 @@
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		2197F38129DAD9CD0032F356 /* LogLevelAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */; };
 		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
-		21A59D8829D1E41B009B55A2 /* RemoteConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A59D8729D1E41B009B55A2 /* RemoteConfig.swift */; };
 		21B442C729DDB3F0004F1DFF /* Certificates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B442C629DDB3F0004F1DFF /* Certificates.swift */; };
 		21B442CD29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */; };
 		21B442CF29DDD9F1004F1DFF /* CertificateValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */; };
@@ -370,6 +370,7 @@
 		21253D1729C9B20B004ED82D /* UIView+Template.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Template.swift"; sourceTree = "<group>"; };
 		21253D2029C9E761004ED82D /* Shimmer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shimmer+Extensions.swift"; sourceTree = "<group>"; };
 		21253D2229CA3152004ED82D /* UIImageView+Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Download.swift"; sourceTree = "<group>"; };
+		212EF31829ED206D0047A7E3 /* RemoteConfigDEBUG.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfigDEBUG.swift; sourceTree = "<group>"; };
 		21440DB329D5B66300E3803E /* LogAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogAssembly.swift; sourceTree = "<group>"; };
 		21440DB529D5B67200E3803E /* LogVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogVC.swift; sourceTree = "<group>"; };
 		21440DB729D5B68200E3803E /* LogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogPresenter.swift; sourceTree = "<group>"; };
@@ -610,6 +611,7 @@
 				211DF36E29D18D0C0038A951 /* BankAppModel.swift */,
 				211DF36F29D18D0C0038A951 /* RemoteConfigService.swift */,
 				21A59D8729D1E41B009B55A2 /* RemoteConfig.swift */,
+				212EF31829ED206D0047A7E3 /* RemoteConfigDEBUG.swift */,
 			);
 			path = RemoteConfigService;
 			sourceTree = "<group>";
@@ -1887,7 +1889,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21A59D8829D1E41B009B55A2 /* RemoteConfig.swift in Sources */,
 				21BA175229C46E3C001C2CEE /* Tread+Extension.swift in Sources */,
 				449D51382971481A00497E82 /* Localization.swift in Sources */,
 				443666CF298BFC3E005119A2 /* ValidSessionModel.swift in Sources */,
@@ -1929,6 +1930,7 @@
 				44BD272929A7AD89001ECF54 /* PaymentOrderModel.swift in Sources */,
 				4473D6C92940653300802446 /* BankView.swift in Sources */,
 				AE4D868429E5346B005C8092 /* SBEdge.swift in Sources */,
+				212EF31A29ED20940047A7E3 /* RemoteConfigDEBUG.swift in Sources */,
 				4464DF9D291D8E4C000C9B45 /* SPay.swift in Sources */,
 				AEEB602429B9B55E00D1E1D2 /* ImageDownloader.swift in Sources */,
 				445CB09B292DFF5100F50047 /* PaymentPresenter.swift in Sources */,
