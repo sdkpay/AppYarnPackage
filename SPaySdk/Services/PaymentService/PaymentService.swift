@@ -102,7 +102,7 @@ final class DefaultPaymentService: PaymentService {
                                                       ipAddress: personalMetricsService.ipAddress,
                                                       paymentToken: token),
                         to: PaymentOrderModel.self,
-                        retryCount: 4) { result in
+                        retrySettings: (4, [StatusCode.errorFormat.rawValue])) { result in
             switch result {
             case .success:
                 completion(nil)

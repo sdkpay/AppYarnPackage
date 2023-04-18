@@ -34,7 +34,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.apiKey = apiKey
         network.request(ConfigTarget.getConfig,
                         to: ConfigModel.self,
-                        retryCount: 5) { [weak self] result in
+                        retrySettings: (5, [])) { [weak self] result in
             switch result {
             case .success(let config):
                 self?.saveConfig(config)

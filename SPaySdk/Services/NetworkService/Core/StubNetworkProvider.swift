@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class StubNetworkProvider: NSObject, NetworkProvider {    
+final class StubNetworkProvider: NSObject, NetworkProvider {
     private let delayedSeconds: Int
     private var dispatchWorkItem: DispatchWorkItem?
 
@@ -16,15 +16,15 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
         super.init()
     }
     
-    func request(_ route: TargetType,
-                 retryCount: Int,
+    func request(_ target: TargetType,
+                 retrySettings: RetrySettings,
                  completion: @escaping NetworkProviderCompletion) {
         let response = HTTPURLResponse(url: ServerURL,
                                        statusCode: 200,
                                        httpVersion: nil,
                                        headerFields: nil)
         dispatchWorkItem = DispatchWorkItem {
-            completion(route.sampleData, response, nil)
+            completion(target.sampleData, response, nil)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(delayedSeconds),
                                       execute: dispatchWorkItem!)

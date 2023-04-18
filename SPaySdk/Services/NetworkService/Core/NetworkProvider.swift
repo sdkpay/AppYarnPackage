@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias RetrySettings = (count: Int, retryCode: [Int])
+
 private enum Constants {
     static let retryCount = 4
     static let timeoutInterval: TimeInterval = 20.0
@@ -48,7 +50,7 @@ enum HTTPTask {
 
 // MARK: - NetworkProvider
 protocol NetworkProvider {
-    func request(_ target: TargetType, retryCount: Int, completion: @escaping NetworkProviderCompletion)
+    func request(_ target: TargetType, retrySettings: RetrySettings, completion: @escaping NetworkProviderCompletion)
     func cancel()
 }
 
@@ -69,14 +71,14 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     }
     
     func request(_ target: TargetType,
-                 retryCount: Int = 1,
+                 retrySettings: RetrySettings = (1, []),
                  completion: @escaping NetworkProviderCompletion) {
-        _request(target: target, retryCount: retryCount, completion: completion)
+        _request(target: target, retrySettings: retrySettings, completion: completion)
     }
 
     private func _request(retry: Int = 1,
                           target: TargetType,
-                          retryCount: Int,
+                          retrySettings: RetrySettings,
                           completion: @escaping NetworkProviderCompletion) {
         do {
             let request = try self.buildRequest(from: target)
@@ -88,13 +90,14 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                         self.saveGeobalancingData(from: response)
                     }
 
-                    if retryCount != 1,
+                    if retrySettings.count != 1,
                        let error = error,
                        error._code == URLError.Code.timedOut.rawValue,
-                       retry < Constants.retryCount {
+                       !retrySettings.retryCode.contains(error._code),
+                       retry < retrySettings.count {
                         self._request(retry: retry + 1,
                                       target: target,
-                                      retryCount: retryCount,
+                                      retrySettings: retrySettings,
                                       completion: completion)
                     } else {
                         completion(data, response, error)
