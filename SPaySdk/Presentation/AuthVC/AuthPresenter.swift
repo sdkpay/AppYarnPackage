@@ -98,8 +98,10 @@ final class AuthPresenter: AuthPresenting {
     private func showBanksStack() {
         authService.removeSavedBank()
         view?.configBanksStack(banks: authService.avaliableBanks, selected: { [weak self] bank in
-            self?.authService.selectBank(bank)
-            self?.getAccessSPay()
+            self?.router.presentPayment()
+//            DEBUG
+//            self?.authService.selectBank(bank)
+//            self?.getAccessSPay()
         })
         analytics.sendEvent(.BankAppsViewAppear)
     }

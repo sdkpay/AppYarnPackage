@@ -1,21 +1,22 @@
 //
-//  PartView.swift
+//  PartCell.swift
 //  SPaySdk
 //
-//  Created by Ипатов Александр Станиславович on 14.04.2023.
+//  Created by Ипатов Александр Станиславович on 18.04.2023.
 //
 
 import UIKit
 
 private extension CGFloat {
     static let pointWidth = 20.0
-    static let height = 50.0
     static let lineHeight = 22.0
     static let lineWidth = 2.0
     static let lineMargin = 2.0
 }
 
-final class PartView: UIView {
+final class PartCell: UITableViewCell {
+    static var reuseId: String { "PartCell" }
+
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         return view
@@ -37,15 +38,8 @@ final class PartView: UIView {
         return view
     }()
     
-    init(model: PartCellModel) {
-        super.init(frame: .zero)
-        titleLabel.text = model.title
-        costLabel.text = model.cost
-        lineView.isHidden = model.hideLine
-        titleLabel.font = model.isSelected ? .bodi1 : .bodi2
-        titleLabel.font = model.isSelected ? .bodi1 : .bodi2
-        titleLabel.textColor = model.isSelected ? .textPrimory : .textSecondary
-        costLabel.textColor = model.isSelected ? .textPrimory : .textSecondary
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
     }
     
@@ -53,12 +47,17 @@ final class PartView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func config(with model: PartCellModel) {
+        titleLabel.text = model.title
+        costLabel.text = model.cost
+        lineView.isHidden = model.hideLine
+        titleLabel.font = model.isSelected ? .bodi1 : .bodi2
+        titleLabel.font = model.isSelected ? .bodi1 : .bodi2
+        titleLabel.textColor = model.isSelected ? .textPrimory : .textSecondary
+        costLabel.textColor = model.isSelected ? .textPrimory : .textSecondary
+    }
+    
     private func setupUI() {
-        translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: .height)
-        ])
-        
         addSubview(pointView)
         pointView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

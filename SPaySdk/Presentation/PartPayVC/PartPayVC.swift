@@ -11,9 +11,11 @@ private extension CGFloat {
     static let topMargin = 24.0
     static let bottomMargin = 44.0
     static let buttonsMargin = 10.0
+    static let rowHeight = 50.0
 }
 
-protocol IPartPayVC { }
+protocol IPartPayVC {
+}
 
 final class PartPayVC: ContentVC, IPartPayVC {
     private lazy var titleLabel: UILabel = {
@@ -56,6 +58,23 @@ final class PartPayVC: ContentVC, IPartPayVC {
         return view
     }()
     
+    private lazy var partsTableView: ContentTableView = {
+        let view = ContentTableView()
+        view.register(CardCell.self, forCellReuseIdentifier: CardCell.reuseId)
+        view.separatorStyle = .none
+        view.backgroundView?.backgroundColor = .backgroundPrimary
+        view.showsVerticalScrollIndicator = false
+        view.rowHeight = .rowHeight
+        view.dataSource = self
+        return view
+    }()
+    
+    private lazy var backgroundTableView: UIView = {
+        let view = UIView()
+        view.setupForBase()
+        return view
+    }()
+    
     private let presenter: PartPayPresenter
         
     init(_ presenter: PartPayPresenter) {
@@ -71,7 +90,6 @@ final class PartPayVC: ContentVC, IPartPayVC {
         super.viewDidLoad()
         topBarIsHidden = true
         presenter.viewDidLoad()
-        setupUI()
         SBLogger.log(.didLoad(view: self))
     }
     
@@ -88,6 +106,8 @@ final class PartPayVC: ContentVC, IPartPayVC {
     private func setupUI() {
         view.addSubview(titleLabel)
         view.addSubview(subTitleLabel)
+        view.addSubview(backgroundTableView)
+        view.addSubview(partsTableView)
         view.addSubview(cancelButton)
         view.addSubview(acceptButton)
         view.addSubview(agreementView)
@@ -106,9 +126,24 @@ final class PartPayVC: ContentVC, IPartPayVC {
             subTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin)
         ])
         
+        backgroundTableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundTableView.topAnchor.constraint(equalTo: subTitleLabel.bottomAnchor),
+            backgroundTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
+            backgroundTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin)
+        ])
+        
+        partsTableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            partsTableView.topAnchor.constraint(equalTo: backgroundTableView.topAnchor, constant: .margin),
+            partsTableView.leadingAnchor.constraint(equalTo: backgroundTableView.leadingAnchor, constant: .margin),
+            partsTableView.trailingAnchor.constraint(equalTo: backgroundTableView.trailingAnchor, constant: -.margin),
+            partsTableView.bottomAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: -.margin)
+        ])
+        
         agreementView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            agreementView.topAnchor.constraint(equalTo: subTitleLabel.bottomAnchor, constant: .bottomMargin),
+            agreementView.topAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: .bottomMargin),
             agreementView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
             agreementView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
             agreementView.bottomAnchor.constraint(equalTo: acceptButton.topAnchor, constant: -.bottomMargin)
@@ -129,5 +164,20 @@ final class PartPayVC: ContentVC, IPartPayVC {
             acceptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
             acceptButton.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -.buttonsMargin)
         ])
+    }
+}
+
+extension PartPayVC: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        presenter.partsCount
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PartCell.reuseId) as? PartCell
+        else { return UITableViewCell() }
+        cell.selectionStyle = .none
+        let model = presenter.model(for: indexPath)
+        cell.config(with: model)
+        return cell
     }
 }

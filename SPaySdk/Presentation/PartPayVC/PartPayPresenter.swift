@@ -7,8 +7,17 @@
 
 import UIKit
 
+struct PartCellModel {
+    let title: String
+    let cost: String
+    let isSelected: Bool
+    let hideLine: Bool
+}
+
 protocol PartPayPresenting {
     func viewDidLoad()
+    var partsCount: Int { get }
+    func model(for indexPath: IndexPath) -> PartCellModel
 }
 
 final class PartPayPresenter: PartPayPresenting {
@@ -16,6 +25,12 @@ final class PartPayPresenter: PartPayPresenting {
     private let analytics: AnalyticsService
 
     weak var view: (IPartPayVC & ContentVC)?
+    
+    private var payParts: [PartCellModel]
+    
+    var partsCount: Int {
+        payParts.count
+    }
 
     init(timeManager: OptimizationCheсkerManager,
          analytics: AnalyticsService,
@@ -23,11 +38,33 @@ final class PartPayPresenter: PartPayPresenting {
         self.analytics = analytics
         self.timeManager = timeManager
         self.timeManager.startTraking()
+        let model1 = PartCellModel(title: "Оплатите сейчас",
+                                   cost: "2000",
+                                   isSelected: true,
+                                   hideLine: false)
+        let model2 = PartCellModel(title: "Оплатите завтра",
+                                   cost: "2000",
+                                   isSelected: false,
+                                   hideLine: false)
+        let model3 = PartCellModel(title: "Оплатите завтра",
+                                   cost: "2000",
+                                   isSelected: false,
+                                   hideLine: false)
+        let model4 = PartCellModel(title: "Оплатите завтра",
+                                   cost: "2000",
+                                   isSelected: false,
+                                   hideLine: false)
+        payParts = [model1, model2, model3, model4]
     }
     
     func viewDidLoad() {
         timeManager.endTraking(CardsVC.self.description()) {
             analytics.sendEvent(.CardsViewAppeared, with: [$0])
         }
+    }
+    
+    func model(for indexPath: IndexPath) -> PartCellModel {
+        // DEBUG
+        return payParts[indexPath.row]
     }
 }

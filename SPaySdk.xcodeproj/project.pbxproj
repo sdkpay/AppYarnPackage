@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		210CACA829EE6C5300E33E0A /* PartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210CACA729EE6C5300E33E0A /* PartCell.swift */; };
+		210CACAA29EE6CFD00E33E0A /* FinalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210CACA929EE6CFD00E33E0A /* FinalCell.swift */; };
+		210CACAB29EE6CFD00E33E0A /* FinalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210CACA929EE6CFD00E33E0A /* FinalCell.swift */; };
+		210CACAC29EE6D0000E33E0A /* PartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210CACA729EE6C5300E33E0A /* PartCell.swift */; };
+		2114883429ED578F002B045D /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114883329ED578F002B045D /* BaseView.swift */; };
+		2114883529ED5868002B045D /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114883329ED578F002B045D /* BaseView.swift */; };
 		211DF36429D18B220038A951 /* UIImage+base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36329D18B220038A951 /* UIImage+base64.swift */; };
 		211DF36629D18CCF0038A951 /* RemoteConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 211DF36529D18CCF0038A951 /* RemoteConfig.json */; };
 		211DF36B29D18CF30038A951 /* ConfigTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36829D18CF30038A951 /* ConfigTarget.swift */; };
@@ -183,20 +189,15 @@
 		21EB4D5729E16405006541B0 /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 21EB4CD329E16405006541B0 /* Dynatrace-Static */; };
 		21EB4D5929E16405006541B0 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 444A13F1291CF1C100C9FBE0 /* .swiftlint.yml */; };
 		21EB4D5A29E16405006541B0 /* SB Sans Text.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB07E292C9D9500F50047 /* SB Sans Text.ttf */; };
-		21EB4D5B29E16405006541B0 /* ListCards.json in Resources */ = {isa = PBXBuildFile; fileRef = 44A31250298103F10099EB76 /* ListCards.json */; };
 		21EB4D5C29E16405006541B0 /* psi.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */; };
-		21EB4D5D29E16405006541B0 /* RemoteConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 211DF36529D18CCF0038A951 /* RemoteConfig.json */; };
 		21EB4D5E29E16405006541B0 /* neg.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76D299ABC8500DD7881 /* neg.mp3 */; };
 		21EB4D5F29E16405006541B0 /* cms-res.der in Resources */ = {isa = PBXBuildFile; fileRef = 44A5A46029B4A38900C01420 /* cms-res.der */; };
 		21EB4D6029E16405006541B0 /* SB Sans Text Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB080292C9DA300F50047 /* SB Sans Text Medium.ttf */; };
 		21EB4D6129E16405006541B0 /* poz.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76B299ABC7800DD7881 /* poz.mp3 */; };
-		21EB4D6229E16405006541B0 /* Auth.json in Resources */ = {isa = PBXBuildFile; fileRef = 442A45CD297FEE8000EC3D73 /* Auth.json */; };
 		21EB4D6329E16405006541B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 445CB072292BBB1400F50047 /* Assets.xcassets */; };
 		21EB4D6429E16405006541B0 /* ecomtest.s.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 443D83AA295D8F31002605AA /* ecomtest.s.ru.der */; };
-		21EB4D6529E16405006541B0 /* PaymentOrderSDK.json in Resources */ = {isa = PBXBuildFile; fileRef = 44BD272A29A7AE38001ECF54 /* PaymentOrderSDK.json */; };
 		21EB4D6629E16405006541B0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 445CB06D292BB99F00F50047 /* Localizable.strings */; };
 		21EB4D6729E16405006541B0 /* SB Sans Text Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB07C292C9D2C00F50047 /* SB Sans Text Semibold.ttf */; };
-		21EB4D6829E16405006541B0 /* PaymentToken.json in Resources */ = {isa = PBXBuildFile; fileRef = 44533D1B29851C0D0041FAA9 /* PaymentToken.json */; };
 		440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */; };
 		440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3AC295C304300B84E05 /* AnalyticsService.swift */; };
 		4416E424291E21C300284972 /* SDKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E423291E21C300284972 /* SDKError.swift */; };
@@ -374,6 +375,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		210CACA729EE6C5300E33E0A /* PartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartCell.swift; sourceTree = "<group>"; };
+		210CACA929EE6CFD00E33E0A /* FinalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalCell.swift; sourceTree = "<group>"; };
+		2114883329ED578F002B045D /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		211DF36329D18B220038A951 /* UIImage+base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+base64.swift"; sourceTree = "<group>"; };
 		211DF36529D18CCF0038A951 /* RemoteConfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RemoteConfig.json; sourceTree = "<group>"; };
 		211DF36829D18CF30038A951 /* ConfigTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigTarget.swift; sourceTree = "<group>"; };
@@ -611,6 +615,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2114883229ED5779002B045D /* BaseView */ = {
+			isa = PBXGroup;
+			children = (
+				2114883329ED578F002B045D /* BaseView.swift */,
+			);
+			path = BaseView;
+			sourceTree = "<group>";
+		};
 		211DF36729D18CF30038A951 /* Config */ = {
 			isa = PBXGroup;
 			children = (
@@ -691,6 +703,8 @@
 				2180D22229E93FDA00948681 /* PartPayAssembly.swift */,
 				2180D22029E93F2700948681 /* PartPayVC.swift */,
 				2180D22429E93FFB00948681 /* PartPayPresenter.swift */,
+				210CACA729EE6C5300E33E0A /* PartCell.swift */,
+				210CACA929EE6CFD00E33E0A /* FinalCell.swift */,
 			);
 			path = PartPayVC;
 			sourceTree = "<group>";
@@ -947,6 +961,7 @@
 		444A13B8291BAF6400C9FBE0 /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				2114883229ED5779002B045D /* BaseView */,
 				2180D23429E96CEC00948681 /* PartPayView */,
 				2180D22D29E95F9000948681 /* ShakableView */,
 				2180D22929E953B500948681 /* CheckView */,
@@ -1716,20 +1731,15 @@
 			files = (
 				21EB4D5929E16405006541B0 /* .swiftlint.yml in Resources */,
 				21EB4D5A29E16405006541B0 /* SB Sans Text.ttf in Resources */,
-				21EB4D5B29E16405006541B0 /* ListCards.json in Resources */,
 				21EB4D5C29E16405006541B0 /* psi.spaymentsplus.ru.der in Resources */,
-				21EB4D5D29E16405006541B0 /* RemoteConfig.json in Resources */,
 				21EB4D5E29E16405006541B0 /* neg.mp3 in Resources */,
 				21EB4D5F29E16405006541B0 /* cms-res.der in Resources */,
 				21EB4D6029E16405006541B0 /* SB Sans Text Medium.ttf in Resources */,
 				21EB4D6129E16405006541B0 /* poz.mp3 in Resources */,
-				21EB4D6229E16405006541B0 /* Auth.json in Resources */,
 				21EB4D6329E16405006541B0 /* Assets.xcassets in Resources */,
 				21EB4D6429E16405006541B0 /* ecomtest.s.ru.der in Resources */,
-				21EB4D6529E16405006541B0 /* PaymentOrderSDK.json in Resources */,
 				21EB4D6629E16405006541B0 /* Localizable.strings in Resources */,
 				21EB4D6729E16405006541B0 /* SB Sans Text Semibold.ttf in Resources */,
-				21EB4D6829E16405006541B0 /* PaymentToken.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1825,9 +1835,11 @@
 				21EB4CD829E16405006541B0 /* RemoteConfig.swift in Sources */,
 				21EB4CD929E16405006541B0 /* Tread+Extension.swift in Sources */,
 				21EB4CDA29E16405006541B0 /* Localization.swift in Sources */,
+				210CACAB29EE6CFD00E33E0A /* FinalCell.swift in Sources */,
 				21EB4CDB29E16405006541B0 /* ValidSessionModel.swift in Sources */,
 				21EB4CDC29E16405006541B0 /* UIFont+Bundle.swift in Sources */,
 				21EB4CDD29E16405006541B0 /* AlertView.swift in Sources */,
+				210CACA829EE6C5300E33E0A /* PartCell.swift in Sources */,
 				21EB4CDE29E16405006541B0 /* PaymentService.swift in Sources */,
 				21EB4CDF29E16405006541B0 /* AuthTarget.swift in Sources */,
 				21EB4CE029E16405006541B0 /* SPaymentTokenRequest.swift in Sources */,
@@ -1896,6 +1908,7 @@
 				21EB4D1E29E16405006541B0 /* UIViewController+Container.swift in Sources */,
 				21EB4D1F29E16405006541B0 /* LocationManager.swift in Sources */,
 				21EB4D2029E16405006541B0 /* PersonalMetricsService.swift in Sources */,
+				2114883429ED578F002B045D /* BaseView.swift in Sources */,
 				21EB4D2129E16405006541B0 /* RootAssembly.swift in Sources */,
 				21EB4D2229E16405006541B0 /* AuthPresenter.swift in Sources */,
 				21EB4D2329E16405006541B0 /* ProfileView.swift in Sources */,
@@ -1960,6 +1973,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				21A59D8829D1E41B009B55A2 /* RemoteConfig.swift in Sources */,
+				2114883529ED5868002B045D /* BaseView.swift in Sources */,
 				21BA175229C46E3C001C2CEE /* Tread+Extension.swift in Sources */,
 				449D51382971481A00497E82 /* Localization.swift in Sources */,
 				443666CF298BFC3E005119A2 /* ValidSessionModel.swift in Sources */,
@@ -2038,6 +2052,7 @@
 				4416E424291E21C300284972 /* SDKError.swift in Sources */,
 				44A31268298156C30099EB76 /* String+Extensions.swift in Sources */,
 				44A3125E298137E90099EB76 /* RootPresenter.swift in Sources */,
+				210CACAC29EE6D0000E33E0A /* PartCell.swift in Sources */,
 				442A45CC297FEE1500EC3D73 /* StubbedResponse.swift in Sources */,
 				44A23767292FAF3000C5883E /* Int+Price.swift in Sources */,
 				44D5361B2926198400B99463 /* UIViewController+Container.swift in Sources */,
@@ -2103,6 +2118,7 @@
 				2180D23929E9724500948681 /* PartView.swift in Sources */,
 				2180D23029E9603D00948681 /* ShakableView.swift in Sources */,
 				2180D22829E9412100948681 /* PartPayPresenter.swift in Sources */,
+				210CACAA29EE6CFD00E33E0A /* FinalCell.swift in Sources */,
 				2180D22729E9411F00948681 /* PartPayVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

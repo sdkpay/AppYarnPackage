@@ -42,10 +42,14 @@ extension String {
         static let accept = String(stringLiteral: "accept.title")
         /// Оплатить полностью
         static let cancel = String(stringLiteral: "part.pay.cancel.title")
-        /// Я соглашаюсь с условиями договора. Договор заключается с ООО «ЦНФС»
+        /// Я соглашаюсь с условиями договора.
         static let acceptDoc = String(stringLiteral: "part.pay.accert.doc")
         /// условиями договора
         static let acceptDocColor = String(stringLiteral: "part.pay.accert.doc.color")
+        /// Итого
+        static let final = String(stringLiteral: "part.pay.final")
+        /// Спишем сегодня
+        static let today = String(stringLiteral: "part.pay.today")
     }
 
     enum Error {
