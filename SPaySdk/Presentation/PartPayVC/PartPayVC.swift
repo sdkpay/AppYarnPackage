@@ -15,6 +15,7 @@ private extension CGFloat {
 }
 
 protocol IPartPayVC {
+    func setFinalCost(_ value: String)
 }
 
 final class PartPayVC: ContentVC, IPartPayVC {
@@ -58,12 +59,35 @@ final class PartPayVC: ContentVC, IPartPayVC {
         return view
     }()
     
+    private lazy var finalLabel: UILabel = {
+        let view = UILabel()
+        view.font = .bodi1
+        view.textColor = .textPrimory
+        view.text = .PayPart.final
+        return view
+    }()
+    
+    private lazy var finalCostLabel: UILabel = {
+       let view = UILabel()
+        view.font = .bodi1
+        view.textColor = .textPrimory
+        return view
+    }()
+    
+    private lazy var finalStack: UIStackView = {
+        let view = UIStackView()
+        view.axis = .horizontal
+        view.addArrangedSubview(finalLabel)
+        view.addArrangedSubview(finalCostLabel)
+        return view
+    }()
+    
     private lazy var partsTableView: ContentTableView = {
         let view = ContentTableView()
-        view.register(CardCell.self, forCellReuseIdentifier: CardCell.reuseId)
+        view.register(PartCell.self, forCellReuseIdentifier: PartCell.reuseId)
         view.separatorStyle = .none
-        view.backgroundView?.backgroundColor = .backgroundPrimary
         view.showsVerticalScrollIndicator = false
+        view.isScrollEnabled = false
         view.rowHeight = .rowHeight
         view.dataSource = self
         return view
@@ -90,6 +114,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
         super.viewDidLoad()
         topBarIsHidden = true
         presenter.viewDidLoad()
+        setupUI()
         SBLogger.log(.didLoad(view: self))
     }
     
@@ -103,11 +128,16 @@ final class PartPayVC: ContentVC, IPartPayVC {
         SBLogger.log(.didDissapear(view: self))
     }
     
+    func setFinalCost(_ value: String) {
+        finalCostLabel.text = value
+    }
+    
     private func setupUI() {
         view.addSubview(titleLabel)
         view.addSubview(subTitleLabel)
         view.addSubview(backgroundTableView)
-        view.addSubview(partsTableView)
+        backgroundTableView.addSubview(partsTableView)
+        backgroundTableView.addSubview(finalStack)
         view.addSubview(cancelButton)
         view.addSubview(acceptButton)
         view.addSubview(agreementView)
@@ -137,8 +167,16 @@ final class PartPayVC: ContentVC, IPartPayVC {
         NSLayoutConstraint.activate([
             partsTableView.topAnchor.constraint(equalTo: backgroundTableView.topAnchor, constant: .margin),
             partsTableView.leadingAnchor.constraint(equalTo: backgroundTableView.leadingAnchor, constant: .margin),
-            partsTableView.trailingAnchor.constraint(equalTo: backgroundTableView.trailingAnchor, constant: -.margin),
-            partsTableView.bottomAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: -.margin)
+            partsTableView.trailingAnchor.constraint(equalTo: backgroundTableView.trailingAnchor, constant: -.margin)
+        ])
+        
+        finalStack.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            finalStack.topAnchor.constraint(equalTo: partsTableView.bottomAnchor),
+            finalStack.leadingAnchor.constraint(equalTo: backgroundTableView.leadingAnchor, constant: .margin),
+            finalStack.trailingAnchor.constraint(equalTo: backgroundTableView.trailingAnchor, constant: -.margin),
+            finalStack.heightAnchor.constraint(equalToConstant: .rowHeight),
+            finalStack.bottomAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: -.margin)
         ])
         
         agreementView.translatesAutoresizingMaskIntoConstraints = false
@@ -167,7 +205,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
     }
 }
 
-extension PartPayVC: UITableViewDataSource, UITableViewDelegate {
+extension PartPayVC: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         presenter.partsCount
     }

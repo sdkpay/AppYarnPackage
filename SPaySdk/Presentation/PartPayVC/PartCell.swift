@@ -8,7 +8,8 @@
 import UIKit
 
 private extension CGFloat {
-    static let pointWidth = 20.0
+    static let pointBackgroundWidth = 20.0
+    static let pointWidth = 12.0
     static let lineHeight = 22.0
     static let lineWidth = 2.0
     static let lineMargin = 2.0
@@ -17,19 +18,23 @@ private extension CGFloat {
 final class PartCell: UITableViewCell {
     static var reuseId: String { "PartCell" }
 
-    private lazy var titleLabel: UILabel = {
-        let view = UILabel()
-        return view
-    }()
-    
+    private lazy var titleLabel = UILabel()
+
     private lazy var costLabel: UILabel = {
         let view = UILabel()
         view.textAlignment = .right
         return view
     }()
     
-    private lazy var pointView: UIImageView = {
-        let view = UIImageView()
+    private lazy var pointView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = .pointWidth / 2
+        return view
+    }()
+    
+    private lazy var backgroundPointView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = .pointBackgroundWidth / 2
         return view
     }()
     
@@ -55,26 +60,39 @@ final class PartCell: UITableViewCell {
         titleLabel.font = model.isSelected ? .bodi1 : .bodi2
         titleLabel.textColor = model.isSelected ? .textPrimory : .textSecondary
         costLabel.textColor = model.isSelected ? .textPrimory : .textSecondary
+        backgroundPointView.backgroundColor = model.isSelected ? .main.withAlphaComponent(0.16) : .clear
+        pointView.backgroundColor = model.isSelected ? .main : .textSecondary
     }
     
     private func setupUI() {
-        addSubview(pointView)
+        backgroundColor = .backgroundSecondary
+        
+        contentView.addSubview(backgroundPointView)
+        backgroundPointView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundPointView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backgroundPointView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundPointView.widthAnchor.constraint(equalToConstant: .pointBackgroundWidth),
+            backgroundPointView.heightAnchor.constraint(equalToConstant: .pointBackgroundWidth)
+        ])
+
+        backgroundPointView.addSubview(pointView)
         pointView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            pointView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            pointView.topAnchor.constraint(equalTo: topAnchor),
+            pointView.centerXAnchor.constraint(equalTo: backgroundPointView.centerXAnchor),
+            pointView.centerYAnchor.constraint(equalTo: backgroundPointView.centerYAnchor),
             pointView.widthAnchor.constraint(equalToConstant: .pointWidth),
             pointView.heightAnchor.constraint(equalToConstant: .pointWidth)
         ])
         
-        addSubview(titleLabel)
+        contentView.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: pointView.trailingAnchor, constant: .margin),
             titleLabel.centerYAnchor.constraint(equalTo: pointView.centerYAnchor)
         ])
         
-        addSubview(costLabel)
+        contentView.addSubview(costLabel)
         costLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             costLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -82,7 +100,7 @@ final class PartCell: UITableViewCell {
             costLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor)
         ])
         
-        addSubview(lineView)
+        contentView.addSubview(lineView)
         lineView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             lineView.centerXAnchor.constraint(equalTo: pointView.centerXAnchor),

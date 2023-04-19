@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		210CACA829EE6C5300E33E0A /* PartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210CACA729EE6C5300E33E0A /* PartCell.swift */; };
-		210CACAA29EE6CFD00E33E0A /* FinalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210CACA929EE6CFD00E33E0A /* FinalCell.swift */; };
-		210CACAB29EE6CFD00E33E0A /* FinalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210CACA929EE6CFD00E33E0A /* FinalCell.swift */; };
 		210CACAC29EE6D0000E33E0A /* PartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210CACA729EE6C5300E33E0A /* PartCell.swift */; };
 		2114883429ED578F002B045D /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114883329ED578F002B045D /* BaseView.swift */; };
 		2114883529ED5868002B045D /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2114883329ED578F002B045D /* BaseView.swift */; };
@@ -47,10 +45,6 @@
 		2180D23029E9603D00948681 /* ShakableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180D22E29E95FB500948681 /* ShakableView.swift */; };
 		2180D23229E96C6A00948681 /* NSAttributedString+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180D23129E96C6A00948681 /* NSAttributedString+Extension.swift */; };
 		2180D23329E96C9900948681 /* NSAttributedString+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180D23129E96C6A00948681 /* NSAttributedString+Extension.swift */; };
-		2180D23629E96D0700948681 /* PartsPayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180D23529E96D0700948681 /* PartsPayView.swift */; };
-		2180D23729E96F4A00948681 /* PartsPayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180D23529E96D0700948681 /* PartsPayView.swift */; };
-		2180D23929E9724500948681 /* PartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180D23829E9724500948681 /* PartView.swift */; };
-		2180D23A29E9724500948681 /* PartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180D23829E9724500948681 /* PartView.swift */; };
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		2197F38129DAD9CD0032F356 /* LogLevelAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */; };
 		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
@@ -376,7 +370,6 @@
 
 /* Begin PBXFileReference section */
 		210CACA729EE6C5300E33E0A /* PartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartCell.swift; sourceTree = "<group>"; };
-		210CACA929EE6CFD00E33E0A /* FinalCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalCell.swift; sourceTree = "<group>"; };
 		2114883329ED578F002B045D /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
 		211DF36329D18B220038A951 /* UIImage+base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+base64.swift"; sourceTree = "<group>"; };
 		211DF36529D18CCF0038A951 /* RemoteConfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RemoteConfig.json; sourceTree = "<group>"; };
@@ -404,8 +397,6 @@
 		2180D22A29E953DB00948681 /* CheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckView.swift; sourceTree = "<group>"; };
 		2180D22E29E95FB500948681 /* ShakableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakableView.swift; sourceTree = "<group>"; };
 		2180D23129E96C6A00948681 /* NSAttributedString+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+Extension.swift"; sourceTree = "<group>"; };
-		2180D23529E96D0700948681 /* PartsPayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartsPayView.swift; sourceTree = "<group>"; };
-		2180D23829E9724500948681 /* PartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartView.swift; sourceTree = "<group>"; };
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevelAlertVC.swift; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -704,7 +695,6 @@
 				2180D22029E93F2700948681 /* PartPayVC.swift */,
 				2180D22429E93FFB00948681 /* PartPayPresenter.swift */,
 				210CACA729EE6C5300E33E0A /* PartCell.swift */,
-				210CACA929EE6CFD00E33E0A /* FinalCell.swift */,
 			);
 			path = PartPayVC;
 			sourceTree = "<group>";
@@ -723,15 +713,6 @@
 				2180D22E29E95FB500948681 /* ShakableView.swift */,
 			);
 			path = ShakableView;
-			sourceTree = "<group>";
-		};
-		2180D23429E96CEC00948681 /* PartPayView */ = {
-			isa = PBXGroup;
-			children = (
-				2180D23529E96D0700948681 /* PartsPayView.swift */,
-				2180D23829E9724500948681 /* PartView.swift */,
-			);
-			path = PartPayView;
 			sourceTree = "<group>";
 		};
 		440DB3A8295C1C6200B84E05 /* ContentTableView */ = {
@@ -962,7 +943,6 @@
 			isa = PBXGroup;
 			children = (
 				2114883229ED5779002B045D /* BaseView */,
-				2180D23429E96CEC00948681 /* PartPayView */,
 				2180D22D29E95F9000948681 /* ShakableView */,
 				2180D22929E953B500948681 /* CheckView */,
 				44890674297A7CEF002CDBAD /* ProfileView */,
@@ -1835,7 +1815,6 @@
 				21EB4CD829E16405006541B0 /* RemoteConfig.swift in Sources */,
 				21EB4CD929E16405006541B0 /* Tread+Extension.swift in Sources */,
 				21EB4CDA29E16405006541B0 /* Localization.swift in Sources */,
-				210CACAB29EE6CFD00E33E0A /* FinalCell.swift in Sources */,
 				21EB4CDB29E16405006541B0 /* ValidSessionModel.swift in Sources */,
 				21EB4CDC29E16405006541B0 /* UIFont+Bundle.swift in Sources */,
 				21EB4CDD29E16405006541B0 /* AlertView.swift in Sources */,
@@ -1942,7 +1921,6 @@
 				21EB4D3D29E16405006541B0 /* CoverPresentationController.swift in Sources */,
 				21EB4D3E29E16405006541B0 /* PayInfo.swift in Sources */,
 				21EB4D3F29E16405006541B0 /* AuthVC.swift in Sources */,
-				2180D23629E96D0700948681 /* PartsPayView.swift in Sources */,
 				21EB4D4029E16405006541B0 /* ParameterEncoding.swift in Sources */,
 				21EB4D4129E16405006541B0 /* CGPoint+Extension.swift in Sources */,
 				21EB4D4229E16405006541B0 /* UIImage+base64.swift in Sources */,
@@ -1951,7 +1929,6 @@
 				21EB4D4529E16405006541B0 /* TransparentWindow.swift in Sources */,
 				21EB4D4629E16405006541B0 /* AlertService.swift in Sources */,
 				21EB4D4729E16405006541B0 /* Date+Extension.swift in Sources */,
-				2180D23A29E9724500948681 /* PartView.swift in Sources */,
 				21EB4D4829E16405006541B0 /* Gallery.swift in Sources */,
 				21EB4D4929E16405006541B0 /* OptimizationCheсkerManager.swift in Sources */,
 				21EB4D4A29E16405006541B0 /* LogPresenter.swift in Sources */,
@@ -1997,7 +1974,6 @@
 				44F9FD4A295AFAB800FE4B9F /* CoverPresentAnimatedTransitioning.swift in Sources */,
 				AE4D869029E53999005C8092 /* UIView+TouchEdge.swift in Sources */,
 				AEF1EFA929D6DFA3008E6653 /* NetworkMonitorManager.swift in Sources */,
-				2180D23729E96F4A00948681 /* PartsPayView.swift in Sources */,
 				44C651052930E102008F1C29 /* LoadingView.swift in Sources */,
 				AE4D867C29E533F2005C8092 /* UIView+Horisontal+Vertical.swift in Sources */,
 				4464DF89291D01F4000C9B45 /* NetworkService.swift in Sources */,
@@ -2115,10 +2091,8 @@
 				4479ECDA29476EEF009B3AB8 /* Style.swift in Sources */,
 				44D898D82937449B00550FC6 /* SDKManager.swift in Sources */,
 				444A13BB291BAFDA00C9FBE0 /* SPButton.swift in Sources */,
-				2180D23929E9724500948681 /* PartView.swift in Sources */,
 				2180D23029E9603D00948681 /* ShakableView.swift in Sources */,
 				2180D22829E9412100948681 /* PartPayPresenter.swift in Sources */,
-				210CACAA29EE6CFD00E33E0A /* FinalCell.swift in Sources */,
 				2180D22729E9411F00948681 /* PartPayVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
