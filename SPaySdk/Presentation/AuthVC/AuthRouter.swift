@@ -20,11 +20,7 @@ final class AuthRouter: AuthRouting {
     }
     
     func presentPayment() {
-//        DEBUG
-//        let vc = PaymentAssembly(locator: locator).createModule()
-//        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
-        let vc = PartPayAssembly(locator: locator).createModule { card in
-        }
+        let vc = PaymentAssembly(locator: locator).createModule()
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
 }

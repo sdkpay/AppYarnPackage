@@ -159,15 +159,12 @@ final class PaymentPresenter: PaymentPresenting {
                              cardIconURL: selectedCard.cardLogoUrl,
                              needArrow: user.paymentToolInfo.count > 1) { [weak self] in
             guard user.paymentToolInfo.count > 1 else { return }
-            self?.router.presentPartPay(selectedCard: { _ in
+            self?.router.presentCards(cards: user.paymentToolInfo,
+                                      selectedId: selectedCard.paymentId,
+                                      selectedCard: { [weak self] card in
+                self?.selectedCard = card
+                self?.configWithCard(user: user, selectedCard: card)
             })
-            // DEBUG
-//            self?.router.presentCards(cards: user.paymentToolInfo,
-//                                      selectedId: selectedCard.paymentId,
-//                                      selectedCard: { [weak self] card in
-//                self?.selectedCard = card
-//                self?.configWithCard(user: user, selectedCard: card)
-//            })
         }
     }
     
