@@ -13,6 +13,22 @@ private extension CGFloat {
     static let buttonsMargin = 10.0
     static let purchaseMargin = 2.0
     static let cartWidth = 56.0
+    static let inset = 16.0
+    static let spacing = 16.0
+    static let itemHeight = 72.0
+}
+
+enum PaymentCellType {
+    case cards
+    case parts
+}
+
+struct PaymentModel {
+    var cardName: String
+    var cardInfo: String
+    var cardIconURL: String?
+    var needArrow: Bool
+    var type: PaymentCellType
 }
 
 protocol IPaymentVC {
@@ -24,7 +40,10 @@ protocol IPaymentVC {
                         action: @escaping Action)
 }
 
-final class PaymentVC: ContentVC, IPaymentVC {    
+final class PaymentVC: ContentVC, IPaymentVC {
+    private var models: [PaymentModel] = []
+    private var cardsDidTap: Action?
+    
     private lazy var payButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
         view.setTitle(String(stringLiteral: .Common.payTitle), for: .normal)
@@ -44,21 +63,21 @@ final class PaymentVC: ContentVC, IPaymentVC {
     }()
     
     private lazy var shopLabel: UILabel = {
-       let view = UILabel()
+        let view = UILabel()
         view.font = .bodi2
         view.textColor = .textSecondary
         return view
     }()
     
     private lazy var costLabel: UILabel = {
-       let view = UILabel()
+        let view = UILabel()
         view.font = .header
         view.textColor = .textPrimory
         return view
     }()
     
     private lazy var logoImageView: UIImageView = {
-       let view = UIImageView()
+        let view = UIImageView()
         return view
     }()
     
@@ -69,8 +88,23 @@ final class PaymentVC: ContentVC, IPaymentVC {
         view.addArrangedSubview(costLabel)
         return view
     }()
-
-    private lazy var cardInfoView = CardInfoView()
+    
+    private lazy var collectionView: CompactCollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.itemSize = CGSize(
+            width: UIScreen.main.bounds.width - (.inset * 2),
+            height: .itemHeight
+        )
+        layout.minimumLineSpacing = .spacing
+        let collectionView = CompactCollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = .clear
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.register(CardInfoView.self, forCellWithReuseIdentifier: CardInfoView.reuseID)
+        return collectionView
+    }()
     
     private var presenter: PaymentPresenting
     
@@ -89,7 +123,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
         presenter.viewDidLoad()
         SBLogger.log(.didLoad(view: self))
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         SBLogger.log(.didAppear(view: self))
@@ -99,7 +133,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
         super.viewDidDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
     }
-
+    
     func configShopInfo(with shop: String, cost: String, iconURL: String?) {
         shopLabel.text = shop
         costLabel.text = cost
@@ -111,58 +145,75 @@ final class PaymentVC: ContentVC, IPaymentVC {
                         cardIconURL: String?,
                         needArrow: Bool,
                         action: @escaping Action) {
-        cardInfoView.config(with: cardName,
-                            cardInfo: cardInfo,
-                            cardIconURL: cardIconURL,
-                            needArrow: needArrow,
-                            action: action)
+        cardsDidTap = action
+        models.append(PaymentModel(cardName: cardName, cardInfo: cardInfo, cardIconURL: cardIconURL, needArrow: needArrow, type: .cards))
+        models.append(.init(cardName: "Плати частями", cardInfo: "Оформлять", needArrow: needArrow, type: .parts))
+        collectionView.reloadData()
     }
     
     private func setupUI() {
-        view.addSubview(cancelButton)
-        view.addSubview(payButton)
-        view.addSubview(logoImageView)
-        view.addSubview(purchaseInfoStack)
-        view.addSubview(cardInfoView)
+        logoImageView.add(toSuperview: view)
+        
+        cancelButton
+            .add(toSuperview: view)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .bottomMargin, usingRelation: .lessThanOrEqual)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+            .height(.defaultButtonHeight)
+        
+        payButton
+            .add(toSuperview: view)
+            .height(.defaultButtonHeight)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+            .touchEdge(.bottom, toEdge: .top, ofView: cancelButton, withInset: .buttonsMargin)
+        
+        collectionView
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+            .touchEdge(.bottom, toEdge: .top, ofView: payButton, withInset: .topMargin)
+        
+        purchaseInfoStack
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
+            .touchEdge(.right, toEdge: .left, ofView: logoImageView, withInset: .margin)
+            .touchEdge(.bottom, toEdge: .top, ofView: collectionView, withInset: .buttonsMargin)
+            .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: .topMargin)
+            .height(.cartWidth)
+        
+        logoImageView
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+            .centerInView(purchaseInfoStack, axis: .y)
+            .size(.init(width: .cartWidth, height: .cartWidth))
+    }
+}
 
-        cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            cancelButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -.bottomMargin),
-            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
-            cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            cancelButton.heightAnchor.constraint(equalToConstant: .defaultButtonHeight)
-        ])
+extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return models.isEmpty ? 2 : models.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView
+            .dequeueReusableCell(withReuseIdentifier: CardInfoView.reuseID, for: indexPath) as? CardInfoView else {
+            return UICollectionViewCell()
+        }
+        if models[safe: indexPath.row] != nil {
+            let model = models[indexPath.row]
+            cell.config(with: model.cardName, cardInfo: model.cardInfo, cardIconURL: model.cardIconURL, needArrow: model.needArrow)
+        }
         
-        payButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            payButton.heightAnchor.constraint(equalToConstant: .defaultButtonHeight),
-            payButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
-            payButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            payButton.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -.buttonsMargin)
-        ])
-        
-        cardInfoView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            cardInfoView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
-            cardInfoView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            cardInfoView.bottomAnchor.constraint(equalTo: payButton.topAnchor, constant: -.topMargin)
-        ])
-        
-        purchaseInfoStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            purchaseInfoStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
-            purchaseInfoStack.trailingAnchor.constraint(equalTo: logoImageView.leadingAnchor, constant: -.margin),
-            purchaseInfoStack.bottomAnchor.constraint(equalTo: cardInfoView.topAnchor, constant: -.buttonsMargin),
-            purchaseInfoStack.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: .topMargin),
-            purchaseInfoStack.heightAnchor.constraint(equalToConstant: .cartWidth)
-        ])
-        
-        logoImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            logoImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            logoImageView.centerYAnchor.constraint(equalTo: purchaseInfoStack.centerYAnchor),
-            logoImageView.widthAnchor.constraint(equalToConstant: .cartWidth),
-            logoImageView.heightAnchor.constraint(equalToConstant: .cartWidth)
-        ])
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let model = models[safe: indexPath.row] else { return }
+        switch model.type {
+        case .cards:
+            cardsDidTap?()
+        case .parts:
+            break
+        }
     }
 }

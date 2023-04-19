@@ -29,6 +29,7 @@ final class CardsVC: ContentVC, ICardsVC {
         let view = ContentTableView()
         view.register(CardCell.self, forCellReuseIdentifier: CardCell.reuseId)
         view.separatorStyle = .none
+        view.backgroundColor = .clear
         view.backgroundView?.backgroundColor = .backgroundPrimary
         view.showsVerticalScrollIndicator = false
         view.rowHeight = .rowHeight
@@ -69,20 +70,18 @@ final class CardsVC: ContentVC, ICardsVC {
         view.addSubview(titleLabel)
         view.addSubview(tableView)
         
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: .topMargin),
-            titleLabel.leadingAnchor.constraint(equalTo: logoImage.leadingAnchor),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin)
-        ])
-        
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: .tableMargin),
-            tableView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -.bottomMargin)
-        ])
+        titleLabel
+            .add(toSuperview: view)
+            .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: .topMargin)
+            .touchEdge(.left, toEdge: .left, ofView: logoImage)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+
+        tableView
+            .add(toSuperview: view)
+            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: .tableMargin)
+            .touchEdge(.left, toEdge: .left, ofView: titleLabel)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .bottomMargin)
     }
 }
 

@@ -45,6 +45,7 @@ final class DefaultStartupService: StartupService {
                               locator: LocatorService,
                               rootVC: UIViewController) {
         if #available(iOS 13.0, *) {
+            rootVC.modalPresentationStyle = .custom
             viewController.present(rootVC, animated: true)
         } else {
             sdkWindow = TransparentWindow(frame: UIScreen.main.bounds)

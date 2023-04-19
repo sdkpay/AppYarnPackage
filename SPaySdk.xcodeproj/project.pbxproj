@@ -318,6 +318,10 @@
 		AE4D868E29E53507005C8092 /* UIView+Add.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868D29E53507005C8092 /* UIView+Add.swift */; };
 		AE4D869029E53999005C8092 /* UIView+TouchEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D868F29E53999005C8092 /* UIView+TouchEdge.swift */; };
 		AE4D869229E539C4005C8092 /* UIView+Touch.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D869129E539C4005C8092 /* UIView+Touch.swift */; };
+		AE4D878C29EED290005C8092 /* CompactCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D878B29EED290005C8092 /* CompactCollectionView.swift */; };
+		AE4D878D29EED3C0005C8092 /* CompactCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D878B29EED290005C8092 /* CompactCollectionView.swift */; };
+		AE4D878F29EFE9B6005C8092 /* Array+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D878E29EFE9B6005C8092 /* Array+Safe.swift */; };
+		AE4D879029EFE9D1005C8092 /* Array+Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D878E29EFE9B6005C8092 /* Array+Safe.swift */; };
 		AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEB0059B29C09F72002C9AB9 /* Loader.swift */; };
 		AEE5575A29CFAD470015BDD6 /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = AEE5575929CFAD470015BDD6 /* Dynatrace-Static */; };
 		AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */; };
@@ -538,6 +542,8 @@
 		AE4D868D29E53507005C8092 /* UIView+Add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Add.swift"; sourceTree = "<group>"; };
 		AE4D868F29E53999005C8092 /* UIView+TouchEdge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+TouchEdge.swift"; sourceTree = "<group>"; };
 		AE4D869129E539C4005C8092 /* UIView+Touch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Touch.swift"; sourceTree = "<group>"; };
+		AE4D878B29EED290005C8092 /* CompactCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCollectionView.swift; sourceTree = "<group>"; };
+		AE4D878E29EFE9B6005C8092 /* Array+Safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Safe.swift"; sourceTree = "<group>"; };
 		AE5F906329CFA60C003ED648 /* SPaySdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SPaySdk.h; path = SPaySdk/Public/SPaySdk.h; sourceTree = "<group>"; };
 		AE5F906529CFA9A0003ED648 /* BizoneCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = BizoneCore.xcframework; path = FingerprintPackage/BizoneCore.xcframework; sourceTree = "<group>"; };
 		AEB0059B29C09F72002C9AB9 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
@@ -1362,6 +1368,7 @@
 		44D536192926196200B99463 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				AE4D878E29EFE9B6005C8092 /* Array+Safe.swift */,
 				AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */,
 				44D5361A2926198400B99463 /* UIViewController+Container.swift */,
 				445CB065292BB3E300F50047 /* String+Localized.swift */,
@@ -1485,6 +1492,7 @@
 		AEB0059A29C09F60002C9AB9 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				AE4D878B29EED290005C8092 /* CompactCollectionView.swift */,
 				AEB0059B29C09F72002C9AB9 /* Loader.swift */,
 			);
 			path = UI;
@@ -1809,6 +1817,7 @@
 				21EB4D0A29E16405006541B0 /* CardCell.swift in Sources */,
 				21EB4D0B29E16405006541B0 /* UserDefaults+Extension.swift in Sources */,
 				21EB4D0C29E16405006541B0 /* UIButton+Background.swift in Sources */,
+				AE4D878C29EED290005C8092 /* CompactCollectionView.swift in Sources */,
 				21EB4D0D29E16405006541B0 /* Certificates.swift in Sources */,
 				21EB4D0E29E16405006541B0 /* LogLevelAlertVC.swift in Sources */,
 				21EB4D0F29E16405006541B0 /* NetworkProvider.swift in Sources */,
@@ -1817,6 +1826,7 @@
 				21EB4D1229E16405006541B0 /* AuthModel.swift in Sources */,
 				21EB4D1329E16405006541B0 /* BankAppModel.swift in Sources */,
 				21EB4D1429E16405006541B0 /* SBShimmeringView.swift in Sources */,
+				AE4D878F29EFE9B6005C8092 /* Array+Safe.swift in Sources */,
 				21EB4D1529E16405006541B0 /* UIImage+Bundle.swift in Sources */,
 				21EB4D1629E16405006541B0 /* CoverDismissAnimatedTransitioning.swift in Sources */,
 				21EB4D1729E16405006541B0 /* RemoteConfigService.swift in Sources */,
@@ -1909,6 +1919,7 @@
 				21253D2129C9E761004ED82D /* Shimmer+Extensions.swift in Sources */,
 				44F9FD4A295AFAB800FE4B9F /* CoverPresentAnimatedTransitioning.swift in Sources */,
 				AE4D869029E53999005C8092 /* UIView+TouchEdge.swift in Sources */,
+				AE4D879029EFE9D1005C8092 /* Array+Safe.swift in Sources */,
 				AEF1EFA929D6DFA3008E6653 /* NetworkMonitorManager.swift in Sources */,
 				44C651052930E102008F1C29 /* LoadingView.swift in Sources */,
 				AE4D867C29E533F2005C8092 /* UIView+Horisontal+Vertical.swift in Sources */,
@@ -1939,6 +1950,7 @@
 				44D898D52936487900550FC6 /* String+Random.swift in Sources */,
 				44E581822939D25A00BDEC4E /* BankModel.swift in Sources */,
 				4464DF90291D0DE3000C9B45 /* NetworkDecoding.swift in Sources */,
+				AE4D878D29EED3C0005C8092 /* CompactCollectionView.swift in Sources */,
 				21253D1C29C9B20B004ED82D /* UIView+Extensions.swift in Sources */,
 				445CB06F292BBA7100F50047 /* Palette.swift in Sources */,
 				AE4D868029E5343B005C8092 /* UIView+Center.swift in Sources */,
