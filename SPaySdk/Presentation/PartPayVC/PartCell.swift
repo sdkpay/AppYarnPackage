@@ -40,6 +40,7 @@ final class PartCell: UITableViewCell {
     
     private lazy var lineView: UIView = {
         let view = UIView()
+        view.backgroundColor = .textSecondary.withAlphaComponent(0.1)
         return view
     }()
     
@@ -103,8 +104,8 @@ final class PartCell: UITableViewCell {
         contentView.addSubview(lineView)
         lineView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            lineView.centerXAnchor.constraint(equalTo: pointView.centerXAnchor),
-            lineView.topAnchor.constraint(equalTo: pointView.bottomAnchor, constant: .lineMargin),
+            lineView.centerXAnchor.constraint(equalTo: backgroundPointView.centerXAnchor),
+            lineView.topAnchor.constraint(equalTo: backgroundPointView.bottomAnchor, constant: .lineMargin),
             lineView.widthAnchor.constraint(equalToConstant: .lineWidth),
             lineView.heightAnchor.constraint(equalToConstant: .lineHeight)
         ])

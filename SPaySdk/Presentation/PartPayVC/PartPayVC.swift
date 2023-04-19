@@ -10,8 +10,10 @@ import UIKit
 private extension CGFloat {
     static let topMargin = 24.0
     static let bottomMargin = 44.0
+    static let tableMargin = 20.0
     static let buttonsMargin = 10.0
     static let rowHeight = 50.0
+    static let finalMargin = 22.0
 }
 
 protocol IPartPayVC {
@@ -158,7 +160,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
         
         backgroundTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            backgroundTableView.topAnchor.constraint(equalTo: subTitleLabel.bottomAnchor),
+            backgroundTableView.topAnchor.constraint(equalTo: subTitleLabel.bottomAnchor, constant: .tableMargin),
             backgroundTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
             backgroundTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin)
         ])
@@ -173,7 +175,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
         finalStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             finalStack.topAnchor.constraint(equalTo: partsTableView.bottomAnchor),
-            finalStack.leadingAnchor.constraint(equalTo: backgroundTableView.leadingAnchor, constant: .margin),
+            finalStack.leadingAnchor.constraint(equalTo: backgroundTableView.leadingAnchor, constant: .finalMargin),
             finalStack.trailingAnchor.constraint(equalTo: backgroundTableView.trailingAnchor, constant: -.margin),
             finalStack.heightAnchor.constraint(equalToConstant: .rowHeight),
             finalStack.bottomAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: -.margin)
@@ -181,10 +183,10 @@ final class PartPayVC: ContentVC, IPartPayVC {
         
         agreementView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            agreementView.topAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: .bottomMargin),
+            agreementView.topAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: .topMargin),
             agreementView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
             agreementView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            agreementView.bottomAnchor.constraint(equalTo: acceptButton.topAnchor, constant: -.bottomMargin)
+            agreementView.bottomAnchor.constraint(equalTo: acceptButton.topAnchor, constant: -.topMargin)
         ])
         
         cancelButton.translatesAutoresizingMaskIntoConstraints = false

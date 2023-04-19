@@ -39,21 +39,21 @@ final class PartPayPresenter: PartPayPresenting {
         self.timeManager = timeManager
         self.timeManager.startTraking()
         let model1 = PartCellModel(title: "Оплатите сейчас",
-                                   cost: "2000",
+                                   cost: 2000.price(with: 643),
                                    isSelected: true,
                                    hideLine: false)
         let model2 = PartCellModel(title: "Оплатите завтра",
-                                   cost: "2000",
+                                   cost: 2000.price(with: 643),
                                    isSelected: false,
                                    hideLine: false)
         let model3 = PartCellModel(title: "Оплатите завтра",
-                                   cost: "2000",
+                                   cost: 2000.price(with: 643),
                                    isSelected: false,
                                    hideLine: false)
         let model4 = PartCellModel(title: "Оплатите завтра",
-                                   cost: "2000",
+                                   cost: 2000.price(with: 643),
                                    isSelected: false,
-                                   hideLine: false)
+                                   hideLine: true)
         payParts = [model1, model2, model3, model4]
     }
     
@@ -61,6 +61,7 @@ final class PartPayPresenter: PartPayPresenting {
         timeManager.endTraking(CardsVC.self.description()) {
             analytics.sendEvent(.CardsViewAppeared, with: [$0])
         }
+        view?.setFinalCost(1600000.price(with: 643))
     }
     
     func model(for indexPath: IndexPath) -> PartCellModel {
