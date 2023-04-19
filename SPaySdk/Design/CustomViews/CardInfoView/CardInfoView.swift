@@ -12,9 +12,21 @@ private extension CGFloat {
     static let cardWidth = 36.0
 }
 
-final class CardInfoView: ContentView, SBShimmeringView {
+final class CardInfoView: UICollectionViewCell {
     private var needArrow = false
-
+    static var reuseID: String { "CardInfoView" }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .backgroundSecondary
+        layer.cornerRadius = 8.0
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+        
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.font = .bodi1
@@ -52,43 +64,32 @@ final class CardInfoView: ContentView, SBShimmeringView {
     func config(with title: String,
                 cardInfo: String,
                 cardIconURL: String?,
-                needArrow: Bool,
-                action: @escaping Action) {
+                needArrow: Bool) {
         titleLabel.text = title
         subtitleLabel.text = cardInfo
         self.needArrow = needArrow
-        self.action = action
-        setupUI()
         cardIconView.downloadImage(from: cardIconURL)
     }
     
     private func setupUI() {
-        addSubview(cardIconView)
-        cardIconView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            cardIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
-            cardIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            cardIconView.widthAnchor.constraint(equalToConstant: .cardWidth),
-            cardIconView.heightAnchor.constraint(equalToConstant: .cardWidth)
-        ])
+        cardIconView
+            .add(toSuperview: contentView)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
+            .centerInSuperview(.y)
+            .size(.init(width: .cardWidth, height: .cardWidth))
 
-        addSubview(cardInfoStack)
-        cardInfoStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            cardInfoStack.leadingAnchor.constraint(equalTo: cardIconView.trailingAnchor, constant: .margin),
-            cardInfoStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin),
-            cardInfoStack.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ])
+        cardInfoStack
+            .add(toSuperview: contentView)
+            .touchEdge(.left, toEdge: .right, ofView: cardIconView, withInset: .margin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+            .centerInSuperview(.y)
         
         if needArrow {
-            addSubview(arrowView)
-            arrowView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                arrowView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin),
-                arrowView.centerYAnchor.constraint(equalTo: centerYAnchor),
-                arrowView.widthAnchor.constraint(equalToConstant: .arrowWidth),
-                arrowView.heightAnchor.constraint(equalToConstant: .arrowWidth)
-            ])
+            arrowView
+                .add(toSuperview: contentView)
+                .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+                .centerInSuperview(.y)
+                .size(.init(width: .arrowWidth, height: .arrowWidth))
         }
     }
 }

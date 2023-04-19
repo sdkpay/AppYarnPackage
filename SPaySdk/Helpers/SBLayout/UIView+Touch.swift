@@ -8,6 +8,27 @@
 import UIKit
 
 public extension UIView {
+    /// Touches the edges to the given `NSLayoutAxisAnchor`s with the insets and
+    /// priority of the constraints.
+    ///
+    /// 1. Compact version of default Swift layout. Allows you to pin edges to
+    /// specific `NSLayoutAxisAnchor`.
+    ///
+    /// 2. To make Auto-Layout works properly, it automatically sets view
+    /// property `translatesAutoresizingMaskIntoConstraints` to `false`
+    ///
+    /// - Precondition: You should pass at least one anchor, otherwise this method
+    /// will have no effect.
+    ///
+    /// - Parameter top: The anchor to pin top to.
+    /// - Parameter left: The anchor to pin left to.
+    /// - Parameter bottom: The anchor to pin bottom to.
+    /// - Parameter right: The anchor to pin right to.
+    /// - Parameter insets: The insets between the edges.
+    /// - Parameter priority: The priority of the constraints.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touch(topTo top: NSLayoutYAxisAnchor? = nil,
                leftTo left: NSLayoutXAxisAnchor? = nil,
@@ -44,7 +65,30 @@ public extension UIView {
         
         return self
     }
-    
+    /// Touches the edge of the view using the specified type of relation to the
+    /// given edge of another view with the inset and priority of the constraint.
+    ///
+    /// 1. Consider, accordingly to
+    /// [Apple's documentation](https://apple.co/2PFH9f2), you cannot pin edges
+    /// with different axis, otherwise it will throw fatal error.
+    ///
+    /// 2. To make Auto-Layout works properly, it automatically sets view
+    /// property `translatesAutoresizingMaskIntoConstraints` to `false`
+    ///
+    /// - Precondition:
+    ///     - Another view must be in the same view hierarchy as this view.
+    ///     - Pin edges with same axis or method will throw fatal error.
+    ///
+    /// - Parameter edge: The edge of this view to pin.
+    /// - Parameter pinningEdge: The edge of another view to pin to.
+    /// - Parameter anotherView: Another view to pin to.
+    /// - Parameter inset: The inset between the edge of this view and the edge of
+    /// another view.
+    /// - Parameter relation: The type of relationship for the constraint.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdge(_ edge: SBEdge,
                    toEdge pinningEdge: SBEdge,
@@ -55,9 +99,11 @@ public extension UIView {
         translatesAutoresizingMaskIntoConstraints = false
         
         let constraint = NSLayoutConstraint(
-            item: self, attribute: edge.convertedToNSLayoutAttribute,
+            item: self,
+            attribute: edge.convertedToNSLayoutAttribute,
             relatedBy: relation,
-            toItem: anotherView, attribute: pinningEdge.convertedToNSLayoutAttribute,
+            toItem: anotherView,
+            attribute: pinningEdge.convertedToNSLayoutAttribute,
             multiplier: 1.0,
             constant: inset * edge.directionalMultiplier
         )
@@ -66,7 +112,25 @@ public extension UIView {
         
         return self
     }
-    
+    /// Touches the given edge of the view using the specified type of relation to
+    /// the corresponding margin of another view with the inset and priority of
+    /// the constraint.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view property
+    /// `translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Precondition: Another view must be in the same view hierarchy as this
+    /// view.
+    ///
+    /// - Parameter edge: The edge of this view to pin to.
+    /// - Parameter anotherView: Another view to pin to.
+    /// - Parameter inset: The inset beetween the edge of this view and the
+    /// corresponding edge of another view.
+    /// - Parameter relation: The type of relationship for the constraint.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdge(_ edge: SBEdge,
                    toSameEdgeOfView anotherView: UIView,
@@ -80,7 +144,27 @@ public extension UIView {
                   priority: priority
         )
     }
-    
+    /// Touches the given edges of the view using the specified type of relation to
+    /// the corresponding margins of another view with the insets and priority of
+    /// the constraints.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view
+    /// property `translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Precondition: Another view must be in the same view hierarchy as this
+    /// view.
+    ///
+    /// - Parameter edges: The edges of this view to pin to.
+    /// - Parameter anotherView: Another view to pin to.
+    /// - Parameter insets: The insets beetween the edges of this view and
+    /// corresponding edges of another view.
+    /// - Parameter relation: The type of relationship for the constraints.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Tag: toSameEdgesOfView_insets
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdges(_ edges: [SBEdge] = SBEdge.all,
                     toSameEdgesOfView anotherView: UIView,
@@ -121,7 +205,27 @@ public extension UIView {
         }
         return self
     }
-    
+    /// Pins the given edges of the view using the specified type of relation to
+    /// the corresponding margins of another view with the equal insets and
+    /// priority of the constraints.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view
+    /// property`translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Precondition: Another view must be in the same view hierarchy as this
+    /// view.
+    ///
+    /// - Parameter edges: The edges of this view to pin to.
+    /// - Parameter anotherView: Another view to pin to.
+    /// - Parameter inset: The inset beetween the edges of this view and
+    /// corresponding edges of another view.
+    /// - Parameter relation: The type of relationship for the constraints.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Tag: toSameEdgesOfView_inset
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdges(_ edges: [SBEdge] = SBEdge.all,
                     toSameEdgesOfView anotherView: UIView,
@@ -135,7 +239,25 @@ public extension UIView {
                    priority: priority
         )
     }
-    
+    /// Touches edges of the view of the given group using the specified type of
+    /// relation to the corresponding margins of another view with the equal
+    /// insets and priority of the constraints.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view property
+    /// `translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Precondition: Another view must be in the same view hierarchy as this
+    /// view.
+    ///
+    /// - Parameter edgeGroup: The group of edges of this view to pin to.
+    /// - Parameter anotherView: Another view to pin to.
+    /// - Parameter inset: The inset beetween the edges of this view and
+    /// corresponding edges of another view.
+    /// - Parameter relation: The type of relationship for the constraints.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdges(ofGroup edgeGroup: SBEdgeGroup,
                     toSameEdgesOfView anotherView: UIView,
@@ -149,7 +271,25 @@ public extension UIView {
                    priority: priority
         )
     }
-    
+    /// Touches the edges of the view using the specified type of relation to the
+    /// corresponding margins of another view with the insets and priority of the
+    /// constraints, excluding one edge.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view
+    /// property `translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Precondition: Another view must be in the same view hierarchy as this
+    /// view.
+    ///
+    /// - Parameter anotherView: Another view to pin to.
+    /// - Parameter excludedEdge: The edge to be ingored and not pinned.
+    /// - Parameter insets: The insets beetween the edges of this view and
+    /// corresponding edges of another view.
+    /// - Parameter relation: The type of relationship for the constraints.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdges(toSameEdgesOfView anotherView: UIView,
                     excludingEdge excludedEdge: SBEdge,
@@ -165,7 +305,25 @@ public extension UIView {
         )
         return self
     }
-    
+    /// Touches the edges of the view using the specified type of relation to the
+    /// corresponding margins of another view with the equal inset and priority of
+    /// the constraints, excluding one edge.
+    ///
+    /// 2. To make Auto-Layout works properly, it automatically sets view
+    /// property `translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Precondition: Another view must be in the same view hierarchy as this
+    /// view.
+    ///
+    /// - Parameter anotherView: Another view to pin to.
+    /// - Parameter excludedEdge: The edge to be ingored and not pinned.
+    /// - Parameter inset: The inset beetween the edges of this view and
+    /// corresponding edges of another view.
+    /// - Parameter relation: The type of relationship for the constraints.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdges(toSameEdgesOfView anotherView: UIView,
                     excludingEdge excludedEdge: SBEdge,
@@ -179,7 +337,28 @@ public extension UIView {
             usingRelation: relation, priority: priority
         )
     }
-    
+    /// Touches the edge of the view using the specified type of relation to the
+    /// given edge of guide with the inset and priority of the constraint.
+    ///
+    /// 1. Consider, accordingly to
+    /// [Apple's documentation](https://apple.co/2PFH9f2), you cannot pin edges
+    /// with different axis, otherwise it will throw fatal error.
+    ///
+    /// 2. To make Auto-Layout works properly, it automatically sets view
+    /// property `translatesAutoresizingMaskIntoConstraints` to `false`
+    ///
+    /// - Precondition: Pin edges with same axis or method will throw fatal error.
+    ///
+    /// - Parameter edge: The edge of this view to pin.
+    /// - Parameter pinningEdge: The edge of another view to pin to.
+    /// - Parameter guide: The guide to pin to.
+    /// - Parameter inset: The inset between the edge of this view and the edge of
+    /// guide.
+    /// - Parameter relation: The type of relationship for the constraint.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdge(_ edge: SBEdge,
                    toEdge pinningEdge: SBEdge,
@@ -203,7 +382,22 @@ public extension UIView {
         
         return self
     }
-    
+    /// Touches the given edge of the view using the specified type of relation to
+    /// the corresponding margin of guide with the inset and priority of
+    /// the constraint.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view property
+    /// `translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Parameter edge: The edge of this view to pin to.
+    /// - Parameter guide: The guide to pin to.
+    /// - Parameter inset: The inset beetween the edge of this view and the
+    /// corresponding edge of guide.
+    /// - Parameter relation: The type of relationship for the constraint.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdge(_ edge: SBEdge,
                    toSameEdgeOfGuide guide: SBGuide,
@@ -218,7 +412,22 @@ public extension UIView {
                   priority: priority
         )
     }
-    
+    /// Pins the given edges of the view using the specified type of relation to
+    /// the corresponding margins of guide with the insets and priority of
+    /// the constraints.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view
+    /// property `translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Parameter edges: The edges of this view to pin to.
+    /// - Parameter guide: The guide to pin to.
+    /// - Parameter insets: The insets beetween the edges of this view and
+    /// corresponding edges of guide.
+    /// - Parameter relation: The type of relationship for the constraints.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdges(_ edges: [SBEdge] = SBEdge.all,
                     toSameEdgesOfGuide guide: SBGuide,
@@ -259,7 +468,22 @@ public extension UIView {
         }
         return self
     }
-    
+    /// Pins the given edges of the view using the specified type of relation to
+    /// the corresponding margins of guide with the equal insets and
+    /// priority of the constraints.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view
+    /// property`translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Parameter edges: The edges of this view to pin to.
+    /// - Parameter guide: The guide to pin to.
+    /// - Parameter inset: The inset beetween the edges of this view and
+    /// corresponding edges of guide.
+    /// - Parameter relation: The type of relationship for the constraints.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdges(_ edges: [SBEdge] = SBEdge.all,
                     toSameEdgesOfGuide guide: SBGuide,
@@ -273,7 +497,20 @@ public extension UIView {
                    priority: priority
         )
     }
-    
+    /// Touches edges of the view of the given group using the specified type of
+    /// relation to the corresponding margins of guide with the equal
+    /// insets and priority of the constraints.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view property
+    /// `translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Parameter edgeGroup: The group of edges of this view to pin to.
+    /// - Parameter guide: The guide to pin to.
+    /// - Parameter inset: The inset beetween the edges of this view and
+    /// corresponding edges of guide.
+    /// - Parameter relation: The type of relationship for the constraints.
+    /// - Parameter priority: The priority of the constraint.
+    ///
     @discardableResult
     func touchEdges(ofGroup edgeGroup: SBEdgeGroup,
                     toSameEdgesOfGuide guide: SBGuide,
@@ -287,7 +524,22 @@ public extension UIView {
                    priority: priority
         )
     }
-    
+    /// Touches the edges of the view using the specified type of relation to the
+    /// corresponding margins of guide with the insets and priority of the
+    /// constraints, excluding one edge.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view
+    /// property `translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Parameter guide: The guide to pin to.
+    /// - Parameter excludedEdge: The edge to be ingored and not pinned.
+    /// - Parameter insets: The insets beetween the edges of this view and
+    /// corresponding edges of guide.
+    /// - Parameter relation: The type of relationship for the constraints.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdges(toSameEdgesOfGuide guide: SBGuide,
                     excludingEdge excludedEdge: SBEdge,
@@ -303,7 +555,22 @@ public extension UIView {
         )
         return self
     }
-    
+    /// Touches the edges of the view using the specified type of relation to the
+    /// corresponding margins of guide with the equal inset and priority of
+    /// the constraints, excluding one edge.
+    ///
+    /// To make Auto-Layout works properly, it automatically sets view
+    /// property `translatesAutoresizingMaskIntoConstraints` to `false`.
+    ///
+    /// - Parameter guide: The guide to pin to.
+    /// - Parameter excludedEdge: The edge to be ingored and not pinned.
+    /// - Parameter inset: The inset beetween the edges of this view and
+    /// corresponding edges of guide.
+    /// - Parameter relation: The type of relationship for the constraints.
+    /// - Parameter priority: The priority of the constraint.
+    ///
+    /// - Returns: `self` with attribute `@discardableResult`.
+    ///
     @discardableResult
     func touchEdges(toSameEdgesOfGuide guide: SBGuide,
                     excludingEdge excludedEdge: SBEdge,

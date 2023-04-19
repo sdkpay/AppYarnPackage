@@ -36,7 +36,7 @@ final class AuthVC: ContentVC, IAuthVC {
         return view
     }()
     
-   private let presenter: AuthPresenting
+    private let presenter: AuthPresenting
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,26 +82,18 @@ final class AuthVC: ContentVC, IAuthVC {
     }
     
     private func setupUI() {
-        view.addSubview(banksStack)
-        view.addSubview(titleLabel)
+        view.height(.minScreenSize, priority: .defaultLow)
         
-        let height = view.heightAnchor.constraint(equalToConstant: .minScreenSize)
-        height.priority = .defaultLow
-        height.isActive = true
+        titleLabel
+            .add(toSuperview: view)
+            .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: .topMargin)
+            .touchEdge(.left, toEdge: .left, ofView: logoImage, withInset: .margin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: -.margin)
         
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: .topMargin),
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
-            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin)
-        ])
-        
-        banksStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            banksStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            banksStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
-            banksStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            banksStack.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
+        banksStack
+            .add(toSuperview: view)
+            .centerInSuperview()
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: -.margin)
     }
 }
