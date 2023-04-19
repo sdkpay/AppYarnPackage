@@ -146,8 +146,24 @@ final class PaymentVC: ContentVC, IPaymentVC {
                         needArrow: Bool,
                         action: @escaping Action) {
         cardsDidTap = action
-        models.append(PaymentModel(cardName: cardName, cardInfo: cardInfo, cardIconURL: cardIconURL, needArrow: needArrow, type: .cards))
-        models.append(.init(cardName: "Плати частями", cardInfo: "Оформлять", needArrow: needArrow, type: .parts))
+        if models.isEmpty {
+            models.append(PaymentModel(cardName: cardName,
+                                       cardInfo: cardInfo,
+                                       cardIconURL: cardIconURL,
+                                       needArrow: needArrow,
+                                       type: .cards))
+            models.append(.init(cardName: "Плати частями",
+                                cardInfo: "Оформлять",
+                                needArrow: needArrow,
+                                type: .parts))
+        } else {
+            models[0] = PaymentModel(cardName: cardName,
+                                     cardInfo: cardInfo,
+                                     cardIconURL: cardIconURL,
+                                     needArrow: needArrow,
+                                     type: .cards)
+        }
+       
         collectionView.reloadData()
     }
     
