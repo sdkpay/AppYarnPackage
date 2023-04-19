@@ -18,32 +18,12 @@ private extension CGFloat {
     static let itemHeight = 72.0
 }
 
-enum PaymentCellType {
-    case cards
-    case parts
-}
-
-struct PaymentModel {
-    var cardName: String
-    var cardInfo: String
-    var cardIconURL: String?
-    var needArrow: Bool
-    var type: PaymentCellType
-}
-
 protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String, iconURL: String?)
-    func configCardView(with cardName: String,
-                        cardInfo: String,
-                        cardIconURL: String?,
-                        needArrow: Bool,
-                        action: @escaping Action)
+    func reloadCollectionView()
 }
 
 final class PaymentVC: ContentVC, IPaymentVC {
-    private var models: [PaymentModel] = []
-    private var cardsDidTap: Action?
-    
     private lazy var payButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
         view.setTitle(String(stringLiteral: .Common.payTitle), for: .normal)
@@ -140,30 +120,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
         logoImageView.downloadImage(from: iconURL, placeholder: .Payment.cart)
     }
     
-    func configCardView(with cardName: String,
-                        cardInfo: String,
-                        cardIconURL: String?,
-                        needArrow: Bool,
-                        action: @escaping Action) {
-        cardsDidTap = action
-        if models.isEmpty {
-            models.append(PaymentModel(cardName: cardName,
-                                       cardInfo: cardInfo,
-                                       cardIconURL: cardIconURL,
-                                       needArrow: needArrow,
-                                       type: .cards))
-            models.append(.init(cardName: "Плати частями",
-                                cardInfo: "Оформлять",
-                                needArrow: needArrow,
-                                type: .parts))
-        } else {
-            models[0] = PaymentModel(cardName: cardName,
-                                     cardInfo: cardInfo,
-                                     cardIconURL: cardIconURL,
-                                     needArrow: needArrow,
-                                     type: .cards)
-        }
-       
+    func reloadCollectionView() {
         collectionView.reloadData()
     }
     
@@ -207,7 +164,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
 
 extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return models.isEmpty ? 2 : models.count
+        presenter.cellDataCount
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -215,21 +172,12 @@ extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource {
             .dequeueReusableCell(withReuseIdentifier: CardInfoView.reuseID, for: indexPath) as? CardInfoView else {
             return UICollectionViewCell()
         }
-        if models[safe: indexPath.row] != nil {
-            let model = models[indexPath.row]
-            cell.config(with: model.cardName, cardInfo: model.cardInfo, cardIconURL: model.cardIconURL, needArrow: model.needArrow)
-        }
-        
+        let model = presenter.model(for: indexPath)
+        cell.config(with: model)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let model = models[safe: indexPath.row] else { return }
-        switch model.type {
-        case .cards:
-            cardsDidTap?()
-        case .parts:
-            break
-        }
+        presenter.didSelectItem(at: indexPath)
     }
 }

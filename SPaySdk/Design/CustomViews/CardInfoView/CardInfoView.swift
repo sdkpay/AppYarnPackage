@@ -61,14 +61,11 @@ final class CardInfoView: UICollectionViewCell {
         return view
     }()
     
-    func config(with title: String,
-                cardInfo: String,
-                cardIconURL: String?,
-                needArrow: Bool) {
-        titleLabel.text = title
-        subtitleLabel.text = cardInfo
-        self.needArrow = needArrow
-        cardIconView.downloadImage(from: cardIconURL)
+    func config(with model: PaymentCellModel) {
+        titleLabel.text = model.title
+        subtitleLabel.text = model.subtitle
+        self.needArrow = model.needArrow
+        cardIconView.downloadImage(from: model.iconURL)
     }
     
     private func setupUI() {

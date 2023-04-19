@@ -7,7 +7,36 @@
 
 import Foundation
 
+private enum PaymentCellType {
+    case card
+    case partPay
+}
+
+struct PaymentCellModel {
+    var title: String
+    var subtitle: String
+    var iconURL: String?
+    var needArrow: Bool
+    
+    init(title: String, subtitle: String, iconURL: String? = nil, needArrow: Bool) {
+        self.title = title
+        self.subtitle = subtitle
+        self.iconURL = iconURL
+        self.needArrow = needArrow
+    }
+    
+    init() {
+        self.title = ""
+        self.subtitle = ""
+        self.iconURL = ""
+        self.needArrow = true
+    }
+}
+
 protocol PaymentPresenting {
+    var cellDataCount: Int { get }
+    func model(for indexPath: IndexPath) -> PaymentCellModel
+    func didSelectItem(at indexPath: IndexPath)
     func viewDidLoad()
     func payButtonTapped()
     func cancelTapped()
@@ -22,6 +51,17 @@ final class PaymentPresenter: PaymentPresenting {
     private let sdkManager: SDKManager
     private let alertService: AlertService
     private let timeManager: OptimizationCheсkerManager
+
+    private var cellData: [PaymentCellType] {
+        return [
+            .card,
+            .partPay
+        ]
+    }
+    
+    var cellDataCount: Int {
+        cellData.count
+    }
     
     private var selectedCard: PaymentToolInfo?
     private var user: User?
@@ -35,8 +75,7 @@ final class PaymentPresenter: PaymentPresenting {
          paymentService: PaymentService,
          locationManager: LocationManager,
          alertService: AlertService,
-         timeManager: OptimizationCheсkerManager
-    ) {
+         timeManager: OptimizationCheсkerManager) {
         self.router = router
         self.userService = userService
         self.sdkManager = manager
@@ -135,6 +174,52 @@ final class PaymentPresenter: PaymentPresenting {
             }
         }
     }
+    
+    func model(for indexPath: IndexPath) -> PaymentCellModel {
+        let cellType = cellData[indexPath.row]
+        switch cellType {
+        case .card:
+            return configCardModel()
+        case .partPay:
+            return configPartModel()
+        }
+    }
+    
+    private func configCardModel() -> PaymentCellModel {
+        guard let selectedCard = selectedCard,
+                let user = user else { return PaymentCellModel() }
+        return PaymentCellModel(title: selectedCard.productName ?? "",
+                                subtitle: selectedCard.cardNumber.card,
+                                iconURL: selectedCard.cardLogoUrl,
+                                needArrow: user.paymentToolInfo.count > 1)
+    }
+    
+    private func configPartModel() -> PaymentCellModel {
+        // DEBUG: - Ждем данных с конфига
+        return PaymentCellModel(title: "Плати частями",
+                                subtitle: "Оформлять",
+                                needArrow: true)
+    }
+    
+    func didSelectItem(at indexPath: IndexPath) {
+        guard let selectedCard = selectedCard,
+              let user = user else { return }
+        let cellType = cellData[indexPath.row]
+        switch cellType {
+        case .card:
+            guard user.paymentToolInfo.count > 1 else { return }
+            router.presentCards(cards: user.paymentToolInfo,
+                                selectedId: selectedCard.paymentId,
+                                selectedCard: { [weak self] card in
+                self?.selectedCard = card
+                self?.view?.reloadCollectionView()
+            })
+        case .partPay:
+            // DEBUG - Допилю возврат оплаты частями
+            router.presentPartPay { _ in
+            }
+        }
+    }
 
     private func configViews() {
         guard let user = user else { return }
@@ -144,27 +229,11 @@ final class PaymentPresenter: PaymentPresenting {
                              iconURL: user.logoUrl)
         view?.configProfileView(with: user.userInfo)
 
-        if let selectedCard = selectedCard {
-            configWithCard(user: user, selectedCard: selectedCard)
+        if selectedCard != nil {
+            view?.hideLoading()
+            view?.reloadCollectionView()
         } else {
             configWithNoCards()
-        }
-    }
-    
-    private func configWithCard(user: User, selectedCard: PaymentToolInfo) {
-        SBLogger.logThread(obj: self)
-        view?.hideLoading()
-        view?.configCardView(with: selectedCard.productName ?? "",
-                             cardInfo: selectedCard.cardNumber.card,
-                             cardIconURL: selectedCard.cardLogoUrl,
-                             needArrow: user.paymentToolInfo.count > 1) { [weak self] in
-            guard user.paymentToolInfo.count > 1 else { return }
-            self?.router.presentCards(cards: user.paymentToolInfo,
-                                      selectedId: selectedCard.paymentId,
-                                      selectedCard: { [weak self] card in
-                self?.selectedCard = card
-                self?.configWithCard(user: user, selectedCard: card)
-            })
         }
     }
     

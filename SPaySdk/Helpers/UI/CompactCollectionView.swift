@@ -51,4 +51,3 @@ class CompactCollectionView: UICollectionView {
         return true
     }
 }
-
