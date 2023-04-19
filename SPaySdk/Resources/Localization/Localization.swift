@@ -32,6 +32,25 @@ extension String {
         /// Выберите карту для оплаты
         static let cardsTitle = String(stringLiteral: "cards.title")
     }
+    
+    enum PayPart {
+        /// Плати частями
+        static let title = String(stringLiteral: "part.pay.title")
+        /// 4 платежа раз в 2 недели
+        static let subtitle = String(stringLiteral: "part.pay.subtitle")
+        /// Подтвердить
+        static let accept = String(stringLiteral: "accept.title")
+        /// Оплатить полностью
+        static let cancel = String(stringLiteral: "part.pay.cancel.title")
+        /// Я соглашаюсь с условиями договора.
+        static let acceptDoc = String(stringLiteral: "part.pay.accert.doc")
+        /// условиями договора
+        static let acceptDocColor = String(stringLiteral: "part.pay.accert.doc.color")
+        /// Итого
+        static let final = String(stringLiteral: "part.pay.final")
+        /// Спишем сегодня
+        static let today = String(stringLiteral: "part.pay.today")
+    }
 
     enum Error {
         /// Системная или внутренняя ошибка.

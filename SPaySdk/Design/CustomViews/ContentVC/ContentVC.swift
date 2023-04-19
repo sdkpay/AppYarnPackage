@@ -48,6 +48,13 @@ class ContentVC: LoggableVC {
         return view
     }()
     
+    var topBarIsHidden = false {
+        didSet {
+            logoImage.isHidden = topBarIsHidden
+            profileView.isHidden = topBarIsHidden
+        }
+    }
+    
     private lazy var profileView = ProfileView()
 
     override func viewDidLoad() {

@@ -15,4 +15,5 @@ extension UIColor {
     static let textPrimory = UIColor(named: "Black_primory", in: Bundle(for: SPay.self), compatibleWith: nil)!
     static let textSecondary = UIColor(named: "Gray_primary", in: Bundle(for: SPay.self), compatibleWith: nil)!
     static let notification = UIColor(named: "Orange", in: Bundle(for: SPay.self), compatibleWith: nil)!
+    static let inactive = UIColor(named: "Gray_inactive", in: Bundle(for: SPay.self), compatibleWith: nil)!
 }

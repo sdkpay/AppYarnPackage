@@ -19,6 +19,17 @@
 // Cards
 "cards.title" = "Выберите карту для оплаты";
 
+// PartPay
+"part.pay.title" = "Плати частями";
+"part.pay.subtitle" = "4 платежа раз в 2 недели";
+"accept.title" = "Подтвердить";
+"part.pay.cancel.title" = "Оплатить полностью";
+"part.pay.accert.doc" = "Я соглашаюсь с условиями договора.";
+"part.pay.accert.doc.color" = "условиями договора.";
+"part.pay.final" = "Итого";
+"part.pay.today" = "Спишем сегодня";
+
+
 // Error
 "error.system" = "Системная или внутренняя ошибка.";
 "error.format" = "Некорректный формат запроса/ответа.";

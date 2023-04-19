@@ -21,7 +21,7 @@ struct Loader {
     
     private var topVC: ContentVC? {
         var navigationController: ContentNC
-        if #available(iOS 13.0, *), UIApplication.shared.supportsMultipleScenes {
+        if #available(iOS 13.0, *) {
             guard let nc = UIApplication.shared.topViewController as? ContentNC
             else { return nil }
             navigationController = nc

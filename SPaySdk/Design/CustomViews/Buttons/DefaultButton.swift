@@ -51,7 +51,7 @@ enum DefaultButtonAppearance {
                                      titleColor: .notification)
         case .info:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .main)
+                                     titleColor: .textPrimory)
         }
     }
     

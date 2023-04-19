@@ -14,7 +14,7 @@ extension CGFloat {
     static let defaultButtonCorner = 8.0
     static let defaultButtonHeight = 56.0
     static let minScreenSize = 375.0
-    static let vcMaxHeight = UIScreen.main.bounds.height * 0.6
+    static let vcMaxHeight = UIScreen.main.bounds.height * 0.8
 }
 
 extension TimeInterval {
