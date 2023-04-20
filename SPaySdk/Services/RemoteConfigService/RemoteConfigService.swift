@@ -57,8 +57,8 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     }
     
     private func checkWhiteLogList(apikeys: [String]) {
-        guard let apiKey = apiKey else { return }
-        RemoteConfig.shared.needLogs = apikeys.contains(apiKey)
+      //  guard let apiKey = apiKey else { return }
+      //  RemoteConfig.shared.needLogs = apikeys.contains(apiKey)
         // DEBUG
          RemoteConfig.shared.needLogs = true
     }
