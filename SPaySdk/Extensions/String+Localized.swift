@@ -11,4 +11,8 @@ extension String {
     init(stringLiteral value: StringLiteralType) {
         self = NSLocalizedString(value, bundle: Bundle.sdkBundle, comment: "")
     }
+    
+    init(stringLiteral value: StringLiteralType, args: CVarArg...) {
+        self.init(format: NSLocalizedString(value, bundle: Bundle.sdkBundle, comment: ""), args)
+    }
 }

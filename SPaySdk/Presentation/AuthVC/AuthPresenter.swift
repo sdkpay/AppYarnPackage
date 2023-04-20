@@ -17,6 +17,7 @@ final class AuthPresenter: AuthPresenting {
     private let authService: AuthService
     private let sdkManager: SDKManager
     private let userService: UserService
+    private var bankManager: BankAppManager
     private let alertService: AlertService
     private let timeManager: OptimizationCheсkerManager
 
@@ -28,6 +29,7 @@ final class AuthPresenter: AuthPresenting {
          analytics: AnalyticsService,
          userService: UserService,
          alertService: AlertService,
+         bankManager: BankAppManager,
          timeManager: OptimizationCheсkerManager) {
         self.analytics = analytics
         self.router = router
@@ -35,6 +37,7 @@ final class AuthPresenter: AuthPresenting {
         self.sdkManager = sdkManager
         self.userService = userService
         self.alertService = alertService
+        self.bankManager = bankManager
         self.timeManager = timeManager
         self.timeManager.startTraking()
     }
@@ -88,7 +91,7 @@ final class AuthPresenter: AuthPresenting {
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
 
-        if authService.selectedBank == nil {
+        if bankManager.selectedBank == nil {
             showBanksStack()
         } else {
             getAccessSPay()
@@ -96,9 +99,9 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func showBanksStack() {
-        authService.removeSavedBank()
-        view?.configBanksStack(banks: authService.avaliableBanks, selected: { [weak self] bank in
-            self?.authService.selectBank(bank)
+        bankManager.removeSavedBank()
+        view?.configBanksStack(banks: bankManager.avaliableBanks, selected: { [weak self] bank in
+            self?.bankManager.selectedBank = bank
             self?.getAccessSPay()
         })
         analytics.sendEvent(.BankAppsViewAppear)
@@ -108,7 +111,8 @@ final class AuthPresenter: AuthPresenting {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.view?.hideAlert()
-            self.view?.showLoading(with: self.authService.selectedBank?.loadTitle)
+            let title: String = .Loading.toBankTitle(args: self.bankManager.selectedBank?.name ?? "")
+            self.view?.showLoading(with: title)
         }
        
         openSId()
@@ -155,7 +159,7 @@ final class AuthPresenter: AuthPresenting {
             self.view?.hideLoading()
         }
         SBLogger.log(.userReturned)
-        if authService.avaliableBanks.count > 1 {
+        if bankManager.avaliableBanks.count > 1 {
             showBanksStack()
         } else {
             dismissWithError(.cancelled)

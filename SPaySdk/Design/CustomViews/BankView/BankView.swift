@@ -31,7 +31,7 @@ final class BankView: ContentView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func config(with bank: BankAppModel, action: @escaping Action) {
+    func config(with bank: BankApp, action: @escaping Action) {
         titleLabel.text = bank.name
         logoImageView.image = UIImage(base64: bank.icon)
         self.action = action

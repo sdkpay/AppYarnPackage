@@ -53,6 +53,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         }
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
+        UserDefaults.bankApps = value.bankApps
         UserDefaults.images = value.images
     }
     

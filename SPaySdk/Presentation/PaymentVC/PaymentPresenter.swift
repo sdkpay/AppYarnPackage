@@ -21,6 +21,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let locationManager: LocationManager
     private let sdkManager: SDKManager
     private let alertService: AlertService
+    private let bankManager: BankAppManager
     private let timeManager: OptimizationCheсkerManager
     
     private var selectedCard: PaymentToolInfo?
@@ -32,6 +33,7 @@ final class PaymentPresenter: PaymentPresenting {
          manager: SDKManager,
          userService: UserService,
          analytics: AnalyticsService,
+         bankManager: BankAppManager,
          paymentService: PaymentService,
          locationManager: LocationManager,
          alertService: AlertService,
@@ -44,6 +46,7 @@ final class PaymentPresenter: PaymentPresenting {
         self.paymentService = paymentService
         self.locationManager = locationManager
         self.alertService = alertService
+        self.bankManager = bankManager
         self.timeManager = timeManager
         self.timeManager.startTraking()
     }
@@ -199,7 +202,7 @@ final class PaymentPresenter: PaymentPresenting {
             })
         }))
         alertService.showAlert(on: view,
-                               with: .localization?.payWaiting ?? "",
+                               with: .Alert.waiting(args: bankManager.selectedBank?.name ?? ""),
                                state: .waiting,
                                buttons: buttons,
                                completion: {})

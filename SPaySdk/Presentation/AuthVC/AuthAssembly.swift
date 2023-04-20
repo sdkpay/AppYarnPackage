@@ -34,6 +34,7 @@ final class AuthAssembly {
                       analytics: locator.resolve(),
                       userService: locator.resolve(),
                       alertService: locator.resolve(),
+                      bankManager: locator.resolve(),
                       timeManager: OptimizationCheсkerManager())
     }
 

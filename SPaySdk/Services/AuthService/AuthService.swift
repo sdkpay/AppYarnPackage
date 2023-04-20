@@ -12,6 +12,7 @@ final class AuthServiceAssembly: Assembly {
         let service: AuthService = DefaultAuthService(network: container.resolve(),
                                                       sdkManager: container.resolve(),
                                                       analytics: container.resolve(),
+                                                      bankAppManager: container.resolve(),
                                                       authManager: container.resolve(),
                                                       personalMetricsService: container.resolve())
         container.register(service: service)
@@ -21,10 +22,6 @@ final class AuthServiceAssembly: Assembly {
 protocol AuthService {
     func tryToAuth(completion: @escaping (SDKError?) -> Void)
     func completeAuth(with url: URL)
-    func removeSavedBank()
-    var selectedBank: BankAppModel? { get set }
-    func selectBank(_ app: BankAppModel)
-    var avaliableBanks: [BankAppModel] { get }
 }
 
 final class DefaultAuthService: AuthService, ResponseDecoder {
@@ -32,36 +29,20 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var analytics: AnalyticsService
     private let network: NetworkService
     private let sdkManager: SDKManager
+    private let bankAppManager: BankAppManager
     private var authManager: AuthManager
     private var personalMetricsService: PersonalMetricsService
-    
-    var avaliableBanks: [BankAppModel] {
-        bankModels.filter({ canOpen(link: $0.link) })
-    }
-    
-    private var _selectedBank: BankAppModel?
-    
-    var selectedBank: BankAppModel? {
-        get {
-            if let bankApp = getSelectedBank(),
-               canOpen(link: bankApp.link) {
-                return bankApp
-            } else {
-                return nil
-            }
-        } set {
-            _selectedBank = newValue
-        }
-    }
     
     init(network: NetworkService,
          sdkManager: SDKManager,
          analytics: AnalyticsService,
+         bankAppManager: BankAppManager,
          authManager: AuthManager,
          personalMetricsService: PersonalMetricsService) {
         self.analytics = analytics
         self.network = network
         self.sdkManager = sdkManager
+        self.bankAppManager = bankAppManager
         self.authManager = authManager
         self.personalMetricsService = personalMetricsService
         SBLogger.log(.start(obj: self))
@@ -69,10 +50,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     deinit {
         SBLogger.log(.stop(obj: self))
-    }
-    
-    func selectBank(_ app: BankAppModel) {
-        selectedBank = app
     }
     
     func tryToAuth(completion: @escaping (SDKError?) -> Void) {
@@ -121,36 +98,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             authСompletion?(error)
         }
         // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
-        saveSelectedBank()
-    }
-    
-    func removeSavedBank() {
-        SBLogger.log("🗑 Remove value for key: selectedBank")
-        UserDefaults.removeValue(for: .selectedBank)
-    }
-    
-    private func saveSelectedBank() {
-        UserDefaults.bankApp = _selectedBank?.name
-    }
-    
-    private func getSelectedBank() -> BankAppModel? {
-        // Проверяем есть ли выбранное приложение
-        if let selectedBank = _selectedBank {
-            return selectedBank
-        }
-        if avaliableBanks.count > 1 {
-            // Если больше 1 то смотрим на сохраненный банк
-            if let savedBank = UserDefaults.bankApp {
-                _selectedBank = bankModels.first(where: { $0.name == savedBank })
-                return _selectedBank
-            } else {
-                return nil
-            }
-        } else {
-            // Берем единственный банк на устройстве
-            _selectedBank = avaliableBanks.first
-            return _selectedBank
-        }
+        bankAppManager.saveSelectedBank()
     }
     
     // MARK: - Методы авторизации через sId
@@ -167,32 +115,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
     
     private func authURL(link: String) -> URL? {
-        guard let url = selectedBank?.link else { return nil }
+        guard let url = bankAppManager.selectedBank?.link else { return nil }
         return URL(string: url + link)
-    }
-    
-    // MARK: - Вспомогательные методы
-    
-    private func canOpen(link: String) -> Bool {
-        guard let url = URL(string: link) else { return false }
-        return UIApplication.shared.canOpenURL(url)
-    }
-    
-    private var bankModels: [BankAppModel] {
-        guard let localized = UserDefaults.localization else { return [] }
-        guard let links = UserDefaults.schemas else { return [] }
-        guard let images = UserDefaults.images else { return [] }
-
-        var models = [BankAppModel]()
-        models.append(BankAppModel(name: localized.firstApp,
-                                   link: links.authLinkFirstApp,
-                                   icon: images.firstAppIcon,
-                                   loadTitle: localized.loadToFirstApp))
-        models.append(BankAppModel(name: localized.secondApp,
-                                   link: links.authLinkSecondApp,
-                                   icon: images.secondAppIcon,
-                                   loadTitle: localized.loadToSecondApp))
-        
-        return models
     }
 }

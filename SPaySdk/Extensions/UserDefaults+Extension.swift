@@ -11,6 +11,7 @@ enum DefaultsKey: String {
     case selectedBank
     case localization
     case schemas
+    case bankApps
     case images
 }
 
@@ -49,27 +50,22 @@ extension UserDefaults {
     static var bankApp: String?
     
     @UserDefault(key: .localization,
-                 defaultValue: Localization(authTitle: "foo",
-                                            firstApp: "foo",
-                                            secondApp: "foo",
-                                            loadToFirstApp: "foo",
-                                            loadToSecondApp: "foo",
-                                            payWaiting: "foo"))
+                 defaultValue: Localization(authTitle: "foo"))
     static var localization: Localization?
     
     @UserDefault(key: .schemas,
-                 defaultValue: Schemas(authLinkFirstApp: "foo",
-                                       authLinkSecondApp: "foo",
-                                       payLinkFirstApp: "foo",
+                 defaultValue: Schemas(payLinkFirstApp: "foo",
                                        payLinkSecondApp: "foo",
                                        dynatraceUrl: "foo",
                                        dynatraceId: "foo"))
     static var schemas: Schemas?
     
     @UserDefault(key: .images,
-                 defaultValue: Images(firstAppIcon: "foo",
-                                      secondAppIcon: "foo",
-                                      logoIcon: "foo",
+                 defaultValue: Images(logoIcon: "foo",
                                       logoClear: "foo"))
     static var images: Images?
+    
+    @UserDefault(key: .bankApps,
+                 defaultValue: [BankApp(name: "", link: "", icon: "")])
+    static var bankApps: [BankApp]?
 }

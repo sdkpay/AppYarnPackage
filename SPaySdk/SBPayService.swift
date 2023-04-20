@@ -42,6 +42,7 @@ final class DefaultSBPayService: SBPayService {
     private var assemblies: [Assembly] = [
         AnalyticsServiceAssembly(),
         PersonalMetricsServiceAssembly(),
+        BankAppManagerAssembly(),
         AuthManagerAssembly(),
         BaseRequestManagerAssembly(),
         NetworkServiceAssembly(),
@@ -83,10 +84,10 @@ final class DefaultSBPayService: SBPayService {
             #if targetEnvironment(simulator)
        return true
             #else
-        let authService: AuthService = locator.resolve()
+        let bankManager: BankAppManager = locator.resolve()
         let analyticsService: AnalyticsService = locator.resolve()
-        let apps = authService.avaliableBanks
-        SBLogger.log("🏦 Found bank apps: \n\(authService.avaliableBanks)")
+        let apps = bankManager.avaliableBanks
+        SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
         analyticsService.sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
         return !apps.isEmpty
             #endif

@@ -14,8 +14,8 @@ private extension CGFloat {
 }
 
 protocol IAuthVC {
-    func configBanksStack(banks: [BankAppModel],
-                          selected: @escaping (BankAppModel) -> Void)
+    func configBanksStack(banks: [BankApp],
+                          selected: @escaping (BankApp) -> Void)
     func showViews(_ value: Bool)
 }
 
@@ -64,7 +64,7 @@ final class AuthVC: ContentVC, IAuthVC {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configBanksStack(banks: [BankAppModel], selected: @escaping (BankAppModel) -> Void) {
+    func configBanksStack(banks: [BankApp], selected: @escaping (BankApp) -> Void) {
         if !banksStack.arrangedSubviews.isEmpty {
             banksStack.arrangedSubviews.forEach({ $0.removeFromSuperview() })
         }

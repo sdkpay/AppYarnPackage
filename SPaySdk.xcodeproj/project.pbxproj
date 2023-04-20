@@ -11,7 +11,6 @@
 		211DF36629D18CCF0038A951 /* RemoteConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 211DF36529D18CCF0038A951 /* RemoteConfig.json */; };
 		211DF36B29D18CF30038A951 /* ConfigTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36829D18CF30038A951 /* ConfigTarget.swift */; };
 		211DF36C29D18CF30038A951 /* ConfigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36A29D18CF30038A951 /* ConfigModel.swift */; };
-		211DF37029D18D0C0038A951 /* BankAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36E29D18D0C0038A951 /* BankAppModel.swift */; };
 		211DF37129D18D0C0038A951 /* RemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36F29D18D0C0038A951 /* RemoteConfigService.swift */; };
 		211DF37229D1C0DD0038A951 /* SB Sans Text Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB080292C9DA300F50047 /* SB Sans Text Medium.ttf */; };
 		21253D1B29C9B20B004ED82D /* SBShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1329C9B20B004ED82D /* SBShimmeringView.swift */; };
@@ -30,6 +29,8 @@
 		214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 214E9C4A29CC4B09009DF5FE /* FingerprintPackage */; };
 		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		2160A02429E6FC6700B72F40 /* SPaySdkDEBUG.h in Headers */ = {isa = PBXBuildFile; fileRef = 2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2180695A29F187CD00587AB8 /* BankAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180695929F187CD00587AB8 /* BankAppManager.swift */; };
+		2180695B29F1884E00587AB8 /* BankAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180695929F187CD00587AB8 /* BankAppManager.swift */; };
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		2197F38129DAD9CD0032F356 /* LogLevelAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */; };
 		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
@@ -97,7 +98,6 @@
 		21EB4D1029E16405006541B0 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442A45DF298059F900EC3D73 /* UserService.swift */; };
 		21EB4D1129E16405006541B0 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		21EB4D1229E16405006541B0 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF98291D3DB7000C9B45 /* AuthModel.swift */; };
-		21EB4D1329E16405006541B0 /* BankAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36E29D18D0C0038A951 /* BankAppModel.swift */; };
 		21EB4D1429E16405006541B0 /* SBShimmeringView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21253D1329C9B20B004ED82D /* SBShimmeringView.swift */; };
 		21EB4D1529E16405006541B0 /* UIImage+Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445CB074292BC3EF00F50047 /* UIImage+Bundle.swift */; };
 		21EB4D1629E16405006541B0 /* CoverDismissAnimatedTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD46295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift */; };
@@ -362,7 +362,6 @@
 		211DF36529D18CCF0038A951 /* RemoteConfig.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = RemoteConfig.json; sourceTree = "<group>"; };
 		211DF36829D18CF30038A951 /* ConfigTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigTarget.swift; sourceTree = "<group>"; };
 		211DF36A29D18CF30038A951 /* ConfigModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigModel.swift; sourceTree = "<group>"; };
-		211DF36E29D18D0C0038A951 /* BankAppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BankAppModel.swift; sourceTree = "<group>"; };
 		211DF36F29D18D0C0038A951 /* RemoteConfigService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteConfigService.swift; sourceTree = "<group>"; };
 		21253D1329C9B20B004ED82D /* SBShimmeringView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SBShimmeringView.swift; sourceTree = "<group>"; };
 		21253D1529C9B20B004ED82D /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
@@ -379,6 +378,7 @@
 		21440DBE29D6F5D500E3803E /* String+Ranges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ranges.swift"; sourceTree = "<group>"; };
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPaySdkDEBUG.h; path = SPaySdk/Public/SPaySdkDEBUG.h; sourceTree = "<group>"; };
+		2180695929F187CD00587AB8 /* BankAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAppManager.swift; sourceTree = "<group>"; };
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevelAlertVC.swift; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
@@ -608,7 +608,6 @@
 		211DF36D29D18D0C0038A951 /* RemoteConfigService */ = {
 			isa = PBXGroup;
 			children = (
-				211DF36E29D18D0C0038A951 /* BankAppModel.swift */,
 				211DF36F29D18D0C0038A951 /* RemoteConfigService.swift */,
 				21A59D8729D1E41B009B55A2 /* RemoteConfig.swift */,
 				212EF31829ED206D0047A7E3 /* RemoteConfigDEBUG.swift */,
@@ -661,6 +660,14 @@
 				214E9C4929CC4AF5009DF5FE /* FingerprintPackage */,
 			);
 			name = Packages;
+			sourceTree = "<group>";
+		};
+		2180695829F187C000587AB8 /* BankAppManager */ = {
+			isa = PBXGroup;
+			children = (
+				2180695929F187CD00587AB8 /* BankAppManager.swift */,
+			);
+			path = BankAppManager;
 			sourceTree = "<group>";
 		};
 		440DB3A8295C1C6200B84E05 /* ContentTableView */ = {
@@ -843,6 +850,7 @@
 		444A13B5291BA98B00C9FBE0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				2180695829F187C000587AB8 /* BankAppManager */,
 				211DF36D29D18D0C0038A951 /* RemoteConfigService */,
 				4498008A29AD246E008E808A /* AlertService */,
 				44BD273029A8A44E001ECF54 /* PaymentService */,
@@ -1807,6 +1815,7 @@
 				21EB4D0629E16405006541B0 /* BankModel.swift in Sources */,
 				21EB4D0729E16405006541B0 /* NetworkDecoding.swift in Sources */,
 				21EB4D0829E16405006541B0 /* UIView+Extensions.swift in Sources */,
+				2180695A29F187CD00587AB8 /* BankAppManager.swift in Sources */,
 				21EB4D0929E16405006541B0 /* Palette.swift in Sources */,
 				21EB4D0A29E16405006541B0 /* CardCell.swift in Sources */,
 				21EB4D0B29E16405006541B0 /* UserDefaults+Extension.swift in Sources */,
@@ -1817,7 +1826,6 @@
 				21EB4D1029E16405006541B0 /* UserService.swift in Sources */,
 				21EB4D1129E16405006541B0 /* SBPayState.swift in Sources */,
 				21EB4D1229E16405006541B0 /* AuthModel.swift in Sources */,
-				21EB4D1329E16405006541B0 /* BankAppModel.swift in Sources */,
 				21EB4D1429E16405006541B0 /* SBShimmeringView.swift in Sources */,
 				21EB4D1529E16405006541B0 /* UIImage+Bundle.swift in Sources */,
 				21EB4D1629E16405006541B0 /* CoverDismissAnimatedTransitioning.swift in Sources */,
@@ -1953,7 +1961,6 @@
 				442A45E0298059F900EC3D73 /* UserService.swift in Sources */,
 				218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */,
 				4464DF99291D3DB7000C9B45 /* AuthModel.swift in Sources */,
-				211DF37029D18D0C0038A951 /* BankAppModel.swift in Sources */,
 				21253D1B29C9B20B004ED82D /* SBShimmeringView.swift in Sources */,
 				445CB075292BC3EF00F50047 /* UIImage+Bundle.swift in Sources */,
 				44F9FD4B295AFAB800FE4B9F /* CoverDismissAnimatedTransitioning.swift in Sources */,
@@ -2020,6 +2027,7 @@
 				44B822022923897D00C06C51 /* SBPayService.swift in Sources */,
 				442A45DA29804E0C00EC3D73 /* UserModel.swift in Sources */,
 				AEB0059C29C09F72002C9AB9 /* Loader.swift in Sources */,
+				2180695B29F1884E00587AB8 /* BankAppManager.swift in Sources */,
 				44F9FD51295AFAD700FE4B9F /* ContentNC.swift in Sources */,
 				21440DBA29D5EE1F00E3803E /* SearchInputView.swift in Sources */,
 				44A31254298108330099EB76 /* Locator.swift in Sources */,

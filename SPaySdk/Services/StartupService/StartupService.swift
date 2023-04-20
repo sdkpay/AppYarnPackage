@@ -98,7 +98,7 @@ final class DefaultStartupService: StartupService {
                             type: .full,
                             action: completion))
             service.showAlert(on: sdkWindow?.topVC as? ContentVC,
-                              with: .localization?.payWaiting ?? "",
+                              with: .Alert.waiting(args: "банка"),
                               state: .waiting,
                               buttons: buttons,
                               completion: {})
