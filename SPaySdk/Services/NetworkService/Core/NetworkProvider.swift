@@ -93,7 +93,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                     if retrySettings.count != 1,
                        let error = error,
                        (error._code == URLError.Code.timedOut.rawValue || !retrySettings.retryCode.contains(error._code)),
-                       retry < retrySettings.count {
+                       retry <= retrySettings.count {
                         self._request(retry: retry + 1,
                                       target: target,
                                       retrySettings: retrySettings,
