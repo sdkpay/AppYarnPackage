@@ -19,7 +19,7 @@ protocol StartupService {
 final class DefaultStartupService: StartupService {
     private var sdkWindow: TransparentWindow?
     private var locator: LocatorService?
-    private var rootController: RootVC?
+    private weak var rootController: RootVC?
     private let timeManager: OptimizationCheсkerManager?
     
     init(timeManager: OptimizationCheсkerManager) {
