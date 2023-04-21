@@ -60,8 +60,13 @@ enum Config: Int, CaseIterable, Codable {
 }
 /// PSI
 /// "AFhdqaX970inj42EoOVuw+kAAAAAAAAADH8u5FkDlopXBsahjOkZA1CcQwTaKaUMQB/H1JNtlz7fSTFdvOcWXXvpgvzCkJDHyRrfKuxYc8p4wP5kcZN+ua3bxgqRjGQLNxI2b9askeQvt63cZNivX3EDIJz6Ywlk0omNVxAlneT7Z1Do/OSkelsZa5zVwVZbYV0yQVSz"
+///
+/// merchantLogin: 781000122206-22061013
+
 /// IFT:
 /// APgWA9brxUPpgEz/Qj0dHR4AAAAAAAAADDR8ezdUy7tW0Vvns+yzeJ8FMyClHvqjIdqYmXxYJ3MXG+CaM15S/073vf1A3RoXNTrl1DPxKEkvPBetfoURU7DBI0bkqayEmRROmV6Yu7vlgTwnyJt+88884H7yezp8lEkQ4/dRVlQgYChKGC1Hyi25i9I1TMA+SgxudCUwWMLJ7t7BgQ8wMgCAsLY=
+///
+/// merchantLogin: test_sberpay
 struct ConfigValues: Codable {
     var apiKey = "APgWA9brxUPpgEz/Qj0dHR4AAAAAAAAADDR8ezdUy7tW0Vvns+yzeJ8FMyClHvqjIdqYmXxYJ3MXG+CaM15S/073vf1A3RoXNTrl1DPxKEkvPBetfoURU7DBI0bkqayEmRROmV6Yu7vlgTwnyJt+88884H7yezp8lEkQ4/dRVlQgYChKGC1Hyi25i9I1TMA+SgxudCUwWMLJ7t7BgQ8wMgCAsLY=" // swiftlint:disable:this line_length
     var cost = "2000"
