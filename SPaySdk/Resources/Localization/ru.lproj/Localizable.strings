@@ -34,7 +34,7 @@
 "alert.pay.success.title" = "Успешно оплатили";
 "alert.pay.no.cards.title" = "Нет подходящих карт. Вернитесь к заказу\nи выберите другой способ оплаты.";
 "alert.pay.no.internet.title" = "Нет интернета. Проверьте подключение и попробуйте ещё раз.";
-"alert.pay.no.waiting.title" = "Обрабатываем оплату. Следите за статусом в Истории приложения @";
+"alert.pay.no.waiting.title" = "Обрабатываем оплату. Следите за статусом в Истории приложения %@";
 
 // MerchantAlert
 "merchant.alert.apikey" = "⛔️ Передайте apiKey в методе setup.";
