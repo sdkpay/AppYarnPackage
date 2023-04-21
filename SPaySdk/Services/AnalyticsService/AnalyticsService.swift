@@ -99,8 +99,8 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     
     func config() {
         let startupDictionary: [String: Any?] = [
-            kDTXApplicationID: String.dynatraceId,
-            kDTXBeaconURL: String.dynatraceUrl,
+            kDTXApplicationID: ConfigGlobal.schemas?.dynatraceId,
+            kDTXBeaconURL: ConfigGlobal.schemas?.dynatraceUrl,
             kDTXLogLevel: "OFF"
         ]
         Dynatrace.startup(withConfig: startupDictionary as [String: Any])
