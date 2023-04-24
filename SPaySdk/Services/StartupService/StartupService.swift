@@ -68,8 +68,6 @@ final class DefaultStartupService: StartupService {
         guard let locator = locator else { return }
         let network: NetworkService = locator.resolve()
         network.cancelTask()
-        let manager: SDKManager = locator.resolve()
-        manager.completionWithError(error: .cancelled)
         let analytics: AnalyticsService = locator.resolve()
         analytics.sendEvent(.ManuallyClosed)
         rootController?.dismiss(animated: true)
