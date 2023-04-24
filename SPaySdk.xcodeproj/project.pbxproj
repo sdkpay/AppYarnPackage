@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		211DF36429D18B220038A951 /* UIImage+base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36329D18B220038A951 /* UIImage+base64.swift */; };
-		211DF36629D18CCF0038A951 /* RemoteConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 211DF36529D18CCF0038A951 /* RemoteConfig.json */; };
 		211DF36B29D18CF30038A951 /* ConfigTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36829D18CF30038A951 /* ConfigTarget.swift */; };
 		211DF36C29D18CF30038A951 /* ConfigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36A29D18CF30038A951 /* ConfigModel.swift */; };
 		211DF37129D18D0C0038A951 /* RemoteConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211DF36F29D18D0C0038A951 /* RemoteConfigService.swift */; };
@@ -36,6 +35,8 @@
 		218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218A8A1029B0DEF7006A0626 /* SBPayState.swift */; };
 		2197F38129DAD9CD0032F356 /* LogLevelAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */; };
 		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
+		21B3BA3B29F66AD90024BDF0 /* RemoteConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 211DF36529D18CCF0038A951 /* RemoteConfig.json */; };
+		21B3BA3C29F66ADE0024BDF0 /* ListCards.json in Resources */ = {isa = PBXBuildFile; fileRef = 44A31250298103F10099EB76 /* ListCards.json */; };
 		21B442C729DDB3F0004F1DFF /* Certificates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B442C629DDB3F0004F1DFF /* Certificates.swift */; };
 		21B442CD29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */; };
 		21B442CF29DDD9F1004F1DFF /* CertificateValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */; };
@@ -169,20 +170,15 @@
 		21EB4D5729E16405006541B0 /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = 21EB4CD329E16405006541B0 /* Dynatrace-Static */; };
 		21EB4D5929E16405006541B0 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 444A13F1291CF1C100C9FBE0 /* .swiftlint.yml */; };
 		21EB4D5A29E16405006541B0 /* SB Sans Text.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB07E292C9D9500F50047 /* SB Sans Text.ttf */; };
-		21EB4D5B29E16405006541B0 /* ListCards.json in Resources */ = {isa = PBXBuildFile; fileRef = 44A31250298103F10099EB76 /* ListCards.json */; };
 		21EB4D5C29E16405006541B0 /* psi.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */; };
-		21EB4D5D29E16405006541B0 /* RemoteConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 211DF36529D18CCF0038A951 /* RemoteConfig.json */; };
 		21EB4D5E29E16405006541B0 /* neg.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76D299ABC8500DD7881 /* neg.mp3 */; };
 		21EB4D5F29E16405006541B0 /* cms-res.der in Resources */ = {isa = PBXBuildFile; fileRef = 44A5A46029B4A38900C01420 /* cms-res.der */; };
 		21EB4D6029E16405006541B0 /* SB Sans Text Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB080292C9DA300F50047 /* SB Sans Text Medium.ttf */; };
 		21EB4D6129E16405006541B0 /* poz.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76B299ABC7800DD7881 /* poz.mp3 */; };
-		21EB4D6229E16405006541B0 /* Auth.json in Resources */ = {isa = PBXBuildFile; fileRef = 442A45CD297FEE8000EC3D73 /* Auth.json */; };
 		21EB4D6329E16405006541B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 445CB072292BBB1400F50047 /* Assets.xcassets */; };
 		21EB4D6429E16405006541B0 /* ecomtest.s.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 443D83AA295D8F31002605AA /* ecomtest.s.ru.der */; };
-		21EB4D6529E16405006541B0 /* PaymentOrderSDK.json in Resources */ = {isa = PBXBuildFile; fileRef = 44BD272A29A7AE38001ECF54 /* PaymentOrderSDK.json */; };
 		21EB4D6629E16405006541B0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 445CB06D292BB99F00F50047 /* Localizable.strings */; };
 		21EB4D6729E16405006541B0 /* SB Sans Text Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB07C292C9D2C00F50047 /* SB Sans Text Semibold.ttf */; };
-		21EB4D6829E16405006541B0 /* PaymentToken.json in Resources */ = {isa = PBXBuildFile; fileRef = 44533D1B29851C0D0041FAA9 /* PaymentToken.json */; };
 		440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */; };
 		440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3AC295C304300B84E05 /* AnalyticsService.swift */; };
 		4416E424291E21C300284972 /* SDKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E423291E21C300284972 /* SDKError.swift */; };
@@ -262,7 +258,6 @@
 		44A0B5BD293DF282007AB3FD /* CardsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A0B5BC293DF282007AB3FD /* CardsPresenter.swift */; };
 		44A0B5BF293E05CC007AB3FD /* CardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A0B5BE293E05CC007AB3FD /* CardCell.swift */; };
 		44A23767292FAF3000C5883E /* Int+Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A23766292FAF3000C5883E /* Int+Price.swift */; };
-		44A31251298103F10099EB76 /* ListCards.json in Resources */ = {isa = PBXBuildFile; fileRef = 44A31250298103F10099EB76 /* ListCards.json */; };
 		44A31254298108330099EB76 /* Locator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A31253298108330099EB76 /* Locator.swift */; };
 		44A3125A298135B70099EB76 /* RootAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A31259298135B70099EB76 /* RootAssembly.swift */; };
 		44A3125C298135F10099EB76 /* RootRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A3125B298135F10099EB76 /* RootRouter.swift */; };
@@ -1674,20 +1669,15 @@
 			files = (
 				21EB4D5929E16405006541B0 /* .swiftlint.yml in Resources */,
 				21EB4D5A29E16405006541B0 /* SB Sans Text.ttf in Resources */,
-				21EB4D5B29E16405006541B0 /* ListCards.json in Resources */,
 				21EB4D5C29E16405006541B0 /* psi.spaymentsplus.ru.der in Resources */,
-				21EB4D5D29E16405006541B0 /* RemoteConfig.json in Resources */,
 				21EB4D5E29E16405006541B0 /* neg.mp3 in Resources */,
 				21EB4D5F29E16405006541B0 /* cms-res.der in Resources */,
 				21EB4D6029E16405006541B0 /* SB Sans Text Medium.ttf in Resources */,
 				21EB4D6129E16405006541B0 /* poz.mp3 in Resources */,
-				21EB4D6229E16405006541B0 /* Auth.json in Resources */,
 				21EB4D6329E16405006541B0 /* Assets.xcassets in Resources */,
 				21EB4D6429E16405006541B0 /* ecomtest.s.ru.der in Resources */,
-				21EB4D6529E16405006541B0 /* PaymentOrderSDK.json in Resources */,
 				21EB4D6629E16405006541B0 /* Localizable.strings in Resources */,
 				21EB4D6729E16405006541B0 /* SB Sans Text Semibold.ttf in Resources */,
-				21EB4D6829E16405006541B0 /* PaymentToken.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1697,9 +1687,7 @@
 			files = (
 				444A13F3291CF1C100C9FBE0 /* .swiftlint.yml in Resources */,
 				445CB07F292C9D9500F50047 /* SB Sans Text.ttf in Resources */,
-				44A31251298103F10099EB76 /* ListCards.json in Resources */,
 				21B442CD29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der in Resources */,
-				211DF36629D18CCF0038A951 /* RemoteConfig.json in Resources */,
 				4421B76E299ABC8500DD7881 /* neg.mp3 in Resources */,
 				44A5A46129B4A38900C01420 /* cms-res.der in Resources */,
 				211DF37229D1C0DD0038A951 /* SB Sans Text Medium.ttf in Resources */,
@@ -1707,10 +1695,12 @@
 				442A45CE297FEE8000EC3D73 /* Auth.json in Resources */,
 				445CB073292BBB1400F50047 /* Assets.xcassets in Resources */,
 				443D83AB295D8F31002605AA /* ecomtest.s.ru.der in Resources */,
+				21B3BA3B29F66AD90024BDF0 /* RemoteConfig.json in Resources */,
 				44BD272B29A7AE38001ECF54 /* PaymentOrderSDK.json in Resources */,
 				445CB06B292BB99F00F50047 /* Localizable.strings in Resources */,
 				445CB07D292C9D2C00F50047 /* SB Sans Text Semibold.ttf in Resources */,
 				44533D1C29851C0D0041FAA9 /* PaymentToken.json in Resources */,
+				21B3BA3C29F66ADE0024BDF0 /* ListCards.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2151,6 +2141,7 @@
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "-DSDKPROD";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s.pay.SPaySdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2203,6 +2194,7 @@
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "-DSDKPROD";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s.pay.SPaySdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2256,6 +2248,7 @@
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "-DSDKPROD";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s.pay.SPaySdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2308,6 +2301,7 @@
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "-DSDKPROD";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s.pay.SPaySdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -2359,6 +2353,7 @@
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "-DSDKDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s.pay.SPaySdk;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -2412,6 +2407,7 @@
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "-DSDKDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s.pay.SPaySdk;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -2798,6 +2794,7 @@
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "-DSDKDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s.pay.SPaySdk;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -2976,6 +2973,7 @@
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
+				OTHER_SWIFT_FLAGS = "-DSDKDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s.pay.SPaySdk;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
