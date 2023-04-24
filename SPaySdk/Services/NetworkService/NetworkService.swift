@@ -78,7 +78,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                  retrySettings: RetrySettings = (1, []),
                  completion: @escaping (Result<Void, SDKError>) -> Void) {
         provider.request(target, retrySettings: retrySettings) { data, response, error in
-            SBLogger.logRequestCompleted(target, response: response, data: data)
+            SBLogger.logRequestCompleted(target, response: response, data: data, error: error)
             let result = self.decodeResponse(data: data, response: response, error: error)
             completion(result)
         }
@@ -89,7 +89,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                     retrySettings: RetrySettings = (1, []),
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
         provider.request(target, retrySettings: retrySettings) { data, response, error in
-            SBLogger.logRequestCompleted(target, response: response, data: data)
+            SBLogger.logRequestCompleted(target, response: response, data: data, error: error)
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
             completion(result)
         }
