@@ -119,7 +119,7 @@ final class DefaultSDKManager: SDKManager {
                 paymentCompletion = nil
             }
         }
-        NotificationCenter.default.post(name: Notification.Name(closeSDKNotification),
+        NotificationCenter.default.post(name: Notification.Name(closeSDKNotificationWithError),
                                         object: nil,
                                         userInfo: nil)
     }

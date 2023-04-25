@@ -7,7 +7,8 @@
 
 import UIKit
 
-let closeSDKNotification = "CloseSDK"
+let closeSDKNotification = "CloseSDKWithoutError"
+let closeSDKNotificationWithError = "CloseSDKWithError"
 
 protocol StartupService {
     func openInitialScreen(with viewController: UIViewController,
@@ -39,6 +40,10 @@ final class DefaultStartupService: StartupService {
                                                selector: #selector(closeSdk),
                                                name: Notification.Name(closeSDKNotification),
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(closeSdk(isErrorCompleted:)),
+                                               name: Notification.Name(closeSDKNotificationWithError),
+                                               object: true)
     }
     
     private func setupWindows(viewController: UIViewController,
@@ -64,10 +69,14 @@ final class DefaultStartupService: StartupService {
     }
     
     @objc
-    private func closeSdk() {
+    private func closeSdk(isErrorCompleted: Bool = false) {
         guard let locator = locator else { return }
         let network: NetworkService = locator.resolve()
         network.cancelTask()
+        if !isErrorCompleted {
+            let manager: SDKManager = locator.resolve()
+            manager.completionWithError(error: .cancelled)
+        }
         let analytics: AnalyticsService = locator.resolve()
         analytics.sendEvent(.ManuallyClosed)
         rootController?.dismiss(animated: true)
