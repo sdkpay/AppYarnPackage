@@ -119,6 +119,9 @@ final class DefaultSDKManager: SDKManager {
                 paymentCompletion = nil
             }
         }
+        NotificationCenter.default.post(name: Notification.Name(closeSDKNotificationWithError),
+                                        object: nil,
+                                        userInfo: nil)
     }
     
     func completionPaymentToken(with paymentToken: String? = nil,
