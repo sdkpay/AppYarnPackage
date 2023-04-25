@@ -120,8 +120,6 @@ extension PaymentTarget: TargetType {
                 ]
                 params["jsonParams"] = jsonParams
             }
-            
-            params["operationId"] = String.generateRandom(with: 36)
             return .requestWithParameters(nil, bodyParameters: params)
         }
     }

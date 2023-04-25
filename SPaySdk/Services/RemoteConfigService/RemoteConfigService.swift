@@ -34,7 +34,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.apiKey = apiKey
         network.request(ConfigTarget.getConfig,
                         to: ConfigModel.self,
-                        retryCount: 5) { [weak self] result in
+                        retrySettings: (5, [])) { [weak self] result in
             switch result {
             case .success(let config):
                 self?.saveConfig(config)
@@ -53,14 +53,15 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         }
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
+        UserDefaults.bankApps = value.bankApps
         UserDefaults.images = value.images
     }
     
     private func checkWhiteLogList(apikeys: [String]) {
-        // guard let apiKey = apiKey else { return }
+      //  guard let apiKey = apiKey else { return }
+      //  RemoteConfig.shared.needLogs = apikeys.contains(apiKey)
         // DEBUG
-        // RemoteConfig.shared.needLogs = apikeys.contains(apiKey)
-        RemoteConfig.shared.needLogs = true
+         RemoteConfig.shared.needLogs = true
     }
     
     private func checkVersion(version: String) {

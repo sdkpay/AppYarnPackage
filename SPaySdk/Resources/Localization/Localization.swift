@@ -66,6 +66,10 @@ extension String {
     enum Loading {
         ///  Проводим оплату...
         static let tryToPayTitle = String(stringLiteral: "try.to.pay.title")
+        /// Переходим в %@ для авторизации
+        static func toBankTitle(args: CVarArg...) -> String {
+            String(stringLiteral: "to.bank.title", args: args)
+        }
     }
     
     enum Alert {
@@ -77,6 +81,10 @@ extension String {
         static let alertPayNoCardsTitle = String(stringLiteral: "alert.pay.no.cards.title")
         /// Нет интернета. Проверьте подключение и попробуйте ещё раз.
         static let alertPayNoInternetTitle = String(stringLiteral: "alert.pay.no.internet.title")
+        /// Обрабатываем оплату. Следите за статусом в Истории приложения @
+        static func waiting(args: CVarArg...) -> String {
+            String(stringLiteral: "alert.pay.no.waiting.title", args: args)
+        }
     }
     
     enum MerchantAlert {

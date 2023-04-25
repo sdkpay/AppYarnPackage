@@ -62,7 +62,9 @@ enum AnalyticsValue: String {
 
 protocol AnalyticsService {
     func sendEvent(_ event: AnalyticsEvent)
-    func sendEvent<T>(_ event: AnalyticsEvent, with value: [T])
+    func sendEvent(_ event: AnalyticsEvent, with strings: [String])
+    func sendEvent(_ event: AnalyticsEvent, with ints: [Int])
+    func sendEvent(_ event: AnalyticsEvent, with doubles: [Double])
     func config()
 }
 
@@ -72,19 +74,21 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         action?.leave()
     }
     
-    func sendEvent<T>(_ event: AnalyticsEvent, with values: [T]) {
+    func sendEvent(_ event: AnalyticsEvent, with strings: [String]) {
         let action = DTXAction.enter(withName: event.rawValue)
-        for value in values {
-            if let value = value as? String {
-                action?.reportValue(withName: event.rawValue, stringValue: value)
-            } else if let value = value as? Int64 {
-                action?.reportValue(withName: event.rawValue, intValue: value)
-            } else if let value = value as? Double {
-                action?.reportValue(withName: event.rawValue, doubleValue: value)
-            } else {
-                print("Bad type for value")
-            }
-        }
+        strings.forEach({ action?.reportValue(withName: event.rawValue, stringValue: $0) })
+        action?.leave()
+    }
+    
+    func sendEvent(_ event: AnalyticsEvent, with ints: [Int]) {
+        let action = DTXAction.enter(withName: event.rawValue)
+        ints.forEach({ action?.reportValue(withName: event.rawValue, intValue: Int64($0)) })
+        action?.leave()
+    }
+    
+    func sendEvent(_ event: AnalyticsEvent, with doubles: [Double]) {
+        let action = DTXAction.enter(withName: event.rawValue)
+        doubles.forEach({ action?.reportValue(withName: event.rawValue, doubleValue: $0) })
         action?.leave()
     }
 
@@ -99,8 +103,8 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     
     func config() {
         let startupDictionary: [String: Any?] = [
-            kDTXApplicationID: String.dynatraceId,
-            kDTXBeaconURL: String.dynatraceUrl,
+            kDTXApplicationID: ConfigGlobal.schemas?.dynatraceId,
+            kDTXBeaconURL: ConfigGlobal.schemas?.dynatraceUrl,
             kDTXLogLevel: "OFF"
         ]
         Dynatrace.startup(withConfig: startupDictionary as [String: Any])

@@ -7,7 +7,8 @@
 
 import UIKit
 
-let closeSDKNotification = "CloseSDK"
+let closeSDKNotification = "CloseSDKWithoutError"
+let closeSDKNotificationWithError = "CloseSDKWithError"
 
 protocol StartupService {
     func openInitialScreen(with viewController: UIViewController,
@@ -39,20 +40,28 @@ final class DefaultStartupService: StartupService {
                                                selector: #selector(closeSdk),
                                                name: Notification.Name(closeSDKNotification),
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(closeSdk(isErrorCompleted:)),
+                                               name: Notification.Name(closeSDKNotificationWithError),
+                                               object: true)
     }
     
     private func setupWindows(viewController: UIViewController,
                               locator: LocatorService,
                               rootVC: UIViewController) {
-        if #available(iOS 13.0, *) {
-            rootVC.modalPresentationStyle = .custom
-            viewController.present(rootVC, animated: true)
-        } else {
-            sdkWindow = TransparentWindow(frame: UIScreen.main.bounds)
-            sdkWindow?.windowLevel = UIWindow.Level.alert + 1
-            sdkWindow?.rootViewController = rootVC
-            sdkWindow?.makeKeyAndVisible()
-        }
+        sdkWindow = TransparentWindow(frame: UIScreen.main.bounds)
+        sdkWindow?.windowLevel = UIWindow.Level.alert + 1
+        sdkWindow?.rootViewController = rootVC
+        sdkWindow?.makeKeyAndVisible()
+//        if #available(iOS 13.0, *) {
+//            rootVC.modalPresentationStyle = .custom
+//            viewController.present(rootVC, animated: true)
+//        } else {
+//            sdkWindow = TransparentWindow(frame: UIScreen.main.bounds)
+//            sdkWindow?.windowLevel = UIWindow.Level.alert + 1
+//            sdkWindow?.rootViewController = rootVC
+//            sdkWindow?.makeKeyAndVisible()
+//        }
     }
     
     deinit {
@@ -60,12 +69,14 @@ final class DefaultStartupService: StartupService {
     }
     
     @objc
-    private func closeSdk() {
+    private func closeSdk(isErrorCompleted: Bool = false) {
         guard let locator = locator else { return }
         let network: NetworkService = locator.resolve()
         network.cancelTask()
-        let manager: SDKManager = locator.resolve()
-        manager.completionWithError(error: .cancelled)
+        if !isErrorCompleted {
+            let manager: SDKManager = locator.resolve()
+            manager.completionWithError(error: .cancelled)
+        }
         let analytics: AnalyticsService = locator.resolve()
         analytics.sendEvent(.ManuallyClosed)
         rootController?.dismiss(animated: true)
@@ -94,7 +105,7 @@ final class DefaultStartupService: StartupService {
                             type: .full,
                             action: completion))
             service.showAlert(on: sdkWindow?.topVC as? ContentVC,
-                              with: .localization?.payWaiting ?? "",
+                              with: .Alert.waiting(args: "банка"),
                               state: .waiting,
                               buttons: buttons,
                               completion: {})

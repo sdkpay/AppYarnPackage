@@ -69,13 +69,16 @@ struct SBLogger: ResponseDecoder {
     
     static func logRequestCompleted(_ target: TargetType,
                                     response: URLResponse?,
-                                    data: Data?) {
+                                    data: Data?,
+                                    error: Error?) {
         let url = ServerURL.appendingPathComponent(target.path)
         var code = "None"
         var headers = "None"
         if let response = response as? HTTPURLResponse {
             code = String(response.statusCode)
             headers = response.allHeaderFields.json
+        } else if let error = error {
+            code = "\(error._code) - \(error.localizedDescription)"
         }
         if code != "200" {
             log(

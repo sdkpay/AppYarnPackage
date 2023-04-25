@@ -119,6 +119,9 @@ final class DefaultSDKManager: SDKManager {
                 paymentCompletion = nil
             }
         }
+        NotificationCenter.default.post(name: Notification.Name(closeSDKNotificationWithError),
+                                        object: nil,
+                                        userInfo: nil)
     }
     
     func completionPaymentToken(with paymentToken: String? = nil,
@@ -136,7 +139,7 @@ final class DefaultSDKManager: SDKManager {
         case .success:
             paymentCompletion?(.success, .Alert.alertPaySuccessTitle)
         case .waiting:
-            paymentCompletion?(.waiting, .localization?.payWaiting ?? "")
+            paymentCompletion?(.waiting, .Alert.waiting(args: "банка"))
         case .error:
             paymentCompletion?(.error, .Alert.alertErrorMainTitle)
         }
