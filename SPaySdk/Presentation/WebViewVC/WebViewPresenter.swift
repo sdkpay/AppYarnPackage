@@ -15,15 +15,18 @@ protocol WebViewPresenting {
 
 final class WebViewPresenter: WebViewPresenting {
     private let url: String
+    private let title: String
     
     weak var view: (IWebViewVC & ContentVC)?
     
-    init(with url: String) {
+    init(with url: String, title: String) {
         self.url = url
+        self.title = title
     }
     
     func viewDidLoad() {
         setupWebView()
+        view?.setTitle(text: title)
     }
     
     func backButtonTapped() {

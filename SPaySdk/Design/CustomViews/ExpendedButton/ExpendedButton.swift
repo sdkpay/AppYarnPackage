@@ -22,7 +22,7 @@ class ExpendedButton: ActionButton {
     }
     
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        let expandedBounds = bounds.insetBy(dx: x, dy: y)
+        let expandedBounds = bounds.insetBy(dx: -x, dy: -y)
         return expandedBounds.contains(point)
     }
 }

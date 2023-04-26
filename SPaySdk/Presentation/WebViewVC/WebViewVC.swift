@@ -16,6 +16,7 @@ private extension CGFloat {
 }
 
 protocol IWebViewVC {
+    func setTitle(text: String)
     func goTo(to url: URL)
 }
 
@@ -23,8 +24,8 @@ final class WebViewVC: ContentVC, IWebViewVC {
     private lazy var titleLabel: UILabel = {
        let view = UILabel()
         view.font = .header
+        view.numberOfLines = 1
         view.textColor = .textPrimory
-        view.text = .PayPart.title
         return view
     }()
     
@@ -65,6 +66,7 @@ final class WebViewVC: ContentVC, IWebViewVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
+        topBarIsHidden = true
         setupUI()
     }
     
@@ -72,31 +74,40 @@ final class WebViewVC: ContentVC, IWebViewVC {
         webView.load(URLRequest(url: url))
     }
     
+    func setTitle(text: String) {
+        titleLabel.text = text
+    }
+
+    
     private func setupUI() {
         view.height(.vcMaxHeight)
-    
+        
         shareButton
             .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .top, ofView: view, withInset: .shareMargin)
-            .height(.shareHeight)
-            .width(.shareHeight)
 
         titleLabel
             .add(toSuperview: view)
             .touchEdge(.top, toEdge: .top, ofView: view, withInset: .topMargin)
             .touchEdge(.left, toEdge: .left, ofView: view, withInset: .margin)
-            .touchEdge(.right, toEdge: .right, ofView: shareButton, withInset: -.margin)
+            .touchEdge(.right, toEdge: .left, ofView: shareButton, withInset: .margin)
+        
+        shareButton
+            .touchEdge(.top, toEdge: .top, ofView: view, withInset: .shareMargin)
+            .touchEdge(.right, toEdge: .right, ofView: view, withInset: .margin)
+            .height(.shareHeight)
+            .width(.shareHeight)
+            .centerInView(titleLabel, axis: .y, withOffset: .zero)
         
         webView
             .add(toSuperview: view)
             .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: .margin)
             .touchEdge(.left, toEdge: .left, ofView: view, withInset: .margin)
-            .touchEdge(.right, toEdge: .right, ofView: view, withInset: -.margin)
+            .touchEdge(.right, toEdge: .right, ofView: view, withInset: .margin)
         
         backButton
             .add(toSuperview: view)
             .height(.defaultButtonHeight)
-            .touchEdge(.top, toEdge: .top, ofView: webView, withInset: .margin)
+            .touchEdge(.top, toEdge: .bottom, ofView: webView, withInset: .margin)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
             .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: .bottomMargin)

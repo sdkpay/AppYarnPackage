@@ -20,6 +20,7 @@ protocol PartPayPresenting {
     func checkTapped(_ value: Bool)
     func agreementViewTapped()
     func acceptButtonTapped()
+    func backButtonTapped()
     func model(for indexPath: IndexPath) -> PartCellModel
 }
 
@@ -28,7 +29,7 @@ final class PartPayPresenter: PartPayPresenting {
     private let router: PartPayRouter
     private let timeManager: OptimizationCheсkerManager
     private let analytics: AnalyticsService
-    private var checkTapped: Bool = false
+    private var checkTapped = false
 
     weak var view: (IPartPayVC & ContentVC)?
     
@@ -81,11 +82,16 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     func agreementViewTapped() {
-        router.presentWebView(with: "https://www.google.com/webhp?hl=en&sa=X&ved=0ahUKEwin0I3W3cX-AhWDqIsKHVurAGIQPAgJ")
+        router.presentWebView(with: "https://www.google.com/webhp?hl=en&sa=X&ved=0ahUKEwin0I3W3cX-AhWDqIsKHVurAGIQPAgJ",
+                              title: .PayPart.agreement)
     }
     
     func acceptButtonTapped() {
         partPayService.bnplplanSelected = checkTapped
+    }
+    
+    func backButtonTapped() {
+        view?.contentNavigationController?.popViewController(animated: true)
     }
     
     func model(for indexPath: IndexPath) -> PartCellModel {

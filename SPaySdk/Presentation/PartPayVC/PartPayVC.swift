@@ -50,6 +50,9 @@ final class PartPayVC: ContentVC, IPartPayVC {
     private lazy var cancelButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .info)
         view.setTitle(String(stringLiteral: .PayPart.cancel), for: .normal)
+        view.addAction { [weak self] in
+            self?.presenter.backButtonTapped()
+        }
         return view
     }()
     

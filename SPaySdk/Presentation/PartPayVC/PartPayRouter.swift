@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PartPayRouting {
-    func presentWebView(with url: String)
+    func presentWebView(with url: String, title: String)
 }
 
 final class PartPayRouter: PartPayRouting {
@@ -19,8 +19,8 @@ final class PartPayRouter: PartPayRouting {
         self.locator = locator
     }
     
-    func presentWebView(with url: String) {
-        let vc = WebViewAssembly(locator: locator).createModule(with: url)
+    func presentWebView(with url: String, title: String) {
+        let vc = WebViewAssembly(locator: locator).createModule(with: url, title: title)
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
 }

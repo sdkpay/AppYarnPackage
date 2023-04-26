@@ -28,7 +28,7 @@
 "part.pay.accert.doc.color" = "условиями договора.";
 "part.pay.final" = "Итого";
 "part.pay.today" = "Спишем сегодня";
-
+"agreement.title" = "Условия договора";
 
 // Error
 "error.system" = "Системная или внутренняя ошибка.";

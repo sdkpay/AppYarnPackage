@@ -88,12 +88,12 @@ final class AuthVC: ContentVC, IAuthVC {
             .add(toSuperview: view)
             .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: .topMargin)
             .touchEdge(.left, toEdge: .left, ofView: logoImage, withInset: .margin)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: -.margin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
         
         banksStack
             .add(toSuperview: view)
             .centerInSuperview()
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: -.margin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
     }
 }

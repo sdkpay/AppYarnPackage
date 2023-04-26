@@ -50,6 +50,8 @@ extension String {
         static let final = String(stringLiteral: "part.pay.final")
         /// Спишем сегодня
         static let today = String(stringLiteral: "part.pay.today")
+        /// Условия договора
+        static let agreement = String(stringLiteral: "agreement.title")
     }
 
     enum Error {
