@@ -15,14 +15,23 @@ final class PartPayAssembly {
     }
 
     func createModule(selectedCard: @escaping (PaymentToolInfo) -> Void) -> ContentVC {
-        let presenter = modulePresenter(selectedCard: selectedCard)
+        let router = moduleRouter()
+        let presenter = modulePresenter(router, selectedCard: selectedCard)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
+        router.viewController = contentView
         return contentView
     }
+    
+    func moduleRouter() -> PartPayRouter {
+        PartPayRouter(with: locator)
+    }
 
-    private func modulePresenter(selectedCard: @escaping (PaymentToolInfo) -> Void) -> PartPayPresenter {
-        let presenter = PartPayPresenter(timeManager: OptimizationCheсkerManager(),
+    private func modulePresenter(_ router: PartPayRouter,
+                                 selectedCard: @escaping (PaymentToolInfo) -> Void) -> PartPayPresenter {
+        let presenter = PartPayPresenter(router,
+                                         partPayService: locator.resolve(),
+                                         timeManager: OptimizationCheсkerManager(),
                                          analytics: locator.resolve(),
                                          selectedCard: selectedCard)
         return presenter

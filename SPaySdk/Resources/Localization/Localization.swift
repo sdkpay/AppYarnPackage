@@ -70,6 +70,8 @@ extension String {
         static func toBankTitle(args: CVarArg...) -> String {
             String(stringLiteral: "to.bank.title", args: args)
         }
+        ///  Подгружаем ваши данные
+        static let getData = String(stringLiteral: "get.data.title")
     }
     
     enum Alert {

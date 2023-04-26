@@ -45,7 +45,7 @@ protocol PaymentPresenting {
 final class PaymentPresenter: PaymentPresenting {
     private let router: PaymentRouting
     private let analytics: AnalyticsService
-    private let userService: UserService
+    private var userService: UserService
     private let paymentService: PaymentService
     private let locationManager: LocationManager
     private let sdkManager: SDKManager
@@ -63,9 +63,6 @@ final class PaymentPresenter: PaymentPresenting {
     var cellDataCount: Int {
         cellData.count
     }
-    
-    private var selectedCard: PaymentToolInfo?
-    private var user: User?
 
     weak var view: (IPaymentVC & ContentVC)?
     
@@ -91,15 +88,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func viewDidLoad() {
-        if let user = userService.user {
-            self.user = user
-            selectedCard = user.paymentToolInfo
-                .first(where: { $0.priorityCard })
-            ?? user.paymentToolInfo.first
-            configViews()
-        } else {
-            getUser()
-        }
+        configViews()
         timeManager.endTraking(PaymentVC.self.description()) {
             self.analytics.sendEvent(.PayViewAppeared, with: [$0])
         }
@@ -118,7 +107,7 @@ final class PaymentPresenter: PaymentPresenting {
             self.view?.hideAlert()
             self.view?.showLoading(with: .Loading.tryToPayTitle)
         }
-        guard let paymentId = selectedCard?.paymentId else { return }
+        guard let paymentId = userService.selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId) { [weak self] error in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -152,32 +141,6 @@ final class PaymentPresenter: PaymentPresenting {
         })
     }
     
-    private func getUser() {
-        DispatchQueue.main.async {
-            self.view?.hideAlert()
-            self.view?.showLoading(animate: false)
-        }
-        userService.getUser { [weak self] result in
-            switch result {
-            case .success(let user):
-                self?.user = user
-                self?.selectedCard = user.paymentToolInfo.first(where: { $0.priorityCard }) ?? user.paymentToolInfo.first
-                DispatchQueue.main.async { [weak self] in
-                    self?.configViews()
-                }
-            case .failure(let error):
-                if error.represents(.noInternetConnection) {
-                    self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.getUser() },
-                                                              completion: { self?.dismissWithError(error) }))
-                } else {
-                    self?.alertService.show(on: self?.view,
-                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
-                }
-            }
-        }
-    }
-    
     func model(for indexPath: IndexPath) -> PaymentCellModel {
         let cellType = cellData[indexPath.row]
         switch cellType {
@@ -189,8 +152,8 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func configCardModel() -> PaymentCellModel {
-        guard let selectedCard = selectedCard,
-                let user = user else { return PaymentCellModel() }
+        guard let selectedCard = userService.selectedCard,
+              let user = userService.user else { return PaymentCellModel() }
         return PaymentCellModel(title: selectedCard.productName ?? "",
                                 subtitle: selectedCard.cardNumber.card,
                                 iconURL: selectedCard.cardLogoUrl,
@@ -205,8 +168,8 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func didSelectItem(at indexPath: IndexPath) {
-        guard let selectedCard = selectedCard,
-              let user = user else { return }
+        guard let selectedCard = userService.selectedCard,
+              let user = userService.user else { return }
         let cellType = cellData[indexPath.row]
         switch cellType {
         case .card:
@@ -214,7 +177,7 @@ final class PaymentPresenter: PaymentPresenting {
             router.presentCards(cards: user.paymentToolInfo,
                                 selectedId: selectedCard.paymentId,
                                 selectedCard: { [weak self] card in
-                self?.selectedCard = card
+                self?.userService.selectedCard = card
                 self?.view?.reloadCollectionView()
             })
         case .partPay:
@@ -225,14 +188,16 @@ final class PaymentPresenter: PaymentPresenting {
     }
 
     private func configViews() {
-        guard let user = user else { return }
+        guard let user = userService.user else { return }
         
         view?.configShopInfo(with: user.merchantName,
-                             cost: user.orderAmount.amount.price(with: Int(user.orderAmount.currency)),
+                             cost: user.orderAmount.amount.price(
+                                .init(rawValue: Int(user.orderAmount.currency) ?? 643) ?? .RUB
+                             ),
                              iconURL: user.logoUrl)
         view?.configProfileView(with: user.userInfo)
 
-        if selectedCard != nil {
+        if userService.selectedCard != nil {
             view?.hideLoading()
             view?.reloadCollectionView()
         } else {

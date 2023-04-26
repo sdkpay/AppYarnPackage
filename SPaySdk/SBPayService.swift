@@ -51,6 +51,7 @@ final class DefaultSBPayService: SBPayService {
         SDKManagerAssembly(),
         AuthServiceAssembly(),
         UserServiceAssembly(),
+        PartPayServiceAssembly(),
         LocationManagerAssembly(),
         PaymentServiceAssembly()
     ]

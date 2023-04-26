@@ -19,7 +19,7 @@ enum CurrencyCode: Int {
 }
 
 extension Int {
-    func price(with currency: Int?) -> String {
+    func price(_ currency: CurrencyCode = .RUB) -> String {
         let formatter = NumberFormatter()
         formatter.groupingSeparator = " "
         formatter.groupingSize = 3
@@ -28,7 +28,7 @@ extension Int {
         formatter.maximumFractionDigits = 2
         let finalPrice = Double(self) / 100
         let priceString = formatter.string(from: NSNumber(value: finalPrice)) ?? "0"
-        let currencyString = CurrencyCode(rawValue: currency ?? 643)?.symbol ?? CurrencyCode.RUB.symbol
+        let currencyString = currency.symbol
         return priceString + currencyString
     }
 }

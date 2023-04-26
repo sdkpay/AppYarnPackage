@@ -18,7 +18,8 @@ final class UserServiceAssembly: Assembly {
 
 protocol UserService {
     var user: User? { get }
-    func getUser(completion: @escaping (Result<User, SDKError>) -> Void)
+    var selectedCard: PaymentToolInfo? { get set }
+    func getUser(completion: @escaping (SDKError?) -> Void)
     func checkUserSession(completion: @escaping (Result<Void, SDKError>) -> Void)
     func clearData()
 }
@@ -28,6 +29,8 @@ final class DefaultUserService: UserService {
     private(set) var user: User?
     private let sdkManager: SDKManager
     private let authManager: AuthManager
+    
+    var selectedCard: PaymentToolInfo?
     
     init(network: NetworkService,
          sdkManager: SDKManager,
@@ -42,7 +45,7 @@ final class DefaultUserService: UserService {
         SBLogger.log(.stop(obj: self))
     }
     
-    func getUser(completion: @escaping (Result<User, SDKError>) -> Void) {
+    func getUser(completion: @escaping (SDKError?) -> Void) {
         guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId,
               let authCode = authManager.authCode,
@@ -63,21 +66,30 @@ final class DefaultUserService: UserService {
                         to: User.self) { [weak self] result in
             switch result {
             case .success(let user):
-                self?.user = user
-                completion(.success(user))
+                guard let self = self else { return }
+                self.user = user
+                self.selectedCard = self.selectCard(from: user.paymentToolInfo)
+                completion(nil)
             case .failure(let error):
-                completion(.failure(error))
+                completion(error)
             }
         }
     }
     
     func checkUserSession(completion: @escaping (Result<Void, SDKError>) -> Void) {
-        guard let sessionId = authManager.sessionId else { return }
+        guard let sessionId = authManager.sessionId, user != nil else {
+            completion(.failure(.noData))
+            return
+        }
         network.request(AuthTarget.checkSession(sessionId: sessionId),
                         completion: completion)
     }
     
     func clearData() {
         user = nil
+    }
+
+    private func selectCard(from cards: [PaymentToolInfo]) -> PaymentToolInfo? {
+        cards.first(where: { $0.priorityCard }) ?? cards.first
     }
 }

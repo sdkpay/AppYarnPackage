@@ -18,6 +18,7 @@ private extension CGFloat {
 
 protocol IPartPayVC {
     func setFinalCost(_ value: String)
+    func setButtonEnabled(value: Bool)
 }
 
 final class PartPayVC: ContentVC, IPartPayVC {
@@ -41,7 +42,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
         let view = DefaultButton(buttonAppearance: .full)
         view.setTitle(String(stringLiteral: .PayPart.accept), for: .normal)
         view.addAction { [weak self] in
-            self?.agreementView.shake()
+            self?.presenter.acceptButtonTapped()
         }
         return view
     }()
@@ -57,7 +58,12 @@ final class PartPayVC: ContentVC, IPartPayVC {
         let text = NSAttributedString(text: .PayPart.acceptDoc,
                                       dedicatedPart: .PayPart.acceptDocColor,
                                       attrebutes: [.foregroundColor: UIColor.main])
-        view.config(with: text, checkTapped: {}, textTapped: {})
+        view.config(with: text,
+                    checkTapped: { [weak self] value in
+            self?.presenter.checkTapped(value)
+        }, textTapped: { [weak self] in
+            self?.presenter.agreementViewTapped()
+        })
         return view
     }()
     
@@ -134,6 +140,10 @@ final class PartPayVC: ContentVC, IPartPayVC {
         finalCostLabel.text = value
     }
     
+    func setButtonEnabled(value: Bool) {
+        acceptButton.isEnabled = value
+    }
+    
     private func setupUI() {
         view.addSubview(titleLabel)
         view.addSubview(subTitleLabel)
@@ -191,7 +201,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
         
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cancelButton.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: -.bottomMargin),
+            cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -.bottomMargin),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
             cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
             cancelButton.heightAnchor.constraint(equalToConstant: .defaultButtonHeight)

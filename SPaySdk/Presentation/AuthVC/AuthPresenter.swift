@@ -137,11 +137,35 @@ final class AuthPresenter: AuthPresenting {
                                            type: .defaultError(completion: { self.dismissWithError(error) }))
                 }
             } else {
-                self.view?.showViews(false)
                 self.analytics.sendEvent(.BankAppAuthSuccess)
-                self.router.presentPayment()
+                self.getUser()
             }
         }
+    }
+    
+    private func getUser() {
+        view?.showLoading(with: .Loading.getData, animate: false)
+        userService.getUser { [weak self] error in
+            if let error = error {
+                if error.represents(.noInternetConnection) {
+                    self?.alertService.show(on: self?.view,
+                                            type: .noInternet(retry: { self?.getUser() },
+                                                              completion: { self?.dismissWithError(error) }))
+                } else {
+                    self?.alertService.show(on: self?.view,
+                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
+                }
+            } else {
+                DispatchQueue.main.async { [weak self] in
+                    self?.view?.showViews(false)
+                    self?.router.presentPayment()
+                }
+            }
+        }
+    }
+    
+    private func getBnpl() {
+        // TODO: - Добавить логику бнпл
     }
     
     private func dismissWithError(_ error: SDKError) {
