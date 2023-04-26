@@ -15,8 +15,27 @@ private extension CGFloat {
     static let sideMargin = 20.0
 }
 
+struct PerchaseConfig: Codable {
+    let currency: String?
+    let mobilePhone: String?
+    let orderNumber: String?
+    let orderId: String?
+    let orderDescription: String?
+    let language: String?
+    let recurrentExipiry: String?
+    let recurrentFrequency: Int
+}
+
+enum RequestMethod: String, CaseIterable, Codable {
+    case OrderId, Purchase
+}
+
+enum PayMode: String, CaseIterable, Codable {
+    case Manual, Auto
+}
+
 enum Config: Int, CaseIterable, Codable {
-    case apiKey, merchantLogin, cost, orderId, configMethod, lang, mode, network, ssl
+    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl
     
     var title: String {
         switch self {
@@ -26,10 +45,10 @@ enum Config: Int, CaseIterable, Codable {
             return "MerchantLogin:"
         case .cost:
             return "Cost:"
-        case .orderId:
-            return "OdredId:"
         case .configMethod:
             return "Config request method:"
+        case .orderId:
+            return "OdredId:"
         case .lang:
             return "Lang:"
         case .mode:
@@ -38,6 +57,10 @@ enum Config: Int, CaseIterable, Codable {
             return "Network mode:"
         case .ssl:
             return "SSL:"
+        case .currency:
+            return "Currency:"
+        case .orderNumber:
+            return "OrderNumber:"
         }
     }
     
@@ -46,13 +69,13 @@ enum Config: Int, CaseIterable, Codable {
         case .lang:
             return ["Swift", "Obj-C"]
         case .mode:
-            return ["Manual", "Auto"]
+            return PayMode.allCases.map({ $0.rawValue })
         case .network:
             return [NetworkState.Mocker.rawValue]
         case .ssl:
             return ["On", "Off"]
         case .configMethod:
-            return ["OrderId", "Purchase"]
+            return RequestMethod.allCases.map({ $0.rawValue })
         default:
             return nil
         }
@@ -71,11 +94,13 @@ struct ConfigValues: Codable {
     var apiKey = "APgWA9brxUPpgEz/Qj0dHR4AAAAAAAAADDR8ezdUy7tW0Vvns+yzeJ8FMyClHvqjIdqYmXxYJ3MXG+CaM15S/073vf1A3RoXNTrl1DPxKEkvPBetfoURU7DBI0bkqayEmRROmV6Yu7vlgTwnyJt+88884H7yezp8lEkQ4/dRVlQgYChKGC1Hyi25i9I1TMA+SgxudCUwWMLJ7t7BgQ8wMgCAsLY=" // swiftlint:disable:this line_length
     var cost = "2000"
     var merchantLogin = "test_sberpay"
-    var configMethod = "orderId"
+    var configMethod = RequestMethod.OrderId
     var orderId = "a8c8dc9136924b858f3d1de2c028abda"
+    var orderNumber = "5f3f7d10-7005-7afe-b756-f73001c896b1"
     var lang = "Swift"
-    var mode = "Auto"
+    var mode = PayMode.Auto
     var network = NetworkState.Prom
+    var currency = "643"
     var ssl = "On"
     
     func getValue(for type: Config) -> String {
@@ -89,15 +114,19 @@ struct ConfigValues: Codable {
         case .orderId:
             return orderId
         case .configMethod:
-            return configMethod
+            return configMethod.rawValue
         case .lang:
             return lang
         case .mode:
-            return mode
+            return mode.rawValue
         case .network:
             return network.rawValue
         case .ssl:
             return ssl
+        case .currency:
+            return currency
+        case .orderNumber:
+            return orderNumber
         }
     }
     
@@ -114,19 +143,53 @@ struct ConfigValues: Codable {
         case .lang:
             lang = value
         case .mode:
-            mode = value
+            mode = PayMode(rawValue: value) ?? .Auto
         case .network:
             network = NetworkState(rawValue: value) ?? .Prom
         case .ssl:
             ssl = value
         case .configMethod:
-            configMethod = value
+            configMethod = RequestMethod(rawValue: value) ?? .OrderId
+        case .currency:
+            currency = value
+        case .orderNumber:
+            orderNumber = value
         }
     }
 }
 
 final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    private var cellConfig = Config.allCases
+    private var paymentMethod: RequestMethod = .Purchase
+
+    private var cellConfig: [Config] {
+        switch paymentMethod {
+        case .OrderId:
+            return [
+                .apiKey,
+                .merchantLogin,
+                .lang,
+                .network,
+                .mode,
+                .configMethod,
+                .orderId,
+                .ssl
+            ]
+        case .Purchase:
+            return [
+                .apiKey,
+                .merchantLogin,
+                .lang,
+                .network,
+                .mode,
+                .configMethod,
+                .orderNumber,
+                .cost,
+                .currency,
+                .ssl
+            ]
+        }
+    }
+    
     private var values = ConfigValues()
     
     private lazy var tableView: UITableView = {
@@ -195,6 +258,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
 
     private func prepareData() {
         values = getConfig()
+        paymentMethod = values.configMethod
+        tableView.reloadData()
     }
     
     private func configNav() {
@@ -245,7 +310,15 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         cell.config(title: data.title,
                     items: data.items ?? [],
                     selected: values.getValue(for: data)) { [weak self] value in
-            self?.values.setValue(value: value, for: data)
+            guard let self = self else { return }
+            self.values.setValue(value: value, for: data)
+            if data == .configMethod {
+                self.paymentMethod = RequestMethod(rawValue: value) ?? .OrderId
+                if self.paymentMethod == .Purchase {
+                    self.values.setValue(value: PayMode.Manual.rawValue, for: .mode)
+                }
+                self.tableView.reloadData()
+            }
         }
         return cell
     }
@@ -347,14 +420,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         if values.lang == "Obj-C" {
             vc = ObjcCartVC()
         } else {
-            vc = CartVC(totalCost: Int(values.cost) ?? 0,
-                        apiKey: values.apiKey,
-                        orderId: values.orderId,
-                        merchantLogin: values.merchantLogin,
-                        autoMode: values.mode == "Auto",
-                        purchase: values.configMethod == "Purchase",
-                        network: values.network,
-                        sslOn: values.ssl == "On")
+            vc = CartVC(values: values)
         }
         saveConfig()
 
