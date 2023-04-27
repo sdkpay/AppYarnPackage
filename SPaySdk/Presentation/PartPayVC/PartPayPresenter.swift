@@ -29,11 +29,12 @@ final class PartPayPresenter: PartPayPresenting {
     private let router: PartPayRouter
     private let timeManager: OptimizationCheсkerManager
     private let analytics: AnalyticsService
+    private var partPaySelected: Action
     private var checkTapped = false
 
     weak var view: (IPartPayVC & ContentVC)?
     
-    private var payParts: [PartCellModel]
+    private var payParts: [PartCellModel] = []
     
     var partsCount: Int {
         payParts.count
@@ -43,36 +44,23 @@ final class PartPayPresenter: PartPayPresenting {
          partPayService: PartPayService,
          timeManager: OptimizationCheсkerManager,
          analytics: AnalyticsService,
-         selectedCard: @escaping (PaymentToolInfo) -> Void) {
+         partPaySelected: @escaping Action) {
         self.partPayService = partPayService
         self.router = router
         self.analytics = analytics
         self.timeManager = timeManager
+        self.partPaySelected = partPaySelected
         self.timeManager.startTraking()
-        let model1 = PartCellModel(title: "Оплатите сейчас",
-                                   cost: 2000.price(),
-                                   isSelected: true,
-                                   hideLine: false)
-        let model2 = PartCellModel(title: "Оплатите завтра",
-                                   cost: 2000.price(),
-                                   isSelected: false,
-                                   hideLine: false)
-        let model3 = PartCellModel(title: "Оплатите завтра",
-                                   cost: 2000.price(),
-                                   isSelected: false,
-                                   hideLine: false)
-        let model4 = PartCellModel(title: "Оплатите завтра",
-                                   cost: 2000.price(),
-                                   isSelected: false,
-                                   hideLine: true)
-        payParts = [model1, model2, model3, model4]
     }
     
     func viewDidLoad() {
         timeManager.endTraking(CardsVC.self.description()) {
             analytics.sendEvent(.CardsViewAppeared, with: [$0])
         }
-        view?.setFinalCost(1600000.price())
+        let finalPrice = partPayService.bnplplan?.graphBnpl?.payments
+            .map({ $0.amount })
+            .reduce(0,+) ?? 0
+        view?.setFinalCost(finalPrice.price(CurrencyCode(rawValue: 643) ?? .RUB))
         checkTapped = partPayService.bnplplanSelected
         view?.setButtonEnabled(value: checkTapped)
     }
@@ -82,20 +70,30 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     func agreementViewTapped() {
-        router.presentWebView(with: "https://www.google.com/webhp?hl=en&sa=X&ved=0ahUKEwin0I3W3cX-AhWDqIsKHVurAGIQPAgJ",
-                              title: .PayPart.agreement)
+        router.presentWebView(with: partPayService.bnplplan?.offerUrl ?? "",
+                              title: partPayService.bnplplan?.graphBnpl?.header ?? "")
     }
     
     func acceptButtonTapped() {
-        partPayService.bnplplanSelected = checkTapped
+        partPayService.bnplplanSelected = true
+        partPaySelected()
+        view?.contentNavigationController?.popViewController(animated: true)
     }
     
     func backButtonTapped() {
+        partPayService.bnplplanSelected = false
+        partPaySelected()
         view?.contentNavigationController?.popViewController(animated: true)
     }
     
     func model(for indexPath: IndexPath) -> PartCellModel {
-        // DEBUG
-        return payParts[indexPath.row]
+        guard let parts = partPayService.bnplplan?.graphBnpl?.payments else {
+            return PartCellModel(title: "", cost: "", isSelected: true, hideLine: true)
+        }
+        let part = parts[indexPath.row]
+        return PartCellModel(title: part.date,
+                             cost: part.amount.price(CurrencyCode(rawValue: 643) ?? .RUB),
+                             isSelected: indexPath.row == 0,
+                             hideLine: indexPath.row == parts.count)
     }
 }

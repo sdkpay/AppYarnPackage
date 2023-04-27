@@ -66,6 +66,7 @@ final class CardInfoView: UICollectionViewCell {
         subtitleLabel.text = model.subtitle
         self.needArrow = model.needArrow
         cardIconView.downloadImage(from: model.iconURL)
+        setupUI()
     }
     
     private func setupUI() {

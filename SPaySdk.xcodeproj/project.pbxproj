@@ -69,6 +69,8 @@
 		21B3BA5529F8F3D50024BDF0 /* PartPayRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA5329F8F3D50024BDF0 /* PartPayRouter.swift */; };
 		21B3BA5729F93FAD0024BDF0 /* ExpendedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA5629F93FAD0024BDF0 /* ExpendedButton.swift */; };
 		21B3BA5829F93FAD0024BDF0 /* ExpendedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA5629F93FAD0024BDF0 /* ExpendedButton.swift */; };
+		21B3BA5C29FA526E0024BDF0 /* ContentLoadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA5B29FA526E0024BDF0 /* ContentLoadManager.swift */; };
+		21B3BA5D29FA526E0024BDF0 /* ContentLoadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA5B29FA526E0024BDF0 /* ContentLoadManager.swift */; };
 		21B442C729DDB3F0004F1DFF /* Certificates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B442C629DDB3F0004F1DFF /* Certificates.swift */; };
 		21B442CD29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */; };
 		21B442CF29DDD9F1004F1DFF /* CertificateValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */; };
@@ -434,6 +436,7 @@
 		21B3BA5029F85A2B0024BDF0 /* WebViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewPresenter.swift; sourceTree = "<group>"; };
 		21B3BA5329F8F3D50024BDF0 /* PartPayRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartPayRouter.swift; sourceTree = "<group>"; };
 		21B3BA5629F93FAD0024BDF0 /* ExpendedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpendedButton.swift; sourceTree = "<group>"; };
+		21B3BA5B29FA526E0024BDF0 /* ContentLoadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentLoadManager.swift; sourceTree = "<group>"; };
 		21B442C629DDB3F0004F1DFF /* Certificates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Certificates.swift; sourceTree = "<group>"; };
 		21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = psi.spaymentsplus.ru.der; sourceTree = "<group>"; };
 		21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateValidator.swift; sourceTree = "<group>"; };
@@ -810,6 +813,14 @@
 			path = ExpendedButton;
 			sourceTree = "<group>";
 		};
+		21B3BA5A29FA52620024BDF0 /* ContentLoadManager */ = {
+			isa = PBXGroup;
+			children = (
+				21B3BA5B29FA526E0024BDF0 /* ContentLoadManager.swift */,
+			);
+			path = ContentLoadManager;
+			sourceTree = "<group>";
+		};
 		440DB3A8295C1C6200B84E05 /* ContentTableView */ = {
 			isa = PBXGroup;
 			children = (
@@ -992,6 +1003,7 @@
 		444A13B5291BA98B00C9FBE0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				21B3BA5A29FA52620024BDF0 /* ContentLoadManager */,
 				21B3BA4529F804170024BDF0 /* PartPayService */,
 				2180695829F187C000587AB8 /* BankAppManager */,
 				211DF36D29D18D0C0038A951 /* RemoteConfigService */,
@@ -2041,6 +2053,7 @@
 				21EB4D4429E16405006541B0 /* Bundle+Extensions.swift in Sources */,
 				21EB4D4529E16405006541B0 /* TransparentWindow.swift in Sources */,
 				21EB4D4629E16405006541B0 /* AlertService.swift in Sources */,
+				21B3BA5D29FA526E0024BDF0 /* ContentLoadManager.swift in Sources */,
 				21EB4D4729E16405006541B0 /* Date+Extension.swift in Sources */,
 				21EB4D4829E16405006541B0 /* Gallery.swift in Sources */,
 				21EB4D4929E16405006541B0 /* OptimizationCheсkerManager.swift in Sources */,
@@ -2217,6 +2230,7 @@
 				21B3BA4729F804340024BDF0 /* PartPayService.swift in Sources */,
 				2180D23029E9603D00948681 /* ShakableView.swift in Sources */,
 				2180D22829E9412100948681 /* PartPayPresenter.swift in Sources */,
+				21B3BA5C29FA526E0024BDF0 /* ContentLoadManager.swift in Sources */,
 				2180D22729E9411F00948681 /* PartPayVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

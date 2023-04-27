@@ -53,7 +53,8 @@ final class DefaultSBPayService: SBPayService {
         UserServiceAssembly(),
         PartPayServiceAssembly(),
         LocationManagerAssembly(),
-        PaymentServiceAssembly()
+        PaymentServiceAssembly(),
+        ContentLoadManagerAssembly()
     ]
     
     private func registerServices() {

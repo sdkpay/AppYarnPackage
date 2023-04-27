@@ -10,15 +10,29 @@ import Foundation
 // MARK: - ConfigModel
 struct BnplModel: Codable {
     let isBnplEnabled: Bool
-    let count: Int
-    let payments: [BankApp]
-    let schemas: Schemas
-    let apikey: [String]
-    let images: Images
+    let buttonBnpl: ButtonBnpl?
+    let offerUrl: String?
+    let offerText: String?
+    let graphBnpl: GraphBnpl?
 }
 
-struct Payments: Codable {
+struct GraphBnpl: Codable {
+    let header: String
+    let content: String
+    let count: Int?
+    let text: String?
+    let payments: [Payment]
+}
+
+struct Payment: Codable {
     let date: String
-    let amount: String
+    let amount: Int
     let currencyCode: String
+}
+
+struct ButtonBnpl: Codable {
+    let activeButtonLogo: String
+    let inactiveButtonLogo: String
+    let header: String
+    let content: String
 }

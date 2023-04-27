@@ -35,6 +35,7 @@ final class AuthAssembly {
                       userService: locator.resolve(),
                       alertService: locator.resolve(),
                       bankManager: locator.resolve(),
+                      contentLoadManager: locator.resolve(),
                       timeManager: OptimizationCheсkerManager())
     }
 

@@ -77,7 +77,6 @@ final class WebViewVC: ContentVC, IWebViewVC {
     func setTitle(text: String) {
         titleLabel.text = text
     }
-
     
     private func setupUI() {
         view.height(.vcMaxHeight)

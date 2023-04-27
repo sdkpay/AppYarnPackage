@@ -20,6 +20,7 @@ final class AuthPresenter: AuthPresenting {
     private var bankManager: BankAppManager
     private let alertService: AlertService
     private let timeManager: OptimizationCheсkerManager
+    private let contentLoadManager: ContentLoadManager
 
     weak var view: (IAuthVC & ContentVC)?
     
@@ -30,6 +31,7 @@ final class AuthPresenter: AuthPresenting {
          userService: UserService,
          alertService: AlertService,
          bankManager: BankAppManager,
+         contentLoadManager: ContentLoadManager,
          timeManager: OptimizationCheсkerManager) {
         self.analytics = analytics
         self.router = router
@@ -37,6 +39,7 @@ final class AuthPresenter: AuthPresenting {
         self.sdkManager = sdkManager
         self.userService = userService
         self.alertService = alertService
+        self.contentLoadManager = contentLoadManager
         self.bankManager = bankManager
         self.timeManager = timeManager
         self.timeManager.startTraking()
@@ -138,18 +141,21 @@ final class AuthPresenter: AuthPresenting {
                 }
             } else {
                 self.analytics.sendEvent(.BankAppAuthSuccess)
-                self.getUser()
+                self.loadPaymentData()
             }
         }
     }
     
-    private func getUser() {
+    private func loadPaymentData() {
         view?.showLoading(with: .Loading.getData, animate: false)
-        userService.getUser { [weak self] error in
+        contentLoadManager.load(contentTypes: [
+            (.userData, .high),
+            (.bnplPlan, .low)
+        ]) { [weak self] error in
             if let error = error {
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.getUser() },
+                                            type: .noInternet(retry: { self?.loadPaymentData() },
                                                               completion: { self?.dismissWithError(error) }))
                 } else {
                     self?.alertService.show(on: self?.view,
@@ -162,10 +168,6 @@ final class AuthPresenter: AuthPresenting {
                 }
             }
         }
-    }
-    
-    private func getBnpl() {
-        // TODO: - Добавить логику бнпл
     }
     
     private func dismissWithError(_ error: SDKError) {

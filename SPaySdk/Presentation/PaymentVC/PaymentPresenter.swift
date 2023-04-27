@@ -51,15 +51,10 @@ final class PaymentPresenter: PaymentPresenting {
     private let sdkManager: SDKManager
     private let alertService: AlertService
     private let bankManager: BankAppManager
+    private let partPayService: PartPayService
     private let timeManager: OptimizationCheсkerManager
 
-    private var cellData: [PaymentCellType] {
-        return [
-            .card,
-            .partPay
-        ]
-    }
-    
+    private var cellData: [PaymentCellType] = []
     var cellDataCount: Int {
         cellData.count
     }
@@ -74,6 +69,7 @@ final class PaymentPresenter: PaymentPresenting {
          paymentService: PaymentService,
          locationManager: LocationManager,
          alertService: AlertService,
+         partPayService: PartPayService,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
         self.userService = userService
@@ -82,6 +78,7 @@ final class PaymentPresenter: PaymentPresenting {
         self.paymentService = paymentService
         self.locationManager = locationManager
         self.alertService = alertService
+        self.partPayService = partPayService
         self.bankManager = bankManager
         self.timeManager = timeManager
         self.timeManager.startTraking()
@@ -92,6 +89,7 @@ final class PaymentPresenter: PaymentPresenting {
         timeManager.endTraking(PaymentVC.self.description()) {
             self.analytics.sendEvent(.PayViewAppeared, with: [$0])
         }
+        cellData = configCellData()
     }
     
     func payButtonTapped() {
@@ -161,9 +159,13 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func configPartModel() -> PaymentCellModel {
-        // DEBUG: - Ждем данных с конфига
-        return PaymentCellModel(title: "Плати частями",
-                                subtitle: "Оформлять",
+        guard let bnpl = partPayService.bnplplan,
+              let buttonBnpl = bnpl.buttonBnpl
+        else { return PaymentCellModel() }
+        let icon = partPayService.bnplplanSelected ?buttonBnpl.activeButtonLogo : buttonBnpl.inactiveButtonLogo
+        return PaymentCellModel(title: buttonBnpl.header,
+                                subtitle: buttonBnpl.content,
+                                iconURL: icon,
                                 needArrow: true)
     }
     
@@ -181,8 +183,8 @@ final class PaymentPresenter: PaymentPresenting {
                 self?.view?.reloadCollectionView()
             })
         case .partPay:
-            // DEBUG - Допилю возврат оплаты частями
-            router.presentPartPay { _ in
+            router.presentPartPay { [weak self] in
+                self?.view?.reloadCollectionView()
             }
         }
     }
@@ -224,6 +226,15 @@ final class PaymentPresenter: PaymentPresenting {
                                completion: {})
     }
     
+    private func configCellData() -> [PaymentCellType] {
+        var cellData: [PaymentCellType] = []
+        cellData.append(.card)
+        if let bnpl = partPayService.bnplplan, bnpl.isBnplEnabled {
+            cellData.append(.partPay)
+        }
+       return cellData
+    }
+
     private func configForWaiting() {
         var buttons: [(title: String,
                        type: DefaultButtonAppearance,
