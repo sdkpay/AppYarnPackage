@@ -32,6 +32,16 @@
 		214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 214E9C4A29CC4B09009DF5FE /* FingerprintPackage */; };
 		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		2160A02429E6FC6700B72F40 /* SPaySdkDEBUG.h in Headers */ = {isa = PBXBuildFile; fileRef = 2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2173376D29FD751B00B95C30 /* PaymentFeatureToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2173376C29FD751B00B95C30 /* PaymentFeatureToggle.swift */; };
+		2173376E29FD751B00B95C30 /* PaymentFeatureToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2173376C29FD751B00B95C30 /* PaymentFeatureToggle.swift */; };
+		2173377129FD7C7000B95C30 /* PayContentAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2173377029FD7C7000B95C30 /* PayContentAssembly.swift */; };
+		2173377229FD7C7000B95C30 /* PayContentAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2173377029FD7C7000B95C30 /* PayContentAssembly.swift */; };
+		2173377429FD7C8000B95C30 /* PayContentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2173377329FD7C8000B95C30 /* PayContentVC.swift */; };
+		2173377529FD7C8000B95C30 /* PayContentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2173377329FD7C8000B95C30 /* PayContentVC.swift */; };
+		2173377729FD7C9F00B95C30 /* PayContentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2173377629FD7C9F00B95C30 /* PayContentPresenter.swift */; };
+		2173377829FD7C9F00B95C30 /* PayContentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2173377629FD7C9F00B95C30 /* PayContentPresenter.swift */; };
+		2173377A29FD7CB300B95C30 /* PayContentRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2173377929FD7CB300B95C30 /* PayContentRouter.swift */; };
+		2173377B29FD7CB300B95C30 /* PayContentRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2173377929FD7CB300B95C30 /* PayContentRouter.swift */; };
 		2180695A29F187CD00587AB8 /* BankAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180695929F187CD00587AB8 /* BankAppManager.swift */; };
 		2180695B29F1884E00587AB8 /* BankAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180695929F187CD00587AB8 /* BankAppManager.swift */; };
 		2180695E29F260B600587AB8 /* ConfigGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180695D29F260B600587AB8 /* ConfigGlobal.swift */; };
@@ -71,6 +81,10 @@
 		21B3BA5829F93FAD0024BDF0 /* ExpendedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA5629F93FAD0024BDF0 /* ExpendedButton.swift */; };
 		21B3BA5C29FA526E0024BDF0 /* ContentLoadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA5B29FA526E0024BDF0 /* ContentLoadManager.swift */; };
 		21B3BA5D29FA526E0024BDF0 /* ContentLoadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA5B29FA526E0024BDF0 /* ContentLoadManager.swift */; };
+		21B3BA6029FBC5D90024BDF0 /* FeatureToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA5F29FBC5D90024BDF0 /* FeatureToggle.swift */; };
+		21B3BA6129FBC5D90024BDF0 /* FeatureToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA5F29FBC5D90024BDF0 /* FeatureToggle.swift */; };
+		21B3BA6429FBD6900024BDF0 /* AssemblieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA6329FBD6900024BDF0 /* AssemblieManager.swift */; };
+		21B3BA6529FBD6900024BDF0 /* AssemblieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B3BA6329FBD6900024BDF0 /* AssemblieManager.swift */; };
 		21B442C729DDB3F0004F1DFF /* Certificates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B442C629DDB3F0004F1DFF /* Certificates.swift */; };
 		21B442CD29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */; };
 		21B442CF29DDD9F1004F1DFF /* CertificateValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */; };
@@ -415,6 +429,11 @@
 		21440DBE29D6F5D500E3803E /* String+Ranges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ranges.swift"; sourceTree = "<group>"; };
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPaySdkDEBUG.h; path = SPaySdk/Public/SPaySdkDEBUG.h; sourceTree = "<group>"; };
+		2173376C29FD751B00B95C30 /* PaymentFeatureToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFeatureToggle.swift; sourceTree = "<group>"; };
+		2173377029FD7C7000B95C30 /* PayContentAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayContentAssembly.swift; sourceTree = "<group>"; };
+		2173377329FD7C8000B95C30 /* PayContentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayContentVC.swift; sourceTree = "<group>"; };
+		2173377629FD7C9F00B95C30 /* PayContentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayContentPresenter.swift; sourceTree = "<group>"; };
+		2173377929FD7CB300B95C30 /* PayContentRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayContentRouter.swift; sourceTree = "<group>"; };
 		2180695929F187CD00587AB8 /* BankAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAppManager.swift; sourceTree = "<group>"; };
 		2180695D29F260B600587AB8 /* ConfigGlobal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigGlobal.swift; sourceTree = "<group>"; };
 		2180D22029E93F2700948681 /* PartPayVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartPayVC.swift; sourceTree = "<group>"; };
@@ -437,6 +456,8 @@
 		21B3BA5329F8F3D50024BDF0 /* PartPayRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartPayRouter.swift; sourceTree = "<group>"; };
 		21B3BA5629F93FAD0024BDF0 /* ExpendedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpendedButton.swift; sourceTree = "<group>"; };
 		21B3BA5B29FA526E0024BDF0 /* ContentLoadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentLoadManager.swift; sourceTree = "<group>"; };
+		21B3BA5F29FBC5D90024BDF0 /* FeatureToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggle.swift; sourceTree = "<group>"; };
+		21B3BA6329FBD6900024BDF0 /* AssemblieManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssemblieManager.swift; sourceTree = "<group>"; };
 		21B442C629DDB3F0004F1DFF /* Certificates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Certificates.swift; sourceTree = "<group>"; };
 		21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = psi.spaymentsplus.ru.der; sourceTree = "<group>"; };
 		21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateValidator.swift; sourceTree = "<group>"; };
@@ -726,6 +747,17 @@
 			name = Packages;
 			sourceTree = "<group>";
 		};
+		2173376F29FD7C4000B95C30 /* PayContentVC */ = {
+			isa = PBXGroup;
+			children = (
+				2173377029FD7C7000B95C30 /* PayContentAssembly.swift */,
+				2173377329FD7C8000B95C30 /* PayContentVC.swift */,
+				2173377629FD7C9F00B95C30 /* PayContentPresenter.swift */,
+				2173377929FD7CB300B95C30 /* PayContentRouter.swift */,
+			);
+			path = PayContentVC;
+			sourceTree = "<group>";
+		};
 		2180695829F187C000587AB8 /* BankAppManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -821,6 +853,22 @@
 			path = ContentLoadManager;
 			sourceTree = "<group>";
 		};
+		21B3BA5E29FBC5BB0024BDF0 /* FeatureToggleService */ = {
+			isa = PBXGroup;
+			children = (
+				21B3BA5F29FBC5D90024BDF0 /* FeatureToggle.swift */,
+			);
+			path = FeatureToggleService;
+			sourceTree = "<group>";
+		};
+		21B3BA6229FBD6860024BDF0 /* AssemblieManager */ = {
+			isa = PBXGroup;
+			children = (
+				21B3BA6329FBD6900024BDF0 /* AssemblieManager.swift */,
+			);
+			path = AssemblieManager;
+			sourceTree = "<group>";
+		};
 		440DB3A8295C1C6200B84E05 /* ContentTableView */ = {
 			isa = PBXGroup;
 			children = (
@@ -879,6 +927,7 @@
 		4416E425291E22E600284972 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				2173376F29FD7C4000B95C30 /* PayContentVC */,
 				21B3BA4929F859F40024BDF0 /* WebViewVC */,
 				2180D21F29E93F0000948681 /* PartPayVC */,
 				21440DB229D5B64000E3803E /* LogVC */,
@@ -1003,6 +1052,7 @@
 		444A13B5291BA98B00C9FBE0 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				21B3BA5E29FBC5BB0024BDF0 /* FeatureToggleService */,
 				21B3BA5A29FA52620024BDF0 /* ContentLoadManager */,
 				21B3BA4529F804170024BDF0 /* PartPayService */,
 				2180695829F187C000587AB8 /* BankAppManager */,
@@ -1100,6 +1150,7 @@
 		44533D1F29852A1C0041FAA9 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				21B3BA6229FBD6860024BDF0 /* AssemblieManager */,
 				445D01892994F35F006458AD /* BaseRequestManager */,
 				443666C6298BBE70005119A2 /* LocationManager */,
 				443666C5298BBE68005119A2 /* AuthManager */,
@@ -1179,6 +1230,7 @@
 		445CB091292CC07300F50047 /* PaymentVC */ = {
 			isa = PBXGroup;
 			children = (
+				2173376C29FD751B00B95C30 /* PaymentFeatureToggle.swift */,
 				445CB0A1292E119800F50047 /* PaymentAssembly.swift */,
 				445CB092292CC08400F50047 /* PaymentVC.swift */,
 				445CB09A292DFF5100F50047 /* PaymentPresenter.swift */,
@@ -1956,6 +2008,7 @@
 				21EB4CF029E16405006541B0 /* CoverTransitionDriver.swift in Sources */,
 				21EB4CF129E16405006541B0 /* UserTarget.swift in Sources */,
 				21B3BA5229F85A2B0024BDF0 /* WebViewPresenter.swift in Sources */,
+				2173377229FD7C7000B95C30 /* PayContentAssembly.swift in Sources */,
 				21EB4CF329E16405006541B0 /* Data+Extension.swift in Sources */,
 				21B3BA4F29F85A1A0024BDF0 /* WebViewAssembly.swift in Sources */,
 				21EB4CF429E16405006541B0 /* UIAplication+TopViewContriller.swift in Sources */,
@@ -1969,6 +2022,7 @@
 				21EB4CFB29E16405006541B0 /* ContentTableView.swift in Sources */,
 				21EB4CFC29E16405006541B0 /* PaymentOrderModel.swift in Sources */,
 				2180D22F29E95FB500948681 /* ShakableView.swift in Sources */,
+				21B3BA6129FBC5D90024BDF0 /* FeatureToggle.swift in Sources */,
 				21EB4CFD29E16405006541B0 /* BankView.swift in Sources */,
 				21EB4CFE29E16405006541B0 /* SPay.swift in Sources */,
 				21EB4CFF29E16405006541B0 /* ImageDownloader.swift in Sources */,
@@ -1978,6 +2032,7 @@
 				21EB4D0229E16405006541B0 /* StartupService.swift in Sources */,
 				21EB4D0329E16405006541B0 /* ConfigTarget.swift in Sources */,
 				21EB4D0429E16405006541B0 /* AuthInfo.swift in Sources */,
+				2173377529FD7C8000B95C30 /* PayContentVC.swift in Sources */,
 				21EB4D0529E16405006541B0 /* String+Random.swift in Sources */,
 				21EB4D0629E16405006541B0 /* BankModel.swift in Sources */,
 				21EB4D0729E16405006541B0 /* NetworkDecoding.swift in Sources */,
@@ -1999,6 +2054,7 @@
 				AE4D878F29EFE9B6005C8092 /* Array+Safe.swift in Sources */,
 				21EB4D1529E16405006541B0 /* UIImage+Bundle.swift in Sources */,
 				21EB4D1629E16405006541B0 /* CoverDismissAnimatedTransitioning.swift in Sources */,
+				2173376E29FD751B00B95C30 /* PaymentFeatureToggle.swift in Sources */,
 				21EB4D1729E16405006541B0 /* RemoteConfigService.swift in Sources */,
 				21EB4D1829E16405006541B0 /* BaseRequestManager.swift in Sources */,
 				21EB4D1929E16405006541B0 /* SDKError.swift in Sources */,
@@ -2016,6 +2072,7 @@
 				21EB4D2429E16405006541B0 /* AuthAssembly.swift in Sources */,
 				21EB4D2529E16405006541B0 /* UIPanGestureRecognizer+Extension.swift in Sources */,
 				21EB4D2629E16405006541B0 /* ActionButton.swift in Sources */,
+				2173377829FD7C9F00B95C30 /* PayContentPresenter.swift in Sources */,
 				21EB4D2729E16405006541B0 /* CardsVC.swift in Sources */,
 				21EB4D2829E16405006541B0 /* PaymentRouter.swift in Sources */,
 				21EB4D2929E16405006541B0 /* RootVC.swift in Sources */,
@@ -2033,10 +2090,12 @@
 				21B3BA4029F7E7BE0024BDF0 /* BnplTarget.swift in Sources */,
 				21EB4D3329E16405006541B0 /* StubNetworkProvider.swift in Sources */,
 				21EB4D3429E16405006541B0 /* UIView+Shimmer.swift in Sources */,
+				2173377B29FD7CB300B95C30 /* PayContentRouter.swift in Sources */,
 				21EB4D3529E16405006541B0 /* BuildSettings.swift in Sources */,
 				21EB4D3629E16405006541B0 /* SPaymentTokenResponse.swift in Sources */,
 				2180D22529E93FFB00948681 /* PartPayPresenter.swift in Sources */,
 				21EB4D3729E16405006541B0 /* UIView+Template.swift in Sources */,
+				21B3BA6529FBD6900024BDF0 /* AssemblieManager.swift in Sources */,
 				21EB4D3829E16405006541B0 /* UIImageView+Download.swift in Sources */,
 				21EB4D3929E16405006541B0 /* AuthRouter.swift in Sources */,
 				21EB4D3A29E16405006541B0 /* PaymentTokenModel.swift in Sources */,
@@ -2139,7 +2198,9 @@
 				44A0B5BF293E05CC007AB3FD /* CardCell.swift in Sources */,
 				4473D6CD29409A8D00802446 /* UserDefaults+Extension.swift in Sources */,
 				445CB090292CBEEF00F50047 /* UIButton+Background.swift in Sources */,
+				21B3BA6029FBC5D90024BDF0 /* FeatureToggle.swift in Sources */,
 				21B442C729DDB3F0004F1DFF /* Certificates.swift in Sources */,
+				21B3BA6429FBD6900024BDF0 /* AssemblieManager.swift in Sources */,
 				2197F38129DAD9CD0032F356 /* LogLevelAlertVC.swift in Sources */,
 				4464DF8C291D0452000C9B45 /* NetworkProvider.swift in Sources */,
 				21B3BA4329F7E9AA0024BDF0 /* BnplModel.swift in Sources */,
@@ -2156,6 +2217,7 @@
 				AE4D867A29E5339C005C8092 /* SBOffset.swift in Sources */,
 				445D018B2994F375006458AD /* BaseRequestManager.swift in Sources */,
 				4416E424291E21C300284972 /* SDKError.swift in Sources */,
+				2173377A29FD7CB300B95C30 /* PayContentRouter.swift in Sources */,
 				44A31268298156C30099EB76 /* String+Extensions.swift in Sources */,
 				44A3125E298137E90099EB76 /* RootPresenter.swift in Sources */,
 				210CACAC29EE6D0000E33E0A /* PartCell.swift in Sources */,
@@ -2170,6 +2232,7 @@
 				AE4D868C29E534D0005C8092 /* UIEdgeInsets+Extension.swift in Sources */,
 				AE4D868629E5347C005C8092 /* SBEdgeGroup.swift in Sources */,
 				44834C6A292E16EA000A32B2 /* AuthAssembly.swift in Sources */,
+				2173376D29FD751B00B95C30 /* PaymentFeatureToggle.swift in Sources */,
 				44F9FD60295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift in Sources */,
 				445CB08C292CB9D000F50047 /* ActionButton.swift in Sources */,
 				44A0B5BB293DF267007AB3FD /* CardsVC.swift in Sources */,
@@ -2194,6 +2257,7 @@
 				21253D1E29C9B20B004ED82D /* UIView+Template.swift in Sources */,
 				21253D2329CA3152004ED82D /* UIImageView+Download.swift in Sources */,
 				44A3126129813ABB0099EB76 /* AuthRouter.swift in Sources */,
+				2173377129FD7C7000B95C30 /* PayContentAssembly.swift in Sources */,
 				44533D1E298521380041FAA9 /* PaymentTokenModel.swift in Sources */,
 				445CB066292BB3E300F50047 /* String+Localized.swift in Sources */,
 				211DF36C29D18CF30038A951 /* ConfigModel.swift in Sources */,
@@ -2206,6 +2270,7 @@
 				44F9FD5F295AFCAC00FE4B9F /* CGPoint+Extension.swift in Sources */,
 				211DF36429D18B220038A951 /* UIImage+base64.swift in Sources */,
 				44F9FD61295AFCAC00FE4B9F /* CGFloat+Extension.swift in Sources */,
+				2173377429FD7C8000B95C30 /* PayContentVC.swift in Sources */,
 				2180D23329E96C9900948681 /* NSAttributedString+Extension.swift in Sources */,
 				44499BED296EB4A500B6A582 /* Bundle+Extensions.swift in Sources */,
 				44B821FD2923810C00C06C51 /* TransparentWindow.swift in Sources */,
@@ -2224,6 +2289,7 @@
 				44F9FD51295AFAD700FE4B9F /* ContentNC.swift in Sources */,
 				21440DBA29D5EE1F00E3803E /* SearchInputView.swift in Sources */,
 				44A31254298108330099EB76 /* Locator.swift in Sources */,
+				2173377729FD7C9F00B95C30 /* PayContentPresenter.swift in Sources */,
 				4479ECDA29476EEF009B3AB8 /* Style.swift in Sources */,
 				44D898D82937449B00550FC6 /* SDKManager.swift in Sources */,
 				444A13BB291BAFDA00C9FBE0 /* SPButton.swift in Sources */,

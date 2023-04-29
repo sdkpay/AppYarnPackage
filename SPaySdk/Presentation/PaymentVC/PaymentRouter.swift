@@ -8,7 +8,9 @@
 import UIKit
 
 protocol PaymentRouting {
-    func presentCards(cards: [PaymentToolInfo], selectedId: Int, selectedCard: @escaping (PaymentToolInfo) -> Void)
+    func presentCards(cards: [PaymentToolInfo],
+                      selectedId: Int,
+                      selectedCard: @escaping (PaymentToolInfo) -> Void)
     func presentPartPay(partPaySelected: @escaping Action)
 }
 

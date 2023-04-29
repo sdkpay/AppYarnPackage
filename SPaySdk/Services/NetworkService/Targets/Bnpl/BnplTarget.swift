@@ -53,4 +53,3 @@ extension BnplTarget: TargetType {
         }
     }
 }
-

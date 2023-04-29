@@ -51,8 +51,9 @@ final class PaymentPresenter: PaymentPresenting {
     private let sdkManager: SDKManager
     private let alertService: AlertService
     private let bankManager: BankAppManager
-    private let partPayService: PartPayService
     private let timeManager: OptimizationCheсkerManager
+    
+    private let partPayService: PartPayService?
 
     private var cellData: [PaymentCellType] = []
     var cellDataCount: Int {
@@ -69,7 +70,7 @@ final class PaymentPresenter: PaymentPresenting {
          paymentService: PaymentService,
          locationManager: LocationManager,
          alertService: AlertService,
-         partPayService: PartPayService,
+         partPayService: PartPayService? = nil,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
         self.userService = userService
@@ -159,10 +160,11 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func configPartModel() -> PaymentCellModel {
-        guard let bnpl = partPayService.bnplplan,
+        guard let partPayService = partPayService,
+              let bnpl = partPayService.bnplplan,
               let buttonBnpl = bnpl.buttonBnpl
         else { return PaymentCellModel() }
-        let icon = partPayService.bnplplanSelected ?buttonBnpl.activeButtonLogo : buttonBnpl.inactiveButtonLogo
+        let icon = partPayService.bnplplanSelected ? buttonBnpl.activeButtonLogo : buttonBnpl.inactiveButtonLogo
         return PaymentCellModel(title: buttonBnpl.header,
                                 subtitle: buttonBnpl.content,
                                 iconURL: icon,
@@ -229,7 +231,9 @@ final class PaymentPresenter: PaymentPresenting {
     private func configCellData() -> [PaymentCellType] {
         var cellData: [PaymentCellType] = []
         cellData.append(.card)
-        if let bnpl = partPayService.bnplplan, bnpl.isBnplEnabled {
+        if let partPayService = partPayService,
+           let bnpl = partPayService.bnplplan,
+           bnpl.isBnplEnabled {
             cellData.append(.partPay)
         }
        return cellData

@@ -9,10 +9,12 @@ import Foundation
 
 final class PartPayServiceAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: PartPayService = DefaultPartPayService(network: container.resolve(),
-                                                            sdkManager: container.resolve(),
-                                                            authManager: container.resolve())
-        container.register(service: service)
+        container.register(reference: {
+            let service: PartPayService = DefaultPartPayService(network: container.resolve(),
+                                                                sdkManager: container.resolve(),
+                                                                authManager: container.resolve())
+            return service
+        })
     }
 }
 

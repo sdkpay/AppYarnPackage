@@ -19,6 +19,9 @@ private extension CGFloat {
 protocol IPartPayVC {
     func setFinalCost(_ value: String)
     func setButtonEnabled(value: Bool)
+    func configCheckView(text: NSAttributedString,
+                         checkTapped: @escaping BoolAction,
+                         textTapped: @escaping Action)
 }
 
 final class PartPayVC: ContentVC, IPartPayVC {
@@ -58,15 +61,6 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     private lazy var agreementView: CheckView = {
         let view = CheckView()
-        let text = NSAttributedString(text: .PayPart.acceptDoc,
-                                      dedicatedPart: .PayPart.acceptDocColor,
-                                      attrebutes: [.foregroundColor: UIColor.main])
-        view.config(with: text,
-                    checkTapped: { [weak self] value in
-            self?.presenter.checkTapped(value)
-        }, textTapped: { [weak self] in
-            self?.presenter.agreementViewTapped()
-        })
         return view
     }()
     
@@ -125,7 +119,6 @@ final class PartPayVC: ContentVC, IPartPayVC {
         super.viewDidLoad()
         topBarIsHidden = true
         presenter.viewDidLoad()
-        setupUI()
         SBLogger.log(.didLoad(view: self))
     }
     
@@ -145,6 +138,15 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     func setButtonEnabled(value: Bool) {
         acceptButton.isEnabled = value
+    }
+    
+    func configCheckView(text: NSAttributedString,
+                         checkTapped: @escaping BoolAction,
+                         textTapped: @escaping Action) {
+        agreementView.config(with: text,
+                             checkTapped: checkTapped,
+                             textTapped: textTapped)
+        setupUI()
     }
     
     private func setupUI() {

@@ -9,8 +9,12 @@ import Foundation
 
 final class ContentLoadManagerAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: ContentLoadManager = DefaultContentLoadManager(userService: container.resolve(),
-                                                                    partPayService: container.resolve())
+        let service: ContentLoadManager
+        switch container.resolve(FeatureToggleService.self).isEnabled(.bnpl) {
+        case true: service = DefaultContentLoadManager(userService: container.resolve(),
+                                                       partPayService: container.resolve())
+        case false: service = DefaultContentLoadManager(userService: container.resolve())
+        }
         container.register(service: service)
     }
 }
@@ -32,12 +36,12 @@ protocol ContentLoadManager {
 
 final class DefaultContentLoadManager: ContentLoadManager {
     private let userService: UserService
-    private let partPayService: PartPayService
+    private var partPayService: PartPayService?
     
     private let group = DispatchGroup()
     
     init(userService: UserService,
-         partPayService: PartPayService) {
+         partPayService: PartPayService? = nil) {
         self.partPayService = partPayService
         self.userService = userService
     }
@@ -71,6 +75,7 @@ final class DefaultContentLoadManager: ContentLoadManager {
         case .userData:
             userService.getUser(completion: completion)
         case .bnplPlan:
+            guard let partPayService = partPayService else { return completion(nil) }
             partPayService.getBnplPlan(completion: completion)
         }
     }

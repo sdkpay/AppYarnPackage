@@ -11,7 +11,7 @@ typealias PaymentTokenCompletion = (SPaymentTokenResponse) -> Void
 typealias PaymentCompletion = (_ state: SPayState, _ info: String) -> Void
 
 protocol SBPayService {
-    func setup(apiKey: String, completion: Action?)
+    func setup(apiKey: String, bnplPlan: Bool, completion: Action?)
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
@@ -27,94 +27,76 @@ protocol SBPayService {
 }
 
 extension SBPayService {
-    func setup(apiKey: String, completion: Action? = nil) {
-        setup(apiKey: apiKey, completion: completion)
+    func setup(apiKey: String, bnplPlan: Bool = true, completion: Action? = nil) {
+        setup(apiKey: apiKey, bnplPlan: bnplPlan, completion: completion)
     }
 }
 
 final class DefaultSBPayService: SBPayService {
-
     private lazy var startService: StartupService = DefaultStartupService(timeManager: timeManager)
     private lazy var locator: LocatorService = DefaultLocatorService()
-    private var apiKey: String?
+    private let assemblyManager = AssemblyManager()
     private let timeManager = OptimizationCheсkerManager()
-
-    private var assemblies: [Assembly] = [
-        AnalyticsServiceAssembly(),
-        PersonalMetricsServiceAssembly(),
-        BankAppManagerAssembly(),
-        AuthManagerAssembly(),
-        BaseRequestManagerAssembly(),
-        NetworkServiceAssembly(),
-        RemoteConfigServiceAssembly(),
-        AlertServiceAssembly(),
-        SDKManagerAssembly(),
-        AuthServiceAssembly(),
-        UserServiceAssembly(),
-        PartPayServiceAssembly(),
-        LocationManagerAssembly(),
-        PaymentServiceAssembly(),
-        ContentLoadManagerAssembly()
-    ]
+    private var apiKey: String?
     
-    private func registerServices() {
-        for assembly in assemblies {
-            assembly.register(in: locator)
-        }
-    }
-    
-    func setup(apiKey: String, completion: Action? = nil) {
+    func setup(apiKey: String, bnplPlan: Bool, completion: Action? = nil) {
         self.apiKey = apiKey
         UIFont.registerFontsIfNeeded()
+        assemblyManager.registerServices(to: locator)
+        locator
+            .resolve(FeatureToggleService.self)
+            .setFeature(.init(feature: .bnpl, isEnabled: bnplPlan))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         SBLogger.dateString = dateFormatter.string(from: Date())
-        registerServices()
-        let remoteConfigService: RemoteConfigService = locator.resolve()
-        remoteConfigService.getConfig(with: apiKey) { error in
-            completion?()
-            guard error == nil else { return }
-            let analyticsService: AnalyticsService = self.locator.resolve()
-            analyticsService.config()
-        }
+        locator
+            .resolve(RemoteConfigService.self)
+            .getConfig(with: apiKey) { error in
+                completion?()
+                guard error == nil else { return }
+                self.locator
+                    .resolve(AnalyticsService.self)
+                    .config()
+            }
     }
     
     var isReadyForSPay: Bool {
         SBLogger.log(.version)
-        registerServices()
         // Для симулятора всегда true для удобства разработки
-            #if targetEnvironment(simulator)
-       return true
-            #else
-        let bankManager: BankAppManager = locator.resolve()
-        let analyticsService: AnalyticsService = locator.resolve()
-        let apps = bankManager.avaliableBanks
+#if targetEnvironment(simulator)
+        return true
+#else
+        let apps = locator.resolve(BankAppManager.self).avaliableBanks
+        locator
+            .resolve(AnalyticsService.self)
+            .sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
         SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
-        analyticsService.sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
         return !apps.isEmpty
-            #endif
+#endif
     }
-
+    
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
         SBLogger.logRequestPaymentToken(with: request)
-        let manager: SDKManager = locator.resolve()
         guard let apiKey = apiKey else { return assertionFailure(.MerchantAlert.alertApiKey) }
-        manager.config(apiKey: apiKey,
-                       paymentTokenRequest: request,
-                       completion: { response in
-            SBLogger.logResponsePaymentToken(with: response)
-            completion(response)
-        })
+        locator
+            .resolve(SDKManager.self)
+            .config(apiKey: apiKey,
+                    paymentTokenRequest: request,
+                    completion: { response in
+                SBLogger.logResponsePaymentToken(with: response)
+                completion(response)
+            })
         startService.openInitialScreen(with: viewController, with: locator)
         SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
     }
     
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
-        let manager: SDKManager = locator.resolve()
-        manager.pay(with: paymentRequest, completion: completion)
+        locator
+            .resolve(SDKManager.self)
+            .pay(with: paymentRequest, completion: completion)
     }
     
     func completePayment(paymentSuccess: SPayState,
@@ -125,24 +107,27 @@ final class DefaultSBPayService: SBPayService {
     func payWithOrderId(with viewController: UIViewController,
                         paymentRequest: SFullPaymentRequest,
                         completion: @escaping PaymentCompletion) {
-        let manager: SDKManager = locator.resolve()
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
         guard let apiKey = apiKey else { return assertionFailure(.MerchantAlert.alertVersion) }
-        manager.configWithOrderId(apiKey: apiKey,
-                                  paymentRequest: paymentRequest,
-                                  completion: completion)
+        locator
+            .resolve(SDKManager.self)
+            .configWithOrderId(apiKey: apiKey,
+                               paymentRequest: paymentRequest,
+                               completion: completion)
         SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
         startService.openInitialScreen(with: viewController,
                                        with: locator)
         timeManager.stopCheckingCPULoad {
-            let analyticsService: AnalyticsService = self.locator.resolve()
-            analyticsService.sendEvent(.StartTime, with: [$0])
+            self.locator
+                .resolve(AnalyticsService.self)
+                .sendEvent(.StartTime, with: [$0])
         }
     }
-
+    
     func getResponseFrom(_ url: URL) {
-        let authService: AuthService = locator.resolve()
-        authService.completeAuth(with: url)
+        locator
+            .resolve(AuthService.self)
+            .completeAuth(with: url)
     }
 }

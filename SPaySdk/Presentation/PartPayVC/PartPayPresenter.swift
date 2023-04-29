@@ -17,8 +17,6 @@ struct PartCellModel {
 protocol PartPayPresenting {
     func viewDidLoad()
     var partsCount: Int { get }
-    func checkTapped(_ value: Bool)
-    func agreementViewTapped()
     func acceptButtonTapped()
     func backButtonTapped()
     func model(for indexPath: IndexPath) -> PartCellModel
@@ -57,19 +55,29 @@ final class PartPayPresenter: PartPayPresenting {
         timeManager.endTraking(CardsVC.self.description()) {
             analytics.sendEvent(.CardsViewAppeared, with: [$0])
         }
-        let finalPrice = partPayService.bnplplan?.graphBnpl?.payments
-            .map({ $0.amount })
-            .reduce(0,+) ?? 0
+        let finalPrice = 200
         view?.setFinalCost(finalPrice.price(CurrencyCode(rawValue: 643) ?? .RUB))
         checkTapped = partPayService.bnplplanSelected
         view?.setButtonEnabled(value: checkTapped)
+        configCheckView()
+    }
+    
+    private func configCheckView() {
+        let text = NSAttributedString(string: partPayService.bnplplan?.offerText ?? "")
+        view?.configCheckView(text: text,
+                              checkTapped: { [weak self] value in
+            self?.checkTapped(value)
+        },
+                              textTapped: { [weak self] in
+            self?.agreementViewTapped()
+        })
     }
 
-    func checkTapped(_ value: Bool) {
+    private func checkTapped(_ value: Bool) {
         view?.setButtonEnabled(value: value)
     }
     
-    func agreementViewTapped() {
+    private func agreementViewTapped() {
         router.presentWebView(with: partPayService.bnplplan?.offerUrl ?? "",
                               title: partPayService.bnplplan?.graphBnpl?.header ?? "")
     }

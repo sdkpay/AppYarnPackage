@@ -7,7 +7,7 @@
 */
 // Common
 "pay.title" = "Оплатить";
-"cancel.title" = "Отменить";
+"cancel.title" = "Отменить оплату";
 "ok.title" = "Понятно";
 "return.title" = "К способам оплаты";
 "try.title" = "Попробовать ещё раз";
@@ -22,12 +22,9 @@
 // PartPay
 "part.pay.title" = "Плати частями";
 "part.pay.subtitle" = "4 платежа раз в 2 недели";
-"accept.title" = "Подтвердить";
-"part.pay.cancel.title" = "Оплатить полностью";
-"part.pay.accert.doc" = "Я соглашаюсь с условиями договора.";
-"part.pay.accert.doc.color" = "условиями договора.";
+"accept.title" = "Подтвердить оплату частями";
+"part.pay.cancel.title" = "Не хочу платить частями";
 "part.pay.final" = "Итого";
-"part.pay.today" = "Спишем сегодня";
 "agreement.title" = "Условия договора";
 
 // Error

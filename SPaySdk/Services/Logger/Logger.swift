@@ -337,7 +337,16 @@ struct SBLogger: ResponseDecoder {
         log(
             level: .debug(level: .lifeCycle),
             """
-            ☑️ Locator register service: \(key)
+            📦 Locator register service: \(key)
+            """
+        )
+    }
+    
+    static func logLocatorRegisterRef(_ key: String) {
+        log(
+            level: .debug(level: .lifeCycle),
+            """
+            📦 Locator register service reference: \(key)
             """
         )
     }
@@ -346,7 +355,7 @@ struct SBLogger: ResponseDecoder {
         log(
             level: .debug(level: .lifeCycle),
             """
-            🔘 Locator resolve service: \(key)
+            ✂️ Locator resolve service: \(key)
             """
         )
     }
