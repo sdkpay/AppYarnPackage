@@ -72,8 +72,10 @@ enum AlertType {
 
 final class AlertServiceAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: AlertService = DefaultAlertService(locator: container)
-        container.register(service: service)
+        container.register(reference: {
+            let service: AlertService = DefaultAlertService(locator: container)
+            return service
+        })
     }
 }
 

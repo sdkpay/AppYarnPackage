@@ -9,10 +9,12 @@ import Foundation
 
 final class UserServiceAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: UserService = DefaultUserService(network: container.resolve(),
-                                                      sdkManager: container.resolve(),
-                                                      authManager: container.resolve())
-        container.register(service: service)
+        container.register {
+            let service: UserService = DefaultUserService(network: container.resolve(),
+                                                          sdkManager: container.resolve(),
+                                                          authManager: container.resolve())
+            return service
+        }
     }
 }
 

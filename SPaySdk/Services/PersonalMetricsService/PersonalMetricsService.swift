@@ -10,8 +10,10 @@ import Foundation
 
 final class PersonalMetricsServiceAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: PersonalMetricsService = DefaultPersonalMetricsService()
-        container.register(service: service)
+        container.register {
+            let service: PersonalMetricsService = DefaultPersonalMetricsService()
+            return service
+        }
     }
 }
 

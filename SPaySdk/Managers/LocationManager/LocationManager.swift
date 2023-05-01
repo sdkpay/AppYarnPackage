@@ -10,8 +10,10 @@ import CoreLocation
 
 final class LocationManagerAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: LocationManager = DefaultLocationManager()
-        container.register(service: service)
+        container.register {
+            let service: LocationManager = DefaultLocationManager()
+            return service
+        }
     }
 }
 

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class PaymentAssembly: PaymentFeatureToggle {
+final class PaymentAssembly {
     private let locator: LocatorService
 
     init(locator: LocatorService) {
@@ -16,11 +16,24 @@ final class PaymentAssembly: PaymentFeatureToggle {
 
     func createModule() -> ContentVC {
         let router = moduleRouter()
-        let presenter = modulePresenter(router, locator: locator)
+        let presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         router.viewController = contentView
         return contentView
+    }
+    
+    func modulePresenter(_ router: PaymentRouting) -> PaymentPresenter {
+        PaymentPresenter(router,
+                         manager: locator.resolve(),
+                         userService: locator.resolve(),
+                         analytics: locator.resolve(),
+                         bankManager: locator.resolve(),
+                         paymentService: locator.resolve(),
+                         locationManager: locator.resolve(),
+                         alertService: locator.resolve(),
+                         partPayService: locator.resolve(),
+                         timeManager: OptimizationCheсkerManager())
     }
 
     func moduleRouter() -> PaymentRouter {

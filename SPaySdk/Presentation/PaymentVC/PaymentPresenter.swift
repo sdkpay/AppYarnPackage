@@ -53,7 +53,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let bankManager: BankAppManager
     private let timeManager: OptimizationCheсkerManager
     
-    private let partPayService: PartPayService?
+    private let partPayService: PartPayService
 
     private var cellData: [PaymentCellType] = []
     var cellDataCount: Int {
@@ -70,7 +70,7 @@ final class PaymentPresenter: PaymentPresenting {
          paymentService: PaymentService,
          locationManager: LocationManager,
          alertService: AlertService,
-         partPayService: PartPayService? = nil,
+         partPayService: PartPayService,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
         self.userService = userService
@@ -160,8 +160,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func configPartModel() -> PaymentCellModel {
-        guard let partPayService = partPayService,
-              let bnpl = partPayService.bnplplan,
+        guard let bnpl = partPayService.bnplplan,
               let buttonBnpl = bnpl.buttonBnpl
         else { return PaymentCellModel() }
         let icon = partPayService.bnplplanSelected ? buttonBnpl.activeButtonLogo : buttonBnpl.inactiveButtonLogo
@@ -231,8 +230,7 @@ final class PaymentPresenter: PaymentPresenting {
     private func configCellData() -> [PaymentCellType] {
         var cellData: [PaymentCellType] = []
         cellData.append(.card)
-        if let partPayService = partPayService,
-           let bnpl = partPayService.bnplplan,
+        if let bnpl = partPayService.bnplplan,
            bnpl.isBnplEnabled {
             cellData.append(.partPay)
         }

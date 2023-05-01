@@ -18,6 +18,7 @@ private extension CGFloat {
 
 protocol IPartPayVC {
     func setFinalCost(_ value: String)
+    func setSubtitle(_ value: String)
     func setButtonEnabled(value: Bool)
     func configCheckView(text: NSAttributedString,
                          checkTapped: @escaping BoolAction,
@@ -134,6 +135,10 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     func setFinalCost(_ value: String) {
         finalCostLabel.text = value
+    }
+    
+    func setSubtitle(_ value: String) {
+        subTitleLabel.text = value
     }
     
     func setButtonEnabled(value: Bool) {

@@ -21,8 +21,10 @@ extension String {
 
 final class BaseRequestManagerAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve())
-        container.register(service: service)
+        container.register {
+            let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve())
+            return service
+        }
     }
 }
 

@@ -9,8 +9,10 @@ import Foundation
 
 final class AuthManagerAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: AuthManager = DefaultAuthManager()
-        container.register(service: service)
+        container.register {
+            let service: AuthManager = DefaultAuthManager()
+            return service
+        }
     }
 }
 

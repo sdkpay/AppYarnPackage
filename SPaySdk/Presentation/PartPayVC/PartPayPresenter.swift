@@ -59,6 +59,7 @@ final class PartPayPresenter: PartPayPresenting {
         view?.setFinalCost(finalPrice.price(CurrencyCode(rawValue: 643) ?? .RUB))
         checkTapped = partPayService.bnplplanSelected
         view?.setButtonEnabled(value: checkTapped)
+        view?.setSubtitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
         configCheckView()
     }
     

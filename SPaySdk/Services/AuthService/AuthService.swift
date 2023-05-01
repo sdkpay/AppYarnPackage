@@ -9,13 +9,15 @@ import UIKit
 
 final class AuthServiceAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: AuthService = DefaultAuthService(network: container.resolve(),
-                                                      sdkManager: container.resolve(),
-                                                      analytics: container.resolve(),
-                                                      bankAppManager: container.resolve(),
-                                                      authManager: container.resolve(),
-                                                      personalMetricsService: container.resolve())
-        container.register(service: service)
+        container.register {
+            let service: AuthService = DefaultAuthService(network: container.resolve(),
+                                                          sdkManager: container.resolve(),
+                                                          analytics: container.resolve(),
+                                                          bankAppManager: container.resolve(),
+                                                          authManager: container.resolve(),
+                                                          personalMetricsService: container.resolve())
+            return service
+        }
     }
 }
 

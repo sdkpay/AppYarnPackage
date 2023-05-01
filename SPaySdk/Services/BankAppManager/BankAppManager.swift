@@ -9,8 +9,10 @@ import UIKit
 
 final class BankAppManagerAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: BankAppManager = DefaultBankAppManager()
-        container.register(service: service)
+        container.register {
+            let service: BankAppManager = DefaultBankAppManager()
+            return service
+        }
     }
 }
 

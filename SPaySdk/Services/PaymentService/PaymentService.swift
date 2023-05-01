@@ -9,11 +9,13 @@ import Foundation
 
 final class PaymentServiceAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: PaymentService = DefaultPaymentService(authManager: container.resolve(),
-                                                            network: container.resolve(), userService: container.resolve(),
-                                                            personalMetricsService: container.resolve(),
-                                                            sdkManager: container.resolve())
-        container.register(service: service)
+        container.register {
+            let service: PaymentService = DefaultPaymentService(authManager: container.resolve(),
+                                                                network: container.resolve(), userService: container.resolve(),
+                                                                personalMetricsService: container.resolve(),
+                                                                sdkManager: container.resolve())
+            return service
+        }
     }
 }
 
