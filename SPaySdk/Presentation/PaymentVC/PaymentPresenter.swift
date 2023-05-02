@@ -107,7 +107,8 @@ final class PaymentPresenter: PaymentPresenting {
             self.view?.showLoading(with: .Loading.tryToPayTitle)
         }
         guard let paymentId = userService.selectedCard?.paymentId else { return }
-        paymentService.tryToPay(paymentId: paymentId) { [weak self] error in
+        paymentService.tryToPay(paymentId: paymentId,
+                                isBnplEnabled: partPayService.bnplplanSelected) { [weak self] error in
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.view?.hideLoading()

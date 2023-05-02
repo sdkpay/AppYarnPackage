@@ -17,7 +17,8 @@ enum PaymentTarget {
                          currency: String?,
                          orderNumber: String?,
                          expiry: String?,
-                         frequency: Int?)
+                         frequency: Int?,
+                         isBnplEnabled: Bool)
     case getPaymentOrder(operationId: String,
                          orderId: String?,
                          merchantLogin: String?,
@@ -53,11 +54,13 @@ extension PaymentTarget: TargetType {
                                   currency: currency,
                                   orderNumber: orderNumber,
                                   expiry: expiry,
-                                  frequency: frequency):
+                                  frequency: frequency,
+                                  isBnplEnabled):
             var params: [String: Any] = [
                 "sessionId": sessionId,
                 "deviceInfo": deviceInfo,
-                "paymentId": paymentId
+                "paymentId": paymentId,
+                "isBnplEnabled": isBnplEnabled
             ]
             
             if let orderId = orderId {

@@ -13,4 +13,5 @@ struct AuthModel: Codable {
     let sessionId: String
     let clientId: String
     let nonce: String
+    let isBnplEnabled: Bool?
 }

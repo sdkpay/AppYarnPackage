@@ -20,7 +20,7 @@ final class PaymentServiceAssembly: Assembly {
 }
 
 protocol PaymentService {
-    func tryToPay(paymentId: Int, completion: @escaping (SDKError?) -> Void)
+    func tryToPay(paymentId: Int, isBnplEnabled: Bool, completion: @escaping (SDKError?) -> Void)
 }
 
 final class DefaultPaymentService: PaymentService {
@@ -47,11 +47,12 @@ final class DefaultPaymentService: PaymentService {
         SBLogger.log(.stop(obj: self))
     }
     
-    func tryToPay(paymentId: Int, completion: @escaping (SDKError?) -> Void) {
+    func tryToPay(paymentId: Int, isBnplEnabled: Bool, completion: @escaping (SDKError?) -> Void) {
         personalMetricsService.getUserData { [weak self] deviceInfo in
             if let deviceInfo = deviceInfo {
                 self?.getPaymenyToken(with: deviceInfo,
                                       paymentId: paymentId,
+                                      isBnplEnabled: isBnplEnabled,
                                       completion: completion)
             } else {
                 completion(.personalInfo)
@@ -61,6 +62,7 @@ final class DefaultPaymentService: PaymentService {
     
     private func getPaymenyToken(with deviceInfo: String,
                                  paymentId: Int,
+                                 isBnplEnabled: Bool,
                                  completion: @escaping (SDKError?) -> Void) {
         guard let sessionId = authManager.sessionId,
               let authInfo = sdkManager.authInfo
@@ -74,7 +76,8 @@ final class DefaultPaymentService: PaymentService {
                                                       currency: authInfo.currency,
                                                       orderNumber: authInfo.orderNumber,
                                                       expiry: authInfo.expiry,
-                                                      frequency: authInfo.frequency),
+                                                      frequency: authInfo.frequency,
+                                                      isBnplEnabled: isBnplEnabled),
                         to: PaymentTokenModel.self) { [weak self] result in
             guard let self = self else { return }
             self.userService.clearData()
