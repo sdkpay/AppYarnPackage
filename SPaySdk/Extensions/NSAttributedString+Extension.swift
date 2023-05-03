@@ -23,6 +23,8 @@ extension NSAttributedString {
         let markedRange = NSRange(location: openMarkPosition,
                                   length: closeMarkPosition - openMarkPosition)
         str.addAttributes(attrebutes, range: markedRange)
+        str.replaceCharacters(in: NSRange(location: openMarkPosition, length: 1), with: "")
+        str.replaceCharacters(in: NSRange(location: closeMarkPosition - 1, length: 1), with: "")
         self.init(attributedString: str)
     }
     

@@ -51,8 +51,8 @@ final class DefaultPartPayService: PartPayService {
               let sessionId = authManager.sessionId
         else { return }
         network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
-                                               merchantLogin: authInfo.merchantLogin,
-                                               orderId: authInfo.orderId),
+                                               merchantLogin: authInfo.merchantLogin!,
+                                               orderId: authInfo.orderId!),
                         to: BnplModel.self) { [weak self] result in
             switch result {
             case .success(let bnplplan):

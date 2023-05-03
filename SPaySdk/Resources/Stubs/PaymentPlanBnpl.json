@@ -1,0 +1,39 @@
+{
+  "offerUrl": "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
+  "offerText": "Я соглашаюсь с <условиями документов> по операции. Договор заключается с ООО «ЦНФС».",
+  "isBnplEnabled": true,
+  "buttonBnpl": {
+    "activeButtonLogo": "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
+    "inactiveButtonLogo": "https://cms-res.online.sberbank.ru/sberpay/icons/980000084043.png",
+    "header": "Плати частями",
+    "content": "4 платежа раз в 2 недели"
+  },
+  "graphBnpl": {
+    "header": "График платежей",
+    "content": "4 платежа раз в 2 недели",
+    "text": "Спишем сегодня",
+    "count": "4",
+    "payments": [
+      {
+        "date": "18 Апреля",
+        "amount": 43434,
+        "currencyCode": "643"
+      },
+      {
+        "date": "18 Апреля",
+        "amount": 43434,
+        "currencyCode": "643"
+      },
+      {
+        "date": "18 Апреля",
+        "amount": 43434,
+        "currencyCode": "643"
+      },
+      {
+        "date": "18 Апреля",
+        "amount": 43434,
+        "currencyCode": "643"
+      }
+    ]
+  }
+}

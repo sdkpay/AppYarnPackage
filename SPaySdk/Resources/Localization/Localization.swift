@@ -19,6 +19,8 @@ extension String {
         static let returnTitle = String(stringLiteral: "return.title")
         /// Попробовать ещё раз
         static let tryTitle = String(stringLiteral: "try.title")
+        /// Вернуться
+        static let backTitle = String(stringLiteral: "back.title")
     }
     
     enum Payment {

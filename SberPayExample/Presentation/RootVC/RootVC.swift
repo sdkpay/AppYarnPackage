@@ -36,7 +36,7 @@ enum PayMode: String, CaseIterable, Codable {
 
 enum Config: Int, CaseIterable, Codable {
     case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl
-    
+    case bnpl
     var title: String {
         switch self {
         case .apiKey:
@@ -61,6 +61,8 @@ enum Config: Int, CaseIterable, Codable {
             return "Currency:"
         case .orderNumber:
             return "OrderNumber:"
+        case .bnpl:
+            return "Bnpl:"
         }
     }
     
@@ -72,8 +74,6 @@ enum Config: Int, CaseIterable, Codable {
             return PayMode.allCases.map({ $0.rawValue })
         case .network:
             return [NetworkState.Mocker.rawValue]
-        case .ssl:
-            return ["On", "Off"]
         case .configMethod:
             return RequestMethod.allCases.map({ $0.rawValue })
         default:
@@ -101,7 +101,8 @@ struct ConfigValues: Codable {
     var mode = PayMode.Auto
     var network = NetworkState.Prom
     var currency = "643"
-    var ssl = "On"
+    var ssl = true
+    var bnpl = true
     
     func getValue(for type: Config) -> String {
         switch type {
@@ -122,11 +123,13 @@ struct ConfigValues: Codable {
         case .network:
             return network.rawValue
         case .ssl:
-            return ssl
+            return ssl.description
         case .currency:
             return currency
         case .orderNumber:
             return orderNumber
+        case .bnpl:
+            return bnpl.description
         }
     }
     
@@ -147,13 +150,15 @@ struct ConfigValues: Codable {
         case .network:
             network = NetworkState(rawValue: value) ?? .Prom
         case .ssl:
-            ssl = value
+            ssl = value.bool ?? true
         case .configMethod:
             configMethod = RequestMethod(rawValue: value) ?? .OrderId
         case .currency:
             currency = value
         case .orderNumber:
             orderNumber = value
+        case .bnpl:
+            bnpl = value.bool ?? true
         }
     }
 }
@@ -172,6 +177,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 .mode,
                 .configMethod,
                 .orderId,
+                .bnpl,
                 .ssl
             ]
         case .Purchase:
@@ -185,6 +191,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 .orderNumber,
                 .cost,
                 .currency,
+                .bnpl,
                 .ssl
             ]
         }
@@ -198,6 +205,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         view.register(RootCell.self, forCellReuseIdentifier: RootCell.reuseID)
         view.register(SegmentedControlCell.self, forCellReuseIdentifier: SegmentedControlCell.reuseID)
         view.register(ButtonTypeCell.self, forCellReuseIdentifier: ButtonTypeCell.reuseID)
+        view.register(SwitchCell.self, forCellReuseIdentifier: SwitchCell.reuseID)
         view.delegate = self
         view.dataSource = self
         view.backgroundColor = .white
@@ -270,12 +278,31 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if cellConfig[indexPath.row] == .network {
-            return configButtonCell(for: indexPath)
-        } else if cellConfig[indexPath.row].items != nil {
-            return configSwitchCell(for: indexPath)
-        } else {
+        switch cellConfig[indexPath.row] {
+        case .apiKey:
             return configStringCell(for: indexPath)
+        case .merchantLogin:
+            return configStringCell(for: indexPath)
+        case .cost:
+            return configStringCell(for: indexPath)
+        case .configMethod:
+            return configSermentCell(for: indexPath)
+        case .orderId:
+            return configStringCell(for: indexPath)
+        case .currency:
+            return configStringCell(for: indexPath)
+        case .orderNumber:
+            return configStringCell(for: indexPath)
+        case .lang:
+            return configSermentCell(for: indexPath)
+        case .mode:
+            return configSermentCell(for: indexPath)
+        case .network:
+            return configButtonCell(for: indexPath)
+        case .ssl:
+            return configSwitchCell(for: indexPath)
+        case .bnpl:
+            return configSwitchCell(for: indexPath)
         }
     }
     
@@ -303,6 +330,18 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func configSwitchCell(for indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SwitchCell.reuseID) as? SwitchCell else {
+            return UITableViewCell()
+        }
+        let data = cellConfig[indexPath.row]
+        cell.config(with: data.title,
+                    value: values.getValue(for: data)) { [weak self] value in
+            self?.values.setValue(value: value, for: data)
+        }
+        return cell
+    }
+    
+    func configSermentCell(for indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SegmentedControlCell.reuseID) as? SegmentedControlCell else {
             return UITableViewCell()
         }
@@ -424,8 +463,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         saveConfig()
 
-        SPayDebug.debugConfig(network: values.network, ssl: values.ssl == "On")
-        SPay.setup(apiKey: values.apiKey) {
+        SPayDebug.debugConfig(network: values.network, ssl: values.ssl)
+        SPay.setup(apiKey: values.apiKey, bnplPlan: values.bnpl) {
             self.loader.stopAnimating()
             self.navigationController?.pushViewController(vc, animated: true)
         }
@@ -491,5 +530,21 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 self.tableView.reloadData()
                 self.loader.stopAnimating()
             }
+    }
+}
+
+extension String {
+    var bool: Bool? {
+        switch self.lowercased() {
+        case "true", "t", "yes", "y":
+            return true
+        case "false", "f", "no", "n", "":
+            return false
+        default:
+            if let int = Int(self) {
+                return int != 0
+            }
+            return nil
+        }
     }
 }

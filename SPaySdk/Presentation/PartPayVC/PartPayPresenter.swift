@@ -32,10 +32,8 @@ final class PartPayPresenter: PartPayPresenting {
 
     weak var view: (IPartPayVC & ContentVC)?
     
-    private var payParts: [PartCellModel] = []
-    
     var partsCount: Int {
-        payParts.count
+        partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
     }
 
     init(_ router: PartPayRouter,
@@ -67,9 +65,10 @@ final class PartPayPresenter: PartPayPresenting {
         view?.setButtonEnabled(value: checkTapped)
         view?.setSubtitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
     }
-    
+
     private func configCheckView() {
-        let text = NSAttributedString(string: partPayService.bnplplan?.offerText ?? "")
+        let text = NSAttributedString(markedText: partPayService.bnplplan?.offerText ?? "",
+                                      attrebutes: [.foregroundColor: UIColor.main])
         view?.configCheckView(text: text,
                               checkTapped: { [weak self] value in
             self?.checkTapped(value)
@@ -85,7 +84,7 @@ final class PartPayPresenter: PartPayPresenting {
     
     private func agreementViewTapped() {
         router.presentWebView(with: partPayService.bnplplan?.offerUrl ?? "",
-                              title: partPayService.bnplplan?.graphBnpl?.header ?? "")
+                              title: .PayPart.agreement )
     }
     
     func acceptButtonTapped() {
@@ -108,6 +107,6 @@ final class PartPayPresenter: PartPayPresenting {
         return PartCellModel(title: part.date,
                              cost: part.amount.price(CurrencyCode(rawValue: 643) ?? .RUB),
                              isSelected: indexPath.row == 0,
-                             hideLine: indexPath.row == parts.count)
+                             hideLine: indexPath.row == parts.count - 1)
     }
 }

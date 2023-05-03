@@ -45,7 +45,7 @@ final class WebViewVC: ContentVC, IWebViewVC {
     
     private lazy var backButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
-        view.setTitle(String(stringLiteral: .PayPart.accept), for: .normal)
+        view.setTitle(String(stringLiteral: .Common.backTitle), for: .normal)
         view.addAction { [weak self] in
             self?.presenter.backButtonTapped()
         }

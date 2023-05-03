@@ -9,8 +9,8 @@ import Foundation
 
 enum BnplTarget {
     case getBnplPlan(sessionId: String,
-                     merchantLogin: String?,
-                     orderId: String?)
+                     merchantLogin: String,
+                     orderId: String)
 }
 
 extension BnplTarget: TargetType {
@@ -49,7 +49,7 @@ extension BnplTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getBnplPlan:
-            return StubbedResponse.config.data
+            return StubbedResponse.paymentPlanBnpl.data
         }
     }
 }

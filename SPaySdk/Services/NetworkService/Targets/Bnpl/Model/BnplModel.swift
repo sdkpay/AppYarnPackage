@@ -18,7 +18,7 @@ struct BnplModel: Codable {
 struct GraphBnpl: Codable {
     let header: String
     let content: String
-    let count: Int?
+    let count: String?
     let text: String?
     let payments: [Payment]
     

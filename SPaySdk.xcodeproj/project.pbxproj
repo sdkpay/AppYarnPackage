@@ -79,6 +79,8 @@
 		21B442CD29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */; };
 		21B442CF29DDD9F1004F1DFF /* CertificateValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */; };
 		21BA175229C46E3C001C2CEE /* Tread+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BA175129C46E3C001C2CEE /* Tread+Extension.swift */; };
+		21CA011F2A02312F00BB8690 /* SwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CA011E2A02312F00BB8690 /* SwitchCell.swift */; };
+		21CA01242A02461800BB8690 /* PaymentPlanBnpl.json in Resources */ = {isa = PBXBuildFile; fileRef = 21CA01222A02460400BB8690 /* PaymentPlanBnpl.json */; };
 		21EB4CD029E163DA006541B0 /* SPayDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EB4CCF29E163DA006541B0 /* SPayDebug.swift */; };
 		21EB4CD629E16405006541B0 /* SPaySdk.h in Headers */ = {isa = PBXBuildFile; fileRef = AE5F906329CFA60C003ED648 /* SPaySdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21EB4CD829E16405006541B0 /* RemoteConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A59D8729D1E41B009B55A2 /* RemoteConfig.swift */; };
@@ -447,6 +449,8 @@
 		21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = psi.spaymentsplus.ru.der; sourceTree = "<group>"; };
 		21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateValidator.swift; sourceTree = "<group>"; };
 		21BA175129C46E3C001C2CEE /* Tread+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tread+Extension.swift"; sourceTree = "<group>"; };
+		21CA011E2A02312F00BB8690 /* SwitchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCell.swift; sourceTree = "<group>"; };
+		21CA01222A02460400BB8690 /* PaymentPlanBnpl.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = PaymentPlanBnpl.json; sourceTree = "<group>"; };
 		21EB4CCF29E163DA006541B0 /* SPayDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPayDebug.swift; sourceTree = "<group>"; };
 		21EB4D6F29E16405006541B0 /* SPaySdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		21EB4D7029E16405006541B0 /* info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "info-prod.plist"; path = "SPaySdk/SupportingFiles/info-prod.plist"; sourceTree = SOURCE_ROOT; };
@@ -947,6 +951,7 @@
 				44A31250298103F10099EB76 /* ListCards.json */,
 				44533D1B29851C0D0041FAA9 /* PaymentToken.json */,
 				44BD272A29A7AE38001ECF54 /* PaymentOrderSDK.json */,
+				21CA01222A02460400BB8690 /* PaymentPlanBnpl.json */,
 			);
 			path = Stubs;
 			sourceTree = "<group>";
@@ -1391,6 +1396,7 @@
 				44C2A04A29223430000D894A /* SegmentedControlCell.swift */,
 				AE4D867229DC4546005C8092 /* ButtonTypeCell.swift */,
 				AE4D867429DDA195005C8092 /* NetworkServer.swift */,
+				21CA011E2A02312F00BB8690 /* SwitchCell.swift */,
 			);
 			path = RootVC;
 			sourceTree = "<group>";
@@ -1869,6 +1875,7 @@
 				445CB07F292C9D9500F50047 /* SB Sans Text.ttf in Resources */,
 				21B442CD29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der in Resources */,
 				4421B76E299ABC8500DD7881 /* neg.mp3 in Resources */,
+				21CA01242A02461800BB8690 /* PaymentPlanBnpl.json in Resources */,
 				44A5A46129B4A38900C01420 /* cms-res.der in Resources */,
 				211DF37229D1C0DD0038A951 /* SB Sans Text Medium.ttf in Resources */,
 				4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */,
@@ -2276,6 +2283,7 @@
 				4471721529193B21005EDF32 /* AppDelegate.swift in Sources */,
 				44C2A04B29223430000D894A /* SegmentedControlCell.swift in Sources */,
 				447172302919466E005EDF32 /* CartCell.swift in Sources */,
+				21CA011F2A02312F00BB8690 /* SwitchCell.swift in Sources */,
 				444A13BE291BB52500C9FBE0 /* RootCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
