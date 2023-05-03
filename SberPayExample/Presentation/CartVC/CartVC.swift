@@ -15,14 +15,7 @@ private extension CGFloat {
 }
 
 final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    private let totalCost: Int
-    private let apiKey: String
-    private let merchantLogin: String
-    private let autoMode: Bool
-    private let orderId: String
-    private let network: NetworkState
-    private let sslOn: Bool
-    private let purchase: Bool
+    private let values: ConfigValues
     
     private lazy var tableView: UITableView = {
         let view = UITableView()
@@ -41,7 +34,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private lazy var totalCostLabel: UILabel = {
         let view = UILabel()
-        view.text = "\(String(totalCost)) p"
+        view.text = "\(values.cost) p"
         view.textColor = .black
         return view
     }()
@@ -67,22 +60,8 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         setupUI()
     }
     
-    init(totalCost: Int,
-         apiKey: String,
-         orderId: String,
-         merchantLogin: String,
-         autoMode: Bool,
-         purchase: Bool,
-         network: NetworkState,
-         sslOn: Bool) {
-        self.totalCost = totalCost
-        self.apiKey = apiKey
-        self.orderId = orderId
-        self.autoMode = autoMode
-        self.network = network
-        self.sslOn = sslOn
-        self.purchase = purchase
-        self.merchantLogin = merchantLogin
+    init(values: ConfigValues) {
+        self.values = values
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -98,7 +77,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CartCell.reuseID) as? CartCell else {
             return UITableViewCell()
         }
-        cell.config(with: "Наушники", cost: totalCost / tableView.numberOfRows(inSection: 0))
+        cell.config(with: "Наушники", cost: (Int(values.cost) ?? 1) / tableView.numberOfRows(inSection: 0))
         return cell
     }
     
@@ -155,20 +134,22 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func sPayButtonTapped() {
-        if autoMode {
+        switch values.mode {
+        case .Auto:
             autoPay()
-        } else {
-            if purchase {
-                paymentTokenWithPerchase()
-            } else {
+        case .Manual:
+            switch values.configMethod {
+            case .OrderId:
                 getPaymentToken()
+            case .Purchase:
+                paymentTokenWithPerchase()
             }
         }
     }
     
     private func getPaymentToken() {
-        let request = SPaymentTokenRequest(merchantLogin: merchantLogin,
-                                           orderId: orderId,
+        let request = SPaymentTokenRequest(merchantLogin: values.merchantLogin,
+                                           orderId: values.orderId,
                                            redirectUri: "testapp://test")
         SPay.getPaymentToken(with: self, with: request) { response in
             if let error = response.error {
@@ -184,11 +165,11 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func paymentTokenWithPerchase() {
         let request = SPaymentTokenRequest(redirectUri: "testapp://test",
-                                           merchantLogin: merchantLogin,
-                                           amount: totalCost,
-                                           currency: "643",
+                                           merchantLogin: values.merchantLogin,
+                                           amount: Int(values.cost) ?? 0,
+                                           currency: values.currency,
                                            mobilePhone: nil,
-                                           orderNumber: orderId,
+                                           orderNumber: values.orderNumber,
                                            recurrentExipiry: "20230821",
                                            recurrentFrequency: 2)
         SPay.getPaymentToken(with: self, with: request) { response in
@@ -204,8 +185,8 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func autoPay() {
-        let request = SFullPaymentRequest(merchantLogin: merchantLogin,
-                                          orderId: orderId,
+        let request = SFullPaymentRequest(merchantLogin: values.merchantLogin,
+                                          orderId: values.orderId,
                                           redirectUri: "testapp://test")
         SPay.payWithOrderId(with: self, with: request) { state, info  in
             switch state {
@@ -222,8 +203,8 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func pay(with token: String) {
-        let request = SPaymentRequest(orderId: "213132",
-                                      paymentToken: "")
+        let request = SPaymentRequest(orderId: values.orderId,
+                                      paymentToken: token)
         SPay.pay(with: request) { state, info  in
             switch state {
             case .success:
