@@ -7,7 +7,6 @@
 
 import Foundation
 
-// MARK: - ConfigModel
 struct BnplModel: Codable {
     let isBnplEnabled: Bool
     let buttonBnpl: ButtonBnpl?
@@ -22,6 +21,10 @@ struct GraphBnpl: Codable {
     let count: Int?
     let text: String?
     let payments: [Payment]
+    
+    var finalCost: Int {
+        payments.map({ $0.amount }).reduce(0, +)
+    }
 }
 
 struct Payment: Codable {

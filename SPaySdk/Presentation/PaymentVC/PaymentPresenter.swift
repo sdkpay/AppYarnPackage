@@ -186,23 +186,28 @@ final class PaymentPresenter: PaymentPresenting {
             })
         case .partPay:
             router.presentPartPay { [weak self] in
-                self?.view?.reloadCollectionView()
+                self?.configViews()
             }
         }
     }
 
     private func configViews() {
         guard let user = userService.user else { return }
-        
+        var finalCost: String
+        if partPayService.bnplplanSelected {
+            finalCost = user.orderAmount.amount.price(
+                .init(rawValue: Int(user.orderAmount.currency) ?? 643) ?? .RUB
+             )
+        } else {
+            finalCost = partPayService.bnplplan?.graphBnpl?.finalCost.price(
+                .init(rawValue: Int(user.orderAmount.currency) ?? 643) ?? .RUB) ?? ""
+        }
         view?.configShopInfo(with: user.merchantName,
-                             cost: user.orderAmount.amount.price(
-                                .init(rawValue: Int(user.orderAmount.currency) ?? 643) ?? .RUB
-                             ),
+                             cost: finalCost,
                              iconURL: user.logoUrl)
         view?.configProfileView(with: user.userInfo)
 
         if userService.selectedCard != nil {
-            view?.hideLoading()
             view?.reloadCollectionView()
         } else {
             configWithNoCards()

@@ -55,12 +55,17 @@ final class PartPayPresenter: PartPayPresenting {
         timeManager.endTraking(CardsVC.self.description()) {
             analytics.sendEvent(.CardsViewAppeared, with: [$0])
         }
-        let finalPrice = 200
-        view?.setFinalCost(finalPrice.price(CurrencyCode(rawValue: 643) ?? .RUB))
+        configViews()
+        configCheckView()
+    }
+    
+    private func configViews() {
+        if let plan = partPayService.bnplplan?.graphBnpl {
+            view?.setFinalCost(plan.finalCost.price(CurrencyCode(rawValue: 643) ?? .RUB))
+        }
         checkTapped = partPayService.bnplplanSelected
         view?.setButtonEnabled(value: checkTapped)
         view?.setSubtitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
-        configCheckView()
     }
     
     private func configCheckView() {

@@ -1,13 +1,11 @@
 disabled_rules:
     - nesting
     - anyobject_protocol
-    - todo
     - type_body_length
     - function_body_length
     - switch_case_alignment
     - identifier_name
     - inclusive_language
-    - file_length
     - cyclomatic_complexity
     - discouraged_direct_init
     - trailing_whitespace
@@ -18,7 +16,12 @@ disabled_rules:
     - attributes
     - compiler_protocol_init
     - nslocalizedstring_key
+    - discouraged_optional_boolean
+    - file_length
 opt_in_rules:
+    - trailing_whitespace
+    - vertical_whitespace_opening_braces
+    - implicit_getter
     - todo
     - closing_brace
     - array_init
@@ -134,7 +137,6 @@ opt_in_rules:
     - class_delegate_protocol
     - force_try
     - generic_type_name
-    - discouraged_optional_boolean
 
 custom_rules:
     vboolean_clear_condition:
