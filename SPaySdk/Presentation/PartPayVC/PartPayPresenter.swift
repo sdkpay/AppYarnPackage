@@ -63,7 +63,8 @@ final class PartPayPresenter: PartPayPresenting {
         }
         checkTapped = partPayService.bnplplanSelected
         view?.setButtonEnabled(value: checkTapped)
-        view?.setSubtitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
+        view?.setTitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
+        view?.setSubtitle(partPayService.bnplplan?.graphBnpl?.content ?? "")
     }
 
     private func configCheckView() {

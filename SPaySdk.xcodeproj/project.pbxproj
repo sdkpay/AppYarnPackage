@@ -2783,7 +2783,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExampleDebug.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 56;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2807,7 +2807,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/SberPayExample",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROD_VERSION = NO;
@@ -2833,7 +2833,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 56;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2858,7 +2858,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/SberPayExample",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROD_VERSION = NO;
@@ -2947,7 +2947,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SberPayExample/SberPayExampleDebug-Prod.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 56;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2971,7 +2971,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/SberPayExample",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROD_VERSION = YES;
@@ -3124,7 +3124,7 @@
 				CODE_SIGN_ENTITLEMENTS = SberPayExample/SberPayExample.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 56;
+				CURRENT_PROJECT_VERSION = 57;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 9C29T4D59W;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3149,7 +3149,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/SberPayExample",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ru.ir.resheniya.PayTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROD_VERSION = YES;
