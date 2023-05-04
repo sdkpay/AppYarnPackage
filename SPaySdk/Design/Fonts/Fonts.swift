@@ -9,6 +9,7 @@ import UIKit
 
 extension UIFont {
     static let header = UIFont(name: "SB Sans Text Semibold", size: 32) ?? defaultFount(with: 32)
+    static let header2 = UIFont(name: "SB Sans Text Semibold", size: 20) ?? defaultFount(with: 20)
     static let subheadline = UIFont(name: "SB Sans Text Semibold", size: 16) ?? defaultFount(with: 16)
     static let bodi1 = UIFont(name: "SBSansText-Regular", size: 16) ?? defaultFount(with: 16)
     static let bodi2 = UIFont(name: "SBSansText-Regular", size: 13) ?? defaultFount(with: 13)

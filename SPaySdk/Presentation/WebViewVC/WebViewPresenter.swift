@@ -34,11 +34,22 @@ final class WebViewPresenter: WebViewPresenting {
     }
     
     func shareButtonTapped() {
-        // TODO: - Share logic
+        shareUrlAddress()
     }
     
     private func setupWebView() {
         guard let url = URL(string: url) else { return }
         view?.goTo(to: url)
+    }
+    
+    private func shareUrlAddress() {
+        DispatchQueue.global(qos: .userInteractive).async {
+            guard let url = URL(string: self.url) else { return }
+            let text = self.title
+            let activity = UIActivityViewController(activityItems: [text, url], applicationActivities: nil)
+            DispatchQueue.main.async {
+                self.view?.present(activity, animated: true, completion: nil)
+            }
+        }
     }
 }

@@ -30,7 +30,7 @@ protocol IPartPayVC {
 final class PartPayVC: ContentVC, IPartPayVC {
     private lazy var titleLabel: UILabel = {
        let view = UILabel()
-        view.font = .header
+        view.font = .header2
         view.textColor = .textPrimory
         view.text = .PayPart.title
         return view

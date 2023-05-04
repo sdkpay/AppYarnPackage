@@ -23,7 +23,7 @@ protocol IWebViewVC {
 final class WebViewVC: ContentVC, IWebViewVC {
     private lazy var titleLabel: UILabel = {
        let view = UILabel()
-        view.font = .header
+        view.font = .header2
         view.numberOfLines = 1
         view.textColor = .textPrimory
         return view
@@ -38,8 +38,9 @@ final class WebViewVC: ContentVC, IWebViewVC {
         return view
     }()
     
-    private lazy var webView: WKWebView = {
-        let view = WKWebView()
+    private lazy var webView: LoadableWebView = {
+        let view = LoadableWebView()
+        view.navigationDelegate = self
         return view
     }()
     
@@ -112,3 +113,14 @@ final class WebViewVC: ContentVC, IWebViewVC {
             .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: .bottomMargin)
     }
 }
+
+extension WebViewVC: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        (webView as? LoadableWebView)?.startLoading()
+    }
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        (webView as? LoadableWebView)?.stopLoading()
+    }
+}
+
+final class LoadableWebView: WKWebView, Loadable {}
