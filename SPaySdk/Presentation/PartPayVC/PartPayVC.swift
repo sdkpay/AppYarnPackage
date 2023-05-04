@@ -22,6 +22,7 @@ protocol IPartPayVC {
     func setTitle(_ value: String)
     func setButtonEnabled(value: Bool)
     func configCheckView(text: NSAttributedString,
+                         checkSelected: Bool,
                          checkTapped: @escaping BoolAction,
                          textTapped: @escaping Action)
 }
@@ -151,9 +152,11 @@ final class PartPayVC: ContentVC, IPartPayVC {
     }
     
     func configCheckView(text: NSAttributedString,
+                         checkSelected: Bool,
                          checkTapped: @escaping BoolAction,
                          textTapped: @escaping Action) {
         agreementView.config(with: text,
+                             checkSelected: checkSelected,
                              checkTapped: checkTapped,
                              textTapped: textTapped)
         setupUI()

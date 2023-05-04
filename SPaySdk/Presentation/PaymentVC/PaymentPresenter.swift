@@ -236,8 +236,8 @@ final class PaymentPresenter: PaymentPresenting {
     private func configCellData() -> [PaymentCellType] {
         var cellData: [PaymentCellType] = []
         cellData.append(.card)
-        if let bnpl = partPayService.bnplplan,
-           bnpl.isBnplEnabled {
+        if partPayService.bnplplan != nil,
+           partPayService.bnplplanEnabled {
             cellData.append(.partPay)
         }
        return cellData

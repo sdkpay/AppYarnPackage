@@ -15,7 +15,7 @@ final class AuthServiceAssembly: Assembly {
                                                           analytics: container.resolve(),
                                                           bankAppManager: container.resolve(),
                                                           authManager: container.resolve(),
-                                                          featureToggleService: container.resolve(),
+                                                          partPayService: container.resolve(),
                                                           personalMetricsService: container.resolve())
             return service
         }
@@ -34,7 +34,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private let sdkManager: SDKManager
     private let bankAppManager: BankAppManager
     private var authManager: AuthManager
-    private var featureToggleService: FeatureToggleService
+    private var partPayService: PartPayService
     private var personalMetricsService: PersonalMetricsService
     
     init(network: NetworkService,
@@ -42,14 +42,14 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
          analytics: AnalyticsService,
          bankAppManager: BankAppManager,
          authManager: AuthManager,
-         featureToggleService: FeatureToggleService,
+         partPayService: PartPayService,
          personalMetricsService: PersonalMetricsService) {
         self.analytics = analytics
         self.network = network
         self.sdkManager = sdkManager
         self.bankAppManager = bankAppManager
         self.authManager = authManager
-        self.featureToggleService = featureToggleService
+        self.partPayService = partPayService
         self.personalMetricsService = personalMetricsService
         SBLogger.log(.start(obj: self))
     }
@@ -86,9 +86,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             self?.authСompletion = completion
             switch result {
             case .success(let result):
-                self?.authManager.sessionId = result.sessionId
-                self?.featureToggleService.setFeatureStatus(.bnpl, with: result.isBnplEnabled ?? false)
-                self?.sIdAuth(with: result)
+                guard let self = self else { return }
+                self.authManager.sessionId = result.sessionId
+                self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
+                                                      enabledLevel: .server)
+                self.sIdAuth(with: result)
             case .failure(let error):
                 completion(error)
             }

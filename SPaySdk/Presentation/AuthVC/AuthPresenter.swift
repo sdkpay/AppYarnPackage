@@ -148,10 +148,7 @@ final class AuthPresenter: AuthPresenting {
     
     private func loadPaymentData() {
         view?.showLoading(with: .Loading.getData, animate: false)
-        contentLoadManager.load(contentTypes: [
-            (.userData, .high),
-            (.bnplPlan, .low)
-        ]) { [weak self] error in
+        contentLoadManager.load { [weak self] error in
             if let error = error {
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,

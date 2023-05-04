@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias ContentLoadType = (type: ContentType, priority: Priority)
+
 final class ContentLoadManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
@@ -28,8 +30,9 @@ enum ContentType {
 }
 
 protocol ContentLoadManager {
-    func load(contentTypes: [(type: ContentType, priority: Priority)],
+    func load(contentTypes: [ContentLoadType],
               completion: @escaping (SDKError?) -> Void)
+    func load(completion: @escaping (SDKError?) -> Void)
 }
 
 final class DefaultContentLoadManager: ContentLoadManager {
@@ -44,7 +47,17 @@ final class DefaultContentLoadManager: ContentLoadManager {
         self.userService = userService
     }
     
-    func load(contentTypes: [(type: ContentType, priority: Priority)],
+    func load(completion: @escaping (SDKError?) -> Void) {
+        var contentTypes: [ContentLoadType] = [
+            (.userData, .high)
+        ]
+        if partPayService.bnplplanEnabled {
+            contentTypes.append((.bnplPlan, .low))
+        }
+        load(contentTypes: contentTypes, completion: completion)
+    }
+    
+    func load(contentTypes: [ContentLoadType],
               completion: @escaping (SDKError?) -> Void) {
         var requestErrors: [(error: SDKError?, priority: Priority)] = []
     

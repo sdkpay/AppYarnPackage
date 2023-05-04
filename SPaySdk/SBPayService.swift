@@ -44,8 +44,8 @@ final class DefaultSBPayService: SBPayService {
         UIFont.registerFontsIfNeeded()
         assemblyManager.registerServices(to: locator)
         locator
-            .resolve(FeatureToggleService.self)
-            .setFeature(.init(feature: .bnpl, isEnabled: bnplPlan))
+            .resolve(PartPayService.self)
+            .setUserEnableBnpl(bnplPlan, enabledLevel: .merch)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         SBLogger.dateString = dateFormatter.string(from: Date())

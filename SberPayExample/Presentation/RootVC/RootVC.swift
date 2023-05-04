@@ -8,6 +8,7 @@
 import UIKit
 import SPaySdkDEBUG
 import CoreFoundation
+import SafariServices
 
 private extension CGFloat {
     static let buttonHeight = 40.0

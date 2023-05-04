@@ -10,7 +10,8 @@ import Foundation
 final class RemoteConfigServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         let service: RemoteConfigService = DefaultRemoteConfigService(network: container.resolve(),
-                                                                      analytics: container.resolve())
+                                                                      analytics: container.resolve(),
+                                                                      featureToggle: container.resolve())
         container.register(service: service)
     }
 }
@@ -23,11 +24,15 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private let network: NetworkService
     private let optimizationManager = OptimizationCheсkerManager()
     private var apiKey: String?
+    private let featureToggle: FeatureToggleService
     private let analytics: AnalyticsService
 
-    init(network: NetworkService, analytics: AnalyticsService) {
+    init(network: NetworkService,
+         analytics: AnalyticsService,
+         featureToggle: FeatureToggleService) {
         self.network = network
         self.analytics = analytics
+        self.featureToggle = featureToggle
     }
     
     func getConfig(with apiKey: String, completion: @escaping (SDKError?) -> Void) {
@@ -40,6 +45,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                 self?.saveConfig(config)
                 self?.checkWhiteLogList(apikeys: config.apikey)
                 self?.checkVersion(version: config.version)
+                self?.setFeatures(config.featuresToggle)
                 completion(nil)
             case .failure(let error):
                 completion(error)
@@ -55,6 +61,10 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         UserDefaults.schemas = value.schemas
         UserDefaults.bankApps = value.bankApps
         UserDefaults.images = value.images
+    }
+    
+    private func setFeatures(_ values: [FeaturesToggle]) {
+        featureToggle.setFeatures(values)
     }
     
     private func checkWhiteLogList(apikeys: [String]) {

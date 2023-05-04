@@ -63,8 +63,10 @@ final class CheckView: UIView {
     }
     
     func config(with text: String? = nil,
+                checkSelected: Bool,
                 checkTapped: @escaping BoolAction,
                 textTapped: Action? = nil) {
+        self.checkSelected = checkSelected
         self.checkTapped = checkTapped
         self.textTapped = textTapped
         titleLabel.text = text
@@ -72,8 +74,10 @@ final class CheckView: UIView {
     }
     
     func config(with attributedText: NSAttributedString? = nil,
+                checkSelected: Bool,
                 checkTapped: @escaping BoolAction,
                 textTapped: Action? = nil) {
+        self.checkSelected = checkSelected
         self.checkTapped = checkTapped
         self.textTapped = textTapped
         titleLabel.attributedText = attributedText

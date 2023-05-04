@@ -12,14 +12,22 @@ final class PartPayServiceAssembly: Assembly {
         container.register(reference: {
             let service: PartPayService = DefaultPartPayService(network: container.resolve(),
                                                                 sdkManager: container.resolve(),
-                                                                authManager: container.resolve())
+                                                                authManager: container.resolve(),
+                                                                featureToggle: container.resolve())
             return service
         })
     }
 }
 
+enum EnabledLevel {
+    case merch
+    case server
+}
+
 protocol PartPayService {
     var bnplplanSelected: Bool { get set }
+    var bnplplanEnabled: Bool { get }
+    func setUserEnableBnpl(_ value: Bool, enabledLevel: EnabledLevel)
     var bnplplan: BnplModel? { get }
     func getBnplPlan(completion: @escaping (SDKError?) -> Void)
 }
@@ -28,22 +36,45 @@ final class DefaultPartPayService: PartPayService {
     private let network: NetworkService
     private let sdkManager: SDKManager
     private let authManager: AuthManager
+    private let featureToggle: FeatureToggleService
+    private var userEnableBnpl = false
     
     var bnplplanSelected = false
+    
+    var bnplplanEnabled: Bool {
+        if featureToggle.isEnabled(.bnpl) {
+            return userEnableBnpl
+        } else {
+            return false
+        }
+    }
     
     private(set) var bnplplan: BnplModel?
     
     init(network: NetworkService,
          sdkManager: SDKManager,
-         authManager: AuthManager) {
+         authManager: AuthManager,
+         featureToggle: FeatureToggleService) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
+        self.featureToggle = featureToggle
         SBLogger.log(.start(obj: self))
     }
     
     deinit {
         SBLogger.log(.stop(obj: self))
+    }
+    
+    func setUserEnableBnpl(_ value: Bool, enabledLevel: EnabledLevel) {
+        switch enabledLevel {
+        case .merch:
+            userEnableBnpl = value
+        case .server:
+            if userEnableBnpl {
+                userEnableBnpl = value
+            }
+        }
     }
     
     func getBnplPlan(completion: @escaping (SDKError?) -> Void) {

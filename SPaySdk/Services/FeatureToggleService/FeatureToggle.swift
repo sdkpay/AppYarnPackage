@@ -7,13 +7,8 @@
 
 import Foundation
 
-enum Feature {
+enum Feature: String, Codable {
     case bnpl
-}
-
-struct FeatureModel {
-    let feature: Feature
-    var isEnabled: Bool
 }
 
 final class FeatureToggleServiceAssembly: Assembly {
@@ -25,27 +20,26 @@ final class FeatureToggleServiceAssembly: Assembly {
 
 protocol FeatureToggleService {
     func isEnabled(_ feature: Feature) -> Bool
-    func setFeature(_ feature: FeatureModel)
-    func setFeatureStatus(_ feature: Feature, with value: Bool)
+    func setFeature(_ feature: FeaturesToggle)
+    func setFeatures(_ features: [FeaturesToggle])
 }
 
 final class DefaultFeatureToggleService: FeatureToggleService {
-    private var features: [FeatureModel] = []
+    private var features: [FeaturesToggle] = []
     
-    func setFeature(_ feature: FeatureModel) {
+    func setFeature(_ feature: FeaturesToggle) {
         features.append(feature)
     }
     
-    func isEnabled(_ feature: Feature) -> Bool {
-        features.first(where: { $0.feature == feature })?.isEnabled ?? false
+    func setFeatures(_ features: [FeaturesToggle]) {
+        self.features.append(contentsOf: features)
     }
     
-    func setFeatureStatus(_ feature: Feature, with value: Bool) {
-        if var feature = features.first(where: { $0.feature == feature }) {
-            feature.isEnabled = value
-        } else {
-            let feature = FeatureModel(feature: feature, isEnabled: value)
-            features.append(feature)
-        }
+    func isEnabled(_ feature: Feature) -> Bool {
+        getFeature(feature)?.value ?? false
+    }
+    
+    private func getFeature(_ feature: Feature) -> FeaturesToggle? {
+        features.first(where: { $0.name == feature.rawValue })
     }
 }

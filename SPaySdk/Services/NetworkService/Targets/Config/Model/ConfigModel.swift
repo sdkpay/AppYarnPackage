@@ -13,6 +13,7 @@ struct ConfigModel: Codable {
     let localization: Localization
     let bankApps: [BankApp]
     let schemas: Schemas
+    let featuresToggle: [FeaturesToggle]
     let apikey: [String]
     let images: Images
 }
@@ -20,6 +21,11 @@ struct ConfigModel: Codable {
 // MARK: - Localization
 struct Localization: Codable {
     let authTitle: String
+}
+
+struct FeaturesToggle: Codable {
+    let name: String
+    var value: Bool
 }
 
 // MARK: - Schemas

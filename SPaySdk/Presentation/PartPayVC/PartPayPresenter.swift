@@ -71,6 +71,7 @@ final class PartPayPresenter: PartPayPresenting {
         let text = NSAttributedString(markedText: partPayService.bnplplan?.offerText ?? "",
                                       attrebutes: [.foregroundColor: UIColor.main])
         view?.configCheckView(text: text,
+                              checkSelected: partPayService.bnplplanSelected,
                               checkTapped: { [weak self] value in
             self?.checkTapped(value)
         },
@@ -101,11 +102,12 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     func model(for indexPath: IndexPath) -> PartCellModel {
-        guard let parts = partPayService.bnplplan?.graphBnpl?.payments else {
+        guard let parts = partPayService.bnplplan?.graphBnpl?.payments,
+              let text = partPayService.bnplplan?.graphBnpl?.text else {
             return PartCellModel(title: "", cost: "", isSelected: true, hideLine: true)
         }
         let part = parts[indexPath.row]
-        return PartCellModel(title: part.date,
+        return PartCellModel(title: indexPath.row == 0 ? text : part.date,
                              cost: part.amount.price(CurrencyCode(rawValue: 643) ?? .RUB),
                              isSelected: indexPath.row == 0,
                              hideLine: indexPath.row == parts.count - 1)
