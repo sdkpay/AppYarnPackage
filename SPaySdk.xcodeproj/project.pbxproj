@@ -32,6 +32,8 @@
 		214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 214E9C4A29CC4B09009DF5FE /* FingerprintPackage */; };
 		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		2160A02429E6FC6700B72F40 /* SPaySdkDEBUG.h in Headers */ = {isa = PBXBuildFile; fileRef = 2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		21676D9A2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */; };
+		21676D9B2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */; };
 		2180695A29F187CD00587AB8 /* BankAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180695929F187CD00587AB8 /* BankAppManager.swift */; };
 		2180695B29F1884E00587AB8 /* BankAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180695929F187CD00587AB8 /* BankAppManager.swift */; };
 		2180695E29F260B600587AB8 /* ConfigGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2180695D29F260B600587AB8 /* ConfigGlobal.swift */; };
@@ -218,7 +220,6 @@
 		21EB4D6029E16405006541B0 /* SB Sans Text Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB080292C9DA300F50047 /* SB Sans Text Medium.ttf */; };
 		21EB4D6129E16405006541B0 /* poz.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4421B76B299ABC7800DD7881 /* poz.mp3 */; };
 		21EB4D6329E16405006541B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 445CB072292BBB1400F50047 /* Assets.xcassets */; };
-		21EB4D6429E16405006541B0 /* ecomtest.s.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 443D83AA295D8F31002605AA /* ecomtest.s.ru.der */; };
 		21EB4D6629E16405006541B0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 445CB06D292BB99F00F50047 /* Localizable.strings */; };
 		21EB4D6729E16405006541B0 /* SB Sans Text Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB07C292C9D2C00F50047 /* SB Sans Text Semibold.ttf */; };
 		440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */; };
@@ -236,7 +237,6 @@
 		442A45E0298059F900EC3D73 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442A45DF298059F900EC3D73 /* UserService.swift */; };
 		443666C8298BBE98005119A2 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443666C7298BBE98005119A2 /* LocationManager.swift */; };
 		443666CF298BFC3E005119A2 /* ValidSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443666CE298BFC3E005119A2 /* ValidSessionModel.swift */; };
-		443D83AB295D8F31002605AA /* ecomtest.s.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 443D83AA295D8F31002605AA /* ecomtest.s.ru.der */; };
 		44499BED296EB4A500B6A582 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */; };
 		444A13AF291BA96100C9FBE0 /* SPaySdkDEBUG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */; };
 		444A13B0291BA96100C9FBE0 /* SPaySdkDEBUG.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -423,6 +423,7 @@
 		21440DBE29D6F5D500E3803E /* String+Ranges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ranges.swift"; sourceTree = "<group>"; };
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPaySdkDEBUG.h; path = SPaySdk/Public/SPaySdkDEBUG.h; sourceTree = "<group>"; };
+		21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ift.gate1.spaymentsplus.ru.der; sourceTree = "<group>"; };
 		2180695929F187CD00587AB8 /* BankAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAppManager.swift; sourceTree = "<group>"; };
 		2180695D29F260B600587AB8 /* ConfigGlobal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigGlobal.swift; sourceTree = "<group>"; };
 		2180D22029E93F2700948681 /* PartPayVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartPayVC.swift; sourceTree = "<group>"; };
@@ -473,7 +474,6 @@
 		442A45DF298059F900EC3D73 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		443666C7298BBE98005119A2 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		443666CE298BFC3E005119A2 /* ValidSessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidSessionModel.swift; sourceTree = "<group>"; };
-		443D83AA295D8F31002605AA /* ecomtest.s.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ecomtest.s.ru.der; sourceTree = "<group>"; };
 		44499BEC296EB4A500B6A582 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdkDEBUG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		444A13AB291BA96100C9FBE0 /* SPaySdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPaySdk.h; sourceTree = "<group>"; };
@@ -877,9 +877,9 @@
 		440DB3AE295C645300B84E05 /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
+				21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */,
 				21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */,
 				44A5A46029B4A38900C01420 /* cms-res.der */,
-				443D83AA295D8F31002605AA /* ecomtest.s.ru.der */,
 				21B442C629DDB3F0004F1DFF /* Certificates.swift */,
 			);
 			path = Certificates;
@@ -1873,7 +1873,7 @@
 				21EB4D6029E16405006541B0 /* SB Sans Text Medium.ttf in Resources */,
 				21EB4D6129E16405006541B0 /* poz.mp3 in Resources */,
 				21EB4D6329E16405006541B0 /* Assets.xcassets in Resources */,
-				21EB4D6429E16405006541B0 /* ecomtest.s.ru.der in Resources */,
+				21676D9B2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */,
 				21EB4D6629E16405006541B0 /* Localizable.strings in Resources */,
 				21EB4D6729E16405006541B0 /* SB Sans Text Semibold.ttf in Resources */,
 			);
@@ -1883,6 +1883,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21676D9A2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */,
 				444A13F3291CF1C100C9FBE0 /* .swiftlint.yml in Resources */,
 				445CB07F292C9D9500F50047 /* SB Sans Text.ttf in Resources */,
 				21B442CD29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der in Resources */,
@@ -1893,7 +1894,6 @@
 				4421B76C299ABC7900DD7881 /* poz.mp3 in Resources */,
 				442A45CE297FEE8000EC3D73 /* Auth.json in Resources */,
 				445CB073292BBB1400F50047 /* Assets.xcassets in Resources */,
-				443D83AB295D8F31002605AA /* ecomtest.s.ru.der in Resources */,
 				21B3BA3B29F66AD90024BDF0 /* RemoteConfig.json in Resources */,
 				44BD272B29A7AE38001ECF54 /* PaymentOrderSDK.json in Resources */,
 				445CB06B292BB99F00F50047 /* Localizable.strings in Resources */,

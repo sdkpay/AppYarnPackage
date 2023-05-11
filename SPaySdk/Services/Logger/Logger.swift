@@ -40,7 +40,7 @@ enum DebugLogLevel: String, CaseIterable {
     case defaultLevel = "Default"
 }
 
-struct SBLogger: ResponseDecoder {
+enum SBLogger {
     private static var logger = Log()
     static var dateString = ""
     

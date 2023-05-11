@@ -59,9 +59,12 @@ extension PaymentTarget: TargetType {
             var params: [String: Any] = [
                 "sessionId": sessionId,
                 "deviceInfo": deviceInfo,
-                "paymentId": paymentId,
-                "isBnplEnabled": isBnplEnabled
+                "paymentId": paymentId
             ]
+            
+            if isBnplEnabled {
+                params["isBnplEnabled"] = isBnplEnabled
+            }
             
             if let orderId = orderId {
                 params["orderId"] = orderId
