@@ -189,6 +189,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 .network,
                 .mode,
                 .configMethod,
+                .orderId,
                 .orderNumber,
                 .cost,
                 .currency,
