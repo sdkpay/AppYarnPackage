@@ -12,7 +12,7 @@ struct User: Codable {
     let userInfo: UserInfo
     let orderAmount: OrderAmount
     let paymentToolInfo: [PaymentToolInfo]
-    let merchantName: String
+    let merchantName: String?
     let logoUrl: String
 }
 

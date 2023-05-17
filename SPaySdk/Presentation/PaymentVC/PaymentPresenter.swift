@@ -202,7 +202,7 @@ final class PaymentPresenter: PaymentPresenting {
             finalCost = partPayService.bnplplan?.graphBnpl?.finalCost.price(
                 .init(rawValue: Int(user.orderAmount.currency) ?? 643) ?? .RUB) ?? ""
         }
-        view?.configShopInfo(with: user.merchantName,
+        view?.configShopInfo(with: user.merchantName ?? "",
                              cost: finalCost,
                              iconURL: user.logoUrl)
         view?.configProfileView(with: user.userInfo)
