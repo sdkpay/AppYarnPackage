@@ -23,7 +23,7 @@ protocol SDKManager {
     var newStart: Bool { get }
     var payStrategy: PayStrategy { get }
     var authInfo: AuthInfo? { get }
-    var payHandler: Action? { get set }
+    var payHandler: ((PayInfo) -> Void)? { get set }
     func config(apiKey: String,
                 paymentTokenRequest: SPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion)
@@ -58,7 +58,7 @@ final class DefaultSDKManager: SDKManager {
     private(set) var authInfo: AuthInfo?
     private(set) var payInfo: PayInfo?
     
-    var payHandler: Action?
+    var payHandler: ((PayInfo) -> Void)?
 
     private(set) var payStrategy: PayStrategy = .manual
     private(set) var newStart = true
@@ -99,8 +99,9 @@ final class DefaultSDKManager: SDKManager {
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
         payInfo = PayInfo(paymentRequest: paymentRequest)
+        authInfo?.orderId = paymentRequest.orderId
         paymentCompletion = completion
-        payHandler?()
+        payHandler?(PayInfo(paymentRequest: paymentRequest))
     }
     
     func completionWithError(error: SDKError) {

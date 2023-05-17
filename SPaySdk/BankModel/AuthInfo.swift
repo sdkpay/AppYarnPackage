@@ -9,7 +9,7 @@ import Foundation
 
 struct AuthInfo: Hashable {
     let merchantLogin: String?
-    let orderId: String?
+    var orderId: String?
     let redirectUri: String
     let amount: Int?
     let currency: String?

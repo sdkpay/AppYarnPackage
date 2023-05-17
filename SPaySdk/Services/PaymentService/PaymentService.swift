@@ -87,8 +87,8 @@ final class DefaultPaymentService: PaymentService {
                 case .auto:
                     self.pay(with: result.paymentToken, completion: completion)
                 case .manual:
-                    self.sdkManager.payHandler = {
-                        self.pay(with: result.paymentToken, completion: completion)
+                    self.sdkManager.payHandler = { [weak self] payInfo in
+                        self?.pay(with: payInfo.paymentToken ?? result.paymentToken, completion: completion)
                     }
                     self.sdkManager.completionPaymentToken(with: result.paymentToken)
                 }
