@@ -37,7 +37,7 @@ class ContentVC: LoggableVC {
 
     lazy var logoImage: UIImageView = {
         let view = UIImageView()
-        view.image = .Common.logoMain
+        view.image = UIImage(base64: UserDefaults.images?.logoIcon ?? "")
         return view
     }()
     

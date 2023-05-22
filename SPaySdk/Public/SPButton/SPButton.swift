@@ -32,7 +32,7 @@ public final class SBPButton: UIView {
     
     private lazy var logoImageView: UIImageView = {
         let view = UIImageView()
-        view.image = .Common.logoClear
+        view.image = UIImage(base64: UserDefaults.images?.logoClear ?? "")
         NSLayoutConstraint.activate([
             view.widthAnchor.constraint(equalToConstant: .logoWidth),
             view.heightAnchor.constraint(equalToConstant: .logoHeight)
