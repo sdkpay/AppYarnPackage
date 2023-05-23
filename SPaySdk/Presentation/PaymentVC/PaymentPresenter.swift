@@ -194,16 +194,17 @@ final class PaymentPresenter: PaymentPresenting {
     private func configViews() {
         guard let user = userService.user else { return }
         var finalCost: String
+        var fullPrice: String?
         if partPayService.bnplplanSelected {
-            finalCost = user.orderAmount.amount.price(
-                .init(rawValue: Int(user.orderAmount.currency) ?? 643) ?? .RUB
-             )
+            guard let firstPay = partPayService.bnplplan?.graphBnpl?.payments.first else { return }
+            finalCost = firstPay.amount.price(firstPay.currencyCode)
+            fullPrice = user.orderAmount.amount.price(user.orderAmount.currency)
         } else {
-            finalCost = partPayService.bnplplan?.graphBnpl?.finalCost.price(
-                .init(rawValue: Int(user.orderAmount.currency) ?? 643) ?? .RUB) ?? ""
+            finalCost = user.orderAmount.amount.price(user.orderAmount.currency)
         }
         view?.configShopInfo(with: user.merchantName ?? "",
                              cost: finalCost,
+                             fullPrice: fullPrice,
                              iconURL: user.logoUrl)
         view?.configProfileView(with: user.userInfo)
 

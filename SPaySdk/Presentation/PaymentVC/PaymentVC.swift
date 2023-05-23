@@ -19,7 +19,7 @@ private extension CGFloat {
 }
 
 protocol IPaymentVC {
-    func configShopInfo(with shop: String, cost: String, iconURL: String?)
+    func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?)
     func reloadCollectionView()
 }
 
@@ -114,10 +114,23 @@ final class PaymentVC: ContentVC, IPaymentVC {
         SBLogger.log(.didDissapear(view: self))
     }
     
-    func configShopInfo(with shop: String, cost: String, iconURL: String?) {
+    func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?) {
         shopLabel.text = shop
-        costLabel.text = cost
         logoImageView.downloadImage(from: iconURL, placeholder: .Payment.cart)
+        if let fullPrice {
+            let price: String = cost + .Common.fromTitle(args: fullPrice)
+            let attributedPrice = NSAttributedString(text: price,
+                                                     dedicatedPart: .Common.fromTitle(args: fullPrice),
+                                                     attrebutes: [
+                                                        .font: UIFont.bodi3,
+                                                        .foregroundColor: UIColor.textSecondary
+                                                     ])
+            costLabel.text = nil
+            costLabel.attributedText = attributedPrice
+        } else {
+            costLabel.attributedText = nil
+            costLabel.text = cost
+        }
     }
     
     func reloadCollectionView() {

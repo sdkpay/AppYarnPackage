@@ -7,8 +7,8 @@
 
 import Foundation
 
-enum CurrencyCode: Int {
-    case RUB = 643
+enum CurrencyCode: String {
+    case RUB = "643"
     
     var symbol: String {
         switch self {
@@ -19,7 +19,16 @@ enum CurrencyCode: Int {
 }
 
 extension Int {
+    func price(_ currency: String?) -> String {
+        let currencyCode = CurrencyCode(rawValue: currency ?? "643") ?? .RUB
+        return priceFormatted + currencyCode.symbol
+    }
+
     func price(_ currency: CurrencyCode = .RUB) -> String {
+        priceFormatted + currency.symbol
+    }
+    
+    private var priceFormatted: String {
         let formatter = NumberFormatter()
         formatter.groupingSeparator = " "
         formatter.groupingSize = 3
@@ -27,8 +36,6 @@ extension Int {
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         let finalPrice = Double(self) / 100
-        let priceString = formatter.string(from: NSNumber(value: finalPrice)) ?? "0"
-        let currencyString = currency.symbol
-        return priceString + currencyString
+        return formatter.string(from: NSNumber(value: finalPrice)) ?? "0"
     }
 }

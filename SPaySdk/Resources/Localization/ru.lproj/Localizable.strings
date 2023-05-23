@@ -12,6 +12,7 @@
 "return.title" = "К способам оплаты";
 "try.title" = "Попробовать ещё раз";
 "back.title" = "Вернуться";
+"from.title" = " из %@";
 
 // Payment
 "payment.noCards.title" = "Нет карт для оплаты";

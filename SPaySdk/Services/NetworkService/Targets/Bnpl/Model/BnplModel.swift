@@ -25,6 +25,10 @@ struct GraphBnpl: Codable {
     var finalCost: Int {
         payments.map({ $0.amount }).reduce(0, +)
     }
+    
+    var currencyCode: String {
+        payments.first?.currencyCode ?? "643"
+    }
 }
 
 struct Payment: Codable {

@@ -59,7 +59,7 @@ final class PartPayPresenter: PartPayPresenting {
     
     private func configViews() {
         if let plan = partPayService.bnplplan?.graphBnpl {
-            view?.setFinalCost(plan.finalCost.price(CurrencyCode(rawValue: 643) ?? .RUB))
+            view?.setFinalCost(plan.finalCost.price(plan.currencyCode))
         }
         checkTapped = partPayService.bnplplanSelected
         view?.setButtonEnabled(value: checkTapped)
@@ -108,7 +108,7 @@ final class PartPayPresenter: PartPayPresenting {
         }
         let part = parts[indexPath.row]
         return PartCellModel(title: indexPath.row == 0 ? text : part.date,
-                             cost: part.amount.price(CurrencyCode(rawValue: 643) ?? .RUB),
+                             cost: part.amount.price(part.currencyCode),
                              isSelected: indexPath.row == 0,
                              hideLine: indexPath.row == parts.count - 1)
     }

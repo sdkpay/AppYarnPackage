@@ -21,6 +21,10 @@ extension String {
         static let tryTitle = String(stringLiteral: "try.title")
         /// Вернуться
         static let backTitle = String(stringLiteral: "back.title")
+        /// %@ из  %@
+        static func fromTitle(args: CVarArg...) -> String {
+            String(stringLiteral: "from.title", args: args)
+        }
     }
     
     enum Payment {
