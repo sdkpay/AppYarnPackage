@@ -107,9 +107,6 @@ final class DefaultButton: ActionButton {
         self.scheme = buttonAppearance
         super.init(frame: .zero)
         applyScheme()
-        if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = .light
-        }
     }
 
     required init?(coder: NSCoder) {
