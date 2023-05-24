@@ -31,6 +31,12 @@
 		21440DBF29D6F5D500E3803E /* String+Ranges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21440DBE29D6F5D500E3803E /* String+Ranges.swift */; };
 		214E9C4B29CC4B09009DF5FE /* FingerprintPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 214E9C4A29CC4B09009DF5FE /* FingerprintPackage */; };
 		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
+		215E50672A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 215E50662A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der */; };
+		215E50682A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 215E50662A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der */; };
+		215E506B2A1E3B6800BD80E0 /* EnvironmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215E506A2A1E3B6800BD80E0 /* EnvironmentManager.swift */; };
+		215E506C2A1E3B6800BD80E0 /* EnvironmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215E506A2A1E3B6800BD80E0 /* EnvironmentManager.swift */; };
+		215E50702A1E3D5A00BD80E0 /* HostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215E506F2A1E3D5A00BD80E0 /* HostManager.swift */; };
+		215E50712A1E3D5A00BD80E0 /* HostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215E506F2A1E3D5A00BD80E0 /* HostManager.swift */; };
 		2160A02429E6FC6700B72F40 /* SPaySdkDEBUG.h in Headers */ = {isa = PBXBuildFile; fileRef = 2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21676D9A2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */; };
 		21676D9B2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */; };
@@ -85,7 +91,6 @@
 		21BA175229C46E3C001C2CEE /* Tread+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BA175129C46E3C001C2CEE /* Tread+Extension.swift */; };
 		21CA011F2A02312F00BB8690 /* SwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CA011E2A02312F00BB8690 /* SwitchCell.swift */; };
 		21CA01242A02461800BB8690 /* PaymentPlanBnpl.json in Resources */ = {isa = PBXBuildFile; fileRef = 21CA01222A02460400BB8690 /* PaymentPlanBnpl.json */; };
-		21EB4CD029E163DA006541B0 /* SPayDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EB4CCF29E163DA006541B0 /* SPayDebug.swift */; };
 		21EB4CD629E16405006541B0 /* SPaySdk.h in Headers */ = {isa = PBXBuildFile; fileRef = AE5F906329CFA60C003ED648 /* SPaySdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21EB4CD829E16405006541B0 /* RemoteConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A59D8729D1E41B009B55A2 /* RemoteConfig.swift */; };
 		21EB4CD929E16405006541B0 /* Tread+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BA175129C46E3C001C2CEE /* Tread+Extension.swift */; };
@@ -422,6 +427,9 @@
 		21440DBB29D6B27800E3803E /* LoggableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggableVC.swift; sourceTree = "<group>"; };
 		21440DBE29D6F5D500E3803E /* String+Ranges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ranges.swift"; sourceTree = "<group>"; };
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
+		215E50662A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ift.gate2.spaymentsplus.ru.der; sourceTree = "<group>"; };
+		215E506A2A1E3B6800BD80E0 /* EnvironmentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentManager.swift; sourceTree = "<group>"; };
+		215E506F2A1E3D5A00BD80E0 /* HostManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostManager.swift; sourceTree = "<group>"; };
 		2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPaySdkDEBUG.h; path = SPaySdk/Public/SPaySdkDEBUG.h; sourceTree = "<group>"; };
 		21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ift.gate1.spaymentsplus.ru.der; sourceTree = "<group>"; };
 		2180695929F187CD00587AB8 /* BankAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAppManager.swift; sourceTree = "<group>"; };
@@ -455,7 +463,6 @@
 		21BA175129C46E3C001C2CEE /* Tread+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tread+Extension.swift"; sourceTree = "<group>"; };
 		21CA011E2A02312F00BB8690 /* SwitchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCell.swift; sourceTree = "<group>"; };
 		21CA01222A02460400BB8690 /* PaymentPlanBnpl.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = PaymentPlanBnpl.json; sourceTree = "<group>"; };
-		21EB4CCF29E163DA006541B0 /* SPayDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPayDebug.swift; sourceTree = "<group>"; };
 		21EB4D6F29E16405006541B0 /* SPaySdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		21EB4D7029E16405006541B0 /* info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "info-prod.plist"; path = "SPaySdk/SupportingFiles/info-prod.plist"; sourceTree = SOURCE_ROOT; };
 		21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
@@ -739,6 +746,22 @@
 			name = Packages;
 			sourceTree = "<group>";
 		};
+		215E50692A1E3B4F00BD80E0 /* EnvironmentManager */ = {
+			isa = PBXGroup;
+			children = (
+				215E506A2A1E3B6800BD80E0 /* EnvironmentManager.swift */,
+			);
+			path = EnvironmentManager;
+			sourceTree = "<group>";
+		};
+		215E506E2A1E3D4300BD80E0 /* HostManager */ = {
+			isa = PBXGroup;
+			children = (
+				215E506F2A1E3D5A00BD80E0 /* HostManager.swift */,
+			);
+			path = HostManager;
+			sourceTree = "<group>";
+		};
 		2180695829F187C000587AB8 /* BankAppManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -878,6 +901,7 @@
 			isa = PBXGroup;
 			children = (
 				21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */,
+				215E50662A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der */,
 				21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */,
 				44A5A46029B4A38900C01420 /* cms-res.der */,
 				21B442C629DDB3F0004F1DFF /* Certificates.swift */,
@@ -1140,6 +1164,8 @@
 		44533D1F29852A1C0041FAA9 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				215E506E2A1E3D4300BD80E0 /* HostManager */,
+				215E50692A1E3B4F00BD80E0 /* EnvironmentManager */,
 				21B3BA6229FBD6860024BDF0 /* AssemblieManager */,
 				445D01892994F35F006458AD /* BaseRequestManager */,
 				443666C6298BBE70005119A2 /* LocationManager */,
@@ -1566,7 +1592,6 @@
 				4464DF9C291D8E4C000C9B45 /* SPay.swift */,
 				44C6510F2934E37F008F1C29 /* SPError.swift */,
 				444A13B9291BAFA100C9FBE0 /* SPButton */,
-				21EB4CCF29E163DA006541B0 /* SPayDebug.swift */,
 			);
 			path = Public;
 			sourceTree = "<group>";
@@ -1875,6 +1900,7 @@
 				21EB4D6329E16405006541B0 /* Assets.xcassets in Resources */,
 				21676D9B2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */,
 				21EB4D6629E16405006541B0 /* Localizable.strings in Resources */,
+				215E50682A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der in Resources */,
 				21EB4D6729E16405006541B0 /* SB Sans Text Semibold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1899,6 +1925,7 @@
 				445CB06B292BB99F00F50047 /* Localizable.strings in Resources */,
 				445CB07D292C9D2C00F50047 /* SB Sans Text Semibold.ttf in Resources */,
 				44533D1C29851C0D0041FAA9 /* PaymentToken.json in Resources */,
+				215E50672A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der in Resources */,
 				21B3BA3C29F66ADE0024BDF0 /* ListCards.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1997,6 +2024,7 @@
 				21EB4CEE29E16405006541B0 /* NetworkService.swift in Sources */,
 				21EB4CEF29E16405006541B0 /* LogVC.swift in Sources */,
 				21EB4CF029E16405006541B0 /* CoverTransitionDriver.swift in Sources */,
+				215E50712A1E3D5A00BD80E0 /* HostManager.swift in Sources */,
 				21EB4CF129E16405006541B0 /* UserTarget.swift in Sources */,
 				21B3BA5229F85A2B0024BDF0 /* WebViewPresenter.swift in Sources */,
 				21EB4CF329E16405006541B0 /* Data+Extension.swift in Sources */,
@@ -2092,6 +2120,7 @@
 				21EB4D3E29E16405006541B0 /* PayInfo.swift in Sources */,
 				21EB4D3F29E16405006541B0 /* AuthVC.swift in Sources */,
 				21EB4D4029E16405006541B0 /* ParameterEncoding.swift in Sources */,
+				215E506C2A1E3B6800BD80E0 /* EnvironmentManager.swift in Sources */,
 				21EB4D4129E16405006541B0 /* CGPoint+Extension.swift in Sources */,
 				21EB4D4229E16405006541B0 /* UIImage+base64.swift in Sources */,
 				21EB4D4329E16405006541B0 /* CGFloat+Extension.swift in Sources */,
@@ -2154,7 +2183,6 @@
 				21440DB629D5B67200E3803E /* LogVC.swift in Sources */,
 				44F9FD4C295AFAB800FE4B9F /* CoverTransitionDriver.swift in Sources */,
 				442A45DD29804E2E00EC3D73 /* UserTarget.swift in Sources */,
-				21EB4CD029E163DA006541B0 /* SPayDebug.swift in Sources */,
 				44AC79CC299FE9A50043FA4E /* Data+Extension.swift in Sources */,
 				AE4D3FA729C48AF000962DD6 /* UIAplication+TopViewContriller.swift in Sources */,
 				44A3125C298135F10099EB76 /* RootRouter.swift in Sources */,
@@ -2194,6 +2222,7 @@
 				2180D22629E9411B00948681 /* PartPayAssembly.swift in Sources */,
 				442A45E0298059F900EC3D73 /* UserService.swift in Sources */,
 				218A8A1129B0DEF7006A0626 /* SBPayState.swift in Sources */,
+				215E50702A1E3D5A00BD80E0 /* HostManager.swift in Sources */,
 				4464DF99291D3DB7000C9B45 /* AuthModel.swift in Sources */,
 				21253D1B29C9B20B004ED82D /* SBShimmeringView.swift in Sources */,
 				445CB075292BC3EF00F50047 /* UIImage+Bundle.swift in Sources */,
@@ -2224,6 +2253,7 @@
 				44A3126329813D110099EB76 /* PaymentRouter.swift in Sources */,
 				AE4D868E29E53507005C8092 /* UIView+Add.swift in Sources */,
 				44B8220A2923D79900C06C51 /* RootVC.swift in Sources */,
+				215E506B2A1E3B6800BD80E0 /* EnvironmentManager.swift in Sources */,
 				44F9FD49295AFAB800FE4B9F /* CoverTransitioningDelegate.swift in Sources */,
 				44533D192985196D0041FAA9 /* PaymentTarget.swift in Sources */,
 				445D018D29950BB2006458AD /* SFullPaymentRequest.swift in Sources */,
@@ -2408,7 +2438,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -2441,6 +2471,7 @@
 				OTHER_SWIFT_FLAGS = "-DSDKPROD";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s.pay.SPaySdk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -3008,7 +3039,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
@@ -3041,6 +3072,7 @@
 				OTHER_SWIFT_FLAGS = "-DSDKDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.s.pay.SPaySdk;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

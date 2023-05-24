@@ -11,9 +11,27 @@ public enum NetworkState: String, CaseIterable, Codable {
     case Mocker = "Моккер", Prom = "ПРОМ", Ift = "ИФТ", Psi = "ПСИ", Local = "СТАБЫ"
 }
 
-final class BuildSettings {
-    var networkState = NetworkState.Prom
-    var ssl = true
+final class BuildSettingsAssembly: Assembly {
+    func register(in container: LocatorService) {
+        container.register {
+            let service: BuildSettings = DefaultBuildSettings()
+            return service
+        }
+    }
+}
 
-    static let shared = BuildSettings()
+protocol BuildSettings {
+    var networkState: NetworkState { get }
+    var ssl: Bool { get }
+    func setConfig(networkState: NetworkState, ssl: Bool)
+}
+
+final class DefaultBuildSettings: BuildSettings {
+    private(set) var networkState = NetworkState.Prom
+    private(set) var ssl = true
+    
+    func setConfig(networkState: NetworkState, ssl: Bool) {
+        self.networkState = networkState
+        self.ssl = ssl
+    }
 }

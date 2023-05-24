@@ -10,16 +10,18 @@ import UIKit
 final class StubNetworkProvider: NSObject, NetworkProvider {
     private let delayedSeconds: Int
     private var dispatchWorkItem: DispatchWorkItem?
+    private var hostManager: HostManager
 
-    init(delayedSeconds: Int = 0) {
+    init(delayedSeconds: Int = 0, hostManager: HostManager) {
         self.delayedSeconds = delayedSeconds
+        self.hostManager = hostManager
         super.init()
     }
     
     func request(_ target: TargetType,
                  retrySettings: RetrySettings,
                  completion: @escaping NetworkProviderCompletion) {
-        let response = HTTPURLResponse(url: ServerURL,
+        let response = HTTPURLResponse(url: hostManager.host,
                                        statusCode: 200,
                                        httpVersion: nil,
                                        headerFields: nil)

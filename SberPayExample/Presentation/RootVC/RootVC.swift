@@ -35,8 +35,14 @@ enum PayMode: String, CaseIterable, Codable {
     case Manual, Auto
 }
 
+enum Environment: String, CaseIterable, Codable {
+    case Prod
+    case SandboxWithoutBankApp
+    case SandboxRealBankApp
+}
+
 enum Config: Int, CaseIterable, Codable {
-    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl
+    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, environment
     case bnpl
     var title: String {
         switch self {
@@ -52,6 +58,8 @@ enum Config: Int, CaseIterable, Codable {
             return "OdredId:"
         case .lang:
             return "Lang:"
+        case .environment:
+            return "Environment"
         case .mode:
             return "Pay mode:"
         case .network:
@@ -75,6 +83,8 @@ enum Config: Int, CaseIterable, Codable {
             return PayMode.allCases.map({ $0.rawValue })
         case .network:
             return [NetworkState.Mocker.rawValue]
+        case .environment:
+            return [Environment.Prod.rawValue]
         case .configMethod:
             return RequestMethod.allCases.map({ $0.rawValue })
         default:
@@ -100,6 +110,7 @@ struct ConfigValues: Codable {
     var orderNumber = "5f3f7d10-7005-7afe-b756-f73001c896b1"
     var lang = "Swift"
     var mode = PayMode.Auto
+    var enviroment = Environment.Prod
     var network = NetworkState.Prom
     var currency = "643"
     var ssl = true
@@ -119,6 +130,8 @@ struct ConfigValues: Codable {
             return configMethod.rawValue
         case .lang:
             return lang
+        case .environment:
+            return enviroment.rawValue
         case .mode:
             return mode.rawValue
         case .network:
@@ -160,6 +173,8 @@ struct ConfigValues: Codable {
             orderNumber = value
         case .bnpl:
             bnpl = value.bool ?? true
+        case .environment:
+            enviroment = Environment(rawValue: value) ?? .Prod
         }
     }
 }
@@ -174,6 +189,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 .apiKey,
                 .merchantLogin,
                 .lang,
+                .environment,
                 .network,
                 .mode,
                 .configMethod,
@@ -186,6 +202,7 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 .apiKey,
                 .merchantLogin,
                 .lang,
+                .environment,
                 .network,
                 .mode,
                 .configMethod,
@@ -304,6 +321,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         case .ssl:
             return configSwitchCell(for: indexPath)
         case .bnpl:
+            return configSwitchCell(for: indexPath)
+        case .environment:
             return configSwitchCell(for: indexPath)
         }
     }
@@ -465,8 +484,8 @@ final class RootVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
         saveConfig()
 
-        SPayDebug.debugConfig(network: values.network, ssl: values.ssl)
-        SPay.setup(apiKey: values.apiKey, bnplPlan: values.bnpl) {
+        SPay.debugConfig(network: values.network, ssl: values.ssl)
+        SPay.setup(apiKey: values.apiKey, bnplPlan: values.bnpl, environment: .prod) {
             self.loader.stopAnimating()
             self.navigationController?.pushViewController(vc, animated: true)
         }

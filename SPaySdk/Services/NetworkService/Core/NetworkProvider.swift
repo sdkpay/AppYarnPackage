@@ -58,12 +58,18 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private var task: URLSessionTask?
     private var session: URLSession?
     private var requestManager: BaseRequestManager
+    private var hostManager: HostManager
     private let timeManager = OptimizationCheсkerManager()
+    private var buildSettings: BuildSettings
 
-    init(requestManager: BaseRequestManager) {
+    init(requestManager: BaseRequestManager,
+         hostManager: HostManager,
+         buildSettings: BuildSettings) {
         SBLogger.log(level: .debug(level: .network),
                      "#️⃣ SSL certificates: \(Certificates.allCases.map({ $0.rawValue }).json)")
         self.requestManager = requestManager
+        self.hostManager = hostManager
+        self.buildSettings = buildSettings
         super.init()
         session = URLSession(configuration: .default,
                              delegate: self,
@@ -100,6 +106,11 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                                       completion: completion)
                     } else {
                         completion(data, response, error)
+                        SBLogger.logRequestCompleted(host: self.hostManager.host,
+                                                     target,
+                                                     response: response,
+                                                     data: data,
+                                                     error: error)
                     }
                 }
             })
@@ -116,7 +127,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     }
 
     private func buildRequest(from route: TargetType) throws -> URLRequest {
-        var request = URLRequest(url: ServerURL.appendingPathComponent(route.path),
+        var request = URLRequest(url: hostManager.host.appendingPathComponent(route.path),
                                  cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
                                  timeoutInterval: Constants.timeoutInterval)
         request.httpMethod = route.httpMethod.rawValue
@@ -180,6 +191,8 @@ extension DefaultNetworkProvider: URLSessionDelegate {
     func urlSession(_ session: URLSession,
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        CertificateValidator.validate(challenge: challenge, completionHandler: completionHandler)
+        CertificateValidator.validate(defaultHandling: !buildSettings.ssl,
+                                      challenge: challenge,
+                                      completionHandler: completionHandler)
     }
 }
