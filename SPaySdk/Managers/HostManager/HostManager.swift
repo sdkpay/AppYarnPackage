@@ -21,6 +21,7 @@ protocol HostManager {
     var host: URL { get }
 }
 
+// TODO - !!!
 final class DefaultHostManager: HostManager {
     var host: URL {
         guard environmentManager.environment == .prod else {

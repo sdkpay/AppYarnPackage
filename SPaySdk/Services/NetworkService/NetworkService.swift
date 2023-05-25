@@ -10,7 +10,7 @@ import UIKit
 final class NetworkServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         var provider: NetworkProvider
-
+        
         switch container.resolve(BuildSettings.self).networkState {
         case .Prom, .Mocker, .Psi, .Ift:
             provider = DefaultNetworkProvider(requestManager: container.resolve(),
@@ -19,7 +19,7 @@ final class NetworkServiceAssembly: Assembly {
         case .Local:
             provider = StubNetworkProvider(delayedSeconds: 2, hostManager: container.resolve())
         }
-
+        
         let service: NetworkService = DefaultNetworkService(provider: provider)
         container.register(service: service)
     }

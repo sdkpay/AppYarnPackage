@@ -1047,7 +1047,6 @@
 				44B822012923897D00C06C51 /* SBPayService.swift */,
 				AEB0059929C09F3F002C9AB9 /* Helpers */,
 				44533D1F29852A1C0041FAA9 /* Managers */,
-				442A45D3298049A100EC3D73 /* BuildSettings */,
 				44C6510A2934E2F5008F1C29 /* Public */,
 				44D536192926196200B99463 /* Extensions */,
 				4416E429291F9C7200284972 /* Navigation */,
@@ -1164,6 +1163,7 @@
 		44533D1F29852A1C0041FAA9 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				442A45D3298049A100EC3D73 /* BuildSettings */,
 				215E506E2A1E3D4300BD80E0 /* HostManager */,
 				215E50692A1E3B4F00BD80E0 /* EnvironmentManager */,
 				21B3BA6229FBD6860024BDF0 /* AssemblieManager */,
