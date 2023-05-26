@@ -9,21 +9,24 @@ import UIKit
 import SPaySdkDEBUG
 
 enum SectionData: Int, CaseIterable {
-    case merchantInfo
+    case config
     case order
     case script
     case next
     
     var cellType: [CellType] {
         switch self {
-        case .merchantInfo:
+        case .config:
             return [
                 .apiKey,
-                .merchantLogin
+                .bnpl,
+                .environment
             ]
         case .order:
             return [
+                .mode,
                 .configMethod,
+                .merchantLogin,
                 .orderId,
                 .orderNumber,
                 .cost,
@@ -31,9 +34,7 @@ enum SectionData: Int, CaseIterable {
             ]
         case .script:
             return [
-                .environment,
                 .network,
-                .bnpl,
                 .ssl,
                 .lang
             ]
@@ -304,7 +305,7 @@ extension ConfigPresenter {
 
     private func modeCell(type: CellType) -> UITableViewCell {
         let cell = SegmentedControlCell()
-        cell.config(title: "Mode",
+        cell.config(title: "Pay mode",
                     items: PayMode.allCases.map({ $0.rawValue }),
                     selected: configValues.mode.rawValue) { item in
             self.configValues.mode = PayMode(rawValue: item) ?? .Auto
@@ -335,7 +336,7 @@ extension ConfigPresenter {
         let cell = ListCell()
         cell.config(title: "Network mode",
                     value: configValues.network.rawValue) {
-            self.view?.showSelectableAlert(with: self.configValues.network.rawValue,
+            self.view?.showSelectableAlert(with: "Network mode",
                                            items: NetworkState.allCases.map({ $0.rawValue }),
                                            selectedItem: { item in
                 self.configValues.network = NetworkState(rawValue: item) ?? .Ift
@@ -350,7 +351,7 @@ extension ConfigPresenter {
         let cell = ListCell()
         cell.config(title: "Environment",
                     value: configValues.environment.rawValue) {
-            self.view?.showSelectableAlert(with: self.configValues.environment.rawValue,
+            self.view?.showSelectableAlert(with: "Environment",
                                            items: Environment.allCases.map({ $0.rawValue }),
                                            selectedItem: { item in
                 self.configValues.environment = Environment(rawValue: item) ?? .Prod
