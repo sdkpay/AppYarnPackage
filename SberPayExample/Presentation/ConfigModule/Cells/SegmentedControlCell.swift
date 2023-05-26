@@ -1,47 +1,42 @@
 //
-//  SegmentedControlCell.swift
-//  SPayExample
+//  TextViewCell.swift
+//  SberPay
 //
-//  Created by Alexander Ipatov on 14.11.2022.
+//  Created by Alexander Ipatov on 07.11.2022.
 //
 
 import UIKit
-
-private extension CGFloat {
-    static let topMargin = 15.0
-    static let sideMargin = 20.0
-}
+import SBLayout
 
 final class SegmentedControlCell: UITableViewCell {
-    static var reuseID: String { "SegmentedControl" }
-    
+    static var reuseID: String { "SegmentedControlCell" }
+
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.numberOfLines = 2
-        view.text = "Lang:"
-        view.textColor = .black
+        view.textColor = .gray
+        view.font = .systemFont(ofSize: 13, weight: .medium)
+        view.sizeToFit()
         return view
     }()
     
     private lazy var segmentedControl: UISegmentedControl = {
         let view = UISegmentedControl()
-        view.backgroundColor = .lightGray
-        view.selectedSegmentIndex = 0
-        view.tintColor = .white
-        view.addTarget(self, action: #selector(valueChanged), for: .valueChanged)
+        view.addTarget(self, action: #selector(valueChanged),
+                       for: .valueChanged)
         return view
     }()
     
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
         view.distribution = .fill
-        view.axis = .vertical
+        view.alignment = .center
+        view.axis = .horizontal
         view.spacing = 10
         view.addArrangedSubview(titleLabel)
         view.addArrangedSubview(segmentedControl)
         return view
     }()
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -67,6 +62,7 @@ final class SegmentedControlCell: UITableViewCell {
             segmentedControl.insertSegment(withTitle: item, at: index, animated: false)
         }
         segmentedControl.selectedSegmentIndex = items.firstIndex(of: selected) ?? 0
+        setupUI()
     }
     
     @objc
@@ -74,20 +70,13 @@ final class SegmentedControlCell: UITableViewCell {
         guard let items = items else { return }
         selectedItem?(items[segmentedControl.selectedSegmentIndex])
     }
-    
-    func setupUI() {
-        backgroundColor = .white
-        contentView.addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor,
-                                           constant: .topMargin),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
-                                               constant: .sideMargin),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
-                                                constant: -.sideMargin),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
-                                              constant: -.topMargin)
-        ])
+
+    private func setupUI() {
+        stackView
+            .add(toSuperview: contentView)
+            .touchEdge(SBEdge.top, toEdge: SBEdge.top, ofView: contentView)
+            .touchEdge(SBEdge.left, toEdge: SBEdge.left, ofView: contentView, withInset: .sideMargin)
+            .touchEdge(SBEdge.bottom, toEdge: SBEdge.bottom, ofView: contentView)
+            .touchEdge(SBEdge.right, toEdge: SBEdge.right, ofView: contentView, withInset: .sideMargin)
     }
 }

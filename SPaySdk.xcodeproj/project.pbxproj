@@ -60,6 +60,20 @@
 		219490C82A03B16D00F6E367 /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219490C72A03B16D00F6E367 /* LoaderView.swift */; };
 		219490C92A03B27200F6E367 /* LoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219490C72A03B16D00F6E367 /* LoaderView.swift */; };
 		2197F38129DAD9CD0032F356 /* LogLevelAlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */; };
+		2199F4A92A1F66F20093BC70 /* TextViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4A12A1F66F10093BC70 /* TextViewCell.swift */; };
+		2199F4AA2A1F66F20093BC70 /* SegmentedControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4A22A1F66F10093BC70 /* SegmentedControlCell.swift */; };
+		2199F4AB2A1F66F20093BC70 /* ConfigPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4A32A1F66F10093BC70 /* ConfigPresenter.swift */; };
+		2199F4AD2A1F66F20093BC70 /* ConfigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4A62A1F66F10093BC70 /* ConfigModel.swift */; };
+		2199F4AE2A1F66F20093BC70 /* ConfigAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4A72A1F66F10093BC70 /* ConfigAssembly.swift */; };
+		2199F4AF2A1F66F20093BC70 /* ConfigVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4A82A1F66F10093BC70 /* ConfigVC.swift */; };
+		2199F4B52A1F68190093BC70 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4B42A1F68190093BC70 /* ActionButton.swift */; };
+		2199F4B82A1F6ABA0093BC70 /* SBLayout.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2199F49D2A1F669C0093BC70 /* SBLayout.xcframework */; };
+		2199F4B92A1F6ABA0093BC70 /* SBLayout.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2199F49D2A1F669C0093BC70 /* SBLayout.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2199F4BC2A1F793C0093BC70 /* UserDefaultWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4BB2A1F793C0093BC70 /* UserDefaultWrapper.swift */; };
+		2199F4BE2A1F895B0093BC70 /* ListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4BD2A1F895B0093BC70 /* ListCell.swift */; };
+		2199F4C02A1F89690093BC70 /* SwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4BF2A1F89690093BC70 /* SwitchCell.swift */; };
+		2199F4C32A1FC6880093BC70 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2199F4C22A1FC6880093BC70 /* IQKeyboardManagerSwift */; };
+		2199F4C62A2082330093BC70 /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4C52A2082330093BC70 /* ButtonCell.swift */; };
 		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
 		21B3BA3B29F66AD90024BDF0 /* RemoteConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 211DF36529D18CCF0038A951 /* RemoteConfig.json */; };
 		21B3BA3C29F66ADE0024BDF0 /* ListCards.json in Resources */ = {isa = PBXBuildFile; fileRef = 44A31250298103F10099EB76 /* ListCards.json */; };
@@ -89,7 +103,6 @@
 		21B442CD29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */; };
 		21B442CF29DDD9F1004F1DFF /* CertificateValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */; };
 		21BA175229C46E3C001C2CEE /* Tread+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BA175129C46E3C001C2CEE /* Tread+Extension.swift */; };
-		21CA011F2A02312F00BB8690 /* SwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CA011E2A02312F00BB8690 /* SwitchCell.swift */; };
 		21CA01242A02461800BB8690 /* PaymentPlanBnpl.json in Resources */ = {isa = PBXBuildFile; fileRef = 21CA01222A02460400BB8690 /* PaymentPlanBnpl.json */; };
 		21EB4CD629E16405006541B0 /* SPaySdk.h in Headers */ = {isa = PBXBuildFile; fileRef = AE5F906329CFA60C003ED648 /* SPaySdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21EB4CD829E16405006541B0 /* RemoteConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A59D8729D1E41B009B55A2 /* RemoteConfig.swift */; };
@@ -246,7 +259,6 @@
 		444A13AF291BA96100C9FBE0 /* SPaySdkDEBUG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */; };
 		444A13B0291BA96100C9FBE0 /* SPaySdkDEBUG.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		444A13BB291BAFDA00C9FBE0 /* SPButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444A13BA291BAFDA00C9FBE0 /* SPButton.swift */; };
-		444A13BE291BB52500C9FBE0 /* RootCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444A13BC291BB1FD00C9FBE0 /* RootCell.swift */; };
 		444A13F3291CF1C100C9FBE0 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 444A13F1291CF1C100C9FBE0 /* .swiftlint.yml */; };
 		44533D192985196D0041FAA9 /* PaymentTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44533D182985196D0041FAA9 /* PaymentTarget.swift */; };
 		44533D1C29851C0D0041FAA9 /* PaymentToken.json in Resources */ = {isa = PBXBuildFile; fileRef = 44533D1B29851C0D0041FAA9 /* PaymentToken.json */; };
@@ -324,7 +336,6 @@
 		44BD272F29A895A2001ECF54 /* PayInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BD272E29A895A2001ECF54 /* PayInfo.swift */; };
 		44BD273229A8A463001ECF54 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BD273129A8A463001ECF54 /* PaymentService.swift */; };
 		44C2A04829222E18000D894A /* ObjcCartVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2A04729222E18000D894A /* ObjcCartVC.m */; };
-		44C2A04B29223430000D894A /* SegmentedControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C2A04A29223430000D894A /* SegmentedControlCell.swift */; };
 		44C651052930E102008F1C29 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651042930E102008F1C29 /* LoadingView.swift */; };
 		44C651092930E721008F1C29 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651082930E721008F1C29 /* AlertView.swift */; };
 		44C6510C2934E327008F1C29 /* SPaymentTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510B2934E327008F1C29 /* SPaymentTokenResponse.swift */; };
@@ -347,7 +358,6 @@
 		44F9FD60295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD59295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift */; };
 		44F9FD61295AFCAC00FE4B9F /* CGFloat+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */; };
 		AE4D3FA729C48AF000962DD6 /* UIAplication+TopViewContriller.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */; };
-		AE4D867329DC4546005C8092 /* ButtonTypeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867229DC4546005C8092 /* ButtonTypeCell.swift */; };
 		AE4D867529DDA195005C8092 /* NetworkServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867429DDA195005C8092 /* NetworkServer.swift */; };
 		AE4D867A29E5339C005C8092 /* SBOffset.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867929E5339C005C8092 /* SBOffset.swift */; };
 		AE4D867C29E533F2005C8092 /* UIView+Horisontal+Vertical.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4D867B29E533F2005C8092 /* UIView+Horisontal+Vertical.swift */; };
@@ -398,6 +408,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				2199F4B92A1F6ABA0093BC70 /* SBLayout.xcframework in Embed Frameworks */,
 				444A13B0291BA96100C9FBE0 /* SPaySdkDEBUG.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -443,6 +454,18 @@
 		218A8A1029B0DEF7006A0626 /* SBPayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBPayState.swift; sourceTree = "<group>"; };
 		219490C72A03B16D00F6E367 /* LoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderView.swift; sourceTree = "<group>"; };
 		2197F38029DAD9CD0032F356 /* LogLevelAlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevelAlertVC.swift; sourceTree = "<group>"; };
+		2199F49D2A1F669C0093BC70 /* SBLayout.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = SBLayout.xcframework; sourceTree = "<group>"; };
+		2199F4A12A1F66F10093BC70 /* TextViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewCell.swift; sourceTree = "<group>"; };
+		2199F4A22A1F66F10093BC70 /* SegmentedControlCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentedControlCell.swift; sourceTree = "<group>"; };
+		2199F4A32A1F66F10093BC70 /* ConfigPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigPresenter.swift; sourceTree = "<group>"; };
+		2199F4A62A1F66F10093BC70 /* ConfigModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigModel.swift; sourceTree = "<group>"; };
+		2199F4A72A1F66F10093BC70 /* ConfigAssembly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigAssembly.swift; sourceTree = "<group>"; };
+		2199F4A82A1F66F10093BC70 /* ConfigVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigVC.swift; sourceTree = "<group>"; };
+		2199F4B42A1F68190093BC70 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
+		2199F4BB2A1F793C0093BC70 /* UserDefaultWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultWrapper.swift; sourceTree = "<group>"; };
+		2199F4BD2A1F895B0093BC70 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
+		2199F4BF2A1F89690093BC70 /* SwitchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCell.swift; sourceTree = "<group>"; };
+		2199F4C52A2082330093BC70 /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		219CCC0D29BF1B3B00BA360B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		21A59D8729D1E41B009B55A2 /* RemoteConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfig.swift; sourceTree = "<group>"; };
@@ -461,7 +484,6 @@
 		21B442CC29DDCBAE004F1DFF /* psi.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = psi.spaymentsplus.ru.der; sourceTree = "<group>"; };
 		21B442CE29DDD9F1004F1DFF /* CertificateValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateValidator.swift; sourceTree = "<group>"; };
 		21BA175129C46E3C001C2CEE /* Tread+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tread+Extension.swift"; sourceTree = "<group>"; };
-		21CA011E2A02312F00BB8690 /* SwitchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCell.swift; sourceTree = "<group>"; };
 		21CA01222A02460400BB8690 /* PaymentPlanBnpl.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = PaymentPlanBnpl.json; sourceTree = "<group>"; };
 		21EB4D6F29E16405006541B0 /* SPaySdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		21EB4D7029E16405006541B0 /* info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "info-prod.plist"; path = "SPaySdk/SupportingFiles/info-prod.plist"; sourceTree = SOURCE_ROOT; };
@@ -485,7 +507,6 @@
 		444A13A9291BA96100C9FBE0 /* SPaySdkDEBUG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdkDEBUG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		444A13AB291BA96100C9FBE0 /* SPaySdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPaySdk.h; sourceTree = "<group>"; };
 		444A13BA291BAFDA00C9FBE0 /* SPButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPButton.swift; sourceTree = "<group>"; };
-		444A13BC291BB1FD00C9FBE0 /* RootCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCell.swift; sourceTree = "<group>"; };
 		444A13F1291CF1C100C9FBE0 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		44533D182985196D0041FAA9 /* PaymentTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTarget.swift; sourceTree = "<group>"; };
 		44533D1B29851C0D0041FAA9 /* PaymentToken.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = PaymentToken.json; sourceTree = "<group>"; };
@@ -574,7 +595,6 @@
 		44C2A04629222E17000D894A /* SberPayExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SberPayExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		44C2A04729222E18000D894A /* ObjcCartVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjcCartVC.m; sourceTree = "<group>"; };
 		44C2A04929222E76000D894A /* ObjcCartVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcCartVC.h; sourceTree = "<group>"; };
-		44C2A04A29223430000D894A /* SegmentedControlCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlCell.swift; sourceTree = "<group>"; };
 		44C651042930E102008F1C29 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		44C651082930E721008F1C29 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		44C6510B2934E327008F1C29 /* SPaymentTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPaymentTokenResponse.swift; sourceTree = "<group>"; };
@@ -597,7 +617,6 @@
 		44F9FD59295AFCAC00FE4B9F /* UIPanGestureRecognizer+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIPanGestureRecognizer+Extension.swift"; sourceTree = "<group>"; };
 		44F9FD5A295AFCAC00FE4B9F /* CGFloat+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extension.swift"; sourceTree = "<group>"; };
 		AE4D3FA629C48AF000962DD6 /* UIAplication+TopViewContriller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAplication+TopViewContriller.swift"; sourceTree = "<group>"; };
-		AE4D867229DC4546005C8092 /* ButtonTypeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonTypeCell.swift; sourceTree = "<group>"; };
 		AE4D867429DDA195005C8092 /* NetworkServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServer.swift; sourceTree = "<group>"; };
 		AE4D867929E5339C005C8092 /* SBOffset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SBOffset.swift; sourceTree = "<group>"; };
 		AE4D867B29E533F2005C8092 /* UIView+Horisontal+Vertical.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Horisontal+Vertical.swift"; sourceTree = "<group>"; };
@@ -648,7 +667,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2199F4B82A1F6ABA0093BC70 /* SBLayout.xcframework in Frameworks */,
 				444A13AF291BA96100C9FBE0 /* SPaySdkDEBUG.framework in Frameworks */,
+				2199F4C32A1FC6880093BC70 /* IQKeyboardManagerSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -812,6 +833,54 @@
 				219490C72A03B16D00F6E367 /* LoaderView.swift */,
 			);
 			path = LoaderView;
+			sourceTree = "<group>";
+		};
+		2199F49F2A1F66F10093BC70 /* ConfigModule */ = {
+			isa = PBXGroup;
+			children = (
+				2199F4A02A1F66F10093BC70 /* Cells */,
+				2199F4A32A1F66F10093BC70 /* ConfigPresenter.swift */,
+				2199F4A72A1F66F10093BC70 /* ConfigAssembly.swift */,
+				2199F4A82A1F66F10093BC70 /* ConfigVC.swift */,
+			);
+			path = ConfigModule;
+			sourceTree = "<group>";
+		};
+		2199F4A02A1F66F10093BC70 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				2199F4A62A1F66F10093BC70 /* ConfigModel.swift */,
+				2199F4A12A1F66F10093BC70 /* TextViewCell.swift */,
+				2199F4A22A1F66F10093BC70 /* SegmentedControlCell.swift */,
+				2199F4BD2A1F895B0093BC70 /* ListCell.swift */,
+				2199F4BF2A1F89690093BC70 /* SwitchCell.swift */,
+				2199F4C52A2082330093BC70 /* ButtonCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		2199F4B02A1F673A0093BC70 /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				2199F4B32A1F68020093BC70 /* ActionButton */,
+			);
+			path = CustomView;
+			sourceTree = "<group>";
+		};
+		2199F4B32A1F68020093BC70 /* ActionButton */ = {
+			isa = PBXGroup;
+			children = (
+				2199F4B42A1F68190093BC70 /* ActionButton.swift */,
+			);
+			path = ActionButton;
+			sourceTree = "<group>";
+		};
+		2199F4BA2A1F792F0093BC70 /* UserDefaultWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				2199F4BB2A1F793C0093BC70 /* UserDefaultWrapper.swift */,
+			);
+			path = UserDefaultWrapper;
 			sourceTree = "<group>";
 		};
 		21B3BA3D29F7E7980024BDF0 /* Bnpl */ = {
@@ -1369,6 +1438,8 @@
 		4471721329193B21005EDF32 /* SberPayExample */ = {
 			isa = PBXGroup;
 			children = (
+				2199F4BA2A1F792F0093BC70 /* UserDefaultWrapper */,
+				2199F4B02A1F673A0093BC70 /* CustomView */,
 				448807C429B091D30011FC20 /* SberPayExampleDebug-Prod.entitlements */,
 				448807C329B091CC0011FC20 /* SberPayExampleDebug.entitlements */,
 				44602757295444BE00EC9DE8 /* SberPayExample.entitlements */,
@@ -1392,6 +1463,7 @@
 		4471722929193FF6005EDF32 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				2199F49F2A1F66F10093BC70 /* ConfigModule */,
 				4471722E2919465D005EDF32 /* CartVC */,
 				44C2A04529222DF5000D894A /* ObjcCartVC */,
 				44717234291A457E005EDF32 /* RootVC */,
@@ -1402,6 +1474,7 @@
 		4471722A29194009005EDF32 /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
+				2199F49D2A1F669C0093BC70 /* SBLayout.xcframework */,
 				4460275829548A2700EC9DE8 /* GoogleService-Info.plist */,
 				4471722229193B23005EDF32 /* Info.plist */,
 			);
@@ -1430,11 +1503,7 @@
 			isa = PBXGroup;
 			children = (
 				44717235291A458F005EDF32 /* RootVC.swift */,
-				444A13BC291BB1FD00C9FBE0 /* RootCell.swift */,
-				44C2A04A29223430000D894A /* SegmentedControlCell.swift */,
-				AE4D867229DC4546005C8092 /* ButtonTypeCell.swift */,
 				AE4D867429DDA195005C8092 /* NetworkServer.swift */,
-				21CA011E2A02312F00BB8690 /* SwitchCell.swift */,
 			);
 			path = RootVC;
 			sourceTree = "<group>";
@@ -1814,6 +1883,7 @@
 			);
 			name = SPaySdkExample;
 			packageProductDependencies = (
+				2199F4C22A1FC6880093BC70 /* IQKeyboardManagerSwift */,
 			);
 			productName = SPaySdk;
 			productReference = 4471721129193B21005EDF32 /* SPaySdkExample.app */;
@@ -1872,6 +1942,7 @@
 			mainGroup = 4471720829193B21005EDF32;
 			packageReferences = (
 				44A438F229900EEE00CA04FC /* XCRemoteSwiftPackageReference "swift-mobile-sdk" */,
+				2199F4C12A1FC6880093BC70 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = 4471721229193B21005EDF32 /* Products */;
 			projectDirPath = "";
@@ -2318,17 +2389,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2199F4AA2A1F66F20093BC70 /* SegmentedControlCell.swift in Sources */,
 				4471722D291941EA005EDF32 /* StartupService.swift in Sources */,
+				2199F4BE2A1F895B0093BC70 /* ListCell.swift in Sources */,
+				2199F4AD2A1F66F20093BC70 /* ConfigModel.swift in Sources */,
+				2199F4AB2A1F66F20093BC70 /* ConfigPresenter.swift in Sources */,
 				AE4D867529DDA195005C8092 /* NetworkServer.swift in Sources */,
 				4471721929193B21005EDF32 /* CartVC.swift in Sources */,
 				44C2A04829222E18000D894A /* ObjcCartVC.m in Sources */,
 				44717236291A458F005EDF32 /* RootVC.swift in Sources */,
-				AE4D867329DC4546005C8092 /* ButtonTypeCell.swift in Sources */,
+				2199F4AE2A1F66F20093BC70 /* ConfigAssembly.swift in Sources */,
 				4471721529193B21005EDF32 /* AppDelegate.swift in Sources */,
-				44C2A04B29223430000D894A /* SegmentedControlCell.swift in Sources */,
+				2199F4C62A2082330093BC70 /* ButtonCell.swift in Sources */,
 				447172302919466E005EDF32 /* CartCell.swift in Sources */,
-				21CA011F2A02312F00BB8690 /* SwitchCell.swift in Sources */,
-				444A13BE291BB52500C9FBE0 /* RootCell.swift in Sources */,
+				2199F4AF2A1F66F20093BC70 /* ConfigVC.swift in Sources */,
+				2199F4A92A1F66F20093BC70 /* TextViewCell.swift in Sources */,
+				2199F4C02A1F89690093BC70 /* SwitchCell.swift in Sources */,
+				2199F4BC2A1F793C0093BC70 /* UserDefaultWrapper.swift in Sources */,
+				2199F4B52A1F68190093BC70 /* ActionButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3373,6 +3451,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2199F4C12A1FC6880093BC70 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
+			requirement = {
+				kind = exactVersion;
+				version = 6.5.0;
+			};
+		};
 		21EB4CD429E16405006541B0 /* XCRemoteSwiftPackageReference "swift-mobile-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Dynatrace/swift-mobile-sdk.git";
@@ -3395,6 +3481,11 @@
 		214E9C4A29CC4B09009DF5FE /* FingerprintPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FingerprintPackage;
+		};
+		2199F4C22A1FC6880093BC70 /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2199F4C12A1FC6880093BC70 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
 		};
 		21EB4CD229E16405006541B0 /* FingerprintPackage */ = {
 			isa = XCSwiftPackageProductDependency;

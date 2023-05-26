@@ -10,7 +10,7 @@ import UIKit
 private extension CGFloat {
     static let corner = 25.0
     static let topMargin = 15.0
-    static let sideMargin = 20.0
+    static let side = 20.0
 }
 
 final class CartCell: UITableViewCell {
@@ -73,9 +73,9 @@ final class CartCell: UITableViewCell {
             titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor,
                                             constant: .topMargin),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,
-                                                constant: .sideMargin),
+                                                constant: .side),
             titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,
-                                                 constant: -.sideMargin)
+                                                 constant: -.side)
         ])
         
         costLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -83,9 +83,9 @@ final class CartCell: UITableViewCell {
             costLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
                                            constant: .topMargin),
             costLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,
-                                               constant: .sideMargin),
+                                               constant: .side),
             costLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,
-                                                constant: -.sideMargin),
+                                                constant: -.side),
             costLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,
                                               constant: -.topMargin)
         ])

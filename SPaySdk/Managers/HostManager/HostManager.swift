@@ -7,6 +7,18 @@
 
 import Foundation
 
+private enum Host: String {
+    case sandBox = "https://ift.gate2.spaymentsplus.ru/sdk-gateway/v1"
+    case mocker = "https://ucexvyy1j5.api.quickmocker.com"
+    case ift = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    case psi = "https://prom.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    case prom = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    
+    var url: URL {
+        URL(string: rawValue) ?? URL(string: "https://www.google.com/")!
+    }
+}
+
 final class HostManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
@@ -25,20 +37,20 @@ protocol HostManager {
 final class DefaultHostManager: HostManager {
     var host: URL {
         guard environmentManager.environment == .prod else {
-            return URL(string: "https://ift.gate2.spaymentsplus.ru/sdk-gateway/v1")!
+            return Host.sandBox.url
         }
         
         switch buildSettings.networkState {
         case .Mocker:
-            return URL(string: "https://ucexvyy1j5.api.quickmocker.com")!
+            return Host.mocker.url
         case .Ift:
-            return URL(string: "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1")!
+            return Host.ift.url
         case .Prom:
-            return URL(string: "https://prom.gate1.spaymentsplus.ru/sdk-gateway/v1")!
+            return Host.prom.url
         case .Psi:
-            return URL(string: "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1")!
+            return Host.psi.url
         case .Local:
-            return URL(string: "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1")!
+            return Host.mocker.url
         }
     }
     

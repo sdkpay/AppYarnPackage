@@ -8,7 +8,7 @@
 import UIKit
 import SPaySdkDEBUG
 
-private extension CGFloat {
+extension CGFloat {
     static let paymentHeight = 200.0
     static let margin = 20.0
     static let bottomMargin = 50.0
@@ -34,7 +34,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private lazy var totalCostLabel: UILabel = {
         let view = UILabel()
-        view.text = "\(values.cost) p"
+        view.text = "\(values.cost ?? "") p"
         view.textColor = .black
         return view
     }()
@@ -77,7 +77,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CartCell.reuseID) as? CartCell else {
             return UITableViewCell()
         }
-        cell.config(with: "Наушники", cost: (Int(values.cost) ?? 1) / tableView.numberOfRows(inSection: 0))
+        cell.config(with: "Наушники", cost: (Int(values.cost ?? "2000") ?? 1) / tableView.numberOfRows(inSection: 0))
         return cell
     }
     
@@ -149,7 +149,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func getPaymentToken() {
         let request = SPaymentTokenRequest(merchantLogin: values.merchantLogin,
-                                           orderId: values.orderId,
+                                           orderId: values.orderId!,
                                            redirectUri: "testapp://test")
         SPay.getPaymentToken(with: self, with: request) { response in
             if let error = response.error {
@@ -166,10 +166,10 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private func paymentTokenWithPerchase() {
         let request = SPaymentTokenRequest(redirectUri: "testapp://test",
                                            merchantLogin: values.merchantLogin,
-                                           amount: Int(values.cost) ?? 0,
-                                           currency: values.currency,
+                                           amount: Int(values.cost!) ?? 0,
+                                           currency: values.currency!,
                                            mobilePhone: nil,
-                                           orderNumber: values.orderNumber,
+                                           orderNumber: values.orderNumber!,
                                            recurrentExipiry: "20230821",
                                            recurrentFrequency: 2)
         SPay.getPaymentToken(with: self, with: request) { response in
@@ -186,7 +186,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func autoPay() {
         let request = SFullPaymentRequest(merchantLogin: values.merchantLogin,
-                                          orderId: values.orderId,
+                                          orderId: values.orderId!,
                                           redirectUri: "testapp://test")
         SPay.payWithOrderId(with: self, with: request) { state, info  in
             switch state {
@@ -203,7 +203,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func pay(with token: String) {
-        let request = SPaymentRequest(orderId: values.orderId,
+        let request = SPaymentRequest(orderId: values.orderId!,
                                       paymentToken: token)
         SPay.pay(with: request) { state, info  in
             switch state {
