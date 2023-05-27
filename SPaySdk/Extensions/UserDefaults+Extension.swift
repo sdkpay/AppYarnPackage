@@ -19,7 +19,7 @@ enum DefaultsKey: String {
 struct UserDefault<Value: Codable> {
     let key: DefaultsKey
     let defaultValue: Value?
-    var container: UserDefaults = UserDefaults.standard
+    var container = UserDefaults.standard
 
     var wrappedValue: Value? {
         get {

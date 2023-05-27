@@ -74,6 +74,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
     private var sectionData = SectionData.allCases
     private var configValues = ConfigValues()
     
+    private lazy var configMethod = configValues.configMethod
+    
     weak var view: (ConfigVCProtocol & UIViewController)?
     
     var sectionCount: Int {
@@ -81,12 +83,54 @@ final class ConfigPresenter: ConfigPresenterProtocol {
     }
     
     func numberRowInSection(section: Int) -> Int {
-        sectionData[section].cellType.count
+        guard let section = SectionData(rawValue: section) else { return 0 }
+        return cellForSection(section).count
     }
-
+    
+    private func cellForSection(_ section: SectionData) -> [CellType] {
+        switch section {
+        case .config:
+            return [
+                .apiKey,
+                .bnpl,
+                .environment
+            ]
+        case .order:
+            switch configMethod {
+            case .OrderId:
+                return [
+                    .mode,
+                    .configMethod,
+                    .orderId,
+                    .orderNumber
+                ]
+            case .Purchase:
+                return [
+                    .mode,
+                    .configMethod,
+                    .merchantLogin,
+                    .orderId,
+                    .orderNumber,
+                    .cost,
+                    .currency
+                ]
+            }
+        case .script:
+            return [
+                .network,
+                .ssl,
+                .lang
+            ]
+        case .next:
+            return [
+                .next
+            ]
+        }
+    }
+    
     func cell(for indexPath: IndexPath) -> UITableViewCell {
         let section = sectionData[indexPath.section]
-        let type = section.cellType[indexPath.row]
+        let type = cellForSection(section)[indexPath.row]
         switch type {
         case .apiKey:
             return apiKeyCell(type: type)
@@ -176,6 +220,10 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         setupTitle()
     }
     
+    private func updateSection(section: SectionData) {
+        view?.reloadSection(section: section.rawValue)
+    }
+    
     private func goForward() {
         view?.startLoader()
         let vc: UIViewController
@@ -207,15 +255,15 @@ final class ConfigPresenter: ConfigPresenterProtocol {
     func generateOrderIdTapped() {
         view?.startLoader()
         RequestHeandler()
-            .response(schemaType: .sberbankIFT) { [weak self] model in
-                guard let sbolBankInvoiceID = model?.externalParams.sbolBankInvoiceId,
-                      let self else {
-                    self?.view?.stopLoader()
-                    return
+            .response(schemaType: .sberbankIFT) { [weak self] result in
+                self?.view?.stopLoader()
+                switch result {
+                case .success(let model):
+                    self?.configValues.orderId = model?.externalParams.sbolBankInvoiceId
+                    self?.view?.reload()
+                case .failure(let error):
+                    self?.view?.showAlert(with: error.localizedDescription)
                 }
-                self.configValues.orderId = sbolBankInvoiceID
-                self.view?.reload()
-                self.view?.stopLoader()
             }
     }
 }
@@ -288,7 +336,8 @@ extension ConfigPresenter {
                     items: RequestMethod.allCases.map({ $0.rawValue }),
                     selected: configValues.configMethod.rawValue) { item in
             self.configValues.configMethod = RequestMethod(rawValue: item) ?? .OrderId
-            self.view?.reload()
+            self.configMethod = RequestMethod(rawValue: item) ?? .OrderId
+            self.updateSection(section: .order)
         }
         return cell
     }

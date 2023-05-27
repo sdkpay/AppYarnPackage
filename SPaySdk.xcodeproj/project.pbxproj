@@ -300,7 +300,6 @@
 		4471722129193B23005EDF32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4471721F29193B23005EDF32 /* LaunchScreen.storyboard */; };
 		4471722D291941EA005EDF32 /* StartupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471722C291941EA005EDF32 /* StartupService.swift */; };
 		447172302919466E005EDF32 /* CartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471722F2919466E005EDF32 /* CartCell.swift */; };
-		44717236291A458F005EDF32 /* RootVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44717235291A458F005EDF32 /* RootVC.swift */; };
 		4473D6C92940653300802446 /* BankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6C82940653300802446 /* BankView.swift */; };
 		4473D6CD29409A8D00802446 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6CC29409A8D00802446 /* UserDefaults+Extension.swift */; };
 		4479ECDA29476EEF009B3AB8 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4479ECD929476EEF009B3AB8 /* Style.swift */; };
@@ -553,7 +552,6 @@
 		4471722229193B23005EDF32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4471722C291941EA005EDF32 /* StartupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupService.swift; sourceTree = "<group>"; };
 		4471722F2919466E005EDF32 /* CartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCell.swift; sourceTree = "<group>"; };
-		44717235291A458F005EDF32 /* RootVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootVC.swift; sourceTree = "<group>"; };
 		4473D6C82940653300802446 /* BankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankView.swift; sourceTree = "<group>"; };
 		4473D6CC29409A8D00802446 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
 		4479ECD929476EEF009B3AB8 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
@@ -842,6 +840,7 @@
 				2199F4A32A1F66F10093BC70 /* ConfigPresenter.swift */,
 				2199F4A72A1F66F10093BC70 /* ConfigAssembly.swift */,
 				2199F4A82A1F66F10093BC70 /* ConfigVC.swift */,
+				AE4D867429DDA195005C8092 /* NetworkServer.swift */,
 			);
 			path = ConfigModule;
 			sourceTree = "<group>";
@@ -1466,7 +1465,6 @@
 				2199F49F2A1F66F10093BC70 /* ConfigModule */,
 				4471722E2919465D005EDF32 /* CartVC */,
 				44C2A04529222DF5000D894A /* ObjcCartVC */,
-				44717234291A457E005EDF32 /* RootVC */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -1497,15 +1495,6 @@
 				4471722F2919466E005EDF32 /* CartCell.swift */,
 			);
 			path = CartVC;
-			sourceTree = "<group>";
-		};
-		44717234291A457E005EDF32 /* RootVC */ = {
-			isa = PBXGroup;
-			children = (
-				44717235291A458F005EDF32 /* RootVC.swift */,
-				AE4D867429DDA195005C8092 /* NetworkServer.swift */,
-			);
-			path = RootVC;
 			sourceTree = "<group>";
 		};
 		4473D6C7294064F100802446 /* BankView */ = {
@@ -2397,7 +2386,6 @@
 				AE4D867529DDA195005C8092 /* NetworkServer.swift in Sources */,
 				4471721929193B21005EDF32 /* CartVC.swift in Sources */,
 				44C2A04829222E18000D894A /* ObjcCartVC.m in Sources */,
-				44717236291A458F005EDF32 /* RootVC.swift in Sources */,
 				2199F4AE2A1F66F20093BC70 /* ConfigAssembly.swift in Sources */,
 				4471721529193B21005EDF32 /* AppDelegate.swift in Sources */,
 				2199F4C62A2082330093BC70 /* ButtonCell.swift in Sources */,

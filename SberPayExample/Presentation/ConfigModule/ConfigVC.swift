@@ -16,6 +16,7 @@ protocol ConfigVCProtocol: AnyObject {
     func stopLoader()
     func startLoader()
     func reload()
+    func reloadSection(section: Int)
     func reloadRow(_ indexPath: IndexPath, animate: Bool)
     func showAlert(with message: String)
     func showSelectableAlert(with title: String, items: [String], selectedItem: @escaping (String) -> Void) 
@@ -110,6 +111,10 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
         let attributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
         navigationController?.navigationBar.titleTextAttributes = attributes
         self.title = title
+    }
+    
+    func reloadSection(section: Int) {
+        tableView.reloadSections([section], with: .fade)
     }
     
     @available(iOS 14.0, *)
