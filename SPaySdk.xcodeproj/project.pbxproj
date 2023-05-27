@@ -74,6 +74,11 @@
 		2199F4C02A1F89690093BC70 /* SwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4BF2A1F89690093BC70 /* SwitchCell.swift */; };
 		2199F4C32A1FC6880093BC70 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2199F4C22A1FC6880093BC70 /* IQKeyboardManagerSwift */; };
 		2199F4C62A2082330093BC70 /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4C52A2082330093BC70 /* ButtonCell.swift */; };
+		2199F4C82A22519F0093BC70 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2199F4C72A22519F0093BC70 /* Assets.xcassets */; };
+		2199F4CE2A2251E80093BC70 /* CartVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4CA2A2251E80093BC70 /* CartVC.swift */; };
+		2199F4CF2A2251E80093BC70 /* CartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4CB2A2251E80093BC70 /* CartCell.swift */; };
+		2199F4D02A2251E80093BC70 /* CustomStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4CC2A2251E80093BC70 /* CustomStepper.swift */; };
+		2199F4D12A2251E80093BC70 /* PaymentSCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199F4CD2A2251E80093BC70 /* PaymentSCell.swift */; };
 		219CCC0629BB61D200BA360B /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CCC0529BB61D200BA360B /* Date+Extension.swift */; };
 		21B3BA3B29F66AD90024BDF0 /* RemoteConfig.json in Resources */ = {isa = PBXBuildFile; fileRef = 211DF36529D18CCF0038A951 /* RemoteConfig.json */; };
 		21B3BA3C29F66ADE0024BDF0 /* ListCards.json in Resources */ = {isa = PBXBuildFile; fileRef = 44A31250298103F10099EB76 /* ListCards.json */; };
@@ -295,11 +300,8 @@
 		4464DF99291D3DB7000C9B45 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF98291D3DB7000C9B45 /* AuthModel.swift */; };
 		4464DF9D291D8E4C000C9B45 /* SPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF9C291D8E4C000C9B45 /* SPay.swift */; };
 		4471721529193B21005EDF32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471721429193B21005EDF32 /* AppDelegate.swift */; };
-		4471721929193B21005EDF32 /* CartVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471721829193B21005EDF32 /* CartVC.swift */; };
-		4471721E29193B23005EDF32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4471721D29193B23005EDF32 /* Assets.xcassets */; };
 		4471722129193B23005EDF32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4471721F29193B23005EDF32 /* LaunchScreen.storyboard */; };
 		4471722D291941EA005EDF32 /* StartupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471722C291941EA005EDF32 /* StartupService.swift */; };
-		447172302919466E005EDF32 /* CartCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471722F2919466E005EDF32 /* CartCell.swift */; };
 		4473D6C92940653300802446 /* BankView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6C82940653300802446 /* BankView.swift */; };
 		4473D6CD29409A8D00802446 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4473D6CC29409A8D00802446 /* UserDefaults+Extension.swift */; };
 		4479ECDA29476EEF009B3AB8 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4479ECD929476EEF009B3AB8 /* Style.swift */; };
@@ -465,6 +467,11 @@
 		2199F4BD2A1F895B0093BC70 /* ListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCell.swift; sourceTree = "<group>"; };
 		2199F4BF2A1F89690093BC70 /* SwitchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCell.swift; sourceTree = "<group>"; };
 		2199F4C52A2082330093BC70 /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
+		2199F4C72A22519F0093BC70 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../../Documents/Assets.xcassets; sourceTree = "<group>"; };
+		2199F4CA2A2251E80093BC70 /* CartVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartVC.swift; sourceTree = "<group>"; };
+		2199F4CB2A2251E80093BC70 /* CartCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartCell.swift; sourceTree = "<group>"; };
+		2199F4CC2A2251E80093BC70 /* CustomStepper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomStepper.swift; sourceTree = "<group>"; };
+		2199F4CD2A2251E80093BC70 /* PaymentSCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSCell.swift; sourceTree = "<group>"; };
 		219CCC0529BB61D200BA360B /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		219CCC0D29BF1B3B00BA360B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		21A59D8729D1E41B009B55A2 /* RemoteConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfig.swift; sourceTree = "<group>"; };
@@ -546,12 +553,9 @@
 		4464DF9C291D8E4C000C9B45 /* SPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPay.swift; sourceTree = "<group>"; };
 		4471721129193B21005EDF32 /* SPaySdkExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SPaySdkExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4471721429193B21005EDF32 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4471721829193B21005EDF32 /* CartVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartVC.swift; sourceTree = "<group>"; };
-		4471721D29193B23005EDF32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4471722029193B23005EDF32 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4471722229193B23005EDF32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4471722C291941EA005EDF32 /* StartupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupService.swift; sourceTree = "<group>"; };
-		4471722F2919466E005EDF32 /* CartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartCell.swift; sourceTree = "<group>"; };
 		4473D6C82940653300802446 /* BankView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankView.swift; sourceTree = "<group>"; };
 		4473D6CC29409A8D00802446 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
 		4479ECD929476EEF009B3AB8 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
@@ -880,6 +884,18 @@
 				2199F4BB2A1F793C0093BC70 /* UserDefaultWrapper.swift */,
 			);
 			path = UserDefaultWrapper;
+			sourceTree = "<group>";
+		};
+		2199F4C92A2251E80093BC70 /* CartVC */ = {
+			isa = PBXGroup;
+			children = (
+				2199F4CA2A2251E80093BC70 /* CartVC.swift */,
+				2199F4CB2A2251E80093BC70 /* CartCell.swift */,
+				2199F4CC2A2251E80093BC70 /* CustomStepper.swift */,
+				2199F4CD2A2251E80093BC70 /* PaymentSCell.swift */,
+			);
+			name = CartVC;
+			path = ../../../../Documents/CartVC;
 			sourceTree = "<group>";
 		};
 		21B3BA3D29F7E7980024BDF0 /* Bnpl */ = {
@@ -1462,8 +1478,8 @@
 		4471722929193FF6005EDF32 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				2199F4C92A2251E80093BC70 /* CartVC */,
 				2199F49F2A1F66F10093BC70 /* ConfigModule */,
-				4471722E2919465D005EDF32 /* CartVC */,
 				44C2A04529222DF5000D894A /* ObjcCartVC */,
 			);
 			path = Presentation;
@@ -1482,19 +1498,10 @@
 		4471722B2919402A005EDF32 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2199F4C72A22519F0093BC70 /* Assets.xcassets */,
 				4471721F29193B23005EDF32 /* LaunchScreen.storyboard */,
-				4471721D29193B23005EDF32 /* Assets.xcassets */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		4471722E2919465D005EDF32 /* CartVC */ = {
-			isa = PBXGroup;
-			children = (
-				4471721829193B21005EDF32 /* CartVC.swift */,
-				4471722F2919466E005EDF32 /* CartCell.swift */,
-			);
-			path = CartVC;
 			sourceTree = "<group>";
 		};
 		4473D6C7294064F100802446 /* BankView */ = {
@@ -1996,7 +2003,7 @@
 			files = (
 				4471722129193B23005EDF32 /* LaunchScreen.storyboard in Resources */,
 				4460275929548A2700EC9DE8 /* GoogleService-Info.plist in Resources */,
-				4471721E29193B23005EDF32 /* Assets.xcassets in Resources */,
+				2199F4C82A22519F0093BC70 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2378,20 +2385,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2199F4D02A2251E80093BC70 /* CustomStepper.swift in Sources */,
 				2199F4AA2A1F66F20093BC70 /* SegmentedControlCell.swift in Sources */,
+				2199F4CF2A2251E80093BC70 /* CartCell.swift in Sources */,
 				4471722D291941EA005EDF32 /* StartupService.swift in Sources */,
 				2199F4BE2A1F895B0093BC70 /* ListCell.swift in Sources */,
 				2199F4AD2A1F66F20093BC70 /* ConfigModel.swift in Sources */,
 				2199F4AB2A1F66F20093BC70 /* ConfigPresenter.swift in Sources */,
 				AE4D867529DDA195005C8092 /* NetworkServer.swift in Sources */,
-				4471721929193B21005EDF32 /* CartVC.swift in Sources */,
 				44C2A04829222E18000D894A /* ObjcCartVC.m in Sources */,
 				2199F4AE2A1F66F20093BC70 /* ConfigAssembly.swift in Sources */,
 				4471721529193B21005EDF32 /* AppDelegate.swift in Sources */,
 				2199F4C62A2082330093BC70 /* ButtonCell.swift in Sources */,
-				447172302919466E005EDF32 /* CartCell.swift in Sources */,
 				2199F4AF2A1F66F20093BC70 /* ConfigVC.swift in Sources */,
 				2199F4A92A1F66F20093BC70 /* TextViewCell.swift in Sources */,
+				2199F4D12A2251E80093BC70 /* PaymentSCell.swift in Sources */,
+				2199F4CE2A2251E80093BC70 /* CartVC.swift in Sources */,
 				2199F4C02A1F89690093BC70 /* SwitchCell.swift in Sources */,
 				2199F4BC2A1F793C0093BC70 /* UserDefaultWrapper.swift in Sources */,
 				2199F4B52A1F68190093BC70 /* ActionButton.swift in Sources */,
