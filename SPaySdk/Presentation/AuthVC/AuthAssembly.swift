@@ -36,7 +36,8 @@ final class AuthAssembly {
                       alertService: locator.resolve(),
                       bankManager: locator.resolve(),
                       contentLoadManager: locator.resolve(),
-                      timeManager: OptimizationCheсkerManager())
+                      timeManager: OptimizationCheсkerManager(),
+                      enviromentManager: locator.resolve())
     }
 
     private func moduleView(presenter: AuthPresenter) -> ContentVC & IAuthVC {

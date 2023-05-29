@@ -81,12 +81,18 @@ final class DefaultSBPayService: SBPayService {
 #if targetEnvironment(simulator)
         return true
 #else
-        let apps = locator.resolve(BankAppManager.self).avaliableBanks
-        locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
-        SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
-        return !apps.isEmpty
+        
+        let target = locator.resolve(EnvironmentManager.self).environment == .sandboxWithoutBankApp
+        if target {
+            return true
+        } else {
+            let apps = locator.resolve(BankAppManager.self).avaliableBanks
+            locator
+                .resolve(AnalyticsService.self)
+                .sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
+            SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
+            return !apps.isEmpty
+        }
 #endif
     }
     
