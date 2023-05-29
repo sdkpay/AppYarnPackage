@@ -109,10 +109,6 @@ final class PaymentPresenter: PaymentPresenting {
         guard let paymentId = userService.selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId,
                                 isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.view?.hideLoading()
-            }
             self?.view?.userInteractionsEnabled = true
             switch result {
             case .success():
@@ -242,36 +238,14 @@ final class PaymentPresenter: PaymentPresenting {
             alertService.show(on: view,
                               type: .noInternet(retry: { self.pay() },
                                                 completion: { self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
-        case .timeOut:
-            configForWaiting()
-        case .personalInfo:
-            <#code#>
-        case .partPayError:
-            <#code#>
-        case .unknownStatus:
-            <#code#>
-        case .defaultError, .personalInfo:
-            alertService.show(on: view,
-                              type: .defaultError(completion: { self.dismissWithError(.badResponseWithStatus(code: .errorSystem) }))
-        }
-        switch error {
-        case .noInternetConnection:
-            alertService.show(on: view,
-                              type: .noInternet(retry: { self.pay() },
-                                                completion: { self.dismissWithError(error) }))
-        case .timeOut:
+        case .timeOut, .unknownStatus:
             configForWaiting()
         case .partPayError:
-            alertService.show(on: self.view,
-                              type: .partPayError(fullPay: { [weak self] in
-                self?.partPayService.bnplplanSelected = false
-                self?.pay()
-            }, back: {
-                // TODO - показываем экран без бнпл
-            }))
+            partPayService.bnplplanSelected = false
+            pay()
         default:
             alertService.show(on: view,
-                              type: .defaultError(completion: { self.dismissWithError(error) }))
+                              type: .defaultError(completion: { self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
         }
     }
 

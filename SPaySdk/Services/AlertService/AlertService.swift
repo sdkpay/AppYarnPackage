@@ -166,7 +166,7 @@ final class DefaultAlertService: AlertService {
                       state: .failure,
                       buttons: buttons,
                       completion: completion)
-        case .partPayError(fullPay: let fullPay, back: let back):
+        case let .partPayError(fullPay: fullPay, back: back):
             var buttons: [(title: String,
                            type: DefaultButtonAppearance,
                            action: Action)] = []

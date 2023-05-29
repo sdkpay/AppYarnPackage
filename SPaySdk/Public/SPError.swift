@@ -16,7 +16,7 @@ public class SPError: NSObject {
     init(errorState: SDKError) {
         errorDescription = .Error.errorSystem
         switch errorState {
-        case .noInternetConnection, .badDataFromSBOL, .unauthorizedClient, .personalInfo, .noCards, .partPayError:
+        case .noInternetConnection, .badDataFromSBOL, .unauthorizedClient, .personalInfo, .noCards:
             errorDescription = .Error.errorSystem
         case .noData, .failDecode, .errorFromServer:
             errorDescription = .Error.errorFormat
