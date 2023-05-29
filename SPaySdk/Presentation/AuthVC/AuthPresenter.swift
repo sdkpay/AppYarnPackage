@@ -21,6 +21,7 @@ final class AuthPresenter: AuthPresenting {
     private let alertService: AlertService
     private let timeManager: OptimizationCheсkerManager
     private let contentLoadManager: ContentLoadManager
+    private let enviromentManager: EnvironmentManager
 
     weak var view: (IAuthVC & ContentVC)?
     
@@ -32,7 +33,8 @@ final class AuthPresenter: AuthPresenting {
          alertService: AlertService,
          bankManager: BankAppManager,
          contentLoadManager: ContentLoadManager,
-         timeManager: OptimizationCheсkerManager) {
+         timeManager: OptimizationCheсkerManager,
+         enviromentManager: EnvironmentManager) {
         self.analytics = analytics
         self.router = router
         self.authService = authService
@@ -42,6 +44,7 @@ final class AuthPresenter: AuthPresenting {
         self.contentLoadManager = contentLoadManager
         self.bankManager = bankManager
         self.timeManager = timeManager
+        self.enviromentManager = enviromentManager
         self.timeManager.startTraking()
     }
     
@@ -57,6 +60,12 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkNewStart() {
+        
+        if enviromentManager.environment == .sandboxWithoutBankApp {
+            openSId()
+            return
+        }
+        
         if sdkManager.newStart || userService.user == nil {
             configAuthSettings()
         } else {
@@ -142,6 +151,10 @@ final class AuthPresenter: AuthPresenting {
             } else {
                 self.analytics.sendEvent(.BankAppAuthSuccess)
                 self.loadPaymentData()
+            }
+        } showFakeScreen: {
+            DispatchQueue.main.async {
+                self.router.presentFakeScreen()
             }
         }
     }
