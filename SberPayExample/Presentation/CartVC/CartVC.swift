@@ -24,20 +24,20 @@ struct CellModel {
 final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private let values: ConfigValues
     private var model: [CellModel] = [
-        .init(cost: 820+1370,
+        .init(cost: 820 + 1370,
               title: "Кабель зарядный Lightning connector",
               image: UIImage(named: "charger")!,
-              color: UIColor(red: 253/255, green: 241/255, blue: 233/255, alpha: 1)),
+              color: UIColor(red: 253 / 255, green: 241 / 255, blue: 233 / 255, alpha: 1)),
         .init(cost: 750,
               title: "Амбушюры для Apple Airpods Pro",
               image: UIImage(named: "headphones")!,
-              color: UIColor(red: 237/255, green: 247/255, blue: 251/255, alpha: 1)),
+              color: UIColor(red: 237 / 255, green: 247 / 255, blue: 251 / 255, alpha: 1)),
         .init(cost: 45681,
               title: "Телевизор Hisense 65E7HQ",
               image: UIImage(named: "tv")!,
-              color: UIColor(red: 254/255, green: 236/255, blue: 237/255, alpha: 1))
+              color: UIColor(red: 254 / 255, green: 236 / 255, blue: 237 / 255, alpha: 1))
     ]
-    
+
     private lazy var tableView: UITableView = {
         let view = UITableView()
         view.separatorStyle = .none
@@ -57,7 +57,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private lazy var totalCostLabel: UILabel = {
         let view = UILabel()
         view.text = "\(values.cost ?? "") p"
-        view.textColor = UIColor(red: 251/255, green: 137/255, blue: 78/255, alpha: 1)
+        view.textColor = UIColor(red: 251 / 255, green: 137 / 255, blue: 78 / 255, alpha: 1)
         view.font = .systemFont(ofSize: 17, weight: .semibold)
         return view
     }()

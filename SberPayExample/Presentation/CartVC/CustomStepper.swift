@@ -1,3 +1,9 @@
+//
+//  CustomStepper.swift
+//  SberPay
+//
+//  Created by Alexander Ipatov on 07.11.2022.
+//
 
 import UIKit
 
@@ -7,7 +13,7 @@ final class CustomStepper: UIView {
         let button = UIButton()
         button.setImage(nil, for: .normal)
         button.setTitle("+", for: .normal)
-        button.setTitleColor(UIColor(red: 251/255, green: 137/255, blue: 78/255, alpha: 1), for: .normal)
+        button.setTitleColor(UIColor(red: 251 / 255, green: 137 / 255, blue: 78 / 255, alpha: 1), for: .normal)
         return button
     }()
     
@@ -15,7 +21,7 @@ final class CustomStepper: UIView {
         let button = UIButton()
         button.setImage(nil, for: .normal)
         button.setTitle("-", for: .normal)
-        button.setTitleColor(UIColor(red: 251/255, green: 137/255, blue: 78/255, alpha: 1), for: .normal)
+        button.setTitleColor(UIColor(red: 251 / 255, green: 137 / 255, blue: 78 / 255, alpha: 1), for: .normal)
         return button
     }()
     
