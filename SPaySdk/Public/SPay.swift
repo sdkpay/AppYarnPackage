@@ -24,7 +24,7 @@ public final class SPay: NSObject {
                              bnplPlan: Bool = false,
                              environment: SEnvironment = .prod,
                              completion: Action? = nil) {
-        payService?.setup(apiKey: apiKey, bnplPlan: bnplPlan, completion: completion)
+        payService?.setup(apiKey: apiKey, bnplPlan: bnplPlan, environment: environment, completion: completion)
     }
     
     /**
