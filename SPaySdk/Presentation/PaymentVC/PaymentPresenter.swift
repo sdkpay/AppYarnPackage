@@ -53,7 +53,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let bankManager: BankAppManager
     private let timeManager: OptimizationCheсkerManager
     
-    private let partPayService: PartPayService
+    private var partPayService: PartPayService
 
     private var cellData: [PaymentCellType] = []
     var cellDataCount: Int {
@@ -115,16 +115,7 @@ final class PaymentPresenter: PaymentPresenting {
             }
             self?.view?.userInteractionsEnabled = true
             if let error = error {
-                if error.represents(.noInternetConnection) {
-                    self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.pay() },
-                                                              completion: { self?.dismissWithError(error) }))
-                } else if error.represents(.timeOut) || error.represents(.badResponseWithStatus(code: .unowned)) {
-                    self?.configForWaiting()
-                } else {
-                    self?.alertService.show(on: self?.view,
-                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
-                }
+                self?.validatePayError(error)
             } else {
                 self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
                     self?.view?.dismiss(animated: true, completion: {
@@ -190,7 +181,7 @@ final class PaymentPresenter: PaymentPresenting {
             }
         }
     }
-
+    
     private func configViews() {
         guard let user = userService.user else { return }
         var finalCost: String
@@ -207,7 +198,7 @@ final class PaymentPresenter: PaymentPresenting {
                              fullPrice: fullPrice,
                              iconURL: user.logoUrl)
         view?.configProfileView(with: user.userInfo)
-
+        
         if userService.selectedCard != nil {
             view?.reloadCollectionView()
         } else {
@@ -241,7 +232,46 @@ final class PaymentPresenter: PaymentPresenting {
            partPayService.bnplplanEnabled {
             cellData.append(.partPay)
         }
-       return cellData
+        return cellData
+    }
+    
+    private func validatePayError(_ error: PayError) {
+        switch error {
+        case .noInternetConnection:
+            alertService.show(on: view,
+                              type: .noInternet(retry: { self.pay() },
+                                                completion: { self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+        case .timeOut:
+            configForWaiting()
+        case .personalInfo:
+            <#code#>
+        case .partPayError:
+            <#code#>
+        case .unknownStatus:
+            <#code#>
+        case .defaultError, .personalInfo:
+            alertService.show(on: view,
+                              type: .defaultError(completion: { self.dismissWithError(.badResponseWithStatus(code: .errorSystem) }))
+        }
+        switch error {
+        case .noInternetConnection:
+            alertService.show(on: view,
+                              type: .noInternet(retry: { self.pay() },
+                                                completion: { self.dismissWithError(error) }))
+        case .timeOut:
+            configForWaiting()
+        case .partPayError:
+            alertService.show(on: self.view,
+                              type: .partPayError(fullPay: { [weak self] in
+                self?.partPayService.bnplplanSelected = false
+                self?.pay()
+            }, back: {
+                // TODO - показываем экран без бнпл
+            }))
+        default:
+            alertService.show(on: view,
+                              type: .defaultError(completion: { self.dismissWithError(error) }))
+        }
     }
 
     private func configForWaiting() {

@@ -68,6 +68,7 @@ enum AlertType {
     case paySuccess(completion: Action)
     case defaultError(completion: Action)
     case noInternet(retry: Action, completion: Action)
+    case partPayError(fullPay: Action, back: Action)
 }
 
 final class AlertServiceAssembly: Assembly {
@@ -125,13 +126,15 @@ final class DefaultAlertService: AlertService {
                               type: DefaultButtonAppearance,
                               action: Action)],
                    completion: @escaping Action) {
-        let model = AlertViewModel(image: state.image,
-                                   title: text,
-                                   buttons: buttons,
-                                   sound: state.soundPath,
-                                   feedBack: state.feedBack,
-                                   completion: completion)
-        view?.showAlert(with: model)
+        DispatchQueue.main.async {
+            let model = AlertViewModel(image: state.image,
+                                       title: text,
+                                       buttons: buttons,
+                                       sound: state.soundPath,
+                                       feedBack: state.feedBack,
+                                       completion: completion)
+            view?.showAlert(with: model)
+        }
     }
     
     func show(on view: ContentVC?, type: AlertType) {
@@ -152,17 +155,32 @@ final class DefaultAlertService: AlertService {
             var buttons: [(title: String,
                            type: DefaultButtonAppearance,
                            action: Action)] = []
-                   buttons.append((title: .Common.tryTitle,
-                                   type: .full,
-                                   action: retry))
-                   buttons.append((title: .Common.cancelTitle,
-                                   type: .cancel,
-                                   action: completion))
+            buttons.append((title: .Common.tryTitle,
+                            type: .full,
+                            action: retry))
+            buttons.append((title: .Common.cancelTitle,
+                            type: .cancel,
+                            action: completion))
             showAlert(on: view,
                       with: .Alert.alertPayNoInternetTitle,
                       state: .failure,
                       buttons: buttons,
                       completion: completion)
+        case .partPayError(fullPay: let fullPay, back: let back):
+            var buttons: [(title: String,
+                           type: DefaultButtonAppearance,
+                           action: Action)] = []
+            buttons.append((title: .Common.payFull,
+                            type: .full,
+                            action: fullPay))
+            buttons.append((title: .Common.returnTitle,
+                            type: .cancel,
+                            action: back))
+            showAlert(on: view,
+                      with: .Alert.alertPartPayError,
+                      state: .failure,
+                      buttons: buttons,
+                      completion: back)
         }
     }
 }
