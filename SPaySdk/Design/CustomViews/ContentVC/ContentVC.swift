@@ -137,6 +137,9 @@ extension ContentVC {
     func hideAlert() {
         guard let alertView = alertView else { return }
         alertView.removeFromSuperview()
+        view.subviews.forEach { view in
+            view.isHidden = false
+        }
         self.alertView = nil
     }
 }

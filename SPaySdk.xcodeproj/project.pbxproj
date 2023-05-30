@@ -33,8 +33,6 @@
 		214E9C4C29CC4B95009DF5FE /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */; };
 		215D314D2A24D30B009ED030 /* Result+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D314C2A24D30B009ED030 /* Result+Success.swift */; };
 		215D314E2A24D30B009ED030 /* Result+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D314C2A24D30B009ED030 /* Result+Success.swift */; };
-		215D31512A2514B0009ED030 /* PaymentInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D31502A2514B0009ED030 /* PaymentInteractor.swift */; };
-		215D31522A251533009ED030 /* PaymentInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D31502A2514B0009ED030 /* PaymentInteractor.swift */; };
 		215D315B2A252893009ED030 /* PaymentFeaturesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */; };
 		215D315C2A252893009ED030 /* PaymentFeaturesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */; };
 		2160A02429E6FC6700B72F40 /* SPaySdkDEBUG.h in Headers */ = {isa = PBXBuildFile; fileRef = 2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -429,7 +427,6 @@
 		21440DBE29D6F5D500E3803E /* String+Ranges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ranges.swift"; sourceTree = "<group>"; };
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		215D314C2A24D30B009ED030 /* Result+Success.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Success.swift"; sourceTree = "<group>"; };
-		215D31502A2514B0009ED030 /* PaymentInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentInteractor.swift; sourceTree = "<group>"; };
 		215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFeaturesConfig.swift; sourceTree = "<group>"; };
 		2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPaySdkDEBUG.h; path = SPaySdk/Public/SPaySdkDEBUG.h; sourceTree = "<group>"; };
 		21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ift.gate1.spaymentsplus.ru.der; sourceTree = "<group>"; };
@@ -1233,7 +1230,6 @@
 				445CB092292CC08400F50047 /* PaymentVC.swift */,
 				445CB09A292DFF5100F50047 /* PaymentPresenter.swift */,
 				44A3126229813D110099EB76 /* PaymentRouter.swift */,
-				215D31502A2514B0009ED030 /* PaymentInteractor.swift */,
 				215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */,
 			);
 			path = PaymentVC;
@@ -2084,7 +2080,6 @@
 				21EB4D2C29E16405006541B0 /* SFullPaymentRequest.swift in Sources */,
 				21EB4D2D29E16405006541B0 /* Fonts.swift in Sources */,
 				21EB4D2E29E16405006541B0 /* CardInfoView.swift in Sources */,
-				215D31512A2514B0009ED030 /* PaymentInteractor.swift in Sources */,
 				21EB4D2F29E16405006541B0 /* PaymentVC.swift in Sources */,
 				21EB4D3029E16405006541B0 /* String+Ranges.swift in Sources */,
 				21EB4D3129E16405006541B0 /* SPError.swift in Sources */,
@@ -2258,7 +2253,6 @@
 				21253D1E29C9B20B004ED82D /* UIView+Template.swift in Sources */,
 				21253D2329CA3152004ED82D /* UIImageView+Download.swift in Sources */,
 				44A3126129813ABB0099EB76 /* AuthRouter.swift in Sources */,
-				215D31522A251533009ED030 /* PaymentInteractor.swift in Sources */,
 				44533D1E298521380041FAA9 /* PaymentTokenModel.swift in Sources */,
 				445CB066292BB3E300F50047 /* String+Localized.swift in Sources */,
 				211DF36C29D18CF30038A951 /* ConfigModel.swift in Sources */,

@@ -175,7 +175,7 @@ final class DefaultAlertService: AlertService {
                             type: .full,
                             action: fullPay))
             buttons.append((title: .Common.returnTitle,
-                            type: .cancel,
+                            type: .clear,
                             action: back))
             showAlert(on: view,
                       with: .Alert.alertPartPayError,

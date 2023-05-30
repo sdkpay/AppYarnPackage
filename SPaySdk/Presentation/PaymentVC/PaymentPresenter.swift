@@ -44,7 +44,6 @@ protocol PaymentPresenting {
 
 final class PaymentPresenter: PaymentPresenting {
     private let router: PaymentRouting
-//    private var interactor: PaymentInteracting
     private let analytics: AnalyticsService
     private var userService: UserService
     private let paymentService: PaymentService
@@ -73,7 +72,6 @@ final class PaymentPresenter: PaymentPresenting {
     weak var view: (IPaymentVC & ContentVC)?
     
     init(_ router: PaymentRouting,
-       //  interactor: PaymentInteracting,
          manager: SDKManager,
          userService: UserService,
          analytics: AnalyticsService,
@@ -84,7 +82,6 @@ final class PaymentPresenter: PaymentPresenting {
          partPayService: PartPayService,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
-    //   self.interactor = interactor
         self.userService = userService
         self.sdkManager = manager
         self.analytics = analytics
@@ -218,7 +215,8 @@ final class PaymentPresenter: PaymentPresenting {
         case .noInternetConnection:
             alertService.show(on: view,
                               type: .noInternet(retry: { self.pay() },
-                                                completion: { self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                                                completion: {
+                self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
         case .timeOut, .unknownStatus:
             configForWaiting()
         case .partPayError:
@@ -242,6 +240,7 @@ final class PaymentPresenter: PaymentPresenting {
                                        type: .partPayError(fullPay: {
                     self.pay()
                 }, back: {
+                    self.view?.hideLoading(animate: false)
                     self.view?.reloadCollectionView()
                     self.alertService.hide(on: self.view)
                 }))
