@@ -109,26 +109,31 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func pay() {
-        view?.userInteractionsEnabled = false
-        DispatchQueue.main.async {
-            self.view?.hideAlert()
-            self.view?.showLoading(with: .Loading.tryToPayTitle)
-        }
-        guard let paymentId = userService.selectedCard?.paymentId else { return }
-        paymentService.tryToPay(paymentId: paymentId,
-                                isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
-            self?.view?.userInteractionsEnabled = true
-            switch result {
-            case .success:
-                self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
-                    self?.view?.dismiss(animated: true, completion: {
-                        self?.sdkManager.completionPay(with: .success)
-                    })
-                }))
-            case .failure(let error):
-                self?.validatePayError(error)
-            }
-        }
+        
+        alertService.show(on: view,
+                          type: .noInternet(retry: { self.pay() },
+                                            completion: {
+            self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+//        view?.userInteractionsEnabled = false
+//        DispatchQueue.main.async {
+//            self.view?.hideAlert()
+//            self.view?.showLoading(with: .Loading.tryToPayTitle)
+//        }
+//        guard let paymentId = userService.selectedCard?.paymentId else { return }
+//        paymentService.tryToPay(paymentId: paymentId,
+//                                isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
+//            self?.view?.userInteractionsEnabled = true
+//            switch result {
+//            case .success:
+//                self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
+//                    self?.view?.dismiss(animated: true, completion: {
+//                        self?.sdkManager.completionPay(with: .success)
+//                    })
+//                }))
+//            case .failure(let error):
+//                self?.validatePayError(error)
+//            }
+//        }
     }
     
     func cancelTapped() {

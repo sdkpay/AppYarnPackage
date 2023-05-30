@@ -67,9 +67,6 @@ final class CardsVC: ContentVC, ICardsVC {
     }
     
     private func setupUI() {
-        view.addSubview(titleLabel)
-        view.addSubview(tableView)
-        
         titleLabel
             .add(toSuperview: view)
             .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: .topMargin)

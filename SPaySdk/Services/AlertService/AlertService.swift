@@ -104,22 +104,6 @@ final class DefaultAlertService: AlertService {
         SBLogger.log(.stop(obj: self))
     }
     
-    private var vc: ContentVC? {
-        var navigationController: ContentNC
-        if #available(iOS 13.0, *) {
-            guard let nc = UIApplication.shared.topViewController as? ContentNC
-            else { return nil }
-            navigationController = nc
-        } else {
-            guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) as? TransparentWindow,
-                  let nc = window.topVC as? ContentNC
-            else { return nil }
-            navigationController = nc
-        }
-        
-        return navigationController.topViewController as? ContentVC
-    }
-    
     func showAlert(on view: ContentVC?,
                    with text: String,
                    state: AlertState,
@@ -134,7 +118,8 @@ final class DefaultAlertService: AlertService {
                                        sound: state.soundPath,
                                        feedBack: state.feedBack,
                                        completion: completion)
-            view?.showAlert(with: model)
+            let alertVC = AlertAssembly().createModule(alertModel: model)
+            view?.contentNavigationController?.pushViewController(alertVC, animated: true)
         }
     }
     

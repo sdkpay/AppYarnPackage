@@ -35,6 +35,12 @@
 		215D314E2A24D30B009ED030 /* Result+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D314C2A24D30B009ED030 /* Result+Success.swift */; };
 		215D315B2A252893009ED030 /* PaymentFeaturesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */; };
 		215D315C2A252893009ED030 /* PaymentFeaturesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */; };
+		215D315F2A262B96009ED030 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D315E2A262B95009ED030 /* AlertVC.swift */; };
+		215D31602A262B96009ED030 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D315E2A262B95009ED030 /* AlertVC.swift */; };
+		215D31622A262CB5009ED030 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D31612A262CB5009ED030 /* AlertPresenter.swift */; };
+		215D31632A262CB5009ED030 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D31612A262CB5009ED030 /* AlertPresenter.swift */; };
+		215D31652A262EF0009ED030 /* AlertAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D31642A262EF0009ED030 /* AlertAssembly.swift */; };
+		215D31662A262EF0009ED030 /* AlertAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D31642A262EF0009ED030 /* AlertAssembly.swift */; };
 		2160A02429E6FC6700B72F40 /* SPaySdkDEBUG.h in Headers */ = {isa = PBXBuildFile; fileRef = 2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21676D9A2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */; };
 		21676D9B2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */; };
@@ -428,6 +434,9 @@
 		214E9C4929CC4AF5009DF5FE /* FingerprintPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FingerprintPackage; sourceTree = "<group>"; };
 		215D314C2A24D30B009ED030 /* Result+Success.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Success.swift"; sourceTree = "<group>"; };
 		215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFeaturesConfig.swift; sourceTree = "<group>"; };
+		215D315E2A262B95009ED030 /* AlertVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
+		215D31612A262CB5009ED030 /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
+		215D31642A262EF0009ED030 /* AlertAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertAssembly.swift; sourceTree = "<group>"; };
 		2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPaySdkDEBUG.h; path = SPaySdk/Public/SPaySdkDEBUG.h; sourceTree = "<group>"; };
 		21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ift.gate1.spaymentsplus.ru.der; sourceTree = "<group>"; };
 		2180695929F187CD00587AB8 /* BankAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAppManager.swift; sourceTree = "<group>"; };
@@ -745,6 +754,16 @@
 			name = Packages;
 			sourceTree = "<group>";
 		};
+		215D315D2A262B78009ED030 /* AlertVC */ = {
+			isa = PBXGroup;
+			children = (
+				215D31642A262EF0009ED030 /* AlertAssembly.swift */,
+				215D315E2A262B95009ED030 /* AlertVC.swift */,
+				215D31612A262CB5009ED030 /* AlertPresenter.swift */,
+			);
+			path = AlertVC;
+			sourceTree = "<group>";
+		};
 		2180695829F187C000587AB8 /* BankAppManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -928,6 +947,7 @@
 				44A0B5B7293DF244007AB3FD /* CardsVC */,
 				445CB09C292E053A00F50047 /* AuthVC */,
 				445CB091292CC07300F50047 /* PaymentVC */,
+				215D315D2A262B78009ED030 /* AlertVC */,
 				44B8220B2923D7A700C06C51 /* RootVC */,
 			);
 			path = Presentation;
@@ -2016,6 +2036,7 @@
 				21EB4CF729E16405006541B0 /* CardsAssembly.swift in Sources */,
 				21EB4CF829E16405006541B0 /* SPaymentRequest.swift in Sources */,
 				21EB4CF929E16405006541B0 /* LoggableVC.swift in Sources */,
+				215D31662A262EF0009ED030 /* AlertAssembly.swift in Sources */,
 				21EB4CFA29E16405006541B0 /* ContentView.swift in Sources */,
 				21B3BA5829F93FAD0024BDF0 /* ExpendedButton.swift in Sources */,
 				21EB4CFB29E16405006541B0 /* ContentTableView.swift in Sources */,
@@ -2041,6 +2062,7 @@
 				21EB4D0A29E16405006541B0 /* CardCell.swift in Sources */,
 				21EB4D0B29E16405006541B0 /* UserDefaults+Extension.swift in Sources */,
 				21EB4D0C29E16405006541B0 /* UIButton+Background.swift in Sources */,
+				215D31632A262CB5009ED030 /* AlertPresenter.swift in Sources */,
 				AE4D878C29EED290005C8092 /* CompactCollectionView.swift in Sources */,
 				21EB4D0D29E16405006541B0 /* Certificates.swift in Sources */,
 				21EB4D0E29E16405006541B0 /* LogLevelAlertVC.swift in Sources */,
@@ -2085,6 +2107,7 @@
 				21EB4D3129E16405006541B0 /* SPError.swift in Sources */,
 				21B3BA4829F804340024BDF0 /* PartPayService.swift in Sources */,
 				21EB4D3229E16405006541B0 /* AnalyticsService.swift in Sources */,
+				215D31602A262B96009ED030 /* AlertVC.swift in Sources */,
 				21B3BA4029F7E7BE0024BDF0 /* BnplTarget.swift in Sources */,
 				21EB4D3329E16405006541B0 /* StubNetworkProvider.swift in Sources */,
 				21EB4D3429E16405006541B0 /* UIView+Shimmer.swift in Sources */,
@@ -2163,6 +2186,7 @@
 				4464DF89291D01F4000C9B45 /* NetworkService.swift in Sources */,
 				21440DB629D5B67200E3803E /* LogVC.swift in Sources */,
 				44F9FD4C295AFAB800FE4B9F /* CoverTransitionDriver.swift in Sources */,
+				215D315F2A262B96009ED030 /* AlertVC.swift in Sources */,
 				442A45DD29804E2E00EC3D73 /* UserTarget.swift in Sources */,
 				21EB4CD029E163DA006541B0 /* SPayDebug.swift in Sources */,
 				44AC79CC299FE9A50043FA4E /* Data+Extension.swift in Sources */,
@@ -2188,6 +2212,7 @@
 				44D898D52936487900550FC6 /* String+Random.swift in Sources */,
 				44E581822939D25A00BDEC4E /* BankModel.swift in Sources */,
 				4464DF90291D0DE3000C9B45 /* NetworkDecoding.swift in Sources */,
+				215D31652A262EF0009ED030 /* AlertAssembly.swift in Sources */,
 				AE4D878D29EED3C0005C8092 /* CompactCollectionView.swift in Sources */,
 				21253D1C29C9B20B004ED82D /* UIView+Extensions.swift in Sources */,
 				445CB06F292BBA7100F50047 /* Palette.swift in Sources */,
@@ -2257,6 +2282,7 @@
 				445CB066292BB3E300F50047 /* String+Localized.swift in Sources */,
 				211DF36C29D18CF30038A951 /* ConfigModel.swift in Sources */,
 				215D314D2A24D30B009ED030 /* Result+Success.swift in Sources */,
+				215D31622A262CB5009ED030 /* AlertPresenter.swift in Sources */,
 				AE4D868829E5348F005C8092 /* SBGuide.swift in Sources */,
 				44F9FD4D295AFAB800FE4B9F /* CoverPresentationController.swift in Sources */,
 				AE4D869229E539C4005C8092 /* UIView+Touch.swift in Sources */,
