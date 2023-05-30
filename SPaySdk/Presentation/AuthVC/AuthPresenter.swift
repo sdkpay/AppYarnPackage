@@ -62,14 +62,13 @@ final class AuthPresenter: AuthPresenting {
     private func checkNewStart() {
         
         if enviromentManager.environment == .sandboxWithoutBankApp {
-            openSId()
-            return
-        }
-        
-        if sdkManager.newStart || userService.user == nil {
-            configAuthSettings()
-        } else {
             checkSession()
+        } else {
+            if sdkManager.newStart || userService.user == nil {
+                configAuthSettings()
+            } else {
+                checkSession()
+            }
         }
     }
     
@@ -103,7 +102,9 @@ final class AuthPresenter: AuthPresenting {
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
 
-        if bankManager.selectedBank == nil {
+        if enviromentManager.environment == .sandboxWithoutBankApp {
+            getAccessSPay()
+        } else if bankManager.selectedBank == nil {
             showBanksStack()
         } else {
             getAccessSPay()
@@ -123,7 +124,7 @@ final class AuthPresenter: AuthPresenting {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.view?.hideAlert()
-            let title: String = .Loading.toBankTitle(args: self.bankManager.selectedBank?.name ?? "")
+            let title: String = .Loading.toBankTitle(args: self.bankManager.selectedBank?.name ?? "Банк")
             self.view?.showLoading(with: title)
         }
        
@@ -131,7 +132,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func openSId() {
-        authService.tryToAuth { [weak self] error in
+        authService.tryToAuth { [weak self] error, isShowFakeScreen in
             guard let self = self else { return }
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -149,13 +150,20 @@ final class AuthPresenter: AuthPresenting {
                                            type: .defaultError(completion: { self.dismissWithError(error) }))
                 }
             } else {
+                self.openFakeScreen(target: isShowFakeScreen)
+            }
+        }
+    }
+    
+    private func openFakeScreen(target: Bool) {
+        if target {
+            router.presentFakeScreen {
                 self.analytics.sendEvent(.BankAppAuthSuccess)
                 self.loadPaymentData()
             }
-        } showFakeScreen: {
-            DispatchQueue.main.async {
-                self.router.presentFakeScreen()
-            }
+        } else {
+            self.analytics.sendEvent(.BankAppAuthSuccess)
+            self.loadPaymentData()
         }
     }
     

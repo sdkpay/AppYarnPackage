@@ -9,7 +9,7 @@ import UIKit
 
 protocol AuthRouting {
     func presentPayment()
-    func presentFakeScreen()
+    func presentFakeScreen(completion: @escaping () -> Void)
 }
 
 final class AuthRouter: AuthRouting {
@@ -25,11 +25,11 @@ final class AuthRouter: AuthRouting {
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
     
-    func presentFakeScreen() {
+    func presentFakeScreen(completion: @escaping () -> Void) {
         let fakeViewController = FakeViewController()
         viewController?.present(fakeViewController, animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            fakeViewController.dismiss(animated: true)
+            fakeViewController.dismiss(animated: true, completion: completion)
         }
     }
 }

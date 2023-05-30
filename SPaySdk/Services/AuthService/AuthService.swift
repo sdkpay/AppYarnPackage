@@ -24,12 +24,12 @@ final class AuthServiceAssembly: Assembly {
 }
 
 protocol AuthService {
-    func tryToAuth(completion: @escaping (SDKError?) -> Void, showFakeScreen: @escaping () -> Void)
+    func tryToAuth(completion: @escaping (SDKError?, Bool) -> Void)
     func completeAuth(with url: URL)
 }
 
 final class DefaultAuthService: AuthService, ResponseDecoder {
-    private var authСompletion: ((SDKError?) -> Void)?
+    private var authСompletion: ((SDKError?, Bool) -> Void)?
     private var analytics: AnalyticsService
     private let network: NetworkService
     private let sdkManager: SDKManager
@@ -62,20 +62,20 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         SBLogger.log(.stop(obj: self))
     }
     
-    func tryToAuth(completion: @escaping (SDKError?) -> Void, showFakeScreen: @escaping () -> Void) {
+    func tryToAuth(completion: @escaping (SDKError?, Bool) -> Void) {
         // Проверка на целостность
         personalMetricsService.integrityCheck { [weak self] result in
             if result {
                 // Запрос на получение сессии
-                self?.authRequest(completion: completion, showFakeScreen: showFakeScreen)
+                self?.authRequest(completion: completion)
             } else {
                 // Ошибка авторизации
-                completion(.personalInfo)
+                completion(.personalInfo, false)
             }
         }
     }
     
-    private func authRequest(completion: @escaping (SDKError?) -> Void, showFakeScreen: @escaping () -> Void) {
+    private func authRequest(completion: @escaping (SDKError?, Bool) -> Void) {
         guard let request = sdkManager.authInfo else { return }
         
         network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
@@ -94,9 +94,9 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self.authManager.sessionId = result.sessionId
                 self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
                                                       enabledLevel: .server)
-                self.sIdAuth(with: result, showFakeScreen: showFakeScreen)
+                self.sIdAuth(with: result)
             case .failure(let error):
-                completion(error)
+                completion(error, false)
             }
         }
     }
@@ -106,9 +106,9 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         case .success(let result):
             authManager.authCode = result.code
             authManager.state = result.state
-            authСompletion?(nil)
+            authСompletion?(nil, false)
         case .failure(let error):
-            authСompletion?(error)
+            authСompletion?(error, false)
         }
         // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
         bankAppManager.saveSelectedBank()
@@ -117,16 +117,15 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private func fillFakeData() {
         authManager.authCode = "3401216B-8B70-21FA-2592-58010E53EE5B"
         authManager.state = "4aj27jE6JnB"
-        authСompletion?(nil)
+        authСompletion?(nil, true)
     }
     
     // MARK: - Методы авторизации через sId
-    private func sIdAuth(with model: AuthModel, showFakeScreen: () -> Void) {
+    private func sIdAuth(with model: AuthModel) {
         
         let target = enviromentManager.environment == .sandboxWithoutBankApp
         guard !target else {
             fillFakeData()
-            showFakeScreen()
             return
         }
         
