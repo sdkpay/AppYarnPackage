@@ -117,7 +117,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func fillFakeData() {
         authManager.authCode = "3401216B-8B70-21FA-2592-58010E53EE5B"
-        authManager.state = "4aj27jE6JnB"
         authСompletion?(nil, true)
     }
     
