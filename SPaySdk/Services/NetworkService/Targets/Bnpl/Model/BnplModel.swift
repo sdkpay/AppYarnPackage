@@ -9,7 +9,7 @@ import Foundation
 
 struct BnplModel: Codable {
     let isBnplEnabled: Bool
-    let buttonBnpl: ButtonBnpl?
+    let buttonBnpl: ButtonBnpl
     let offerUrl: String?
     let offerText: String?
     let graphBnpl: GraphBnpl?

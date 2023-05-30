@@ -44,6 +44,7 @@ protocol PaymentPresenting {
 
 final class PaymentPresenter: PaymentPresenting {
     private let router: PaymentRouting
+//    private var interactor: PaymentInteracting
     private let analytics: AnalyticsService
     private var userService: UserService
     private let paymentService: PaymentService
@@ -55,7 +56,16 @@ final class PaymentPresenter: PaymentPresenting {
     
     private var partPayService: PartPayService
 
-    private var cellData: [PaymentCellType] = []
+    private var cellData: [PaymentCellType] {
+        var cellData: [PaymentCellType] = []
+        cellData.append(.card)
+        if partPayService.bnplplan != nil,
+           partPayService.bnplplanEnabled {
+            cellData.append(.partPay)
+        }
+        return cellData
+    }
+
     var cellDataCount: Int {
         cellData.count
     }
@@ -63,6 +73,7 @@ final class PaymentPresenter: PaymentPresenting {
     weak var view: (IPaymentVC & ContentVC)?
     
     init(_ router: PaymentRouting,
+       //  interactor: PaymentInteracting,
          manager: SDKManager,
          userService: UserService,
          analytics: AnalyticsService,
@@ -73,6 +84,7 @@ final class PaymentPresenter: PaymentPresenting {
          partPayService: PartPayService,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
+    //   self.interactor = interactor
         self.userService = userService
         self.sdkManager = manager
         self.analytics = analytics
@@ -90,7 +102,6 @@ final class PaymentPresenter: PaymentPresenting {
         timeManager.endTraking(PaymentVC.self.description()) {
             self.analytics.sendEvent(.PayViewAppeared, with: [$0])
         }
-        cellData = configCellData()
     }
     
     func payButtonTapped() {
@@ -111,7 +122,7 @@ final class PaymentPresenter: PaymentPresenting {
                                 isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
             self?.view?.userInteractionsEnabled = true
             switch result {
-            case .success():
+            case .success:
                 self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
                     self?.view?.dismiss(animated: true, completion: {
                         self?.sdkManager.completionPay(with: .success)
@@ -133,30 +144,10 @@ final class PaymentPresenter: PaymentPresenting {
         let cellType = cellData[indexPath.row]
         switch cellType {
         case .card:
-            return configCardModel()
+            return PaymentFeaturesConfig.configCardModel(userService: userService)
         case .partPay:
-            return configPartModel()
+            return PaymentFeaturesConfig.configPartModel(partPayService: partPayService)
         }
-    }
-    
-    private func configCardModel() -> PaymentCellModel {
-        guard let selectedCard = userService.selectedCard,
-              let user = userService.user else { return PaymentCellModel() }
-        return PaymentCellModel(title: selectedCard.productName ?? "",
-                                subtitle: selectedCard.cardNumber.card,
-                                iconURL: selectedCard.cardLogoUrl,
-                                needArrow: user.paymentToolInfo.count > 1)
-    }
-    
-    private func configPartModel() -> PaymentCellModel {
-        guard let bnpl = partPayService.bnplplan,
-              let buttonBnpl = bnpl.buttonBnpl
-        else { return PaymentCellModel() }
-        let icon = partPayService.bnplplanSelected ? buttonBnpl.activeButtonLogo : buttonBnpl.inactiveButtonLogo
-        return PaymentCellModel(title: buttonBnpl.header,
-                                subtitle: buttonBnpl.content,
-                                iconURL: icon,
-                                needArrow: true)
     }
     
     func didSelectItem(at indexPath: IndexPath) {
@@ -222,16 +213,6 @@ final class PaymentPresenter: PaymentPresenting {
                                completion: {})
     }
     
-    private func configCellData() -> [PaymentCellType] {
-        var cellData: [PaymentCellType] = []
-        cellData.append(.card)
-        if partPayService.bnplplan != nil,
-           partPayService.bnplplanEnabled {
-            cellData.append(.partPay)
-        }
-        return cellData
-    }
-    
     private func validatePayError(_ error: PayError) {
         switch error {
         case .noInternetConnection:
@@ -241,11 +222,32 @@ final class PaymentPresenter: PaymentPresenting {
         case .timeOut, .unknownStatus:
             configForWaiting()
         case .partPayError:
-            partPayService.bnplplanSelected = false
-            pay()
+            getPaymentToken()
         default:
             alertService.show(on: view,
                               type: .defaultError(completion: { self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+        }
+    }
+    
+    private func getPaymentToken() {
+        partPayService.bnplplanSelected = false
+        partPayService.setUserEnableBnpl(false, enabledLevel: .server)
+        
+        guard let paymentId = userService.selectedCard?.paymentId else { return }
+        paymentService.tryToGetPaymenyToken(paymentId: paymentId,
+                                            isBnplEnabled: false) { result in
+            switch result {
+            case .success:
+                self.alertService.show(on: self.view,
+                                       type: .partPayError(fullPay: {
+                    self.pay()
+                }, back: {
+                    self.view?.reloadCollectionView()
+                    self.alertService.hide(on: self.view)
+                }))
+            case .failure(let failure):
+                self.validatePayError(failure)
+            }
         }
     }
 

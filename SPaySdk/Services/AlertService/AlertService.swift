@@ -89,6 +89,7 @@ protocol AlertService {
                               action: Action)],
                    completion: @escaping Action)
     func show(on view: ContentVC?, type: AlertType)
+    func hide(on view: ContentVC?)
 }
 
 final class DefaultAlertService: AlertService {
@@ -182,5 +183,9 @@ final class DefaultAlertService: AlertService {
                       buttons: buttons,
                       completion: back)
         }
+    }
+    
+    func hide(on view: ContentVC?) {
+        view?.hideAlert()
     }
 }
