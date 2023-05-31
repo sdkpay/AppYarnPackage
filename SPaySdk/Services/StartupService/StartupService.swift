@@ -98,16 +98,13 @@ final class DefaultStartupService: StartupService {
                               buttons: [],
                               completion: completion)
         case .waiting:
-            var buttons: [(title: String,
-                           type: DefaultButtonAppearance,
-                           action: Action)] = []
-            buttons.append((title: .Common.okTitle,
-                            type: .full,
-                            action: completion))
+            let button = AlertButtonModel(title: .Common.okTitle,
+                                          type: .full,
+                                          action: completion)
             service.showAlert(on: sdkWindow?.topVC as? ContentVC,
                               with: .Alert.waiting(args: "банка"),
                               state: .waiting,
-                              buttons: buttons,
+                              buttons: [button],
                               completion: {})
         case .error:
             service.showAlert(on: sdkWindow?.topVC as? ContentVC,

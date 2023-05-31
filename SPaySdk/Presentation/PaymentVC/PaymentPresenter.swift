@@ -109,31 +109,24 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func pay() {
-        
-        alertService.show(on: view,
-                          type: .noInternet(retry: { self.pay() },
-                                            completion: {
-            self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
-//        view?.userInteractionsEnabled = false
-//        DispatchQueue.main.async {
-//            self.view?.hideAlert()
-//            self.view?.showLoading(with: .Loading.tryToPayTitle)
-//        }
-//        guard let paymentId = userService.selectedCard?.paymentId else { return }
-//        paymentService.tryToPay(paymentId: paymentId,
-//                                isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
-//            self?.view?.userInteractionsEnabled = true
-//            switch result {
-//            case .success:
-//                self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
-//                    self?.view?.dismiss(animated: true, completion: {
-//                        self?.sdkManager.completionPay(with: .success)
-//                    })
-//                }))
-//            case .failure(let error):
-//                self?.validatePayError(error)
-//            }
-//        }
+        view?.userInteractionsEnabled = false
+        view?.showLoading(with: .Loading.tryToPayTitle)
+        guard let paymentId = userService.selectedCard?.paymentId else { return }
+        paymentService.tryToPay(paymentId: paymentId,
+                                isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
+            self?.view?.userInteractionsEnabled = true
+            switch result {
+            case .success:
+                self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
+                    self?.view?.dismiss(animated: true, completion: {
+                        self?.sdkManager.completionPay(with: .success)
+                    })
+                }))
+            case .failure(let error):
+                self?.view?.hideLoading()
+                self?.validatePayError(error)
+            }
+        }
     }
     
     func cancelTapped() {
@@ -197,21 +190,17 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func configWithNoCards() {
-        var buttons: [(title: String,
-                       type: DefaultButtonAppearance,
-                       action: Action)] = []
-        buttons.append((title: .Common.returnTitle,
-                        type: .full,
-                        action: {
+        let returnButton = AlertButtonModel(title: .Common.returnTitle,
+                                            type: .full) {
             self.view?.dismiss(animated: true,
                                completion: {
                 self.sdkManager.completionWithError(error: .noCards)
             })
-        }))
+        }
         alertService.showAlert(on: self.view,
                                with: .Alert.alertPayNoCardsTitle,
                                state: .failure,
-                               buttons: buttons,
+                               buttons: [returnButton],
                                completion: {})
     }
     
@@ -219,16 +208,21 @@ final class PaymentPresenter: PaymentPresenting {
         switch error {
         case .noInternetConnection:
             alertService.show(on: view,
-                              type: .noInternet(retry: { self.pay() },
+                              type: .noInternet(retry: {
+                self.alertService.showLoading()
+                self.pay()
+            },
                                                 completion: {
                 self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+            self.view?.hideLoading()
         case .timeOut, .unknownStatus:
             configForWaiting()
         case .partPayError:
             getPaymentToken()
         default:
             alertService.show(on: view,
-                              type: .defaultError(completion: { self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                              type: .defaultError(completion: {
+                self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
         }
     }
     
@@ -243,33 +237,31 @@ final class PaymentPresenter: PaymentPresenting {
             case .success:
                 self.alertService.show(on: self.view,
                                        type: .partPayError(fullPay: {
+                    self.alertService.showLoading()
                     self.pay()
                 }, back: {
+                    self.alertService.hide()
                     self.view?.hideLoading(animate: false)
                     self.view?.reloadCollectionView()
-                    self.alertService.hide(on: self.view)
                 }))
             case .failure(let failure):
                 self.validatePayError(failure)
             }
         }
     }
-
+    
     private func configForWaiting() {
-        var buttons: [(title: String,
-                       type: DefaultButtonAppearance,
-                       action: Action)] = []
-        buttons.append((title: .Common.okTitle,
-                        type: .full,
-                        action: {
-            self.view?.dismiss(animated: true, completion: { [weak self] in
+        let okButton = AlertButtonModel(title: .Common.okTitle,
+                                        type: .full) {
+            self.view?.dismiss(animated: true,
+                               completion: { [weak self] in
                 self?.sdkManager.completionPay(with: .waiting)
             })
-        }))
+        }
         alertService.showAlert(on: view,
                                with: .Alert.waiting(args: bankManager.selectedBank?.name ?? ""),
                                state: .waiting,
-                               buttons: buttons,
+                               buttons: [okButton],
                                completion: {})
     }
     

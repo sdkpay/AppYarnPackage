@@ -45,10 +45,10 @@ struct Loader {
     }
     
     @discardableResult
-    func show() -> Loader {
+    func show(on vc: UIViewController) -> Loader {
         guard window != nil else { return self }
         let subview = LoadingView(with: text)
-        guard let rootView = topVC?.view else { return self }
+        guard let rootView = vc.view else { return self }
         
         subview.translatesAutoresizingMaskIntoConstraints = false
         rootView.addSubview(subview)
@@ -66,8 +66,8 @@ struct Loader {
     }
     
     @discardableResult
-    func hide() -> Loader {
-        guard let subview = topVC?.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView else {
+    func hide(from vc: UIViewController) -> Loader {
+        guard let subview = vc.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView else {
             return self
         }
         

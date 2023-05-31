@@ -69,24 +69,25 @@ final class DefaultPaymentService: PaymentService {
                              isBnplEnabled: isBnplEnabled) { result in
             switch result {
             case .success:
-                guard let paymentToken = self.paymentToken else { return }
-                guard let authInfo = self.sdkManager.authInfo else { return }
-                var orderid: String?
-                if isBnplEnabled {
-                    orderid = paymentToken.orderId
-                } else {
-                    orderid = authInfo.orderId
-                }
-                switch self.sdkManager.payStrategy {
-                case .auto:
-                    self.pay(with: paymentToken.paymentToken, orderId: orderid, completion: completion)
-                case .manual:
-                    self.sdkManager.payHandler = { [weak self] payInfo in
-                        self?.pay(with: payInfo.paymentToken ?? paymentToken.paymentToken,
-                                  orderId: orderid, completion: completion)
-                    }
-                    self.sdkManager.completionPaymentToken(with: paymentToken.paymentToken)
-                }
+                completion(.failure(.noInternetConnection))
+//                guard let paymentToken = self.paymentToken else { return }
+//                guard let authInfo = self.sdkManager.authInfo else { return }
+//                var orderid: String?
+//                if isBnplEnabled {
+//                    orderid = paymentToken.orderId
+//                } else {
+//                    orderid = authInfo.orderId
+//                }
+//                switch self.sdkManager.payStrategy {
+//                case .auto:
+//                    self.pay(with: paymentToken.paymentToken, orderId: orderid, completion: completion)
+//                case .manual:
+//                    self.sdkManager.payHandler = { [weak self] payInfo in
+//                        self?.pay(with: payInfo.paymentToken ?? paymentToken.paymentToken,
+//                                  orderId: orderid, completion: completion)
+//                    }
+//                    self.sdkManager.completionPaymentToken(with: paymentToken.paymentToken)
+//                }
             case .failure(let failure):
                 if isBnplEnabled {
                     // Если получили с сервака ошибку, отдаем специальную ошибку

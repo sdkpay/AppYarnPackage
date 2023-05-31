@@ -67,7 +67,7 @@ final class AuthPresenter: AuthPresenting {
     private func checkSession() {
         DispatchQueue.main.async {  [weak self] in
             guard let self = self else { return }
-            self.view?.hideAlert()
+            self.alertService.hide()
             self.view?.showLoading(animate: false)
         }
        
@@ -113,7 +113,6 @@ final class AuthPresenter: AuthPresenting {
     private func getAccessSPay() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.view?.hideAlert()
             let title: String = .Loading.toBankTitle(args: self.bankManager.selectedBank?.name ?? "")
             self.view?.showLoading(with: title)
         }
@@ -127,19 +126,23 @@ final class AuthPresenter: AuthPresenting {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.view?.hideLoading()
+                self.alertService.hideLoading(animate: false)
             }
             self.removeObserver()
             if let error = error {
                 self.analytics.sendEvent(.BankAppAuthFailed)
                 if error.represents(.noInternetConnection) {
                     self.alertService.show(on: self.view,
-                                           type: .noInternet(retry: { self.getAccessSPay() },
-                                                             completion: { self.dismissWithError(error) }))
+                                           type: .noInternet(retry: {
+                        self.alertService.showLoading(animate: false)
+                        self.openSId()
+                    }, completion: { self.dismissWithError(error) }))
                 } else {
                     self.alertService.show(on: self.view,
                                            type: .defaultError(completion: { self.dismissWithError(error) }))
                 }
             } else {
+                self.alertService.hide()
                 self.analytics.sendEvent(.BankAppAuthSuccess)
                 self.loadPaymentData()
             }

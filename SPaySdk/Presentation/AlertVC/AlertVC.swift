@@ -6,12 +6,12 @@
 //
 
 import UIKit
-import AVFoundation
 
 private extension CGFloat {
     static let imageWidth = 80.0
     static let topMargin = 52.0
     static let buttonsMargin = 32.0
+    static let buttonSpacing = 2.0
     static let bottomMargin = 66.0
 }
 
@@ -43,7 +43,7 @@ final class AlertVC: ContentVC, IAlertVC {
     
     private lazy var buttonsStack: UIStackView = {
         let view = UIStackView()
-        view.spacing = .margin
+        view.spacing = .buttonSpacing
         view.axis = .vertical
         view.alignment = .fill
         return view
@@ -108,29 +108,11 @@ final class AlertVC: ContentVC, IAlertVC {
         imageView
             .height(.imageWidth)
             .width(.imageWidth)
-//            .add(toSuperview: view)
-//            .touchEdge(.top, toSuperviewEdge: .top)
-//            .centerInSuperview(.x)
-//            .height(.imageWidth)
-//            .width(.imageWidth)
-//
-//        alertTitle
-//            .add(toSuperview: view)
-//            .touchEdge(.top, toEdge: .bottom, ofView: imageView, withInset: .margin)
-//            .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
-//            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
         
         contentStack
             .add(toSuperview: view)
             .centerInSuperview(.y)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-        
-//        buttonsStack
-//            .add(toSuperview: view)
-//            .touchEdge(.top, toEdge: .bottom, ofView: alertTitle, withInset: .buttonsMargin)
-//            .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
-//            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-//            .touchEdge(.bottom, toSuperviewEdge: .bottom)
     }
 }

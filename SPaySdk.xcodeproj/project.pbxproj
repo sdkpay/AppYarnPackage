@@ -102,7 +102,6 @@
 		21EB4CDA29E16405006541B0 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449D51372971481A00497E82 /* Localization.swift */; };
 		21EB4CDB29E16405006541B0 /* ValidSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443666CE298BFC3E005119A2 /* ValidSessionModel.swift */; };
 		21EB4CDC29E16405006541B0 /* UIFont+Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 445CB088292CA2B200F50047 /* UIFont+Bundle.swift */; };
-		21EB4CDD29E16405006541B0 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651082930E721008F1C29 /* AlertView.swift */; };
 		21EB4CDE29E16405006541B0 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BD273129A8A463001ECF54 /* PaymentService.swift */; };
 		21EB4CDF29E16405006541B0 /* AuthTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4464DF93291D283C000C9B45 /* AuthTarget.swift */; };
 		21EB4CE029E16405006541B0 /* SPaymentTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510D2934E33E008F1C29 /* SPaymentTokenRequest.swift */; };
@@ -331,7 +330,6 @@
 		44C2A04829222E18000D894A /* ObjcCartVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C2A04729222E18000D894A /* ObjcCartVC.m */; };
 		44C2A04B29223430000D894A /* SegmentedControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C2A04A29223430000D894A /* SegmentedControlCell.swift */; };
 		44C651052930E102008F1C29 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651042930E102008F1C29 /* LoadingView.swift */; };
-		44C651092930E721008F1C29 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C651082930E721008F1C29 /* AlertView.swift */; };
 		44C6510C2934E327008F1C29 /* SPaymentTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510B2934E327008F1C29 /* SPaymentTokenResponse.swift */; };
 		44C6510E2934E33E008F1C29 /* SPaymentTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510D2934E33E008F1C29 /* SPaymentTokenRequest.swift */; };
 		44C651102934E37F008F1C29 /* SPError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C6510F2934E37F008F1C29 /* SPError.swift */; };
@@ -584,7 +582,6 @@
 		44C2A04929222E76000D894A /* ObjcCartVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcCartVC.h; sourceTree = "<group>"; };
 		44C2A04A29223430000D894A /* SegmentedControlCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlCell.swift; sourceTree = "<group>"; };
 		44C651042930E102008F1C29 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
-		44C651082930E721008F1C29 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		44C6510B2934E327008F1C29 /* SPaymentTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPaymentTokenResponse.swift; sourceTree = "<group>"; };
 		44C6510D2934E33E008F1C29 /* SPaymentTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPaymentTokenRequest.swift; sourceTree = "<group>"; };
 		44C6510F2934E37F008F1C29 /* SPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPError.swift; sourceTree = "<group>"; };
@@ -1128,7 +1125,6 @@
 				440DB3A8295C1C6200B84E05 /* ContentTableView */,
 				4473D6C7294064F100802446 /* BankView */,
 				44C651062930E112008F1C29 /* LoadingView */,
-				44C651072930E70F008F1C29 /* AlertView */,
 				445CB097292CDBFA00F50047 /* CardInfoView */,
 				445CB08A292CB9B300F50047 /* Buttons */,
 				21440DBD29D6B32100E3803E /* LoggableVC */,
@@ -1577,14 +1573,6 @@
 			path = LoadingView;
 			sourceTree = "<group>";
 		};
-		44C651072930E70F008F1C29 /* AlertView */ = {
-			isa = PBXGroup;
-			children = (
-				44C651082930E721008F1C29 /* AlertView.swift */,
-			);
-			path = AlertView;
-			sourceTree = "<group>";
-		};
 		44C6510A2934E2F5008F1C29 /* Public */ = {
 			isa = PBXGroup;
 			children = (
@@ -2003,7 +1991,6 @@
 				21EB4CDB29E16405006541B0 /* ValidSessionModel.swift in Sources */,
 				21EB4CDC29E16405006541B0 /* UIFont+Bundle.swift in Sources */,
 				215D314E2A24D30B009ED030 /* Result+Success.swift in Sources */,
-				21EB4CDD29E16405006541B0 /* AlertView.swift in Sources */,
 				21B3BA4429F7E9AA0024BDF0 /* BnplModel.swift in Sources */,
 				210CACA829EE6C5300E33E0A /* PartCell.swift in Sources */,
 				21EB4CDE29E16405006541B0 /* PaymentService.swift in Sources */,
@@ -2160,7 +2147,6 @@
 				21B3BA3F29F7E7BE0024BDF0 /* BnplTarget.swift in Sources */,
 				443666CF298BFC3E005119A2 /* ValidSessionModel.swift in Sources */,
 				445CB089292CA2B200F50047 /* UIFont+Bundle.swift in Sources */,
-				44C651092930E721008F1C29 /* AlertView.swift in Sources */,
 				44BD273229A8A463001ECF54 /* PaymentService.swift in Sources */,
 				AE4D867E29E53411005C8092 /* UIView+Size.swift in Sources */,
 				4464DF94291D283C000C9B45 /* AuthTarget.swift in Sources */,

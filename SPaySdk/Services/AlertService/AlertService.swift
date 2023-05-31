@@ -7,12 +7,16 @@
 
 import UIKit
 
+struct AlertButtonModel {
+    let title: String
+    let type: DefaultButtonAppearance
+    let action: Action
+}
+
 struct AlertViewModel {
     let image: UIImage?
     let title: String
-    let buttons: [(title: String,
-                   type: DefaultButtonAppearance,
-                   action: Action)]
+    let buttons: [AlertButtonModel]
     let sound: String
     let feedBack: UINotificationFeedbackGenerator.FeedbackType
     let completion: Action
@@ -84,16 +88,31 @@ protocol AlertService {
     func showAlert(on view: ContentVC?,
                    with text: String,
                    state: AlertState,
-                   buttons: [(title: String,
-                              type: DefaultButtonAppearance,
-                              action: Action)],
+                   buttons: [AlertButtonModel],
                    completion: @escaping Action)
     func show(on view: ContentVC?, type: AlertType)
-    func hide(on view: ContentVC?)
+    func showLoading(with text: String?,
+                     animate: Bool)
+    func hideLoading(animate: Bool)
+    func hide(animated: Bool)
+}
+
+extension AlertService {
+    func showLoading(with text: String? = nil,
+                     animate: Bool = true) {
+        showLoading(with: text, animate: animate)
+    }
+    func hideLoading(animate: Bool = true) {
+        hideLoading(animate: animate)
+    }
+    func hide(animated: Bool = true) {
+        hide(animated: animated)
+    }
 }
 
 final class DefaultAlertService: AlertService {
     private let locator: LocatorService
+    private var alertVC: ContentVC?
     
     init(locator: LocatorService) {
         self.locator = locator
@@ -107,9 +126,7 @@ final class DefaultAlertService: AlertService {
     func showAlert(on view: ContentVC?,
                    with text: String,
                    state: AlertState,
-                   buttons: [(title: String,
-                              type: DefaultButtonAppearance,
-                              action: Action)],
+                   buttons: [AlertButtonModel],
                    completion: @escaping Action) {
         DispatchQueue.main.async {
             let model = AlertViewModel(image: state.image,
@@ -120,7 +137,18 @@ final class DefaultAlertService: AlertService {
                                        completion: completion)
             let alertVC = AlertAssembly().createModule(alertModel: model)
             view?.contentNavigationController?.pushViewController(alertVC, animated: true)
+            self.alertVC?.contentNavigationController?.popViewController(animated: false)
+            self.alertVC = alertVC
         }
+    }
+    
+    func showLoading(with text: String? = nil,
+                     animate: Bool = true) {
+        alertVC?.showLoading(with: text, animate: animate)
+    }
+    
+    func hideLoading(animate: Bool = true) {
+        alertVC?.hideLoading(animate: animate)
     }
     
     func show(on view: ContentVC?, type: AlertType) {
@@ -138,39 +166,41 @@ final class DefaultAlertService: AlertService {
                       buttons: [],
                       completion: completion)
         case let .noInternet(retry, completion):
-            var buttons: [(title: String,
-                           type: DefaultButtonAppearance,
-                           action: Action)] = []
-            buttons.append((title: .Common.tryTitle,
-                            type: .full,
-                            action: retry))
-            buttons.append((title: .Common.cancelTitle,
-                            type: .cancel,
-                            action: completion))
+            let tryButton = AlertButtonModel(title: .Common.tryTitle,
+                                             type: .full,
+                                             action: retry)
+            let cancelButton = AlertButtonModel(title: .Common.cancelTitle,
+                                                type: .cancel,
+                                                action: completion)
             showAlert(on: view,
                       with: .Alert.alertPayNoInternetTitle,
                       state: .failure,
-                      buttons: buttons,
+                      buttons:
+                        [
+                            tryButton,
+                            cancelButton
+                        ],
                       completion: completion)
         case let .partPayError(fullPay: fullPay, back: back):
-            var buttons: [(title: String,
-                           type: DefaultButtonAppearance,
-                           action: Action)] = []
-            buttons.append((title: .Common.payFull,
-                            type: .full,
-                            action: fullPay))
-            buttons.append((title: .Common.returnTitle,
-                            type: .clear,
-                            action: back))
+            let fullPayButton = AlertButtonModel(title: .Common.payFull,
+                                                 type: .full,
+                                                 action: fullPay)
+            let returnButton = AlertButtonModel(title: .Common.returnTitle,
+                                                type: .clear,
+                                                action: back)
             showAlert(on: view,
                       with: .Alert.alertPartPayError,
                       state: .failure,
-                      buttons: buttons,
+                      buttons: [
+                        fullPayButton,
+                        returnButton
+                      ],
                       completion: back)
         }
     }
     
-    func hide(on view: ContentVC?) {
-        view?.hideAlert()
+    func hide(animated: Bool = true) {
+        alertVC?.contentNavigationController?.popViewController(animated: animated)
+        alertVC = nil
     }
 }

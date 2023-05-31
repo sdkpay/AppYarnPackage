@@ -90,17 +90,20 @@ final class ContentNC: UIViewController {
     }
 
     @discardableResult
-    func popViewController(animated: Bool) -> UIViewController? {
+    func popViewController(animated: Bool, completion: Action? = nil) -> UIViewController? {
         guard let from = topViewController, from != viewControllers.first else { return nil }
 
         viewControllers.removeLast()
         if let to = topViewController {
-            transition(from: from, to: to, animated: animated)
+            transition(from: from, to: to, animated: animated, completion: completion)
         }
         return from
     }
 
-    private func transition(from: UIViewController, to: UIViewController, animated: Bool) {
+    private func transition(from: UIViewController,
+                            to: UIViewController,
+                            animated: Bool,
+                            completion: Action? = nil) {
         guard let containerView = presentationController?.containerView else {
             return
         }
@@ -176,6 +179,7 @@ final class ContentNC: UIViewController {
                 to.view.subviews.forEach({ $0.alpha = 1 })
             }, completion: { _ in
                 from.view.subviews.forEach({ $0.alpha = 1 })
+                completion?()
             }
         )
         CATransaction.commit()
