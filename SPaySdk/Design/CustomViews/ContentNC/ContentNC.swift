@@ -108,13 +108,44 @@ final class ContentNC: UIViewController {
             return
         }
         
+        let fomShimView = UIView()
+        fomShimView.backgroundColor = .backgroundPrimary
+        fomShimView.alpha = 0
+        
+        let toShimView = UIView()
+        toShimView.backgroundColor = .backgroundPrimary
+        toShimView.alpha = 1
+        
+        from.view.addSubview(fomShimView)
+        fomShimView.translatesAutoresizingMaskIntoConstraints = false
+        to.view.addSubview(toShimView)
+        toShimView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            fomShimView.bottomAnchor.constraint(equalTo: from.view.bottomAnchor),
+            fomShimView.topAnchor.constraint(equalTo: from.view.topAnchor),
+            fomShimView.leftAnchor.constraint(equalTo: from.view.leftAnchor),
+            fomShimView.rightAnchor.constraint(equalTo: from.view.rightAnchor)
+        ])
+    
+        to.view.addSubview(toShimView)
+        toShimView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            toShimView.bottomAnchor.constraint(equalTo: to.view.bottomAnchor),
+            toShimView.topAnchor.constraint(equalTo: to.view.topAnchor),
+            toShimView.leftAnchor.constraint(equalTo: to.view.leftAnchor),
+            toShimView.rightAnchor.constraint(equalTo: to.view.rightAnchor)
+        ])
+        
+        fomShimView.layoutIfNeeded()
+        toShimView.layoutIfNeeded()
+        
         addChild(to)
         view.addSubview(to.view)
         from.willMove(toParent: nil)
         to.willMove(toParent: self)
         
         to.view.alpha = 0
-        to.view.subviews.forEach({ $0.alpha = 0 })
+       // to.view.subviews.forEach({ $0.alpha = 0 })
 
         view.removeConstraints(view.constraints.filter { $0.firstItem === from.view || $0.secondItem === from.view })
         
@@ -141,7 +172,7 @@ final class ContentNC: UIViewController {
         toTop.isActive = true
         
         CATransaction.begin()
-
+        
         UIView.animate(
             withDuration: .animationDuration,
             delay: 0,
@@ -149,7 +180,8 @@ final class ContentNC: UIViewController {
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-                from.view.subviews.forEach({ $0.alpha = 0 })
+                fomShimView.alpha = 1
+             //   from.view.subviews.forEach({ $0.alpha = 0 })
             }, completion: { _ in
                 to.view.alpha = 1
             }
@@ -176,9 +208,11 @@ final class ContentNC: UIViewController {
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-                to.view.subviews.forEach({ $0.alpha = 1 })
+                toShimView.alpha = 0
+//                to.view.subviews.forEach({ $0.alpha = 1 })
             }, completion: { _ in
-                from.view.subviews.forEach({ $0.alpha = 1 })
+                fomShimView.removeFromSuperview()
+                toShimView.removeFromSuperview()
                 completion?()
             }
         )

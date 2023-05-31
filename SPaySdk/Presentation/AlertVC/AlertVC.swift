@@ -77,7 +77,9 @@ final class AlertVC: ContentVC, IAlertVC {
         for item in model.buttons {
             let button = DefaultButton(buttonAppearance: item.type)
             button.setTitle(item.title, for: .normal)
-            button.addAction(item.action)
+            button.addAction { [weak self] in
+                self?.presenter.buttonTapped(item: item)
+            }
             button.height(.defaultButtonHeight)
             button.width(.defaultButtonWidth)
             buttonsStack.addArrangedSubview(button)

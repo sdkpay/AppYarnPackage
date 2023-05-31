@@ -15,6 +15,7 @@ private extension TimeInterval {
 
 protocol AlertPresenting {
     func viewDidLoad()
+    func buttonTapped(item: AlertButtonModel)
 }
 
 final class AlertPresenter: AlertPresenting {
@@ -33,6 +34,20 @@ final class AlertPresenter: AlertPresenting {
         completeConfig()
     }
     
+    func buttonTapped(item: AlertButtonModel) {
+        switch item.type {
+        case .full, .info:
+            view?.contentNavigationController?.popViewController(animated: true, completion: {
+                item.action()
+            })
+        case .cancel:
+            item.action()
+        case .clear:
+            item.action()
+            view?.contentNavigationController?.popViewController(animated: true)
+        }
+    }
+
     private func completeConfig() {
         DispatchQueue.main.asyncAfter(deadline: .now() + .animationDuration) { [weak self] in
             self?.playFeedback()

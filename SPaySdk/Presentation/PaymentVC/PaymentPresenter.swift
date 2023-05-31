@@ -110,7 +110,7 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func pay() {
         view?.userInteractionsEnabled = false
-        view?.showLoading(with: .Loading.tryToPayTitle)
+        view?.showLoading(with: .Loading.tryToPayTitle, animate: false)
         guard let paymentId = userService.selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId,
                                 isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
@@ -118,12 +118,11 @@ final class PaymentPresenter: PaymentPresenting {
             switch result {
             case .success:
                 self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
-                    self?.view?.dismiss(animated: true, completion: {
+                    self?.alertService.close(animated: true, completion: {
                         self?.sdkManager.completionPay(with: .success)
                     })
                 }))
             case .failure(let error):
-                self?.view?.hideLoading()
                 self?.validatePayError(error)
             }
         }
@@ -209,12 +208,10 @@ final class PaymentPresenter: PaymentPresenting {
         case .noInternetConnection:
             alertService.show(on: view,
                               type: .noInternet(retry: {
-                self.alertService.showLoading()
                 self.pay()
             },
                                                 completion: {
                 self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
-            self.view?.hideLoading()
         case .timeOut, .unknownStatus:
             configForWaiting()
         case .partPayError:
@@ -235,14 +232,12 @@ final class PaymentPresenter: PaymentPresenting {
                                             isBnplEnabled: false) { result in
             switch result {
             case .success:
+                self.view?.reloadCollectionView()
                 self.alertService.show(on: self.view,
                                        type: .partPayError(fullPay: {
-                    self.alertService.showLoading()
                     self.pay()
                 }, back: {
-                    self.alertService.hide()
                     self.view?.hideLoading(animate: false)
-                    self.view?.reloadCollectionView()
                 }))
             case .failure(let failure):
                 self.validatePayError(failure)
@@ -266,7 +261,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func dismissWithError(_ error: SDKError) {
-        view?.dismiss(animated: true, completion: { [weak self] in
+        alertService.close(animated: true, completion: { [weak self] in
             self?.sdkManager.completionWithError(error: error)
         })
     }

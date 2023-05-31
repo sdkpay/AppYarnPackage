@@ -94,7 +94,8 @@ protocol AlertService {
     func showLoading(with text: String?,
                      animate: Bool)
     func hideLoading(animate: Bool)
-    func hide(animated: Bool)
+    func hide(animated: Bool, completion: Action?)
+    func close(animated: Bool, completion: Action?)
 }
 
 extension AlertService {
@@ -105,8 +106,11 @@ extension AlertService {
     func hideLoading(animate: Bool = true) {
         hideLoading(animate: animate)
     }
-    func hide(animated: Bool = true) {
-        hide(animated: animated)
+    func hide(animated: Bool = true, completion: Action? = nil) {
+        hide(animated: animated, completion: completion)
+    }
+    func close(animated: Bool = true, completion: Action? = nil) {
+        close(animated: animated, completion: completion)
     }
 }
 
@@ -199,8 +203,13 @@ final class DefaultAlertService: AlertService {
         }
     }
     
-    func hide(animated: Bool = true) {
-        alertVC?.contentNavigationController?.popViewController(animated: animated)
+    func hide(animated: Bool = true, completion: Action? = nil) {
+        alertVC?.contentNavigationController?.popViewController(animated: animated,
+                                                                completion: completion)
         alertVC = nil
+    }
+    
+    func close(animated: Bool = true, completion: Action? = nil) {
+        alertVC?.dismiss(animated: animated, completion: completion)
     }
 }
