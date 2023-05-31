@@ -13,37 +13,6 @@ enum SectionData: Int, CaseIterable {
     case order
     case script
     case next
-    
-    var cellType: [CellType] {
-        switch self {
-        case .config:
-            return [
-                .apiKey,
-                .bnpl,
-                .environment
-            ]
-        case .order:
-            return [
-                .mode,
-                .configMethod,
-                .merchantLogin,
-                .orderId,
-                .orderNumber,
-                .cost,
-                .currency
-            ]
-        case .script:
-            return [
-                .network,
-                .ssl,
-                .lang
-            ]
-        case .next:
-            return [
-                .next
-            ]
-        }
-    }
 }
 
 enum CellType: String, CaseIterable {
@@ -101,6 +70,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                 return [
                     .mode,
                     .configMethod,
+                    .merchantLogin,
                     .orderId,
                     .orderNumber
                 ]
