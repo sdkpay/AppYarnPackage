@@ -1,12 +1,12 @@
 {
-  "offerUrl": "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
+  "offerUrl": "⁣https://platichastyami.ru/dogovor_oferty_sberpay_chastyam",
   "offerText": "Я соглашаюсь с <условиями документов> по операции. Договор заключается с ООО «ЦНФС».",
   "isBnplEnabled": true,
   "buttonBnpl": {
-    "activeButtonLogo": "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
-    "inactiveButtonLogo": "https://cms-res.online.sberbank.ru/sberpay/icons/980000084043.png",
+    "activeButtonLogo": "part_active",
+    "inactiveButtonLogo": "part",
     "header": "Плати частями",
-    "content": "4 платежа раз в 2 недели"
+    "content": "4 платежа по 4 220 ₽"
   },
   "graphBnpl": {
     "header": "График платежей",

@@ -33,7 +33,7 @@ extension BnplTarget: TargetType {
         case let .getBnplPlan(sessionId: sessionId,
                               merchantLogin: merchantLogin,
                               orderId: orderId):
-            var params: [String: Any] = [
+            let params: [String: Any] = [
                 "sessionId": sessionId,
                 "merchantLogin": merchantLogin,
                 "orderId": orderId

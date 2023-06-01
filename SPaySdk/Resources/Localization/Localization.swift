@@ -11,11 +11,13 @@ extension String {
     enum Common {
         /// Оплатить
         static let payTitle = String(stringLiteral: "pay.title")
+        /// Оплатить полностью
+        static let payFull = String(stringLiteral: "pay.full.title")
         /// Отменить
         static let cancelTitle = String(stringLiteral: "cancel.title")
         /// Понятно
         static let okTitle = String(stringLiteral: "ok.title")
-        /// Вернуться к заказу
+        /// К способам оплаты
         static let returnTitle = String(stringLiteral: "return.title")
         /// Попробовать ещё раз
         static let tryTitle = String(stringLiteral: "try.title")
@@ -89,6 +91,8 @@ extension String {
         static func waiting(args: CVarArg...) -> String {
             String(stringLiteral: "alert.pay.no.waiting.title", args: args)
         }
+        /// Сервис оплаты частями недоступен. Оплатите заказ полностью или выберите другой способ оплаты.
+        static let alertPartPayError = String(stringLiteral: "alert.pay.error.title")
     }
     
     enum MerchantAlert {

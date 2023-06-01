@@ -57,12 +57,18 @@ final class PartCell: UITableViewCell {
         titleLabel.text = model.title
         costLabel.text = model.cost
         lineView.isHidden = model.hideLine
-        titleLabel.font = model.isSelected ? .bodi1 : .bodi2
-        titleLabel.font = model.isSelected ? .bodi1 : .bodi2
+        titleLabel.font = model.isSelected ? .medium1 : .medium2
         titleLabel.textColor = model.isSelected ? .textPrimory : .textSecondary
         costLabel.textColor = model.isSelected ? .textPrimory : .textSecondary
         backgroundPointView.backgroundColor = model.isSelected ? .main.withAlphaComponent(0.16) : .clear
         pointView.backgroundColor = model.isSelected ? .main : .textSecondary
+        
+        costLabel.textAlignment = .right
+        var paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.06
+        costLabel.attributedText = NSMutableAttributedString(string: "Спишем сегодня",
+                                                             attributes: [NSAttributedString.Key.kern: -0.34,
+                                                                          NSAttributedString.Key.paragraphStyle: paragraphStyle])
     }
     
     private func setupUI() {

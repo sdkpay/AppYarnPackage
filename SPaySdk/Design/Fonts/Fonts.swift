@@ -14,4 +14,7 @@ extension UIFont {
     static let bodi1 = UIFont(name: "SBSansText-Regular", size: 16) ?? defaultFount(with: 16)
     static let bodi2 = UIFont(name: "SBSansText-Regular", size: 13) ?? defaultFount(with: 13)
     static let bodi3 = UIFont(name: "SBSansText-Regular", size: 15) ?? defaultFount(with: 15)
+    static let medium1 = UIFont(name: "SBSansText-Medium", size: 15) ?? defaultFount(with: 15)
+    static let medium2 = UIFont(name: "SBSansText-Medium", size: 13) ?? defaultFount(with: 15)
+    static let medium3 = UIFont(name: "SBSansText-Medium", size: 12) ?? defaultFount(with: 15)
 }
