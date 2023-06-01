@@ -18,7 +18,7 @@ private extension CGFloat {
 }
 
 final class CheckView: UIView {
-    private var checkSelected = false {
+    private var checkSelected = true {
         didSet {
             if checkSelected {
                 checkButton.setImage(.Common.checkAgreementSelected, for: .normal)
@@ -30,7 +30,7 @@ final class CheckView: UIView {
 
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.font = .bodi2
+        view.font = .medium3
         view.numberOfLines = 0
         view.textColor = .textSecondary
         return view
@@ -38,7 +38,7 @@ final class CheckView: UIView {
     
     private lazy var checkButton: ExpendedButton = {
         let view = ExpendedButton(.buttonExpend, .buttonExpend)
-        view.setImage(.Common.checkAgreement, for: .normal)
+        view.setImage(.Common.checkAgreementSelected, for: .normal)
         view.addAction { [weak self] in
             guard let self = self else { return }
             self.checkSelected.toggle()

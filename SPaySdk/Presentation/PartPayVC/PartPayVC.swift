@@ -9,6 +9,7 @@ import UIKit
 
 private extension CGFloat {
     static let topMargin = 24.0
+    static let topTo = 20.0
     static let bottomMargin = 44.0
     static let tableMargin = 20.0
     static let buttonsMargin = 10.0
@@ -31,16 +32,24 @@ final class PartPayVC: ContentVC, IPartPayVC {
     private lazy var titleLabel: UILabel = {
        let view = UILabel()
         view.font = .header2
+        var paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.12
+        view.attributedText = NSMutableAttributedString(string: .PayPart.title,
+                                                        attributes: [NSAttributedString.Key.kern: -0.3,
+                                                                     NSAttributedString.Key.paragraphStyle: paragraphStyle])
         view.textColor = .textPrimory
-        view.text = .PayPart.title
         return view
     }()
     
     private lazy var subTitleLabel: UILabel = {
        let view = UILabel()
-        view.font = .bodi2
+        view.font = .medium2
+        var paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.1
+        view.attributedText = NSMutableAttributedString(string: .PayPart.subtitle,
+                                                        attributes: [NSAttributedString.Key.kern: -0.3,
+                                                                     NSAttributedString.Key.paragraphStyle: paragraphStyle])
         view.textColor = .textSecondary
-        view.text = .PayPart.subtitle
         return view
     }()
     
@@ -195,7 +204,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
         
         partsTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            partsTableView.topAnchor.constraint(equalTo: backgroundTableView.topAnchor, constant: .margin),
+            partsTableView.topAnchor.constraint(equalTo: backgroundTableView.topAnchor, constant: .topTo),
             partsTableView.leadingAnchor.constraint(equalTo: backgroundTableView.leadingAnchor, constant: .margin),
             partsTableView.trailingAnchor.constraint(equalTo: backgroundTableView.trailingAnchor, constant: -.margin)
         ])
@@ -214,7 +223,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
             agreementView.topAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: .topMargin),
             agreementView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
             agreementView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            agreementView.bottomAnchor.constraint(equalTo: acceptButton.topAnchor, constant: -.topMargin)
+            agreementView.bottomAnchor.constraint(equalTo: acceptButton.topAnchor, constant: -.topTo)
         ])
         
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
