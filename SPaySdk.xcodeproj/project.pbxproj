@@ -36,18 +36,16 @@
 		215D31452A247550009ED030 /* CustomStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D31412A247550009ED030 /* CustomStepper.swift */; };
 		215D31462A247550009ED030 /* PaymentSCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D31422A247550009ED030 /* PaymentSCell.swift */; };
 		215D31482A2476BE009ED030 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 215D31472A2476BE009ED030 /* Assets.xcassets */; };
+		215D314D2A24D30B009ED030 /* Result+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D314C2A24D30B009ED030 /* Result+Success.swift */; };
+		215D314E2A24D30B009ED030 /* Result+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D314C2A24D30B009ED030 /* Result+Success.swift */; };
+		215D315B2A252893009ED030 /* PaymentFeaturesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */; };
+		215D315C2A252893009ED030 /* PaymentFeaturesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */; };
 		215E50672A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 215E50662A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der */; };
 		215E50682A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 215E50662A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der */; };
 		215E506B2A1E3B6800BD80E0 /* EnvironmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215E506A2A1E3B6800BD80E0 /* EnvironmentManager.swift */; };
 		215E506C2A1E3B6800BD80E0 /* EnvironmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215E506A2A1E3B6800BD80E0 /* EnvironmentManager.swift */; };
 		215E50702A1E3D5A00BD80E0 /* HostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215E506F2A1E3D5A00BD80E0 /* HostManager.swift */; };
 		215E50712A1E3D5A00BD80E0 /* HostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215E506F2A1E3D5A00BD80E0 /* HostManager.swift */; };
-		215D314D2A24D30B009ED030 /* Result+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D314C2A24D30B009ED030 /* Result+Success.swift */; };
-		215D314E2A24D30B009ED030 /* Result+Success.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D314C2A24D30B009ED030 /* Result+Success.swift */; };
-		215D31512A2514B0009ED030 /* PaymentInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D31502A2514B0009ED030 /* PaymentInteractor.swift */; };
-		215D31522A251533009ED030 /* PaymentInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D31502A2514B0009ED030 /* PaymentInteractor.swift */; };
-		215D315B2A252893009ED030 /* PaymentFeaturesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */; };
-		215D315C2A252893009ED030 /* PaymentFeaturesConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */; };
 		2160A02429E6FC6700B72F40 /* SPaySdkDEBUG.h in Headers */ = {isa = PBXBuildFile; fileRef = 2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		21676D9A2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */; };
 		21676D9B2A0CF76A0040B800 /* ift.gate1.spaymentsplus.ru.der in Resources */ = {isa = PBXBuildFile; fileRef = 21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */; };
@@ -251,6 +249,12 @@
 		21EB4D6329E16405006541B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 445CB072292BBB1400F50047 /* Assets.xcassets */; };
 		21EB4D6629E16405006541B0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 445CB06D292BB99F00F50047 /* Localizable.strings */; };
 		21EB4D6729E16405006541B0 /* SB Sans Text Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 445CB07C292C9D2C00F50047 /* SB Sans Text Semibold.ttf */; };
+		21FF71012A28E77C001F5359 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FF70FE2A28E77C001F5359 /* AlertPresenter.swift */; };
+		21FF71022A28E77C001F5359 /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FF70FE2A28E77C001F5359 /* AlertPresenter.swift */; };
+		21FF71032A28E77C001F5359 /* AlertAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FF70FF2A28E77C001F5359 /* AlertAssembly.swift */; };
+		21FF71042A28E77C001F5359 /* AlertAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FF70FF2A28E77C001F5359 /* AlertAssembly.swift */; };
+		21FF71052A28E77C001F5359 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FF71002A28E77C001F5359 /* AlertVC.swift */; };
+		21FF71062A28E77C001F5359 /* AlertVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FF71002A28E77C001F5359 /* AlertVC.swift */; };
 		440DB3AA295C1C8D00B84E05 /* ContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */; };
 		440DB3AD295C304300B84E05 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440DB3AC295C304300B84E05 /* AnalyticsService.swift */; };
 		4416E424291E21C300284972 /* SDKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4416E423291E21C300284972 /* SDKError.swift */; };
@@ -453,12 +457,11 @@
 		215D31412A247550009ED030 /* CustomStepper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomStepper.swift; sourceTree = "<group>"; };
 		215D31422A247550009ED030 /* PaymentSCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSCell.swift; sourceTree = "<group>"; };
 		215D31472A2476BE009ED030 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		215D314C2A24D30B009ED030 /* Result+Success.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Success.swift"; sourceTree = "<group>"; };
+		215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFeaturesConfig.swift; sourceTree = "<group>"; };
 		215E50662A1E298D00BD80E0 /* ift.gate2.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ift.gate2.spaymentsplus.ru.der; sourceTree = "<group>"; };
 		215E506A2A1E3B6800BD80E0 /* EnvironmentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentManager.swift; sourceTree = "<group>"; };
 		215E506F2A1E3D5A00BD80E0 /* HostManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostManager.swift; sourceTree = "<group>"; };
-		215D314C2A24D30B009ED030 /* Result+Success.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Success.swift"; sourceTree = "<group>"; };
-		215D31502A2514B0009ED030 /* PaymentInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentInteractor.swift; sourceTree = "<group>"; };
-		215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentFeaturesConfig.swift; sourceTree = "<group>"; };
 		2160A02329E6FC6700B72F40 /* SPaySdkDEBUG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SPaySdkDEBUG.h; path = SPaySdk/Public/SPaySdkDEBUG.h; sourceTree = "<group>"; };
 		21676D992A0CF7690040B800 /* ift.gate1.spaymentsplus.ru.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = ift.gate1.spaymentsplus.ru.der; sourceTree = "<group>"; };
 		2180695929F187CD00587AB8 /* BankAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAppManager.swift; sourceTree = "<group>"; };
@@ -506,6 +509,9 @@
 		21EB4D6F29E16405006541B0 /* SPaySdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SPaySdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		21EB4D7029E16405006541B0 /* info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "info-prod.plist"; path = "SPaySdk/SupportingFiles/info-prod.plist"; sourceTree = SOURCE_ROOT; };
 		21EBD7B129BB06E500C39C03 /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = usr/lib/libresolv.9.tbd; sourceTree = SDKROOT; };
+		21FF70FE2A28E77C001F5359 /* AlertPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
+		21FF70FF2A28E77C001F5359 /* AlertAssembly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertAssembly.swift; sourceTree = "<group>"; };
+		21FF71002A28E77C001F5359 /* AlertVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertVC.swift; sourceTree = "<group>"; };
 		440DB3A9295C1C8D00B84E05 /* ContentTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTableView.swift; sourceTree = "<group>"; };
 		440DB3AC295C304300B84E05 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		4416E423291E21C300284972 /* SDKError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKError.swift; sourceTree = "<group>"; };
@@ -978,6 +984,16 @@
 			path = AssemblieManager;
 			sourceTree = "<group>";
 		};
+		21FF70FD2A28E77C001F5359 /* AlertVC */ = {
+			isa = PBXGroup;
+			children = (
+				21FF70FE2A28E77C001F5359 /* AlertPresenter.swift */,
+				21FF70FF2A28E77C001F5359 /* AlertAssembly.swift */,
+				21FF71002A28E77C001F5359 /* AlertVC.swift */,
+			);
+			path = AlertVC;
+			sourceTree = "<group>";
+		};
 		440DB3A8295C1C6200B84E05 /* ContentTableView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1037,6 +1053,7 @@
 		4416E425291E22E600284972 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				21FF70FD2A28E77C001F5359 /* AlertVC */,
 				21B3BA4929F859F40024BDF0 /* WebViewVC */,
 				2180D21F29E93F0000948681 /* PartPayVC */,
 				21440DB229D5B64000E3803E /* LogVC */,
@@ -1349,7 +1366,6 @@
 				445CB092292CC08400F50047 /* PaymentVC.swift */,
 				445CB09A292DFF5100F50047 /* PaymentPresenter.swift */,
 				44A3126229813D110099EB76 /* PaymentRouter.swift */,
-				215D31502A2514B0009ED030 /* PaymentInteractor.swift */,
 				215D315A2A252893009ED030 /* PaymentFeaturesConfig.swift */,
 			);
 			path = PaymentVC;
@@ -2096,6 +2112,7 @@
 				21EB4CDF29E16405006541B0 /* AuthTarget.swift in Sources */,
 				21EB4CE029E16405006541B0 /* SPaymentTokenRequest.swift in Sources */,
 				21EB4CE129E16405006541B0 /* UIImage+AssetName.swift in Sources */,
+				21FF71022A28E77C001F5359 /* AlertPresenter.swift in Sources */,
 				21EB4CE229E16405006541B0 /* CertificateValidator.swift in Sources */,
 				21EB4CE329E16405006541B0 /* CardsPresenter.swift in Sources */,
 				21EB4CE429E16405006541B0 /* PaymentAssembly.swift in Sources */,
@@ -2135,6 +2152,7 @@
 				21B3BA4C29F85A0B0024BDF0 /* WebViewVC.swift in Sources */,
 				21EB4D0029E16405006541B0 /* PaymentPresenter.swift in Sources */,
 				21EB4D0129E16405006541B0 /* AuthManager.swift in Sources */,
+				21FF71042A28E77C001F5359 /* AlertAssembly.swift in Sources */,
 				21EB4D0229E16405006541B0 /* StartupService.swift in Sources */,
 				21EB4D0329E16405006541B0 /* ConfigTarget.swift in Sources */,
 				21EB4D0429E16405006541B0 /* AuthInfo.swift in Sources */,
@@ -2187,7 +2205,6 @@
 				21EB4D2C29E16405006541B0 /* SFullPaymentRequest.swift in Sources */,
 				21EB4D2D29E16405006541B0 /* Fonts.swift in Sources */,
 				21EB4D2E29E16405006541B0 /* CardInfoView.swift in Sources */,
-				215D31512A2514B0009ED030 /* PaymentInteractor.swift in Sources */,
 				21EB4D2F29E16405006541B0 /* PaymentVC.swift in Sources */,
 				21EB4D3029E16405006541B0 /* String+Ranges.swift in Sources */,
 				21EB4D3129E16405006541B0 /* SPError.swift in Sources */,
@@ -2219,6 +2236,7 @@
 				21EB4D4529E16405006541B0 /* TransparentWindow.swift in Sources */,
 				21EB4D4629E16405006541B0 /* AlertService.swift in Sources */,
 				21B3BA5D29FA526E0024BDF0 /* ContentLoadManager.swift in Sources */,
+				21FF71062A28E77C001F5359 /* AlertVC.swift in Sources */,
 				21EB4D4729E16405006541B0 /* Date+Extension.swift in Sources */,
 				21EB4D4829E16405006541B0 /* Gallery.swift in Sources */,
 				21EB4D4929E16405006541B0 /* OptimizationCheсkerManager.swift in Sources */,
@@ -2270,6 +2288,7 @@
 				2180695E29F260B600587AB8 /* ConfigGlobal.swift in Sources */,
 				AE4D867C29E533F2005C8092 /* UIView+Horisontal+Vertical.swift in Sources */,
 				4464DF89291D01F4000C9B45 /* NetworkService.swift in Sources */,
+				21FF71052A28E77C001F5359 /* AlertVC.swift in Sources */,
 				21440DB629D5B67200E3803E /* LogVC.swift in Sources */,
 				44F9FD4C295AFAB800FE4B9F /* CoverTransitionDriver.swift in Sources */,
 				442A45DD29804E2E00EC3D73 /* UserTarget.swift in Sources */,
@@ -2326,6 +2345,7 @@
 				4416E424291E21C300284972 /* SDKError.swift in Sources */,
 				44A31268298156C30099EB76 /* String+Extensions.swift in Sources */,
 				44A3125E298137E90099EB76 /* RootPresenter.swift in Sources */,
+				21FF71032A28E77C001F5359 /* AlertAssembly.swift in Sources */,
 				210CACAC29EE6D0000E33E0A /* PartCell.swift in Sources */,
 				442A45CC297FEE1500EC3D73 /* StubbedResponse.swift in Sources */,
 				44A23767292FAF3000C5883E /* Int+Price.swift in Sources */,
@@ -2364,7 +2384,6 @@
 				21253D1E29C9B20B004ED82D /* UIView+Template.swift in Sources */,
 				21253D2329CA3152004ED82D /* UIImageView+Download.swift in Sources */,
 				44A3126129813ABB0099EB76 /* AuthRouter.swift in Sources */,
-				215D31522A251533009ED030 /* PaymentInteractor.swift in Sources */,
 				44533D1E298521380041FAA9 /* PaymentTokenModel.swift in Sources */,
 				445CB066292BB3E300F50047 /* String+Localized.swift in Sources */,
 				211DF36C29D18CF30038A951 /* ConfigModel.swift in Sources */,
@@ -2396,6 +2415,7 @@
 				44F9FD51295AFAD700FE4B9F /* ContentNC.swift in Sources */,
 				21440DBA29D5EE1F00E3803E /* SearchInputView.swift in Sources */,
 				44A31254298108330099EB76 /* Locator.swift in Sources */,
+				21FF71012A28E77C001F5359 /* AlertPresenter.swift in Sources */,
 				4479ECDA29476EEF009B3AB8 /* Style.swift in Sources */,
 				44D898D82937449B00550FC6 /* SDKManager.swift in Sources */,
 				444A13BB291BAFDA00C9FBE0 /* SPButton.swift in Sources */,

@@ -64,11 +64,13 @@ final class PartCell: UITableViewCell {
         pointView.backgroundColor = model.isSelected ? .main : .textSecondary
         
         costLabel.textAlignment = .right
-        var paragraphStyle = NSMutableParagraphStyle()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.06
         costLabel.attributedText = NSMutableAttributedString(string: "Спишем сегодня",
-                                                             attributes: [NSAttributedString.Key.kern: -0.34,
-                                                                          NSAttributedString.Key.paragraphStyle: paragraphStyle])
+                                                             attributes: [
+                                                                NSAttributedString.Key.kern: -0.34,
+                                                                NSAttributedString.Key.paragraphStyle: paragraphStyle
+                                                             ])
     }
     
     private func setupUI() {
