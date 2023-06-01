@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PaymentFeaturesConfig {
+enum PaymentFeaturesConfig {
     static func configCardModel(userService: UserService) -> PaymentCellModel {
         guard let selectedCard = userService.selectedCard,
               let user = userService.user else { return PaymentCellModel() }

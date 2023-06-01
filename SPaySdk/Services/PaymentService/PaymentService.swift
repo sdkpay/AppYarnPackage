@@ -86,6 +86,7 @@ final class DefaultPaymentService: PaymentService {
                                   orderId: orderid, completion: completion)
                     }
                     self.sdkManager.completionPaymentToken(with: paymentToken.paymentToken)
+                    
                 }
             case .failure(let failure):
                 if isBnplEnabled {
