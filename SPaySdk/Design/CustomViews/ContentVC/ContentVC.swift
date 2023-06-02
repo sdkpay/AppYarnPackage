@@ -33,8 +33,6 @@ class ContentVC: LoggableVC {
         }
     }
 
-    private var alertView: AlertView?
-
     lazy var logoImage: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(base64: UserDefaults.images?.logoIcon ?? "")
@@ -104,39 +102,12 @@ extension ContentVC {
                      animate: Bool = true) {
         Loader(text: text)
             .animated(with: animate)
-            .show()
+            .show(on: self)
     }
     
     func hideLoading(animate: Bool = true) {
         Loader()
             .animated(with: animate)
-            .hide()
-    }
-}
-
-// ContentVC + Alert
-extension ContentVC {
-    func showAlert(with alertModel: AlertViewModel) {
-        view.subviews.forEach { view in
-                if view != stickImageView {
-                    view.isHidden = true
-                }
-        }
-        let alertView = AlertView(with: alertModel)
-        self.alertView = alertView
-        view.addSubview(alertView)
-        alertView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            alertView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            alertView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            alertView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        ])
-        view.bringSubviewToFront(stickImageView)
-    }
-    
-    func hideAlert() {
-        guard let alertView = alertView else { return }
-        alertView.removeFromSuperview()
-        self.alertView = nil
+            .hide(from: self)
     }
 }

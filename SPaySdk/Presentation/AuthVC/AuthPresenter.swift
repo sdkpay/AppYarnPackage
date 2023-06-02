@@ -75,7 +75,7 @@ final class AuthPresenter: AuthPresenting {
     private func checkSession() {
         DispatchQueue.main.async {  [weak self] in
             guard let self = self else { return }
-            self.view?.hideAlert()
+            self.alertService.hide()
             self.view?.showLoading(animate: false)
         }
        
@@ -123,21 +123,15 @@ final class AuthPresenter: AuthPresenting {
     private func getAccessSPay() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.view?.hideAlert()
             let title: String = .Loading.toBankTitle(args: self.bankManager.selectedBank?.name ?? "Банк")
             self.view?.showLoading(with: title)
+            self.openSId()
         }
-       
-        openSId()
     }
     
     private func openSId() {
         authService.tryToAuth { [weak self] error, isShowFakeScreen in
             guard let self = self else { return }
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.view?.hideLoading()
-            }
             self.removeObserver()
             if let error = error {
                 self.analytics.sendEvent(.BankAppAuthFailed)
@@ -189,7 +183,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func dismissWithError(_ error: SDKError) {
-        view?.dismiss(animated: true, completion: { [weak self] in
+        alertService.close(animated: true, completion: { [weak self] in
             self?.sdkManager.completionWithError(error: error)
         })
     }
@@ -206,7 +200,9 @@ final class AuthPresenter: AuthPresenting {
         if bankManager.avaliableBanks.count > 1 {
             showBanksStack()
         } else {
-            dismissWithError(.cancelled)
+            view?.dismiss(animated: true, completion: { [weak self] in
+                self?.sdkManager.completionWithError(error: .cancelled)
+            })
         }
     }
     
