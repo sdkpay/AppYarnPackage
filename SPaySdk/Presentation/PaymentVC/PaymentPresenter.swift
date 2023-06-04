@@ -208,7 +208,6 @@ final class PaymentPresenter: PaymentPresenting {
                                completion: {})
     }
 
-    
     private func validatePayError(_ error: PayError) {
         switch error {
         case .noInternetConnection:

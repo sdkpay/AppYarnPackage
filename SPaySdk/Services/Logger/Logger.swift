@@ -49,7 +49,6 @@ enum SBLogger {
         case .merchant:
             NSLog(massage)
         case let .debug(level: level):
-            guard RemoteConfig.shared.needLogs else { return }
             print(massage)
             print("|\(level.rawValue) \(Date()) \n\(massage)", to: &logger)
         }

@@ -27,11 +27,11 @@ enum StubbedResponse {
         }
     }
     
-    private func stubbedResponse(_ filename: String) -> Data! {
-        let path = Bundle(for: SPay.self).path(forResource: filename,
-                                               ofType: "json")
+    private func stubbedResponse(_ filename: String) -> Data {
+        guard let path = Bundle(for: SPay.self).path(forResource: filename,
+                                                     ofType: "json") else { return Data() }
         do {
-            return try Data(contentsOf: URL(fileURLWithPath: path!))
+            return try Data(contentsOf: URL(fileURLWithPath: path))
         } catch {
             fatalError(" \(filename) file not found")
         }
