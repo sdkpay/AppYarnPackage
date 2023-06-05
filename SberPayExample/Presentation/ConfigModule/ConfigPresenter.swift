@@ -213,7 +213,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         case .SandboxRealBankApp:
             environment = .sandboxRealBankApp
         }
-      //  SPay.debugConfig(network: configValues.network, ssl: configValues.ssl)
+        SPay.debugConfig(network: configValues.network, ssl: configValues.ssl)
         SPay.setup(apiKey: configValues.apiKey ?? "",
                    bnplPlan: configValues.bnpl,
                    environment: environment) {
