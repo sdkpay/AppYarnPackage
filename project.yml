@@ -90,6 +90,7 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSLocationAlwaysAndWhenInUseUsageDescription: Need location
         DTXAutoStart: false
         CFBundleURLTypes:
           - CFBundleTypeRole: Editor
