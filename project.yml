@@ -50,7 +50,7 @@ targetTemplates:
       - framework: ./SPaySdk/Resources/BizoneCore.xcframework
       - sdk: libresolv.9.tbd
     info: 
-      path: ./SPaySdk/SupportingFiles/Info.plist  
+      path: ./SPaySdk/SupportingFiles/Info.plist
   
 targets:
   SPaySdkExample:
@@ -61,7 +61,7 @@ targets:
        - path: ./SberPayExample
     settings:
       MARKETING_VERSION: 1.1
-      CURRENT_PROJECT_VERSION: 81
+      CURRENT_PROJECT_VERSION: 82
       PRODUCT_BUNDLE_IDENTIFIER: ru.ir.resheniya.PayTestApp
       DEVELOPMENT_TEAM: 9C29T4D59W
       SWIFT_OBJC_BRIDGING_HEADER: SberPayExample/Presentation/ObjcCartVC/SberPayExample-Bridging-Header.h
@@ -80,7 +80,7 @@ targets:
                  else
                   echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
                 fi
-        basedOnDependencyAnalysis: false
+        basedOnDependencyAnalysis: true
     info:
       path: ./SberPayExample/SupportingFiles/Info.plist
       properties:
@@ -109,7 +109,7 @@ targets:
     templates:
       - SPaySdk
     sources:
-      - path: ./Prod-SPay
+      - path: ./PROD-SPay
     settings:
       base:
         OTHER_SWIFT_FLAGS: "-DSDKPROD"
