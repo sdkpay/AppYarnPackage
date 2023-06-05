@@ -81,7 +81,7 @@ targets:
                   echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
                 fi
         basedOnDependencyAnalysis: false
-    info: 
+    info:
       path: ./SberPayExample/SupportingFiles/Info.plist
       properties:
         UILaunchStoryboardName: LaunchScreen.storyboard
@@ -90,7 +90,9 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
-        NSLocationAlwaysAndWhenInUseUsageDescription: Need location
+        NSLocationWhenInUseUsageDescription: Need location
+        NSUserTrackingUsageDescription: App would like to access IDFA for tracking purpose
+        LSSupportsOpeningDocumentsInPlace: true
         DTXAutoStart: false
         CFBundleURLTypes:
           - CFBundleTypeRole: Editor
