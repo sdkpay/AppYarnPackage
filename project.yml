@@ -32,6 +32,7 @@ targetTemplates:
     type: framework
     platform: iOS
     deploymentTarget: 12.0
+    scheme: {}
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.s.pay.SPaySdk
@@ -57,6 +58,7 @@ targets:
     type: application
     platform: iOS
     deploymentTarget: "12.0"
+    scheme: {}
     sources:
        - path: ./SberPayExample
     settings:
