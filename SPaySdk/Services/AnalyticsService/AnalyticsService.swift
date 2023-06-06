@@ -54,6 +54,20 @@ enum AnalyticsEvent: String {
     case DataSize
     ///  Время, необходимое для запуск SDK
     case StartTime
+    /// Открыли экран с графиком платежей
+    case BNPLViewAppeared
+    /// Пользователь выбрал оплату с БНПЛ на экране с графиком платежей
+    case BNPLConfirmedByUser
+    /// Пользователь выбрал оплату без БНПЛ на экране с графиком платежей
+    case BNPLDeclinedByUser
+    /// Клиент подтвердил оплату с включенным БНПЛ
+    case PayWithBNPLConfirmedByUser
+    /// Открыли экран с ошибкой оплаты с БНПЛ
+    case PayWithBNPLFailed
+    /// Проверка устройства на возможность запуска команды с привилегиями пользователя root
+    case Compromised
+    ///  Проверка устройства на эмуляцию
+    case Emulator
 }
 
 enum AnalyticsValue: String {

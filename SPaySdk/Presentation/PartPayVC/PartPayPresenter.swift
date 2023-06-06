@@ -90,12 +90,14 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     func acceptButtonTapped() {
+        analytics.sendEvent(.BNPLConfirmedByUser)
         partPayService.bnplplanSelected = true
         partPaySelected()
         view?.contentNavigationController?.popViewController(animated: true)
     }
     
     func backButtonTapped() {
+        analytics.sendEvent(.BNPLDeclinedByUser)
         partPayService.bnplplanSelected = false
         partPaySelected()
         view?.contentNavigationController?.popViewController(animated: true)

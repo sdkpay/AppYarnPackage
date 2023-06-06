@@ -17,7 +17,7 @@ final class PartPayAssembly {
     func createModule(partPaySelected: @escaping Action) -> ContentVC {
         let router = moduleRouter()
         let presenter = modulePresenter(router, partPaySelected: partPaySelected)
-        let contentView = moduleView(presenter: presenter)
+        let contentView = moduleView(presenter: presenter, analyticsService: locator.resolve())
         presenter.view = contentView
         router.viewController = contentView
         return contentView
@@ -37,8 +37,8 @@ final class PartPayAssembly {
         return presenter
     }
     
-    private func moduleView(presenter: PartPayPresenter) -> ContentVC & IPartPayVC {
-        let view = PartPayVC(presenter)
+    private func moduleView(presenter: PartPayPresenter, analyticsService: AnalyticsService) -> ContentVC & IPartPayVC {
+        let view = PartPayVC(presenter, analyticsService: analyticsService)
         presenter.view = view
         return view
     }

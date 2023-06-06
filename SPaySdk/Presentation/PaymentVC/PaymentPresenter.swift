@@ -114,16 +114,23 @@ final class PaymentPresenter: PaymentPresenting {
         guard let paymentId = userService.selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId,
                                 isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
-            self?.view?.userInteractionsEnabled = true
+            guard let self = self else { return }
+            self.view?.userInteractionsEnabled = true
+            if self.partPayService.bnplplanSelected {
+                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
+            }
             switch result {
             case .success:
-                self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
-                    self?.alertService.close(animated: true, completion: {
-                        self?.sdkManager.completionPay(with: .success)
+                self.alertService.show(on: self.view, type: .paySuccess(completion: {
+                    self.alertService.close(animated: true, completion: {
+                        self.sdkManager.completionPay(with: .success)
                     })
                 }))
             case .failure(let error):
-                self?.validatePayError(error)
+                if self.partPayService.bnplplanSelected {
+                    self.analytics.sendEvent(.PayWithBNPLFailed)
+                }
+                self.validatePayError(error)
             }
         }
     }
