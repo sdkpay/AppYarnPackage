@@ -99,4 +99,8 @@ extension String {
         static let alertApiKey = String(stringLiteral: "merchant.alert.apikey")
         static let alertVersion = String(stringLiteral: "merchant.alert.version")
     }
+    
+    enum Fake {
+        static let fakeTitle = String(stringLiteral: "fake.title")
+    }
 }

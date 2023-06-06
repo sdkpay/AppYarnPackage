@@ -374,6 +374,8 @@
 		AEE5575A29CFAD470015BDD6 /* Dynatrace-Static in Frameworks */ = {isa = PBXBuildFile; productRef = AEE5575929CFAD470015BDD6 /* Dynatrace-Static */; };
 		AEEB602229B9B50700D1E1D2 /* UIImage+AssetName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */; };
 		AEEB602429B9B55E00D1E1D2 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */; };
+		AEEE168A2A2F06FC0087565B /* FakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEE16892A2F06FC0087565B /* FakeViewController.swift */; };
+		AEEE168B2A2F06FC0087565B /* FakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEE16892A2F06FC0087565B /* FakeViewController.swift */; };
 		AEF1EFA529D6A670008E6653 /* OptimizationCheсkerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1EFA429D6A670008E6653 /* OptimizationCheсkerManager.swift */; };
 		AEF1EFA929D6DFA3008E6653 /* NetworkMonitorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF1EFA829D6DFA3008E6653 /* NetworkMonitorManager.swift */; };
 /* End PBXBuildFile section */
@@ -626,6 +628,7 @@
 		AEB0059B29C09F72002C9AB9 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
 		AEEB602129B9B50700D1E1D2 /* UIImage+AssetName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+AssetName.swift"; sourceTree = "<group>"; };
 		AEEB602329B9B55E00D1E1D2 /* ImageDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
+		AEEE16892A2F06FC0087565B /* FakeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeViewController.swift; sourceTree = "<group>"; };
 		AEF1EFA429D6A670008E6653 /* OptimizationCheсkerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OptimizationCheсkerManager.swift"; sourceTree = "<group>"; };
 		AEF1EFA829D6DFA3008E6653 /* NetworkMonitorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitorManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -940,6 +943,7 @@
 		4416E425291E22E600284972 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				AEEE168C2A2F07000087565B /* FakeVC */,
 				21B3BA4929F859F40024BDF0 /* WebViewVC */,
 				2180D21F29E93F0000948681 /* PartPayVC */,
 				21440DB229D5B64000E3803E /* LogVC */,
@@ -1724,6 +1728,14 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
+		AEEE168C2A2F07000087565B /* FakeVC */ = {
+			isa = PBXGroup;
+			children = (
+				AEEE16892A2F06FC0087565B /* FakeViewController.swift */,
+			);
+			path = FakeVC;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -2021,6 +2033,7 @@
 				21B3BA5229F85A2B0024BDF0 /* WebViewPresenter.swift in Sources */,
 				21EB4CF329E16405006541B0 /* Data+Extension.swift in Sources */,
 				21B3BA4F29F85A1A0024BDF0 /* WebViewAssembly.swift in Sources */,
+				AEEE168B2A2F06FC0087565B /* FakeViewController.swift in Sources */,
 				21EB4CF429E16405006541B0 /* UIAplication+TopViewContriller.swift in Sources */,
 				21EB4CF529E16405006541B0 /* RootRouter.swift in Sources */,
 				21EB4CF629E16405006541B0 /* DefaultButton.swift in Sources */,
@@ -2232,6 +2245,7 @@
 				44A31268298156C30099EB76 /* String+Extensions.swift in Sources */,
 				44A3125E298137E90099EB76 /* RootPresenter.swift in Sources */,
 				210CACAC29EE6D0000E33E0A /* PartCell.swift in Sources */,
+				AEEE168A2A2F06FC0087565B /* FakeViewController.swift in Sources */,
 				442A45CC297FEE1500EC3D73 /* StubbedResponse.swift in Sources */,
 				44A23767292FAF3000C5883E /* Int+Price.swift in Sources */,
 				44D5361B2926198400B99463 /* UIViewController+Container.swift in Sources */,
