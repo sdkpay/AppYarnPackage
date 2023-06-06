@@ -11,7 +11,7 @@ import Foundation
 final class PersonalMetricsServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
-            let service: PersonalMetricsService = DefaultPersonalMetricsService()
+            let service: PersonalMetricsService = DefaultPersonalMetricsService(analyticsService: container.resolve())
             return service
         }
     }
@@ -26,10 +26,12 @@ protocol PersonalMetricsService {
 final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     private var provider: FPReportProviderProtocol?
     private(set) var ipAddress: String?
+    private var analyticsService: AnalyticsService?
     
-    override init() {
+    init(analyticsService: AnalyticsService?) {
         super.init()
         config()
+        self.analyticsService = analyticsService
         SBLogger.log(.start(obj: self))
     }
     
@@ -52,10 +54,13 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
             let сompromised = dataDictionary?["Compromised"] as? Int
             // Проверяем значение
             if let emulator = emulator,
-               let сompromised = сompromised,
-               сompromised == 0,
-               emulator == 0 {
-                completion(true)
+               let сompromised = сompromised {
+                self?.analyticsService?.sendEvent(.Emulator, with: ["\(emulator)"])
+                self?.analyticsService?.sendEvent(.Compromised, with: ["\(сompromised)"])
+                if сompromised == 0,
+                   emulator == 0 {
+                    completion(true)
+                }
             } else {
                 completion(false)
             }

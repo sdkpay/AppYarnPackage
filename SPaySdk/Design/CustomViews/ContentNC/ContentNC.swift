@@ -145,7 +145,7 @@ final class ContentNC: UIViewController {
         to.willMove(toParent: self)
         
         to.view.alpha = 0
-//        to.view.subviews.forEach({ $0.alpha = 0 })
+       // to.view.subviews.forEach({ $0.alpha = 0 })
 
         view.removeConstraints(view.constraints.filter { $0.firstItem === from.view || $0.secondItem === from.view })
         
@@ -172,7 +172,7 @@ final class ContentNC: UIViewController {
         toTop.isActive = true
         
         CATransaction.begin()
-
+        
         UIView.animate(
             withDuration: .animationDuration,
             delay: 0,
@@ -181,10 +181,9 @@ final class ContentNC: UIViewController {
             options: .curveEaseOut,
             animations: {
                 fomShimView.alpha = 1
-//                from.view.subviews.forEach({ $0.alpha = 0 })
+             //   from.view.subviews.forEach({ $0.alpha = 0 })
             }, completion: { _ in
                 to.view.alpha = 1
-                completion?()
             }
         )
         UIView.animate(
@@ -209,12 +208,12 @@ final class ContentNC: UIViewController {
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-//                to.view.subviews.forEach({ $0.alpha = 1 })
                 toShimView.alpha = 0
+//                to.view.subviews.forEach({ $0.alpha = 1 })
             }, completion: { _ in
-//                from.view.subviews.forEach({ $0.alpha = 1 })
                 fomShimView.removeFromSuperview()
                 toShimView.removeFromSuperview()
+                completion?()
             }
         )
         CATransaction.commit()

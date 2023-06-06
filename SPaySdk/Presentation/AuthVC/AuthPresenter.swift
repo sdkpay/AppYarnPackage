@@ -21,7 +21,6 @@ final class AuthPresenter: AuthPresenting {
     private let alertService: AlertService
     private let timeManager: OptimizationCheсkerManager
     private let contentLoadManager: ContentLoadManager
-    private let enviromentManager: EnvironmentManager
 
     weak var view: (IAuthVC & ContentVC)?
     
@@ -33,8 +32,7 @@ final class AuthPresenter: AuthPresenting {
          alertService: AlertService,
          bankManager: BankAppManager,
          contentLoadManager: ContentLoadManager,
-         timeManager: OptimizationCheсkerManager,
-         enviromentManager: EnvironmentManager) {
+         timeManager: OptimizationCheсkerManager) {
         self.analytics = analytics
         self.router = router
         self.authService = authService
@@ -44,7 +42,6 @@ final class AuthPresenter: AuthPresenting {
         self.contentLoadManager = contentLoadManager
         self.bankManager = bankManager
         self.timeManager = timeManager
-        self.enviromentManager = enviromentManager
         self.timeManager.startTraking()
     }
     
@@ -60,15 +57,10 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkNewStart() {
-        
-        if enviromentManager.environment == .sandboxWithoutBankApp {
-            checkSession()
+        if sdkManager.newStart || userService.user == nil {
+            configAuthSettings()
         } else {
-            if sdkManager.newStart || userService.user == nil {
-                configAuthSettings()
-            } else {
-                checkSession()
-            }
+            checkSession()
         }
     }
     
@@ -102,9 +94,7 @@ final class AuthPresenter: AuthPresenting {
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
 
-        if enviromentManager.environment == .sandboxWithoutBankApp {
-            getAccessSPay()
-        } else if bankManager.selectedBank == nil {
+        if bankManager.selectedBank == nil {
             showBanksStack()
         } else {
             getAccessSPay()
@@ -123,41 +113,33 @@ final class AuthPresenter: AuthPresenting {
     private func getAccessSPay() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let title: String = .Loading.toBankTitle(args: self.bankManager.selectedBank?.name ?? "Банк")
-            self.view?.showLoading(with: title)
+            let title: String = .Loading.toBankTitle(args: self.bankManager.selectedBank?.name ?? "")
+            self.view?.showLoading(with: title, animate: false)
             self.openSId()
         }
     }
     
     private func openSId() {
-        authService.tryToAuth { [weak self] error, isShowFakeScreen in
+        authService.tryToAuth { [weak self] error in
             guard let self = self else { return }
             self.removeObserver()
             if let error = error {
                 self.analytics.sendEvent(.BankAppAuthFailed)
                 if error.represents(.noInternetConnection) {
                     self.alertService.show(on: self.view,
-                                           type: .noInternet(retry: { self.getAccessSPay() },
-                                                             completion: { self.dismissWithError(error) }))
+                                           type: .noInternet(retry: {
+                        self.getAccessSPay()
+                    }, completion: {
+                        self.dismissWithError(error)
+                    }))
                 } else {
                     self.alertService.show(on: self.view,
                                            type: .defaultError(completion: { self.dismissWithError(error) }))
                 }
             } else {
-                self.openFakeScreen(target: isShowFakeScreen)
-            }
-        }
-    }
-    
-    private func openFakeScreen(target: Bool) {
-        if target {
-            router.presentFakeScreen {
                 self.analytics.sendEvent(.BankAppAuthSuccess)
                 self.loadPaymentData()
             }
-        } else {
-            self.analytics.sendEvent(.BankAppAuthSuccess)
-            self.loadPaymentData()
         }
     }
     

@@ -50,7 +50,7 @@ enum AlertState {
         case .waiting:
             return .Common.waiting
         case .warning:
-            return .Common.warningAlert
+            return .Common.warning
         }
     }
     
@@ -178,7 +178,7 @@ final class DefaultAlertService: AlertService {
                                                 action: completion)
             showAlert(on: view,
                       with: .Alert.alertPayNoInternetTitle,
-                      state: .warning,
+                      state: .failure,
                       buttons:
                         [
                             tryButton,

@@ -26,6 +26,7 @@ private struct ButtonColorScheme {
 
 enum DefaultButtonAppearance {
     case full
+    case clear
     case cancel
     case clear
     case info

@@ -116,16 +116,23 @@ final class PaymentPresenter: PaymentPresenting {
         guard let paymentId = userService.selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId,
                                 isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
-            self?.view?.userInteractionsEnabled = true
+            guard let self = self else { return }
+            self.view?.userInteractionsEnabled = true
+            if self.partPayService.bnplplanSelected {
+                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
+            }
             switch result {
             case .success:
-                self?.alertService.show(on: self?.view, type: .paySuccess(completion: {
-                    self?.alertService.close(animated: true, completion: {
-                        self?.sdkManager.completionPay(with: .success)
+                self.alertService.show(on: self.view, type: .paySuccess(completion: {
+                    self.alertService.close(animated: true, completion: {
+                        self.sdkManager.completionPay(with: .success)
                     })
                 }))
             case .failure(let error):
-                self?.validatePayError(error)
+                if self.partPayService.bnplplanSelected {
+                    self.analytics.sendEvent(.PayWithBNPLFailed)
+                }
+                self.validatePayError(error)
             }
         }
     }
@@ -209,15 +216,19 @@ final class PaymentPresenter: PaymentPresenting {
         switch error {
         case .noInternetConnection:
             alertService.show(on: view,
-                              type: .noInternet(retry: { self.pay() },
-                                                completion: { self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                              type: .noInternet(retry: {
+                self.pay()
+            },
+                                                completion: {
+                self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
         case .timeOut, .unknownStatus:
             configForWaiting()
         case .partPayError:
             getPaymentToken()
         default:
             alertService.show(on: view,
-                              type: .defaultError(completion: { self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                              type: .defaultError(completion: {
+                self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
         }
     }
     
@@ -242,7 +253,7 @@ final class PaymentPresenter: PaymentPresenting {
             }
         }
     }
-
+    
     private func configForWaiting() {
         let okButton = AlertButtonModel(title: .Common.okTitle,
                                         type: .full) {

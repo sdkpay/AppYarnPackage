@@ -121,8 +121,10 @@ final class PartPayVC: ContentVC, IPartPayVC {
     }()
     
     private let presenter: PartPayPresenter
+    private var analyticsService: AnalyticsService
         
-    init(_ presenter: PartPayPresenter) {
+    init(_ presenter: PartPayPresenter, analyticsService: AnalyticsService) {
+        self.analyticsService = analyticsService
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -140,6 +142,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        analyticsService.sendEvent(.BNPLViewAppeared)
         SBLogger.log(.didAppear(view: self))
     }
     

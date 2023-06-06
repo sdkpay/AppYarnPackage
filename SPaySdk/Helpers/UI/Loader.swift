@@ -52,7 +52,7 @@ struct Loader {
         }
         let subview = LoadingView(with: text)
         guard let rootView = vc.view else { return self }
-
+        
         subview.translatesAutoresizingMaskIntoConstraints = false
         rootView.addSubview(subview)
         
