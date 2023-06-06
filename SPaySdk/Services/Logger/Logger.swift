@@ -49,7 +49,6 @@ enum SBLogger {
         case .merchant:
             NSLog(massage)
         case let .debug(level: level):
-            guard RemoteConfig.shared.needLogs else { return }
             print(massage)
             print("|\(level.rawValue) \(Date()) \n\(massage)", to: &logger)
         }
@@ -67,11 +66,12 @@ enum SBLogger {
             """)
     }
     
-    static func logRequestCompleted(_ target: TargetType,
+    static func logRequestCompleted(host: URL,
+                                    _ target: TargetType,
                                     response: URLResponse?,
                                     data: Data?,
                                     error: Error?) {
-        let url = ServerURL.appendingPathComponent(target.path)
+        let url = host.appendingPathComponent(target.path)
         var code = "None"
         var headers = "None"
         if let response = response as? HTTPURLResponse {

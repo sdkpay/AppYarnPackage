@@ -10,7 +10,6 @@ import UIKit
 private extension CGFloat {
     static let corner = 25.0
     static let topMargin = 15.0
-    static let sideMargin = 20.0
 }
 
 final class CartCell: UITableViewCell {
@@ -18,18 +17,38 @@ final class CartCell: UITableViewCell {
     
     private lazy var containerView = UIView()
     
-    private lazy var titleLabel: UILabel = {
-        let view = UILabel()
-        view.numberOfLines = 2
-        view.textColor = .black
+    private lazy var iconImageView: UIImageView = {
+        let view = UIImageView()
+        view.contentMode = .scaleAspectFit
         return view
     }()
     
     private lazy var costLabel: UILabel = {
+       let label = UILabel()
+        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.textColor = .black
+        return label
+    }()
+    
+    private lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.textColor = .black
-        view.font.withSize(15)
+        view.numberOfLines = 2
+        view.textColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        view.font = .systemFont(ofSize: 15, weight: .light)
+        view.textAlignment = .left
         return view
+    }()
+    
+    private lazy var bargeImageView: UIImageView = {
+       let imageView = UIImageView()
+        imageView.image = UIImage(named: "delete")
+        imageView.contentMode = .center
+        return imageView
+    }()
+    
+    private lazy var stepper: CustomStepper = {
+       let stepper = CustomStepper()
+        return stepper
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -41,53 +60,79 @@ final class CartCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func config(with title: String, cost: Int) {
+    func config(with title: String, cost: Int, icon: UIImage, color: UIColor) {
         titleLabel.text = title
-        costLabel.text = "\(String(cost)) p"
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.groupingSeparator = " "
+        if let formattedNumber = formatter.string(from: NSNumber(value: cost)) {
+            costLabel.text = "\(String(formattedNumber)) p"
+        }
+        iconImageView.image = icon
+        containerView.backgroundColor = color
         setupUI()
     }
     
     func setupUI() {
-        let colorArr: [UIColor] = [.red, .yellow, .blue, .green, .magenta, .orange, .purple]
-        containerView.backgroundColor = colorArr.randomElement()?.withAlphaComponent(0.1)
         containerView.layer.cornerRadius = CGFloat.corner
         backgroundColor = .white
         contentView.addSubview(containerView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(costLabel)
+        containerView.addSubview(iconImageView)
+        containerView.addSubview(bargeImageView)
+        containerView.addSubview(stepper)
         
         containerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor,
-                                               constant: .topMargin),
+                                               constant: 6),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
-                                                   constant: .sideMargin),
+                                                   constant: 16),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
-                                                    constant: -.sideMargin),
+                                                    constant: -16),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
-                                                  constant: -.topMargin)
+                                                  constant: -6)
+        ])
+        
+        stepper.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            stepper.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -16),
+            stepper.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
+            stepper.widthAnchor.constraint(equalToConstant: 64),
+            stepper.heightAnchor.constraint(equalToConstant: 24)
+        ])
+        
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            iconImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            iconImageView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 0),
+            iconImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 0),
+            iconImageView.widthAnchor.constraint(equalToConstant: 72)
         ])
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor,
-                                            constant: .topMargin),
-            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,
-                                                constant: .sideMargin),
-            titleLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,
-                                                 constant: -.sideMargin)
+            titleLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 12),
+            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
+            titleLabel.widthAnchor.constraint(equalToConstant: 158)
         ])
         
         costLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            costLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor,
-                                           constant: .topMargin),
-            costLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor,
-                                               constant: .sideMargin),
-            costLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor,
-                                                constant: -.sideMargin),
-            costLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor,
-                                              constant: -.topMargin)
+            costLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
+            costLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 12),
+            costLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
+            costLabel.widthAnchor.constraint(equalToConstant: 158)
+        ])
+        
+        bargeImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            bargeImageView.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -17),
+            bargeImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            bargeImageView.widthAnchor.constraint(equalToConstant: 24),
+            bargeImageView.heightAnchor.constraint(equalToConstant: 24)
+//            bargeImageView.bottomAnchor.constraint(equalTo: stepper.topAnchor, constant: -24)
         ])
     }
 }

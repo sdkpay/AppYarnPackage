@@ -10,35 +10,19 @@ import UIKit
 final class NetworkServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         var provider: NetworkProvider
-
-        switch BuildSettings.shared.networkState {
+        
+        switch container.resolve(BuildSettings.self).networkState {
         case .Prom, .Mocker, .Psi, .Ift:
-            provider = DefaultNetworkProvider(requestManager: container.resolve())
+            provider = DefaultNetworkProvider(requestManager: container.resolve(),
+                                              hostManager: container.resolve(),
+                                              buildSettings: container.resolve())
         case .Local:
-            provider = StubNetworkProvider(delayedSeconds: 2)
+            provider = StubNetworkProvider(delayedSeconds: 2, hostManager: container.resolve())
         }
-
+        
         let service: NetworkService = DefaultNetworkService(provider: provider)
         container.register(service: service)
     }
-}
-
-var ServerURL: URL {
-    var urlString: String
-    
-    switch BuildSettings.shared.networkState {
-    case .Mocker:
-        urlString = "https://ucexvyy1j5.api.quickmocker.com"
-    case .Ift:
-        urlString = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
-    case .Prom:
-        urlString = "https://prom.gate1.spaymentsplus.ru/sdk-gateway/v1"
-    case .Psi:
-        urlString = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
-    case .Local:
-        urlString = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
-    }
-    return URL(string: urlString)!
 }
 
 protocol NetworkService: AnyObject {
@@ -78,7 +62,6 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                  retrySettings: RetrySettings = (1, []),
                  completion: @escaping (Result<Void, SDKError>) -> Void) {
         provider.request(target, retrySettings: retrySettings) { data, response, error in
-            SBLogger.logRequestCompleted(target, response: response, data: data, error: error)
             let result = self.decodeResponse(data: data, response: response, error: error)
             completion(result)
         }
@@ -89,7 +72,6 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                     retrySettings: RetrySettings = (1, []),
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
         provider.request(target, retrySettings: retrySettings) { data, response, error in
-            SBLogger.logRequestCompleted(target, response: response, data: data, error: error)
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
             completion(result)
         }

@@ -10,6 +10,7 @@ import Foundation
 enum Certificates: String, CaseIterable {
     case psi = "psi.spaymentsplus.ru"
     case ift = "ift.gate1.spaymentsplus.ru"
+    case sandbox = "ift.gate2.spaymentsplus.ru"
     case cms = "cms-res"
 
     var data: Data? {

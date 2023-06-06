@@ -11,7 +11,7 @@ typealias PaymentTokenCompletion = (SPaymentTokenResponse) -> Void
 typealias PaymentCompletion = (_ state: SPayState, _ info: String) -> Void
 
 protocol SBPayService {
-    func setup(apiKey: String, bnplPlan: Bool, completion: Action?)
+    func setup(apiKey: String, bnplPlan: Bool, environment: SEnvironment, completion: Action?)
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
@@ -24,25 +24,40 @@ protocol SBPayService {
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
     func getResponseFrom(_ url: URL)
+    func debugConfig(network: NetworkState, ssl: Bool)
 }
 
 extension SBPayService {
-    func setup(apiKey: String, bnplPlan: Bool = true, completion: Action? = nil) {
-        setup(apiKey: apiKey, bnplPlan: bnplPlan, completion: completion)
+    func setup(apiKey: String,
+               bnplPlan: Bool = true,
+               environment: SEnvironment = .prod,
+               completion: Action? = nil) {
+        setup(apiKey: apiKey,
+              bnplPlan: bnplPlan,
+              environment: environment,
+              completion: completion)
     }
 }
 
 final class DefaultSBPayService: SBPayService {
     private lazy var startService: StartupService = DefaultStartupService(timeManager: timeManager)
     private lazy var locator: LocatorService = DefaultLocatorService()
+    private lazy var buildSettings: BuildSettings = DefaultBuildSettings()
     private let assemblyManager = AssemblyManager()
     private let timeManager = OptimizationCheсkerManager()
     private var apiKey: String?
     
-    func setup(apiKey: String, bnplPlan: Bool, completion: Action? = nil) {
+    func setup(apiKey: String,
+               bnplPlan: Bool,
+               environment: SEnvironment,
+               completion: Action? = nil) {
         self.apiKey = apiKey
         UIFont.registerFontsIfNeeded()
+        locator.register(service: buildSettings)
         assemblyManager.registerServices(to: locator)
+        locator
+            .resolve(EnvironmentManager.self)
+            .setEnvironment(environment)
         locator
             .resolve(PartPayService.self)
             .setUserEnableBnpl(bnplPlan, enabledLevel: .merch)
@@ -66,12 +81,18 @@ final class DefaultSBPayService: SBPayService {
 #if targetEnvironment(simulator)
         return true
 #else
-        let apps = locator.resolve(BankAppManager.self).avaliableBanks
-        locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
-        SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
-        return !apps.isEmpty
+        
+        let target = locator.resolve(EnvironmentManager.self).environment == .sandboxWithoutBankApp
+        if target {
+            return true
+        } else {
+            let apps = locator.resolve(BankAppManager.self).avaliableBanks
+            locator
+                .resolve(AnalyticsService.self)
+                .sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
+            SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
+            return !apps.isEmpty
+        }
 #endif
     }
     
@@ -89,7 +110,6 @@ final class DefaultSBPayService: SBPayService {
                 completion(response)
             })
         startService.openInitialScreen(with: viewController, with: locator)
-        SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
     }
     
     func pay(with paymentRequest: SPaymentRequest,
@@ -115,7 +135,6 @@ final class DefaultSBPayService: SBPayService {
             .configWithOrderId(apiKey: apiKey,
                                paymentRequest: paymentRequest,
                                completion: completion)
-        SBLogger.log("📃 Network state - \(BuildSettings.shared.networkState.rawValue)")
         startService.openInitialScreen(with: viewController,
                                        with: locator)
         timeManager.stopCheckingCPULoad {
@@ -129,5 +148,9 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(AuthService.self)
             .completeAuth(with: url)
+    }
+    
+    func debugConfig(network: NetworkState, ssl: Bool) {
+        buildSettings.setConfig(networkState: network, ssl: ssl)
     }
 }

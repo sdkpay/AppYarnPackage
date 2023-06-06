@@ -1,0 +1,125 @@
+name: SPaySdk
+
+options:
+  deploymentTarget: 12.0
+  groupSortPosition: top
+  generateEmptyDirectories: false
+  findCarthageFrameworks: false
+  minimumXcodeGenVersion: '2.18.0'
+  developmentLanguage: ru
+
+settings:
+  base:
+    CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
+
+packages:
+  IQKeyboardManagerSwift:
+    url: https://github.com/hackiftekhar/IQKeyboardManager.git
+    from: 6.0.0
+  Dynatrace-Static:
+   url: https://github.com/Dynatrace/swift-mobile-sdk.git
+   from: 8.0.0
+
+targetTemplates:
+  Framework:
+    type: framework
+    platform: iOS
+    deploymentTarget: 12.0
+    settings:
+      base:
+        MARKETING_VERSION: 1.0
+  SPaySdk: 
+    type: framework
+    platform: iOS
+    deploymentTarget: 12.0
+    scheme: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.s.pay.SPaySdk
+        BUILD_LIBRARY_FOR_DISTRIBUTION: true
+        ONLY_ACTIVE_ARCH: false
+        MARKETING_VERSION: 1.0
+        OTHER_LDFLAGS:
+          - $(inherited)
+          - $(OTHER_LDFLAGS)
+          - -ObjC
+    sources:
+      - path: ./SPaySdk
+    dependencies:
+      - package: Dynatrace-Static
+      - framework: ./SPaySdk/Resources/Fingerprint.xcframework
+      - framework: ./SPaySdk/Resources/BizoneCore.xcframework
+      - sdk: libresolv.9.tbd
+    info: 
+      path: ./SPaySdk/SupportingFiles/Info.plist
+  
+targets:
+  SPaySdkExample:
+    type: application
+    platform: iOS
+    deploymentTarget: "12.0"
+    scheme: {}
+    sources:
+       - path: ./SberPayExample
+    settings:
+      MARKETING_VERSION: 1.1
+      CURRENT_PROJECT_VERSION: 83
+      PRODUCT_BUNDLE_IDENTIFIER: ru.ir.resheniya.PayTestApp
+      DEVELOPMENT_TEAM: 9C29T4D59W
+      SWIFT_OBJC_BRIDGING_HEADER: SberPayExample/Presentation/ObjcCartVC/SberPayExample-Bridging-Header.h
+    dependencies:
+      - package: IQKeyboardManagerSwift
+      - framework: ./SberPayExample/SupportingFiles/SBLayout.xcframework
+      - target: SPaySdkDEBUG
+        link: true
+    preBuildScripts: 
+      - name: Swiftlint
+        script: |
+                export PATH="$PATH:/opt/homebrew/bin"
+
+                if which swiftlint > /dev/null; then
+                  swiftlint
+                 else
+                  echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+                fi
+        basedOnDependencyAnalysis: true
+    info:
+      path: ./SberPayExample/SupportingFiles/Info.plist
+      properties:
+        UILaunchStoryboardName: LaunchScreen.storyboard
+        CFBundleDisplayName: $(BUNDLE_DISPLAY_NAME)
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        NSLocationWhenInUseUsageDescription: Need location
+        NSUserTrackingUsageDescription: App would like to access IDFA for tracking purpose
+        LSSupportsOpeningDocumentsInPlace: true
+        DTXAutoStart: false
+        CFBundleURLTypes:
+          - CFBundleTypeRole: Editor
+            CFBundleURLName: testapp
+            CFBundleURLSchemes:
+              - testapp
+        LSApplicationQueriesSchemes:
+          - sbolidexternallogin
+          - sberbankidexternallogin
+        NSAppTransportSecurity: 
+          NSAllowsArbitraryLoads: true
+        UIFileSharingEnabled: true
+  SPaySdk:
+    templates:
+      - SPaySdk
+    sources:
+      - path: ./PROD-SPay
+    settings:
+      base:
+        OTHER_SWIFT_FLAGS: "-DSDKPROD"
+  SPaySdkDEBUG:
+    templates:
+      - SPaySdk
+    sources:
+      - path: ./DEBUG-SPay
+    settings:
+      base:
+        OTHER_SWIFT_FLAGS: "-DSDKDEBUG"

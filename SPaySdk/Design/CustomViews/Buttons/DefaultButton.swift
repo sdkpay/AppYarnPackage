@@ -28,6 +28,7 @@ enum DefaultButtonAppearance {
     case full
     case clear
     case cancel
+    case clear
     case info
     
     fileprivate var selected: ButtonColorScheme {

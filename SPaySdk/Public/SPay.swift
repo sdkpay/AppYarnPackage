@@ -8,13 +8,23 @@
 import UIKit
 
 @objc
+public enum SEnvironment: Int {
+    case prod = 0
+    case sandboxWithoutBankApp
+    case sandboxRealBankApp
+}
+
+@objc
 public final class SPay: NSObject {
     private static var payService: SBPayService? = DefaultSBPayService()
     
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     @objc
-    public static func setup(apiKey: String, bnplPlan: Bool = false, completion: Action? = nil) {
-        payService?.setup(apiKey: apiKey, bnplPlan: bnplPlan, completion: completion)
+    public static func setup(apiKey: String,
+                             bnplPlan: Bool = false,
+                             environment: SEnvironment = .prod,
+                             completion: Action? = nil) {
+        payService?.setup(apiKey: apiKey, bnplPlan: bnplPlan, environment: environment, completion: completion)
     }
     
     /**
@@ -70,4 +80,13 @@ public final class SPay: NSObject {
     public static func getAuthURL(_ url: URL) {
         payService?.getResponseFrom(url)
     }
+    
+    /**
+     Метод для установки моков, только для тестовых версий
+     */
+#if SDKDEBUG
+    public static func debugConfig(network: NetworkState, ssl: Bool) {
+        payService?.debugConfig(network: network, ssl: ssl)
+    }
+#endif
 }

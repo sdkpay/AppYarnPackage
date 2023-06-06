@@ -9,19 +9,41 @@ import UIKit
 import SPaySdkDEBUG
 
 private extension CGFloat {
-    static let paymentHeight = 200.0
+    static let paymentHeight = 150.0
     static let margin = 20.0
     static let bottomMargin = 50.0
 }
 
+struct CellModel {
+    var cost: Int
+    var title: String
+    var image: UIImage
+    var color: UIColor
+}
+
 final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private let values: ConfigValues
-    
+    private var model: [CellModel] = [
+        .init(cost: 820 + 1370,
+              title: "Кабель зарядный Lightning connector",
+              image: UIImage(named: "charger")!,
+              color: UIColor(red: 253 / 255, green: 241 / 255, blue: 233 / 255, alpha: 1)),
+        .init(cost: 750,
+              title: "Амбушюры для Apple Airpods Pro",
+              image: UIImage(named: "headphones")!,
+              color: UIColor(red: 237 / 255, green: 247 / 255, blue: 251 / 255, alpha: 1)),
+        .init(cost: 45681,
+              title: "Телевизор Hisense 65E7HQ",
+              image: UIImage(named: "tv")!,
+              color: UIColor(red: 254 / 255, green: 236 / 255, blue: 237 / 255, alpha: 1))
+    ]
+
     private lazy var tableView: UITableView = {
         let view = UITableView()
         view.separatorStyle = .none
         view.backgroundColor = .white
         view.register(CartCell.self, forCellReuseIdentifier: CartCell.reuseID)
+        view.register(PaymentSCell.self, forCellReuseIdentifier: PaymentSCell.reuseID)
         view.delegate = self
         view.dataSource = self
         return view
@@ -34,14 +56,15 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private lazy var totalCostLabel: UILabel = {
         let view = UILabel()
-        view.text = "\(values.cost) p"
-        view.textColor = .black
+        view.text = "\(values.cost ?? "") p"
+        view.textColor = UIColor(red: 251 / 255, green: 137 / 255, blue: 78 / 255, alpha: 1)
+        view.font = .systemFont(ofSize: 17, weight: .semibold)
         return view
     }()
     
     private lazy var totalCostNameLabel: UILabel = {
         let view = UILabel()
-        view.text = "Итого:"
+        view.text = "Итого"
         view.textColor = .black
         return view
     }()
@@ -56,7 +79,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Swift"
+        navigationItem.title = "Корзина"
         setupUI()
     }
     
@@ -69,16 +92,48 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         fatalError("init(coder:) has not been implemented")
     }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        section == 0 ? model.count : 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CartCell.reuseID) as? CartCell else {
-            return UITableViewCell()
+        if indexPath.section == 0 {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: CartCell.reuseID) as? CartCell else {
+                return UITableViewCell()
+            }
+            let model = model[indexPath.row]
+            cell.config(with: model.title, cost: model.cost, icon: model.image, color: model.color)
+            return cell
+        } else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: PaymentSCell.reuseID) as? PaymentSCell else {
+                return UITableViewCell()
+            }
+            return cell
         }
-        cell.config(with: "Наушники", cost: (Int(values.cost) ?? 1) / tableView.numberOfRows(inSection: 0))
-        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        indexPath.section == 0 ? 116 : 80
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 1 {
+            return "Способ оплаты"
+        }
+        
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if section == 1 {
+            guard let view = view as? UITableViewHeaderFooterView else { return }
+            view.textLabel?.textColor = .black
+//            view.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        }
     }
     
     private func setupUI() {
@@ -92,8 +147,8 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             tableView.bottomAnchor.constraint(equalTo: paymentView.topAnchor)
         ])
         
@@ -149,7 +204,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func getPaymentToken() {
         let request = SPaymentTokenRequest(merchantLogin: values.merchantLogin,
-                                           orderId: values.orderId,
+                                           orderId: values.orderId ?? "",
                                            redirectUri: "testapp://test")
         SPay.getPaymentToken(with: self, with: request) { response in
             if let error = response.error {
@@ -166,10 +221,10 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private func paymentTokenWithPerchase() {
         let request = SPaymentTokenRequest(redirectUri: "testapp://test",
                                            merchantLogin: values.merchantLogin,
-                                           amount: Int(values.cost) ?? 0,
-                                           currency: values.currency,
+                                           amount: Int(values.cost ?? "") ?? 0,
+                                           currency: values.currency ?? "",
                                            mobilePhone: nil,
-                                           orderNumber: values.orderNumber,
+                                           orderNumber: values.orderNumber ?? "",
                                            recurrentExipiry: "20230821",
                                            recurrentFrequency: 2)
         SPay.getPaymentToken(with: self, with: request) { response in
@@ -186,7 +241,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private func autoPay() {
         let request = SFullPaymentRequest(merchantLogin: values.merchantLogin,
-                                          orderId: values.orderId,
+                                          orderId: values.orderId ?? "",
                                           redirectUri: "testapp://test")
         SPay.payWithOrderId(with: self, with: request) { state, info  in
             switch state {
@@ -203,7 +258,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func pay(with token: String) {
-        let request = SPaymentRequest(orderId: values.orderId,
+        let request = SPaymentRequest(orderId: values.orderId ?? "",
                                       paymentToken: token)
         SPay.pay(with: request) { state, info  in
             switch state {

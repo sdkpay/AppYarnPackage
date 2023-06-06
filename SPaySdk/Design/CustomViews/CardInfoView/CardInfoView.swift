@@ -43,7 +43,7 @@ final class CardInfoView: UICollectionViewCell {
     
     private lazy var cardIconView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .center
+        view.contentMode = .scaleAspectFit
         return view
     }()
     

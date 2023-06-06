@@ -19,9 +19,10 @@ enum CertificateValidator {
         Certificates.allCases.compactMap({ $0.data })
     }
     
-    static func validate(challenge: URLAuthenticationChallenge,
+    static func validate(defaultHandling: Bool,
+                         challenge: URLAuthenticationChallenge,
                          completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        if !BuildSettings.shared.ssl {
+        if defaultHandling {
             SBLogger.log(level: .debug(level: .network), .sslOff)
             completionHandler(.performDefaultHandling, nil)
             return

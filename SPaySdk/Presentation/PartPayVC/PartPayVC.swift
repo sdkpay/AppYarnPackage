@@ -35,8 +35,10 @@ final class PartPayVC: ContentVC, IPartPayVC {
         var paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.12
         view.attributedText = NSMutableAttributedString(string: .PayPart.title,
-                                                        attributes: [NSAttributedString.Key.kern: -0.3,
-                                                                     NSAttributedString.Key.paragraphStyle: paragraphStyle])
+                                                        attributes: [
+                                                            NSAttributedString.Key.kern: -0.3,
+                                                            NSAttributedString.Key.paragraphStyle: paragraphStyle
+                                                        ])
         view.textColor = .textPrimory
         return view
     }()
@@ -47,8 +49,10 @@ final class PartPayVC: ContentVC, IPartPayVC {
         var paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.1
         view.attributedText = NSMutableAttributedString(string: .PayPart.subtitle,
-                                                        attributes: [NSAttributedString.Key.kern: -0.3,
-                                                                     NSAttributedString.Key.paragraphStyle: paragraphStyle])
+                                                        attributes: [
+                                                            NSAttributedString.Key.kern: -0.3,
+                                                            NSAttributedString.Key.paragraphStyle: paragraphStyle
+                                                        ])
         view.textColor = .textSecondary
         return view
     }()

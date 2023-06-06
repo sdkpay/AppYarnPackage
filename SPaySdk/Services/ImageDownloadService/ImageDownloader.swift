@@ -134,6 +134,8 @@ extension ImageDownloader: URLSessionDelegate {
     func urlSession(_ session: URLSession,
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        CertificateValidator.validate(challenge: challenge, completionHandler: completionHandler)
+        CertificateValidator.validate(defaultHandling: false,
+                                      challenge: challenge,
+                                      completionHandler: completionHandler)
     }
 }

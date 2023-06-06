@@ -110,7 +110,9 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func pay() {
         view?.userInteractionsEnabled = false
-        view?.showLoading(with: .Loading.tryToPayTitle, animate: false)
+        DispatchQueue.main.async {
+            self.view?.showLoading(with: .Loading.tryToPayTitle, animate: false)
+        }
         guard let paymentId = userService.selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId,
                                 isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
@@ -209,7 +211,7 @@ final class PaymentPresenter: PaymentPresenting {
                                buttons: [returnButton],
                                completion: {})
     }
-    
+
     private func validatePayError(_ error: PayError) {
         switch error {
         case .noInternetConnection:
@@ -244,7 +246,7 @@ final class PaymentPresenter: PaymentPresenting {
                                        type: .partPayError(fullPay: {
                     self.pay()
                 }, back: {
-                    self.view?.hideLoading(animate: false)
+                    self.view?.hideLoading(animate: true)
                 }))
             case .failure(let failure):
                 self.validatePayError(failure)

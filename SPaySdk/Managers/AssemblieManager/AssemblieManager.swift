@@ -9,6 +9,8 @@ import Foundation
 
 final class AssemblyManager {
     private var assemblies: [Assembly] = [
+        EnvironmentManagerAssembly(),
+        HostManagerAssembly(),
         FeatureToggleServiceAssembly(),
         AnalyticsServiceAssembly(),
         PersonalMetricsServiceAssembly(),

@@ -1,0 +1,190 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name SBLayout
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import Foundation
+@_exported import SBLayout
+import Swift
+import UIKit
+import _Concurrency
+import _StringProcessing
+extension UIKit.UIView {
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdge(_ edge: SBLayout.SBEdge, toSuperviewEdge superviewEdge: SBLayout.SBEdge, withInset inset: CoreFoundation.CGFloat = .zero, respectingGuide guide: SBLayout.SBSuperviewGuide = .none, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdgeToSuperview(_ edge: SBLayout.SBEdge, withInset inset: CoreFoundation.CGFloat = .zero, respectingGuide guide: SBLayout.SBSuperviewGuide = .none, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdgesToSuperview(_ edges: [SBLayout.SBEdge] = SBEdge.all, withInsets insets: UIKit.UIEdgeInsets = .zero, respectingGuide guide: SBLayout.SBSuperviewGuide = .none, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func pinEdgesToSuperview(_ edges: [SBLayout.SBEdge] = SBEdge.all, withInset inset: CoreFoundation.CGFloat, respectingGuide guide: SBLayout.SBSuperviewGuide = .none, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdgesToSuperview(ofGroup group: SBLayout.SBEdgeGroup, withInset inset: CoreFoundation.CGFloat = .zero, respectingGuide guide: SBLayout.SBSuperviewGuide = .none, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdgesToSuperview(excludingEdge excludedEdge: SBLayout.SBEdge, withInsets insets: UIKit.UIEdgeInsets = .zero, respectingGuide guide: SBLayout.SBSuperviewGuide = .none, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdgesToSuperview(excludingEdge excludedEdge: SBLayout.SBEdge, withInset inset: CoreFoundation.CGFloat, respectingGuide guide: SBLayout.SBSuperviewGuide = .none, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+}
+public enum SBAxis {
+  case horizontal
+  case vertical
+  case x
+  case y
+  public static let all: [SBLayout.SBAxis]
+  public static func == (a: SBLayout.SBAxis, b: SBLayout.SBAxis) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension UIKit.UIView {
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func centerInSuperview(_ axis: SBLayout.SBAxis, withOffset offset: CoreFoundation.CGFloat = .zero, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func centerInView(_ anotherView: UIKit.UIView, withOffset offset: SBLayout.SBOffset, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func centerInSuperview(withOffset offset: SBLayout.SBOffset, priority: UIKit.UILayoutPriority = .required) -> Self
+}
+extension UIKit.UIView {
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func centerInView(_ anotherView: UIKit.UIView, axis: SBLayout.SBAxis, withOffset offset: CoreFoundation.CGFloat = .zero, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func centerInView(_ anotherView: UIKit.UIView, withOffset offset: UIKit.UIOffset = .zero, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func centerInSuperview(axis: SBLayout.SBAxis, withOffset offset: CoreFoundation.CGFloat = .zero, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func centerInSuperview(withOffset offset: UIKit.UIOffset = .zero, priority: UIKit.UILayoutPriority = .required) -> Self
+}
+public struct SBOffset {
+  public let x: CoreFoundation.CGFloat
+  public let y: CoreFoundation.CGFloat
+  public static let zero: SBLayout.SBOffset
+  public init(x: CoreFoundation.CGFloat, y: CoreFoundation.CGFloat)
+}
+extension UIKit.UIView {
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func width(to anotherView: UIKit.UIView, withInset inset: CoreFoundation.CGFloat = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func height(to anotherView: UIKit.UIView, withInset inset: CoreFoundation.CGFloat = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func size(to anotherView: UIKit.UIView, withInsets insets: SBLayout.SBSizeInsets = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func size(to anotherView: UIKit.UIView, withInset inset: CoreFoundation.CGFloat = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func width(_ relation: UIKit.NSLayoutConstraint.Relation, to width: CoreFoundation.CGFloat, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func height(_ relation: UIKit.NSLayoutConstraint.Relation, to height: CoreFoundation.CGFloat, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func size(_ relation: UIKit.NSLayoutConstraint.Relation, to size: CoreFoundation.CGSize, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func size(_ relation: UIKit.NSLayoutConstraint.Relation, toSquareWithSide side: CoreFoundation.CGFloat, priority: UIKit.UILayoutPriority = .required) -> Self
+}
+extension UIKit.UIView {
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func width(_ width: CoreFoundation.CGFloat, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func height(_ height: CoreFoundation.CGFloat, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func size(_ size: CoreFoundation.CGSize, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func size(toSquareWithSide side: CoreFoundation.CGFloat, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+}
+extension UIKit.UIView {
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func width(match anotherView: UIKit.UIView, withInset inset: CoreFoundation.CGFloat = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func height(match anotherView: UIKit.UIView, withInset inset: CoreFoundation.CGFloat = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func size(match anotherView: UIKit.UIView, withInsets insets: SBLayout.SBSizeInsets = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func size(match anotherView: UIKit.UIView, withInset inset: CoreFoundation.CGFloat, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+}
+extension UIKit.UIView {
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touch(topTo top: UIKit.NSLayoutYAxisAnchor? = nil, leftTo left: UIKit.NSLayoutXAxisAnchor? = nil, bottomTo bottom: UIKit.NSLayoutYAxisAnchor? = nil, rightTo right: UIKit.NSLayoutXAxisAnchor? = nil, withInsets insets: UIKit.UIEdgeInsets = .zero, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdge(_ edge: SBLayout.SBEdge, toEdge pinningEdge: SBLayout.SBEdge, ofView anotherView: UIKit.UIView, withInset inset: CoreFoundation.CGFloat = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdge(_ edge: SBLayout.SBEdge, toSameEdgeOfView anotherView: UIKit.UIView, withInset inset: CoreFoundation.CGFloat = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdges(_ edges: [SBLayout.SBEdge] = SBEdge.all, toSameEdgesOfView anotherView: UIKit.UIView, withInsets insets: UIKit.UIEdgeInsets = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdges(_ edges: [SBLayout.SBEdge] = SBEdge.all, toSameEdgesOfView anotherView: UIKit.UIView, withInset inset: CoreFoundation.CGFloat, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdges(ofGroup edgeGroup: SBLayout.SBEdgeGroup, toSameEdgesOfView anotherView: UIKit.UIView, withInset inset: CoreFoundation.CGFloat, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdges(toSameEdgesOfView anotherView: UIKit.UIView, excludingEdge excludedEdge: SBLayout.SBEdge, withInsets insets: UIKit.UIEdgeInsets = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdges(toSameEdgesOfView anotherView: UIKit.UIView, excludingEdge excludedEdge: SBLayout.SBEdge, withInset inset: CoreFoundation.CGFloat, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdge(_ edge: SBLayout.SBEdge, toEdge pinningEdge: SBLayout.SBEdge, ofGuide guide: SBLayout.SBGuide, withInset inset: CoreFoundation.CGFloat = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdge(_ edge: SBLayout.SBEdge, toSameEdgeOfGuide guide: SBLayout.SBGuide, withInset inset: CoreFoundation.CGFloat = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdges(_ edges: [SBLayout.SBEdge] = SBEdge.all, toSameEdgesOfGuide guide: SBLayout.SBGuide, withInsets insets: UIKit.UIEdgeInsets = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdges(_ edges: [SBLayout.SBEdge] = SBEdge.all, toSameEdgesOfGuide guide: SBLayout.SBGuide, withInset inset: CoreFoundation.CGFloat, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdges(ofGroup edgeGroup: SBLayout.SBEdgeGroup, toSameEdgesOfGuide guide: SBLayout.SBGuide, withInset inset: CoreFoundation.CGFloat, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdges(toSameEdgesOfGuide guide: SBLayout.SBGuide, excludingEdge excludedEdge: SBLayout.SBEdge, withInsets insets: UIKit.UIEdgeInsets = .zero, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func touchEdges(toSameEdgesOfGuide guide: SBLayout.SBGuide, excludingEdge excludedEdge: SBLayout.SBEdge, withInset inset: CoreFoundation.CGFloat, usingRelation relation: UIKit.NSLayoutConstraint.Relation = .equal, priority: UIKit.UILayoutPriority = .required) -> Self
+}
+public enum SBSuperviewGuide {
+  case none
+  case layoutMargins
+  case readableContent
+  case safeAreaLayout
+  public static func == (a: SBLayout.SBSuperviewGuide, b: SBLayout.SBSuperviewGuide) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum SBEdgeGroup {
+  case horizontal
+  case vertical
+  public static func == (a: SBLayout.SBEdgeGroup, b: SBLayout.SBEdgeGroup) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension UIKit.UIView {
+  @_Concurrency.MainActor(unsafe) public func touchHorizontalEdgesToSuperview(withInset inset: CoreFoundation.CGFloat = .zero)
+  @_Concurrency.MainActor(unsafe) public func touchVerticalEdgesToSuperview(withInset inset: CoreFoundation.CGFloat = .zero)
+}
+public enum SBEdge {
+  case top
+  case bottom
+  case left
+  case right
+  public static let all: [SBLayout.SBEdge]
+  public static func == (a: SBLayout.SBEdge, b: SBLayout.SBEdge) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public typealias SBSizeInsets = UIKit.UIOffset
+public enum SBGuide {
+  case custom(UIKit.UILayoutGuide)
+  case layoutMargins(of: UIKit.UIView)
+  case readableContent(of: UIKit.UIView)
+  case safeAreaLayout(of: UIKit.UIView)
+  public var layoutGuide: UIKit.UILayoutGuide {
+    get
+  }
+}
+extension UIKit.UIView {
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) public func add(toSuperview superview: UIKit.UIView) -> Self
+}
+extension SBLayout.SBAxis : Swift.Equatable {}
+extension SBLayout.SBAxis : Swift.Hashable {}
+extension SBLayout.SBSuperviewGuide : Swift.Equatable {}
+extension SBLayout.SBSuperviewGuide : Swift.Hashable {}
+extension SBLayout.SBEdgeGroup : Swift.Equatable {}
+extension SBLayout.SBEdgeGroup : Swift.Hashable {}
+extension SBLayout.SBEdge : Swift.Equatable {}
+extension SBLayout.SBEdge : Swift.Hashable {}

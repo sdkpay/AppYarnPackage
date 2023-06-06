@@ -46,7 +46,7 @@
         self.mocksOn = mocksOn;
         self.sslOn = sslOn;
     }
-    
+
     return self;
 }
 
@@ -64,7 +64,7 @@
 
 -(void)sbButtonTapped {
     if (SPay.isReadyForSPay) {
-        
+
     }
     SPaymentTokenRequest *requestModel = [[SPaymentTokenRequest alloc] initWithRedirectUri:@"sberPayExampleapp"
                                                                         merchantLogin:@"Test shop"
@@ -74,7 +74,7 @@
                                                                           orderNumber:@""
                                                                      recurrentExipiry:@""
                                                                    recurrentFrequency:0];
-    
+
     [SPay getPaymentTokenWith:self with:requestModel completion:^(SPaymentTokenResponse * _Nonnull response) {
         if (response.error) {
             // Обработка ошибки

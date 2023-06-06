@@ -7,10 +7,16 @@
 
 import UIKit
 import SPaySdkDEBUG
+import IQKeyboardManagerSwift
 
 final class StartupService {
     func setupInitialState(with window: UIWindow) {
-        window.rootViewController = UINavigationController(rootViewController: RootVC())
+        setupKeyboard()
+        window.rootViewController = UINavigationController(rootViewController: ConfigAssembly().createModule())
         window.makeKeyAndVisible()
+    }
+    
+    private func setupKeyboard() {
+         IQKeyboardManager.shared.enable = true
     }
 }
