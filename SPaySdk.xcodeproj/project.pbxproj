@@ -1845,7 +1845,7 @@
 			path = CardsVC;
 			sourceTree = "<group>";
 		};
-		"TEMP_FFD0963F-83B6-478E-9137-962C006D1EE1" /* SBReusing */ = {
+		"TEMP_BA93679C-CC18-4790-A888-362EBDB1CCCC" /* SBReusing */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -2047,6 +2047,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		5706F64751B389D8626D1251 /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
