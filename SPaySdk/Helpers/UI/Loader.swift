@@ -52,11 +52,6 @@ struct Loader {
         }
         let subview = LoadingView(with: text)
         guard let rootView = vc.view else { return self }
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> Sandbox
         subview.translatesAutoresizingMaskIntoConstraints = false
         rootView.addSubview(subview)
         
