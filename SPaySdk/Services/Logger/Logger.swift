@@ -36,6 +36,7 @@ enum DebugLogLevel: String, CaseIterable {
     case bank = "Auth"
     case network = "Network"
     case lifeCycle = "LifeCycle"
+    case analytics = "Analytics"
     case storage = "Storage"
     case defaultLevel = "Default"
 }

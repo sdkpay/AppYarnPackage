@@ -26,12 +26,12 @@ protocol PersonalMetricsService {
 final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     private var provider: FPReportProviderProtocol?
     private(set) var ipAddress: String?
-    private var analyticsService: AnalyticsService?
+    private let analyticsService: AnalyticsService
     
-    init(analyticsService: AnalyticsService?) {
+    init(analyticsService: AnalyticsService) {
+        self.analyticsService = analyticsService
         super.init()
         config()
-        self.analyticsService = analyticsService
         SBLogger.log(.start(obj: self))
     }
     
@@ -55,8 +55,8 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
             // Проверяем значение
             if let emulator = emulator,
                let сompromised = сompromised {
-                self?.analyticsService?.sendEvent(.Emulator, with: ["\(emulator)"])
-                self?.analyticsService?.sendEvent(.Compromised, with: ["\(сompromised)"])
+                self?.analyticsService.sendEvent(.Emulator, with: "\(emulator)")
+                self?.analyticsService.sendEvent(.Compromised, with: "\(сompromised)")
                 if сompromised == 0,
                    emulator == 0 {
                     completion(true)

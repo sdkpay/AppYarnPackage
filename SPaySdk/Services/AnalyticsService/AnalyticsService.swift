@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_implementationOnly import DynatraceStatic
 
 final class AnalyticsServiceAssembly: Assembly {
     func register(in locator: LocatorService) {
@@ -76,6 +75,9 @@ enum AnalyticsValue: String {
 
 protocol AnalyticsService {
     func sendEvent(_ event: AnalyticsEvent)
+    func sendEvent(_ event: AnalyticsEvent, with strings: String...)
+    func sendEvent(_ event: AnalyticsEvent, with ints: Int...)
+    func sendEvent(_ event: AnalyticsEvent, with doubles: Double...)
     func sendEvent(_ event: AnalyticsEvent, with strings: [String])
     func sendEvent(_ event: AnalyticsEvent, with ints: [Int])
     func sendEvent(_ event: AnalyticsEvent, with doubles: [Double])
@@ -83,29 +85,39 @@ protocol AnalyticsService {
 }
 
 final class DefaultAnalyticsService: NSObject, AnalyticsService {
+    private lazy var analyticServices: [AnalyticsService] = [
+        DefaultYandexAnalyticsService(),
+        DefaultDynatraceAnalyticsService()
+    ]
+    
     func sendEvent(_ event: AnalyticsEvent) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        action?.leave()
+        analyticServices.forEach({ $0.sendEvent(event) })
+    }
+    
+    func sendEvent(_ event: AnalyticsEvent, with strings: String...) {
+        analyticServices.forEach({ $0.sendEvent(event, with: strings) })
+    }
+    
+    func sendEvent(_ event: AnalyticsEvent, with ints: Int...) {
+        analyticServices.forEach({ $0.sendEvent(event, with: ints) })
+    }
+    
+    func sendEvent(_ event: AnalyticsEvent, with doubles: Double...) {
+        analyticServices.forEach({ $0.sendEvent(event, with: doubles) })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with strings: [String]) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        strings.forEach({ action?.reportValue(withName: event.rawValue, stringValue: $0) })
-        action?.leave()
+        analyticServices.forEach({ $0.sendEvent(event, with: strings) })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with ints: [Int]) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        ints.forEach({ action?.reportValue(withName: event.rawValue, intValue: Int64($0)) })
-        action?.leave()
+        analyticServices.forEach({ $0.sendEvent(event, with: ints) })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with doubles: [Double]) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        doubles.forEach({ action?.reportValue(withName: event.rawValue, doubleValue: $0) })
-        action?.leave()
+        analyticServices.forEach({ $0.sendEvent(event, with: doubles) })
     }
-
+    
     override init() {
         super.init()
         SBLogger.log(.start(obj: self))
@@ -116,13 +128,7 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     }
     
     func config() {
-        let startupDictionary: [String: Any?] = [
-            kDTXApplicationID: ConfigGlobal.schemas?.dynatraceId,
-            kDTXBeaconURL: ConfigGlobal.schemas?.dynatraceUrl,
-            kDTXLogLevel: "OFF"
-        ]
-        Dynatrace.startup(withConfig: startupDictionary as [String: Any])
-        Dynatrace.identifyUser(Bundle.main.displayName)
+        analyticServices.forEach({ $0.config() })
         sendEvent(.SDKVersion, with: [Bundle.sdkVersion])
     }
 }

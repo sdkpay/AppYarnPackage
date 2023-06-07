@@ -47,10 +47,11 @@ targetTemplates:
       - path: ./SPaySdk
     dependencies:
       - package: Dynatrace-Static
-      - framework: ./SPaySdk/Resources/Fingerprint.xcframework
-      - framework: ./SPaySdk/Resources/BizoneCore.xcframework
+      - framework: ./SPaySdk/Resources/Frameworks/Fingerprint.xcframework
+      - framework: ./SPaySdk/Resources/Frameworks/BizoneCore.xcframework
+      - framework: ./SPaySdk/Resources/Frameworks/YandexMobileMetrica.xcframework
       - sdk: libresolv.9.tbd
-    info: 
+    info:
       path: ./SPaySdk/SupportingFiles/Info.plist
   
 targets:
