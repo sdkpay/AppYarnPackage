@@ -10,6 +10,7 @@ import Foundation
 enum StatusCode: Int {
     case unknownPayState = 423
     case errorFormat = 400
+    case errorPath = 404
     case errorSystem = 500
     case unowned
 }

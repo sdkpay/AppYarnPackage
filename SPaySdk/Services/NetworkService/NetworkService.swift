@@ -20,7 +20,8 @@ final class NetworkServiceAssembly: Assembly {
             provider = StubNetworkProvider(delayedSeconds: 2, hostManager: container.resolve())
         }
         
-        let service: NetworkService = DefaultNetworkService(provider: provider)
+        let service: NetworkService = DefaultNetworkService(provider: provider,
+                                                            analyticsService: container.resolve())
         container.register(service: service)
     }
 }
@@ -53,8 +54,10 @@ extension NetworkService {
 final class DefaultNetworkService: NetworkService, ResponseDecoder {
     
     private let provider: NetworkProvider
+    private let analyticsService: AnalyticsService
     
-    init(provider: NetworkProvider) {
+    init(provider: NetworkProvider, analyticsService: AnalyticsService) {
+        self.analyticsService = analyticsService
         self.provider = provider
     }
 
@@ -63,6 +66,11 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                  completion: @escaping (Result<Void, SDKError>) -> Void) {
         provider.request(target, retrySettings: retrySettings) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error)
+            switch result {
+            case .failure(let failure):
+                self.sendNetErrorAnalytics(target: target, error: failure)
+            default: return
+            }
             completion(result)
         }
     }
@@ -73,11 +81,26 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
         provider.request(target, retrySettings: retrySettings) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
+            switch result {
+            case .failure(let failure):
+                self.sendNetErrorAnalytics(target: target, error: failure)
+            default: return
+            }
             completion(result)
         }
     }
     
     func cancelTask() {
         provider.cancel()
+    }
+    
+    private func sendNetErrorAnalytics(target: TargetType, error: SDKError) {
+        if error.represents(.timeOut) {
+            analyticsService.sendEvent(.Error404, with: target.path)
+        } else if error.represents(.failDecode) {
+            analyticsService.sendEvent(.DecodeError, with: target.path)
+        } else if error.represents(.badResponseWithStatus(code: .errorPath)) {
+            analyticsService.sendEvent(.Error404, with: target.path)
+        }
     }
 }

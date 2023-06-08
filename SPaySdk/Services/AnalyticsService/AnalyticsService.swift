@@ -67,6 +67,12 @@ enum AnalyticsEvent: String {
     case Compromised
     ///  Проверка устройства на эмуляцию
     case Emulator
+    ///  Ошибка 404 (в эвенте передаем эндпоинт)
+    case Error404
+    ///  Ошибка валидации ответа (в эвенте передаем эндпоинт)
+    case DecodeError
+    ///  Timeout  (в эвенте передаем эндпоинт)
+    case Timeout
 }
 
 enum AnalyticsValue: String {
@@ -129,6 +135,6 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     
     func config() {
         analyticServices.forEach({ $0.config() })
-        sendEvent(.SDKVersion, with: [Bundle.sdkVersion])
+        sendEvent(.SDKVersion, with: Bundle.sdkVersion)
     }
 }
