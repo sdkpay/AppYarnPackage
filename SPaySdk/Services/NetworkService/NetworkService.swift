@@ -66,12 +66,12 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                  completion: @escaping (Result<Void, SDKError>) -> Void) {
         provider.request(target, retrySettings: retrySettings) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error)
+            completion(result)
             switch result {
             case .failure(let failure):
                 self.sendNetErrorAnalytics(target: target, error: failure)
             default: return
             }
-            completion(result)
         }
     }
     
@@ -81,12 +81,12 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
         provider.request(target, retrySettings: retrySettings) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
+            completion(result)
             switch result {
             case .failure(let failure):
                 self.sendNetErrorAnalytics(target: target, error: failure)
             default: return
             }
-            completion(result)
         }
     }
     
