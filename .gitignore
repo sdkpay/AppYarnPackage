@@ -89,6 +89,9 @@ fastlane/test_output
 iOSInjectionProject/
 *.xcodeproj
 
+## SwiftGen
+Generated/
+
 RSwift/
 *.DS_Store
 

@@ -1,0 +1,20 @@
+strings:
+  inputs:
+    - SPaySdk/Resources/Localization/ru.lproj/Localizable.strings
+  outputs:
+    - templateName: structured-swift5
+      output: Generated/Strings.swift
+      params:
+        enumName: Strings
+xcassets:
+  inputs:
+    - SPaySdk/Resources/Assets/Assets.xcassets
+  outputs:
+    - templateName: swift4
+      output: Generated/Assets.swift
+fonts:
+  inputs:
+    - SPaySdk/Resources/Fonts
+  outputs:
+    - templateName: swift4
+      output: Generated/Fonts.swift

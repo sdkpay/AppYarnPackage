@@ -45,6 +45,7 @@ targetTemplates:
           - -ObjC
     sources:
       - path: ./SPaySdk
+      - path: ./Generated
     dependencies:
       - package: Dynatrace-Static
       - framework: ./SPaySdk/Resources/Frameworks/Fingerprint.xcframework

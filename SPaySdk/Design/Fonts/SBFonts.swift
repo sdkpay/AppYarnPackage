@@ -1,5 +1,5 @@
 //
-//  Fonts.swift
+//  SBFonts.swift
 //  SPaySdk
 //
 //  Created by Alexander Ipatov on 22.11.2022.
