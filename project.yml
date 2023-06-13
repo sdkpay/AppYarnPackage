@@ -85,6 +85,10 @@ targets:
                   echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
                 fi
         basedOnDependencyAnalysis: false
+      - name: Swiftgen
+        script: |
+                swiftgen
+        basedOnDependencyAnalysis: false
     info:
       path: ./SberPayExample/SupportingFiles/Info.plist
       properties:
