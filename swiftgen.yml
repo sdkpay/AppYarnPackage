@@ -1,20 +1,24 @@
+
+input_dir: SPaySdk/Resources/
+output_dir: Generated/
+
 strings:
   inputs:
-    - SPaySdk/Resources/Localization/ru.lproj/Localizable.strings
+    - Localization/ru.lproj/Localizable.strings
   outputs:
     - templateName: structured-swift5
-      output: Generated/Strings.swift
+      output: Strings.swift
       params:
         enumName: Strings
 xcassets:
   inputs:
-    - SPaySdk/Resources/Assets/Assets.xcassets
+    - Assets/Assets.xcassets
   outputs:
     - templateName: swift4
-      output: Generated/Assets.swift
+      output: Assets.swift
 fonts:
   inputs:
-    - SPaySdk/Resources/Fonts
+    - Fonts
   outputs:
     - templateName: swift4
-      output: Generated/Fonts.swift
+      output: Fonts.swift
