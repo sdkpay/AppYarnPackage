@@ -47,8 +47,8 @@ struct Loader {
     @discardableResult
     func show(on vc: UIViewController) -> Loader {
         guard window != nil else { return self }
-        guard vc.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView == nil else {
-            return self
+        if var oldLaoding = vc.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView {
+            oldLaoding.removeFromSuperview()
         }
         let subview = LoadingView(with: text)
         guard let rootView = vc.view else { return self }

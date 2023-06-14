@@ -147,24 +147,19 @@ final class AuthPresenter: AuthPresenting {
                                            type: .defaultError(completion: { self.dismissWithError(error) }))
                 }
             } else {
-                self.openFakeScreen(target: isShowFakeScreen)
+                if isShowFakeScreen {
+                    self.router.presentFakeScreen {
+                        self.loadPaymentData()
+                    }
+                } else {
+                    self.loadPaymentData()
+                }
             }
-        }
-    }
-    
-    private func openFakeScreen(target: Bool) {
-        if target {
-            router.presentFakeScreen {
-                self.analytics.sendEvent(.BankAppAuthSuccess)
-                self.loadPaymentData()
-            }
-        } else {
-            self.analytics.sendEvent(.BankAppAuthSuccess)
-            self.loadPaymentData()
         }
     }
     
     private func loadPaymentData() {
+        analytics.sendEvent(.BankAppAuthSuccess)
         view?.showLoading(with: .Loading.getData, animate: false)
         contentLoadManager.load { [weak self] error in
             if let error = error {
@@ -178,8 +173,8 @@ final class AuthPresenter: AuthPresenting {
                 }
             } else {
                 DispatchQueue.main.async { [weak self] in
-                    self?.view?.showViews(false)
-                    self?.router.presentPayment()
+                    // self?.view?.showViews(false)
+                   // self?.router.presentPayment()
                 }
             }
         }
