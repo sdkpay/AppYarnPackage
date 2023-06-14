@@ -68,15 +68,15 @@ final class PartPayPresenter: PartPayPresenting {
     }
 
     private func configCheckView() {
-        let text = NSAttributedString(markedText: partPayService.bnplplan?.offerText ?? "",
-                                      attrebutes: [.foregroundColor: UIColor.main])
-        view?.configCheckView(text: text,
+        view?.configCheckView(text: partPayService.bnplplan?.offerText ?? "",
                               checkSelected: partPayService.bnplplanSelected,
                               checkTapped: { [weak self] value in
             self?.checkTapped(value)
         },
-                              textTapped: { [weak self] in
-            self?.agreementViewTapped()
+                              textTapped: { [weak self] link in
+            DispatchQueue.main.async {
+                self?.agreementTextTapped(link: link)
+            }
         })
     }
 
@@ -84,9 +84,9 @@ final class PartPayPresenter: PartPayPresenting {
         view?.setButtonEnabled(value: value)
     }
     
-    private func agreementViewTapped() {
-        router.presentWebView(with: partPayService.bnplplan?.offerUrl ?? "",
-                              title: .PayPart.agreement )
+    private func agreementTextTapped(link: String) {
+        router.presentWebView(with: link,
+                              title: .PayPart.agreement)
     }
     
     func acceptButtonTapped() {

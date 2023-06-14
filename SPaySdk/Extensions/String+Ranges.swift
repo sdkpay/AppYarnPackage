@@ -22,3 +22,13 @@ extension String {
         return ranges.map { NSRange($0, in: self) }
     }
 }
+
+extension String {
+    func slices(from: String, to: String) -> [String] {
+        components(separatedBy: from).dropFirst().compactMap { sub in
+            (sub.range(of: to)?.lowerBound).flatMap { endRange in
+                String(sub[sub.startIndex ..< endRange])
+            }
+        }
+    }
+}

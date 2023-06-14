@@ -36,6 +36,17 @@ extension NSAttributedString {
         str.addAttributes(attrebutes, range: range)
         self.init(attributedString: str)
     }
+    
+    convenience init(text: String,
+                     dedicatedParts: [String],
+                     attrebutes: [NSAttributedString.Key: Any]) {
+        let str = NSMutableAttributedString(string: text)
+        for part in dedicatedParts {
+            let range = (text as NSString).range(of: part)
+            str.addAttributes(attrebutes, range: range)
+        }
+        self.init(attributedString: str)
+    }
 }
 
 extension String {

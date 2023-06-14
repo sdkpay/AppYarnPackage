@@ -1,6 +1,6 @@
 {
-  "offerUrl": "⁣https://platichastyami.ru/dogovor_oferty_sberpay_chastyam",
-  "offerText": "Я соглашаюсь с <условиями документов> по операции. Договор заключается с ООО «ЦНФС».",
+  "offerUrl": "⁣",
+  "offerText": "Я соглашаюсь с <url=https://platichastyami.ru/dogovor_oferty>условиями договора</url> и <url=https://platichastyami.ru/soglashenie_ob_ispolzovanii_pep>соглашения</url>. Договор заключается с ООО «ЦНФС»",
   "isBnplEnabled": true,
   "buttonBnpl": {
     "activeButtonLogo": "part_active",

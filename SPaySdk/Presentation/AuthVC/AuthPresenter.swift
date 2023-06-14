@@ -173,8 +173,7 @@ final class AuthPresenter: AuthPresenting {
                 }
             } else {
                 DispatchQueue.main.async { [weak self] in
-                    // self?.view?.showViews(false)
-                   // self?.router.presentPayment()
+                    self?.router.presentPayment()
                 }
             }
         }

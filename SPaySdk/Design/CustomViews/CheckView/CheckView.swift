@@ -28,8 +28,8 @@ final class CheckView: UIView {
         }
     }
 
-    private lazy var titleLabel: UILabel = {
-        let view = UILabel()
+    private lazy var titleLabel: LinkLabel = {
+        let view = LinkLabel()
         view.font = .medium3
         view.numberOfLines = 0
         view.textColor = .textSecondary
@@ -49,13 +49,9 @@ final class CheckView: UIView {
     
     private var checkTapped: BoolAction?
     
-    private var textTapped: Action?
-    
     init() {
         super.init(frame: .zero)
         setupUI()
-        let tapGr = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        addGestureRecognizer(tapGr)
     }
     
     required init?(coder: NSCoder) {
@@ -65,30 +61,16 @@ final class CheckView: UIView {
     func config(with text: String? = nil,
                 checkSelected: Bool,
                 checkTapped: @escaping BoolAction,
-                textTapped: Action? = nil) {
+                textTapped: StringAction? = nil) {
         self.checkSelected = checkSelected
         self.checkTapped = checkTapped
-        self.textTapped = textTapped
-        titleLabel.text = text
+        self.titleLabel.linkTapped = textTapped
+        if let text = text {
+            titleLabel.setLinkText(string: text, with: [.foregroundColor: UIColor.main])
+        }
         setupUI()
     }
-    
-    func config(with attributedText: NSAttributedString? = nil,
-                checkSelected: Bool,
-                checkTapped: @escaping BoolAction,
-                textTapped: Action? = nil) {
-        self.checkSelected = checkSelected
-        self.checkTapped = checkTapped
-        self.textTapped = textTapped
-        titleLabel.attributedText = attributedText
-        setupUI()
-    }
-    
-    @objc
-    private func tapped() {
-        textTapped?()
-    }
-    
+
     private func setupUI() {
         setupForBase()
 
