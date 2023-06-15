@@ -9,33 +9,33 @@ import UIKit
 
 extension UIImage {
     enum Common {
-        static let logoClear = UIImage("Logo_clear")
-        static let logoMain = UIImage("Logo_main")
-        static let loader = UIImage("Loader")
-        static let failure = UIImage("Failure")
-        static let success = UIImage("Success")
-        static let checkSelected = UIImage("Check_selected")
-        static let checkDeselected = UIImage("Check_deselected")
-        static let stick = UIImage("Stick")
-        static let warning = UIImage("Warning")
-        static let warningAlert = UIImage("Warning_alert")
-        static let waiting = UIImage("Waiting")
-        static let checkAgreementSelected = UIImage("Check_agreement_selected")
-        static let checkAgreement = UIImage("Check_agreement")
+        static let logoClear = Asset.logoClear.image
+        static let logoMain = Asset.logoMain.image
+        static let loader = Asset.loader.image
+        static let failure = Asset.failure.image
+        static let success = Asset.success.image
+        static let checkSelected = Asset.checkSelected.image
+        static let checkDeselected = Asset.checkDeselected.image
+        static let stick = Asset.stick.image
+        static let warning = Asset.warning.image
+        static let warningAlert = Asset.warningAlert.image
+        static let waiting = Asset.waiting.image
+        static let checkAgreementSelected = Asset.checkAgreementSelected.image
+        static let checkAgreement = Asset.checkAgreement
     }
     enum Payment {
-        static let arrow = UIImage("Arrow")
-        static let cart = UIImage("Cart")
+        static let arrow = Asset.arrow.image
+        static let cart = Asset.cart.image
     }
     enum UserIcon {
-        static let neutral = UIImage("Neutral")
-        static let male = UIImage("Male")
-        static let female = UIImage("Female")
+        static let neutral = Asset.neutral.image
+        static let male = Asset.male.image
+        static let female = Asset.female.image
     }
     enum Cards {
-        static let stockCard = UIImage("StockCard")
+        static let stockCard = Asset.stockCard.image
     }
     enum WebView {
-        static let share = UIImage("Share")
+        static let share = Asset.share.image
     }
 }
