@@ -8,13 +8,13 @@
 import UIKit
 
 extension UIFont {
-    static let header = UIFont(name: "SB Sans Text Semibold", size: 32) ?? defaultFount(with: 32)
-    static let header2 = UIFont(name: "SB Sans Text Semibold", size: 20) ?? defaultFount(with: 20)
-    static let subheadline = UIFont(name: "SB Sans Text Semibold", size: 16) ?? defaultFount(with: 16)
-    static let bodi1 = UIFont(name: "SBSansText-Regular", size: 16) ?? defaultFount(with: 16)
-    static let bodi2 = UIFont(name: "SBSansText-Regular", size: 13) ?? defaultFount(with: 13)
-    static let bodi3 = UIFont(name: "SBSansText-Regular", size: 15) ?? defaultFount(with: 15)
-    static let medium1 = UIFont(name: "SBSansText-Medium", size: 15) ?? defaultFount(with: 15)
-    static let medium2 = UIFont(name: "SBSansText-Medium", size: 13) ?? defaultFount(with: 15)
-    static let medium3 = UIFont(name: "SBSansText-Medium", size: 12) ?? defaultFount(with: 15)
+    static let header = FontFamily.SBSansText.semibold.font(size: 32)
+    static let header2 = FontFamily.SBSansText.semibold.font(size: 20)
+    static let subheadline = FontFamily.SBSansText.semibold.font(size: 16)
+    static let bodi1 = FontFamily.SBSansText.regular.font(size: 16)
+    static let bodi2 = FontFamily.SBSansText.regular.font(size: 13)
+    static let bodi3 = FontFamily.SBSansText.regular.font(size: 15)
+    static let medium1 = FontFamily.SBSansText.medium.font(size: 15)
+    static let medium2 = FontFamily.SBSansText.medium.font(size: 13)
+    static let medium3 = FontFamily.SBSansText.medium.font(size: 12)
 }
