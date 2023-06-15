@@ -10,97 +10,97 @@ import Foundation
 extension String {
     enum Common {
         /// Оплатить
-        static let payTitle = String(stringLiteral: "pay.title")
+        static let payTitle = Strings.Pay.title
         /// Оплатить полностью
-        static let payFull = String(stringLiteral: "pay.full.title")
+        static let payFull = Strings.Pay.Full.title
         /// Отменить
-        static let cancelTitle = String(stringLiteral: "cancel.title")
+        static let cancelTitle = Strings.Cancel.title
         /// Понятно
-        static let okTitle = String(stringLiteral: "ok.title")
+        static let okTitle = Strings.Ok.title
         /// К способам оплаты
-        static let returnTitle = String(stringLiteral: "return.title")
+        static let returnTitle = Strings.Return.title
         /// Попробовать ещё раз
-        static let tryTitle = String(stringLiteral: "try.title")
+        static let tryTitle = Strings.Try.title
         /// Вернуться
-        static let backTitle = String(stringLiteral: "back.title")
+        static let backTitle = Strings.Back.title
         /// %@ из  %@
         static func fromTitle(args: CVarArg...) -> String {
-            String(stringLiteral: "from.title", args: args)
+            Strings.From.title(args)
         }
     }
     
     enum Payment {
         /// Нет карт для оплаты
-        static let noCardsTitle = String(stringLiteral: "payment.noCards.title")
+        static let noCardsTitle = Strings.Payment.NoCards.title
         /// Выберите другой способ
-        static let noCardsSubtitle = String(stringLiteral: "payment.noCards.subtitle")
+        static let noCardsSubtitle = Strings.Payment.NoCards.subtitle
     }
 
     enum Cards {
         /// Выберите карту для оплаты
-        static let cardsTitle = String(stringLiteral: "cards.title")
+        static let cardsTitle = Strings.Cards.title
     }
     
     enum PayPart {
         /// Плати частями
-        static let title = String(stringLiteral: "part.pay.title")
+        static let title = Strings.Part.Pay.title
         /// 4 платежа раз в 2 недели
-        static let subtitle = String(stringLiteral: "part.pay.subtitle")
+        static let subtitle = Strings.Part.Pay.subtitle
         /// Подтвердить
-        static let accept = String(stringLiteral: "accept.title")
+        static let accept =  Strings.Accept.title
         /// Оплатить полностью
-        static let cancel = String(stringLiteral: "part.pay.cancel.title")
+        static let cancel = Strings.Part.Pay.Cancel.title
         /// Итого
-        static let final = String(stringLiteral: "part.pay.final")
+        static let final = Strings.Part.Pay.final
         /// Условия договора
-        static let agreement = String(stringLiteral: "agreement.title")
+        static let agreement = Strings.Agreement.title
     }
 
     enum Error {
         /// Системная или внутренняя ошибка.
-        static let errorSystem = String(stringLiteral: "error.system")
+        static let errorSystem = Strings.Error.system
         /// Некорректный формат запроса/ответа.
-        static let errorFormat = String(stringLiteral: "error.format")
+        static let errorFormat = Strings.Error.format
         /// Клиент закрыл SDK.
-        static let errorClose = String(stringLiteral: "error.close")
+        static let errorClose = Strings.Error.close
         /// Истек таймаут ожидания ответа с сервера.
-        static let errorTimeout = String(stringLiteral: "error.timeout")
+        static let errorTimeout = Strings.Error.timeout
     }
     
     enum Loading {
         ///  Проводим оплату...
-        static let tryToPayTitle = String(stringLiteral: "try.to.pay.title")
+        static let tryToPayTitle = Strings.Try.To.Pay.title
         /// Переходим в %@ для авторизации
         static func toBankTitle(args: CVarArg...) -> String {
-            String(stringLiteral: "to.bank.title", args: args)
+            Strings.To.Bank.title(args)
         }
         ///  Подгружаем ваши данные
-        static let getData = String(stringLiteral: "get.data.title")
+        static let getData = Strings.Get.Data.title
     }
     
     enum Alert {
         /// Не получилось оплатить.\nПожалуйста, выберите другой способ
-        static let alertErrorMainTitle = String(stringLiteral: "alert.error.main.title")
+        static let alertErrorMainTitle = Strings.Alert.Error.Main.title
         /// Успешно оплатили
-        static let alertPaySuccessTitle = String(stringLiteral: "alert.pay.success.title")
+        static let alertPaySuccessTitle = Strings.Alert.Pay.Success.title
         /// Нет подходящих карт. Вернитесь к заказу\nи выберите другой способ оплаты.
-        static let alertPayNoCardsTitle = String(stringLiteral: "alert.pay.no.cards.title")
+        static let alertPayNoCardsTitle = Strings.Alert.Pay.No.Cards.title
         /// Нет интернета. Проверьте подключение и попробуйте ещё раз.
-        static let alertPayNoInternetTitle = String(stringLiteral: "alert.pay.no.internet.title")
+        static let alertPayNoInternetTitle = Strings.Alert.Pay.No.Internet.title
         /// Обрабатываем оплату. Следите за статусом в Истории приложения @
         static func waiting(args: CVarArg...) -> String {
-            String(stringLiteral: "alert.pay.no.waiting.title", args: args)
+            Strings.Alert.Pay.No.Waiting.title(args)
         }
         /// Сервис оплаты частями недоступен. Оплатите заказ полностью или выберите другой способ оплаты.
-        static let alertPartPayError = String(stringLiteral: "alert.pay.error.title")
+        static let alertPartPayError = Strings.Alert.Pay.Error.title
     }
     
     enum MerchantAlert {
-        static let alertApiKey = String(stringLiteral: "merchant.alert.apikey")
-        static let alertVersion = String(stringLiteral: "merchant.alert.version")
+        static let alertApiKey = Strings.Merchant.Alert.apikey
+        static let alertVersion = Strings.Merchant.Alert.version
     }
     
     enum Fake {
-        static let fakeTitle = String(stringLiteral: "fake.title")
+        static let fakeTitle = Strings.Fake.title
     }
 }

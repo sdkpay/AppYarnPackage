@@ -24,7 +24,7 @@ public final class SBPButton: UIView {
     
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.text = String(stringLiteral: .Common.payTitle)
+        view.text = String(stringLiteral: Strings.Pay.title)
         view.font = .subheadline
         view.textColor = .backgroundPrimary
         return view
