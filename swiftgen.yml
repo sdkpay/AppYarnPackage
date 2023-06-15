@@ -16,12 +16,6 @@ xcassets:
   outputs:
     - templateName: swift4
       output: Assets.swift
-colors:
-  inputs:
-    - Assets/Colors.xcassets
-  outputs:
-    - templateName: swift4
-    output: Colors.swift
 fonts:
   inputs:
     - Fonts
