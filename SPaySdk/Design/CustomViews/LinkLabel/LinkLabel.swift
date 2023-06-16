@@ -63,7 +63,6 @@ final class LinkLabel: UILabel {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let url = url(at: touches) {
-            print(url)
             linkTapped?(url)
         } else {
             super.touchesEnded(touches, with: event)

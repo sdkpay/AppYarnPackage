@@ -80,12 +80,17 @@ final class DefaultPartPayService: PartPayService {
     func getBnplPlan(completion: @escaping (SDKError?) -> Void) {
         guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId,
+              let authCode = authManager.authCode,
+              let state = authManager.state,
               let merchantLogin = authInfo.merchantLogin,
               let orderId = authInfo.orderId
         else { return completion(nil) }
         network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
                                                merchantLogin: merchantLogin,
-                                               orderId: orderId),
+                                               orderId: orderId,
+                                               redirectUri: authInfo.redirectUri,
+                                               authCode: authCode,
+                                               state: state),
                         to: BnplModel.self) { [weak self] result in
             switch result {
             case .success(let bnplplan):
