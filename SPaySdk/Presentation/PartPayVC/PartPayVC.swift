@@ -34,7 +34,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
         view.font = .header2
         var paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.12
-        view.attributedText = NSMutableAttributedString(string: .PayPart.title,
+        view.attributedText = NSMutableAttributedString(string: Strings.Part.Pay.title,
                                                         attributes: [
                                                             NSAttributedString.Key.kern: -0.3,
                                                             NSAttributedString.Key.paragraphStyle: paragraphStyle
@@ -48,7 +48,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
         view.font = .medium2
         var paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.1
-        view.attributedText = NSMutableAttributedString(string: .PayPart.subtitle,
+        view.attributedText = NSMutableAttributedString(string: Strings.Part.Pay.subtitle,
                                                         attributes: [
                                                             NSAttributedString.Key.kern: -0.3,
                                                             NSAttributedString.Key.paragraphStyle: paragraphStyle
@@ -59,7 +59,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     private lazy var acceptButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
-        view.setTitle(String(stringLiteral: .PayPart.accept), for: .normal)
+        view.setTitle(String(stringLiteral: Strings.Accept.title), for: .normal)
         view.addAction { [weak self] in
             self?.presenter.acceptButtonTapped()
         }
@@ -68,7 +68,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     private lazy var cancelButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .info)
-        view.setTitle(String(stringLiteral: .PayPart.cancel), for: .normal)
+        view.setTitle(String(stringLiteral: Strings.Part.Pay.Cancel.title), for: .normal)
         view.addAction { [weak self] in
             self?.presenter.backButtonTapped()
         }
@@ -84,7 +84,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
         let view = UILabel()
         view.font = .bodi1
         view.textColor = .textPrimory
-        view.text = .PayPart.final
+        view.text = Strings.Part.Pay.final
         return view
     }()
     

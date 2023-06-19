@@ -111,7 +111,7 @@ final class PaymentPresenter: PaymentPresenting {
     private func pay() {
         view?.userInteractionsEnabled = false
         DispatchQueue.main.async {
-            self.view?.showLoading(with: .Loading.tryToPayTitle, animate: false)
+            self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
         }
         guard let paymentId = userService.selectedCard?.paymentId else { return }
         paymentService.tryToPay(paymentId: paymentId,
@@ -198,7 +198,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func configWithNoCards() {
-        let returnButton = AlertButtonModel(title: .Common.returnTitle,
+        let returnButton = AlertButtonModel(title: Strings.Return.title,
                                             type: .full) {
             self.view?.dismiss(animated: true,
                                completion: {
@@ -206,7 +206,7 @@ final class PaymentPresenter: PaymentPresenting {
             })
         }
         alertService.showAlert(on: self.view,
-                               with: .Alert.alertPayNoCardsTitle,
+                               with: Strings.Alert.Pay.No.Cards.title,
                                state: .failure,
                                buttons: [returnButton],
                                completion: {})
@@ -255,7 +255,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func configForWaiting() {
-        let okButton = AlertButtonModel(title: .Common.okTitle,
+        let okButton = AlertButtonModel(title: Strings.Ok.title,
                                         type: .full) {
             self.view?.dismiss(animated: true,
                                completion: { [weak self] in
@@ -263,7 +263,7 @@ final class PaymentPresenter: PaymentPresenting {
             })
         }
         alertService.showAlert(on: view,
-                               with: .Alert.waiting(args: bankManager.selectedBank?.name ?? ""),
+                               with: Strings.Alert.Pay.No.Waiting.title(bankManager.selectedBank?.name ?? ""),
                                state: .waiting,
                                buttons: [okButton],
                                completion: {})

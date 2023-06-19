@@ -21,7 +21,7 @@ extension UIImage {
         static let warningAlert = Asset.warningAlert.image
         static let waiting = Asset.waiting.image
         static let checkAgreementSelected = Asset.checkAgreementSelected.image
-        static let checkAgreement = Asset.checkAgreement
+        static let checkAgreement = Asset.checkAgreement.image
     }
     enum Payment {
         static let arrow = Asset.arrow.image

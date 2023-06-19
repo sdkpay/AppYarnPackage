@@ -100,7 +100,7 @@ final class DefaultSBPayService: SBPayService {
                          with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
         SBLogger.logRequestPaymentToken(with: request)
-        guard let apiKey = apiKey else { return assertionFailure(.MerchantAlert.alertApiKey) }
+        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         locator
             .resolve(SDKManager.self)
             .config(apiKey: apiKey,
@@ -129,7 +129,7 @@ final class DefaultSBPayService: SBPayService {
                         completion: @escaping PaymentCompletion) {
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
-        guard let apiKey = apiKey else { return assertionFailure(.MerchantAlert.alertVersion) }
+        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.version) }
         locator
             .resolve(SDKManager.self)
             .configWithOrderId(apiKey: apiKey,

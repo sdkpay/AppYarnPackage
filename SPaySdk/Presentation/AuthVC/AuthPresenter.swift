@@ -123,7 +123,7 @@ final class AuthPresenter: AuthPresenting {
     private func getAccessSPay() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let title: String = .Loading.toBankTitle(args: self.bankManager.selectedBank?.name ?? "Банк")
+            let title: String = Strings.To.Bank.title(self.bankManager.selectedBank?.name ?? "Банк")
             self.view?.showLoading(with: title)
             self.openSId()
         }
@@ -160,7 +160,7 @@ final class AuthPresenter: AuthPresenting {
     
     private func loadPaymentData() {
         analytics.sendEvent(.BankAppAuthSuccess)
-        view?.showLoading(with: .Loading.getData, animate: false)
+        view?.showLoading(with: Strings.Get.Data.title, animate: false)
         contentLoadManager.load { [weak self] error in
             if let error = error {
                 if error.represents(.noInternetConnection) {
