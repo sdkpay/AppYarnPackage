@@ -26,7 +26,7 @@ protocol IPaymentVC {
 final class PaymentVC: ContentVC, IPaymentVC {
     private lazy var payButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
-        view.setTitle(String(stringLiteral: .Common.payTitle), for: .normal)
+        view.setTitle(String(stringLiteral: Strings.Pay.title), for: .normal)
         view.addAction { [weak self] in
             self?.presenter.payButtonTapped()
         }
@@ -35,7 +35,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
     
     private lazy var cancelButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .cancel)
-        view.setTitle(String(stringLiteral: .Common.cancelTitle), for: .normal)
+        view.setTitle(String(stringLiteral: Strings.Cancel.title), for: .normal)
         view.addAction { [weak self] in
             self?.presenter.cancelTapped()
         }
@@ -118,9 +118,9 @@ final class PaymentVC: ContentVC, IPaymentVC {
         shopLabel.text = shop
         logoImageView.downloadImage(from: iconURL, placeholder: .Payment.cart)
         if let fullPrice {
-            let price: String = cost + .Common.fromTitle(args: fullPrice)
+            let price: String = cost + Strings.From.title(fullPrice)
             let attributedPrice = NSAttributedString(text: price,
-                                                     dedicatedPart: .Common.fromTitle(args: fullPrice),
+                                                     dedicatedPart: Strings.From.title(fullPrice),
                                                      attrebutes: [
                                                         .font: UIFont.bodi3,
                                                         .foregroundColor: UIColor.textSecondary

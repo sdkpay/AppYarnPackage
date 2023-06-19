@@ -73,7 +73,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private func checkVersion(version: String) {
         let currentVesion = Bundle.sdkVersion
         if version != currentVesion {
-            SBLogger.log(level: .merchant, .MerchantAlert.alertVersion)
+            SBLogger.log(level: .merchant, Strings.Merchant.Alert.version)
         }
     }
 }

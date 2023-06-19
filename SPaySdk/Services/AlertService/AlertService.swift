@@ -159,25 +159,25 @@ final class DefaultAlertService: AlertService {
         switch type {
         case .paySuccess(let completion):
             showAlert(on: view,
-                      with: .Alert.alertPaySuccessTitle,
+                      with: Strings.Alert.Pay.Success.title,
                       state: .success,
                       buttons: [],
                       completion: completion)
         case .defaultError(let completion):
             showAlert(on: view,
-                      with: .Alert.alertErrorMainTitle,
+                      with: Strings.Alert.Error.Main.title,
                       state: .failure,
                       buttons: [],
                       completion: completion)
         case let .noInternet(retry, completion):
-            let tryButton = AlertButtonModel(title: .Common.tryTitle,
+            let tryButton = AlertButtonModel(title: Strings.Try.title,
                                              type: .full,
                                              action: retry)
-            let cancelButton = AlertButtonModel(title: .Common.cancelTitle,
+            let cancelButton = AlertButtonModel(title: Strings.Cancel.title,
                                                 type: .cancel,
                                                 action: completion)
             showAlert(on: view,
-                      with: .Alert.alertPayNoInternetTitle,
+                      with: Strings.Alert.Pay.No.Internet.title,
                       state: .warning,
                       buttons:
                         [
@@ -186,14 +186,14 @@ final class DefaultAlertService: AlertService {
                         ],
                       completion: completion)
         case let .partPayError(fullPay: fullPay, back: back):
-            let fullPayButton = AlertButtonModel(title: .Common.payFull,
+            let fullPayButton = AlertButtonModel(title: Strings.Pay.Full.title,
                                                  type: .full,
                                                  action: fullPay)
-            let returnButton = AlertButtonModel(title: .Common.returnTitle,
+            let returnButton = AlertButtonModel(title: Strings.Return.title,
                                                 type: .clear,
                                                 action: back)
             showAlert(on: view,
-                      with: .Alert.alertPartPayError,
+                      with: Strings.Alert.Pay.Error.title,
                       state: .failure,
                       buttons: [
                         fullPayButton,

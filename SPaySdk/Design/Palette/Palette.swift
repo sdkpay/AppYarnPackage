@@ -8,12 +8,12 @@
 import UIKit
 
 extension UIColor {
-    static let main = UIColor(named: "Green_primary", in: Bundle(for: SPay.self), compatibleWith: nil)!
-    static let mainSecondary = UIColor(named: "Green_secondary", in: Bundle(for: SPay.self), compatibleWith: nil)!
-    static let backgroundPrimary = UIColor(named: "White", in: Bundle(for: SPay.self), compatibleWith: nil)!
-    static let backgroundSecondary = UIColor(named: "Gray_disabled", in: Bundle(for: SPay.self), compatibleWith: nil)!
-    static let textPrimory = UIColor(named: "Black_primory", in: Bundle(for: SPay.self), compatibleWith: nil)!
-    static let textSecondary = UIColor(named: "Gray_primary", in: Bundle(for: SPay.self), compatibleWith: nil)!
-    static let notification = UIColor(named: "Orange", in: Bundle(for: SPay.self), compatibleWith: nil)!
-    static let inactive = UIColor(named: "Gray_inactive", in: Bundle(for: SPay.self), compatibleWith: nil)!
+    static let main = Asset.greenPrimary.color
+    static let mainSecondary = Asset.greenSecondary.color
+    static let backgroundPrimary = Asset.white.color
+    static let backgroundSecondary = Asset.grayDisabled.color
+    static let textPrimory = Asset.blackPrimory.color
+    static let textSecondary = Asset.greenPrimary.color
+    static let notification = Asset.orange.color
+    static let inactive = Asset.grayInactive
 }

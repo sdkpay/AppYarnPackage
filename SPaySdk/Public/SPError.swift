@@ -14,22 +14,22 @@ public class SPError: NSObject {
     @objc public var errorDescription: String
 
     init(errorState: SDKError) {
-        errorDescription = .Error.errorSystem
+        errorDescription = Strings.Error.system
         switch errorState {
         case .noInternetConnection, .badDataFromSBOL, .unauthorizedClient, .personalInfo, .noCards:
-            errorDescription = .Error.errorSystem
+            errorDescription = Strings.Error.system
         case .noData, .failDecode, .errorFromServer:
-            errorDescription = .Error.errorFormat
+            errorDescription = Strings.Error.format
         case .badResponseWithStatus(let code):
             if code == .errorFormat {
-                errorDescription = .Error.errorFormat
+                errorDescription = Strings.Error.format
             } else if code == .errorSystem {
-                errorDescription = .Error.errorSystem
+                errorDescription = Strings.Error.system
             }
         case .cancelled:
-            errorDescription = .Error.errorClose
+            errorDescription = Strings.Error.close
         case .timeOut:
-            errorDescription = .Error.errorTimeout
+            errorDescription = Strings.Error.timeout
         }
     }
 }

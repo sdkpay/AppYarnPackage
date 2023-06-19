@@ -138,11 +138,11 @@ final class DefaultSDKManager: SDKManager {
     func completionPay(with state: SPayState) {
         switch state {
         case .success:
-            paymentCompletion?(.success, .Alert.alertPaySuccessTitle)
+            paymentCompletion?(.success, Strings.Alert.Pay.Success.title)
         case .waiting:
-            paymentCompletion?(.waiting, .Alert.waiting(args: "банка"))
+            paymentCompletion?(.waiting, Strings.Alert.Pay.No.Waiting.title("банка"))
         case .error:
-            paymentCompletion?(.error, .Alert.alertErrorMainTitle)
+            paymentCompletion?(.error, Strings.Alert.Error.Main.title)
         }
         paymentCompletion = nil
     }

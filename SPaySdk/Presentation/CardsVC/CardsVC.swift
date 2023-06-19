@@ -21,7 +21,7 @@ final class CardsVC: ContentVC, ICardsVC {
         let view = UILabel()
         view.font = .bodi2
         view.textColor = .textSecondary
-        view.text = String(stringLiteral: .Cards.cardsTitle)
+        view.text = String(stringLiteral: Strings.Cards.title)
         return view
     }()
     

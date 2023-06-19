@@ -93,22 +93,22 @@ final class DefaultStartupService: StartupService {
         switch paymentSuccess {
         case .success:
             service.showAlert(on: sdkWindow?.topVC as? ContentVC,
-                              with: .Alert.alertPaySuccessTitle,
+                              with: Strings.Alert.Pay.Success.title,
                               state: .success,
                               buttons: [],
                               completion: completion)
         case .waiting:
-            let button = AlertButtonModel(title: .Common.okTitle,
+            let button = AlertButtonModel(title: Strings.Ok.title,
                                           type: .full,
                                           action: completion)
             service.showAlert(on: sdkWindow?.topVC as? ContentVC,
-                              with: .Alert.waiting(args: "банка"),
+                              with: Strings.Alert.Pay.No.Waiting.title("банка"),
                               state: .waiting,
                               buttons: [button],
                               completion: {})
         case .error:
             service.showAlert(on: sdkWindow?.topVC as? ContentVC,
-                              with: .Alert.alertErrorMainTitle,
+                              with: Strings.Alert.Error.Main.title,
                               state: .failure,
                               buttons: [],
                               completion: completion)

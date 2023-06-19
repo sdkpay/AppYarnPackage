@@ -11,7 +11,7 @@ final class FakeViewController: UIViewController {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.text = .Fake.fakeTitle
+        label.text = Strings.Fake.title
         label.font = .bodi3
         label.textColor = .black
         label.numberOfLines = 3
