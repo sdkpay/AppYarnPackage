@@ -55,7 +55,6 @@ final class PartCell: UITableViewCell {
     
     func config(with model: PartCellModel) {
         titleLabel.text = model.title
-        costLabel.text = model.cost
         lineView.isHidden = model.hideLine
         titleLabel.font = model.isSelected ? .medium1 : .medium2
         titleLabel.textColor = model.isSelected ? .textPrimory : .textSecondary
@@ -66,7 +65,7 @@ final class PartCell: UITableViewCell {
         costLabel.textAlignment = .right
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.06
-        costLabel.attributedText = NSMutableAttributedString(string: "Спишем сегодня",
+        costLabel.attributedText = NSMutableAttributedString(string: model.cost,
                                                              attributes: [
                                                                 NSAttributedString.Key.kern: -0.34,
                                                                 NSAttributedString.Key.paragraphStyle: paragraphStyle
@@ -105,8 +104,7 @@ final class PartCell: UITableViewCell {
         costLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             costLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            costLabel.centerYAnchor.constraint(equalTo: pointView.centerYAnchor),
-            costLabel.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor)
+            costLabel.centerYAnchor.constraint(equalTo: pointView.centerYAnchor)
         ])
         
         contentView.addSubview(lineView)

@@ -13,7 +13,7 @@ extension UIColor {
     static let backgroundPrimary = Asset.white.color
     static let backgroundSecondary = Asset.grayDisabled.color
     static let textPrimory = Asset.blackPrimory.color
-    static let textSecondary = Asset.greenPrimary.color
+    static let textSecondary = Asset.grayPrimary.color
     static let notification = Asset.orange.color
     static let inactive = Asset.grayInactive
 }
