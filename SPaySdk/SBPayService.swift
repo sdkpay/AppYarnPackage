@@ -52,7 +52,7 @@ final class DefaultSBPayService: SBPayService {
                environment: SEnvironment,
                completion: Action? = nil) {
         self.apiKey = apiKey
-        UIFont.registerFontsIfNeeded()
+        FontFamily.registerAllCustomFonts()
         locator.register(service: buildSettings)
         assemblyManager.registerServices(to: locator)
         locator
