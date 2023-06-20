@@ -46,13 +46,6 @@ final class PartPayVC: ContentVC, IPartPayVC {
     private lazy var subTitleLabel: UILabel = {
        let view = UILabel()
         view.font = .medium2
-        var paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.1
-        view.attributedText = NSMutableAttributedString(string: Strings.Part.Pay.subtitle,
-                                                        attributes: [
-                                                            NSAttributedString.Key.kern: -0.3,
-                                                            NSAttributedString.Key.paragraphStyle: paragraphStyle
-                                                        ])
         view.textColor = .textSecondary
         return view
     }()
@@ -160,7 +153,13 @@ final class PartPayVC: ContentVC, IPartPayVC {
     }
     
     func setSubtitle(_ value: String) {
-        subTitleLabel.text = value
+        var paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.1
+        subTitleLabel.attributedText = NSMutableAttributedString(string: value,
+                                                                 attributes: [
+                                                                    NSAttributedString.Key.kern: -0.3,
+                                                                    NSAttributedString.Key.paragraphStyle: paragraphStyle
+                                                                 ])
     }
     
     func setButtonEnabled(value: Bool) {
