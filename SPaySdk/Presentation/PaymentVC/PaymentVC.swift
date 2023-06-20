@@ -14,7 +14,7 @@ private extension CGFloat {
     static let purchaseMargin = 2.0
     static let cartWidth = 56.0
     static let inset = 16.0
-    static let spacing = 16.0
+    static let spacing = 8.0
     static let itemHeight = 72.0
 }
 

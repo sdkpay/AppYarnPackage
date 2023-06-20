@@ -230,13 +230,14 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                                 (text: configValues.orderNumber, placeholder: "OrderNumber"),
                                 (text: configValues.cost, placeholder: "Cost"),
                                 (text: configValues.currency, placeholder: "Сurrency")
-                            ]) { results in
-                                if #available(iOS 13.0, *) {
-                                    self.generateOrder(orderNumber: results[0],
-                                                       amount: results[1],
-                                                       currency: results[2])
-                                }
-                            }
+                            ]
+        ) { results in
+            if #available(iOS 13.0, *) {
+                self.generateOrder(orderNumber: results[0],
+                                   amount: results[1],
+                                   currency: results[2])
+            }
+        }
     }
     
     @available(iOS 13.0, *)

@@ -14,6 +14,7 @@ private extension CGFloat {
     static let tableMargin = 20.0
     static let buttonsMargin = 10.0
     static let rowHeight = 50.0
+    static let finalHeight = 46.0
     static let finalMargin = 22.0
 }
 
@@ -153,7 +154,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
     }
     
     func setSubtitle(_ value: String) {
-        var paragraphStyle = NSMutableParagraphStyle()
+        let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.1
         subTitleLabel.attributedText = NSMutableAttributedString(string: value,
                                                                  attributes: [
@@ -220,13 +221,13 @@ final class PartPayVC: ContentVC, IPartPayVC {
             finalStack.topAnchor.constraint(equalTo: partsTableView.bottomAnchor),
             finalStack.leadingAnchor.constraint(equalTo: backgroundTableView.leadingAnchor, constant: .finalMargin),
             finalStack.trailingAnchor.constraint(equalTo: backgroundTableView.trailingAnchor, constant: -.margin),
-            finalStack.heightAnchor.constraint(equalToConstant: .rowHeight),
+            finalStack.heightAnchor.constraint(equalToConstant: .margin),
             finalStack.bottomAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: -.margin)
         ])
         
         agreementView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            agreementView.topAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: .topMargin),
+            agreementView.topAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: .marginHalf),
             agreementView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
             agreementView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
             agreementView.bottomAnchor.constraint(equalTo: acceptButton.topAnchor, constant: -.topTo)
