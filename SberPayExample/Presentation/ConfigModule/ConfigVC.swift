@@ -157,10 +157,12 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
     }
     
     func showAlert(with message: String) {
-        let alertConteroller = UIAlertController(title: message, message: nil, preferredStyle: .alert)
-        let alertAction = UIAlertAction(title: "OK", style: .default)
-        alertConteroller.addAction(alertAction)
-        present(alertConteroller, animated: true)
+        DispatchQueue.main.async {
+            let alertConteroller = UIAlertController(title: message, message: nil, preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "OK", style: .default)
+            alertConteroller.addAction(alertAction)
+            self.present(alertConteroller, animated: true)
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

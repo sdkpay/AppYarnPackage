@@ -14,15 +14,15 @@ final class WebViewAssembly {
         self.locator = locator
     }
     
-    func createModule(with url: String, title: String) -> ContentVC {
-        let presenter = modulePresenter(with: url, title: title)
+    func createModule(with url: String) -> ContentVC {
+        let presenter = modulePresenter(with: url)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         return contentView
     }
     
-    private func modulePresenter(with url: String, title: String) -> WebViewPresenter {
-        WebViewPresenter(with: url, title: title)
+    private func modulePresenter(with url: String) -> WebViewPresenter {
+        WebViewPresenter(with: url)
     }
 
     private func moduleView(presenter: WebViewPresenter) -> ContentVC & IWebViewVC {

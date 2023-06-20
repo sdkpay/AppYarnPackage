@@ -11,22 +11,26 @@ protocol WebViewPresenting {
     func viewDidLoad()
     func backButtonTapped()
     func shareButtonTapped()
+    func webTitle(_ title: String?)
+}
+
+private extension String {
+    static let openTitleTag = "<title>"
+    static let closeTitleTag = "</title>"
 }
 
 final class WebViewPresenter: WebViewPresenting {
     private let url: String
-    private let title: String
+    private var title: String?
     
     weak var view: (IWebViewVC & ContentVC)?
     
-    init(with url: String, title: String) {
+    init(with url: String) {
         self.url = url
-        self.title = title
     }
     
     func viewDidLoad() {
         setupWebView()
-        view?.setTitle(text: title)
     }
     
     func backButtonTapped() {
@@ -41,11 +45,16 @@ final class WebViewPresenter: WebViewPresenting {
         guard let url = URL(string: url) else { return }
         view?.goTo(to: url)
     }
+
+    func webTitle(_ title: String?) {
+        self.title = title
+        view?.setTitle(text: title ?? "")
+    }
     
     private func shareUrlAddress() {
         DispatchQueue.global(qos: .userInteractive).async {
             guard let url = URL(string: self.url) else { return }
-            let text = self.title
+            let text = self.title ?? ""
             let activity = UIActivityViewController(activityItems: [text, url], applicationActivities: nil)
             DispatchQueue.main.async {
                 self.view?.present(activity, animated: true, completion: nil)

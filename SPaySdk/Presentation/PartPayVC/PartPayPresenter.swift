@@ -85,8 +85,7 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     private func agreementTextTapped(link: String) {
-        router.presentWebView(with: link,
-                              title: Strings.Agreement.title)
+        router.presentWebView(with: link)
     }
     
     func acceptButtonTapped() {

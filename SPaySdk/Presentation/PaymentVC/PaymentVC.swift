@@ -122,7 +122,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
             let attributedPrice = NSAttributedString(text: price,
                                                      dedicatedPart: Strings.From.title(fullPrice),
                                                      attrebutes: [
-                                                        .font: UIFont.bodi3,
+                                                        .font: UIFont.bodi3 ?? .systemFont(ofSize: 15),
                                                         .foregroundColor: UIColor.textSecondary
                                                      ])
             costLabel.text = nil

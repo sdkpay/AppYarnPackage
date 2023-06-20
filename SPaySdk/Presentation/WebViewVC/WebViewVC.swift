@@ -8,6 +8,10 @@
 import UIKit
 import WebKit
 
+private extension TimeInterval {
+    static let animationDuration = 0.25
+}
+
 private extension CGFloat {
     static let topMargin = 24.0
     static let shareMargin = 26.0
@@ -76,7 +80,12 @@ final class WebViewVC: ContentVC, IWebViewVC {
     }
     
     func setTitle(text: String) {
-        titleLabel.text = text
+        UIView.transition(with: titleLabel,
+                          duration: .animationDuration,
+                          options: .transitionCrossDissolve,
+                          animations: { [weak self] in
+            self?.titleLabel.text = text
+        }, completion: nil)
     }
     
     private func setupUI() {
@@ -118,8 +127,10 @@ extension WebViewVC: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         (webView as? LoadableWebView)?.startLoading()
     }
+    
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         (webView as? LoadableWebView)?.stopLoading()
+        presenter.webTitle(webView.title)
     }
 }
 

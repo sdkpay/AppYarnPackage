@@ -45,7 +45,7 @@ extension BnplTarget: TargetType {
                 "orderId": orderId,
                 "authCode": authCode,
                 "state": state,
-                "redirectUri": redirectUri,
+                "redirectUri": redirectUri
             ]
             return .requestWithParameters(nil, bodyParameters: params)
         }

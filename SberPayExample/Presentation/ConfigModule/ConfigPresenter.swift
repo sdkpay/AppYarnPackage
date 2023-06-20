@@ -223,18 +223,67 @@ final class ConfigPresenter: ConfigPresenterProtocol {
     }
     
     func generateOrderIdTapped() {
+        alertWithTextField(title: "Generate order id",
+                           message: "Params:",
+                           textFields:
+                            [
+                                (text: configValues.orderNumber, placeholder: "OrderNumber"),
+                                (text: configValues.cost, placeholder: "Cost"),
+                                (text: configValues.currency, placeholder: "Сurrency")
+                            ]) { results in
+                                if #available(iOS 13.0, *) {
+                                    self.generateOrder(orderNumber: results[0],
+                                                       amount: results[1],
+                                                       currency: results[2])
+                                }
+                            }
+    }
+    
+    @available(iOS 13.0, *)
+    private func generateOrder(orderNumber: String,
+                               amount: String,
+                               currency: String) {
         view?.startLoader()
-        RequestHeandler()
-            .response(schemaType: .sberbankIFT) { [weak self] result in
-                self?.view?.stopLoader()
-                switch result {
-                case .success(let model):
-                    self?.configValues.orderId = model?.externalParams.sbolBankInvoiceId
-                    self?.view?.reload()
-                case .failure(let error):
-                    self?.view?.showAlert(with: error.localizedDescription)
+        Task {
+            do {
+                let orderModel = try await OrderService.registerToken(stand: NetworkType(from: configValues.network),
+                                                                      orderNumber: "123",
+                                                                      amount: 123,
+                                                                      currency: 1232)
+                DispatchQueue.main.async {
+                    self.configValues.orderId = orderModel.externalParams.sbolBankInvoiceId
+                    self.view?.reload()
+                    self.view?.stopLoader()
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.view?.showAlert(with: error.localizedDescription)
+                    self.view?.stopLoader()
                 }
             }
+        }
+    }
+
+    private func alertWithTextField(title: String? = nil,
+                                    message: String? = nil,
+                                    textFields: [(text: String?, placeholder: String)],
+                                    completion: @escaping (([String]) -> Void) = { _ in }) {
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
+        for field in textFields {
+            alert.addTextField { newTextField in
+                newTextField.placeholder = field.placeholder
+                newTextField.text = field.text
+            }
+        }
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in completion([]) })
+        alert.addAction(UIAlertAction(title: "Ok", style: .default) { _ in
+            if let textFields = alert.textFields {
+                completion(textFields.compactMap({ $0.text }) )
+            } else { completion([]) }
+        })
+        view?.navigationController?.present(alert, animated: true)
     }
 }
 

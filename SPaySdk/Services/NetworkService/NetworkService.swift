@@ -17,7 +17,7 @@ final class NetworkServiceAssembly: Assembly {
                                               hostManager: container.resolve(),
                                               buildSettings: container.resolve())
         case .Local:
-            provider = StubNetworkProvider(delayedSeconds: 2, hostManager: container.resolve())
+            provider = StubNetworkProvider(delayedSeconds: 1, hostManager: container.resolve())
         }
         
         let service: NetworkService = DefaultNetworkService(provider: provider,
