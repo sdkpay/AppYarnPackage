@@ -101,6 +101,11 @@ final class PaymentPresenter: PaymentPresenting {
         }
     }
     
+    private func updatePayButtonTitle() {
+        let buttonTitle = partPayService.bnplplanSelected ? Strings.Part.Active.Button.title : Strings.Pay.title
+        view?.setPayButtonTitle(title: buttonTitle)
+    }
+    
     func payButtonTapped() {
         analytics.sendEvent(.PayConfirmedByUser)
         let permission = locationManager.locationEnabled ? [AnalyticsValue.Location.rawValue] : []
@@ -169,6 +174,7 @@ final class PaymentPresenter: PaymentPresenting {
         case .partPay:
             router.presentPartPay { [weak self] in
                 self?.configViews()
+                self?.updatePayButtonTitle()
             }
         }
     }
@@ -195,6 +201,7 @@ final class PaymentPresenter: PaymentPresenting {
         } else {
             configWithNoCards()
         }
+        updatePayButtonTitle()
     }
     
     private func configWithNoCards() {

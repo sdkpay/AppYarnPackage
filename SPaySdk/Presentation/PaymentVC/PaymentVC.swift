@@ -20,6 +20,7 @@ private extension CGFloat {
 
 protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?)
+    func setPayButtonTitle(title: String)
     func reloadCollectionView()
 }
 
@@ -131,6 +132,10 @@ final class PaymentVC: ContentVC, IPaymentVC {
             costLabel.attributedText = nil
             costLabel.text = cost
         }
+    }
+    
+    func setPayButtonTitle(title: String) {
+        payButton.setTitle(title, for: .normal)
     }
     
     func reloadCollectionView() {

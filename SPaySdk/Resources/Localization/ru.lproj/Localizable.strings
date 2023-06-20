@@ -30,6 +30,7 @@
 "part.pay.final" = "Итого";
 "agreement.title" = "Условия договора";
 "part.inactive.title" = "Разбить на 4 платежа";
+"part.active.button.title" = "Оплатить частями";
 
 // Error
 "error.system" = "Системная или внутренняя ошибка.";
