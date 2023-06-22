@@ -63,7 +63,9 @@ extension ResponseDecoder {
         guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             return .failure(.badDataFromSBOL)
         }
-        guard let queryItems = urlComponents.queryItems else { return .failure(.badDataFromSBOL) }
+        guard let queryItems = urlComponents.queryItems else {
+            return .failure(.badDataFromSBOL)
+        }
         var parameters = [String: String]()
         queryItems.forEach {
             if let value = $0.value {

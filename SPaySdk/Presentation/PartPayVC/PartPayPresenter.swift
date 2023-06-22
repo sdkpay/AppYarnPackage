@@ -62,14 +62,13 @@ final class PartPayPresenter: PartPayPresenting {
             view?.setFinalCost(plan.finalCost.price(plan.currencyCode))
         }
         checkTapped = partPayService.bnplplanSelected
-        view?.setButtonEnabled(value: checkTapped)
         view?.setTitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
         view?.setSubtitle(partPayService.bnplplan?.graphBnpl?.content ?? "")
     }
 
     private func configCheckView() {
         view?.configCheckView(text: partPayService.bnplplan?.offerText ?? "",
-                              checkSelected: partPayService.bnplplanSelected,
+                              checkSelected: !partPayService.bnplplanSelected,
                               checkTapped: { [weak self] value in
             self?.checkTapped(value)
         },

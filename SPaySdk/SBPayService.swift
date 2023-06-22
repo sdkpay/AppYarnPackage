@@ -72,18 +72,28 @@ final class DefaultSBPayService: SBPayService {
                 self.locator
                     .resolve(AnalyticsService.self)
                     .config()
+                self.locator.resolve(AnalyticsService.self)
+                    .sendEvent(.Setup,
+                               with: ["apiKey: \(apiKey)",
+                                      "bnpl: \(bnplPlan)",
+                                      "environment: \(environment.rawValue)"])
             }
     }
     
     var isReadyForSPay: Bool {
         SBLogger.log(.version)
+        let service = locator.resolve(AnalyticsService.self)
         // Для симулятора всегда true для удобства разработки
 #if targetEnvironment(simulator)
+        service.sendEvent(.IsReadyForSPay,
+                          with: "\(true)")
         return true
 #else
         
         let target = locator.resolve(EnvironmentManager.self).environment == .sandboxWithoutBankApp
         if target {
+            service.sendEvent(.IsReadyForSPay,
+                              with: "\(true)")
             return true
         } else {
             let apps = locator.resolve(BankAppManager.self).avaliableBanks
@@ -91,6 +101,8 @@ final class DefaultSBPayService: SBPayService {
                 .resolve(AnalyticsService.self)
                 .sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
             SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
+            service.sendEvent(.IsReadyForSPay,
+                              with: "\(!apps.isEmpty)")
             return !apps.isEmpty
         }
 #endif
@@ -99,6 +111,9 @@ final class DefaultSBPayService: SBPayService {
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
+        locator.resolve(AnalyticsService.self)
+            .sendEvent(.GetPaymentToken,
+                       with: ["request: \(request)"])
         SBLogger.logRequestPaymentToken(with: request)
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         locator
@@ -114,6 +129,8 @@ final class DefaultSBPayService: SBPayService {
     
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
+        locator.resolve(AnalyticsService.self)
+            .sendEvent(.Pay, with: ["paymentRequest: \(paymentRequest)"])
         locator
             .resolve(SDKManager.self)
             .pay(with: paymentRequest, completion: completion)
@@ -122,6 +139,8 @@ final class DefaultSBPayService: SBPayService {
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action) {
         startService.completePayment(paymentSuccess: paymentSuccess, completion: completion)
+        locator.resolve(AnalyticsService.self)
+            .sendEvent(.CompletePayment, with: ["paymentRequest: \(paymentSuccess.rawValue)"])
     }
     
     func payWithOrderId(with viewController: UIViewController,
@@ -130,6 +149,8 @@ final class DefaultSBPayService: SBPayService {
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.version) }
+        locator.resolve(AnalyticsService.self)
+            .sendEvent(.PayWithOrderId, with: ["paymentRequest: \(paymentRequest)"])
         locator
             .resolve(SDKManager.self)
             .configWithOrderId(apiKey: apiKey,
@@ -145,6 +166,8 @@ final class DefaultSBPayService: SBPayService {
     }
     
     func getResponseFrom(_ url: URL) {
+        locator.resolve(AnalyticsService.self)
+            .sendEvent(.GetResponseFrom, with: ["url: \(url)"])
         locator
             .resolve(AuthService.self)
             .completeAuth(with: url)

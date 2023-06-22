@@ -175,7 +175,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
         
         logoImageView
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-            .centerInView(purchaseInfoStack, axis: .y)
+            .centerInView(purchaseInfoStack, axis: .y, withOffset: -6)
             .size(.init(width: .cartWidth, height: .cartWidth))
     }
 }
