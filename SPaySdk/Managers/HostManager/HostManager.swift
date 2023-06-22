@@ -11,8 +11,8 @@ private enum Host: String {
     case sandBox = "https://ift.gate2.spaymentsplus.ru/sdk-gateway/v1"
     case mocker = "https://ucexvyy1j5.api.quickmocker.com"
     case ift = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
-    case psi = "https://prom.gate1.spaymentsplus.ru/sdk-gateway/v1"
-    case prom = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    case psi = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    case prom = "https://prom.gate1.spaymentsplus.ru/sdk-gateway/v1"
     
     var url: URL {
         URL(string: rawValue) ?? URL(string: "https://www.google.com/")!
