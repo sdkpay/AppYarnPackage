@@ -9,5 +9,5 @@ import Foundation
 
 struct PaymentTokenModel: Codable {
     let paymentToken: String
-    let orderId: String?
+    let initiateBankInvoiceId: String?
 }

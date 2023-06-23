@@ -73,7 +73,7 @@ final class DefaultPaymentService: PaymentService {
                 guard let authInfo = self.sdkManager.authInfo else { return }
                 var orderid: String?
                 if isBnplEnabled {
-                    orderid = paymentToken.orderId
+                    orderid = paymentToken.initiateBankInvoiceId
                 } else {
                     orderid = authInfo.orderId
                 }
