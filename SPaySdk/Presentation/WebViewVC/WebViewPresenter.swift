@@ -21,6 +21,7 @@ private extension String {
 
 final class WebViewPresenter: WebViewPresenting {
     private let url: String
+    @UserDefault(key: .offerTitle, defaultValue: nil)
     private var title: String?
     
     weak var view: (IWebViewVC & ContentVC)?
@@ -47,7 +48,9 @@ final class WebViewPresenter: WebViewPresenting {
     }
 
     func webTitle(_ title: String?) {
-        self.title = title
+        if self.title != title {
+            self.title = title
+        }
         view?.setTitle(text: title ?? "")
     }
     

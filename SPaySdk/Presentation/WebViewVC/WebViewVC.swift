@@ -78,7 +78,8 @@ final class WebViewVC: ContentVC, IWebViewVC {
     }
     
     func goTo(to url: URL) {
-        webView.load(URLRequest(url: url))
+        let request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
+        webView.load(request)
     }
     
     func setTitle(text: String) {
