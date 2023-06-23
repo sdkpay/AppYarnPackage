@@ -73,6 +73,22 @@ enum AnalyticsEvent: String {
     case DecodeError
     ///  Timeout  (в эвенте передаем эндпоинт)
     case Timeout
+    ///  Изначальная настройка SDK
+    case Setup
+    ///  Готовность работать с SDK
+    case IsReadyForSPay
+    ///  Получение платежного токена
+    case GetPaymentToken
+    /// Оплата
+    case Pay
+    /// Оплата с id
+    case PayWithOrderId
+    /// Окончание оплаты
+    case CompletePayment
+    /// Получение url
+    case GetResponseFrom
+    /// Уровень соединения
+    case DebugConfig
 }
 
 enum AnalyticsValue: String {

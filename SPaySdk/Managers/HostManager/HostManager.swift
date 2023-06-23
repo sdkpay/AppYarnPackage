@@ -13,6 +13,7 @@ private enum Host: String {
     case ift = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
     case psi = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
     case prom = "https://prom.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    
     var url: URL {
         URL(string: rawValue) ?? URL(string: "https://www.google.com/")!
     }
