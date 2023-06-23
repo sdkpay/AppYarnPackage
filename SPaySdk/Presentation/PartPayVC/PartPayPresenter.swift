@@ -28,7 +28,7 @@ final class PartPayPresenter: PartPayPresenting {
     private let timeManager: OptimizationCheсkerManager
     private let analytics: AnalyticsService
     private var partPaySelected: Action
-    private var checkTapped = false
+    private var isSelected = true
 
     weak var view: (IPartPayVC & ContentVC)?
     
@@ -61,14 +61,13 @@ final class PartPayPresenter: PartPayPresenting {
         if let plan = partPayService.bnplplan?.graphBnpl {
             view?.setFinalCost(plan.finalCost.price(plan.currencyCode))
         }
-        checkTapped = partPayService.bnplplanSelected
         view?.setTitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
         view?.setSubtitle(partPayService.bnplplan?.graphBnpl?.content ?? "")
     }
 
     private func configCheckView() {
         view?.configCheckView(text: partPayService.bnplplan?.offerText ?? "",
-                              checkSelected: !partPayService.bnplplanSelected,
+                              checkSelected: isSelected,
                               checkTapped: { [weak self] value in
             self?.checkTapped(value)
         },
