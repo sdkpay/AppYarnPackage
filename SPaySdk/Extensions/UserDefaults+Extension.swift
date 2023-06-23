@@ -13,6 +13,7 @@ enum DefaultsKey: String {
     case schemas
     case bankApps
     case images
+    case offerTitle
 }
 
 @propertyWrapper

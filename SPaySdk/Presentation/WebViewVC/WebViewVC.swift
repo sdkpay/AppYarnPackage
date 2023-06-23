@@ -43,7 +43,9 @@ final class WebViewVC: ContentVC, IWebViewVC {
     }()
     
     private lazy var webView: LoadableWebView = {
-        let view = LoadableWebView()
+        let configuration = WKWebViewConfiguration()
+        configuration.websiteDataStore = .default()
+        let view = LoadableWebView(frame: .zero, configuration: configuration)
         view.navigationDelegate = self
         return view
     }()
@@ -76,7 +78,8 @@ final class WebViewVC: ContentVC, IWebViewVC {
     }
     
     func goTo(to url: URL) {
-        webView.load(URLRequest(url: url))
+        let request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
+        webView.load(request)
     }
     
     func setTitle(text: String) {

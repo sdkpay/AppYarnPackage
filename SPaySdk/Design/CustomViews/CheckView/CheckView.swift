@@ -18,9 +18,9 @@ private extension CGFloat {
 }
 
 final class CheckView: UIView {
-    private var checkSelected = true {
+    private var isSelected = true {
         didSet {
-            if checkSelected {
+            if isSelected {
                 checkButton.setImage(.Common.checkAgreementSelected, for: .normal)
             } else {
                 checkButton.setImage(.Common.checkAgreement, for: .normal)
@@ -41,8 +41,8 @@ final class CheckView: UIView {
         view.setImage(.Common.checkAgreementSelected, for: .normal)
         view.addAction { [weak self] in
             guard let self = self else { return }
-            self.checkSelected.toggle()
-            self.checkTapped?(self.checkSelected)
+            self.isSelected.toggle()
+            self.checkTapped?(self.isSelected)
         }
         return view
     }()
@@ -62,7 +62,7 @@ final class CheckView: UIView {
                 checkSelected: Bool,
                 checkTapped: @escaping BoolAction,
                 textTapped: StringAction? = nil) {
-        self.checkSelected = checkSelected
+        self.isSelected = checkSelected
         self.checkTapped = checkTapped
         self.titleLabel.linkTapped = textTapped
         if let text = text {
