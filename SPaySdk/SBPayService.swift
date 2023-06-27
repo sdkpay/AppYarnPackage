@@ -76,8 +76,8 @@ final class DefaultSBPayService: SBPayService {
                     .sendEvent(.Setup,
                                with: [
                                 "apiKey: \(apiKey)",
-                                      "bnpl: \(bnplPlan)",
-                                      "environment: \(environment.rawValue)"
+                                "bnpl: \(bnplPlan)",
+                                "environment: \(environment.rawValue)"
                                ])
             }
     }
