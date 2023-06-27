@@ -35,7 +35,7 @@ enum AlertState {
         case .failure:
             return "neg.mp3"
         case .waiting:
-            return "poz.mp3"
+            return "progress.mp3"
         case .warning:
             return "neg.mp3"
         }
