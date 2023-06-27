@@ -12,7 +12,7 @@ private enum Host: String {
     case mocker = "https://api.mocki.io/v2/071c7c55"
     case ift = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
     case psi = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
-    case prom = "https://prom.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    case prom = "https://gate1.spaymentsplus.ru/sdk-gateway/v1"
     
     var url: URL {
         URL(string: rawValue) ?? URL(string: "https://www.google.com/")!
