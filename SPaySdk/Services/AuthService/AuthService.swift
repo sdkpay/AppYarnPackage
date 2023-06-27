@@ -64,13 +64,17 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     func tryToAuth(completion: @escaping (SDKError?, Bool) -> Void) {
         // Проверка на целостность
-        personalMetricsService.integrityCheck { [weak self] result in
-            if result {
-                // Запрос на получение сессии
-                self?.authRequest(completion: completion)
-            } else {
-                // Ошибка авторизации
-                completion(.personalInfo, false)
+        if enviromentManager.environment == .sandboxWithoutBankApp {
+            authRequest(completion: completion)
+        } else {
+            personalMetricsService.integrityCheck { [weak self] result in
+                if result {
+                    // Запрос на получение сессии
+                    self?.authRequest(completion: completion)
+                } else {
+                    // Ошибка авторизации
+                    completion(.personalInfo, false)
+                }
             }
         }
     }
@@ -122,7 +126,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     // MARK: - Методы авторизации через sId
     private func sIdAuth(with model: AuthModel) {
-        
         let target = enviromentManager.environment == .sandboxWithoutBankApp
         guard !target else {
             fillFakeData()

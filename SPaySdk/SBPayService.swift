@@ -74,9 +74,11 @@ final class DefaultSBPayService: SBPayService {
                     .config()
                 self.locator.resolve(AnalyticsService.self)
                     .sendEvent(.Setup,
-                               with: ["apiKey: \(apiKey)",
+                               with: [
+                                "apiKey: \(apiKey)",
                                       "bnpl: \(bnplPlan)",
-                                      "environment: \(environment.rawValue)"])
+                                      "environment: \(environment.rawValue)"
+                               ])
             }
     }
     
