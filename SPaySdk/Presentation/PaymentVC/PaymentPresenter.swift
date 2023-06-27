@@ -128,7 +128,11 @@ final class PaymentPresenter: PaymentPresenting {
             }
             switch result {
             case .success:
-                self.configForWaiting()
+                self.alertService.show(on: self.view, type: .paySuccess(completion: {
+                    self.alertService.close(animated: true, completion: {
+                        self.sdkManager.completionPay(with: .success)
+                    })
+                }))
             case .failure(let error):
                 if self.partPayService.bnplplanSelected {
                     self.analytics.sendEvent(.PayWithBNPLFailed)
@@ -266,7 +270,7 @@ final class PaymentPresenter: PaymentPresenting {
             })
         }
         alertService.showAlert(on: view,
-                               with: Strings.Alert.Pay.No.Waiting.title(bankManager.selectedBank?.name ?? ""),
+                               with: ConfigGlobal.localization?.payLoading ?? "",
                                state: .waiting,
                                buttons: [okButton],
                                completion: {})

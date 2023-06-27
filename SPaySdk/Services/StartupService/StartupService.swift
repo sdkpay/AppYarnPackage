@@ -102,7 +102,7 @@ final class DefaultStartupService: StartupService {
                                           type: .full,
                                           action: completion)
             service.showAlert(on: sdkWindow?.topVC as? ContentVC,
-                              with: Strings.Alert.Pay.No.Waiting.title("банка"),
+                              with: ConfigGlobal.localization?.payLoading ?? "",
                               state: .waiting,
                               buttons: [button],
                               completion: {})

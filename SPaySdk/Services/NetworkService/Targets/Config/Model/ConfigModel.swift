@@ -21,6 +21,7 @@ struct ConfigModel: Codable {
 // MARK: - Localization
 struct Localization: Codable {
     let authTitle: String
+    let payLoading: String
 }
 
 struct FeaturesToggle: Codable {

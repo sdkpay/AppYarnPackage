@@ -51,7 +51,7 @@ extension UserDefaults {
     static var bankApp: String?
     
     @UserDefault(key: .localization,
-                 defaultValue: Localization(authTitle: "foo"))
+                 defaultValue: Localization(authTitle: "foo", payLoading: "foo"))
     static var localization: Localization?
     
     @UserDefault(key: .schemas,
