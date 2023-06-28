@@ -69,11 +69,8 @@ final class PartPayVC: ContentVC, IPartPayVC {
         return view
     }()
     
-    private lazy var agreementView: CheckView = {
-        let view = CheckView()
-        return view
-    }()
-    
+    private lazy var agreementView = CheckView()
+
     private lazy var finalLabel: UILabel = {
         let view = UILabel()
         view.font = .bodi1
