@@ -242,8 +242,12 @@ final class PaymentPresenter: PaymentPresenting {
     private func getPaymentToken() {
         partPayService.bnplplanSelected = false
         partPayService.setUserEnableBnpl(false, enabledLevel: .server)
-        
-        guard let paymentId = userService.selectedCard?.paymentId else { return }
+        guard let paymentId = userService.selectedCard?.paymentId else {
+            alertService.show(on: view,
+                              type: .defaultError(completion: {
+                self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+            return
+        }
         paymentService.tryToGetPaymenyToken(paymentId: paymentId,
                                             isBnplEnabled: false) { result in
             switch result {
@@ -273,7 +277,9 @@ final class PaymentPresenter: PaymentPresenting {
                                with: ConfigGlobal.localization?.payLoading ?? "",
                                state: .waiting,
                                buttons: [okButton],
-                               completion: {})
+                               completion: {
+            self.view?.hideLoading(animate: true)
+        })
     }
     
     private func dismissWithError(_ error: SDKError) {
