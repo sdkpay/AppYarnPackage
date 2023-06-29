@@ -28,7 +28,7 @@ buildDevice() {
 buildSim() {
     printStep "Build framework for sim"
     xcodebuild archive \
-    -scheme SPaySdkDEBUG \
+    -scheme SPaySdk \
     -archivePath "./build/ios_sim.xcarchive" \
     -sdk iphonesimulator \
     ONLY_ACTIVE_ARCH=NO \
@@ -39,7 +39,7 @@ createXCFramework() {
     printStep "Create XCFramework"
     xcodebuild -create-xcframework \
     -framework "./build/ios.xcarchive/Products/Library/Frameworks/SPaySdk.framework" \
-    -framework "./build/ios_sim.xcarchive/Products/Library/Frameworks/SPaySdkDEBUG.framework" \
+    -framework "./build/ios_sim.xcarchive/Products/Library/Frameworks/SPaySdk.framework" \
     -output "./build/SPaySdk.xcframework"
     open "./build"
 }

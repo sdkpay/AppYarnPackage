@@ -132,7 +132,6 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         if section == 1 {
             guard let view = view as? UITableViewHeaderFooterView else { return }
             view.textLabel?.textColor = .black
-//            view.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         }
     }
     
