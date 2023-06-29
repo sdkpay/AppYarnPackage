@@ -43,6 +43,7 @@ final class DefaultSBPayService: SBPayService {
     private lazy var startService: StartupService = DefaultStartupService(timeManager: timeManager)
     private lazy var locator: LocatorService = DefaultLocatorService()
     private lazy var buildSettings: BuildSettings = DefaultBuildSettings()
+    private lazy var logService: LogService = DefaultLogService()
     private let assemblyManager = AssemblyManager()
     private let timeManager = OptimizationCheсkerManager()
     private var apiKey: String?
@@ -53,8 +54,12 @@ final class DefaultSBPayService: SBPayService {
                completion: Action? = nil) {
         self.apiKey = apiKey
         FontFamily.registerAllCustomFonts()
+        locator.register(service: logService)
         locator.register(service: buildSettings)
         assemblyManager.registerServices(to: locator)
+        locator
+            .resolve(LogService.self)
+            .setLogsWritable(environment: environment)
         locator
             .resolve(EnvironmentManager.self)
             .setEnvironment(environment)

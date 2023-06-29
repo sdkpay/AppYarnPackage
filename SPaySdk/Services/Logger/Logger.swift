@@ -45,6 +45,7 @@ enum SBLogger {
     private static var logger = Log()
     static var dateString = ""
     static var writeLogs = true
+    static var secureLogs = true
     
     static func log(level: LogLevel = .debug(level: .defaultLevel), _ massage: String) {
         switch level {
@@ -514,11 +515,12 @@ enum SBLogger {
     }
     
     static func stringToLog(from data: Data?) -> NSString {
-        if let data = data,
-           let decoded = data.prettyPrintedJSONString {
-            return decoded
+        guard let data = data else { return "None" }
+        if secureLogs {
+            return data.securePrintedJSONString(keys: ["clientId", "authCode"]) ?? "None"
+        } else {
+            return data.prettyPrintedJSONString ?? "None"
         }
-        return "None"
     }
     
     private static func headers(_ headers: [String: String]?) -> String {

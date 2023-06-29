@@ -69,6 +69,7 @@ final class DefaultStartupService: StartupService {
         let analytics: AnalyticsService = locator.resolve()
         analytics.sendEvent(.ManuallyClosed)
         rootController?.dismiss(animated: true)
+        rootController = nil
         sdkWindow = nil
         timeManager?.stopContectionTypeChecking()
     }

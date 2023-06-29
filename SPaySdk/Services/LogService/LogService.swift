@@ -32,8 +32,10 @@ final class DefaultLogService: LogService {
         }
 #if SDKDEBUG
         SBLogger.writeLogs = true
+        SBLogger.secureLogs = false
 #else
         SBLogger.writeLogs = writeLogs
+        SBLogger.secureLogs = true
 #endif
     }
 }
