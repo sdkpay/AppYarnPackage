@@ -50,8 +50,10 @@ enum SBLogger {
         case .merchant:
             NSLog(massage)
         case let .debug(level: level):
+#if SDKDEBUG
             print(massage)
             print("|\(level.rawValue) \(Date()) \n\(massage)", to: &logger)
+#endif
         }
     }
     
