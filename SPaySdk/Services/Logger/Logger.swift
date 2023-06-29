@@ -44,16 +44,16 @@ enum DebugLogLevel: String, CaseIterable {
 enum SBLogger {
     private static var logger = Log()
     static var dateString = ""
+    static var writeLogs = true
     
     static func log(level: LogLevel = .debug(level: .defaultLevel), _ massage: String) {
         switch level {
         case .merchant:
             NSLog(massage)
         case let .debug(level: level):
-#if SDKDEBUG
+            guard writeLogs else { return }
             print(massage)
             print("|\(level.rawValue) \(Date()) \n\(massage)", to: &logger)
-#endif
         }
     }
     
