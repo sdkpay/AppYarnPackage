@@ -108,7 +108,6 @@ protocol AnalyticsService {
 
 final class DefaultAnalyticsService: NSObject, AnalyticsService {
     private lazy var analyticServices: [AnalyticsService] = [
-        DefaultYandexAnalyticsService(),
         DefaultDynatraceAnalyticsService()
     ]
     

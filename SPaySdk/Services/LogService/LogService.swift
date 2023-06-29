@@ -23,7 +23,7 @@ protocol LogService {
 final class DefaultLogService: LogService {
     func setLogsWritable(environment: SEnvironment) {
         var writeLogs = false
-    
+
         switch environment {
         case .prod:
             writeLogs = false

@@ -50,7 +50,6 @@ targetTemplates:
       - package: Dynatrace-Static
       - framework: ./SPaySdk/Resources/Frameworks/Fingerprint.xcframework
       - framework: ./SPaySdk/Resources/Frameworks/BizoneCore.xcframework
-      - framework: ./SPaySdk/Resources/Frameworks/YandexMobileMetrica.xcframework
       - sdk: libresolv.9.tbd
     info:
       path: ./SPaySdk/SupportingFiles/Info.plist
