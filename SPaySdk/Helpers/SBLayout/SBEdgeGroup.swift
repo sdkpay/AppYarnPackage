@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum SBEdgeGroup {
+enum SBEdgeGroup {
     case horizontal
     case vertical
     

@@ -7,7 +7,7 @@
 
 import UIKit
 
-public extension UIView {
+extension UIView {
     
     /// Centers the axis of this view in its superview with the offset and priority
     /// of the constraint.
@@ -78,7 +78,7 @@ public extension UIView {
     }
 }
 
-public extension UIView {
+extension UIView {
     
     /// Centers the axis of this view in another view with the offset and priority
     /// of the constraint.

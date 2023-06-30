@@ -7,7 +7,7 @@
 
 import UIKit
 
-public extension UIView {
+extension UIView {
     /// Touches the edges to the given `NSLayoutAxisAnchor`s with the insets and
     /// priority of the constraints.
     ///

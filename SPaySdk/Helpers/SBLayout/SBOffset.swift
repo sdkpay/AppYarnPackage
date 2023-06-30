@@ -9,14 +9,14 @@ import Foundation
 
 typealias SBDimensionalInsets = CGSize
 
-public struct SBOffset {
+struct SBOffset {
     
-    public let x: CGFloat
-    public let y: CGFloat
+    let x: CGFloat
+    let y: CGFloat
     
-    public static let zero = SBOffset(x: 0, y: 0)
+    static let zero = SBOffset(x: 0, y: 0)
     
-    public init(x: CGFloat, y: CGFloat) {
+    init(x: CGFloat, y: CGFloat) {
         self.x = x
         self.y = y
     }

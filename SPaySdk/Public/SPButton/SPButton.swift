@@ -89,7 +89,8 @@ public final class SBPButton: UIView {
         
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(equalToConstant: .buttonHeight)
+            self.heightAnchor.constraint(equalToConstant: .buttonHeight),
+            self.widthAnchor.constraint(greaterThanOrEqualToConstant: 150)
         ])
         
         addSubview(contentStack)

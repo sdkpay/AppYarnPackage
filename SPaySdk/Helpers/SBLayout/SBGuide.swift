@@ -7,15 +7,15 @@
 
 import UIKit
 
-public typealias SBSizeInsets = UIOffset
+typealias SBSizeInsets = UIOffset
 
-public enum SBGuide {
+enum SBGuide {
     case custom(UILayoutGuide)
     case layoutMargins(of: UIView)
     case readableContent(of: UIView)
     case safeAreaLayout(of: UIView)
     
-    public var layoutGuide: UILayoutGuide {
+    var layoutGuide: UILayoutGuide {
         switch self {
         case .custom(let layoutGuide):
             return layoutGuide
