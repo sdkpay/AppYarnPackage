@@ -7,7 +7,7 @@
 
 import UIKit
 
-public extension UIView {
+extension UIView {
     /// Touches the edge of the view using the specified type of relation to the
     /// given edge of its superview with the inset and priority of the constraint.
     /// Optionally respects one of pre-defined Apple's layout guides.

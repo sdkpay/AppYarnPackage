@@ -7,7 +7,7 @@
 
 import UIKit
 
-public enum SBSuperviewGuide {
+enum SBSuperviewGuide {
     case none
     case layoutMargins
     case readableContent

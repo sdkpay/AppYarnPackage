@@ -7,7 +7,7 @@
 
 import UIKit
 
-public extension UIView {
+extension UIView {
     @discardableResult
     func add(toSuperview superview: UIView) -> Self {
         superview.addSubview(self)

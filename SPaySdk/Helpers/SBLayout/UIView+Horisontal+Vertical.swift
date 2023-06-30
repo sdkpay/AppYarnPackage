@@ -7,7 +7,7 @@
 
 import UIKit
 
-public extension UIView {
+extension UIView {
     
     func touchHorizontalEdgesToSuperview(withInset inset: CGFloat = .zero) {
         touchEdgesToSuperview(ofGroup: .horizontal, withInset: inset)

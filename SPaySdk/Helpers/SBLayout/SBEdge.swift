@@ -7,13 +7,13 @@
 
 import UIKit
 
-public enum SBEdge {
+enum SBEdge {
     case top
     case bottom
     case left
     case right
     
-    public static let all: [SBEdge] = [.top, .bottom, .left, .right]
+    static let all: [SBEdge] = [.top, .bottom, .left, .right]
     
     var directionalMultiplier: CGFloat {
         switch self {

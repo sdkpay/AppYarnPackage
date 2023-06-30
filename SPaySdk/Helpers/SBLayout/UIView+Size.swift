@@ -7,7 +7,7 @@
 
 import UIKit
 
-public extension UIView {
+extension UIView {
     
     @discardableResult
     func width(to anotherView: UIView,
@@ -73,7 +73,7 @@ public extension UIView {
     }
 }
 
-public extension UIView {
+extension UIView {
     
     @discardableResult
     func width(_ width: CGFloat,
@@ -132,7 +132,7 @@ public extension UIView {
     }
 }
 
-public extension UIView {
+extension UIView {
     
     @discardableResult
     func width(match anotherView: UIView,

@@ -11,5 +11,5 @@ public enum SBAxis {
     case x
     case y
     
-    public static let all: [SBAxis] = [.horizontal, .vertical]
+    static let all: [SBAxis] = [.horizontal, .vertical]
 }
