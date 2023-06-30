@@ -1,38 +1,38 @@
 {
-  "offerText" : "Я соглашаюсь с <url=https:\/\/platichastyami.ru\/dogovor_oferty>;условиями договора<\/url> и <url=https:\/\/platichastyami.ru\/soglashenie_ob_ispolzovanii_pep>;соглашения<\/url>. Договор заключается с ООО «ЦНФС»",
+  "offerText" : "Я соглашаюсь с <url=https:\/\/platichastyami.ru\/dogovor_oferty>условиями договора<\/url> и <url=https:\/\/platichastyami.ru\/soglashenie_ob_ispolzovanii_pep>соглашения<\/url>. Договор заключается с ООО «ЦНФС»",
   "isBnplEnabled" : true,
   "buttonBnpl" : {
-    "content" : "4 платежа раз в 2 недели",
-    "header" : "Плати частями",
-    "activeButtonLogo" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/SDK\/activeButtonLogo.png",
-    "inactiveButtonLogo" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/SDK\/inactiveButtonLogo.png"
-  },
-  "graphBnpl" : {
-    "content" : "4 платежа раз в 2 недели",
-    "count" : "4",
-    "header" : "График платежей",
-    "payments" : [
-      {
-        "date" : "20 Июня",
-        "amount" : 87500,
-        "currencyCode" : "643"
+        "content" : "4 платежа раз в 2 недели",
+        "header" : "Плати частями",
+        "activeButtonLogo" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/SDK\/activeButtonLogo.png",
+        "inactiveButtonLogo" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/SDK\/inactiveButtonLogo.png"
       },
-      {
-        "date" : "4 Июля",
-        "amount" : 87500,
-        "currencyCode" : "643"
-      },
-      {
-        "date" : "18 Июля",
-        "amount" : 87500,
-        "currencyCode" : "643"
-      },
-      {
-        "date" : "1 Августа",
-        "amount" : 87500,
-        "currencyCode" : "643"
+      "graphBnpl" : {
+        "content" : "4 платежа раз в 2 недели",
+        "count" : "4",
+        "header" : "График платежей",
+        "payments" : [
+          {
+            "date" : "20 Июня",
+            "amount" : 87500,
+            "currencyCode" : "643"
+          },
+          {
+            "date" : "4 Июля",
+            "amount" : 87500,
+            "currencyCode" : "643"
+          },
+          {
+            "date" : "18 Июля",
+            "amount" : 87500,
+            "currencyCode" : "643"
+          },
+          {
+            "date" : "1 Августа",
+            "amount" : 87500,
+            "currencyCode" : "643"
+          }
+        ],
+        "text" : "Спишем сегодня"
       }
-    ],
-    "text" : "Спишем сегодня"
-  }
-}
+    }

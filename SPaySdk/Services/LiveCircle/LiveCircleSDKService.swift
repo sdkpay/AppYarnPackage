@@ -1,5 +1,5 @@
 //
-//  StartupService.swift
+//  LiveCircleService.swift
 //  SPaySdk
 //
 //  Created by Alexander Ipatov on 12.11.2022.
@@ -8,16 +8,16 @@
 import UIKit
 
 let closeSDKNotification = "CloseSDKWithoutError"
-let closeSDKNotificationWithError = "CloseSDKWithError"
 
-protocol StartupService {
+protocol LiveCircleManager {
     func openInitialScreen(with viewController: UIViewController,
                            with locator: LocatorService)
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
+    func closeSDKWindow()
 }
 
-final class DefaultStartupService: StartupService {
+final class DefaultLiveCircleManager: LiveCircleManager {
     private var sdkWindow: TransparentWindow?
     private var locator: LocatorService?
     private weak var rootController: RootVC?
@@ -40,10 +40,6 @@ final class DefaultStartupService: StartupService {
                                                selector: #selector(closeSdk),
                                                name: Notification.Name(closeSDKNotification),
                                                object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(closeSdk(isErrorCompleted:)),
-                                               name: Notification.Name(closeSDKNotificationWithError),
-                                               object: true)
     }
     
     private func setupWindows(viewController: UIViewController,
@@ -62,16 +58,20 @@ final class DefaultStartupService: StartupService {
         guard let locator = locator else { return }
         let network: NetworkService = locator.resolve()
         network.cancelTask()
+        closeSDKWindow()
         if !isErrorCompleted {
             let manager: SDKManager = locator.resolve()
             manager.completionWithError(error: .cancelled)
         }
         let analytics: AnalyticsService = locator.resolve()
         analytics.sendEvent(.ManuallyClosed)
+        timeManager?.stopContectionTypeChecking()
+    }
+    
+    func closeSDKWindow() {
         rootController?.dismiss(animated: true)
         rootController = nil
         sdkWindow = nil
-        timeManager?.stopContectionTypeChecking()
     }
     
     func completePayment(paymentSuccess: SPayState,

@@ -14,7 +14,8 @@ enum PayStrategy {
 
 final class SDKManagerAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: SDKManager = DefaultSDKManager(authManager: container.resolve())
+        let service: SDKManager = DefaultSDKManager(authManager: container.resolve(),
+                                                    liveCircleManager: container.resolve())
         container.register(service: service)
     }
 }
@@ -51,6 +52,7 @@ extension SDKManager {
 
 final class DefaultSDKManager: SDKManager {
     private var authManager: AuthManager
+    private var liveCircleManager: LiveCircleManager
 
     private var paymentCompletion: PaymentCompletion?
     private var paymentTokenCompletion: PaymentTokenCompletion?
@@ -63,8 +65,10 @@ final class DefaultSDKManager: SDKManager {
     private(set) var payStrategy: PayStrategy = .manual
     private(set) var newStart = true
     
-    init(authManager: AuthManager) {
+    init(authManager: AuthManager,
+         liveCircleManager: LiveCircleManager) {
         self.authManager = authManager
+        self.liveCircleManager = liveCircleManager
         SBLogger.log(.start(obj: self))
     }
     
@@ -120,9 +124,7 @@ final class DefaultSDKManager: SDKManager {
                 paymentCompletion = nil
             }
         }
-        NotificationCenter.default.post(name: Notification.Name(closeSDKNotificationWithError),
-                                        object: nil,
-                                        userInfo: nil)
+        liveCircleManager.closeSDKWindow()
     }
     
     func completionPaymentToken(with paymentToken: String? = nil,

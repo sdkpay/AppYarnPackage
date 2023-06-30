@@ -40,7 +40,7 @@ extension SBPayService {
 }
 
 final class DefaultSBPayService: SBPayService {
-    private lazy var startService: StartupService = DefaultStartupService(timeManager: timeManager)
+    private lazy var liveCircleManager: LiveCircleManager = DefaultLiveCircleManager(timeManager: timeManager)
     private lazy var locator: LocatorService = DefaultLocatorService()
     private lazy var buildSettings: BuildSettings = DefaultBuildSettings()
     private lazy var logService: LogService = DefaultLogService()
@@ -54,6 +54,7 @@ final class DefaultSBPayService: SBPayService {
                completion: Action? = nil) {
         self.apiKey = apiKey
         FontFamily.registerAllCustomFonts()
+        locator.register(service: liveCircleManager)
         locator.register(service: logService)
         locator.register(service: buildSettings)
         assemblyManager.registerServices(to: locator)
@@ -131,7 +132,7 @@ final class DefaultSBPayService: SBPayService {
                 SBLogger.logResponsePaymentToken(with: response)
                 completion(response)
             })
-        startService.openInitialScreen(with: viewController, with: locator)
+        liveCircleManager.openInitialScreen(with: viewController, with: locator)
     }
     
     func pay(with paymentRequest: SPaymentRequest,
@@ -145,7 +146,7 @@ final class DefaultSBPayService: SBPayService {
     
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action) {
-        startService.completePayment(paymentSuccess: paymentSuccess, completion: completion)
+        liveCircleManager.completePayment(paymentSuccess: paymentSuccess, completion: completion)
         locator.resolve(AnalyticsService.self)
             .sendEvent(.CompletePayment, with: ["paymentRequest: \(paymentSuccess.rawValue)"])
     }
@@ -163,8 +164,8 @@ final class DefaultSBPayService: SBPayService {
             .configWithOrderId(apiKey: apiKey,
                                paymentRequest: paymentRequest,
                                completion: completion)
-        startService.openInitialScreen(with: viewController,
-                                       with: locator)
+        liveCircleManager.openInitialScreen(with: viewController,
+                                            with: locator)
         timeManager.stopCheckingCPULoad {
             self.locator
                 .resolve(AnalyticsService.self)
