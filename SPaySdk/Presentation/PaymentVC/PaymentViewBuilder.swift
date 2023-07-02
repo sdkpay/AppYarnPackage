@@ -109,7 +109,6 @@ final class PaymentViewBuilder {
             .centerInView(purchaseInfoStack, axis: .y, withOffset: Cost.ImageView.yOffSet)
             .size(Cost.ImageView.size)
     }
-
 }
 
 private extension PaymentViewBuilder {

@@ -35,7 +35,7 @@ extension Int {
         formatter.usesGroupingSeparator = true
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
-        formatter.decimalSeparator = "."
+        formatter.decimalSeparator = ","
         let finalPrice = Double(self) / 100
         return formatter.string(from: NSNumber(value: finalPrice)) ?? "0"
     }

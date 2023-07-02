@@ -7,17 +7,6 @@
 
 import UIKit
 
-private extension CGFloat {
-    static let bottomMargin = 44.0
-    static let topMargin = 22.0
-    static let buttonsMargin = 10.0
-    static let purchaseMargin = 2.0
-    static let cartWidth = 56.0
-    static let inset = 16.0
-    static let spacing = 8.0
-    static let itemHeight = 72.0
-}
-
 protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?)
     func setPayButtonTitle(title: String)
@@ -90,7 +79,6 @@ final class PaymentVC: ContentVC, IPaymentVC {
     func reloadCollectionView() {
         viewBuilder.collectionView.reloadData()
     }
-    
 }
 
 extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource {
