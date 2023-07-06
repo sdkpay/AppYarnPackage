@@ -32,7 +32,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
               title: "Амбушюры для Apple Airpods Pro",
               image: UIImage(named: "headphones")!,
               color: UIColor(red: 237 / 255, green: 247 / 255, blue: 251 / 255, alpha: 1)),
-        .init(cost: 45681,
+        .init(cost: 45680,
               title: "Телевизор Hisense 65E7HQ",
               image: UIImage(named: "tv")!,
               color: UIColor(red: 254 / 255, green: 236 / 255, blue: 237 / 255, alpha: 1))

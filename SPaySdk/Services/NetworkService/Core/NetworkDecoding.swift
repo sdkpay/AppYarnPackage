@@ -76,6 +76,10 @@ extension ResponseDecoder {
             SBLogger.logResponseFromSbolFailed(url, error: error)
             return .failure(checkBankError(error: error))
         }
+        if let status = parameters["status"], status != "success" {
+            SBLogger.logResponseFromSbolFailed(url, error: "status \(status)")
+            return .failure(checkBankError(error: status))
+        }
         SBLogger.logResponseFromSbolCompleted(parameters)
         return .success(BankModel(dictionary: parameters))
     }

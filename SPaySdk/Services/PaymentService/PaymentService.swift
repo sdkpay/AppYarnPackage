@@ -92,6 +92,8 @@ final class DefaultPaymentService: PaymentService {
                     // Если получили с сервака ошибку, отдаем специальную ошибку
                     if failure == .defaultError {
                         completion(.failure(.partPayError))
+                    } else {
+                        completion(.failure(failure))
                     }
                 } else {
                     completion(.failure(failure))

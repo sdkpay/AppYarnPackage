@@ -14,22 +14,22 @@
         "payments" : [
           {
             "date" : "20 Июня",
-            "amount" : 87500,
+            "amount" : 1215500,
             "currencyCode" : "643"
           },
           {
             "date" : "4 Июля",
-            "amount" : 87500,
+            "amount" : 1215500,
             "currencyCode" : "643"
           },
           {
             "date" : "18 Июля",
-            "amount" : 87500,
+            "amount" : 1215500,
             "currencyCode" : "643"
           },
           {
             "date" : "1 Августа",
-            "amount" : 87500,
+            "amount" : 1215500,
             "currencyCode" : "643"
           }
         ],

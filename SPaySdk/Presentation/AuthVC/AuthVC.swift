@@ -83,7 +83,10 @@ final class AuthVC: ContentVC, IAuthVC {
     
     private func setupUI() {
         view.height(.minScreenSize, priority: .defaultLow)
-        
+//        topBarIsHidden = true
+//        banksStack.alpha = 0
+//        titleLabel.alpha = 0
+
         titleLabel
             .add(toSuperview: view)
             .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: .topMargin)
