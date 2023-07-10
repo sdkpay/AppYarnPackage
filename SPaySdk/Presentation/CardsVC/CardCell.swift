@@ -21,9 +21,7 @@ private extension CGFloat {
     static let cardWidth = 36.0
 }
 
-final class CardCell: UITableViewCell {
-    static var reuseId: String { "CardCell" }
-    
+final class CardCell: UITableViewCell {    
     private lazy var containerView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = .corner

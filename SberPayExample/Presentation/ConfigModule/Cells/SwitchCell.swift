@@ -12,9 +12,7 @@ private extension CGFloat {
     static let topMargin = 10.0
 }
 
-final class SwitchCell: UITableViewCell {
-    static var reuseID: String { "SwitchCell" }
-    
+final class SwitchCell: UITableViewCell {    
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .gray

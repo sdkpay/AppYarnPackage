@@ -13,8 +13,6 @@ private extension CGFloat {
 }
 
 final class ListCell: UITableViewCell {
-    static var reuseID: String { "ListCell" }
-
     private lazy var refreshButton: ActionButton = {
         let view = ActionButton()
         view.addAction {

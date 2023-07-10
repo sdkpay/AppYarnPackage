@@ -33,13 +33,9 @@ final class PartPayVC: ContentVC, IPartPayVC {
     private lazy var titleLabel: UILabel = {
        let view = UILabel()
         view.font = .header2
-        var paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.12
-        view.attributedText = NSMutableAttributedString(string: Strings.Part.Pay.title,
-                                                        attributes: [
-                                                            NSAttributedString.Key.kern: -0.3,
-                                                            NSAttributedString.Key.paragraphStyle: paragraphStyle
-                                                        ])
+        view.setAttributedString(lineHeightMultiple: 1.12,
+                                 kern: -0.3,
+                                 string: Strings.Part.Pay.title)
         view.textColor = .textPrimory
         return view
     }()
@@ -96,7 +92,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     private lazy var partsTableView: ContentTableView = {
         let view = ContentTableView()
-        view.register(PartCell.self, forCellReuseIdentifier: PartCell.reuseId)
+        view.register(cellClass: PartCell.self)
         view.separatorStyle = .none
         view.showsVerticalScrollIndicator = false
         view.isScrollEnabled = false
@@ -151,13 +147,9 @@ final class PartPayVC: ContentVC, IPartPayVC {
     }
     
     func setSubtitle(_ value: String) {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.1
-        subTitleLabel.attributedText = NSMutableAttributedString(string: value,
-                                                                 attributes: [
-                                                                    NSAttributedString.Key.kern: -0.3,
-                                                                    NSAttributedString.Key.paragraphStyle: paragraphStyle
-                                                                 ])
+        subTitleLabel.setAttributedString(lineHeightMultiple: 1.1,
+                                          kern: -0.3,
+                                          string: value)
     }
     
     func setButtonEnabled(value: Bool) {
@@ -254,8 +246,7 @@ extension PartPayVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: PartCell.reuseId) as? PartCell
-        else { return UITableViewCell() }
+        let cell: PartCell = tableView.dequeueResuableCell(forIndexPath: indexPath)
         cell.selectionStyle = .none
         let model = presenter.model(for: indexPath)
         cell.config(with: model)

@@ -12,9 +12,7 @@ private extension CGFloat {
     static let topMargin = 15.0
 }
 
-final class CartCell: UITableViewCell {
-    static var reuseID: String { "CartCell" }
-    
+final class CartCell: UITableViewCell {    
     private lazy var containerView = UIView()
     
     private lazy var iconImageView: UIImageView = {

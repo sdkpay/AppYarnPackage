@@ -7,9 +7,7 @@
 
 import UIKit
 
-final class PaymentSCell: UITableViewCell {
-    static var reuseID: String { "PaymentSCell" }
-    
+final class PaymentSCell: UITableViewCell {    
     private var mainView: UIView = {
        let view = UIView()
         view.layer.cornerRadius = 12

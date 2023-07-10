@@ -9,8 +9,6 @@ import UIKit
 import SBLayout
 
 final class SegmentedControlCell: UITableViewCell {
-    static var reuseID: String { "SegmentedControlCell" }
-
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .gray
