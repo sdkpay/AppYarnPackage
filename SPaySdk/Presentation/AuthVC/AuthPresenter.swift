@@ -82,7 +82,6 @@ final class AuthPresenter: AuthPresenting {
         userService.checkUserSession { [weak self] result in
             switch result {
             case .success:
-                self?.view?.showViews(false)
                 self?.router.presentPayment()
             case .failure(let error):
                 if error.represents(.noInternetConnection) {

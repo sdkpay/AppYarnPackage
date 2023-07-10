@@ -55,7 +55,7 @@ struct ConfigValues {
     var configMethod: RequestMethod
     
     @UserDefault(key: CellType.orderId.rawValue,
-                 defaultValue: "a8c8dc9136924b858f3d1de2c028abda")
+                 defaultValue: "23fc772ae8944aac8434944774630ae7")
     var orderId: String?
 
     @UserDefault(key: CellType.orderNumber.rawValue,

@@ -135,6 +135,7 @@ final class DefaultSDKManager: SDKManager {
                                              tokenExpiration: tokenExpiration,
                                              error: nil)
         paymentTokenCompletion?(responce)
+        liveCircleManager.closeSDKWindow()
     }
     
     func completionPay(with state: SPayState) {
@@ -147,6 +148,7 @@ final class DefaultSDKManager: SDKManager {
             paymentCompletion?(.error, Strings.Alert.Error.Main.title)
         }
         paymentCompletion = nil
+        liveCircleManager.closeSDKWindow()
     }
     
     private func isNewStart(check authInfo: AuthInfo) -> Bool {

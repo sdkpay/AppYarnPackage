@@ -107,7 +107,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
     
     func completeAuth(with url: URL) {
-        switch decodeParametersFrom(url: urlF) {
+        switch decodeParametersFrom(url: url) {
         case .success(let result):
             authManager.authCode = result.code
             authManager.state = result.state
