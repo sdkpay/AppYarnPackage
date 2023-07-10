@@ -30,6 +30,8 @@ public class SPError: NSObject {
             errorDescription = Strings.Error.close
         case .timeOut:
             errorDescription = Strings.Error.timeout
+        case .ssl:
+            errorDescription = Strings.Error.system
         }
     }
 }

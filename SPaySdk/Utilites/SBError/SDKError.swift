@@ -27,6 +27,7 @@ enum SDKError: Error, Hashable {
     case noCards
     case cancelled
     case timeOut
+    case ssl
     
     func represents(_ error: SDKError) -> Bool {
         self == error

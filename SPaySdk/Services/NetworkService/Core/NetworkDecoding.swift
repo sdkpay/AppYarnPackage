@@ -19,14 +19,16 @@ protocol ResponseDecoder {
 }
 
 extension ResponseDecoder {
+    
     func decodeResponse<T: Codable>(data: Data?,
                                     response: URLResponse?,
                                     error: Error?,
                                     type: T.Type) -> Result<T, SDKError> {
-        if let error = error as? NSError,
-            error._code == URLError.Code.timedOut.rawValue {
-            return .failure(.timeOut)
+
+        if let error = systemError(error) {
+            return .failure(error)
         }
+    
         guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
         guard let data = data else { return .failure(.noData) }
         guard (200...299).contains(response.statusCode) else {
@@ -82,6 +84,37 @@ extension ResponseDecoder {
         }
         SBLogger.logResponseFromSbolCompleted(parameters)
         return .success(BankModel(dictionary: parameters))
+    }
+    
+    private func systemError(_ error: Error?) -> SDKError? {
+    
+        guard let error = error as? NSError else { return nil }
+
+        var sslErrors: [URLError.Code] {
+            return [
+                .secureConnectionFailed,
+                .serverCertificateHasBadDate,
+                .serverCertificateUntrusted,
+                .serverCertificateHasUnknownRoot,
+                .serverCertificateNotYetValid,
+                .clientCertificateRejected,
+                .clientCertificateRequired
+            ]
+        }
+        
+        var timeOutErrors: [URLError.Code] {
+            return [
+                .timedOut
+            ]
+        }
+        
+        if sslErrors.contains(where: { $0.rawValue == error._code }) {
+            return .ssl
+        } else if timeOutErrors.contains(where: { $0.rawValue == error._code }) {
+            return .timeOut
+        } else {
+            return nil
+        }
     }
     
     private func checkBankError(error: String) -> SDKError {
