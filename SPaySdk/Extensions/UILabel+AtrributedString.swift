@@ -12,9 +12,9 @@ extension UILabel {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = lineHeightMultiple
         self.attributedText = NSMutableAttributedString(string: string,
-                                                                 attributes: [
-                                                                    NSAttributedString.Key.kern: kern,
-                                                                    NSAttributedString.Key.paragraphStyle: paragraphStyle
-                                                                 ])
+                                                        attributes: [
+                                                            NSAttributedString.Key.kern: kern,
+                                                            NSAttributedString.Key.paragraphStyle: paragraphStyle
+                                                        ])
     }
 }
