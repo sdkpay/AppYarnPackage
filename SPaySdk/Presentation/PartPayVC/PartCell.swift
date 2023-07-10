@@ -16,8 +16,6 @@ private extension CGFloat {
 }
 
 final class PartCell: UITableViewCell {
-    static var reuseId: String { "PartCell" }
-
     private lazy var titleLabel = UILabel()
 
     private lazy var costLabel: UILabel = {
@@ -63,13 +61,7 @@ final class PartCell: UITableViewCell {
         pointView.backgroundColor = model.isSelected ? .main : .textSecondary
         
         costLabel.textAlignment = .right
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.06
-        costLabel.attributedText = NSMutableAttributedString(string: model.cost,
-                                                             attributes: [
-                                                                NSAttributedString.Key.kern: -0.34,
-                                                                NSAttributedString.Key.paragraphStyle: paragraphStyle
-                                                             ])
+        costLabel.setAttributedString(lineHeightMultiple: 1.06, kern: -0.34, string: model.cost)
     }
     
     private func setupUI() {

@@ -42,8 +42,8 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let view = UITableView()
         view.separatorStyle = .none
         view.backgroundColor = .white
-        view.register(CartCell.self, forCellReuseIdentifier: CartCell.reuseID)
-        view.register(PaymentSCell.self, forCellReuseIdentifier: PaymentSCell.reuseID)
+        view.register(cellClass: CartCell.self)
+        view.register(cellClass: PaymentSCell.self)
         view.delegate = self
         view.dataSource = self
         return view
@@ -102,16 +102,12 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: CartCell.reuseID) as? CartCell else {
-                return UITableViewCell()
-            }
+            let cell: CartCell = tableView.dequeueResuableCell(forIndexPath: indexPath)
             let model = model[indexPath.row]
             cell.config(with: model.title, cost: model.cost, icon: model.image, color: model.color)
             return cell
         } else {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: PaymentSCell.reuseID) as? PaymentSCell else {
-                return UITableViewCell()
-            }
+            let cell: PaymentSCell = tableView.dequeueResuableCell(forIndexPath: indexPath)
             return cell
         }
     }

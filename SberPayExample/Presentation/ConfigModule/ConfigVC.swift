@@ -42,9 +42,9 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
         } else {
             tableView = UITableView(frame: .zero, style: .grouped)
         }
-        tableView.register(TextViewCell.self, forCellReuseIdentifier: TextViewCell.reuseID)
-        tableView.register(SegmentedControlCell.self, forCellReuseIdentifier: SegmentedControlCell.reuseID)
-        tableView.register(SwitchCell.self, forCellReuseIdentifier: SwitchCell.reuseID)
+        tableView.register(cellClass: TextViewCell.self)
+        tableView.register(cellClass: SegmentedControlCell.self)
+        tableView.register(cellClass: SwitchCell.self)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.allowsSelection = false

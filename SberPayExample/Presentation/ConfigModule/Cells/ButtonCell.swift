@@ -13,8 +13,6 @@ private extension CGFloat {
 }
 
 final class ButtonCell: UITableViewCell {
-    static var reuseID: String { "ButtonCell" }
-
     private lazy var button: ActionButton = {
         let view = ActionButton()
         view.setTitleColor(.systemBlue, for: .normal)
