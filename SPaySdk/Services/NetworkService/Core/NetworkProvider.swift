@@ -50,7 +50,10 @@ enum HTTPTask {
 
 // MARK: - NetworkProvider
 protocol NetworkProvider {
-    func request(_ target: TargetType, retrySettings: RetrySettings, completion: @escaping NetworkProviderCompletion)
+    func request(_ target: TargetType,
+                 retrySettings: RetrySettings,
+                 host: HostSettings,
+                 completion: @escaping NetworkProviderCompletion)
     func cancel()
 }
 
@@ -65,8 +68,6 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     init(requestManager: BaseRequestManager,
          hostManager: HostManager,
          buildSettings: BuildSettings) {
-        SBLogger.log(level: .debug(level: .network),
-                     "#️⃣ SSL certificates: \(Certificates.allCases.map({ $0.rawValue }).json)")
         self.requestManager = requestManager
         self.hostManager = hostManager
         self.buildSettings = buildSettings
@@ -78,16 +79,18 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     
     func request(_ target: TargetType,
                  retrySettings: RetrySettings = (1, []),
+                 host: HostSettings = .main,
                  completion: @escaping NetworkProviderCompletion) {
-        _request(target: target, retrySettings: retrySettings, completion: completion)
+        _request(target: target, retrySettings: retrySettings, host: host, completion: completion)
     }
 
     private func _request(retry: Int = 1,
                           target: TargetType,
                           retrySettings: RetrySettings,
+                          host: HostSettings,
                           completion: @escaping NetworkProviderCompletion) {
         do {
-            let request = try self.buildRequest(from: target)
+            let request = try self.buildRequest(from: target, hostSettings: host)
             SBLogger.logRequestStarted(request)
             task = session?.dataTask(with: request, completionHandler: { data, response, error in
                 self.timeManager.checkNetworkDataSize(object: data)
@@ -95,7 +98,6 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                     if let response = response {
                         self.saveGeobalancingData(from: response)
                     }
-
                     if retrySettings.count != 1,
                        let error = error,
                        (error._code == URLError.Code.timedOut.rawValue || !retrySettings.retryCode.contains(error._code)),
@@ -103,10 +105,11 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                         self._request(retry: retry + 1,
                                       target: target,
                                       retrySettings: retrySettings,
+                                      host: host,
                                       completion: completion)
                     } else {
                         completion(data, response, error)
-                        SBLogger.logRequestCompleted(host: self.hostManager.host,
+                        SBLogger.logRequestCompleted(host: self.hostManager.host(for: host),
                                                      target,
                                                      response: response,
                                                      data: data,
@@ -126,8 +129,8 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         task?.cancel()
     }
 
-    private func buildRequest(from route: TargetType) throws -> URLRequest {
-        var request = URLRequest(url: hostManager.host.appendingPathComponent(route.path),
+    private func buildRequest(from route: TargetType, hostSettings: HostSettings) throws -> URLRequest {
+        var request = URLRequest(url: hostManager.host(for: hostSettings).appendingPathComponent(route.path),
                                  cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
                                  timeoutInterval: Constants.timeoutInterval)
         request.httpMethod = route.httpMethod.rawValue

@@ -20,8 +20,9 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
     
     func request(_ target: TargetType,
                  retrySettings: RetrySettings,
+                 host: HostSettings,
                  completion: @escaping NetworkProviderCompletion) {
-        let response = HTTPURLResponse(url: hostManager.host,
+        let response = HTTPURLResponse(url: hostManager.host(for: host),
                                        statusCode: 200,
                                        httpVersion: nil,
                                        headerFields: nil)

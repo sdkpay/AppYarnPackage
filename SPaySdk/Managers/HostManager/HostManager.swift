@@ -7,12 +7,25 @@
 
 import Foundation
 
+enum HostSettings {
+    case main
+    case cers
+}
+
 private enum Host: String {
     case sandBox = "https://ift.gate2.spaymentsplus.ru/sdk-gateway/v1"
     case mocker = "https://api.mocki.io/v2/071c7c55"
     case ift = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
     case psi = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
     case prom = "https://gate1.spaymentsplus.ru/sdk-gateway/v1"
+    
+    var url: URL {
+        URL(string: rawValue) ?? URL(string: "https://www.google.com/")!
+    }
+}
+
+private enum CertConfigHost: String {
+    case dropbox = "https://dl.dropboxusercontent.com/s"
     
     var url: URL {
         URL(string: rawValue) ?? URL(string: "https://www.google.com/")!
@@ -30,29 +43,34 @@ final class HostManagerAssembly: Assembly {
 }
 
 protocol HostManager {
-    var host: URL { get }
+    func host(for settings: HostSettings) -> URL
 }
 
 final class DefaultHostManager: HostManager {
-    var host: URL {
-        guard environmentManager.environment == .prod else {
-            return Host.sandBox.url
-        }
-        
-        switch buildSettings.networkState {
-        case .Mocker:
-            return Host.mocker.url
-        case .Ift:
-            return Host.ift.url
-        case .Prom:
-            return Host.prom.url
-        case .Psi:
-            return Host.psi.url
-        case .Local:
-            return Host.mocker.url
+    func host(for settings: HostSettings) -> URL {
+        switch settings {
+        case .main:
+            guard environmentManager.environment == .prod else {
+                return Host.sandBox.url
+            }
+            
+            switch buildSettings.networkState {
+            case .Mocker:
+                return Host.mocker.url
+            case .Ift:
+                return Host.ift.url
+            case .Prom:
+                return Host.prom.url
+            case .Psi:
+                return Host.psi.url
+            case .Local:
+                return Host.mocker.url
+            }
+        case .cers:
+            return CertConfigHost.dropbox.url
         }
     }
-    
+
     private let environmentManager: EnvironmentManager
     private let buildSettings: BuildSettings
     

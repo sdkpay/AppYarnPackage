@@ -28,10 +28,12 @@ final class NetworkServiceAssembly: Assembly {
 
 protocol NetworkService: AnyObject {
     func request(_ target: TargetType,
+                 host: HostSettings,
                  retrySettings: RetrySettings,
                  completion: @escaping (Result<Void, SDKError>) -> Void)
     func request<T>(_ target: TargetType,
                     to: T.Type,
+                    host: HostSettings,
                     retrySettings: RetrySettings,
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable
     func cancelTask()
@@ -39,15 +41,17 @@ protocol NetworkService: AnyObject {
 
 extension NetworkService {
     func request(_ target: TargetType,
+                 host: HostSettings = .main,
                  retrySettings: RetrySettings = (1, []),
                  completion: @escaping (Result<Void, SDKError>) -> Void) {
-        request(target, retrySettings: retrySettings, completion: completion)
+        request(target, host: host, retrySettings: retrySettings, completion: completion)
     }
     func request<T>(_ target: TargetType,
                     to: T.Type,
+                    host: HostSettings = .main,
                     retrySettings: RetrySettings = (1, []),
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
-        request(target, to: to, retrySettings: retrySettings, completion: completion)
+        request(target, to: to, host: host, retrySettings: retrySettings, completion: completion)
     }
 }
 
@@ -62,9 +66,10 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
     }
 
     func request(_ target: TargetType,
+                 host: HostSettings,
                  retrySettings: RetrySettings = (1, []),
                  completion: @escaping (Result<Void, SDKError>) -> Void) {
-        provider.request(target, retrySettings: retrySettings) { data, response, error in
+        provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error)
             completion(result)
             switch result {
@@ -77,9 +82,10 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
     
     func request<T>(_ target: TargetType,
                     to: T.Type,
+                    host: HostSettings,
                     retrySettings: RetrySettings = (1, []),
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
-        provider.request(target, retrySettings: retrySettings) { data, response, error in
+        provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
             completion(result)
             switch result {

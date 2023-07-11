@@ -98,7 +98,8 @@ extension ResponseDecoder {
                 .serverCertificateHasUnknownRoot,
                 .serverCertificateNotYetValid,
                 .clientCertificateRejected,
-                .clientCertificateRequired
+                .clientCertificateRequired,
+                .cancelled
             ]
         }
         

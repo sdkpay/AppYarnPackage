@@ -14,6 +14,7 @@ enum DefaultsKey: String {
     case bankApps
     case images
     case offerTitle
+    case certKeys
 }
 
 @propertyWrapper
@@ -69,4 +70,7 @@ extension UserDefaults {
     @UserDefault(key: .bankApps,
                  defaultValue: [BankApp(name: "", link: "", icon: "")])
     static var bankApps: [BankApp]?
+    
+    @UserDefault(key: .certKeys, defaultValue: [String]())
+    static var certKeys: [String]?
 }
