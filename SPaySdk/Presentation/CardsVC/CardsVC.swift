@@ -88,8 +88,7 @@ extension CardsVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueResuableCell(forIndexPath: indexPath) as? CardCell
-        else { return UITableViewCell() }
+        let cell: CardCell = tableView.dequeueResuableCell(forIndexPath: indexPath)
         cell.selectionStyle = .none
         let model = presenter.model(for: indexPath)
         cell.config(with: model)
