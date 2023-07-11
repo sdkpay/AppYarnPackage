@@ -69,9 +69,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     }
     
     func getConfig(with apiKey: String, completion: @escaping (SDKError?) -> Void) {
-        getCertificates { [weak self] in
-            self?.getRemoteConfig(with: apiKey, completion: completion)
-        }
+        getRemoteConfig(with: apiKey, completion: completion)
     }
     
     private func saveConfig(_ value: ConfigModel) {

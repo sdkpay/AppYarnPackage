@@ -41,7 +41,7 @@ final class DefaultRemoteCertificateService: RemoteCertificateService {
         guard localCertsKeys.isEmpty else {
             SBLogger.log(level: .debug(level: .network),
                          "#️⃣ Get local SSL certificates: \(UserDefaults.certKeys?.json ?? "none")")
-            CertificateValidator.addPublicKeys(localCertsKeys)
+         //   CertificateValidator.addPublicKeys(localCertsKeys)
             completion()
             return
         }
@@ -70,7 +70,7 @@ final class DefaultRemoteCertificateService: RemoteCertificateService {
             switch result {
             case .success(let result):
                 UserDefaults.certKeys = result.certKeys
-                CertificateValidator.addPublicKeys(result.certKeys)
+             //   CertificateValidator.addPublicKeys(result.certKeys)
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
