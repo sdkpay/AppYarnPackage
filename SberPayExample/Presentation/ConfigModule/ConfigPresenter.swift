@@ -293,6 +293,7 @@ extension ConfigPresenter {
         let cell = TextViewCell()
         cell.config(title: "ApiKey",
                     text: configValues.apiKey,
+                    accessibilityIdentifier: "ApiKey",
                     placeholder: "ApiKey",
                     textEdited: { text in
             self.configValues.apiKey = text

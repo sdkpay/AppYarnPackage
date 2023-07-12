@@ -67,6 +67,7 @@ final class TextViewCell: UITableViewCell {
 
     func config(title: String,
                 text: String?,
+                accessibilityIdentifier: String? = nil,
                 placeholder: String? = nil,
                 keyboardType: UIKeyboardType = .default,
                 description: String? = nil,
@@ -77,6 +78,7 @@ final class TextViewCell: UITableViewCell {
                 refreshButtonTapped: (() -> Void)? = nil) {
         titleLabel.text = title
         textField.text = text
+        textField.accessibilityIdentifier = accessibilityIdentifier
         self.textEdited = textEdited
         
         if let placeholder {
