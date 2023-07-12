@@ -1,0 +1,319 @@
+//
+//  PartPayViewBuilder.swift
+//  SPaySdk
+//
+//  Created by Арсений on 11.07.2023.
+//
+
+import UIKit
+
+private extension PartPayViewBuilder {
+    enum Consts {
+        static let margin: CGFloat = 16.0
+        
+        enum Label {
+            enum Title {
+                static let font = UIFont.header2
+                static let textColor = UIColor.textPrimory
+                
+                static let topOffSet: CGFloat = 24.0
+                static let leftOffSet: CGFloat = Consts.margin
+                static let rightOffSet: CGFloat = Consts.margin
+            }
+            
+            enum SubTittle {
+                static let font = UIFont.medium2
+                static let textColor = UIColor.textSecondary
+                
+                static let topOffSet: CGFloat = 24.0
+                static let leftOffSet: CGFloat = Consts.margin
+                static let rightOffSet: CGFloat = Consts.margin
+            }
+            
+            enum Final {
+                static let font = UIFont.bodi1
+                static let textColor = UIColor.textPrimory
+                static let text = Strings.Part.Pay.final
+            }
+            
+            enum FinalCost {
+                static let font = UIFont.bodi1
+                static let textColor = UIColor.textPrimory
+            }
+        }
+        
+        enum Button {
+            enum Accept {
+                static let title = String(stringLiteral: Strings.Accept.title)
+                
+                static let topOffSet: CGFloat = 20.0
+                static let leftOffSet: CGFloat = Consts.margin
+                static let rightOffSet: CGFloat = Consts.margin
+                static let bottomOffSet: CGFloat = 10.0
+                static let height: CGFloat = 56.0
+            }
+            
+            enum Cancel {
+                static let title = String(stringLiteral: Strings.Part.Pay.Cancel.title)
+                
+                static let topOffSet: CGFloat = 20.0
+                static let leftOffSet: CGFloat = Consts.margin
+                static let rightOffSet: CGFloat = Consts.margin
+                static let bottomOffSet: CGFloat = 44.0
+                static let height: CGFloat = 56.0
+            }
+        }
+        
+        enum TableView {
+            
+            enum Background {
+                static let rowHeight: CGFloat = 50.0
+                
+                static let topOffSet: CGFloat = 20.0
+                static let leftOffSet: CGFloat = Consts.margin
+                static let rightOffSet: CGFloat = Consts.margin
+            }
+            
+            enum Parts {
+                static let topOffSet: CGFloat = 20.0
+                static let leftOffSet: CGFloat = Consts.margin
+                static let rightOffSet: CGFloat = Consts.margin
+            }
+        }
+        
+        enum Stack {
+            static let topOffSet: CGFloat = 20.0
+            static let leftOffSet: CGFloat = 22.0
+            static let rightOffSet: CGFloat = Consts.margin
+            static let bottomOffSet: CGFloat = Consts.margin
+            static let height: CGFloat = Consts.margin
+        }
+        
+        enum View {
+            static let topOffSet: CGFloat = 8.0
+            static let leftOffSet: CGFloat = Consts.margin
+            static let rightOffSet: CGFloat = Consts.margin
+            static let bottomOffSet: CGFloat = 20.0
+        }
+    }
+}
+
+final class PartPayViewBuilder {
+    private var acceptButtonTapped: Action
+    private var backButtonTapped: Action
+    
+    private(set) lazy var titleLabel: UILabel = {
+       let view = UILabel()
+        view.font = Consts.Label.Title.font
+        view.setAttributedString(lineHeightMultiple: 1.12,
+                                 kern: -0.3,
+                                 string: Strings.Part.Pay.title)
+        view.textColor = Consts.Label.Title.textColor
+        return view
+    }()
+    
+    private(set) lazy var subTitleLabel: UILabel = {
+       let view = UILabel()
+        view.font = Consts.Label.Title.font
+        view.textColor = Consts.Label.SubTittle.textColor
+        return view
+    }()
+    
+    private(set) lazy var acceptButton: DefaultButton = {
+        let view = DefaultButton(buttonAppearance: .full)
+        view.setTitle(Consts.Button.Accept.title, for: .normal)
+        view.addAction(acceptButtonTapped)
+        return view
+    }()
+    
+    private(set) lazy var cancelButton: DefaultButton = {
+        let view = DefaultButton(buttonAppearance: .info)
+        view.setTitle(Consts.Button.Cancel.title, for: .normal)
+        view.addAction(backButtonTapped)
+        return view
+    }()
+    
+    private(set) lazy var agreementView = CheckView()
+
+    private(set) lazy var finalLabel: UILabel = {
+        let view = UILabel()
+        view.font = Consts.Label.Final.font
+        view.textColor = Consts.Label.Final.textColor
+        view.text = Consts.Label.Final.text
+        return view
+    }()
+    
+    private(set) lazy var finalCostLabel: UILabel = {
+       let view = UILabel()
+        view.font = Consts.Label.FinalCost.font
+        view.textColor = Consts.Label.FinalCost.textColor
+        return view
+    }()
+    
+    private(set) lazy var finalStack: UIStackView = {
+        let view = UIStackView()
+        view.axis = .horizontal
+        view.addArrangedSubview(finalLabel)
+        view.addArrangedSubview(finalCostLabel)
+        return view
+    }()
+    
+    private(set) lazy var partsTableView: ContentTableView = {
+        let view = ContentTableView()
+        view.register(cellClass: PartCell.self)
+        view.separatorStyle = .none
+        view.showsVerticalScrollIndicator = false
+        view.isScrollEnabled = false
+        view.rowHeight = Consts.TableView.Background.rowHeight
+        return view
+    }()
+    
+    private(set) lazy var backgroundTableView: UIView = {
+        let view = UIView()
+        view.setupForBase()
+        return view
+    }()
+    
+    init(acceptButtonTapped: @escaping Action, backButtonTapped: @escaping Action) {
+        self.acceptButtonTapped = acceptButtonTapped
+        self.backButtonTapped = backButtonTapped
+    }
+    
+    func setupUI(view: UIView) {
+        view.addSubview(titleLabel)
+        view.addSubview(subTitleLabel)
+        view.addSubview(backgroundTableView)
+        backgroundTableView.addSubview(partsTableView)
+        backgroundTableView.addSubview(finalStack)
+        view.addSubview(cancelButton)
+        view.addSubview(acceptButton)
+        view.addSubview(agreementView)
+        
+        acceptButton
+            .add(toSuperview: view)
+        
+        titleLabel
+            .add(toSuperview: view)
+            .touchEdge(.top, toSuperviewEdge: .top, withInset: Consts.Label.Title.topOffSet)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Label.Title.leftOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Label.Title.rightOffSet)
+
+        subTitleLabel
+            .add(toSuperview: view)
+            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Label.SubTittle.leftOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Label.SubTittle.rightOffSet)
+
+        backgroundTableView
+            .add(toSuperview: view)
+            .touchEdge(.top, toEdge: .bottom, ofView: subTitleLabel, withInset: Consts.TableView.Background.topOffSet)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.TableView.Background.leftOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.Background.rightOffSet)
+        
+        partsTableView
+            .add(toSuperview: backgroundTableView)
+            .touchEdge(.top, toEdge: .top, ofView: backgroundTableView, withInset: Consts.TableView.Parts.topOffSet)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.TableView.Parts.leftOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.Parts.rightOffSet)
+        
+        finalStack
+            .add(toSuperview: backgroundTableView)
+            .touchEdge(.top, toEdge: .bottom, ofView: partsTableView)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Stack.leftOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Stack.rightOffSet)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Consts.Stack.bottomOffSet)
+            .height(Consts.Stack.height)
+
+        agreementView
+            .add(toSuperview: view)
+            .touchEdge(.top, toEdge: .bottom, ofView: backgroundTableView, withInset: Consts.View.topOffSet)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.View.leftOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.View.rightOffSet)
+            .touchEdge(.bottom, toEdge: .top, ofView: acceptButton, withInset: Consts.View.bottomOffSet)
+            
+        cancelButton
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Button.Cancel.leftOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Button.Cancel.rightOffSet)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Consts.Button.Cancel.bottomOffSet)
+            .height(Consts.Button.Cancel.height)
+
+        acceptButton
+            .add(toSuperview: view)
+            .height(Consts.Button.Accept.height)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Button.Accept.leftOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Button.Accept.rightOffSet)
+            .touchEdge(.bottom, toEdge: .top, ofView: cancelButton, withInset: Consts.Button.Accept.bottomOffSet)
+    }
+    
+//    private func setupUI() {
+//        view.addSubview(titleLabel)
+//        view.addSubview(subTitleLabel)
+//        view.addSubview(backgroundTableView)
+//        backgroundTableView.addSubview(partsTableView)
+//        backgroundTableView.addSubview(finalStack)
+//        view.addSubview(cancelButton)
+//        view.addSubview(acceptButton)
+//        view.addSubview(agreementView)
+//
+//        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: .topMargin),
+//            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
+//            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin)
+//        ])
+//
+//        subTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            subTitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+//            subTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
+//            subTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin)
+//        ])
+//
+//        backgroundTableView.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            backgroundTableView.topAnchor.constraint(equalTo: subTitleLabel.bottomAnchor, constant: .tableMargin),
+//            backgroundTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
+//            backgroundTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin)
+//        ])
+//
+//        partsTableView.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            partsTableView.topAnchor.constraint(equalTo: backgroundTableView.topAnchor, constant: .topTo),
+//            partsTableView.leadingAnchor.constraint(equalTo: backgroundTableView.leadingAnchor, constant: .margin),
+//            partsTableView.trailingAnchor.constraint(equalTo: backgroundTableView.trailingAnchor, constant: -.margin)
+//        ])
+//
+//        finalStack.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            finalStack.topAnchor.constraint(equalTo: partsTableView.bottomAnchor),
+//            finalStack.leadingAnchor.constraint(equalTo: backgroundTableView.leadingAnchor, constant: .finalMargin),
+//            finalStack.trailingAnchor.constraint(equalTo: backgroundTableView.trailingAnchor, constant: -.margin),
+//            finalStack.heightAnchor.constraint(equalToConstant: .margin),
+//            finalStack.bottomAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: -.margin)
+//        ])
+//
+//        agreementView.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            agreementView.topAnchor.constraint(equalTo: backgroundTableView.bottomAnchor, constant: .marginHalf),
+//            agreementView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
+//            agreementView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
+//            agreementView.bottomAnchor.constraint(equalTo: acceptButton.topAnchor, constant: -.topTo)
+//        ])
+//
+//        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -.bottomMargin),
+//            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
+//            cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
+//            cancelButton.heightAnchor.constraint(equalToConstant: .defaultButtonHeight)
+//        ])
+//
+//        acceptButton.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            acceptButton.heightAnchor.constraint(equalToConstant: .defaultButtonHeight),
+//            acceptButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin),
+//            acceptButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
+//            acceptButton.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -.buttonsMargin)
+//        ])
+}

@@ -7,38 +7,11 @@
 
 import UIKit
 
-private extension CGFloat {
-    static let topMargin = 20.0
-    static let tableMargin = 12.0
-    static let bottomMargin = 58.0
-    static let rowHeight = 84.0
-}
-
 protocol ICardsVC { }
 
 final class CardsVC: ContentVC, ICardsVC {
-    private lazy var titleLabel: UILabel = {
-        let view = UILabel()
-        view.font = .bodi2
-        view.textColor = .textSecondary
-        view.text = String(stringLiteral: Strings.Cards.title)
-        return view
-    }()
-    
-    private lazy var tableView: ContentTableView = {
-        let view = ContentTableView()
-        view.register(cellClass: CardCell.self)
-        view.separatorStyle = .none
-        view.backgroundColor = .clear
-        view.backgroundView?.backgroundColor = .backgroundPrimary
-        view.showsVerticalScrollIndicator = false
-        view.rowHeight = .rowHeight
-        view.dataSource = self
-        view.delegate = self
-        return view
-    }()
-    
     private let presenter: CardsPresenting
+    private let viewBuilder = CardsViewBuilder()
     
     init(_ presenter: CardsPresenting) {
         self.presenter = presenter
@@ -52,7 +25,9 @@ final class CardsVC: ContentVC, ICardsVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
-        setupUI()
+        viewBuilder.setupUI(view: view, logoImage: logoImage)
+        viewBuilder.tableView.delegate = self
+        viewBuilder.tableView.dataSource = self
         SBLogger.log(.didLoad(view: self))
     }
     
@@ -64,21 +39,6 @@ final class CardsVC: ContentVC, ICardsVC {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
-    }
-    
-    private func setupUI() {
-        titleLabel
-            .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: .topMargin)
-            .touchEdge(.left, toEdge: .left, ofView: logoImage)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-
-        tableView
-            .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: .tableMargin)
-            .touchEdge(.left, toEdge: .left, ofView: titleLabel)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .bottomMargin)
     }
 }
 

@@ -107,37 +107,15 @@ final class ContentNC: UIViewController {
         guard let containerView = presentationController?.containerView else {
             return
         }
-        
-        let fomShimView = UIView()
+        var fomShimView = UIView()
         fomShimView.backgroundColor = .backgroundPrimary
         fomShimView.alpha = 0
         
-        let toShimView = UIView()
+        var toShimView = UIView()
         toShimView.backgroundColor = .backgroundPrimary
         toShimView.alpha = 1
         
-        from.view.addSubview(fomShimView)
-        fomShimView.translatesAutoresizingMaskIntoConstraints = false
-        to.view.addSubview(toShimView)
-        toShimView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            fomShimView.bottomAnchor.constraint(equalTo: from.view.bottomAnchor),
-            fomShimView.topAnchor.constraint(equalTo: from.view.topAnchor),
-            fomShimView.leftAnchor.constraint(equalTo: from.view.leftAnchor),
-            fomShimView.rightAnchor.constraint(equalTo: from.view.rightAnchor)
-        ])
-    
-        to.view.addSubview(toShimView)
-        toShimView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            toShimView.bottomAnchor.constraint(equalTo: to.view.bottomAnchor),
-            toShimView.topAnchor.constraint(equalTo: to.view.topAnchor),
-            toShimView.leftAnchor.constraint(equalTo: to.view.leftAnchor),
-            toShimView.rightAnchor.constraint(equalTo: to.view.rightAnchor)
-        ])
-        
-        fomShimView.layoutIfNeeded()
-        toShimView.layoutIfNeeded()
+        addedConstraint(fomShimView: &fomShimView, toShimView: &toShimView, from: from, to: to)
         
         addChild(to)
         view.addSubview(to.view)
@@ -170,8 +148,48 @@ final class ContentNC: UIViewController {
         fromTop.isActive = false
         toTop.isActive = true
         
-        CATransaction.begin()
+        animatedViews(fomShimView: fomShimView,
+                      toShimView: toShimView,
+                      to: to,
+                      from: from,
+                      containerView: containerView,
+                      completion: completion)
+    }
+    
+    private func addedConstraint(fomShimView: inout UIView,
+                                 toShimView: inout UIView,
+                                 from: UIViewController,
+                                 to: UIViewController) {
+        from.view.addSubview(fomShimView)
+        fomShimView.translatesAutoresizingMaskIntoConstraints = false
+        to.view.addSubview(toShimView)
+        toShimView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            fomShimView.bottomAnchor.constraint(equalTo: from.view.bottomAnchor),
+            fomShimView.topAnchor.constraint(equalTo: from.view.topAnchor),
+            fomShimView.leftAnchor.constraint(equalTo: from.view.leftAnchor),
+            fomShimView.rightAnchor.constraint(equalTo: from.view.rightAnchor)
+        ])
+    
+        to.view.addSubview(toShimView)
+        toShimView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            toShimView.bottomAnchor.constraint(equalTo: to.view.bottomAnchor),
+            toShimView.topAnchor.constraint(equalTo: to.view.topAnchor),
+            toShimView.leftAnchor.constraint(equalTo: to.view.leftAnchor),
+            toShimView.rightAnchor.constraint(equalTo: to.view.rightAnchor)
+        ])
         
+        fomShimView.layoutIfNeeded()
+        toShimView.layoutIfNeeded()
+    }
+    
+    private func animatedViews(fomShimView: UIView,
+                               toShimView: UIView,
+                               to: UIViewController,
+                               from: UIViewController,
+                               containerView: UIView,
+                               completion: Action?) {
         UIView.animate(
             withDuration: .animationDuration,
             delay: 0,
@@ -185,6 +203,7 @@ final class ContentNC: UIViewController {
                 completion?()
             }
         )
+        
         UIView.animate(
             withDuration: .animationDuration,
             delay: .animationDuration,
@@ -200,6 +219,7 @@ final class ContentNC: UIViewController {
                 from.didMove(toParent: nil)
             }
         )
+        
         UIView.animate(
             withDuration: .animationDuration,
             delay: .animationDuration * 2,
@@ -213,6 +233,5 @@ final class ContentNC: UIViewController {
                 toShimView.removeFromSuperview()
             }
         )
-        CATransaction.commit()
     }
 }
