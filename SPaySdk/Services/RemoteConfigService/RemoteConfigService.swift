@@ -11,8 +11,7 @@ final class RemoteConfigServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         let service: RemoteConfigService = DefaultRemoteConfigService(network: container.resolve(),
                                                                       analytics: container.resolve(),
-                                                                      featureToggle: container.resolve(),
-                                                                      certsService: container.resolve())
+                                                                      featureToggle: container.resolve())
         container.register(service: service)
     }
 }
@@ -27,20 +26,18 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private var apiKey: String?
     private let featureToggle: FeatureToggleService
     private let analytics: AnalyticsService
-    private let certsService: RemoteCertificateService
     private var retryWithCerts = true
 
     init(network: NetworkService,
          analytics: AnalyticsService,
-         featureToggle: FeatureToggleService,
-         certsService: RemoteCertificateService) {
+         featureToggle: FeatureToggleService) {
         self.network = network
         self.analytics = analytics
         self.featureToggle = featureToggle
-        self.certsService = certsService
     }
     
-    private func getRemoteConfig(with apiKey: String, completion: @escaping (SDKError?) -> Void) {
+    func getConfig(with apiKey: String,
+                   completion: @escaping (SDKError?) -> Void) {
         self.apiKey = apiKey
         network.request(ConfigTarget.getConfig,
                         to: ConfigModel.self,
@@ -54,22 +51,9 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                 self.setFeatures(config.featuresToggle)
                 completion(nil)
             case .failure(let error):
-                if error.represents(.ssl), self.retryWithCerts {
-                    self.retryWithCerts = false
-                    self.getConfig(with: apiKey, completion: completion)
-                } else {
-                    completion(error)
-                }
+                completion(error)
             }
         }
-    }
-    
-    private func getCertificates(completion: @escaping Action) {
-        certsService.getCerts(completion: completion)
-    }
-    
-    func getConfig(with apiKey: String, completion: @escaping (SDKError?) -> Void) {
-        getRemoteConfig(with: apiKey, completion: completion)
     }
     
     private func saveConfig(_ value: ConfigModel) {

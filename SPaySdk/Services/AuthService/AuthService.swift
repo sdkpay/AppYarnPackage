@@ -64,15 +64,14 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     func tryToAuth(completion: @escaping (SDKError?, Bool) -> Void) {
         // Проверка на целостность
-        if enviromentManager.environment == .sandboxWithoutBankApp {
+        if enviromentManager.environment != .prod {
             authRequest(completion: completion)
         } else {
             personalMetricsService.integrityCheck { [weak self] result in
-                if result {
-                    // Запрос на получение сессии
+                switch result {
+                case true:
                     self?.authRequest(completion: completion)
-                } else {
-                    // Ошибка авторизации
+                case false:
                     completion(.personalInfo, false)
                 }
             }

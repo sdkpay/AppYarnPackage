@@ -18,7 +18,6 @@ final class AssemblyManager {
         AuthManagerAssembly(),
         BaseRequestManagerAssembly(),
         NetworkServiceAssembly(),
-        RemoteCertificateServiceAssembly(),
         RemoteConfigServiceAssembly(),
         AlertServiceAssembly(),
         SDKManagerAssembly(),

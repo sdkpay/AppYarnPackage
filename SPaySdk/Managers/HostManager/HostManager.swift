@@ -9,7 +9,6 @@ import Foundation
 
 enum HostSettings {
     case main
-    case cers
 }
 
 private enum Host: String {
@@ -18,14 +17,6 @@ private enum Host: String {
     case ift = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
     case psi = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
     case prom = "https://gate1.spaymentsplus.ru/sdk-gateway/v1"
-    
-    var url: URL {
-        URL(string: rawValue) ?? URL(string: "https://www.google.com/")!
-    }
-}
-
-private enum CertConfigHost: String {
-    case dropbox = "https://dl.dropboxusercontent.com/s"
     
     var url: URL {
         URL(string: rawValue) ?? URL(string: "https://www.google.com/")!
@@ -66,8 +57,6 @@ final class DefaultHostManager: HostManager {
             case .Local:
                 return Host.mocker.url
             }
-        case .cers:
-            return CertConfigHost.dropbox.url
         }
     }
 
