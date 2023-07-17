@@ -14,7 +14,6 @@ protocol IPaymentVC {
 }
 
 final class PaymentVC: ContentVC, IPaymentVC {
-
     private lazy var viewBuilder = PaymentViewBuilder { [weak self] in
         guard let self = self else { return }
         self.presenter.payButtonTapped()

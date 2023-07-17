@@ -50,14 +50,14 @@ final class ProfileView: UIView {
         setupUI()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func config(with userInfo: UserInfo) {
         nameLabel.text = userInfo.fullName
         iconView.image = userInfo.sdkGender.icon
         setupUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     private func setupUI() {

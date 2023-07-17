@@ -12,6 +12,8 @@ protocol AuthPresenting {
 }
 
 final class AuthPresenter: AuthPresenting {
+    weak var view: (IAuthVC & ContentVC)?
+
     private let analytics: AnalyticsService
     private let router: AuthRouter
     private let authService: AuthService
@@ -22,8 +24,6 @@ final class AuthPresenter: AuthPresenting {
     private let timeManager: OptimizationCheсkerManager
     private let contentLoadManager: ContentLoadManager
     private let enviromentManager: EnvironmentManager
-
-    weak var view: (IAuthVC & ContentVC)?
     
     init(_ router: AuthRouter,
          authService: AuthService,

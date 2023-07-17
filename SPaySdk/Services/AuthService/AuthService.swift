@@ -78,6 +78,24 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
     }
     
+    func completeAuth(with url: URL) {
+        switch decodeParametersFrom(url: url) {
+        case .success(let result):
+            authManager.authCode = result.code
+            authManager.state = result.state
+            authСompletion?(nil, false)
+        case .failure(let error):
+            authСompletion?(error, false)
+        }
+        // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
+        bankAppManager.saveSelectedBank()
+    }
+    
+    private func fillFakeData() {
+        authManager.authCode = "3401216B-8B70-21FA-2592-58010E53EE5B"
+        authСompletion?(nil, true)
+    }
+    
     private func authRequest(completion: @escaping (SDKError?, Bool) -> Void) {
         guard let request = sdkManager.authInfo else { return }
         
@@ -103,24 +121,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 completion(error, false)
             }
         }
-    }
-    
-    func completeAuth(with url: URL) {
-        switch decodeParametersFrom(url: url) {
-        case .success(let result):
-            authManager.authCode = result.code
-            authManager.state = result.state
-            authСompletion?(nil, false)
-        case .failure(let error):
-            authСompletion?(error, false)
-        }
-        // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
-        bankAppManager.saveSelectedBank()
-    }
-    
-    private func fillFakeData() {
-        authManager.authCode = "3401216B-8B70-21FA-2592-58010E53EE5B"
-        authСompletion?(nil, true)
     }
     
     // MARK: - Методы авторизации через sId

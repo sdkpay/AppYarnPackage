@@ -43,7 +43,6 @@ final class CardCell: UITableViewCell {
     }()
     
     private var cardIconView = UIImageView()
-    
     private lazy var checkImageView = UIImageView()
     
     private lazy var cardInfoStack: UIStackView = {

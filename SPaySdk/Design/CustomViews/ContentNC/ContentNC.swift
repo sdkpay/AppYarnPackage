@@ -12,12 +12,11 @@ private extension TimeInterval {
 }
 
 final class ContentNC: UIViewController {
-    private lazy var customTransitioningDelegate = CoverTransitioningDelegate()
-    private(set) var viewControllers: [UIViewController] = []
-
     var topViewController: UIViewController? {
         viewControllers.last
     }
+    private lazy var customTransitioningDelegate = CoverTransitioningDelegate()
+    private(set) var viewControllers: [UIViewController] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,34 +38,6 @@ final class ContentNC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupUI() {
-        view.backgroundColor = .backgroundPrimary
-        view.layer.masksToBounds = true
-        let path = UIBezierPath(roundedRect: view.bounds,
-                                byRoundingCorners: [.topRight, .topLeft],
-                                cornerRadii: CGSize(width: CGFloat.containerCorner,
-                                                    height: CGFloat.containerCorner))
-
-        let maskLayer = CAShapeLayer()
-        maskLayer.path = path.cgPath
-        view.layer.mask = maskLayer
-    }
-    
-    private func setRootViewController(_ viewController: UIViewController) {
-        viewControllers = [viewController]
-
-        addChild(viewController)
-        view.addSubview(viewController.view)
-        viewController.didMove(toParent: self)
-        viewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            viewController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            viewController.view.widthAnchor.constraint(equalTo: view.widthAnchor)
-        ])
-    }
-
     func setViewControllers(_ viewControllers: [UIViewController], animated: Bool) {
         guard let to = viewControllers.last else {
             return
@@ -98,6 +69,34 @@ final class ContentNC: UIViewController {
             transition(from: from, to: to, animated: animated, completion: completion)
         }
         return from
+    }
+    
+    private func setupUI() {
+        view.backgroundColor = .backgroundPrimary
+        view.layer.masksToBounds = true
+        let path = UIBezierPath(roundedRect: view.bounds,
+                                byRoundingCorners: [.topRight, .topLeft],
+                                cornerRadii: CGSize(width: CGFloat.containerCorner,
+                                                    height: CGFloat.containerCorner))
+
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = path.cgPath
+        view.layer.mask = maskLayer
+    }
+    
+    private func setRootViewController(_ viewController: UIViewController) {
+        viewControllers = [viewController]
+
+        addChild(viewController)
+        view.addSubview(viewController.view)
+        viewController.didMove(toParent: self)
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            viewController.view.topAnchor.constraint(equalTo: view.topAnchor),
+            viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            viewController.view.widthAnchor.constraint(equalTo: view.widthAnchor)
+        ])
     }
 
     private func transition(from: UIViewController,

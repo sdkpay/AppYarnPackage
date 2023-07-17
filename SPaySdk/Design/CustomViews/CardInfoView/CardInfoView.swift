@@ -13,8 +13,8 @@ private extension CGFloat {
 }
 
 final class CardInfoView: UICollectionViewCell {
-    private var needArrow = false
     static var reuseID: String { "CardInfoView" }
+    private var needArrow = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)

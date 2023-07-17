@@ -25,6 +25,11 @@ final class CoverTransitionDriver: UIPercentDrivenInteractiveTransition, UIGestu
         panRecognizer.delegate = self
         return panRecognizer
     }()
+    
+    private var maxTranslation: CGFloat? {
+        let height = presentedController?.view.frame.height ?? 0
+        return height > 0 ? height : nil
+    }
 
     private weak var presentedController: UIViewController?
 
@@ -33,11 +38,6 @@ final class CoverTransitionDriver: UIPercentDrivenInteractiveTransition, UIGestu
         
         controller.view.addGestureRecognizer(panRecognizer)
         presentedController = controller
-    }
-
-    private var maxTranslation: CGFloat? {
-        let height = presentedController?.view.frame.height ?? 0
-        return height > 0 ? height : nil
     }
 
     @objc

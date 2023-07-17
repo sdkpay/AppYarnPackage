@@ -8,7 +8,6 @@
 import UIKit
 
 final class FakeViewController: UIViewController {
-    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = Strings.Fake.title

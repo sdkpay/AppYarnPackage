@@ -10,11 +10,11 @@ import UIKit
 typealias StringAction = ((String) -> Void)
 
 final class LinkLabel: UILabel {
+    var linkTapped: StringAction?
     private let linkTag = "url"
     private let closeTagSymbol = ">"
     private let pointerSymbol = "="
     private var links: [String: String] = [:]
-    var linkTapped: StringAction?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,6 +23,14 @@ final class LinkLabel: UILabel {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let url = url(at: touches) {
+            linkTapped?(url)
+        } else {
+            super.touchesEnded(touches, with: event)
+        }
     }
     
     func setLinkText(string: String, with attributes: [NSAttributedString.Key: Any]) {
@@ -59,14 +67,6 @@ final class LinkLabel: UILabel {
             }
         }
         return linkTextDictionary
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let url = url(at: touches) {
-            linkTapped?(url)
-        } else {
-            super.touchesEnded(touches, with: event)
-        }
     }
     
     private func url(at touches: Set<UITouch>) -> String? {

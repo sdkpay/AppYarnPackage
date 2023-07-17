@@ -13,6 +13,8 @@ private extension CGFloat {
 }
 
 class ContentView: UIView {
+    var action: Action?
+
     init() {
         super.init(frame: .zero)
         setupUI()
@@ -24,7 +26,6 @@ class ContentView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var action: Action?
     
     @objc
     private func tapped() {

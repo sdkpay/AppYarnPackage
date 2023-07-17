@@ -42,30 +42,8 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                                                object: nil)
     }
     
-    private func setupWindows(viewController: UIViewController,
-                              locator: LocatorService,
-                              rootVC: UIViewController) {
-        rootVC.modalPresentationStyle = .custom
-        viewController.present(rootVC, animated: true)
-    }
-    
     deinit {
         SBLogger.log(.stop(obj: self))
-    }
-    
-    @objc
-    private func closeSdk(isErrorCompleted: Bool = false) {
-        guard let locator = locator else { return }
-        let network: NetworkService = locator.resolve()
-        network.cancelTask()
-        closeSDKWindow()
-        if !isErrorCompleted {
-            let manager: SDKManager = locator.resolve()
-            manager.completionWithError(error: .cancelled)
-        }
-        let analytics: AnalyticsService = locator.resolve()
-        analytics.sendEvent(.ManuallyClosed)
-        timeManager?.stopContectionTypeChecking()
     }
     
     func closeSDKWindow() {
@@ -105,5 +83,27 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         }
     
         closeSdk()
+    }
+    
+    @objc
+    private func closeSdk(isErrorCompleted: Bool = false) {
+        guard let locator = locator else { return }
+        let network: NetworkService = locator.resolve()
+        network.cancelTask()
+        closeSDKWindow()
+        if !isErrorCompleted {
+            let manager: SDKManager = locator.resolve()
+            manager.completionWithError(error: .cancelled)
+        }
+        let analytics: AnalyticsService = locator.resolve()
+        analytics.sendEvent(.ManuallyClosed)
+        timeManager?.stopContectionTypeChecking()
+    }
+    
+    private func setupWindows(viewController: UIViewController,
+                              locator: LocatorService,
+                              rootVC: UIViewController) {
+        rootVC.modalPresentationStyle = .custom
+        viewController.present(rootVC, animated: true)
     }
 }

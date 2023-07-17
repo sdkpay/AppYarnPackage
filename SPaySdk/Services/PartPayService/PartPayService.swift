@@ -33,12 +33,6 @@ protocol PartPayService {
 }
 
 final class DefaultPartPayService: PartPayService {
-    private let network: NetworkService
-    private let sdkManager: SDKManager
-    private let authManager: AuthManager
-    private let featureToggle: FeatureToggleService
-    private var userEnableBnpl = false
-    
     var bnplplanSelected = false
     
     var bnplplanEnabled: Bool {
@@ -49,6 +43,11 @@ final class DefaultPartPayService: PartPayService {
         }
     }
     
+    private let network: NetworkService
+    private let sdkManager: SDKManager
+    private let authManager: AuthManager
+    private let featureToggle: FeatureToggleService
+    private var userEnableBnpl = false
     private(set) var bnplplan: BnplModel?
     
     init(network: NetworkService,

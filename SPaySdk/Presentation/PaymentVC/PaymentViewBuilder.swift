@@ -8,7 +8,6 @@
 import UIKit
 
 final class PaymentViewBuilder {
-    
     private var payButtonDidTap: Action
     private var cancelButtonDidTap: Action
     

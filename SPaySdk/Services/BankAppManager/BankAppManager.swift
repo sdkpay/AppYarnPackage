@@ -43,6 +43,15 @@ final class DefaultBankAppManager: BankAppManager {
         }
     }
     
+    func removeSavedBank() {
+        SBLogger.log("🗑 Remove value for key: selectedBank")
+        UserDefaults.removeValue(for: .selectedBank)
+    }
+    
+    func saveSelectedBank() {
+        UserDefaults.bankApp = _selectedBank?.name
+    }
+    
     private func getSelectedBank() -> BankApp? {
         // Проверяем есть ли выбранное приложение
         if let selectedBank = _selectedBank {
@@ -61,15 +70,6 @@ final class DefaultBankAppManager: BankAppManager {
             _selectedBank = avaliableBanks.first
             return _selectedBank
         }
-    }
-    
-    func removeSavedBank() {
-        SBLogger.log("🗑 Remove value for key: selectedBank")
-        UserDefaults.removeValue(for: .selectedBank)
-    }
-    
-    func saveSelectedBank() {
-        UserDefaults.bankApp = _selectedBank?.name
     }
     
     private func canOpen(link: String) -> Bool {

@@ -42,10 +42,10 @@ enum DebugLogLevel: String, CaseIterable {
 }
 
 enum SBLogger {
-    private static var logger = Log()
     static var dateString = ""
     static var writeLogs = true
     static var secureLogs = true
+    private static var logger = Log()
     
     static func log(level: LogLevel = .debug(level: .defaultLevel), _ massage: String) {
         switch level {

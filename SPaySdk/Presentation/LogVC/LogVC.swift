@@ -92,6 +92,23 @@ final class LogVC: UIViewController, ILogVC {
         SBLogger.log(.didDissapear(view: self))
     }
     
+    func setText(_ text: String) {
+        textView.text = text
+    }
+    
+    func setResultsNum(current: Int, count: Int) {
+        searchView.setResultsNum(current: current, count: count)
+    }
+    
+    func hideResultsNum() {
+        searchView.hideResultsNum()
+    }
+    
+    func scrollTo(_ range: NSRange) {
+        textView.scrollRangeToVisible(range)
+        textView.highlight(range: range)
+    }
+    
     private func setupNavVC() {
         navigationController?.navigationBar.backgroundColor = .backgroundSecondary
         
@@ -110,23 +127,6 @@ final class LogVC: UIViewController, ILogVC {
     @objc
     private func settingTapped() {
         presenter.settingTapped()
-    }
-    
-    func setText(_ text: String) {
-        textView.text = text
-    }
-    
-    func setResultsNum(current: Int, count: Int) {
-        searchView.setResultsNum(current: current, count: count)
-    }
-    
-    func hideResultsNum() {
-        searchView.hideResultsNum()
-    }
-    
-    func scrollTo(_ range: NSRange) {
-        textView.scrollRangeToVisible(range)
-        textView.highlight(range: range)
     }
     
     private func setupUI() {

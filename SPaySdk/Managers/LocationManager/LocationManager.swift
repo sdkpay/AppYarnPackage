@@ -23,13 +23,6 @@ protocol LocationManager {
 }
 
 final class DefaultLocationManager: LocationManager {
-    private var locationManager: CLLocationManager = {
-        let locationManager = CLLocationManager()
-        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        locationManager.requestWhenInUseAuthorization()
-        return locationManager
-    }()
-
     var locationEnabled: Bool {
         var locationAuthorizationStatus: CLAuthorizationStatus
         if #available(iOS 14.0, *) {
@@ -39,6 +32,13 @@ final class DefaultLocationManager: LocationManager {
         }
         return locationAuthorizationStatus == .authorizedWhenInUse || locationAuthorizationStatus == .authorizedAlways
     }
+    
+    private var locationManager: CLLocationManager = {
+        let locationManager = CLLocationManager()
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.requestWhenInUseAuthorization()
+        return locationManager
+    }()
     
     func requestLocation() {
         locationManager.requestLocation()

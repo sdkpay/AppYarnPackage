@@ -15,18 +15,17 @@ protocol CardsPresenting {
 }
 
 final class CardsPresenter: CardsPresenting {
+    weak var view: (ICardsVC & ContentVC)?
+    var cardsCount: Int {
+        cards.count
+    }
+
     private let analytics: AnalyticsService
     private let userService: UserService
     private let cards: [PaymentToolInfo]
     private let selectedCard: (PaymentToolInfo) -> Void
     private let selectedId: Int
     private var timeManager: OptimizationCheсkerManager
-
-    weak var view: (ICardsVC & ContentVC)?
-    
-    var cardsCount: Int {
-        cards.count
-    }
 
     init(userService: UserService,
          analytics: AnalyticsService,

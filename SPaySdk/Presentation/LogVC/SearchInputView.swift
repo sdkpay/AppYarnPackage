@@ -18,14 +18,13 @@ private extension UIImage {
 }
 
 final class SearchInputView: UIView {
+    var upAction: Action?
+    var downAction: Action?
+    
     private lazy var infoLabel: UILabel = {
         let view = UILabel()
         return view
     }()
-    
-    var upAction: Action?
-    
-    var downAction: Action?
     
     private lazy var nextButton: ActionButton = {
         let view = ActionButton()

@@ -10,6 +10,15 @@ import UIKit
 final class RootVC: UIViewController {
     private let presenter: RootPresenting
     
+    init(presenter: RootPresenting) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         SBLogger.log(.didLoad(view: self))
@@ -26,14 +35,5 @@ final class RootVC: UIViewController {
         super.viewDidDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
         SBLogger.log(.close)
-    }
-
-    init(presenter: RootPresenting) {
-        self.presenter = presenter
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError()
     }
 }

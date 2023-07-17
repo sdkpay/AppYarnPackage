@@ -22,6 +22,8 @@ protocol LogPresenting {
 }
 
 final class LogPresenter: LogPresenting {
+    weak var view: (UIViewController & ILogVC)?
+
     private var logPath: URL? {
         let fm = FileManager.default
         return fm.urls(for: .documentDirectory,
@@ -35,24 +37,11 @@ final class LogPresenter: LogPresenting {
     private var searchRanges: [NSRange] = []
     private var logLevel: DebugLogLevel?
     private var currentRangeIndex = 0
-
-    weak var view: (UIViewController & ILogVC)?
     
     func viewDidLoad() {
         view?.title = .title
         getLogString()
         showAllText()
-    }
-    
-    private func getLogString() {
-        guard let logPath = logPath else { return }
-        let logContentString = try? String(contentsOf: logPath)
-        logContent = logContentString?.components(separatedBy: ["|"]) ?? []
-    }
-    
-    private func showAllText() {
-        let text = logContent.isEmpty ? .noLogs : logContent.joined(separator: "\n")
-        view?.setText(text)
     }
     
     func settingTapped() {
@@ -77,6 +66,13 @@ final class LogPresenter: LogPresenting {
         return logPath
     }
     
+    func shareTapped() {
+        guard let path = getLogPath() else { return }
+        let activityViewController = UIActivityViewController(activityItems: [path],
+                                                              applicationActivities: nil)
+        view?.present(activityViewController, animated: true)
+    }
+    
     func searchTextUpdated(_ text: String) {
         guard !text.isEmpty else {
             showAllText()
@@ -95,6 +91,17 @@ final class LogPresenter: LogPresenting {
         }
     }
     
+    private func getLogString() {
+        guard let logPath = logPath else { return }
+        let logContentString = try? String(contentsOf: logPath)
+        logContent = logContentString?.components(separatedBy: ["|"]) ?? []
+    }
+    
+    private func showAllText() {
+        let text = logContent.isEmpty ? .noLogs : logContent.joined(separator: "\n")
+        view?.setText(text)
+    }
+    
     private func scrollToRange(range: NSRange) {
         view?.scrollTo(range)
         view?.setResultsNum(current: currentRangeIndex + 1, count: searchRanges.count)
@@ -107,13 +114,6 @@ final class LogPresenter: LogPresenting {
             self?.filterLogs()
         }
         view?.present(alertVC, animated: true)
-    }
-    
-    func shareTapped() {
-        guard let path = getLogPath() else { return }
-        let activityViewController = UIActivityViewController(activityItems: [path],
-                                                              applicationActivities: nil)
-        view?.present(activityViewController, animated: true)
     }
     
     private func filterLogs() {

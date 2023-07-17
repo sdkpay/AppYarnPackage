@@ -23,18 +23,18 @@ protocol PartPayPresenting {
 }
 
 final class PartPayPresenter: PartPayPresenting {
+    weak var view: (IPartPayVC & ContentVC)?
+    
+    var partsCount: Int {
+        partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
+    }
+
     private var partPayService: PartPayService
     private let router: PartPayRouter
     private let timeManager: OptimizationCheсkerManager
     private let analytics: AnalyticsService
     private var partPaySelected: Action
     private var isSelected = true
-
-    weak var view: (IPartPayVC & ContentVC)?
-    
-    var partsCount: Int {
-        partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
-    }
 
     init(_ router: PartPayRouter,
          partPayService: PartPayService,
@@ -55,6 +55,32 @@ final class PartPayPresenter: PartPayPresenting {
         }
         configViews()
         configCheckView()
+    }
+    
+    func acceptButtonTapped() {
+        analytics.sendEvent(.BNPLConfirmedByUser)
+        partPayService.bnplplanSelected = true
+        partPaySelected()
+        view?.contentNavigationController?.popViewController(animated: true)
+    }
+    
+    func backButtonTapped() {
+        analytics.sendEvent(.BNPLDeclinedByUser)
+        partPayService.bnplplanSelected = false
+        partPaySelected()
+        view?.contentNavigationController?.popViewController(animated: true)
+    }
+    
+    func model(for indexPath: IndexPath) -> PartCellModel {
+        guard let parts = partPayService.bnplplan?.graphBnpl?.payments,
+              let text = partPayService.bnplplan?.graphBnpl?.text else {
+            return PartCellModel(title: "", cost: "", isSelected: true, hideLine: true)
+        }
+        let part = parts[indexPath.row]
+        return PartCellModel(title: indexPath.row == 0 ? text : part.date,
+                             cost: part.amount.price(part.currencyCode),
+                             isSelected: indexPath.row == 0,
+                             hideLine: indexPath.row == parts.count - 1)
     }
     
     private func configViews() {
@@ -84,31 +110,5 @@ final class PartPayPresenter: PartPayPresenting {
     
     private func agreementTextTapped(link: String) {
         router.presentWebView(with: link)
-    }
-    
-    func acceptButtonTapped() {
-        analytics.sendEvent(.BNPLConfirmedByUser)
-        partPayService.bnplplanSelected = true
-        partPaySelected()
-        view?.contentNavigationController?.popViewController(animated: true)
-    }
-    
-    func backButtonTapped() {
-        analytics.sendEvent(.BNPLDeclinedByUser)
-        partPayService.bnplplanSelected = false
-        partPaySelected()
-        view?.contentNavigationController?.popViewController(animated: true)
-    }
-    
-    func model(for indexPath: IndexPath) -> PartCellModel {
-        guard let parts = partPayService.bnplplan?.graphBnpl?.payments,
-              let text = partPayService.bnplplan?.graphBnpl?.text else {
-            return PartCellModel(title: "", cost: "", isSelected: true, hideLine: true)
-        }
-        let part = parts[indexPath.row]
-        return PartCellModel(title: indexPath.row == 0 ? text : part.date,
-                             cost: part.amount.price(part.currencyCode),
-                             isSelected: indexPath.row == 0,
-                             hideLine: indexPath.row == parts.count - 1)
     }
 }

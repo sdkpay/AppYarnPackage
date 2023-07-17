@@ -39,6 +39,15 @@ final class AuthVC: ContentVC, IAuthVC {
     
     private let presenter: AuthPresenting
     
+    init(_ presenter: AuthPresenting) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         topBarIsHidden = true
@@ -55,15 +64,6 @@ final class AuthVC: ContentVC, IAuthVC {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
-    }
-    
-    init(_ presenter: AuthPresenting) {
-        self.presenter = presenter
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     func configBanksStack(banks: [BankApp], selected: @escaping (BankApp) -> Void) {
