@@ -43,8 +43,8 @@ struct ConfigValues {
     var apiKey: String?
     
     @UserDefault(key: CellType.cost.rawValue,
-                 defaultValue: "2000")
-    var cost: String?
+                 defaultValue: 2000)
+    var cost: Int
     
     @UserDefault(key: CellType.merchantLogin.rawValue,
                  defaultValue: "test_sberpay")
@@ -79,8 +79,8 @@ struct ConfigValues {
     var network: NetworkState
     
     @UserDefault(key: CellType.currency.rawValue,
-                 defaultValue: "643")
-    var currency: String?
+                 defaultValue: 643)
+    var currency: Int
 
     @UserDefault(key: CellType.ssl.rawValue,
                  defaultValue: true)

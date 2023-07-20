@@ -9,15 +9,15 @@ import Foundation
 
 struct BnplModel: Codable {
     let isBnplEnabled: Bool
-    let buttonBnpl: ButtonBnpl
+    let buttonBnpl: ButtonBnpl?
     let offerUrl: String?
     let offerText: String?
     let graphBnpl: GraphBnpl?
 }
 
 struct GraphBnpl: Codable {
-    let header: String
-    let content: String
+    let header: String?
+    let content: String?
     let count: String?
     let text: String?
     let payments: [Payment]
@@ -32,14 +32,14 @@ struct GraphBnpl: Codable {
 }
 
 struct Payment: Codable {
-    let date: String
+    let date: String?
     let amount: Int
-    let currencyCode: String
+    let currencyCode: String?
 }
 
 struct ButtonBnpl: Codable {
-    let activeButtonLogo: String
-    let inactiveButtonLogo: String
-    let header: String
-    let content: String
+    let activeButtonLogo: String?
+    let inactiveButtonLogo: String?
+    let header: String?
+    let content: String?
 }

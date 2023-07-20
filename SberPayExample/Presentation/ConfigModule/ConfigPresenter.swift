@@ -228,8 +228,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                            textFields:
                             [
                                 (text: configValues.orderNumber, placeholder: "OrderNumber"),
-                                (text: configValues.cost, placeholder: "Cost"),
-                                (text: configValues.currency, placeholder: "Сurrency")
+                                (text: String(configValues.cost), placeholder: "Cost"),
+                                (text: String(configValues.currency), placeholder: "Сurrency")
                             ]
         ) { results in
             if #available(iOS 13.0, *) {
@@ -245,23 +245,21 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                                amount: String,
                                currency: String) {
         view?.startLoader()
-        Task {
-            do {
-                let orderModel = try await OrderService.registerToken(stand: NetworkType(from: configValues.network),
-                                                                      orderNumber: "123",
-                                                                      amount: 123,
-                                                                      currency: 1232)
-                DispatchQueue.main.async {
-                    self.configValues.orderId = orderModel.externalParams.sbolBankInvoiceId
-                    self.view?.reload()
-                    self.view?.stopLoader()
+        let amount: Int = configValues.cost
+        let currency: Int = configValues.currency
+        OrderService().response(schemaType: .sberbankIFT,
+                                orderNumber: configValues.orderNumber ?? "",
+                                amount: amount,
+                                currency: currency) { result in
+            switch result {
+                case .success(let model):
+                        self.configValues.orderId = model?.externalParams.sbolBankInvoiceId
+                        self.view?.reload()
+                        self.view?.stopLoader()
+                case .failure(let error):
+                        self.view?.showAlert(with: error.localizedDescription)
+                        self.view?.stopLoader()
                 }
-            } catch {
-                DispatchQueue.main.async {
-                    self.view?.showAlert(with: error.localizedDescription)
-                    self.view?.stopLoader()
-                }
-            }
         }
     }
 
@@ -314,9 +312,9 @@ extension ConfigPresenter {
     private func costCell(type: CellType) -> UITableViewCell {
         let cell = TextViewCell()
         cell.config(title: "Cost",
-                    text: configValues.cost,
+                    text: String(configValues.cost),
                     textEdited: { text in
-            self.configValues.cost = text
+            self.configValues.cost = Int(text) ?? 2000
         })
         return cell
     }
@@ -334,9 +332,9 @@ extension ConfigPresenter {
     private func currencyCell(type: CellType) -> UITableViewCell {
         let cell = TextViewCell()
         cell.config(title: "Currency",
-                    text: configValues.currency,
+                    text: String(configValues.currency),
                     textEdited: { text in
-            self.configValues.currency = text
+            self.configValues.currency = Int(text) ?? 635
         })
         return cell
     }

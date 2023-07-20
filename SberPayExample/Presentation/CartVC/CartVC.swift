@@ -56,7 +56,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     private lazy var totalCostLabel: UILabel = {
         let view = UILabel()
-        view.text = "\(values.cost ?? "") p"
+        view.text = "\(values.cost) p"
         view.textColor = UIColor(red: 251 / 255, green: 137 / 255, blue: 78 / 255, alpha: 1)
         view.font = .systemFont(ofSize: 17, weight: .semibold)
         return view
@@ -216,8 +216,8 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private func paymentTokenWithPerchase() {
         let request = SPaymentTokenRequest(redirectUri: "testapp://test",
                                            merchantLogin: values.merchantLogin,
-                                           amount: Int(values.cost ?? "") ?? 0,
-                                           currency: values.currency ?? "",
+                                           amount: values.cost,
+                                           currency: String(values.currency),
                                            mobilePhone: nil,
                                            orderNumber: values.orderNumber ?? "",
                                            recurrentExipiry: "20230821",

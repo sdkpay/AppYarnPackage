@@ -26,7 +26,7 @@ enum NetworkType: String, RawRepresentable {
         case .Psi:
             self.init(rawValue: "sberbankPSI")!
         default:
-            self.init(rawValue: "sberbankIFT")!
+            self.init(rawValue: "sberbankIFT1")!
         }
     }
 }
@@ -45,11 +45,11 @@ struct OrderService {
                               orderNumber: String,
                               amount: Int,
                               currency: Int) async throws -> ResponseModel {
-        var request = URLRequest(url: host)
+        var request = URLRequest(url: host, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
         request.httpMethod = "POST"
         var params: [String: Any] = [
             "userName": "781000012764-20162559-api",
-            "password": stand.rawValue,
+            "password": "\(stand.rawValue)1",
             "orderNumber": orderNumber,
             "amount": amount,
             "currency": currency,
@@ -90,10 +90,11 @@ struct OrderService {
         }
     }
     func response(schemaType: NetworkType,
-                  cost: String,
+                  orderNumber: String,
+                  amount: Int,
+                  currency: Int,
                   clouser: @escaping (Result<ResponseModel?, NetError>) -> Void) {
-        let orderNumber = String(Int.random(in: Int.zero...Int.max))
-        let url = "https://sb03.tst.rbstest.ru/payment/rest/register.do?returnUrl=https://sberbank.ru&amount=16500&orderBundle=%7B%22cartItems%22:%7B%22items%22:[%7B%22tax%22:%7B%22taxType%22:0%7D,%22itemAmount%22:\(cost),%22positionId%22:1,%22quantity%22:%7B%22value%22:165,%22measure%22:%22%D0%A1%E2%80%9A%22%7D,%22itemCode%22:%22130163%22,%22itemPrice%22:100,%22name%22:%2215%22%7D]%7D%7D&jsonParams=%7B%22app2app%22:%22true%22,%22app.osType%22:%22android%22,%22app.deepLink%22:%22https://sberbank.ru%22%7D&userName=781000012764-20162559-api&password=\(schemaType.rawValue)1&sessionTimeoutSecs=600000&orderNumber=\(orderNumber)"
+        let url = "https://sb03.tst.rbstest.ru/payment/rest/register.do?returnUrl=https://sberbank.ru&amount=\(amount)&orderBundle=%7B%22cartItems%22:%7B%22items%22:[%7B%22tax%22:%7B%22taxType%22:0%7D,%22itemAmount%22:\(amount ),%22positionId%22:1,%22quantity%22:%7B%22value%22:\(amount),%22measure%22:%22%D0%A1%E2%80%9A%22%7D,%22itemCode%22:%22130163%22,%22itemPrice%22:1,%22name%22:%2215%22%7D]%7D%7D&jsonParams=%7B%22app2app%22:%22true%22,%22app.osType%22:%22android%22,%22app.deepLink%22:%22https://sberbank.ru%22%7D&userName=781000012764-20162559-api&password=\(schemaType.rawValue)1&sessionTimeoutSecs=600000&orderNumber=\(orderNumber)&currency=\(currency)"
         guard let url = URL(string: url) else {
             assertionFailure("urlComp is not allowed")
             clouser(.failure(NetError.urlError))
