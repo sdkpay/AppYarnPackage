@@ -18,7 +18,8 @@ enum UserTarget {
                         currency: String?,
                         orderNumber: String?,
                         expiry: String?,
-                        frequency: Int?)
+                        frequency: Int?,
+                        listPaymentCards: Bool?)
 }
 
 extension UserTarget: TargetType {
@@ -48,7 +49,8 @@ extension UserTarget: TargetType {
                                currency: currency,
                                orderNumber: orderNumber,
                                expiry: expiry,
-                               frequency: frequency):
+                               frequency: frequency,
+                               listPaymentCards: listPaymentCards):
             var params: [String: Any] = [
                 "redirectUri": redirectUri,
                 "authCode": authCode,
@@ -62,6 +64,9 @@ extension UserTarget: TargetType {
             if let orderId = orderId {
                 params["orderId"] = orderId
             }
+            
+            params["listPaymentCards"] = listPaymentCards == nil ? false : listPaymentCards
+            
             if let amount = amount,
                amount != 0,
                let currency = currency,
