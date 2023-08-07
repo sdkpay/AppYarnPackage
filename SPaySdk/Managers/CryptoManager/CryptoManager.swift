@@ -20,7 +20,6 @@ class CryptoManager {
     private let key: Data
     private let iv: Data
 
-
     // MARK: - Initialzier
     init?(key: String, iv: String) {
         guard key.count == kCCKeySizeAES256, let keyData = key.data(using: .utf8) else {
@@ -36,7 +35,6 @@ class CryptoManager {
         self.key = keyData
         self.iv  = ivData
     }
-
 
     // MARK: - Function
     // MARK: Public
