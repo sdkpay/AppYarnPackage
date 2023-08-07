@@ -13,6 +13,9 @@ settings:
     CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
 
 packages:
+  IQKeyboardManagerSwift:
+    url: https://github.com/hackiftekhar/IQKeyboardManager.git
+    from: 6.0.0
   Dynatrace-Static:
    url: https://github.com/Dynatrace/swift-mobile-sdk.git
    from: 8.0.0
