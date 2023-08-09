@@ -9,7 +9,7 @@ import Foundation
 import Security
 
 enum StorageKey: String {
-    case refreshToken
+    case cookie
 }
 
 enum KeychainError: Error {
@@ -46,7 +46,7 @@ protocol KeychainStorage {
     func setData(_ value: Data, for key: StorageKey) throws
     func getData(for key: StorageKey) throws -> Data?
     func get(_ key: StorageKey) throws -> String?
-    func delete(account: String) throws
+    func delete(_ key: String) throws
     func deleteAll() throws
 }
 
@@ -58,7 +58,7 @@ final class DefaultKeychainStorage: KeychainStorage {
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: key.rawValue,
             kSecAttrService: service,
-            kSecReturnData: false,
+            kSecReturnData: false
         ] as NSDictionary, nil)
         
         if status == errSecSuccess {
@@ -92,7 +92,7 @@ final class DefaultKeychainStorage: KeychainStorage {
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: key,
             kSecAttrService: service,
-            kSecReturnData: true,
+            kSecReturnData: true
         ] as NSDictionary, &result)
         if status == errSecSuccess {
             return result as? Data
@@ -112,11 +112,11 @@ final class DefaultKeychainStorage: KeychainStorage {
         }
     }
     
-    func delete(account: String) throws {
+    func delete(_ key: String) throws {
         let status = SecItemDelete([
             kSecClass: kSecClassGenericPassword,
-            kSecAttrAccount: account,
-            kSecAttrService: service,
+            kSecAttrAccount: key,
+            kSecAttrService: service
         ] as NSDictionary)
         
         if status != errSecSuccess {
@@ -126,7 +126,7 @@ final class DefaultKeychainStorage: KeychainStorage {
     
     func deleteAll() throws {
         let status = SecItemDelete([
-            kSecClass: kSecClassGenericPassword,
+            kSecClass: kSecClassGenericPassword
         ] as NSDictionary)
         
         if status != errSecSuccess {
@@ -140,7 +140,7 @@ final class DefaultKeychainStorage: KeychainStorage {
             kSecAttrAccount: key.rawValue,
             kSecAttrService: service,
             kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock,
-            kSecValueData: value,
+            kSecValueData: value
         ] as NSDictionary, nil)
         
         if status != errSecSuccess {
@@ -152,9 +152,9 @@ final class DefaultKeychainStorage: KeychainStorage {
         let status = SecItemUpdate([
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: key.rawValue,
-            kSecAttrService: service,
+            kSecAttrService: service
         ] as NSDictionary, [
-            kSecValueData: value,
+            kSecValueData: value
         ] as NSDictionary)
         
         if status != errSecSuccess {

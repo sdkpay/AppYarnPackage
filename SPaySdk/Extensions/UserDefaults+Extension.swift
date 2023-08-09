@@ -28,7 +28,7 @@ struct UserDefault<Value: Codable> {
             let data = container.object(forKey: key.rawValue) as? Data ?? Data()
             let value = data.decode(to: Value.self)
             SBLogger.log(level: .debug(level: .storage),
-                         "⬆️ Get value: '\((value as? String) ?? "none")' from key: '\(key.rawValue)'")
+                         "⬆️ Get value: '\((value.debugDescription))' from key: '\(key.rawValue)'")
             return value
         }
         set {

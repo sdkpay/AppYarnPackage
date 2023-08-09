@@ -79,16 +79,16 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
     
     func completeAuth(with url: URL) {
+        // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
+        bankAppManager.saveSelectedBank()
         switch decodeParametersFrom(url: url) {
         case .success(let result):
             authManager.authCode = result.code
             authManager.state = result.state
-            authСompletion?(nil, false)
+            refreshAuth()
         case .failure(let error):
             authСompletion?(error, false)
         }
-        // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
-        bankAppManager.saveSelectedBank()
     }
     
     private func fillFakeData() {
@@ -98,7 +98,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func authRequest(completion: @escaping (SDKError?, Bool) -> Void) {
         guard let request = sdkManager.authInfo else { return }
-        let headers: HTTPHeaders? = nil
         network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
                                                 merchantLogin: request.merchantLogin,
                                                 orderId: request.orderId,
@@ -106,8 +105,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                                 currency: request.currency,
                                                 orderNumber: request.orderNumber,
                                                 expiry: request.expiry,
-                                                frequency: request.frequency,
-                                                headers: headers),
+                                                frequency: request.frequency),
                         to: AuthModel.self) { [weak self] result in
             self?.authСompletion = completion
             switch result {
@@ -117,7 +115,13 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self.authManager.state = result.state
                 self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
                                                       enabledLevel: .server)
-                self.sIdAuth(with: result)
+                if result.refreshTokenlsActive ?? false {
+                    self.authManager.authMethod = .refresh
+                    self.refreshAuth()
+                } else {
+                    self.authManager.authMethod = .bank
+                    self.sIdAuth(with: result)
+                }
             case .failure(let error):
                 completion(error, false)
             }
@@ -146,5 +150,44 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private func authURL(link: String) -> URL? {
         guard let url = bankAppManager.selectedBank?.link else { return nil }
         return URL(string: url + link)
+    }
+    
+    private func refreshAuth() {
+        personalMetricsService.getUserData { [weak self] data in
+            guard let data else {
+                self?.authСompletion?(SDKError.personalInfo, false)
+                return
+            }
+            
+            self?.auth(deviceInfo: data)
+        }
+    }
+    
+    private func auth(deviceInfo: String) {
+        guard let request = sdkManager.authInfo else { return }
+        network.request(AuthTarget.auth(redirectUri: request.redirectUri,
+                                        authCode: authManager.authCode,
+                                        sessionId: authManager.sessionId ?? "",
+                                        state: authManager.state,
+                                        deviceInfo: deviceInfo,
+                                        orderId: request.orderId,
+                                        amount: request.amount,
+                                        currency: request.currency,
+                                        mobilePhone: nil,
+                                        orderNumber: request.orderNumber,
+                                        description: nil,
+                                        expiry: request.expiry,
+                                        frequency: request.frequency,
+                                        userName: nil,
+                                        merchantLogin: request.merchantLogin),
+                        to: AuthRefreshModel.self) { [weak self] result in
+            switch result {
+            case .success(let result):
+                self?.authManager.userInfo = result.userInfo
+                self?.authСompletion?(nil, false)
+            case .failure(let error):
+                self?.authСompletion?(error, false)
+            }
+        }
     }
 }

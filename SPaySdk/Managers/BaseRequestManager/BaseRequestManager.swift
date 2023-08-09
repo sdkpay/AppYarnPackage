@@ -22,7 +22,8 @@ extension String {
 final class BaseRequestManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
-            let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve())
+            let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve(),
+                                                                        storage: container.resolve())
             return service
         }
     }
@@ -35,10 +36,19 @@ protocol BaseRequestManager {
 }
 
 final class DefaultBaseRequestManager: BaseRequestManager {
-    var cookie: String?
+    var cookie: String? {
+        get {
+            try? storage.get(.cookie)
+        } set {
+            guard let newValue else { return }
+            try? storage.set(newValue, .cookie)
+        }
+    }
+
     var pod: String?
     
-    private let authManager: AuthManager 
+    private let authManager: AuthManager
+    private let storage: KeychainStorage
 
     var headers: HTTPHeaders {
         var headers = HTTPHeaders()
@@ -57,7 +67,9 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         return headers
     }
     
-    init(authManager: AuthManager) {
+    init(authManager: AuthManager,
+         storage: KeychainStorage) {
         self.authManager = authManager
+        self.storage = storage
     }
 }

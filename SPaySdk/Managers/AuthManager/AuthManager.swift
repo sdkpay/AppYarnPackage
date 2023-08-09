@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum AuthMethod {
+    case refresh
+    case bank
+}
+
 final class AuthManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
@@ -22,6 +27,8 @@ protocol AuthManager {
     var authCode: String? { get set }
     var state: String? { get set }
     var lang: String? { get set }
+    var userInfo: UserInfoModel? { get set }
+    var authMethod: AuthMethod? { get set }
 }
 
 final class DefaultAuthManager: AuthManager {
@@ -30,4 +37,6 @@ final class DefaultAuthManager: AuthManager {
     var authCode: String?
     var state: String?
     var lang: String?
+    var userInfo: UserInfoModel?
+    var authMethod: AuthMethod?
 }

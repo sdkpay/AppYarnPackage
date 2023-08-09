@@ -15,8 +15,7 @@ enum AuthTarget {
                       currency: String?,
                       orderNumber: String?,
                       expiry: String?,
-                      frequency: Int?,
-                      headers: HTTPHeaders?)
+                      frequency: Int?)
     case checkSession(sessionId: String)
     case auth(redirectUri: String?,
               authCode: String?,
@@ -24,18 +23,15 @@ enum AuthTarget {
               state: String?,
               deviceInfo: String?,
               orderId: String?,
-              amount: Int,
-              currency: Int,
+              amount: Int?,
+              currency: String?,
               mobilePhone: String?,
-              orderNumber: String,
+              orderNumber: String?,
               description: String?,
-              enabled: Bool,
               expiry: String?,
               frequency: Int?,
               userName: String?,
-              merchantLogin: String?,
-              headers: HTTPHeaders?
-    )
+              merchantLogin: String?)
 }
 
 extension AuthTarget: TargetType {
@@ -71,8 +67,7 @@ extension AuthTarget: TargetType {
                                currency: currency,
                                orderNumber: orderNumber,
                                expiry: expiry,
-                               frequency: frequency,
-                               headers: headers):
+                               frequency: frequency):
             var params: [String: Any] = [
                 "redirectUri": redirectUri
             ]
@@ -108,29 +103,27 @@ extension AuthTarget: TargetType {
                 params["purchase"] = purchaceParams
             }
             
-            return .requestWithParametersAndHeaders(nil, bodyParameters: params, headers: headers)
+            return .requestWithParametersAndHeaders(nil, bodyParameters: params)
         case .checkSession(sessionId: let sessionId):
             let params = [
                 "sessionId": sessionId
             ]
             return .requestWithParametersAndHeaders(params, headers: headers)
-        case .auth(redirectUri: let redirectUri,
-                   authCode: let authCode,
-                   sessionId: let sessionId,
-                   state: let state,
-                   deviceInfo: let deviceInfo,
-                   orderId: let orderId,
-                   amount: let amount,
-                   currency: let currency,
-                   mobilePhone: let mobilePhone,
-                   orderNumber: let orderNumber,
-                   description: let description,
-                   enabled: let enabled,
-                   expiry: let expiry,
-                   frequency: let frequency,
-                   userName: let userName,
-                   merchantLogin: let merchantLogin,
-                   headers: let headers):
+        case let .auth(redirectUri: redirectUri,
+                       authCode: authCode,
+                       sessionId: sessionId,
+                       state: state,
+                       deviceInfo: deviceInfo,
+                       orderId: orderId,
+                       amount: amount,
+                       currency: currency,
+                       mobilePhone: mobilePhone,
+                       orderNumber: orderNumber,
+                       description: description,
+                       expiry: expiry,
+                       frequency: frequency,
+                       userName: userName,
+                       merchantLogin: merchantLogin):
             
             var params: [String: Any] = [:]
 
@@ -155,7 +148,11 @@ extension AuthTarget: TargetType {
             if let deviceInfo {
                 params["deviceInfo"] = deviceInfo
             }
-            if amount != 0 {
+            
+            if let amount = amount,
+               amount != 0,
+               let currency = currency,
+               let orderNumber = orderNumber {
                 var purchaceParams: [String: Any] = [
                     "amount": amount,
                     "currency": currency,
@@ -171,8 +168,8 @@ extension AuthTarget: TargetType {
                 }
                 
                 if let expiry, let frequency {
-                    var recurrent: [String: Any] = [
-                        "enabled": enabled,
+                    let recurrent: [String: Any] = [
+                        "enabled": true,
                         "expiry": expiry,
                         "frequency": frequency
                     ]
@@ -190,7 +187,7 @@ extension AuthTarget: TargetType {
                 params["userName"] = userName
             }
             
-            return .requestWithParametersAndHeaders(params, headers: headers)
+            return .requestWithParameters(nil, bodyParameters: params)
         }
     }
     
@@ -201,11 +198,11 @@ extension AuthTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getSessionId:
-            return StubbedResponse.auth.data
+            return try? Data(contentsOf: Files.sessionIdJson.url)
         case .checkSession:
             return nil
         case .auth:
-            return nil
+            return try? Data(contentsOf: Files.authJson.url)
         }
     }
 }

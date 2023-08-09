@@ -1,10 +1,8 @@
-
-input_dir: SPaySdk/Resources/
 output_dir: Generated/
 
 strings:
   inputs:
-    - Localization/ru.lproj/Localizable.strings
+    - SPaySdk/Resources/Localization/ru.lproj/Localizable.strings
   outputs:
     - templateName: structured-swift5
       output: Strings.swift
@@ -12,13 +10,19 @@ strings:
         enumName: Strings
 xcassets:
   inputs:
-    - Assets/Assets.xcassets
+    - SPaySdk/Resources/Assets/Assets.xcassets
   outputs:
     - templateName: swift4
       output: Assets.swift
 fonts:
   inputs:
-    - Fonts
+    - SPaySdk/Resources/Fonts
   outputs:
     - templateName: swift4
       output: Fonts.swift
+files:
+  inputs:
+    - DEBUG-SPay/Resources/Stubs
+  outputs:
+    - templateName: structured-swift5
+      output: Files.swift

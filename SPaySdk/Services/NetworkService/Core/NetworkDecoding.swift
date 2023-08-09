@@ -61,6 +61,37 @@ extension ResponseDecoder {
         return .success(())
     }
     
+    func decodeResponseWithHeaders<T: Codable>(data: Data?,
+                                               response: URLResponse?,
+                                               error: Error?,
+                                               type: T.Type) -> Result<(result: T, headers: HTTPHeaders), SDKError> {
+        
+        if let error = systemError(error) {
+            return .failure(error)
+        }
+    
+        guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
+        guard let data = data else { return .failure(.noData) }
+        guard (200...299).contains(response.statusCode) else {
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+        }
+        var headers = response.allHeaderFields as? HTTPHeaders ?? [:]
+
+        if let errorText = checkServerError(data: data) { return .failure(.errorFromServer(text: errorText)) }
+        do {
+            let decoder = JSONDecoder()
+            let decodedData = try decoder.decode(type, from: data)
+            SBLogger.responseDecodedWithSuccess(for: type)
+            return .success((decodedData, headers))
+        } catch let error as DecodingError {
+            SBLogger.responseDecodedWithError(for: type, decodingError: error)
+            return .failure(.failDecode)
+        } catch {
+            print("error: ", error)
+            return .failure(.failDecode)
+        }
+    }
+    
     func decodeParametersFrom(url: URL) -> Result<BankModel, SDKError> {
         guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
             return .failure(.badDataFromSBOL)

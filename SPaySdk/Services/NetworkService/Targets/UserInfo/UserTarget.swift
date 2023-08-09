@@ -105,7 +105,7 @@ extension UserTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getListCards:
-            return StubbedResponse.listCards.data
+            return try? Data(contentsOf: Files.listCardsJson.url)
         }
     }
 }

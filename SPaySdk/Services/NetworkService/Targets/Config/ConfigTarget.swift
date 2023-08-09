@@ -40,7 +40,7 @@ extension ConfigTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getConfig:
-            return StubbedResponse.config.data
+            return try? Data(contentsOf: Files.remoteConfigJson.url)
         }
     }
 }

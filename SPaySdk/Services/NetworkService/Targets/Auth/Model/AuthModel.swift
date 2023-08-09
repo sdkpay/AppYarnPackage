@@ -16,22 +16,20 @@ struct AuthModel: Codable {
     let isBnplEnabled: Bool?
     let codeChallengeMethod: String
     let codeChallenge: String
-    let score: String
+    let scope: String
     let refreshTokenlsActive: Bool?
 }
 
-struct AuthRefreshModel {
+struct AuthRefreshModel: Codable {
     let sessionId: String
-    let userInfo: UserInfo
+    let userInfo: UserInfoModel
     let merchantName: String?
     let logo: String?
-    
-    struct UserInfo {
-        let lastName: String
-        let firstName: String
-        let gender: Int?
-        let mobilePhone: String?
-    }
 }
 
-
+struct UserInfoModel: Codable {
+    let lastName: String
+    let firstName: String
+    let gender: Int?
+    let mobilePhone: String?
+}

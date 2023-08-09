@@ -58,7 +58,7 @@ extension BnplTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getBnplPlan:
-            return StubbedResponse.paymentPlanBnpl.data
+            return try? Data(contentsOf: Files.paymentPlanBnplJson.url)
         }
     }
 }

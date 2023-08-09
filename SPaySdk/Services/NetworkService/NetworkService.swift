@@ -36,6 +36,11 @@ protocol NetworkService: AnyObject {
                     host: HostSettings,
                     retrySettings: RetrySettings,
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable
+    func requestForHeaders<T>(_ target: TargetType,
+                              to: T.Type,
+                              host: HostSettings,
+                              retrySettings: RetrySettings,
+                              completion: @escaping (Result<(result: T, headers: HTTPHeaders), SDKError>) -> Void) where T: Codable
     func cancelTask()
 }
 
@@ -52,6 +57,14 @@ extension NetworkService {
                     retrySettings: RetrySettings = (1, []),
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
         request(target, to: to, host: host, retrySettings: retrySettings, completion: completion)
+    }
+    
+    func requestForHeaders<T>(_ target: TargetType,
+                              to: T.Type,
+                              host: HostSettings = .main,
+                              retrySettings: RetrySettings = (1, []),
+                              completion: @escaping (Result<(result: T, headers: HTTPHeaders), SDKError>) -> Void) where T: Codable {
+        requestForHeaders(target, to: to, host: host, retrySettings: retrySettings, completion: completion)
     }
 }
 
@@ -87,6 +100,22 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
         provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
+            completion(result)
+            switch result {
+            case .failure(let failure):
+                self.sendNetErrorAnalytics(target: target, error: failure)
+            default: return
+            }
+        }
+    }
+    
+    func requestForHeaders<T>(_ target: TargetType,
+                              to: T.Type,
+                              host: HostSettings,
+                              retrySettings: RetrySettings = (1, []),
+                              completion: @escaping (Result<(result: T, headers: HTTPHeaders), SDKError>) -> Void) where T: Codable {
+        provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
+            let result = self.decodeResponseWithHeaders(data: data, response: response, error: error, type: to)
             completion(result)
             switch result {
             case .failure(let failure):

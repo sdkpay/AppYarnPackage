@@ -54,6 +54,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let paymentService: PaymentService
     private let locationManager: LocationManager
     private let sdkManager: SDKManager
+    private let authManager: AuthManager
     private let alertService: AlertService
     private let bankManager: BankAppManager
     private let timeManager: OptimizationCheсkerManager
@@ -78,6 +79,7 @@ final class PaymentPresenter: PaymentPresenting {
          locationManager: LocationManager,
          alertService: AlertService,
          partPayService: PartPayService,
+         authManager: AuthManager,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
         self.userService = userService
@@ -89,6 +91,7 @@ final class PaymentPresenter: PaymentPresenting {
         self.partPayService = partPayService
         self.bankManager = bankManager
         self.timeManager = timeManager
+        self.authManager = authManager
         self.timeManager.startTraking()
     }
     
@@ -128,22 +131,60 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func didSelectItem(at indexPath: IndexPath) {
-        guard let selectedCard = userService.selectedCard,
-              let user = userService.user else { return }
         let cellType = cellData[indexPath.row]
         switch cellType {
         case .card:
-            guard user.paymentToolInfo.count > 1 else { return }
-            router.presentCards(cards: user.paymentToolInfo,
-                                selectedId: selectedCard.paymentId,
-                                selectedCard: { [weak self] card in
-                self?.userService.selectedCard = card
-                self?.view?.reloadCollectionView()
-            })
+            cardTapped()
         case .partPay:
             router.presentPartPay { [weak self] in
                 self?.configViews()
                 self?.updatePayButtonTitle()
+            }
+        }
+    }
+    
+    private func cardTapped() {
+        guard let selectedCard = userService.selectedCard,
+              let user = userService.user,
+              let authMethod = authManager.authMethod else { return }
+
+        switch userService.gotListCards {
+        case true:
+            guard user.paymentToolInfo.count > 1 else { return }
+            router.presentCards(cards: user.paymentToolInfo,
+                                selectedId: selectedCard.paymentId,
+                                selectedCard: { [weak self] card in
+                self?.view?.hideLoading(animate: true)
+                self?.userService.selectedCard = card
+                self?.view?.reloadCollectionView()
+            })
+        case false:
+            switch authMethod {
+            case .refresh:
+                // MARK: Локальная авторизация
+                getListCards()
+            case .bank:
+                getListCards()
+            }
+        }
+    }
+    
+    private func getListCards() {
+        view?.showLoading()
+        userService.getListCards { [weak self] result in
+            switch result {
+            case .success:
+                self?.cardTapped()
+            case .failure(let error):
+                self?.view?.hideLoading(animate: true)
+                if error.represents(.noInternetConnection) {
+                    self?.alertService.show(on: self?.view,
+                                            type: .noInternet(retry: { self?.getListCards() },
+                                                              completion: { self?.dismissWithError(error) }))
+                } else {
+                    self?.alertService.show(on: self?.view,
+                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
+                }
             }
         }
     }
