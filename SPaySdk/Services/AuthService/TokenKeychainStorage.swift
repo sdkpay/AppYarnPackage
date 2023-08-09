@@ -13,5 +13,3 @@ struct Credential {
     var vector: String
     var expDate: String
 }
-
-

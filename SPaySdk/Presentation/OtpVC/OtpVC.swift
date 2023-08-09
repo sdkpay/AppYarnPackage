@@ -9,10 +9,12 @@ import UIKit
 
 protocol IOtpVC: AnyObject {
     func updateTimer(sec: Int)
+    func updateMobilePhone(phoneNumber: String)
 }
 
 final class OtpVC: ContentVC, IOtpVC {
     private let presenter: OtpPresenting
+    private var otpCode = ""
         
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -24,7 +26,11 @@ final class OtpVC: ContentVC, IOtpVC {
     
     private lazy var textField: DefaultTextField = {
         let textField = DefaultTextField()
-        textField.config(maxLength: 6, textEdited: {_ in }, textEndEdited: {_ in })
+        textField.config(maxLength: 6,
+                         textEdited: nil,
+                         textEndEdited: { text in
+            self.otpCode = text
+        })
         return textField
     }()
     
@@ -38,7 +44,7 @@ final class OtpVC: ContentVC, IOtpVC {
         let view = DefaultButton(buttonAppearance: .full)
 //        view.setTitle(String(stringLiteral: Cost.Button.Pay.title), for: .normal)
         view.addAction {
-            
+            self.presenter.sendOTP(otpCode: self.otpCode)
         }
         return view
     }()
@@ -47,12 +53,10 @@ final class OtpVC: ContentVC, IOtpVC {
         let view = DefaultButton(buttonAppearance: .cancel)
 //        view.setTitle(String(stringLiteral: Cost.Button.Cancel.title), for: .normal)
         view.addAction {
-            
         }
         return view
     }()
 
-    
     func updateTimer(sec: Int) {
         if sec > 0 {
             timeButton.isEnabled = true
@@ -63,7 +67,10 @@ final class OtpVC: ContentVC, IOtpVC {
             timeButton.setTitle("Отправить повторно", for: .normal)
             timeButton.tintColor = ColorAsset.Color.backgroundSecondary
         }
-
+    }
+    
+    func updateMobilePhone(phoneNumber: String) {
+        titleLabel.text = "Отправили СМС с кодом-подтверждением \n оплаты на номер \(phoneNumber) "
     }
     
     override func viewDidLoad() {

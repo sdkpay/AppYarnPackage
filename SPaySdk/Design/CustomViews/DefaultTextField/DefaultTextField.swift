@@ -54,7 +54,7 @@ final class DefaultTextField: UIView {
     private var maxLength: Int?
     
     func config(maxLength: Int?,
-                textEdited: @escaping (String) -> Void,
+                textEdited: ((String) -> Void)?,
                 textEndEdited: @escaping (String) -> Void,
                 buttonTapped: (() -> Void)? = nil) {
         self.maxLength = maxLength
@@ -91,11 +91,12 @@ final class DefaultTextField: UIView {
     @objc
     private func valueChanged() {
         textEdited?(textField.text ?? "")
-        guard let maxLength else { return }
-        let currentLength = (maxLength - (textField.text?.count ?? 0))
+        guard let maxLength,
+              maxLength >= textField.text?.count ?? 0 else {
+            return
+        }
         textEdited?(textField.text ?? "")
     }
-    
     
     private func setupUI() {
         backgroundView
@@ -111,23 +112,21 @@ final class DefaultTextField: UIView {
             .touchEdge(.left, toEdge: .left, ofView: backgroundView, withInset: .backMargin)
             .touchEdge(.right, toEdge: .right, ofView: backgroundView, withInset: .backMargin)
             .touchEdge(.bottom, toEdge: .bottom, ofView: backgroundView)
-
     }
 }
 
 final class InsertTextField: UITextField {
     private var padding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .buttonHeight)
     
-    override public func textRect(forBounds bounds: CGRect) -> CGRect {
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: padding)
     }
     
-    override public func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: padding)
     }
     
-    override public func editingRect(forBounds bounds: CGRect) -> CGRect {
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: padding)
     }
 }
-

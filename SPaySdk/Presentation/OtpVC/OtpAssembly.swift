@@ -8,6 +8,12 @@
 import UIKit
 
 final class OtpAssembly {
+    private let locator: LocatorService
+
+    init(locator: LocatorService) {
+        self.locator = locator
+    }
+    
     func createModule() -> ContentVC {
         let presenter = modulePresenter()
         let contentView = moduleView(presenter: presenter)
@@ -16,7 +22,7 @@ final class OtpAssembly {
     }
 
     private func modulePresenter() -> OtpPresenter {
-        let presenter = OtpPresenter()
+        let presenter = OtpPresenter(otpService: locator.resolve(), userService: locator.resolve(), sdkManager: locator.resolve())
         return presenter
     }
     

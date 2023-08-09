@@ -8,7 +8,7 @@
 import Foundation
 import CommonCrypto
 
-protocol CryptoManagerDelegate {
+protocol CryptoManagerDelegate: AnyObject {
     func encrypt(string: String) -> Data?
     func decrypt(data: Data?) -> String?
 }
@@ -19,7 +19,6 @@ class CryptoManager {
     // MARK: Private
     private let key: Data
     private let iv: Data
-
 
     // MARK: - Initialzier
     init?(key: String, iv: String) {
@@ -36,7 +35,6 @@ class CryptoManager {
         self.key = keyData
         self.iv  = ivData
     }
-
 
     // MARK: - Function
     // MARK: Public

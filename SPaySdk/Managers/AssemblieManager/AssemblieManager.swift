@@ -22,6 +22,8 @@ final class AssemblyManager {
         AlertServiceAssembly(),
         SDKManagerAssembly(),
         AuthServiceAssembly(),
+        OTPManagerAssembly(),
+        OTPServiceAssembly(),
         UserServiceAssembly(),
         LocationManagerAssembly(),
         PaymentServiceAssembly(),
