@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 private enum PaymentCellType {
     case card
@@ -55,6 +56,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let locationManager: LocationManager
     private let sdkManager: SDKManager
     private let authManager: AuthManager
+    private let authService: AuthService
     private let alertService: AlertService
     private let bankManager: BankAppManager
     private let timeManager: OptimizationCheсkerManager
@@ -78,6 +80,7 @@ final class PaymentPresenter: PaymentPresenting {
          paymentService: PaymentService,
          locationManager: LocationManager,
          alertService: AlertService,
+         authService: AuthService,
          partPayService: PartPayService,
          authManager: AuthManager,
          timeManager: OptimizationCheсkerManager) {
@@ -85,6 +88,7 @@ final class PaymentPresenter: PaymentPresenting {
         self.userService = userService
         self.sdkManager = manager
         self.analytics = analytics
+        self.authService = authService
         self.paymentService = paymentService
         self.locationManager = locationManager
         self.alertService = alertService
@@ -163,6 +167,7 @@ final class PaymentPresenter: PaymentPresenting {
             case .refresh:
                 // MARK: Локальная авторизация
                 getListCards()
+              //  appAuth()
             case .bank:
                 getListCards()
             }
@@ -296,6 +301,37 @@ final class PaymentPresenter: PaymentPresenting {
         alertService.close(animated: true, completion: { [weak self] in
             self?.sdkManager.completionWithError(error: error)
         })
+    }
+    
+    private func appAuth() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationDidBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
+        
+        authService.appAuth { [weak self] result in
+            guard let self else { return }
+            NotificationCenter.default.removeObserver(self,
+                                                      name: UIApplication.didBecomeActiveNotification,
+                                                      object: nil)
+            switch result {
+            case .success:
+                self.getListCards()
+            case .failure(_):
+                self.alertService.show(on: self.view,
+                                       type: .defaultError(completion: {
+                    self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+            }
+        }
+    }
+    
+    @objc
+    private func applicationDidBecomeActive() {
+        // Если пользователь не смог получить обратный редирект
+        // от банковского приложения и перешел самостоятельно
+        alertService.show(on: view,
+                          type: .defaultError(completion: {
+            self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
     }
     
     private func pay() {

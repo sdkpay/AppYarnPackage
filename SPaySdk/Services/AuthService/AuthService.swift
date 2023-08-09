@@ -25,6 +25,8 @@ final class AuthServiceAssembly: Assembly {
 
 protocol AuthService {
     func tryToAuth(completion: @escaping (SDKError?, Bool) -> Void)
+    func refreshAuth(completion: @escaping (Result<Void, SDKError>) -> Void)
+    func appAuth(completion: @escaping (Result<Void, SDKError>) -> Void)
     func completeAuth(with url: URL)
 }
 
@@ -38,6 +40,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var partPayService: PartPayService
     private var personalMetricsService: PersonalMetricsService
     private var enviromentManager: EnvironmentManager
+    private var appCompletion: ((Result<Void, SDKError>) -> Void)?
+    private var appLink: String?
     
     init(network: NetworkService,
          sdkManager: SDKManager,
@@ -85,9 +89,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         case .success(let result):
             authManager.authCode = result.code
             authManager.state = result.state
-            refreshAuth()
+            authСompletion?(nil, false)
+            appCompletion?(.success)
         case .failure(let error):
             authСompletion?(error, false)
+            appCompletion?(.failure(error))
         }
     }
     
@@ -96,7 +102,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         authСompletion?(nil, true)
     }
     
-    private func authRequest(completion: @escaping (SDKError?, Bool) -> Void) {
+    private func authRequest(method: AuthMethod? = nil,
+                             completion: @escaping (SDKError?, Bool) -> Void) {
         guard let request = sdkManager.authInfo else { return }
         network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
                                                 merchantLogin: request.merchantLogin,
@@ -113,14 +120,15 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 guard let self = self else { return }
                 self.authManager.sessionId = result.sessionId
                 self.authManager.state = result.state
+                self.appLink = result.deeplink
                 self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
                                                       enabledLevel: .server)
                 if result.refreshTokenlsActive ?? false {
                     self.authManager.authMethod = .refresh
-                    self.refreshAuth()
+                    self.authСompletion?(nil, false)
                 } else {
                     self.authManager.authMethod = .bank
-                    self.sIdAuth(with: result)
+                    self.sIdAuth()
                 }
             case .failure(let error):
                 completion(error, false)
@@ -128,15 +136,21 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
     }
     
+    func appAuth(completion: @escaping (Result<Void, SDKError>) -> Void) {
+        self.appCompletion = completion
+        sIdAuth()
+    }
+    
     // MARK: - Методы авторизации через sId
-    private func sIdAuth(with model: AuthModel) {
+    private func sIdAuth() {
         let target = enviromentManager.environment == .sandboxWithoutBankApp
         guard !target else {
             fillFakeData()
             return
         }
         
-        guard let link = authURL(link: model.deeplink) else {
+        guard let appLink,
+              let link = authURL(link: appLink) else {
             return
         }
         UIApplication.shared.open(link) { [weak self] success in
@@ -152,18 +166,20 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         return URL(string: url + link)
     }
     
-    private func refreshAuth() {
+    func refreshAuth(completion: @escaping (Result<Void, SDKError>) -> Void) {
         personalMetricsService.getUserData { [weak self] data in
             guard let data else {
-                self?.authСompletion?(SDKError.personalInfo, false)
+                DispatchQueue.main.async {
+                    completion(.failure(.personalInfo))
+                }
                 return
             }
             
-            self?.auth(deviceInfo: data)
+            self?.auth(deviceInfo: data, completion: completion)
         }
     }
     
-    private func auth(deviceInfo: String) {
+    private func auth(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
         guard let request = sdkManager.authInfo else { return }
         network.request(AuthTarget.auth(redirectUri: request.redirectUri,
                                         authCode: authManager.authCode,
@@ -184,9 +200,9 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             switch result {
             case .success(let result):
                 self?.authManager.userInfo = result.userInfo
-                self?.authСompletion?(nil, false)
+                completion(.success)
             case .failure(let error):
-                self?.authСompletion?(error, false)
+                completion(.failure(error))
             }
         }
     }

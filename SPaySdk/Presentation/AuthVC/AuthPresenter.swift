@@ -134,24 +134,22 @@ final class AuthPresenter: AuthPresenting {
             self.removeObserver()
             if let error = error {
                 self.analytics.sendEvent(.BankAppAuthFailed)
-                if error.represents(.noInternetConnection) {
-                    self.alertService.show(on: self.view,
-                                           type: .noInternet(retry: {
-                        self.getAccessSPay()
-                    }, completion: {
-                        self.dismissWithError(error)
-                    }))
-                } else {
-                    self.alertService.show(on: self.view,
-                                           type: .defaultError(completion: { self.dismissWithError(error) }))
-                }
+                self.validateAuthError(error: error)
             } else {
                 if isShowFakeScreen {
                     self.router.presentFakeScreen {
                         self.loadPaymentData()
                     }
                 } else {
-                    self.loadPaymentData()
+                    self.authService.refreshAuth { [weak self] result in
+                        switch result {
+                        case .success:
+                            self?.loadPaymentData()
+                        case .failure(let error):
+                            self?.analytics.sendEvent(.BankAppAuthFailed)
+                            self?.validateAuthError(error: error)
+                        }
+                    }
                 }
             }
         }
@@ -175,6 +173,20 @@ final class AuthPresenter: AuthPresenting {
                     self?.router.presentPayment()
                 }
             }
+        }
+    }
+    
+    private func validateAuthError(error: SDKError) {
+        if error.represents(.noInternetConnection) {
+            alertService.show(on: view,
+                              type: .noInternet(retry: {
+                self.getAccessSPay()
+            }, completion: {
+                self.dismissWithError(error)
+            }))
+        } else {
+            alertService.show(on: view,
+                              type: .defaultError(completion: { self.dismissWithError(error) }))
         }
     }
     
