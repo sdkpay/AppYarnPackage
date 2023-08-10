@@ -8,6 +8,13 @@
 import Foundation
 import LocalAuthentication
 
+final class BiometricAuthProviderAssembly: Assembly {
+    func register(in container: LocatorService) {
+        let service: BiometricAuthProviderProtocol = BiometricAuthProvider()
+        container.register(service: service)
+    }
+}
+
 protocol AuthenticationContextProtocol: AuthenticationEvaluateProtocol {
     init()
     func reset()

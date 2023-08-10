@@ -17,7 +17,7 @@ struct AuthModel: Codable {
     let codeChallengeMethod: String
     let codeChallenge: String
     let scope: String
-    let refreshTokenlsActive: Bool?
+    let refreshTokenIsActive: Bool?
 }
 
 struct AuthRefreshModel: Codable {

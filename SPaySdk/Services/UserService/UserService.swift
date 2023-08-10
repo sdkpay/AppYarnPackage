@@ -52,15 +52,10 @@ final class DefaultUserService: UserService {
     
     func getUser(completion: @escaping (SDKError?) -> Void) {
         guard let authInfo = sdkManager.authInfo,
-              let sessionId = authManager.sessionId,
-              let authCode = authManager.authCode,
-              let state = authManager.state
+              let sessionId = authManager.sessionId
         else { return }
         
-        network.request(UserTarget.getListCards(redirectUri: authInfo.redirectUri,
-                                                authCode: authCode,
-                                                sessionId: sessionId,
-                                                state: state,
+        network.request(UserTarget.getListCards(sessionId: sessionId,
                                                 merchantLogin: authInfo.merchantLogin,
                                                 orderId: authInfo.orderId,
                                                 amount: authInfo.amount,
@@ -83,17 +78,11 @@ final class DefaultUserService: UserService {
     }
     
     func getListCards(completion: @escaping (Result<Void, SDKError>) -> Void) {
-        guard authManager.authMethod == .bank else { return }
         guard let authInfo = sdkManager.authInfo,
-              let sessionId = authManager.sessionId,
-              let authCode = authManager.authCode,
-              let state = authManager.state
+              let sessionId = authManager.sessionId
         else { return }
         
-        network.request(UserTarget.getListCards(redirectUri: authInfo.redirectUri,
-                                                authCode: authCode,
-                                                sessionId: sessionId,
-                                                state: state,
+        network.request(UserTarget.getListCards(sessionId: sessionId,
                                                 merchantLogin: authInfo.merchantLogin,
                                                 orderId: authInfo.orderId,
                                                 amount: authInfo.amount,

@@ -123,7 +123,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self.appLink = result.deeplink
                 self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
                                                       enabledLevel: .server)
-                if result.refreshTokenlsActive ?? false {
+                if result.refreshTokenIsActive ?? false {
                     self.authManager.authMethod = .refresh
                     self.authСompletion?(nil, false)
                 } else {

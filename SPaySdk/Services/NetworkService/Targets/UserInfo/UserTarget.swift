@@ -8,18 +8,15 @@
 import Foundation
 
 enum UserTarget {
-    case getListCards(redirectUri: String,
-                        authCode: String,
-                        sessionId: String,
-                        state: String,
-                        merchantLogin: String?,
-                        orderId: String?,
-                        amount: Int?,
-                        currency: String?,
-                        orderNumber: String?,
-                        expiry: String?,
-                        frequency: Int?,
-                        listPaymentCards: Bool?)
+    case getListCards(sessionId: String,
+                      merchantLogin: String?,
+                      orderId: String?,
+                      amount: Int?,
+                      currency: String?,
+                      orderNumber: String?,
+                      expiry: String?,
+                      frequency: Int?,
+                      listPaymentCards: Bool?)
 }
 
 extension UserTarget: TargetType {
@@ -39,10 +36,7 @@ extension UserTarget: TargetType {
     
     var task: HTTPTask {
         switch self {
-        case let .getListCards(redirectUri: redirectUri,
-                               authCode: authCode,
-                               sessionId: sessionId,
-                               state: state,
+        case let .getListCards(sessionId: sessionId,
                                merchantLogin: merchantLogin,
                                orderId: orderId,
                                amount: amount,
@@ -52,10 +46,7 @@ extension UserTarget: TargetType {
                                frequency: frequency,
                                listPaymentCards: listPaymentCards):
             var params: [String: Any] = [
-                "redirectUri": redirectUri,
-                "authCode": authCode,
-                "sessionId": sessionId,
-                "state": state
+                "sessionId": sessionId
             ]
             
             if let merchantLogin = merchantLogin {

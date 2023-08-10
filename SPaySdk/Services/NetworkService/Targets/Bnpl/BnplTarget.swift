@@ -10,10 +10,7 @@ import Foundation
 enum BnplTarget {
     case getBnplPlan(sessionId: String,
                      merchantLogin: String,
-                     orderId: String,
-                     redirectUri: String,
-                     authCode: String,
-                     state: String)
+                     orderId: String)
 }
 
 extension BnplTarget: TargetType {
@@ -35,17 +32,11 @@ extension BnplTarget: TargetType {
         switch self {
         case let .getBnplPlan(sessionId: sessionId,
                               merchantLogin: merchantLogin,
-                              orderId: orderId,
-                              redirectUri: redirectUri,
-                              authCode: authCode,
-                              state: state):
+                              orderId: orderId):
             let params: [String: Any] = [
                 "sessionId": sessionId,
                 "merchantLogin": merchantLogin,
-                "orderId": orderId,
-                "authCode": authCode,
-                "state": state,
-                "redirectUri": redirectUri
+                "orderId": orderId
             ]
             return .requestWithParameters(nil, bodyParameters: params)
         }

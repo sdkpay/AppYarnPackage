@@ -99,6 +99,7 @@ targets:
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSLocationWhenInUseUsageDescription: Need location
         NSUserTrackingUsageDescription: App would like to access IDFA for tracking purpose
+        NSFaceIDUsageDescription: "Так вы подтвердите, что именно вы выполняете вход"
         LSSupportsOpeningDocumentsInPlace: true
         DTXAutoStart: false
         CFBundleURLTypes:

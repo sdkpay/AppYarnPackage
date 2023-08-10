@@ -61,6 +61,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let bankManager: BankAppManager
     private let timeManager: OptimizationCheсkerManager
     private var partPayService: PartPayService
+    private let biometricAuthProvider: BiometricAuthProviderProtocol
 
     private var cellData: [PaymentCellType] {
         var cellData: [PaymentCellType] = []
@@ -83,6 +84,7 @@ final class PaymentPresenter: PaymentPresenting {
          authService: AuthService,
          partPayService: PartPayService,
          authManager: AuthManager,
+         biometricAuthProvider: BiometricAuthProviderProtocol,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
         self.userService = userService
@@ -93,6 +95,7 @@ final class PaymentPresenter: PaymentPresenting {
         self.locationManager = locationManager
         self.alertService = alertService
         self.partPayService = partPayService
+        self.biometricAuthProvider = biometricAuthProvider
         self.bankManager = bankManager
         self.timeManager = timeManager
         self.authManager = authManager
@@ -165,9 +168,14 @@ final class PaymentPresenter: PaymentPresenting {
         case false:
             switch authMethod {
             case .refresh:
-                // MARK: Локальная авторизация
-                getListCards()
-              //  appAuth()
+                biometricAuthProvider.evaluate { result, _ in
+                    switch result {
+                    case true:
+                        self.getListCards()
+                    case false:
+                        self.appAuth()
+                    }
+                }
             case .bank:
                 getListCards()
             }

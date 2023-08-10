@@ -61,7 +61,8 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
         network.request(OTPTarget.confirmOtp(bankInvoiceId: orderId,
                                              otpHash: orderHash,
                                              merchantLogin: nil,
-                                             sessionId: sessionId), to: OTPModel.self) { result in
+                                             sessionId: sessionId),
+                        to: OTPModel.self) { result in
             switch result {
             case .success:
                 completion(nil, false)

@@ -186,13 +186,6 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         requestManager.cookie = headers[String.Headers.setCookie] as? String
         requestManager.pod = headers[String.Headers.pod] as? String
     }
-    
-    private func saveCookie(from response: URLResponse) {
-        guard let response = response as? HTTPURLResponse else { return }
-        let headers = response.allHeaderFields
-        requestManager.cookie = headers[String.Headers.setCookie] as? String
-        requestManager.pod = headers[String.Headers.pod] as? String
-    }
 }
 
 // MARK: - Ssl pinning

@@ -35,6 +35,7 @@ final class PaymentAssembly {
                          authService: locator.resolve(),
                          partPayService: locator.resolve(),
                          authManager: locator.resolve(),
+                         biometricAuthProvider: locator.resolve(),
                          timeManager: OptimizationCheсkerManager())
     }
 

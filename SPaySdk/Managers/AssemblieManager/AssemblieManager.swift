@@ -10,6 +10,7 @@ import Foundation
 final class AssemblyManager {
     private var assemblies: [Assembly] = [
         KeychainStorageAssembly(),
+        BiometricAuthProviderAssembly(),
         EnvironmentManagerAssembly(),
         HostManagerAssembly(),
         FeatureToggleServiceAssembly(),
