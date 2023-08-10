@@ -8,7 +8,7 @@
 import Foundation
 import CommonCrypto
 
-protocol CryptoManagerDelegate {
+protocol CryptoManagerDelegate: AnyObject {
     func encrypt(string: String) -> Data?
     func decrypt(data: Data?) -> String?
 }

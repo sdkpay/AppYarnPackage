@@ -38,10 +38,10 @@ extension OTPTarget: TargetType {
     
     var task: HTTPTask {
         switch self {
-        case .confirmOtp(let bankInvoiceId,
-                         let otpHash,
-                         let merchantLogin,
-                         let sessionId):
+        case let .confirmOtp(bankInvoiceId,
+                             otpHash,
+                             merchantLogin,
+                             sessionId):
             var params: [String: Any] = [
                 "bankInvoiceId": bankInvoiceId,
                 "otpHash": otpHash
@@ -56,10 +56,10 @@ extension OTPTarget: TargetType {
             }
             
             return .requestWithParameters(params)
-        case .createOtpSdk(let bankInvoiceId,
-                           let sessionId,
-                           let paymentId):
-            var params: [String: Any] = [
+        case let .createOtpSdk(bankInvoiceId,
+                               sessionId,
+                               paymentId):
+            let params: [String: Any] = [
                 "bankInvoiceId": bankInvoiceId,
                 "sessionId": sessionId,
                 "paymentId": paymentId
