@@ -12,18 +12,29 @@ protocol IOtpVC: AnyObject {
     func updateMobilePhone(phoneNumber: String)
     func showError()
     func hideKeyboard()
+    func showLoader()
+    func hideLoader()
+    func getKeyboardHeight(keyboardHeight: Int)
 }
 
 final class OtpVC: ContentVC, IOtpVC {
     private let presenter: OtpPresenting
     private var otpCode = ""
     private var maxLength = 6
+    private var keyboardHeight = 0
         
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
         label.textAlignment = .left
         return label
+    }()
+    
+    private lazy var loader: UIActivityIndicatorView = {
+        var loader = UIActivityIndicatorView(style: .whiteLarge)
+        loader.layer.cornerRadius = 10
+        loader.center = view.center
+        return loader
     }()
     
     private lazy var textField: DefaultTextField = {
@@ -67,6 +78,13 @@ final class OtpVC: ContentVC, IOtpVC {
         }
         return view
     }()
+    
+    func getKeyboardHeight(keyboardHeight: Int) {
+        self.keyboardHeight = keyboardHeight
+        backButton.touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: CGFloat(keyboardHeight + 22))
+        backButton.updateConstraints()
+        backButton.layoutIfNeeded()
+    }
 
     func updateTimer(sec: Int) {
         if sec > 0 {
@@ -92,6 +110,24 @@ final class OtpVC: ContentVC, IOtpVC {
     
     func showError() {
         textField.addDescriptionLabel()
+    }
+    
+    func showLoader() {
+        DispatchQueue.main.async {
+            self.loader.center = self.view.center
+            self.view.addSubview(self.loader)
+            self.view.bringSubviewToFront(self.loader)
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
+            self.loader.startAnimating()
+            self.view.isUserInteractionEnabled = false
+        }
+    }
+    
+    func hideLoader() {
+        DispatchQueue.main.async {
+            self.loader.stopAnimating()
+            self.view.isUserInteractionEnabled = true
+        }
     }
     
     override func viewDidLoad() {

@@ -38,7 +38,9 @@ final class PaymentRouter: PaymentRouting {
     }
     
     func presentOTPScreen(completion: @escaping Action) {
-        let vc = OtpAssembly(locator: locator).createModule(completion: completion)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+        DispatchQueue.main.async {
+            let vc = OtpAssembly(locator: self.locator).createModule(completion: completion)
+            self.viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

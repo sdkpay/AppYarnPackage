@@ -5,7 +5,7 @@
 //  Created by Арсений on 02.08.2023.
 //
 
-import Foundation
+import UIKit
 
 protocol OtpPresenting {
     func viewDidLoad()
@@ -41,35 +41,54 @@ final class OtpPresenter: OtpPresenting {
     func viewDidLoad() {
         createTimer()
         getOTP()
+        addObserver()
+    }
+    
+    private func addObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            
+            view?.getKeyboardHeight(keyboardHeight: Int(keyboardHeight))
+        }
     }
     
     func getOTP() {
-        alertService.showLoading(with: nil, animate: true)
+        view?.showLoader()
         otpService.creteOTP(orderId: userService.user?.sessionId ?? "",
                             sessionId: userService.user?.sessionId ?? "",
                             paymentId: Int(userService.selectedCard?.paymentId ?? 0)) { error, mobilePhone in
             if let error {
                 self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error)}))
-                self.alertService.hideLoading(animate: true)
+                self.view?.hideLoader()
                 return
             }
             
             if let mobilePhone {
                 self.view?.updateMobilePhone(phoneNumber: mobilePhone)
-                self.alertService.hideLoading(animate: true)
+                self.view?.hideLoader()
             }
         }
     }
     
     func sendOTP(otpCode: String) {
         let otpHash = getHashCode(code: otpCode)
-        view?.showLoading(with: nil, animate: true)
+        view?.showLoader()
         otpService.confirmOTP(orderId: sdkManager.authInfo?.orderId ?? "",
                               orderHash: otpHash,
                               sessionId: userService.user?.sessionId ?? "") { errorCode, error in
             if let error {
                 self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error)}))
-                self.view?.hideLoading(animate: true)
+                self.view?.hideLoader()
                 return
             }
             
@@ -90,7 +109,7 @@ final class OtpPresenter: OtpPresenting {
             }
             
             self.view?.hideKeyboard()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                 guard let self = self else { return }
                 self.closeWithSuccess()
             }
@@ -98,11 +117,12 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func back() {
+        self.view?.hideKeyboard()
         view?.contentNavigationController?.popViewController(animated: true)
     }
     
     private func closeWithSuccess() {
-        view?.contentNavigationController?.popViewController(animated: true, completion: {
+        view?.contentNavigationController?.popViewController(animated: false, completion: {
             self.completion?()
         })
     }
