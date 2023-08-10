@@ -12,7 +12,7 @@ protocol PaymentRouting {
                       selectedId: Int,
                       selectedCard: @escaping (PaymentToolInfo) -> Void)
     func presentPartPay(partPaySelected: @escaping Action)
-    func presentOTPScreen()
+    func presentOTPScreen(completion: @escaping Action)
 }
 
 final class PaymentRouter: PaymentRouting {
@@ -37,8 +37,8 @@ final class PaymentRouter: PaymentRouting {
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
     
-    func presentOTPScreen() {
-        let vc = OtpAssembly(locator: locator).createModule()
+    func presentOTPScreen(completion: @escaping Action) {
+        let vc = OtpAssembly(locator: locator).createModule(completion: completion)
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -24,12 +24,18 @@ final class OtpPresenter: OtpPresenting {
     private var sec = 45
     private var countOfErrorPayment = 0
     private lazy var timer = Timer(timeInterval: 1.0, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
+    private var completion: Action?
 
-    init(otpService: OTPService, userService: UserService, sdkManager: SDKManager, alertService: AlertService) {
+    init(otpService: OTPService,
+         userService: UserService,
+         sdkManager: SDKManager,
+         alertService: AlertService,
+         completion: @escaping Action) {
         self.otpService = otpService
         self.userService = userService
         self.sdkManager = sdkManager
         self.alertService = alertService
+        self.completion = completion
     }
     
     func viewDidLoad() {
@@ -61,7 +67,7 @@ final class OtpPresenter: OtpPresenting {
                 self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error)}))
                 return
             }
-
+            
             if errorCode == "5" {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
@@ -89,11 +95,9 @@ final class OtpPresenter: OtpPresenting {
     }
     
     private func closeWithSuccess() {
-        self.alertService.show(on: self.view, type: .paySuccess(completion: {
-             self.alertService.close(animated: true, completion: {
-                   self.sdkManager.completionPay(with: .success)
-            })
-        }))
+        view?.contentNavigationController?.popViewController(animated: true, completion: {
+            self.completion?()
+        })
     }
     
     private func dismissWithError(_ error: SDKError) {

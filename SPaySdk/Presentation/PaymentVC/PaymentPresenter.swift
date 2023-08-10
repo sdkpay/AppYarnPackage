@@ -118,7 +118,7 @@ final class PaymentPresenter: PaymentPresenting {
         analytics.sendEvent(.PayConfirmedByUser)
         let permission = locationManager.locationEnabled ? [AnalyticsValue.Location.rawValue] : []
         analytics.sendEvent(.Permissions, with: permission)
-        pay()
+        goToPay()
     }
     
     func cancelTapped() {
@@ -278,7 +278,7 @@ final class PaymentPresenter: PaymentPresenting {
                 self.view?.reloadCollectionView()
                 self.alertService.show(on: self.view,
                                        type: .partPayError(fullPay: {
-                    self.pay()
+                    self.goToPay()
                 }, back: {
                     self.view?.hideLoading(animate: true)
                 }))
@@ -342,34 +342,42 @@ final class PaymentPresenter: PaymentPresenting {
             self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
     }
     
+    private func goToPay() {
+        if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank {
+            pay()
+        } else {
+            router.presentOTPScreen(completion: { [weak self] in
+                self?.pay()
+            })
+        }
+    }
+    
     private func pay() {
-        router.presentOTPScreen()
-        
-//        view?.userInteractionsEnabled = false
-//        DispatchQueue.main.async {
-//            self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
-//        }
-//        guard let paymentId = userService.selectedCard?.paymentId else { return }
-//        paymentService.tryToPay(paymentId: paymentId,
-//                                isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
-//            guard let self = self else { return }
-//            self.view?.userInteractionsEnabled = true
-//            if self.partPayService.bnplplanSelected {
-//                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
-//            }
-//            switch result {
-//            case .success:
-//                self.alertService.show(on: self.view, type: .paySuccess(completion: {
-//                    self.alertService.close(animated: true, completion: {
-//                        self.sdkManager.completionPay(with: .success)
-//                    })
-//                }))
-//            case .failure(let error):
-//                if self.partPayService.bnplplanSelected {
-//                    self.analytics.sendEvent(.PayWithBNPLFailed)
-//                }
-//                self.validatePayError(error)
-//            }
-//        }
+        view?.userInteractionsEnabled = false
+        DispatchQueue.main.async {
+            self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+        }
+        guard let paymentId = userService.selectedCard?.paymentId else { return }
+        paymentService.tryToPay(paymentId: paymentId,
+                                isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
+            guard let self = self else { return }
+            self.view?.userInteractionsEnabled = true
+            if self.partPayService.bnplplanSelected {
+                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
+            }
+            switch result {
+            case .success:
+                self.alertService.show(on: self.view, type: .paySuccess(completion: {
+                    self.alertService.close(animated: true, completion: {
+                        self.sdkManager.completionPay(with: .success)
+                    })
+                }))
+            case .failure(let error):
+                if self.partPayService.bnplplanSelected {
+                    self.analytics.sendEvent(.PayWithBNPLFailed)
+                }
+                self.validatePayError(error)
+            }
+        }
     }
 }

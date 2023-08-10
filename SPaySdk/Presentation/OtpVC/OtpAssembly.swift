@@ -14,18 +14,19 @@ final class OtpAssembly {
         self.locator = locator
     }
     
-    func createModule() -> ContentVC {
-        let presenter = modulePresenter()
+    func createModule(completion: @escaping Action) -> ContentVC {
+        let presenter = modulePresenter(completion: completion)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         return contentView
     }
 
-    private func modulePresenter() -> OtpPresenter {
+    private func modulePresenter(completion: @escaping Action) -> OtpPresenter {
         let presenter = OtpPresenter(otpService: locator.resolve(),
                                      userService: locator.resolve(),
                                      sdkManager: locator.resolve(),
-                                     alertService: locator.resolve())
+                                     alertService: locator.resolve(),
+                                     completion: completion)
         return presenter
     }
     
