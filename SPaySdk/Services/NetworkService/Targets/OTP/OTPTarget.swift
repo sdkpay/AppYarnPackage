@@ -73,6 +73,6 @@ extension OTPTarget: TargetType {
     }
     
     var sampleData: Data? {
-        nil
+        return try? Data(contentsOf: Files.otpJson.url)
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 protocol IOtpVC: AnyObject {
     func updateTimer(sec: Int)
     func updateMobilePhone(phoneNumber: String)
+    func showError()
 }
 
 final class OtpVC: ContentVC, IOtpVC {
@@ -20,27 +21,22 @@ final class OtpVC: ContentVC, IOtpVC {
         let label = UILabel()
         label.numberOfLines = 2
         label.textAlignment = .left
-        label.text = "Отправили СМС с кодом-подтверждением\nоплата на номер +%@"
         return label
     }()
     
     private lazy var textField: DefaultTextField = {
         let textField = DefaultTextField()
-        textField.config(text: "",
-                         keyboardType: .numberPad,
-                         placeholder: "Код-поддтверждение",
-                         description: "gfdgd",
+        textField.config(keyboardType: .numberPad,
                          maxLength: 6,
-                         textEdited: {_ in},
-                         textEndEdited: { _ in
-//            self.presenter.sendOTP(otpCode: <#T##String#>)
+                         textEndEdited: {
+            self.nextButton.isEnabled = true
+            self.otpCode = $0
         })
         return textField
     }()
     
     private lazy var timeButton: UIButton = {
         let timeButton = UIButton()
-        timeButton.setTitle("Отправить повторно через %@ секунд", for: .normal)
         timeButton.setTitleColor(.textSecondary, for: .normal)
         timeButton.isEnabled = true
         timeButton.titleLabel?.font = .medium2
@@ -51,6 +47,7 @@ final class OtpVC: ContentVC, IOtpVC {
     private(set) lazy var nextButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
         view.isEnabled = false
+        let string = Strings.Next.Button.title
         view.setTitle(String(stringLiteral: "Продолжить"), for: .normal)
         view.addAction {
             self.presenter.sendOTP(otpCode: self.otpCode)
@@ -60,8 +57,10 @@ final class OtpVC: ContentVC, IOtpVC {
     
     private(set) lazy var backButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .cancel)
-        view.setTitle(String(stringLiteral: "Назад"), for: .normal)
+        let string = Strings.Back.Button.title
+        view.setTitle(String(stringLiteral: string), for: .normal)
         view.addAction {
+            self.presenter.back()
         }
         return view
     }()
@@ -69,17 +68,23 @@ final class OtpVC: ContentVC, IOtpVC {
     func updateTimer(sec: Int) {
         if sec > 0 {
             timeButton.isEnabled = true
-            timeButton.setTitle("Отправим повторно через \(sec) секунд", for: .normal)
+            let string = Strings.Time.Button.Repeat.isNotActive(sec)
+            timeButton.setTitle(string, for: .normal)
             timeButton.setTitleColor(.textSecondary, for: .normal)
         } else {
             timeButton.isEnabled = false
-            timeButton.setTitle("Отправить повторно", for: .normal)        
+            let string = Strings.Time.Button.Repeat.isActive
+            timeButton.setTitle(string, for: .normal)
             timeButton.setTitleColor(.main, for: .normal)
         }
     }
     
     func updateMobilePhone(phoneNumber: String) {
-        titleLabel.text = "Отправили СМС с кодом-подтверждением\n оплаты на номер \(phoneNumber) "
+        titleLabel.text = Strings.TitleLabel.Message.title(phoneNumber)
+    }
+    
+    func showError() {
+        textField.addDescriptionLabel()
     }
     
     override func viewDidLoad() {
@@ -159,7 +164,6 @@ extension OtpVC {
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
                 static let top: CGFloat = 22
-//                static let title = Strings
             }
             
             enum Back {
