@@ -11,11 +11,13 @@ protocol IOtpVC: AnyObject {
     func updateTimer(sec: Int)
     func updateMobilePhone(phoneNumber: String)
     func showError()
+    func hideKeyboard()
 }
 
 final class OtpVC: ContentVC, IOtpVC {
     private let presenter: OtpPresenting
     private var otpCode = ""
+    private var maxLength = 6
         
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -27,9 +29,10 @@ final class OtpVC: ContentVC, IOtpVC {
     private lazy var textField: DefaultTextField = {
         let textField = DefaultTextField()
         textField.config(keyboardType: .numberPad,
-                         maxLength: 6,
+                         maxLength: maxLength,
                          textEndEdited: {
-            self.nextButton.isEnabled = true
+            self.nextButton.isEnabled = $0.count == self.maxLength
+            guard $0.count == self.maxLength else { return }
             self.otpCode = $0
         })
         return textField
@@ -77,6 +80,10 @@ final class OtpVC: ContentVC, IOtpVC {
             timeButton.setTitle(string, for: .normal)
             timeButton.setTitleColor(.main, for: .normal)
         }
+    }
+    
+    func hideKeyboard() {
+        view.endEditing(true)
     }
     
     func updateMobilePhone(phoneNumber: String) {
