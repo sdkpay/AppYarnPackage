@@ -12,14 +12,7 @@ var modilePhone: String = ""
 final class OTPServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
-            let service: AuthService = DefaultAuthService(network: container.resolve(),
-                                                          sdkManager: container.resolve(),
-                                                          analytics: container.resolve(),
-                                                          bankAppManager: container.resolve(),
-                                                          authManager: container.resolve(),
-                                                          partPayService: container.resolve(),
-                                                          personalMetricsService: container.resolve(),
-                                                          enviromentManager: container.resolve())
+            let service: OTPService = DefaultOTPService(network: container.resolve())
             return service
         }
     }

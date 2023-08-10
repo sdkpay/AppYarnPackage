@@ -19,8 +19,8 @@ final class OtpPresenter: OtpPresenting {
     private var otpService: OTPService
     private var userService: UserService
     private let sdkManager: SDKManager
-    private var sec = 45
-    private var timer: Timer?
+    private var sec = 10
+    private lazy var timer = Timer(timeInterval: 1.0, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
 
     init(otpService: OTPService, userService: UserService, sdkManager: SDKManager) {
         self.otpService = otpService
@@ -30,6 +30,7 @@ final class OtpPresenter: OtpPresenting {
     
     func viewDidLoad() {
         createTimer()
+        getOTP()
     }
     
     func getOTP() {
@@ -61,17 +62,14 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func createTimer() {
-        timer = Timer(timeInterval: 1.0, target: self, selector: #selector(updateTime), userInfo: nil, repeats: false)
-        guard let timer else { return }
         RunLoop.current.add(timer, forMode: .common)
     }
     
     @objc private func updateTime() {
         sec -= 1
-        if sec <= 0 {
-            timer?.invalidate()
-            sec = 60
-            timer = nil
+        if sec < 0 {
+            timer.invalidate()
+            sec = 45
         } else {
             view?.updateTimer(sec: sec)
         }

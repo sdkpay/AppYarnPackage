@@ -20,29 +20,38 @@ final class OtpVC: ContentVC, IOtpVC {
         let label = UILabel()
         label.numberOfLines = 2
         label.textAlignment = .left
-        label.text = "Отправили СМС с кодом-подтверждением \n оплаты на номер +7 905 •••-76-46 "
+        label.text = "Отправили СМС с кодом-подтверждением\nоплата на номер +%@"
         return label
     }()
     
     private lazy var textField: DefaultTextField = {
         let textField = DefaultTextField()
-        textField.config(maxLength: 6,
-                         textEdited: nil,
-                         textEndEdited: { text in
-            self.otpCode = text
+        textField.config(text: "",
+                         keyboardType: .numberPad,
+                         placeholder: "Код-поддтверждение",
+                         description: "gfdgd",
+                         maxLength: 6,
+                         textEdited: {_ in},
+                         textEndEdited: { _ in
+//            self.presenter.sendOTP(otpCode: <#T##String#>)
         })
         return textField
     }()
     
     private lazy var timeButton: UIButton = {
         let timeButton = UIButton()
+        timeButton.setTitle("Отправить повторно через %@ секунд", for: .normal)
+        timeButton.setTitleColor(.textSecondary, for: .normal)
         timeButton.isEnabled = true
+        timeButton.titleLabel?.font = .medium2
+        timeButton.titleLabel?.textAlignment = .left
         return timeButton
     }()
     
     private(set) lazy var nextButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
-//        view.setTitle(String(stringLiteral: Cost.Button.Pay.title), for: .normal)
+        view.isEnabled = false
+        view.setTitle(String(stringLiteral: "Продолжить"), for: .normal)
         view.addAction {
             self.presenter.sendOTP(otpCode: self.otpCode)
         }
@@ -51,7 +60,7 @@ final class OtpVC: ContentVC, IOtpVC {
     
     private(set) lazy var backButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .cancel)
-//        view.setTitle(String(stringLiteral: Cost.Button.Cancel.title), for: .normal)
+        view.setTitle(String(stringLiteral: "Назад"), for: .normal)
         view.addAction {
         }
         return view
@@ -61,21 +70,20 @@ final class OtpVC: ContentVC, IOtpVC {
         if sec > 0 {
             timeButton.isEnabled = true
             timeButton.setTitle("Отправим повторно через \(sec) секунд", for: .normal)
-            timeButton.tintColor = ColorAsset.Color.backgroundPrimary
+            timeButton.setTitleColor(.textSecondary, for: .normal)
         } else {
             timeButton.isEnabled = false
-            timeButton.setTitle("Отправить повторно", for: .normal)
-            timeButton.tintColor = ColorAsset.Color.backgroundSecondary
+            timeButton.setTitle("Отправить повторно", for: .normal)        
+            timeButton.setTitleColor(.main, for: .normal)
         }
     }
     
     func updateMobilePhone(phoneNumber: String) {
-        titleLabel.text = "Отправили СМС с кодом-подтверждением \n оплаты на номер \(phoneNumber) "
+        titleLabel.text = "Отправили СМС с кодом-подтверждением\n оплаты на номер \(phoneNumber) "
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textField.becomeFirstResponder()
         presenter.viewDidLoad()
         setupUI()
     }
@@ -105,23 +113,22 @@ final class OtpVC: ContentVC, IOtpVC {
         timeButton
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Time.left)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Time.right)
-            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Cost.Button.Time.top)
+            .touchEdge(.top, toEdge: .bottom, ofView: textField, withInset: Cost.Button.Time.top)
+               
+        nextButton
+            .add(toSuperview: view)
+            .height(.defaultButtonHeight)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Next.left)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Next.right)
+            .touchEdge(.top, toEdge: .bottom, ofView: timeButton, withInset: Cost.Button.Next.bottom)
         
         backButton
             .add(toSuperview: view)
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.Back.bottom, usingRelation: .lessThanOrEqual)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Back.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Back.right)
+            .touchEdge(.top, toEdge: .bottom, ofView: nextButton, withInset: Cost.Button.Back.top)
             .height(.defaultButtonHeight)
-        
-        nextButton
-            .add(toSuperview: view)
-            .height(.defaultButtonHeight)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Next.left)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Next.right)
-            .touchEdge(.bottom, toEdge: .top, ofView: backButton, withInset: Cost.Button.Next.bottom)
-            .touchEdge(.top, toEdge: .bottom, ofView: timeButton, withInset: Cost.Button.Next.bottom)
     }
 }
 
@@ -152,6 +159,7 @@ extension OtpVC {
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
                 static let top: CGFloat = 22
+//                static let title = Strings
             }
             
             enum Back {
@@ -165,7 +173,7 @@ extension OtpVC {
             enum Time {
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
-                static let top: CGFloat = 16
+                static let top: CGFloat = 12
             }
         }
     }

@@ -335,31 +335,33 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func pay() {
-        view?.userInteractionsEnabled = false
-        DispatchQueue.main.async {
-            self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
-        }
-        guard let paymentId = userService.selectedCard?.paymentId else { return }
-        paymentService.tryToPay(paymentId: paymentId,
-                                isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
-            guard let self = self else { return }
-            self.view?.userInteractionsEnabled = true
-            if self.partPayService.bnplplanSelected {
-                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
-            }
-            switch result {
-            case .success:
-                self.alertService.show(on: self.view, type: .paySuccess(completion: {
-                    self.alertService.close(animated: true, completion: {
-                        self.sdkManager.completionPay(with: .success)
-                    })
-                }))
-            case .failure(let error):
-                if self.partPayService.bnplplanSelected {
-                    self.analytics.sendEvent(.PayWithBNPLFailed)
-                }
-                self.validatePayError(error)
-            }
-        }
+        router.presentOTPScreen()
+        
+//        view?.userInteractionsEnabled = false
+//        DispatchQueue.main.async {
+//            self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+//        }
+//        guard let paymentId = userService.selectedCard?.paymentId else { return }
+//        paymentService.tryToPay(paymentId: paymentId,
+//                                isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
+//            guard let self = self else { return }
+//            self.view?.userInteractionsEnabled = true
+//            if self.partPayService.bnplplanSelected {
+//                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
+//            }
+//            switch result {
+//            case .success:
+//                self.alertService.show(on: self.view, type: .paySuccess(completion: {
+//                    self.alertService.close(animated: true, completion: {
+//                        self.sdkManager.completionPay(with: .success)
+//                    })
+//                }))
+//            case .failure(let error):
+//                if self.partPayService.bnplplanSelected {
+//                    self.analytics.sendEvent(.PayWithBNPLFailed)
+//                }
+//                self.validatePayError(error)
+//            }
+//        }
     }
 }

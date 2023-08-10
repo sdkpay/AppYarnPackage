@@ -34,6 +34,16 @@
 "alert.pay.success.title" = "Успешно оплатили";
 "alert.pay.no.cards.title" = "Нет подходящих карт. Вернитесь к заказу\nи выберите другой способ оплаты.";
 "alert.pay.no.internet.title" = "Нет интернета. Проверьте подключение и попробуйте ещё раз.";
+"alert.otp.error.title" = "Вы исчерпали попытки ввода кода.\nВыберете другой метод оплаты";
 
 // FakeViewController
 "fake.title" = "Это тестовый режим\nТут происходит авторизация в мобильном приложении банка";
+
+// OTP
+"next.button.title" = "Продолжить";
+"back.button.title" = "Назад";
+"time.button.repeat.isActive" = "Отправить повторно";
+"time.button.repeat.isNotActive" = "Отправить повторно через %@ секунд";
+"textField.error.title" = "Неверный код. Повторите попытку";
+"textField.placeholder" = "Введите код";
+"titleLabel.message.title" = "Отправили СМС с кодом-подтверждением\nоплата на номер +%@";

@@ -7,7 +7,7 @@
 
 import UIKit
 import SPaySdkDEBUG
-import IQKeyboardManagerSwift
+//import IQKeyboardManagerSwift
 
 final class StartupService {
     func setupInitialState(with window: UIWindow) {
@@ -17,6 +17,6 @@ final class StartupService {
     }
     
     private func setupKeyboard() {
-         IQKeyboardManager.shared.enable = true
+//         IQKeyboardManager.shared.enable = true
     }
 }

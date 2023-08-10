@@ -11,8 +11,8 @@ struct AuthModel: Codable {
     let deeplink: String
     let state: String
     let sessionId: String
-    let clientId: String
-    let nonce: String
+    let clientId: String?
+    let nonce: String?
     let isBnplEnabled: Bool?
     let codeChallengeMethod: String
     let codeChallenge: String
