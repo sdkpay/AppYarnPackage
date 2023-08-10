@@ -85,7 +85,7 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func back() {
-        view?.dismiss(animated: true)
+        view?.contentNavigationController?.popViewController(animated: true)
     }
     
     private func closeWithSuccess() {
