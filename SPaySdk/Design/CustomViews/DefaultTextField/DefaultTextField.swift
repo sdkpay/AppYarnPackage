@@ -69,7 +69,7 @@ final class DefaultTextField: UIView {
         view.borderStyle = .none
         view.delegate = self
         view.textAlignment = .left
-        view.clearButtonMode = .whileEditing
+        view.clearButtonMode = .never
         view.addTarget(self, action: #selector(editingBegin), for: .editingChanged)
         view.addTarget(self, action: #selector(editingEnd), for: .editingDidEnd)
         view.addTarget(self, action: #selector(valueChanged), for: .allEvents)
@@ -133,7 +133,6 @@ final class DefaultTextField: UIView {
     @objc
     private func valueChanged() {
         guard let maxLength else { return }
-        guard maxLength == textField.text?.count ?? 0 else { return }
         textEndEdited?(textField.text ?? "")
     }
     
