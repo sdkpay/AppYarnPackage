@@ -22,7 +22,10 @@ final class OtpAssembly {
     }
 
     private func modulePresenter() -> OtpPresenter {
-        let presenter = OtpPresenter(otpService: locator.resolve(), userService: locator.resolve(), sdkManager: locator.resolve())
+        let presenter = OtpPresenter(otpService: locator.resolve(),
+                                     userService: locator.resolve(),
+                                     sdkManager: locator.resolve(),
+                                     alertService: locator.resolve())
         return presenter
     }
     

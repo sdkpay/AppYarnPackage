@@ -44,6 +44,7 @@
 "back.button.title" = "Назад";
 "time.button.repeat.isActive" = "Отправить повторно";
 "time.button.repeat.isNotActive" = "Отправить повторно через %@ секунд";
-"textField.error.title" = "Неверный код. Повторите попытку";
+"descriptionLabel.error.title" = "Неверный код. Повторите попытку";
 "textField.placeholder" = "Введите код";
 "titleLabel.message.title" = "Отправили СМС с кодом-подтверждением\nоплата на номер +%@";
+"textField.suggestion.title" = "Код-подтверждение";

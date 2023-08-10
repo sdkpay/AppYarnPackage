@@ -73,6 +73,7 @@ enum AlertType {
     case defaultError(completion: Action)
     case noInternet(retry: Action, completion: Action)
     case partPayError(fullPay: Action, back: Action)
+    case tryingError(back: Action)
 }
 
 final class AlertServiceAssembly: Assembly {
@@ -198,6 +199,17 @@ final class DefaultAlertService: AlertService {
                       buttons: [
                         fullPayButton,
                         returnButton
+                      ],
+                      completion: back)
+        case .tryingError(back: let back):
+            let fullPayButton = AlertButtonModel(title: Strings.Return.title,
+                                                 type: .cancel,
+                                                 action: back)
+            showAlert(on: view,
+                      with: Strings.Alert.Otp.Error.title,
+                      state: .failure,
+                      buttons: [
+                        fullPayButton
                       ],
                       completion: back)
         }

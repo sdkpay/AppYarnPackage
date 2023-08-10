@@ -37,7 +37,6 @@ final class DefaultTextField: UIView {
         view.numberOfLines = 1
         view.textAlignment = .left
         view.alpha = 1
-        view.text = "fdsfdsfsfs"
         return view
     }()
     
@@ -45,6 +44,7 @@ final class DefaultTextField: UIView {
         let view = UIStackView()
         view.addArrangedSubview(backgroundView)
         view.axis = .vertical
+        view.spacing = 4
         return view
     }()
     
@@ -67,6 +67,7 @@ final class DefaultTextField: UIView {
     private lazy var textField: InsertTextField = {
         let view = InsertTextField()
         view.borderStyle = .none
+        view.delegate = self
         view.textAlignment = .left
         view.clearButtonMode = .whileEditing
         view.addTarget(self, action: #selector(editingBegin), for: .editingChanged)
@@ -87,28 +88,20 @@ final class DefaultTextField: UIView {
         return view
     }()
 
-    private var textEdited: ((String) -> Void)?
     private var textEndEdited: ((String) -> Void)?
     private var maxLength: Int?
     
-    func config(text: String?,
-                keyboardType: UIKeyboardType,
-                placeholder: String?,
-                description: String?,
+    func config(keyboardType: UIKeyboardType,
                 maxLength: Int?,
-                textEdited: @escaping (String) -> Void,
                 textEndEdited: @escaping (String) -> Void,
                 buttonTapped: (() -> Void)? = nil) {
-        textField.text = text
-        textField.placeholder = placeholder
-        descriptionLabel.text = description
+        textField.placeholder = "Код-подтверждение"
         self.maxLength = maxLength
         if maxLength != nil {
             valueChanged()
         }
         textField.keyboardType = keyboardType
         textField.textContentType = .oneTimeCode
-        self.textEdited = textEdited
         self.textEndEdited = textEndEdited
         setupUI()
     }
@@ -120,7 +113,6 @@ final class DefaultTextField: UIView {
                        animations: {
             self.backgroundView.layer.borderColor = state.color.cgColor
             self.descriptionLabel.textColor = state.color
-            self.descriptionLabel.alpha = state != .alert ? 0 : 1
         }, completion: nil)
     }
     
@@ -140,11 +132,17 @@ final class DefaultTextField: UIView {
     
     @objc
     private func valueChanged() {
-        textEdited?(textField.text ?? "")
         guard let maxLength else { return }
-        let currentLength = (maxLength - (textField.text?.count ?? 0))
-        textEdited?(textField.text ?? "")
-    } 
+        guard maxLength == textField.text?.count ?? 0 else { return }
+        textEndEdited?(textField.text ?? "")
+    }
+    
+    func addDescriptionLabel() {
+        mainStack.removeArrangedSubview(backgroundView)
+        mainStack.addArrangedSubview(backgroundView)
+        mainStack.addArrangedSubview(descriptionLabel)
+        setState(.alert)
+    }
     
     private func setupUI() {
         mainStack
@@ -167,13 +165,6 @@ final class DefaultTextField: UIView {
             .touchEdge(.left, toEdge: .left, ofView: backgroundView, withInset: 8)
             .touchEdge(.right, toEdge: .right, ofView: backgroundView, withInset: .backMargin)
             .touchEdge(.bottom, toEdge: .bottom, ofView: backgroundView, withInset: 8)
-        
-//        descriptionLabel
-//            .add(toSuperview: self)
-//            .touchEdge(.top, toEdge: .bottom, ofView: backgroundView, withInset: .backMargin)
-//            .touchEdge(.left, toEdge: .left, ofView: backgroundView, withInset: .backMargin)
-//            .touchEdge(.right, toEdge: .left, ofView: backgroundView, withInset: .margin)
-//            .touchEdge(.bottom, toEdge: .bottom, ofView: self, withInset: .backMargin)
     }
 }
 
@@ -190,5 +181,21 @@ final class InsertTextField: UITextField {
     
     override func editingRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: padding)
+    }
+}
+
+extension DefaultTextField: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+        return updatedText.count <= maxLength ?? 0
+    }
+
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText = textView.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
+        return updatedText.count <= maxLength ?? 0
     }
 }
