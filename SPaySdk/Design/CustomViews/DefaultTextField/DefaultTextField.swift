@@ -106,6 +106,10 @@ final class DefaultTextField: UIView {
         setupUI()
     }
     
+    func becomeFirst() {
+        textField.becomeFirstResponder()
+    }
+    
     func setState(_ state: TextFieldState, animate: Bool = true) {
         UIView.animate(withDuration: animate ? 0.25 : 0.0,
                        delay: .zero,

@@ -12,8 +12,6 @@ protocol IOtpVC: AnyObject {
     func updateMobilePhone(phoneNumber: String)
     func showError()
     func hideKeyboard()
-    func showLoader()
-    func hideLoader()
     func getKeyboardHeight(keyboardHeight: Int)
 }
 
@@ -21,7 +19,7 @@ final class OtpVC: ContentVC, IOtpVC {
     private let presenter: OtpPresenting
     private var otpCode = ""
     private var maxLength = 6
-    private var keyboardHeight = 0
+    private var keyboardHeight = 330
         
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -81,9 +79,6 @@ final class OtpVC: ContentVC, IOtpVC {
     
     func getKeyboardHeight(keyboardHeight: Int) {
         self.keyboardHeight = keyboardHeight
-        backButton.touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: CGFloat(keyboardHeight + 22))
-        backButton.updateConstraints()
-        backButton.layoutIfNeeded()
     }
 
     func updateTimer(sec: Int) {
@@ -111,28 +106,11 @@ final class OtpVC: ContentVC, IOtpVC {
     func showError() {
         textField.addDescriptionLabel()
     }
-    
-    func showLoader() {
-        DispatchQueue.main.async {
-            self.loader.center = self.view.center
-            self.view.addSubview(self.loader)
-            self.view.bringSubviewToFront(self.loader)
-            UIApplication.shared.isNetworkActivityIndicatorVisible = true
-            self.loader.startAnimating()
-            self.view.isUserInteractionEnabled = false
-        }
-    }
-    
-    func hideLoader() {
-        DispatchQueue.main.async {
-            self.loader.stopAnimating()
-            self.view.isUserInteractionEnabled = true
-        }
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
+        textField.becomeFirst()
         setupUI()
     }
     
@@ -172,7 +150,7 @@ final class OtpVC: ContentVC, IOtpVC {
         
         backButton
             .add(toSuperview: view)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.Back.bottom, usingRelation: .lessThanOrEqual)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: CGFloat(keyboardHeight))
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Back.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Back.right)
             .touchEdge(.top, toEdge: .bottom, ofView: nextButton, withInset: Cost.Button.Back.top)

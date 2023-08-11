@@ -23,7 +23,11 @@ final class OtpPresenter: OtpPresenting {
     private let alertService: AlertService
     private var sec = 45
     private var countOfErrorPayment = 0
-    private lazy var timer = Timer(timeInterval: 1.0, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
+    private lazy var timer = Timer(timeInterval: 1.0,
+                                   target: self,
+                                   selector: #selector(updateTime),
+                                   userInfo: nil,
+                                   repeats: true)
     private var completion: Action?
 
     init(otpService: OTPService,
@@ -42,6 +46,7 @@ final class OtpPresenter: OtpPresenting {
         createTimer()
         getOTP()
         addObserver()
+        configViews()
     }
     
     private func addObserver() {
@@ -63,32 +68,37 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func getOTP() {
-        view?.showLoader()
+        view?.showLoading()
         otpService.creteOTP(orderId: userService.user?.sessionId ?? "",
                             sessionId: userService.user?.sessionId ?? "",
                             paymentId: Int(userService.selectedCard?.paymentId ?? 0)) { error, mobilePhone in
             if let error {
                 self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error)}))
-                self.view?.hideLoader()
+                self.view?.hideLoading()
                 return
             }
             
             if let mobilePhone {
                 self.view?.updateMobilePhone(phoneNumber: mobilePhone)
-                self.view?.hideLoader()
+                self.view?.hideLoading()
             }
         }
     }
     
+    private func configViews() {
+        guard let user = userService.user else { return }
+        view?.configProfileView(with: user.userInfo)
+    }
+    
     func sendOTP(otpCode: String) {
         let otpHash = getHashCode(code: otpCode)
-        view?.showLoader()
+        view?.showLoading()
         otpService.confirmOTP(orderId: sdkManager.authInfo?.orderId ?? "",
                               orderHash: otpHash,
                               sessionId: userService.user?.sessionId ?? "") { errorCode, error in
             if let error {
                 self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error)}))
-                self.view?.hideLoader()
+                self.view?.showLoading()
                 return
             }
             
