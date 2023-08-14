@@ -61,7 +61,7 @@ final class CheckView: UIView {
     func config(with text: String? = nil,
                 checkSelected: Bool,
                 checkTapped: @escaping BoolAction,
-                textTapped: StringAction? = nil) {
+                textTapped: LinkAction? = nil) {
         self.isSelected = checkSelected
         self.checkTapped = checkTapped
         self.titleLabel.linkTapped = textTapped

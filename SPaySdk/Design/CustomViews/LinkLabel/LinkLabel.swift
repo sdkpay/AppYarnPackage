@@ -9,8 +9,10 @@ import UIKit
 
 typealias StringAction = ((String) -> Void)
 
+typealias LinkAction = (((link: String, text: String)) -> Void)
+
 final class LinkLabel: UILabel {
-    var linkTapped: StringAction?
+    var linkTapped: LinkAction?
     private let linkTag = "url"
     private let closeTagSymbol = ">"
     private let pointerSymbol = "="
@@ -69,7 +71,7 @@ final class LinkLabel: UILabel {
         return linkTextDictionary
     }
     
-    private func url(at touches: Set<UITouch>) -> String? {
+    private func url(at touches: Set<UITouch>) -> (link: String, text: String)? {
         guard let attributedText = attributedText, attributedText.length > 0 else { return nil }
         guard let touchLocation = touches.max(by: { $0.timestamp < $1.timestamp })?.location(in: self) else { return nil }
         guard let textStorage = preparedTextStorage() else { return nil }
@@ -85,12 +87,12 @@ final class LinkLabel: UILabel {
         return findLink(at: characterIndex)
     }
     
-    private func findLink(at index: Int) -> String? {
+    private func findLink(at index: Int) -> (link: String, text: String)? {
         guard let text = attributedText?.string else { return nil }
         for link in links {
             if let keyRange = text.range(of: link.key),
                keyRange.contains(String.Index(utf16Offset: index, in: text)) {
-                return link.value
+                return (link.key, link.value)
             }
         }
         return nil

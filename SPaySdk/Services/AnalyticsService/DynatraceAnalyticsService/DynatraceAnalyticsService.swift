@@ -8,6 +8,11 @@
 import Foundation
 @_implementationOnly import DynatraceStatic
 
+private enum DynatraceCredentional {
+    static let url = "https://vito.sbrf.ru:443/mbeacon/7e4bdb68-cd47-4ecc-b649-69eb5cd44c91"
+    static let apikey = "63bb5224-894a-41f6-a558-d4ab8e62e21a"
+}
+
 final class DefaultDynatraceAnalyticsService: AnalyticsService {
     func sendEvent(_ event: AnalyticsEvent) {
         let action = DTXAction.enter(withName: event.rawValue)
@@ -49,11 +54,18 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
         doubles.forEach({ action?.reportValue(withName: event.rawValue, doubleValue: $0) })
         action?.leave()
     }
-    
+
     func config() {
+#if SDKDEBUG
+        let dynatraceId = DynatraceCredentional.apikey
+        let dynatraceUrl = DynatraceCredentional.url
+#else
+        let dynatraceId = ConfigGlobal.schemas?.dynatraceId
+        let dynatraceUrl = ConfigGlobal.schemas?.dynatraceUrl
+#endif
         let startupDictionary: [String: Any?] = [
-            kDTXApplicationID: ConfigGlobal.schemas?.dynatraceId,
-            kDTXBeaconURL: ConfigGlobal.schemas?.dynatraceUrl,
+            kDTXApplicationID: dynatraceId,
+            kDTXBeaconURL: dynatraceUrl,
             kDTXLogLevel: "OFF"
         ]
         Dynatrace.startup(withConfig: startupDictionary as [String: Any])

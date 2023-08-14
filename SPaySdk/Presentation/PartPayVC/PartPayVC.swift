@@ -15,7 +15,7 @@ protocol IPartPayVC {
     func configCheckView(text: String,
                          checkSelected: Bool,
                          checkTapped: @escaping BoolAction,
-                         textTapped: @escaping StringAction)
+                         textTapped: @escaping LinkAction)
 }
 
 final class PartPayVC: ContentVC, IPartPayVC {
@@ -78,7 +78,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
     func configCheckView(text: String,
                          checkSelected: Bool,
                          checkTapped: @escaping BoolAction,
-                         textTapped: @escaping StringAction) {
+                         textTapped: @escaping LinkAction) {
         viewBuilder.agreementView.config(with: text, checkSelected: checkSelected, checkTapped: checkTapped, textTapped: textTapped)
         viewBuilder.setupUI(view: view)
     }

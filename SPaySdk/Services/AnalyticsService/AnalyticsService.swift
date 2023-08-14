@@ -63,6 +63,10 @@ enum AnalyticsEvent: String {
     case PayWithBNPLConfirmedByUser
     /// Открыли экран с ошибкой оплаты с БНПЛ
     case PayWithBNPLFailed
+    /// Пользователь перешел по ссылке "Условия договора"
+    case PayWithBNPLContractView
+    /// Пользователь перешел по ссылке "Соглашение"
+    case PayWithBNPLAgreementView
     /// Проверка устройства на возможность запуска команды с привилегиями пользователя root
     case Compromised
     ///  Проверка устройства на эмуляцию

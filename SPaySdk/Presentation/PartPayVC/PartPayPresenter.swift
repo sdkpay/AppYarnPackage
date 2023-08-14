@@ -99,7 +99,15 @@ final class PartPayPresenter: PartPayPresenting {
         },
                               textTapped: { [weak self] link in
             DispatchQueue.main.async {
-                self?.agreementTextTapped(link: link)
+                self?.agreementTextTapped(link: link.link)
+            }
+            switch link.text {
+            case Strings.Part.Contract.title:
+                self?.analytics.sendEvent(.PayWithBNPLContractView)
+            case Strings.Part.Agreement.title:
+                self?.analytics.sendEvent(.PayWithBNPLAgreementView)
+            default:
+                return
             }
         })
     }

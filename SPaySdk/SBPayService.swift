@@ -21,6 +21,9 @@ protocol SBPayService {
     func payWithOrderId(with viewController: UIViewController,
                         paymentRequest: SFullPaymentRequest,
                         completion: @escaping PaymentCompletion)
+    func payWithBankInvoiceId(with viewController: UIViewController,
+                              paymentRequest: SBankInvoicePaymentRequest,
+                              completion: @escaping PaymentCompletion)
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
     func getResponseFrom(_ url: URL)
@@ -156,7 +159,7 @@ final class DefaultSBPayService: SBPayService {
                         completion: @escaping PaymentCompletion) {
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
-        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.version) }
+        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         locator.resolve(AnalyticsService.self)
             .sendEvent(.PayWithOrderId, with: ["paymentRequest: \(paymentRequest)"])
         locator
@@ -164,6 +167,31 @@ final class DefaultSBPayService: SBPayService {
             .configWithOrderId(apiKey: apiKey,
                                paymentRequest: paymentRequest,
                                completion: completion)
+        liveCircleManager.openInitialScreen(with: viewController,
+                                            with: locator)
+        timeManager.stopCheckingCPULoad {
+            self.locator
+                .resolve(AnalyticsService.self)
+                .sendEvent(.StartTime, with: [$0])
+        }
+    }
+    
+    func payWithBankInvoiceId(with viewController: UIViewController,
+                              paymentRequest: SBankInvoicePaymentRequest,
+                              completion: @escaping PaymentCompletion) {
+        timeManager.startCheckingCPULoad()
+        timeManager.startContectionTypeChecking()
+        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
+        if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
+            return assertionFailure(error)
+        }
+        locator.resolve(AnalyticsService.self)
+            .sendEvent(.PayWithOrderId, with: ["paymentRequest: \(paymentRequest)"])
+        locator
+            .resolve(SDKManager.self)
+            .configWithBankInvoiceId(apiKey: apiKey,
+                                     paymentRequest: paymentRequest,
+                                     completion: completion)
         liveCircleManager.openInitialScreen(with: viewController,
                                             with: locator)
         timeManager.stopCheckingCPULoad {
