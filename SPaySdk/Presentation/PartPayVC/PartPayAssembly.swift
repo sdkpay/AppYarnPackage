@@ -37,7 +37,8 @@ final class PartPayAssembly {
         return presenter
     }
     
-    private func moduleView(presenter: PartPayPresenter, analyticsService: AnalyticsService) -> ContentVC & IPartPayVC {
+    private func moduleView(presenter: PartPayPresenter,
+                            analyticsService: AnalyticsService) -> ContentVC & IPartPayVC {
         let view = PartPayVC(presenter, analyticsService: analyticsService)
         presenter.view = view
         return view
