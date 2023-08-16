@@ -12,14 +12,14 @@ protocol IOtpVC: AnyObject {
     func updateMobilePhone(phoneNumber: String)
     func showError()
     func hideKeyboard()
-    func getKeyboardHeight(keyboardHeight: Int)
+    func setKeyboardHeight(height: CGFloat)
 }
 
 final class OtpVC: ContentVC, IOtpVC {
     private let presenter: OtpPresenting
     private var otpCode = ""
     private var maxLength = 6
-    private var keyboardHeight = 330
+    private var keyboardHeight: CGFloat = 330
         
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -77,10 +77,10 @@ final class OtpVC: ContentVC, IOtpVC {
         return view
     }()
     
-    func getKeyboardHeight(keyboardHeight: Int) {
-        self.keyboardHeight = keyboardHeight
+    func setKeyboardHeight(height: CGFloat) {
+        self.keyboardHeight = height
     }
-
+    
     func updateTimer(sec: Int) {
         if sec > 0 {
             timeButton.isEnabled = true
@@ -110,8 +110,11 @@ final class OtpVC: ContentVC, IOtpVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
-        textField.becomeFirst()
         setupUI()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.textField.becomeFirst()
+        }
     }
     
     init(_ presenter: OtpPresenting) {

@@ -73,7 +73,6 @@ final class DefaultTextField: UIView {
         view.addTarget(self, action: #selector(editingBegin), for: .editingChanged)
         view.addTarget(self, action: #selector(editingEnd), for: .editingDidEnd)
         view.addTarget(self, action: #selector(valueChanged), for: .allEvents)
-        view.becomeFirstResponder()
         return view
     }()
     

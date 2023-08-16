@@ -21,6 +21,7 @@ final class OtpPresenter: OtpPresenting {
     private var userService: UserService
     private let sdkManager: SDKManager
     private let alertService: AlertService
+    private let keyboardManager: KeyboardManager
     private var sec = 45
     private var countOfErrorPayment = 0
     private lazy var timer = Timer(timeInterval: 1.0,
@@ -34,37 +35,26 @@ final class OtpPresenter: OtpPresenting {
          userService: UserService,
          sdkManager: SDKManager,
          alertService: AlertService,
+         keyboardManager: KeyboardManager,
          completion: @escaping Action) {
         self.otpService = otpService
         self.userService = userService
         self.sdkManager = sdkManager
         self.alertService = alertService
         self.completion = completion
+        self.keyboardManager = keyboardManager
+        self.setKeyboardHeight()
     }
     
     func viewDidLoad() {
         createTimer()
         getOTP()
-        addObserver()
         configViews()
     }
     
-    private func addObserver() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-    }
-    
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-            
-            view?.getKeyboardHeight(keyboardHeight: Int(keyboardHeight))
-        }
+    func setKeyboardHeight() {
+        let height = keyboardManager.getKeyboardHeight()
+        view?.setKeyboardHeight(height: height)
     }
     
     func getOTP() {
