@@ -75,7 +75,7 @@ extension ResponseDecoder {
         guard (200...299).contains(response.statusCode) else {
             return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
         }
-        var headers = response.allHeaderFields as? HTTPHeaders ?? [:]
+        let headers = response.allHeaderFields as? HTTPHeaders ?? [:]
 
         if let errorText = checkServerError(data: data) { return .failure(.errorFromServer(text: errorText)) }
         do {

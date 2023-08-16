@@ -16,7 +16,7 @@ enum SectionData: Int, CaseIterable {
 }
 
 enum CellType: String, CaseIterable {
-    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, environment, bnpl, next
+    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, refresh, environment, bnpl, next
 }
 
 private struct ConfigCellTextModel {
@@ -62,7 +62,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             return [
                 .apiKey,
                 .bnpl,
-                .environment
+                .environment,
+                .refresh
             ]
         case .order:
             switch configMethod {
@@ -130,6 +131,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             return bnplCell(type: type)
         case .next:
             return nextButtonCell(type: type)
+        case .refresh:
+            return refreshCell(type: type)
         }
     }
     
@@ -213,7 +216,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         case .SandboxRealBankApp:
             environment = .sandboxRealBankApp
         }
-        SPay.debugConfig(network: configValues.network, ssl: configValues.ssl)
+        SPay.debugConfig(network: configValues.network, ssl: configValues.ssl, refresh: configValues.refresh)
         SPay.setup(apiKey: configValues.apiKey ?? "",
                    bnplPlan: configValues.bnpl,
                    environment: environment) {
@@ -386,6 +389,16 @@ extension ConfigPresenter {
         cell.config(with: "SSL",
                     value: configValues.ssl) { bool in
             self.configValues.ssl = bool
+        }
+        
+        return cell
+    }
+    
+    private func refreshCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "Refresh active:",
+                    value: configValues.refresh) { bool in
+            self.configValues.refresh = bool
         }
         
         return cell

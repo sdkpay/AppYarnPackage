@@ -24,7 +24,7 @@ protocol SBPayService {
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
     func getResponseFrom(_ url: URL)
-    func debugConfig(network: NetworkState, ssl: Bool)
+    func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool)
 }
 
 extension SBPayService {
@@ -181,7 +181,7 @@ final class DefaultSBPayService: SBPayService {
             .completeAuth(with: url)
     }
     
-    func debugConfig(network: NetworkState, ssl: Bool) {
-        buildSettings.setConfig(networkState: network, ssl: ssl)
+    func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool) {
+        buildSettings.setConfig(networkState: network, ssl: ssl, refresh: refresh)
     }
 }

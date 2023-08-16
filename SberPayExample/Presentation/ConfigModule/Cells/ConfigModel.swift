@@ -86,6 +86,10 @@ struct ConfigValues {
                  defaultValue: true)
     var ssl: Bool
     
+    @UserDefault(key: CellType.refresh.rawValue,
+                 defaultValue: true)
+    var refresh: Bool
+    
     @UserDefault(key: CellType.bnpl.rawValue,
                  defaultValue: true)
     var bnpl: Bool

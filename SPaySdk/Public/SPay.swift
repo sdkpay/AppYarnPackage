@@ -85,8 +85,8 @@ public final class SPay: NSObject {
      Метод для установки моков, только для тестовых версий
      */
 #if SDKDEBUG
-    public static func debugConfig(network: NetworkState, ssl: Bool) {
-        payService?.debugConfig(network: network, ssl: ssl)
+    public static func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool) {
+        payService?.debugConfig(network: network, ssl: ssl, refresh: refresh)
     }
 #endif
 }

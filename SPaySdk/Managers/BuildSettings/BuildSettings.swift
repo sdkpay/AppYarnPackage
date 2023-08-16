@@ -23,15 +23,18 @@ final class BuildSettingsAssembly: Assembly {
 protocol BuildSettings {
     var networkState: NetworkState { get }
     var ssl: Bool { get }
-    func setConfig(networkState: NetworkState, ssl: Bool)
+    var refresh: Bool { get }
+    func setConfig(networkState: NetworkState, ssl: Bool, refresh: Bool)
 }
 
 final class DefaultBuildSettings: BuildSettings {
     private(set) var networkState = NetworkState.Prom
     private(set) var ssl = true
+    private(set) var refresh = true
     
-    func setConfig(networkState: NetworkState, ssl: Bool) {
+    func setConfig(networkState: NetworkState, ssl: Bool, refresh: Bool) {
         self.networkState = networkState
         self.ssl = ssl
+        self.refresh = refresh
     }
 }

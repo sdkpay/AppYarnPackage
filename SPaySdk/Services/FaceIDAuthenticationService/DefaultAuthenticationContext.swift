@@ -58,7 +58,7 @@ final class DefaultAuthenticationContext: AuthenticationContextProtocol {
     func evaluate(completion: @escaping (Bool, BiometricError?) -> Void) {
         context.evaluatePolicy(
             policy,
-            localizedReason: ""
+            localizedReason: "Reason"
         ) { success, error in
             DispatchQueue.main.async {
                 if success {

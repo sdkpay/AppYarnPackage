@@ -17,7 +17,8 @@ final class AuthServiceAssembly: Assembly {
                                                           authManager: container.resolve(),
                                                           partPayService: container.resolve(),
                                                           personalMetricsService: container.resolve(),
-                                                          enviromentManager: container.resolve())
+                                                          enviromentManager: container.resolve(),
+                                                          buildSettings: container.resolve())
             return service
         }
     }
@@ -37,6 +38,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private let sdkManager: SDKManager
     private let bankAppManager: BankAppManager
     private var authManager: AuthManager
+    private var buildSettings: BuildSettings
     private var partPayService: PartPayService
     private var personalMetricsService: PersonalMetricsService
     private var enviromentManager: EnvironmentManager
@@ -50,7 +52,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
          authManager: AuthManager,
          partPayService: PartPayService,
          personalMetricsService: PersonalMetricsService,
-         enviromentManager: EnvironmentManager) {
+         enviromentManager: EnvironmentManager,
+         buildSettings: BuildSettings) {
         self.analytics = analytics
         self.network = network
         self.sdkManager = sdkManager
@@ -59,6 +62,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.partPayService = partPayService
         self.personalMetricsService = personalMetricsService
         self.enviromentManager = enviromentManager
+        self.buildSettings = buildSettings
         SBLogger.log(.start(obj: self))
     }
     
@@ -123,7 +127,16 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self.appLink = result.deeplink
                 self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
                                                       enabledLevel: .server)
-                if result.refreshTokenIsActive ?? false {
+                
+                var refreshIsActive = false
+                
+                if self.buildSettings.networkState == .Local {
+                    refreshIsActive = self.buildSettings.refresh
+                } else {
+                    refreshIsActive = result.refreshTokenIsActive ?? false
+                }
+                
+                if refreshIsActive {
                     self.authManager.authMethod = .refresh
                     self.authСompletion?(nil, false)
                 } else {
