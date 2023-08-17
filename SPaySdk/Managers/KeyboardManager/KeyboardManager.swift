@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 final class KeyboardManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {

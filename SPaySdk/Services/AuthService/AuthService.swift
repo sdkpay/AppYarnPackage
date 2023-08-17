@@ -18,6 +18,7 @@ final class AuthServiceAssembly: Assembly {
                                                           partPayService: container.resolve(),
                                                           personalMetricsService: container.resolve(),
                                                           enviromentManager: container.resolve(),
+                                                          storage: container.resolve(),
                                                           buildSettings: container.resolve())
             return service
         }
@@ -29,6 +30,7 @@ protocol AuthService {
     func refreshAuth(completion: @escaping (Result<Void, SDKError>) -> Void)
     func appAuth(completion: @escaping (Result<Void, SDKError>) -> Void)
     func completeAuth(with url: URL)
+    var tokenInStorage: Bool { get }
 }
 
 final class DefaultAuthService: AuthService, ResponseDecoder {
@@ -42,8 +44,17 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var partPayService: PartPayService
     private var personalMetricsService: PersonalMetricsService
     private var enviromentManager: EnvironmentManager
+    private var storage: KeychainStorage
     private var appCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
+    
+    var tokenInStorage: Bool {
+        if self.buildSettings.refresh {
+            return (try? storage.exists(.cookie)) ?? false
+        } else {
+            return false
+        }
+    }
     
     init(network: NetworkService,
          sdkManager: SDKManager,
@@ -53,6 +64,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
          partPayService: PartPayService,
          personalMetricsService: PersonalMetricsService,
          enviromentManager: EnvironmentManager,
+         storage: KeychainStorage,
          buildSettings: BuildSettings) {
         self.analytics = analytics
         self.network = network
@@ -63,6 +75,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.personalMetricsService = personalMetricsService
         self.enviromentManager = enviromentManager
         self.buildSettings = buildSettings
+        self.storage = storage
         SBLogger.log(.start(obj: self))
     }
     

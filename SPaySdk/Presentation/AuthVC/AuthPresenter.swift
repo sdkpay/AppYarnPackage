@@ -123,7 +123,7 @@ final class AuthPresenter: AuthPresenting {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let title: String = Strings.To.Bank.title(self.bankManager.selectedBank?.name ?? "Банк")
-            self.view?.showLoading(with: title)
+            self.view?.showLoading(with: self.authService.tokenInStorage ? nil : title)
             self.openSId()
         }
     }
