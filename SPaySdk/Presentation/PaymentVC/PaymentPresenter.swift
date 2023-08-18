@@ -41,6 +41,7 @@ protocol PaymentPresenting {
     func viewDidLoad()
     func payButtonTapped()
     func cancelTapped()
+    func openProfile()
 }
 
 final class PaymentPresenter: PaymentPresenting {
@@ -150,14 +151,20 @@ final class PaymentPresenter: PaymentPresenting {
         }
     }
     
+    func openProfile() {
+        guard let user = userService.user else { return }
+        router.openProfile(with: user.userInfo)
+    }
+    
     private func cardTapped() {
         guard let selectedCard = userService.selectedCard,
               let user = userService.user,
               let authMethod = authManager.authMethod else { return }
 
-        switch userService.gotListCards {
+        switch userService.getListCards {
         case true:
-            guard user.paymentToolInfo.count > 1 else { return }
+            guard user.countAdditionalCards ?? user.paymentToolInfo.count > 1,
+                    user.additionalCards == true else { return }
             router.presentCards(cards: user.paymentToolInfo,
                                 selectedId: selectedCard.paymentId,
                                 selectedCard: { [weak self] card in
@@ -166,6 +173,8 @@ final class PaymentPresenter: PaymentPresenting {
                 self?.view?.reloadCollectionView()
             })
         case false:
+            guard user.countAdditionalCards ?? user.paymentToolInfo.count > 1,
+                    user.additionalCards == true else { return }
             switch authMethod {
             case .refresh:
                 biometricAuthProvider.evaluate { result, _ in

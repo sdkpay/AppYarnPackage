@@ -14,6 +14,8 @@ struct User: Codable {
     let paymentToolInfo: [PaymentToolInfo]
     let merchantName: String?
     let logoUrl: String?
+    let countAdditionalCards: Int?
+    let additionalCards: Bool?
 }
 
 struct OrderAmount: Codable {

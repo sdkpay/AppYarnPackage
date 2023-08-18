@@ -6,6 +6,8 @@
   "merchantName" : "Денежка плюс",
   "logoUrl" : "https:\/\/test.stat.online.sberbank.ru\/SBERBANKID\/icons\/781000013690.png",
   "sessionId" : "689072247511674880",
+  "countAdditionalCards": 5,
+  "additionalCards": false,
   "paymentToolInfo" : [
     {
       "paymentSourceType" : "OverdraftCard",

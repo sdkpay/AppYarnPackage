@@ -40,6 +40,9 @@ final class PaymentVC: ContentVC, IPaymentVC {
         viewBuilder.collectionView.dataSource = self
         presenter.viewDidLoad()
         SBLogger.log(.didLoad(view: self))
+        profileView.addAction {
+//            self.presenter.openProfile()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

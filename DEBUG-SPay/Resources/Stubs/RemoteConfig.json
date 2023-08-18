@@ -14,6 +14,10 @@
         {
             "name": "bnpl",
             "value": true
+        },
+        {
+            "name": "refresh",
+            "value": true
         }
     ],
     "bankApps":[
