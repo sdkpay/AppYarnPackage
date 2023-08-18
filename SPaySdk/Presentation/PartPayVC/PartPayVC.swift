@@ -79,7 +79,10 @@ final class PartPayVC: ContentVC, IPartPayVC {
                          checkSelected: Bool,
                          checkTapped: @escaping BoolAction,
                          textTapped: @escaping LinkAction) {
-        viewBuilder.agreementView.config(with: text, checkSelected: checkSelected, checkTapped: checkTapped, textTapped: textTapped)
+        viewBuilder.agreementView.config(with: text,
+                                         checkSelected: checkSelected,
+                                         checkTapped: checkTapped,
+                                         textTapped: textTapped)
         viewBuilder.setupUI(view: view)
     }
 }

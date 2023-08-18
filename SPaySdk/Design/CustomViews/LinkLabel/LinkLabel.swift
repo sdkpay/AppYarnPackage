@@ -92,7 +92,7 @@ final class LinkLabel: UILabel {
         for link in links {
             if let keyRange = text.range(of: link.key),
                keyRange.contains(String.Index(utf16Offset: index, in: text)) {
-                return (link.key, link.value)
+                return (link.value, link.key)
             }
         }
         return nil
