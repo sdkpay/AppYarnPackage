@@ -9,9 +9,10 @@ import Foundation
 
 extension Bundle {
     var displayName: String? {
-        return object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ??
-        object(forInfoDictionaryKey: "CFBundleName") as? String
+        return object(forInfoDictionaryKey: "CFBundleName") as? String ??
+        object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
     }
+    
     
     static var sdkBundle: Bundle = {
         return Bundle(for: SPay.self)

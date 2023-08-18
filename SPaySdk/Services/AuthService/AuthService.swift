@@ -223,7 +223,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                         expiry: request.expiry,
                                         frequency: request.frequency,
                                         userName: nil,
-                                        merchantLogin: request.merchantLogin),
+                                        merchantLogin: request.merchantLogin,
+                                        resourceName: Bundle.main.displayName ?? "None"),
                         to: AuthRefreshModel.self) { [weak self] result in
             switch result {
             case .success(let result):

@@ -31,7 +31,8 @@ enum AuthTarget {
               expiry: String?,
               frequency: Int?,
               userName: String?,
-              merchantLogin: String?)
+              merchantLogin: String?,
+              resourceName: String)
 }
 
 extension AuthTarget: TargetType {
@@ -123,7 +124,8 @@ extension AuthTarget: TargetType {
                        expiry: expiry,
                        frequency: frequency,
                        userName: userName,
-                       merchantLogin: merchantLogin):
+                       merchantLogin: merchantLogin,
+                       resourceName: resourceName):
             
             var params: [String: Any] = [:]
 
@@ -186,6 +188,8 @@ extension AuthTarget: TargetType {
             if let userName = userName {
                 params["userName"] = userName
             }
+            
+            params["resourceName"] = resourceName
             
             return .requestWithParameters(nil, bodyParameters: params)
         }
