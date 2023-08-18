@@ -82,8 +82,13 @@ final class DefaultPaymentService: PaymentService {
                     self.pay(with: paymentToken.paymentToken, orderId: orderid, completion: completion)
                 case .manual:
                     self.sdkManager.payHandler = { [weak self] payInfo in
+                        if isBnplEnabled {
+                            orderid = paymentToken.initiateBankInvoiceId
+                        } else {
+                            orderid = payInfo.orderId
+                        }
                         self?.pay(with: payInfo.paymentToken ?? paymentToken.paymentToken,
-                                  orderId: payInfo.orderId, completion: completion)
+                                  orderId: orderid, completion: completion)
                     }
                     self.sdkManager.completionPaymentToken(with: paymentToken.paymentToken)
                 }
