@@ -68,3 +68,6 @@
 "textField.placeholder" = "Введите код";
 "titleLabel.message.title" = "Отправили СМС с кодом-подтверждением\nоплата на номер +%@";
 
+// Logout
+"button.logout" = "Выйти";
+"button.logout.back" = "Назад";

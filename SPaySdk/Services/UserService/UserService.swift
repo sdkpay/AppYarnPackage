@@ -19,7 +19,7 @@ final class UserServiceAssembly: Assembly {
 }
 
 protocol UserService {
-    var gotListCards: Bool { get }
+    var getListCards: Bool { get }
     var user: User? { get }
     var selectedCard: PaymentToolInfo? { get set }
     func getUser(completion: @escaping (SDKError?) -> Void)
@@ -33,7 +33,7 @@ final class DefaultUserService: UserService {
     private(set) var user: User?
     private let sdkManager: SDKManager
     private let authManager: AuthManager
-    var gotListCards = false
+    var getListCards = false
     
     var selectedCard: PaymentToolInfo?
     
@@ -96,7 +96,7 @@ final class DefaultUserService: UserService {
             case .success(let user):
                 guard let self = self else { return }
                 self.user = user
-                self.gotListCards = true
+                self.getListCards = true
                 completion(.success)
             case .failure(let error):
                 completion(.failure(error))

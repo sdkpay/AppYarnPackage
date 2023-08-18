@@ -135,7 +135,6 @@ final class DefaultTextField: UIView {
     
     @objc
     private func valueChanged() {
-        guard let maxLength else { return }
         textEndEdited?(textField.text ?? "")
     }
     

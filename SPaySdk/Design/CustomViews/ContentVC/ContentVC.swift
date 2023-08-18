@@ -53,7 +53,7 @@ class ContentVC: LoggableVC {
         }
     }
     
-    private lazy var profileView = ProfileView()
+    lazy var profileView = ProfileView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
