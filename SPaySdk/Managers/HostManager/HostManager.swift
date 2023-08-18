@@ -14,7 +14,7 @@ enum HostSettings {
 private enum Host: String {
     case sandBox = "https://ift.gate2.spaymentsplus.ru/sdk-gateway/v1"
     case mocker = "https://api.mocki.io/v2/071c7c55"
-    case ift = "https://ift.gate1.spaymentsplus.ru/sdk-gateway/v1"
+    case ift = "https://ift.gate1.spaymentsplus.ru"
     case psi = "https://psi.gate1.spaymentsplus.ru/sdk-gateway/v1"
     case prom = "https://gate1.spaymentsplus.ru/sdk-gateway/v1"
     

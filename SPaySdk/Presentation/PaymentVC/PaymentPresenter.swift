@@ -56,7 +56,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let locationManager: LocationManager
     private let sdkManager: SDKManager
     private let authManager: AuthManager
-    private let authService: AuthService
+    private var authService: AuthService
     private let alertService: AlertService
     private let bankManager: BankAppManager
     private let timeManager: OptimizationCheсkerManager
@@ -324,6 +324,7 @@ final class PaymentPresenter: PaymentPresenting {
                                                       object: nil)
             switch result {
             case .success:
+                self.authService.bankCheck = true
                 self.getListCards()
             case .failure(_):
                 self.alertService.show(on: self.view,
@@ -343,7 +344,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func goToPay() {
-        if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank {
+        if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
             pay()
         } else {
             router.presentOTPScreen(completion: { [weak self] in

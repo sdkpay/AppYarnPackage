@@ -31,6 +31,7 @@ protocol AuthService {
     func appAuth(completion: @escaping (Result<Void, SDKError>) -> Void)
     func completeAuth(with url: URL)
     var tokenInStorage: Bool { get }
+    var bankCheck: Bool { get set }
 }
 
 final class DefaultAuthService: AuthService, ResponseDecoder {
@@ -48,6 +49,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var appCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
     
+    var bankCheck = false
     var tokenInStorage: Bool {
         if self.buildSettings.refresh {
             return (try? storage.exists(.cookie)) ?? false

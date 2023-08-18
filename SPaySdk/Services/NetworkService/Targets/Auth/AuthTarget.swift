@@ -38,11 +38,11 @@ extension AuthTarget: TargetType {
     var path: String {
         switch self {
         case .getSessionId:
-            return "/sessionId"
+            return "sdk-gateway/v1/sessionId"
         case .checkSession:
-            return "/sessionStatus"
+            return "sdk-gateway/v1/sessionStatus"
         case .auth:
-            return "/sdkAuth"
+            return "/sberpay-auth/v2/sdkAuth"
         }
     }
     

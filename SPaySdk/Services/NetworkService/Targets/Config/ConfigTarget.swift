@@ -15,7 +15,7 @@ extension ConfigTarget: TargetType {
     var path: String {
         switch self {
         case .getConfig:
-            return "/remoteConfigIOS"
+            return "sdk-gateway/v1/remoteConfigIOS"
         }
     }
     

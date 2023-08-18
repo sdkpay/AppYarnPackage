@@ -51,7 +51,7 @@ protocol KeychainStorage {
 }
 
 final class DefaultKeychainStorage: KeychainStorage {
-    private let service = Bundle.sdkBundle
+    private let service = Bundle.sdkBundle.displayName
     
     func exists(_ key: StorageKey) throws -> Bool {
         let status = SecItemCopyMatching([
@@ -90,7 +90,7 @@ final class DefaultKeychainStorage: KeychainStorage {
         var result: AnyObject?
         let status = SecItemCopyMatching([
             kSecClass: kSecClassGenericPassword,
-            kSecAttrAccount: key,
+            kSecAttrAccount: key.rawValue,
             kSecAttrService: service,
             kSecReturnData: true
         ] as NSDictionary, &result)

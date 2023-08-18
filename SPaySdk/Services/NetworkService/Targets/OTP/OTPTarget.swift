@@ -21,9 +21,9 @@ extension OTPTarget: TargetType {
     var path: String {
         switch self {
         case .confirmOtp:
-            return "/confirmOtp"
+            return "sdk-gateway/v1/confirmOtp"
         case .createOtpSdk:
-            return "/createOtpSdk"
+            return "sdk-gateway/v1/createOtpSdk"
         }
     }
     
