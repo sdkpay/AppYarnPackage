@@ -19,6 +19,8 @@ packages:
   Dynatrace-Static:
    url: https://github.com/Dynatrace/swift-mobile-sdk.git
    from: 8.0.0
+  FingerprintPackage:
+    path: ./FingerprintPackage
 
 targetTemplates:
   Framework:
@@ -48,8 +50,7 @@ targetTemplates:
       - path: ./Generated
     dependencies:
       - package: Dynatrace-Static
-      - framework: ./SPaySdk/Resources/Frameworks/Fingerprint.xcframework
-      - framework: ./SPaySdk/Resources/Frameworks/BizoneCore.xcframework
+      - package: FingerprintPackage
       - sdk: libresolv.9.tbd
     info:
       path: ./SPaySdk/SupportingFiles/Info.plist
