@@ -175,7 +175,7 @@ final class DefaultPaymentService: PaymentService {
             return .noInternetConnection
         case .timeOut:
             return .timeOut
-        case .badResponseWithStatus(code: .errorFormat):
+        case .badResponseWithStatus(code: .errorSystem):
             return .unknownStatus
         default:
             return .defaultError
