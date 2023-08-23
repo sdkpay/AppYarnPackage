@@ -159,8 +159,12 @@ final class DefaultPaymentService: PaymentService {
                                                       ipAddress: personalMetricsService.ipAddress,
                                                       paymentToken: token),
                         to: PaymentOrderModel.self,
-                        retrySettings: (4, [StatusCode.errorFormat.rawValue])) { result in
-            switch result {
+                        retrySettings: (4, [
+                            StatusCode.errorSystem.rawValue,
+                            StatusCode.unknownPayState.rawValue,
+                            StatusCode.unknownState.rawValue
+                        ])) { result in
+                            switch result {
             case .success:
                 completion(.success)
             case .failure(let error):

@@ -21,6 +21,8 @@ public final class SPaymentTokenRequest: NSObject {
     let orderNumber: String?
     /// Идентификатор заказа на стороне банка
     let orderId: String?
+    /// Идентификатор заказа на стороне банка
+    var bankInvoiceId: String?
     /// Описание к заказу
     let orderDescription: String?
     /// Выбранный язык локализации интерфейсов
@@ -37,6 +39,7 @@ public final class SPaymentTokenRequest: NSObject {
          amount: Int = 0,
          currency: String? = nil,
          orderId: String? = nil,
+         bankInvoiceId: String? = nil,
          mobilePhone: String? = nil,
          orderNumber: String? = nil,
          orderDescription: String? = nil,
@@ -51,6 +54,10 @@ public final class SPaymentTokenRequest: NSObject {
         self.orderNumber = orderNumber
         self.orderDescription = orderDescription
         self.language = language
+        self.bankInvoiceId = bankInvoiceId
+        if let orderId, bankInvoiceId == nil {
+            self.bankInvoiceId = orderId
+        }
         self.orderId = orderId
         self.recurrentExipiry = recurrentExipiry
         self.recurrentFrequency = recurrentFrequency
@@ -60,11 +67,13 @@ public final class SPaymentTokenRequest: NSObject {
     // With orderId
     @objc
     public convenience init(merchantLogin: String?,
-                            orderId: String,
+                            orderId: String? = nil,
+                            bankInvoiceId: String? = nil,
                             redirectUri: String) {
         self.init(merchantLogin: merchantLogin,
                   currency: nil,
                   orderId: orderId,
+                  bankInvoiceId: bankInvoiceId,
                   mobilePhone: nil,
                   orderNumber: nil,
                   orderDescription: nil,
