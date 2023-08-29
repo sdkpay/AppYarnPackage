@@ -42,6 +42,7 @@ extension SBPayService {
 final class DefaultSBPayService: SBPayService {
     private lazy var liveCircleManager: LiveCircleManager = DefaultLiveCircleManager(timeManager: timeManager)
     private lazy var locator: LocatorService = DefaultLocatorService()
+    private lazy var keychainStorage: KeychainStorage = DefaultKeychainStorage()
     private lazy var buildSettings: BuildSettings = DefaultBuildSettings()
     private lazy var logService: LogService = DefaultLogService()
     private let assemblyManager = AssemblyManager()
@@ -54,6 +55,7 @@ final class DefaultSBPayService: SBPayService {
                completion: Action? = nil) {
         self.apiKey = apiKey
         FontFamily.registerAllCustomFonts()
+        locator.register(service: keychainStorage)
         locator.register(service: liveCircleManager)
         locator.register(service: logService)
         locator.register(service: buildSettings)

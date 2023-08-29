@@ -13,7 +13,6 @@ extension Bundle {
         object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
     }
     
-    
     static var sdkBundle: Bundle = {
         return Bundle(for: SPay.self)
     }()
