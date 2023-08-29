@@ -20,7 +20,7 @@ packages:
    url: https://github.com/Dynatrace/swift-mobile-sdk.git
    from: 8.0.0
   FingerprintPackage:
-    path: ./FingerprintPackage
+    path: ./FingerprintPack
 
 targetTemplates:
   Framework:
