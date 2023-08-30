@@ -15,7 +15,8 @@ enum AuthTarget {
                       currency: String?,
                       orderNumber: String?,
                       expiry: String?,
-                      frequency: Int?)
+                      frequency: Int?,
+                      authCookie: [HTTPCookie])
     case checkSession(sessionId: String)
     case auth(redirectUri: String?,
               authCode: String?,
@@ -68,7 +69,8 @@ extension AuthTarget: TargetType {
                                currency: currency,
                                orderNumber: orderNumber,
                                expiry: expiry,
-                               frequency: frequency):
+                               frequency: frequency,
+                               authCookie: authCookie):
             var params: [String: Any] = [
                 "redirectUri": redirectUri
             ]
@@ -103,8 +105,7 @@ extension AuthTarget: TargetType {
                 
                 params["purchase"] = purchaceParams
             }
-            
-            return .requestWithParametersAndHeaders(nil, bodyParameters: params)
+            return .requestWithParametersAndCookie(nil, bodyParameters: params, cookies: authCookie)
         case .checkSession(sessionId: let sessionId):
             let params = [
                 "sessionId": sessionId

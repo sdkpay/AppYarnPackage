@@ -60,13 +60,14 @@ public final class SPaymentTokenRequest: NSObject {
     // With orderId
     @objc
     public convenience init(merchantLogin: String?,
+                            orderNumber: String,
                             orderId: String,
                             redirectUri: String) {
         self.init(merchantLogin: merchantLogin,
                   currency: nil,
                   orderId: orderId,
                   mobilePhone: nil,
-                  orderNumber: nil,
+                  orderNumber: orderNumber,
                   orderDescription: nil,
                   language: nil,
                   recurrentExipiry: nil,

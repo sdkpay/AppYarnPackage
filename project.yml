@@ -102,6 +102,7 @@ targets:
         NSUserTrackingUsageDescription: App would like to access IDFA for tracking purpose
         NSFaceIDUsageDescription: "Так вы подтвердите, что именно вы выполняете вход"
         LSSupportsOpeningDocumentsInPlace: true
+        NSBluetoothAlwaysUsageDescription: Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
         DTXAutoStart: false
         CFBundleURLTypes:
           - CFBundleTypeRole: Editor
@@ -112,7 +113,15 @@ targets:
           - sbolidexternallogin
           - sberbankidexternallogin
         NSAppTransportSecurity: 
-          NSAllowsArbitraryLoads: true
+          NSExceptionDomains:
+            psi.gate1.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            ift.gate1.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            gate1.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            ift.gate2.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
         UIFileSharingEnabled: true
   SPaySdk:
     templates:

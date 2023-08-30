@@ -106,6 +106,7 @@
 -(void)fullPay {
     SFullPaymentRequest *request = [[SFullPaymentRequest alloc] initWithMerchantLogin: @"Test shop"
                                                                               orderId:@"12312312"
+                                                                          orderNumber:@"12312312"
                                                                              language:nil
                                                                           redirectUri:@"testapp://test"];
     [SPay payWithOrderIdWith:self with:request completion:^(enum SPayState state, NSString * _Nonnull info) {

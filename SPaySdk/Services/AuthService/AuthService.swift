@@ -131,7 +131,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                                 currency: request.currency,
                                                 orderNumber: request.orderNumber,
                                                 expiry: request.expiry,
-                                                frequency: request.frequency),
+                                                frequency: request.frequency,
+                                                authCookie: getRefreshCookies()),
                         to: AuthModel.self) { [weak self] result in
             self?.authСompletion = completion
             switch result {
@@ -209,30 +210,58 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func auth(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
         guard let request = sdkManager.authInfo else { return }
-        network.request(AuthTarget.auth(redirectUri: request.redirectUri,
-                                        authCode: authManager.authCode,
-                                        sessionId: authManager.sessionId ?? "",
-                                        state: authManager.state,
-                                        deviceInfo: deviceInfo,
-                                        orderId: request.orderId,
-                                        amount: request.amount,
-                                        currency: request.currency,
-                                        mobilePhone: nil,
-                                        orderNumber: request.orderNumber,
-                                        description: nil,
-                                        expiry: request.expiry,
-                                        frequency: request.frequency,
-                                        userName: nil,
-                                        merchantLogin: request.merchantLogin,
-                                        resourceName: Bundle.main.displayName ?? "None"),
-                        to: AuthRefreshModel.self) { [weak self] result in
+        network.requestFull(AuthTarget.auth(redirectUri: request.redirectUri,
+                                                  authCode: authManager.authCode,
+                                                  sessionId: authManager.sessionId ?? "",
+                                                  state: authManager.state,
+                                                  deviceInfo: deviceInfo,
+                                                  orderId: request.orderId,
+                                                  amount: request.amount,
+                                                  currency: request.currency,
+                                                  mobilePhone: nil,
+                                                  orderNumber: request.orderNumber,
+                                                  description: nil,
+                                                  expiry: request.expiry,
+                                                  frequency: request.frequency,
+                                                  userName: nil,
+                                                  merchantLogin: request.merchantLogin,
+                                                  resourceName: Bundle.main.displayName ?? "None"),
+                                  to: AuthRefreshModel.self) { [weak self] result in
             switch result {
-            case .success(let result):
-                self?.authManager.userInfo = result.userInfo
+            case .success(let authModel):
+                self?.saveRefreshIfNeeded(from: authModel.cookies)
+                self?.authManager.userInfo = authModel.result.userInfo
                 completion(.success)
             case .failure(let error):
                 completion(.failure(error))
             }
         }
+    }
+    
+    private func saveRefreshIfNeeded(from cookies: [HTTPCookie]) {
+        
+        if let idCookie = cookies.first(where: { $0.name == Cookies.id }) {
+            try? storage.set(idCookie.value, .cookieId)
+        }
+
+        if let dataCookie = cookies.first(where: { $0.name == Cookies.refreshData }) {
+            try? storage.set(dataCookie.value, .cookieData)
+        }
+    }
+    
+    private func getRefreshCookies() -> [HTTPCookie] {
+        var cookies = [HTTPCookie]()
+        
+        if let idCookie = try? storage.get(.cookieId) {
+            guard let cookie = HTTPCookie(properties: [.name : Cookies.id,
+                                                       .value: idCookie]) else { return [] }
+            cookies.append(cookie)
+        }
+        if let cookieData = try? storage.get(.cookieData) {
+            guard let cookie = HTTPCookie(properties: [.name : Cookies.refreshData,
+                                                       .value: cookieData]) else { return [] }
+            cookies.append(cookie)
+        }
+        return cookies
     }
 }
