@@ -120,6 +120,10 @@ enum AuthCookie: String {
     case id = "X-Sdk-Id-Key"
 }
 
+enum CookieParams: String {
+    case dt = "X-Geo-Sticky"
+}
+
 enum CookieValidator {
 
     static func contains(cookie: String, _ authCookie: AuthCookie) -> Bool {

@@ -131,7 +131,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
 
     private func buildRequest(from route: TargetType, hostSettings: HostSettings) throws -> URLRequest {
         var request = URLRequest(url: hostManager.host(for: hostSettings).appendingPathComponent(route.path),
-                                 cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+                                 cachePolicy: .reloadIgnoringLocalCacheData,
                                  timeoutInterval: Constants.timeoutInterval)
         request.httpMethod = route.httpMethod.rawValue
         switch route.task {
@@ -190,7 +190,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
 
 // MARK: - Ssl pinning
 
-extension DefaultNetworkProvider: URLSessionDelegate {
+extension DefaultNetworkProvider: URLSessionDelegate, URLSessionTaskDelegate {
     func urlSession(_ session: URLSession,
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {

@@ -16,7 +16,7 @@ enum UserTarget {
                       orderNumber: String?,
                       expiry: String?,
                       frequency: Int?,
-                      listPaymentCards: Bool?)
+                      priorityCardOnly: Bool)
 }
 
 extension UserTarget: TargetType {
@@ -44,7 +44,7 @@ extension UserTarget: TargetType {
                                orderNumber: orderNumber,
                                expiry: expiry,
                                frequency: frequency,
-                               listPaymentCards: listPaymentCards):
+                               priorityCardOnly: priorityCardOnly):
             var params: [String: Any] = [
                 "sessionId": sessionId
             ]
@@ -56,7 +56,7 @@ extension UserTarget: TargetType {
                 params["orderId"] = orderId
             }
             
-            params["listPaymentCards"] = listPaymentCards == nil ? false : listPaymentCards
+            params["priorityCardOnly"] = priorityCardOnly
             
             if let amount = amount,
                amount != 0,
