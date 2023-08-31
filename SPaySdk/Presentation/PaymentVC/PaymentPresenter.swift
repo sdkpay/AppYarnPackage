@@ -191,17 +191,21 @@ final class PaymentPresenter: PaymentPresenting {
         }
     }
     
-    private func getListCards() {
-        view?.showLoading()
+    private func getListCards(isRetry: Bool = false) {
+        if !isRetry {
+            view?.showLoading()
+        }
         userService.getListCards { [weak self] result in
             switch result {
             case .success:
                 self?.cardTapped()
             case .failure(let error):
-                self?.view?.hideLoading(animate: true)
+                if !isRetry {
+                    self?.view?.hideLoading(animate: true)
+                }
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.getListCards() },
+                                            type: .noInternet(retry: { self?.getListCards(isRetry: true) },
                                                               completion: { self?.dismissWithError(error) }))
                 } else {
                     self?.alertService.show(on: self?.view,

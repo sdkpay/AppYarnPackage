@@ -177,16 +177,19 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func validateAuthError(error: SDKError) {
-        if error.represents(.noInternetConnection) {
-            alertService.show(on: view,
-                              type: .noInternet(retry: {
-                self.getAccessSPay()
-            }, completion: {
-                self.dismissWithError(error)
-            }))
-        } else {
-            alertService.show(on: view,
-                              type: .defaultError(completion: { self.dismissWithError(error) }))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            guard let self else { return }
+            if error.represents(.noInternetConnection) {
+                self.alertService.show(on: self.view,
+                                        type: .noInternet(retry: {
+                    self.getAccessSPay()
+                }, completion: {
+                    self.dismissWithError(error)
+                }))
+            } else {
+                self.alertService.show(on: self.view,
+                                   type: .defaultError(completion: { self.dismissWithError(error) }))
+            }
         }
     }
     

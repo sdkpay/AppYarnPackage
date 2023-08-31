@@ -85,7 +85,7 @@ final class AlertServiceAssembly: Assembly {
     }
 }
 
-protocol AlertService {
+protocol AlertService: AnyObject {
     func showAlert(on view: ContentVC?,
                    with text: String,
                    state: AlertState,
