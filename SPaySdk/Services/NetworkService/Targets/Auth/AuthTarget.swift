@@ -33,7 +33,8 @@ enum AuthTarget {
               frequency: Int?,
               userName: String?,
               merchantLogin: String?,
-              resourceName: String)
+              resourceName: String,
+              authCookie: [HTTPCookie])
 }
 
 extension AuthTarget: TargetType {
@@ -126,7 +127,8 @@ extension AuthTarget: TargetType {
                        frequency: frequency,
                        userName: userName,
                        merchantLogin: merchantLogin,
-                       resourceName: resourceName):
+                       resourceName: resourceName,
+                       authCookie: authCookie):
             
             var params: [String: Any] = [:]
 
@@ -192,7 +194,7 @@ extension AuthTarget: TargetType {
             
             params["resourceName"] = resourceName
             
-            return .requestWithParameters(nil, bodyParameters: params)
+            return .requestWithParametersAndCookie(nil, bodyParameters: params, cookies: authCookie)
         }
     }
     

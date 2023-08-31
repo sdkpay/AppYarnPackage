@@ -81,7 +81,7 @@ extension ResponseDecoder {
         
         var cookies = [HTTPCookie]()
         
-        if let url = response.url  {
+        if let url = response.url {
             cookies = HTTPCookie.cookies(withResponseHeaderFields: headers, for: url)
         }
         

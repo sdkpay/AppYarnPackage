@@ -22,10 +22,21 @@ extension String {
     }
 }
 
-enum Cookies {
-    static let geo = "X-Geo-Sticky"
-    static let refreshData = "X-Sdk-Refresh-Data"
-    static let id = "X-Sdk-Id-Key"
+enum Cookies: String {
+    case geo = "X-Geo-Sticky"
+    case refreshData = "X-Sdk-Refresh-Data"
+    case id = "X-Sdk-Id-Key"
+    
+    var storage: StorageKey? {
+        switch self {
+        case .geo:
+            return nil
+        case .refreshData:
+            return .cookieData
+        case .id:
+            return .cookieId
+        }
+    }
 }
 
 final class BaseRequestManagerAssembly: Assembly {

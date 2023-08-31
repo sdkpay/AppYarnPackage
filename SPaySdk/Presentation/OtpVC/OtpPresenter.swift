@@ -63,7 +63,7 @@ final class OtpPresenter: OtpPresenting {
                             sessionId: userService.user?.sessionId ?? "",
                             paymentId: Int(userService.selectedCard?.paymentId ?? 0)) { error, mobilePhone in
             if let error {
-                self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error)}))
+                self.alertService.show(on: self.view, type: .defaultError(completion:  { self.dismissWithError(error) }))
                 self.view?.hideLoading()
                 return
             }
@@ -87,7 +87,7 @@ final class OtpPresenter: OtpPresenting {
                               orderHash: otpHash,
                               sessionId: userService.user?.sessionId ?? "") { errorCode, error in
             if let error {
-                self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error)}))
+                self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
                 self.view?.showLoading()
                 return
             }

@@ -11,7 +11,6 @@ import Security
 enum StorageKey: String {
     case cookieData
     case cookieId
-    case test
 }
 
 enum KeychainError: Error {

@@ -16,9 +16,10 @@ final class AuthServiceAssembly: Assembly {
                                                           bankAppManager: container.resolve(),
                                                           authManager: container.resolve(),
                                                           partPayService: container.resolve(),
+                                                          storage: container.resolve(),
                                                           personalMetricsService: container.resolve(),
                                                           enviromentManager: container.resolve(),
-                                                          storage: container.resolve(),
+                                                          cookieStorage: container.resolve(),
                                                           buildSettings: container.resolve())
             return service
         }
@@ -46,6 +47,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var personalMetricsService: PersonalMetricsService
     private var enviromentManager: EnvironmentManager
     private var storage: KeychainStorage
+    private var cookieStorage: CookieStorage
     private var appCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
     
@@ -64,9 +66,10 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
          bankAppManager: BankAppManager,
          authManager: AuthManager,
          partPayService: PartPayService,
+         storage: KeychainStorage,
          personalMetricsService: PersonalMetricsService,
          enviromentManager: EnvironmentManager,
-         storage: KeychainStorage,
+         cookieStorage: CookieStorage,
          buildSettings: BuildSettings) {
         self.analytics = analytics
         self.network = network
@@ -78,6 +81,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.enviromentManager = enviromentManager
         self.buildSettings = buildSettings
         self.storage = storage
+        self.cookieStorage = cookieStorage
         SBLogger.log(.start(obj: self))
     }
     
@@ -211,22 +215,23 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private func auth(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
         guard let request = sdkManager.authInfo else { return }
         network.requestFull(AuthTarget.auth(redirectUri: request.redirectUri,
-                                                  authCode: authManager.authCode,
-                                                  sessionId: authManager.sessionId ?? "",
-                                                  state: authManager.state,
-                                                  deviceInfo: deviceInfo,
-                                                  orderId: request.orderId,
-                                                  amount: request.amount,
-                                                  currency: request.currency,
-                                                  mobilePhone: nil,
-                                                  orderNumber: request.orderNumber,
-                                                  description: nil,
-                                                  expiry: request.expiry,
-                                                  frequency: request.frequency,
-                                                  userName: nil,
-                                                  merchantLogin: request.merchantLogin,
-                                                  resourceName: Bundle.main.displayName ?? "None"),
-                                  to: AuthRefreshModel.self) { [weak self] result in
+                                            authCode: authManager.authCode,
+                                            sessionId: authManager.sessionId ?? "",
+                                            state: authManager.state,
+                                            deviceInfo: deviceInfo,
+                                            orderId: request.orderId,
+                                            amount: request.amount,
+                                            currency: request.currency,
+                                            mobilePhone: nil,
+                                            orderNumber: request.orderNumber,
+                                            description: nil,
+                                            expiry: request.expiry,
+                                            frequency: request.frequency,
+                                            userName: nil,
+                                            merchantLogin: request.merchantLogin,
+                                            resourceName: Bundle.main.displayName ?? "None",
+                                            authCookie: getRefreshCookies()),
+                            to: AuthRefreshModel.self) { [weak self] result in
             switch result {
             case .success(let authModel):
                 self?.saveRefreshIfNeeded(from: authModel.cookies)
@@ -240,27 +245,24 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func saveRefreshIfNeeded(from cookies: [HTTPCookie]) {
         
-        if let idCookie = cookies.first(where: { $0.name == Cookies.id }) {
-            try? storage.set(idCookie.value, .cookieId)
+        if let idCookie = cookies.first(where: { $0.name == Cookies.id.rawValue }) {
+            cookieStorage.setCookie(cookie: idCookie, for: .id)
         }
 
-        if let dataCookie = cookies.first(where: { $0.name == Cookies.refreshData }) {
-            try? storage.set(dataCookie.value, .cookieData)
+        if let dataCookie = cookies.first(where: { $0.name == Cookies.refreshData.rawValue }) {
+            cookieStorage.setCookie(cookie: dataCookie, for: .refreshData)
         }
     }
     
     private func getRefreshCookies() -> [HTTPCookie] {
+
         var cookies = [HTTPCookie]()
         
-        if let idCookie = try? storage.get(.cookieId) {
-            guard let cookie = HTTPCookie(properties: [.name : Cookies.id,
-                                                       .value: idCookie]) else { return [] }
-            cookies.append(cookie)
+        if let idCookie = cookieStorage.getCookie(for: .id) {
+            cookies.append(idCookie)
         }
-        if let cookieData = try? storage.get(.cookieData) {
-            guard let cookie = HTTPCookie(properties: [.name : Cookies.refreshData,
-                                                       .value: cookieData]) else { return [] }
-            cookies.append(cookie)
+        if let cookieData = cookieStorage.getCookie(for: .refreshData) {
+            cookies.append(cookieData)
         }
         return cookies
     }

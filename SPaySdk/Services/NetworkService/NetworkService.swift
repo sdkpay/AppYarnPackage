@@ -125,6 +125,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                                                SDKError>) -> Void) where T: Codable {
         provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
             let result = self.decodeResponseFull(data: data, response: response, error: error, type: to)
+            completion(result)
             switch result {
             case .failure(let failure):
                 self.sendNetErrorAnalytics(target: target, error: failure)

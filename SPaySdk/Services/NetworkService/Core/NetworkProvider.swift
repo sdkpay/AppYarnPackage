@@ -198,9 +198,6 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         if let geoCookie = requestManager.geoCookie {
             cookies.append(geoCookie)
         }
-    
-        print("--------go----------")
-        cookies.map{ print($0) }
         request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
     }
     
@@ -212,9 +209,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
 
         if let url = response.url, let headerFields = headers as? [String: String] {
             let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url)
-            print("--------save----------")
-            cookies.map{ print($0) }
-            requestManager.geoCookie = cookies.first(where: { $0.name == Cookies.geo })
+            requestManager.geoCookie = cookies.first(where: { $0.name == Cookies.geo.rawValue })
         }
     }
 }

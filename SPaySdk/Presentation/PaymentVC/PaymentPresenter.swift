@@ -163,8 +163,7 @@ final class PaymentPresenter: PaymentPresenting {
 
         switch userService.getListCards {
         case true:
-            guard user.countAdditionalCards ?? user.paymentToolInfo.count > 1,
-                    user.additionalCards == true else { return }
+            guard user.paymentToolInfo.count > 1 else { return }
             router.presentCards(cards: user.paymentToolInfo,
                                 selectedId: selectedCard.paymentId,
                                 selectedCard: { [weak self] card in
@@ -173,8 +172,7 @@ final class PaymentPresenter: PaymentPresenting {
                 self?.view?.reloadCollectionView()
             })
         case false:
-            guard user.countAdditionalCards ?? user.paymentToolInfo.count > 1,
-                    user.additionalCards == true else { return }
+            guard user.additionalCards ?? false else { return }
             switch authMethod {
             case .refresh:
                 biometricAuthProvider.evaluate { result, _ in

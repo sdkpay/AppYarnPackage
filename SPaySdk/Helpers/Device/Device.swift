@@ -96,7 +96,7 @@ enum Device: String {
         }
     }
     
-    public static func mapToDevice(identifier: String) -> Device {
+    static func mapToDevice(identifier: String) -> Device {
         switch identifier {
         case "iPhone5,1", "iPhone5,2": return .iPhone5
         case "iPhone5,3", "iPhone5,4": return .iPhone5c

@@ -13,4 +13,3 @@ extension UIDevice {
         "\(self.systemName) \(self.systemVersion)"
     }
 }
-
