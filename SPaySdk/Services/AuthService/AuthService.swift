@@ -238,6 +238,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self?.authManager.userInfo = authModel.result.userInfo
                 completion(.success)
             case .failure(let error):
+                self?.cookieStorage.cleanCookie()
                 completion(.failure(error))
             }
         }

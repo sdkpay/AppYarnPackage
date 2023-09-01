@@ -92,6 +92,7 @@ final class CookieStorageAssembly: Assembly {
 protocol CookieStorage {
     func setCookie(cookie: HTTPCookie, for key: Cookies)
     func getCookie(for key: Cookies) -> HTTPCookie?
+    func cleanCookie()
 }
 
 final class DefaultCookieStorage: CookieStorage {
@@ -114,5 +115,10 @@ final class DefaultCookieStorage: CookieStorage {
         guard let cookieData = try? storage.getData(for: key) else { return nil }
         
         return try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(cookieData) as? HTTPCookie
+    }
+    
+    func cleanCookie() {
+        try? storage.delete(StorageKey.cookieId.rawValue)
+        try? storage.delete(StorageKey.cookieData.rawValue)
     }
 }

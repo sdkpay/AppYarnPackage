@@ -15,6 +15,7 @@ enum StatusCode: Int {
     case unowned
 }
 
+
 enum SDKError: Error, Hashable {
     case noInternetConnection
     case noData
