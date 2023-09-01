@@ -36,7 +36,8 @@ final class DefaultPartPayService: PartPayService {
     var bnplplanSelected = false
     
     var bnplplanEnabled: Bool {
-        if featureToggle.isEnabled(.bnpl) {
+        if featureToggle.isEnabled(.bnpl),
+            bnplplan?.isBnplEnabled ?? false {
             return userEnableBnpl
         } else {
             return false
