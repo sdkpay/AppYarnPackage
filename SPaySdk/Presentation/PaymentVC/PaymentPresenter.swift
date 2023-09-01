@@ -172,7 +172,7 @@ final class PaymentPresenter: PaymentPresenting {
                 self?.view?.reloadCollectionView()
             })
         case false:
-            guard user.additionalCards ?? false else { return }
+            guard user.additionalCards == true else { return }
             switch authMethod {
             case .refresh:
                 biometricAuthProvider.evaluate { result, _ in

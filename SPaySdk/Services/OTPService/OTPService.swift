@@ -12,7 +12,8 @@ var modilePhone: String = ""
 final class OTPServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
-            let service: OTPService = DefaultOTPService(network: container.resolve())
+            let service: OTPService = DefaultOTPService(network: container.resolve(),
+                                                        authManager: container.resolve())
             return service
         }
     }
@@ -20,29 +21,28 @@ final class OTPServiceAssembly: Assembly {
 
 protocol OTPService {
     func creteOTP(orderId: String,
-                  sessionId: String,
                   paymentId: Int,
                   completion: @escaping (SDKError?, String?) -> Void)
     func confirmOTP(orderId: String,
                     orderHash: String,
-                    sessionId: String,
                     completion: @escaping (String?, SDKError?) -> Void)
 }
 
 final class DefaultOTPService: OTPService, ResponseDecoder {
     
     private let network: NetworkService
+    private let authManager: AuthManager
     
-    init(network: NetworkService) {
+    init(network: NetworkService, authManager: AuthManager) {
         self.network = network
+        self.authManager = authManager
     }
     
     func creteOTP(orderId: String,
-                  sessionId: String,
                   paymentId: Int,
                   completion: @escaping (SDKError?, String?) -> Void) {
         network.request(OTPTarget.createOtpSdk(bankInvoiceId: orderId,
-                                               sessionId: sessionId,
+                                               sessionId: authManager.sessionId ?? "",
                                                paymentId: paymentId),
                         to: OTPModel.self) { result in
             switch result {
@@ -56,12 +56,11 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
     
     func confirmOTP(orderId: String,
                     orderHash: String,
-                    sessionId: String,
                     completion: @escaping (String?, SDKError?) -> Void) {
         network.request(OTPTarget.confirmOtp(bankInvoiceId: orderId,
                                              otpHash: orderHash,
                                              merchantLogin: nil,
-                                             sessionId: sessionId),
+                                             sessionId: authManager.sessionId ?? ""),
                         to: OTPModel.self) { result in
             switch result {
             case .success(let model):

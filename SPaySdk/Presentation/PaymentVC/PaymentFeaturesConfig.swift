@@ -14,7 +14,7 @@ enum PaymentFeaturesConfig {
         return PaymentCellModel(title: selectedCard.productName ?? "",
                                 subtitle: selectedCard.cardNumber.card,
                                 iconURL: selectedCard.cardLogoUrl,
-                                needArrow: user.paymentToolInfo.count > 1 && user.additionalCards == true)
+                                needArrow: user.paymentToolInfo.count > 1 || user.additionalCards == true)
     }
     
     static func configPartModel(partPayService: PartPayService) -> PaymentCellModel {
