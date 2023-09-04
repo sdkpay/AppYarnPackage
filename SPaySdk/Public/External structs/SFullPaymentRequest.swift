@@ -10,6 +10,8 @@ import Foundation
 #if SDKDEBUG
 @objc(SFullPaymentRequest)
 public final class SFullPaymentRequest: NSObject {
+    /// Api key
+    let apiKey: String?
     /// Логин дочернего партнера
     let merchantLogin: String?
     /// Уникальный номер (идентификатор) заказа в системе Клиента.
@@ -20,10 +22,12 @@ public final class SFullPaymentRequest: NSObject {
     let redirectUri: String
     
     @objc
-    public init(merchantLogin: String? = nil,
+    public init(apiKey: String? = nil,
+                merchantLogin: String? = nil,
                 orderId: String,
                 language: String? = nil,
                 redirectUri: String) {
+        self.apiKey = apiKey
         self.merchantLogin = merchantLogin
         self.orderId = orderId
         self.language = language
@@ -34,6 +38,8 @@ public final class SFullPaymentRequest: NSObject {
 @objc(SFullPaymentRequest)
 @available(*, deprecated, message: "Структура устарела, используйте SBankInvoicePaymentRequest")
 public final class SFullPaymentRequest: NSObject {
+    /// Api key
+    let apiKey: String?
     /// Логин дочернего партнера
     let merchantLogin: String?
     /// Уникальный номер (идентификатор) заказа в системе Клиента.
@@ -44,12 +50,14 @@ public final class SFullPaymentRequest: NSObject {
     let redirectUri: String
     
     @objc
-    public init(merchantLogin: String? = nil,
+    public init(apiKey: String? = nil,
+                merchantLogin: String? = nil,
                 orderId: String,
                 language: String? = nil,
                 redirectUri: String) {
         self.merchantLogin = merchantLogin
         self.orderId = orderId
+        self.apiKey = apiKey
         self.language = language
         self.redirectUri = redirectUri
     }
@@ -58,6 +66,8 @@ public final class SFullPaymentRequest: NSObject {
 
 @objc(SBankInvoiceIdPaymentRequest)
 public final class SBankInvoicePaymentRequest: NSObject {
+    /// Api key
+    let apiKey: String?
     /// Логин дочернего партнера
     let merchantLogin: String?
     /// Выбранный язык локализации интерфейсов
@@ -68,13 +78,15 @@ public final class SBankInvoicePaymentRequest: NSObject {
     let bankInvoiceId: String
     
     @objc
-    public init(merchantLogin: String? = nil,
+    public init(apiKey: String? = nil,
+                merchantLogin: String? = nil,
                 bankInvoiceId: String,
                 language: String? = nil,
                 redirectUri: String) {
         self.merchantLogin = merchantLogin
         self.bankInvoiceId = bankInvoiceId
         self.language = language
+        self.apiKey = apiKey
         self.redirectUri = redirectUri
     }
 }

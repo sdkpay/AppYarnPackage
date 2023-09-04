@@ -17,7 +17,7 @@ final class RemoteConfigServiceAssembly: Assembly {
 }
 
 protocol RemoteConfigService {
-    func getConfig(with apiKey: String, completion: @escaping (SDKError?) -> Void)
+    func getConfig(with apiKey: String?, completion: @escaping (SDKError?) -> Void)
 }
 
 final class DefaultRemoteConfigService: RemoteConfigService {
@@ -36,7 +36,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.featureToggle = featureToggle
     }
     
-    func getConfig(with apiKey: String,
+    func getConfig(with apiKey: String?,
                    completion: @escaping (SDKError?) -> Void) {
         self.apiKey = apiKey
         network.request(ConfigTarget.getConfig,

@@ -9,6 +9,8 @@ import Foundation
 
 @objc(SPaymentTokenRequest)
 public final class SPaymentTokenRequest: NSObject {
+    /// Api key
+    let apiKey: String?
     /// Логин дочернего партнера
     let merchantLogin: String?
     /// Сумма операции в минорных единицах
@@ -35,7 +37,8 @@ public final class SPaymentTokenRequest: NSObject {
     let redirectUri: String
     
     @objc
-    init(merchantLogin: String?,
+    init(apiKey: String? = nil,
+         merchantLogin: String?,
          amount: Int = 0,
          currency: String? = nil,
          orderId: String? = nil,
@@ -47,6 +50,7 @@ public final class SPaymentTokenRequest: NSObject {
          recurrentExipiry: String? = nil,
          recurrentFrequency: Int,
          redirectUri: String) {
+        self.apiKey = apiKey
         self.merchantLogin = merchantLogin
         self.amount = amount
         self.currency = currency
@@ -66,11 +70,13 @@ public final class SPaymentTokenRequest: NSObject {
     
     // With orderId
     @objc
-    public convenience init(merchantLogin: String?,
+    public convenience init(apiKey: String? = nil,
+                            merchantLogin: String?,
                             orderId: String? = nil,
                             bankInvoiceId: String? = nil,
                             redirectUri: String) {
-        self.init(merchantLogin: merchantLogin,
+        self.init(apiKey: apiKey,
+                  merchantLogin: merchantLogin,
                   currency: nil,
                   orderId: orderId,
                   bankInvoiceId: bankInvoiceId,
@@ -85,7 +91,8 @@ public final class SPaymentTokenRequest: NSObject {
     
     // With purchase
     @objc
-    public convenience init(redirectUri: String,
+    public convenience init(apiKey: String,
+                            redirectUri: String,
                             merchantLogin: String?,
                             amount: Int,
                             currency: String,
@@ -93,7 +100,8 @@ public final class SPaymentTokenRequest: NSObject {
                             orderNumber: String,
                             recurrentExipiry: String,
                             recurrentFrequency: Int) {
-        self.init(merchantLogin: merchantLogin,
+        self.init(apiKey: apiKey,
+                  merchantLogin: merchantLogin,
                   amount: amount,
                   currency: currency,
                   mobilePhone: mobilePhone,

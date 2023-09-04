@@ -11,7 +11,7 @@ typealias PaymentTokenCompletion = (SPaymentTokenResponse) -> Void
 typealias PaymentCompletion = (_ state: SPayState, _ info: String) -> Void
 
 protocol SBPayService {
-    func setup(apiKey: String, bnplPlan: Bool, environment: SEnvironment, completion: Action?)
+    func setup(apiKey: String?, bnplPlan: Bool, environment: SEnvironment, completion: Action?)
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
@@ -31,7 +31,7 @@ protocol SBPayService {
 }
 
 extension SBPayService {
-    func setup(apiKey: String,
+    func setup(apiKey: String?,
                bnplPlan: Bool = true,
                environment: SEnvironment = .prod,
                completion: Action? = nil) {
@@ -51,7 +51,7 @@ final class DefaultSBPayService: SBPayService {
     private let timeManager = OptimizationCheсkerManager()
     private var apiKey: String?
     
-    func setup(apiKey: String,
+    func setup(apiKey: String?,
                bnplPlan: Bool,
                environment: SEnvironment,
                completion: Action? = nil) {
@@ -84,7 +84,7 @@ final class DefaultSBPayService: SBPayService {
                 self.locator.resolve(AnalyticsService.self)
                     .sendEvent(.Setup,
                                with: [
-                                "apiKey: \(apiKey)",
+                                "apiKey: \(apiKey ?? "none")",
                                 "bnpl: \(bnplPlan)",
                                 "environment: \(environment.rawValue)"
                                ])
@@ -126,6 +126,9 @@ final class DefaultSBPayService: SBPayService {
             .sendEvent(.GetPaymentToken,
                        with: ["request: \(request)"])
         SBLogger.logRequestPaymentToken(with: request)
+        if apiKey == nil {
+            apiKey = request.apiKey
+        }
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         locator
             .resolve(SDKManager.self)
@@ -159,6 +162,9 @@ final class DefaultSBPayService: SBPayService {
                         completion: @escaping PaymentCompletion) {
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
+        if apiKey == nil {
+            apiKey = paymentRequest.apiKey
+        }
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         locator.resolve(AnalyticsService.self)
             .sendEvent(.PayWithOrderId, with: ["paymentRequest: \(paymentRequest)"])
@@ -181,6 +187,9 @@ final class DefaultSBPayService: SBPayService {
                               completion: @escaping PaymentCompletion) {
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
+        if apiKey == nil {
+            apiKey = paymentRequest.apiKey
+        }
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
             return assertionFailure(error)
