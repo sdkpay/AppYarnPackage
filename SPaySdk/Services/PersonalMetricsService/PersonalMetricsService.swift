@@ -55,6 +55,8 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
             // Проверяем значение
             if let emulator = emulator,
                let сompromised = сompromised {
+                self?.analyticsService.sendEvent(.Emulator, with: "\(emulator)")
+                self?.analyticsService.sendEvent(.Compromised, with: "\(сompromised)")
                 if сompromised == 0,
                    emulator == 0 {
                     completion(true)

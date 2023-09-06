@@ -26,7 +26,7 @@ protocol OTPService {
     func confirmOTP(orderId: String,
                     orderHash: String,
                     sessionId: String,
-                    completion: @escaping (SDKError?) -> Void)
+                    completion: @escaping (String?, SDKError?) -> Void)
 }
 
 final class DefaultOTPService: OTPService, ResponseDecoder {
@@ -57,7 +57,7 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
     func confirmOTP(orderId: String,
                     orderHash: String,
                     sessionId: String,
-                    completion: @escaping (SDKError?) -> Void) {
+                    completion: @escaping (String?, SDKError?) -> Void) {
         network.request(OTPTarget.confirmOtp(bankInvoiceId: orderId,
                                              otpHash: orderHash,
                                              merchantLogin: nil,
@@ -65,9 +65,9 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
                         to: OTPModel.self) { result in
             switch result {
             case .success(let model):
-                completion(nil)
+                completion(model.errorCode, nil)
             case .failure(let error):
-                completion(error)
+                completion(nil, error)
             }
         }
     }

@@ -85,9 +85,14 @@ final class OtpPresenter: OtpPresenting {
         view?.showLoading()
         otpService.confirmOTP(orderId: sdkManager.authInfo?.orderId ?? "",
                               orderHash: otpHash,
-                              sessionId: userService.user?.sessionId ?? "") { error in
+                              sessionId: userService.user?.sessionId ?? "") { errorCode, error in
+            if let error {
+                self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error)}))
+                self.view?.showLoading()
+                return
+            }
             
-            if let error = error?.represents(.otpError(code: .incorrectCode)) {
+            if errorCode == "5" {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     self.view?.hideLoading(animate: true)
@@ -96,7 +101,7 @@ final class OtpPresenter: OtpPresenting {
                 }
             }
             
-            if let error = error?.represents(.otpError(code: .tryingError)) {
+            if errorCode == "6" {
                 self.alertService.show(on: self.view, type: .tryingError(back: {
                     self.view?.dismiss(animated: true)
                 }))
@@ -104,7 +109,6 @@ final class OtpPresenter: OtpPresenting {
             }
             
             self.view?.hideKeyboard()
-            self.view?.hideLoading()
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                 guard let self = self else { return }
                 self.closeWithSuccess()

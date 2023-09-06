@@ -16,7 +16,6 @@ private extension CGFloat {
 protocol IAuthVC {
     func configBanksStack(banks: [BankApp],
                           selected: @escaping (BankApp) -> Void)
-    var bankCount: Int { get }
 }
 
 final class AuthVC: ContentVC, IAuthVC {    
@@ -29,8 +28,6 @@ final class AuthVC: ContentVC, IAuthVC {
         view.alpha = 0
         return view
     }()
-    
-    var bankCount: Int = 0
     
     private lazy var banksStack: UIStackView = {
         let view = UIStackView()
@@ -83,8 +80,6 @@ final class AuthVC: ContentVC, IAuthVC {
             }
             banksStack.addArrangedSubview(bankView)
         }
-        
-        bankCount = banksStack.arrangedSubviews.count
     }
     
     private func setupUI() {

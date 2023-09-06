@@ -79,6 +79,12 @@ final class DefaultSBPayService: SBPayService {
                     .resolve(AnalyticsService.self)
                     .config()
                 self.locator.resolve(AnalyticsService.self)
+                    .sendEvent(.Setup,
+                               with: [
+                                "apiKey: \(apiKey)",
+                                "bnpl: \(bnplPlan)",
+                                "environment: \(environment.rawValue)"
+                               ])
             }
     }
     
@@ -94,16 +100,17 @@ final class DefaultSBPayService: SBPayService {
         
         let target = locator.resolve(EnvironmentManager.self).environment == .sandboxWithoutBankApp
         if target {
-//            service.sendEvent(.IsReadyForSPay,
-//                              with: "\(true)")
+            service.sendEvent(.IsReadyForSPay,
+                              with: "\(true)")
             return true
         } else {
             let apps = locator.resolve(BankAppManager.self).avaliableBanks
             locator
                 .resolve(AnalyticsService.self)
+                .sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
             SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
-//            service.sendEvent(.IsReadyForSPay,
-//                              with: "\(!apps.isEmpty)")
+            service.sendEvent(.IsReadyForSPay,
+                              with: "\(!apps.isEmpty)")
             return !apps.isEmpty
         }
 #endif
@@ -113,9 +120,9 @@ final class DefaultSBPayService: SBPayService {
                          with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
         locator.resolve(AnalyticsService.self)
-//            .sendEvent(.GetPaymentToken,
-//                       with: ["request: \(request)"])
-//        SBLogger.logRequestPaymentToken(with: request)
+            .sendEvent(.GetPaymentToken,
+                       with: ["request: \(request)"])
+        SBLogger.logRequestPaymentToken(with: request)
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         locator
             .resolve(SDKManager.self)
@@ -131,7 +138,7 @@ final class DefaultSBPayService: SBPayService {
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
         locator.resolve(AnalyticsService.self)
-//            .sendEvent(.Pay, with: ["paymentRequest: \(paymentRequest)"])
+            .sendEvent(.Pay, with: ["paymentRequest: \(paymentRequest)"])
         locator
             .resolve(SDKManager.self)
             .pay(with: paymentRequest, completion: completion)
@@ -141,7 +148,7 @@ final class DefaultSBPayService: SBPayService {
                          completion: @escaping Action) {
         liveCircleManager.completePayment(paymentSuccess: paymentSuccess, completion: completion)
         locator.resolve(AnalyticsService.self)
-//            .sendEvent(.CompletePayment, with: ["paymentRequest: \(paymentSuccess.rawValue)"])
+            .sendEvent(.CompletePayment, with: ["paymentRequest: \(paymentSuccess.rawValue)"])
     }
     
     func payWithOrderId(with viewController: UIViewController,
@@ -151,7 +158,7 @@ final class DefaultSBPayService: SBPayService {
         timeManager.startContectionTypeChecking()
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.version) }
         locator.resolve(AnalyticsService.self)
-//            .sendEvent(.PayWithOrderId, with: ["paymentRequest: \(paymentRequest)"])
+            .sendEvent(.PayWithOrderId, with: ["paymentRequest: \(paymentRequest)"])
         locator
             .resolve(SDKManager.self)
             .configWithOrderId(apiKey: apiKey,
@@ -159,16 +166,16 @@ final class DefaultSBPayService: SBPayService {
                                completion: completion)
         liveCircleManager.openInitialScreen(with: viewController,
                                             with: locator)
-        timeManager.stopCheckingCPULoad {_ in 
+        timeManager.stopCheckingCPULoad {
             self.locator
                 .resolve(AnalyticsService.self)
-//                .sendEvent(.StartTime, with: [$0])
+                .sendEvent(.StartTime, with: [$0])
         }
     }
     
     func getResponseFrom(_ url: URL) {
         locator.resolve(AnalyticsService.self)
-//            .sendEvent(.GetResponseFrom, with: ["url: \(url)"])
+            .sendEvent(.GetResponseFrom, with: ["url: \(url)"])
         locator
             .resolve(AuthService.self)
             .completeAuth(with: url)

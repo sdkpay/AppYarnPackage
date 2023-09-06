@@ -10,8 +10,7 @@ import UIKit
 final class BankAppManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
-            let service: BankAppManager = DefaultBankAppManager(analitics: container.resolve(),
-                                                                sdkManager: container.resolve())
+            let service: BankAppManager = DefaultBankAppManager()
             return service
         }
     }
@@ -30,8 +29,6 @@ final class DefaultBankAppManager: BankAppManager {
     }
     
     private var _selectedBank: BankApp?
-    private var analitics: AnalyticsService
-    private var sdkManager: SDKManager
     
     var selectedBank: BankApp? {
         get {
@@ -46,11 +43,6 @@ final class DefaultBankAppManager: BankAppManager {
         }
     }
     
-    init(analitics: AnalyticsService, sdkManager: SDKManager) {
-        self.analitics = analitics
-        self.sdkManager = sdkManager
-    }
-    
     func removeSavedBank() {
         SBLogger.log("🗑 Remove value for key: selectedBank")
         UserDefaults.removeValue(for: .selectedBank)
@@ -63,10 +55,7 @@ final class DefaultBankAppManager: BankAppManager {
     private func getSelectedBank() -> BankApp? {
         // Проверяем есть ли выбранное приложение
         if let selectedBank = _selectedBank {
-            analitics.sendEvent(.LCBankAppFound)
             return selectedBank
-        } else {
-            analitics.sendEvent(.LCNoBankAppFound)
         }
         if avaliableBanks.count > 1 {
             // Если больше 1 то смотрим на сохраненный банк

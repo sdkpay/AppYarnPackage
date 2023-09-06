@@ -32,9 +32,6 @@ public class SPError: NSObject {
             errorDescription = Strings.Error.timeout
         case .ssl:
             errorDescription = Strings.Error.system
-        case .otpError(code: let code):
-            // TODO: Добавить описание
-            break
         }
     }
 }
