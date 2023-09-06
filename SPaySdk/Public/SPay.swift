@@ -81,15 +81,6 @@ public final class SPay: NSObject {
         payService?.getResponseFrom(url)
     }
     
-    @objc
-    public static func isSPayUri(_ url: URL) -> Bool {
-#if SDKDEBUG
-        return true
-#else
-        return url.host == UriValidator.uriHost
-#endif
-    }
-    
     /**
      Метод для установки моков, только для тестовых версий
      */

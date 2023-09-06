@@ -23,10 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication,
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        if SPay.isSPayUri(url) {
+        if url.scheme == "testapp" && url.host == "test" {
             SPay.getAuthURL(url)
-        } else {
-            // ...
         }
         return true
     }
