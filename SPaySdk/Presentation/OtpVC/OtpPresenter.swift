@@ -22,6 +22,7 @@ final class OtpPresenter: OtpPresenting {
     private let sdkManager: SDKManager
     private let alertService: AlertService
     private let keyboardManager: KeyboardManager
+    private let authManager: AuthManager
     private var sec = 45
     private var countOfErrorPayment = 0
     private lazy var timer = Timer(timeInterval: 1.0,
@@ -33,12 +34,14 @@ final class OtpPresenter: OtpPresenting {
 
     init(otpService: OTPService,
          userService: UserService,
+         authManager: AuthManager,
          sdkManager: SDKManager,
          alertService: AlertService,
          keyboardManager: KeyboardManager,
          completion: @escaping Action) {
         self.otpService = otpService
         self.userService = userService
+        self.authManager = authManager
         self.sdkManager = sdkManager
         self.alertService = alertService
         self.completion = completion
@@ -60,16 +63,16 @@ final class OtpPresenter: OtpPresenting {
     func getOTP() {
         view?.showLoading()
         otpService.creteOTP(orderId: sdkManager.authInfo?.orderId ?? "",
-                            paymentId: Int(userService.selectedCard?.paymentId ?? 0)) { error, mobilePhone in
-            if let error {
-                self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
+                            paymentId: Int(userService.selectedCard?.paymentId ?? 0)) { [weak self] result in
+            switch result {
+            case .success(let mobilePhone):
+                guard let self else { return }
+                let mobilePhone = mobilePhone ?? self.authManager.userInfo?.mobilePhone
+                self.view?.updateMobilePhone(phoneNumber: mobilePhone ?? "none")
                 self.view?.hideLoading()
-                return
-            }
-            
-            if let mobilePhone {
-                self.view?.updateMobilePhone(phoneNumber: mobilePhone)
-                self.view?.hideLoading()
+            case .failure(let error):
+                self?.alertService.show(on: self?.view, type: .defaultError(completion: { self?.dismissWithError(error) }))
+                self?.view?.hideLoading()
             }
         }
     }
@@ -84,29 +87,31 @@ final class OtpPresenter: OtpPresenting {
         view?.showLoading()
         otpService.confirmOTP(orderId: sdkManager.authInfo?.orderId ?? "",
                               orderHash: otpHash,
-                              sessionId: userService.user?.sessionId ?? "") { error in
+                              sessionId: userService.user?.sessionId ?? "") { result in
             
-            if let error = error?.represents(.otpError(code: .incorrectCode)) {
-                DispatchQueue.main.async { [weak self] in
+            switch result {
+            case .success:
+                self.view?.hideKeyboard()
+                self.view?.hideLoading()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
                     guard let self = self else { return }
-                    self.view?.hideLoading(animate: true)
-                    self.view?.showError()
-                    return
+                    self.closeWithSuccess()
                 }
-            }
-            
-            if let error = error?.represents(.otpError(code: .tryingError)) {
-                self.alertService.show(on: self.view, type: .tryingError(back: {
-                    self.view?.dismiss(animated: true)
-                }))
-                return
-            }
-            
-            self.view?.hideKeyboard()
-            self.view?.hideLoading()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                guard let self = self else { return }
-                self.closeWithSuccess()
+            case .failure(let error):
+                if error.represents(.errorWithErrorCode(number: OtpError.incorrectCode.rawValue)) {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
+                        self.view?.hideLoading(animate: true)
+                        self.view?.showError()
+                    }
+                } else if error.represents(.errorWithErrorCode(number: OtpError.tryingError.rawValue)) {
+                    self.alertService.show(on: self.view, type: .tryingError(back: {
+                        self.view?.dismiss(animated: true)
+                    }))
+                } else {
+                    self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
+                    self.view?.hideLoading()
+                }
             }
         }
     }

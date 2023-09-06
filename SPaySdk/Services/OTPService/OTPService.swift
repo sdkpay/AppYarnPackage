@@ -22,11 +22,11 @@ final class OTPServiceAssembly: Assembly {
 protocol OTPService {
     func creteOTP(orderId: String,
                   paymentId: Int,
-                  completion: @escaping (SDKError?, String?) -> Void)
+                  completion: @escaping (Result<String?, SDKError>) -> Void)
     func confirmOTP(orderId: String,
                     orderHash: String,
                     sessionId: String,
-                    completion: @escaping (SDKError?) -> Void)
+                    completion: @escaping (Result<Void, SDKError>) -> Void)
 }
 
 final class DefaultOTPService: OTPService, ResponseDecoder {
@@ -41,16 +41,16 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
     
     func creteOTP(orderId: String,
                   paymentId: Int,
-                  completion: @escaping (SDKError?, String?) -> Void) {
+                  completion: @escaping (Result<String?, SDKError>) -> Void) {
         network.request(OTPTarget.createOtpSdk(bankInvoiceId: orderId,
                                                sessionId: authManager.sessionId ?? "",
                                                paymentId: paymentId),
                         to: OTPModel.self) { result in
             switch result {
             case .success(let result):
-                completion(nil, result.mobilePhone)
+                completion(.success(result.mobilePhone))
             case .failure(let error):
-                completion(error, nil)
+                completion(.failure(error))
             }
         }
     }
@@ -58,17 +58,17 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
     func confirmOTP(orderId: String,
                     orderHash: String,
                     sessionId: String,
-                    completion: @escaping (SDKError?) -> Void) {
+                    completion: @escaping (Result<Void, SDKError>) -> Void) {
         network.request(OTPTarget.confirmOtp(bankInvoiceId: orderId,
                                              otpHash: orderHash,
                                              merchantLogin: nil,
                                              sessionId: authManager.sessionId ?? ""),
                         to: OTPModel.self) { result in
             switch result {
-            case .success(let model):
-                completion(nil)
+            case .success:
+                completion(.success)
             case .failure(let error):
-                completion(error)
+                completion(.failure(error))
             }
         }
     }

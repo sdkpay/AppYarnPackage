@@ -64,7 +64,7 @@ targets:
        - path: ./SberPayExample
     settings:
       MARKETING_VERSION: 1.2
-      CURRENT_PROJECT_VERSION: 11
+      CURRENT_PROJECT_VERSION: 12
       PRODUCT_BUNDLE_IDENTIFIER: ru.ir.resheniya.PayTestApp
       DEVELOPMENT_TEAM: 9C29T4D59W
       INFOPLIST_KEY_CFBundleDisplayName: SPayTest

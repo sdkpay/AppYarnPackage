@@ -67,7 +67,7 @@
 "time.button.repeat.isNotActive" = "Отправить повторно через %@ секунд";
 "textField.error.title" = "Неверный код. Повторите попытку";
 "textField.placeholder" = "Введите код";
-"titleLabel.message.title" = "Отправили СМС с кодом-подтверждением\nоплата на номер +%@";
+"titleLabel.message.title" = "Отправили СМС с кодом-подтверждением\nоплата на номер %@";
 
 // Logout
 "button.logout" = "Выйти";

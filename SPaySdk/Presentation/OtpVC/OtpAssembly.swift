@@ -24,6 +24,7 @@ final class OtpAssembly {
     private func modulePresenter(completion: @escaping Action) -> OtpPresenter {
         let presenter = OtpPresenter(otpService: locator.resolve(),
                                      userService: locator.resolve(),
+                                     authManager: locator.resolve(),
                                      sdkManager: locator.resolve(),
                                      alertService: locator.resolve(),
                                      keyboardManager: locator.resolve(),

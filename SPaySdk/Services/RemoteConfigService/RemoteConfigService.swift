@@ -54,11 +54,11 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                 self.checkWhiteLogList(apikeys: config.apikey)
                 self.checkVersion(version: config.version)
                 self.setFeatures(config.featuresToggle)
-                analytics.sendEvent(.RQGoodRemoteConfig)
+                self.analytics.sendEvent(.RQGoodRemoteConfig)
                 completion(nil)
             case .failure(let error):
                 let target: AnalyticsEvent = error.represents(.failDecode) ? .RQFailRemoteConfig : .RQFailRemoteConfig
-                analytics.sendEvent(target, with: "error: \(error.localizedDescription)")
+                self.analytics.sendEvent(target, with: "error: \(error.localizedDescription)")
                 completion(error)
             }
         }

@@ -203,7 +203,7 @@ final class DefaultAlertService: AlertService {
                       completion: back)
         case .tryingError(back: let back):
             let fullPayButton = AlertButtonModel(title: Strings.Return.title,
-                                                 type: .cancel,
+                                                 type: .full,
                                                  action: back)
             showAlert(on: view,
                       with: Strings.Alert.Otp.Error.title,

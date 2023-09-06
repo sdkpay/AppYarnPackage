@@ -240,7 +240,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                             authCookie: getRefreshCookies()),
                             to: AuthRefreshModel.self) { [weak self] result in
             switch result {
-            case .success(let result):
+            case .success(let authModel):
                 self?.saveRefreshIfNeeded(from: authModel.cookies)
                 self?.authManager.userInfo = authModel.result.userInfo
                 self?.analytics.sendEvent(.RSGoodAuth)
