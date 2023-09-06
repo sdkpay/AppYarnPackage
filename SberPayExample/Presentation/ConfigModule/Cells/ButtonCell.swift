@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import SBLayout
-
 private extension CGFloat {
     static let topMargin = 10.0
 }

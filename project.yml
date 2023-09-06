@@ -102,6 +102,7 @@ targets:
         NSUserTrackingUsageDescription: App would like to access IDFA for tracking purpose
         LSSupportsOpeningDocumentsInPlace: true
         DTXAutoStart: false
+        ITSAppUsesNonExemptEncryption: false
         CFBundleURLTypes:
           - CFBundleTypeRole: Editor
             CFBundleURLName: testapp

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SBLayout
 
 extension CGFloat {
     static let sideMargin = 5.0
