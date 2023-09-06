@@ -50,7 +50,7 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        analyticsService.sendEvent(.BNPLViewAppeared)
+//        analyticsService.sendEvent(.BNPLViewAppeared)
         SBLogger.log(.didAppear(view: self))
     }
     

@@ -69,6 +69,7 @@ struct Loader {
     
     @discardableResult
     func hide(from vc: UIViewController) -> Loader {
+        guard window != nil else { return self }
         guard let subview = vc.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView else {
             return self
         }
