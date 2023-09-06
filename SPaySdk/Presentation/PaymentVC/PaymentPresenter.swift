@@ -105,9 +105,6 @@ final class PaymentPresenter: PaymentPresenting {
     
     func viewDidLoad() {
         configViews()
-        timeManager.endTraking(PaymentVC.self.description()) {
-            self.analytics.sendEvent(.PayViewAppeared, with: [$0])
-        }
     }
     
     private func updatePayButtonTitle() {
@@ -116,13 +113,13 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func payButtonTapped() {
-        analytics.sendEvent(.PayConfirmedByUser)
+        analytics.sendEvent(.TouchPay)
         let permission = locationManager.locationEnabled ? [AnalyticsValue.Location.rawValue] : []
-        analytics.sendEvent(.Permissions, with: permission)
         goToPay()
     }
     
     func cancelTapped() {
+        analytics.sendEvent(.TouchCancel)
         view?.dismiss(animated: true, completion: { [weak self] in
             self?.sdkManager.completionWithError(error: .cancelled)
         })
@@ -144,6 +141,7 @@ final class PaymentPresenter: PaymentPresenting {
         case .card:
             cardTapped()
         case .partPay:
+            analytics.sendEvent(.TouchBNPL)
             router.presentPartPay { [weak self] in
                 self?.configViews()
                 self?.updatePayButtonTitle()
@@ -160,7 +158,7 @@ final class PaymentPresenter: PaymentPresenting {
         guard let selectedCard = userService.selectedCard,
               let user = userService.user,
               let authMethod = authManager.authMethod else { return }
-
+        analytics.sendEvent(.TouchCard)
         switch userService.getListCards {
         case true:
             guard user.countAdditionalCards ?? user.paymentToolInfo.count > 1,
@@ -193,9 +191,11 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func getListCards() {
         view?.showLoading()
+        analytics.sendEvent(.RQListCards)
         userService.getListCards { [weak self] result in
             switch result {
             case .success:
+                
                 self?.cardTapped()
             case .failure(let error):
                 self?.view?.hideLoading(animate: true)
@@ -373,7 +373,7 @@ final class PaymentPresenter: PaymentPresenting {
             guard let self = self else { return }
             self.view?.userInteractionsEnabled = true
             if self.partPayService.bnplplanSelected {
-                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
+//                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
             }
             switch result {
             case .success:
@@ -384,7 +384,7 @@ final class PaymentPresenter: PaymentPresenting {
                 }))
             case .failure(let error):
                 if self.partPayService.bnplplanSelected {
-                    self.analytics.sendEvent(.PayWithBNPLFailed)
+//                    self.analytics.sendEvent(.PayWithBNPLFailed)
                 }
                 self.validatePayError(error)
             }

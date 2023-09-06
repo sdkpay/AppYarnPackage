@@ -13,7 +13,8 @@ final class PartPayServiceAssembly: Assembly {
             let service: PartPayService = DefaultPartPayService(network: container.resolve(),
                                                                 sdkManager: container.resolve(),
                                                                 authManager: container.resolve(),
-                                                                featureToggle: container.resolve())
+                                                                featureToggle: container.resolve(),
+                                                                analitics: container.resolve())
             return service
         })
     }
@@ -45,6 +46,7 @@ final class DefaultPartPayService: PartPayService {
     
     private let network: NetworkService
     private let sdkManager: SDKManager
+    private let analitics: AnalyticsService
     private let authManager: AuthManager
     private let featureToggle: FeatureToggleService
     private var userEnableBnpl = false
@@ -53,11 +55,13 @@ final class DefaultPartPayService: PartPayService {
     init(network: NetworkService,
          sdkManager: SDKManager,
          authManager: AuthManager,
-         featureToggle: FeatureToggleService) {
+         featureToggle: FeatureToggleService,
+         analitics: AnalyticsService) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
         self.featureToggle = featureToggle
+        self.analitics = analitics
         SBLogger.log(.start(obj: self))
     }
     
@@ -82,6 +86,7 @@ final class DefaultPartPayService: PartPayService {
               let merchantLogin = authInfo.merchantLogin,
               let orderId = authInfo.orderId
         else { return completion(nil) }
+        analitics.sendEvent(.RQBnpl)
         network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
                                                merchantLogin: merchantLogin,
                                                orderId: orderId),
@@ -89,8 +94,10 @@ final class DefaultPartPayService: PartPayService {
             switch result {
             case .success(let bnplplan):
                 self?.bnplplan = bnplplan
+                self?.analitics.sendEvent(.RQGoodBnpl)
                 completion(nil)
             case .failure(let error):
+                self?.analitics.sendEvent(.RQFailBnpl)
                 completion(error)
             }
         }

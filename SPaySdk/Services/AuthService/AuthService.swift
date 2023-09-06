@@ -124,6 +124,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private func authRequest(method: AuthMethod? = nil,
                              completion: @escaping (SDKError?, Bool) -> Void) {
         guard let request = sdkManager.authInfo else { return }
+        analytics.sendEvent(.RQSessionId)
         network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
                                                 merchantLogin: request.merchantLogin,
                                                 orderId: request.orderId,
@@ -140,6 +141,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self.authManager.sessionId = result.sessionId
                 self.authManager.state = result.state
                 self.appLink = result.deeplink
+                self.analytics.sendEvent(.RQGoodSessionId)
                 self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
                                                       enabledLevel: .server)
                 
@@ -159,6 +161,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     self.sIdAuth()
                 }
             case .failure(let error):
+                if error.represents(.failDecode) {
+                    self?.analytics.sendEvent(.RSFailSessionId, with: "error: \(error.localizedDescription)")
+                } else {
+                    self?.analytics.sendEvent(.RQFailSessionId, with: "error: \(error.localizedDescription)")
+                }
                 completion(error, false)
             }
         }
@@ -183,7 +190,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
         UIApplication.shared.open(link) { [weak self] success in
             if !success {
-                self?.analytics.sendEvent(.RedirectDenied)
+//                self?.analytics.sendEvent(.RedirectDenied)
             }
         }
         SBLogger.logRequestToSbolStarted(link)
@@ -209,6 +216,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func auth(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
         guard let request = sdkManager.authInfo else { return }
+        analytics.sendEvent(.RQAuth)
         network.request(AuthTarget.auth(redirectUri: request.redirectUri,
                                         authCode: authManager.authCode,
                                         sessionId: authManager.sessionId ?? "",
@@ -229,8 +237,14 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             switch result {
             case .success(let result):
                 self?.authManager.userInfo = result.userInfo
+                self?.analytics.sendEvent(.RSGoodAuth)
                 completion(.success)
             case .failure(let error):
+               if error.represents(.failDecode) {
+                    self?.analytics.sendEvent(.RSFailAuth, with: "error: \(error.localizedDescription)")
+                } else {
+//                    self?.analytics.sendEvent(.RQFailSessionId, with: "error: \(error.localizedDescription)")
+                }
                 completion(.failure(error))
             }
         }
