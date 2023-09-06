@@ -15,7 +15,8 @@ enum AuthTarget {
                       currency: String?,
                       orderNumber: String?,
                       expiry: String?,
-                      frequency: Int?)
+                      frequency: Int?,
+                      authCookie: [HTTPCookie])
     case checkSession(sessionId: String)
     case auth(redirectUri: String?,
               authCode: String?,
@@ -32,7 +33,8 @@ enum AuthTarget {
               frequency: Int?,
               userName: String?,
               merchantLogin: String?,
-              resourceName: String)
+              resourceName: String,
+              authCookie: [HTTPCookie])
 }
 
 extension AuthTarget: TargetType {
@@ -68,7 +70,8 @@ extension AuthTarget: TargetType {
                                currency: currency,
                                orderNumber: orderNumber,
                                expiry: expiry,
-                               frequency: frequency):
+                               frequency: frequency,
+                               authCookie: authCookie):
             var params: [String: Any] = [
                 "redirectUri": redirectUri
             ]
@@ -103,8 +106,7 @@ extension AuthTarget: TargetType {
                 
                 params["purchase"] = purchaceParams
             }
-            
-            return .requestWithParametersAndHeaders(nil, bodyParameters: params)
+            return .requestWithParametersAndCookie(nil, bodyParameters: params, cookies: authCookie)
         case .checkSession(sessionId: let sessionId):
             let params = [
                 "sessionId": sessionId
@@ -125,7 +127,8 @@ extension AuthTarget: TargetType {
                        frequency: frequency,
                        userName: userName,
                        merchantLogin: merchantLogin,
-                       resourceName: resourceName):
+                       resourceName: resourceName,
+                       authCookie: authCookie):
             
             var params: [String: Any] = [:]
 
@@ -191,7 +194,7 @@ extension AuthTarget: TargetType {
             
             params["resourceName"] = resourceName
             
-            return .requestWithParameters(nil, bodyParameters: params)
+            return .requestWithParametersAndCookie(nil, bodyParameters: params, cookies: authCookie)
         }
     }
     

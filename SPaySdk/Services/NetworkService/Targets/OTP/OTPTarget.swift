@@ -23,7 +23,7 @@ extension OTPTarget: TargetType {
         case .confirmOtp:
             return "sdk-gateway/v1/confirmOtp"
         case .createOtpSdk:
-            return "sdk-gateway/v1/createOtpSdk"
+            return "sdk-gateway/v1/createOtp"
         }
     }
     
@@ -55,7 +55,7 @@ extension OTPTarget: TargetType {
                 params["sessionId"] = sessionId
             }
             
-            return .requestWithParameters(params)
+            return .requestWithParameters(nil, bodyParameters: params)
         case let .createOtpSdk(bankInvoiceId,
                                sessionId,
                                paymentId):
@@ -64,7 +64,7 @@ extension OTPTarget: TargetType {
                 "sessionId": sessionId,
                 "paymentId": paymentId
             ]
-            return .requestWithParameters(params)
+            return .requestWithParameters(nil, bodyParameters: params)
         }
     }
     

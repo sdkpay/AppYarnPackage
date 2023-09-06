@@ -17,7 +17,7 @@ extension BnplTarget: TargetType {
     var path: String {
         switch self {
         case .getBnplPlan:
-            return "sdk-gateway/v1/paymentPlanBnpl"
+            return "sdk-gateway/v2/paymentPlanBnpl"
         }
     }
     

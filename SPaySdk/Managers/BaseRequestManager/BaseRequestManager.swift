@@ -5,7 +5,7 @@
 //  Created by Alexander Ipatov on 09.02.2023.
 //
 
-import Foundation
+import UIKit
 
 extension String {
     enum Headers {
@@ -16,6 +16,26 @@ extension String {
         static let localTime = "UserTm"
         static let lang = "Accept-Language"
         static let authorization = "Authorization"
+        static let os = "OS"
+        static let deviceName = "deviceName"
+        static let orderNumber = "orderNumber"
+    }
+}
+
+enum Cookies: String {
+    case geo = "X-Geo-Sticky"
+    case refreshData = "X-Sdk-Refresh-Data"
+    case id = "X-Sdk-Id-Key"
+    
+    var storage: StorageKey? {
+        switch self {
+        case .geo:
+            return nil
+        case .refreshData:
+            return .cookieData
+        case .id:
+            return .cookieId
+        }
     }
 }
 
@@ -31,20 +51,12 @@ final class BaseRequestManagerAssembly: Assembly {
 
 protocol BaseRequestManager {
     var headers: HTTPHeaders { get }
-    var cookie: String? { get set }
+    var geoCookie: HTTPCookie? { get set }
     var pod: String? { get set }
 }
 
 final class DefaultBaseRequestManager: BaseRequestManager {
-    var cookie: String? {
-        get {
-            try? storage.get(.cookie)
-        } set {
-            guard let newValue else { return }
-            try? storage.set(newValue, .cookie)
-        }
-    }
-
+    var geoCookie: HTTPCookie?
     var pod: String?
     
     private let authManager: AuthManager
@@ -52,9 +64,6 @@ final class DefaultBaseRequestManager: BaseRequestManager {
 
     var headers: HTTPHeaders {
         var headers = HTTPHeaders()
-        if let cookie = cookie {
-            headers[.Headers.cookie] = cookie
-        }
         if let pod = pod {
             headers[.Headers.pod] = pod
         }
@@ -64,9 +73,15 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         if let lang = authManager.lang {
             headers[.Headers.lang] = lang
         }
+        if let orderNumber = authManager.orderNumber {
+            headers[.Headers.orderNumber] = orderNumber
+        }
+        
+        headers[.Headers.os] = UIDevice.current.fullSystemVersion
+        headers[.Headers.deviceName] = Device.current.rawValue
         return headers
     }
-    
+
     init(authManager: AuthManager,
          storage: KeychainStorage) {
         self.authManager = authManager

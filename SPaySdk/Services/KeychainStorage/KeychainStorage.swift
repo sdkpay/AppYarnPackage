@@ -9,7 +9,8 @@ import Foundation
 import Security
 
 enum StorageKey: String {
-    case cookie
+    case cookieData
+    case cookieId
 }
 
 enum KeychainError: Error {

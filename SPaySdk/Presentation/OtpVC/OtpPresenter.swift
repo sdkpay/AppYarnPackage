@@ -59,11 +59,10 @@ final class OtpPresenter: OtpPresenting {
     
     func getOTP() {
         view?.showLoading()
-        otpService.creteOTP(orderId: userService.user?.sessionId ?? "",
-                            sessionId: userService.user?.sessionId ?? "",
+        otpService.creteOTP(orderId: sdkManager.authInfo?.orderId ?? "",
                             paymentId: Int(userService.selectedCard?.paymentId ?? 0)) { error, mobilePhone in
             if let error {
-                self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error)}))
+                self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
                 self.view?.hideLoading()
                 return
             }

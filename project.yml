@@ -64,7 +64,7 @@ targets:
        - path: ./SberPayExample
     settings:
       MARKETING_VERSION: 1.2
-      CURRENT_PROJECT_VERSION: 5
+      CURRENT_PROJECT_VERSION: 11
       PRODUCT_BUNDLE_IDENTIFIER: ru.ir.resheniya.PayTestApp
       DEVELOPMENT_TEAM: 9C29T4D59W
       INFOPLIST_KEY_CFBundleDisplayName: SPayTest
@@ -102,6 +102,7 @@ targets:
         NSUserTrackingUsageDescription: App would like to access IDFA for tracking purpose
         NSFaceIDUsageDescription: "Так вы подтвердите, что именно вы выполняете вход"
         LSSupportsOpeningDocumentsInPlace: true
+        NSBluetoothAlwaysUsageDescription: Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
         DTXAutoStart: false
         CFBundleURLTypes:
           - CFBundleTypeRole: Editor
@@ -112,7 +113,17 @@ targets:
           - sbolidexternallogin
           - sberbankidexternallogin
         NSAppTransportSecurity: 
-          NSAllowsArbitraryLoads: true
+          NSExceptionDomains:
+            psi.gate1.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            ift.gate1.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            gate1.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            ift.gate2.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            cms-res.online.sberbank.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
         UIFileSharingEnabled: true
   SPaySdk:
     templates:

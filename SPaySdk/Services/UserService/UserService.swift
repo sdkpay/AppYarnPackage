@@ -67,7 +67,7 @@ final class DefaultUserService: UserService {
                                                 orderNumber: authInfo.orderNumber,
                                                 expiry: authInfo.expiry,
                                                 frequency: authInfo.frequency,
-                                                listPaymentCards: false),
+                                                priorityCardOnly: true),
                         to: User.self) { [weak self] result in
             switch result {
             case .success(let user):
@@ -100,7 +100,7 @@ final class DefaultUserService: UserService {
                                                 orderNumber: authInfo.orderNumber,
                                                 expiry: authInfo.expiry,
                                                 frequency: authInfo.frequency,
-                                                listPaymentCards: true),
+                                                priorityCardOnly: false),
                         to: User.self) { [weak self] result in
             switch result {
             case .success(let user):

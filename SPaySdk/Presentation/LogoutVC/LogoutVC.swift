@@ -8,7 +8,6 @@
 import UIKit
 
 protocol ILogoutVC {
-
 }
 
 final class LogoutVC: ContentVC, ILogoutVC {

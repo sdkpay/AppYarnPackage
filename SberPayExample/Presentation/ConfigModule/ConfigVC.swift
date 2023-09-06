@@ -131,6 +131,12 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
                          handler: { _ in
                              self.presenter.refreshData()
                          }),
+                UIAction(title: "Cleare private storage",
+                         image: UIImage(systemName: "trash"),
+                         attributes: .destructive,
+                         handler: { _ in
+                             self.presenter.removeKeychainTapped()
+                         }),
                 UIAction(title: "Cleare logs",
                          image: UIImage(systemName: "trash"),
                          attributes: .destructive,

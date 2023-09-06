@@ -46,6 +46,9 @@ enum HTTPTask {
     case requestWithParametersAndHeaders(_ urlParameters: NetworkParameters? = nil,
                                          bodyParameters: NetworkParameters? = nil,
                                          headers: HTTPHeaders? = nil)
+    case requestWithParametersAndCookie(_ urlParameters: NetworkParameters? = nil,
+                                         bodyParameters: NetworkParameters? = nil,
+                                         cookies: [HTTPCookie] = [])
 }
 
 // MARK: - NetworkProvider
@@ -131,17 +134,24 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
 
     private func buildRequest(from route: TargetType, hostSettings: HostSettings) throws -> URLRequest {
         var request = URLRequest(url: hostManager.host(for: hostSettings).appendingPathComponent(route.path),
-                                 cachePolicy: .reloadIgnoringLocalAndRemoteCacheData,
+                                 cachePolicy: .reloadIgnoringLocalCacheData,
                                  timeoutInterval: Constants.timeoutInterval)
         request.httpMethod = route.httpMethod.rawValue
         switch route.task {
         case .request:
+            addCookies(request: &request, cookies: [])
             addHeaders(request: &request, headers: nil)
         case let .requestWithParameters(urlParameters, bodyParameters):
+            addCookies(request: &request, cookies: [])
             addHeaders(request: &request, headers: nil)
             try configureParameters(request: &request, bodyParameters: bodyParameters, urlParameters: urlParameters)
         case let .requestWithParametersAndHeaders(urlParameters, bodyParameters, headers):
+            addCookies(request: &request, cookies: [])
             addHeaders(request: &request, headers: headers)
+            try configureParameters(request: &request, bodyParameters: bodyParameters, urlParameters: urlParameters)
+        case let .requestWithParametersAndCookie(urlParameters, bodyParameters: bodyParameters, cookies: cookies):
+            addCookies(request: &request, cookies: cookies)
+            addHeaders(request: &request, headers: nil)
             try configureParameters(request: &request, bodyParameters: bodyParameters, urlParameters: urlParameters)
         }
         return request
@@ -163,7 +173,9 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     }
     
     private func addHeaders(request: inout URLRequest, headers: HTTPHeaders?) {
+        
         var baseHeaders = HTTPHeaders()
+    
         baseHeaders[String.Headers.rqUID] = String.generateRandom(with: Constants.lengthUIID)
         baseHeaders[String.Headers.localTime] = Date().rfcFormatted
 
@@ -180,17 +192,31 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         }
     }
     
+    private func addCookies(request: inout URLRequest, cookies: [HTTPCookie]) {
+        var cookies = cookies
+        
+        if let geoCookie = requestManager.geoCookie {
+            cookies.append(geoCookie)
+        }
+        request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
+    }
+    
     private func saveGeobalancingData(from response: URLResponse) {
         guard let response = response as? HTTPURLResponse else { return }
         let headers = response.allHeaderFields
-        requestManager.cookie = headers[String.Headers.setCookie] as? String
+
         requestManager.pod = headers[String.Headers.pod] as? String
+
+        if let url = response.url, let headerFields = headers as? [String: String] {
+            let cookies = HTTPCookie.cookies(withResponseHeaderFields: headerFields, for: url)
+            requestManager.geoCookie = cookies.first(where: { $0.name == Cookies.geo.rawValue })
+        }
     }
 }
 
 // MARK: - Ssl pinning
 
-extension DefaultNetworkProvider: URLSessionDelegate {
+extension DefaultNetworkProvider: URLSessionDelegate, URLSessionTaskDelegate {
     func urlSession(_ session: URLSession,
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {

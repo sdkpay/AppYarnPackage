@@ -35,11 +35,14 @@ protocol NetworkService: AnyObject {
                     host: HostSettings,
                     retrySettings: RetrySettings,
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable
-    func requestForHeaders<T>(_ target: TargetType,
-                              to: T.Type,
-                              host: HostSettings,
-                              retrySettings: RetrySettings,
-                              completion: @escaping (Result<(result: T, headers: HTTPHeaders), SDKError>) -> Void) where T: Codable
+    func requestFull<T>(_ target: TargetType,
+                        to: T.Type,
+                        host: HostSettings,
+                        retrySettings: RetrySettings,
+                        completion: @escaping (Result<(result: T,
+                                                       headers: HTTPHeaders,
+                                                       cookies: [HTTPCookie]),
+                                               SDKError>) -> Void) where T: Codable
     func cancelTask()
 }
 
@@ -58,12 +61,15 @@ extension NetworkService {
         request(target, to: to, host: host, retrySettings: retrySettings, completion: completion)
     }
     
-    func requestForHeaders<T>(_ target: TargetType,
-                              to: T.Type,
-                              host: HostSettings = .main,
-                              retrySettings: RetrySettings = (1, []),
-                              completion: @escaping (Result<(result: T, headers: HTTPHeaders), SDKError>) -> Void) where T: Codable {
-        requestForHeaders(target, to: to, host: host, retrySettings: retrySettings, completion: completion)
+    func requestFull<T>(_ target: TargetType,
+                        to: T.Type,
+                        host: HostSettings = .main,
+                        retrySettings: RetrySettings = (1, []),
+                        completion: @escaping (Result<(result: T,
+                                                       headers: HTTPHeaders,
+                                                       cookies: [HTTPCookie]),
+                                               SDKError>) -> Void) where T: Codable {
+        requestFull(target, to: to, host: host, retrySettings: retrySettings, completion: completion)
     }
 }
 
@@ -96,13 +102,16 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         }
     }
     
-    func requestForHeaders<T>(_ target: TargetType,
-                              to: T.Type,
-                              host: HostSettings,
-                              retrySettings: RetrySettings = (1, []),
-                              completion: @escaping (Result<(result: T, headers: HTTPHeaders), SDKError>) -> Void) where T: Codable {
+    func requestFull<T>(_ target: TargetType,
+                        to: T.Type,
+                        host: HostSettings,
+                        retrySettings: RetrySettings = (1, []),
+                        completion: @escaping (Result<(result: T,
+                                                       headers: HTTPHeaders,
+                                                       cookies: [HTTPCookie]),
+                                               SDKError>) -> Void) where T: Codable {
         provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
-            let result = self.decodeResponseWithHeaders(data: data, response: response, error: error, type: to)
+            let result = self.decodeResponseFull(data: data, response: response, error: error, type: to)
             completion(result)
         }
     }

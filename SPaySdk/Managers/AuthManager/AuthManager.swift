@@ -22,6 +22,7 @@ final class AuthManagerAssembly: Assembly {
 }
 
 protocol AuthManager {
+    var orderNumber: String? { get set }
     var apiKey: String? { get set }
     var sessionId: String? { get set }
     var authCode: String? { get set }
@@ -32,6 +33,7 @@ protocol AuthManager {
 }
 
 final class DefaultAuthManager: AuthManager {
+    var orderNumber: String?
     var apiKey: String?
     var sessionId: String?
     var authCode: String?

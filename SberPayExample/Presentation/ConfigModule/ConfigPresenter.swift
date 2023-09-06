@@ -32,6 +32,7 @@ protocol ConfigPresenterProtocol {
     func cell(for indexPath: IndexPath) -> UITableViewCell
     func removeButtonTapped()
     func removeLogsTapped()
+    func removeKeychainTapped()
     func generateOrderIdTapped()
     func refreshData()
     func viewDidLoad()
@@ -240,6 +241,18 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                                    amount: results[1],
                                    currency: results[2])
             }
+        }
+    }
+    
+    func removeKeychainTapped() {
+        let status = SecItemDelete([
+            kSecClass: kSecClassGenericPassword
+        ] as NSDictionary)
+        
+        if status != errSecSuccess {
+            view?.showAlert(with: status.description)
+        } else {
+            view?.showAlert(with: "Local storage is cleare")
         }
     }
     

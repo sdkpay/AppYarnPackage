@@ -13,6 +13,7 @@ final class ContentLoadManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
             let service: ContentLoadManager = DefaultContentLoadManager(userService: container.resolve(),
+                                                                        featureToggleService: container.resolve(),
                                                                         partPayService: container.resolve())
             return service
         }
@@ -37,12 +38,15 @@ protocol ContentLoadManager {
 
 final class DefaultContentLoadManager: ContentLoadManager {
     private let userService: UserService
+    private let featureToggleService: FeatureToggleService
     private var partPayService: PartPayService
     
     private let group = DispatchGroup()
     
     init(userService: UserService,
+         featureToggleService: FeatureToggleService,
          partPayService: PartPayService) {
+        self.featureToggleService = featureToggleService
         self.partPayService = partPayService
         self.userService = userService
     }
@@ -51,7 +55,7 @@ final class DefaultContentLoadManager: ContentLoadManager {
         var contentTypes: [ContentLoadType] = [
             (.userData, .high)
         ]
-        if partPayService.bnplplanEnabled {
+        if featureToggleService.isEnabled(.bnpl) {
             contentTypes.append((.bnplPlan, .low))
         }
         load(contentTypes: contentTypes, completion: completion)
