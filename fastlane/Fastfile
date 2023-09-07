@@ -74,13 +74,18 @@ platform :ios do
 
   desc "Version from plist"
   private_lane :plist_version do 
-    version = get_version_number(xcodeproj: "SPaySdk.xcodeproj")
-    version
+    version = get_version_number(
+      xcodeproj: "Project.xcodeproj",
+      target: ENV["TARGET_NAME"]
+    )
   end
 
   desc "Build from plist"
   private_lane :plist_build do 
-    build_number = get_build_number(xcodeproj: "SPaySdk.xcodeproj")
+    build_number = get_build_number(
+      xcodeproj: "SPaySdk.xcodeproj",
+      target: ENV["TARGET_NAME"]
+      )
     build_number
   end
 
