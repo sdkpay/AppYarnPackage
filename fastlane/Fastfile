@@ -16,7 +16,7 @@ ENV["TEAM_ID"] = "582949"
 # Marvin Bot
 ENV["BOT_URL"] = "https://api.telegram.org/bot5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4/sendMessage"
 ENV["TG_BOT_TOKEN"] = "5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4"
-ENV["TG_CHAT_ID"] = "-1001899215484"
+ENV["TG_CHAT_ID"] = "-866042957"
 
 # GIT
 ENV["REPO_URL"] = "https://github.com/sdkpay/paySDK-ios"
