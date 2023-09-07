@@ -26,10 +26,10 @@ default_platform(:ios)
 platform :ios do
   desc "Builds, achieves and uploads IPA to testflight"
   lane :release_to_testflight do
-    prebuild
-    build_and_upload
-    upload_to_repo
-    add_and_upload_tags
+    # prebuild
+    # build_and_upload
+    # upload_to_repo
+    # add_and_upload_tags
     marvin_bot(success: true)
   end
 
@@ -75,7 +75,7 @@ platform :ios do
   desc "Version from plist"
   private_lane :plist_version do 
     version = get_version_number(
-      xcodeproj: "Project.xcodeproj",
+      xcodeproj: "SPaySdk.xcodeproj",
       target: ENV["TARGET_NAME"]
     )
   end
@@ -83,8 +83,7 @@ platform :ios do
   desc "Build from plist"
   private_lane :plist_build do 
     build_number = get_build_number(
-      xcodeproj: "SPaySdk.xcodeproj",
-      target: ENV["TARGET_NAME"]
+      xcodeproj: "SPaySdk.xcodeproj"
       )
     build_number
   end
@@ -94,35 +93,34 @@ platform :ios do
     status = (options[:success] ? "✅" : "❌")
       
     message = "
-<u><b>Новая сборка iOS:</b></u>  🚀
-  <i>Проект: </i><code>#{ENV["TARGET_NAME"]}</code>
-  <i>Статус: </i>#{status}
-  <i>Куда: </i><code>Testflight</code>
-  <i>Версия: </i><code> 1 1</code>
-  <i>Коммит: </i><code>1</code>
-  <i>Ветка: </i><code>1</code>
-
-<u><b>Изменения:</b></u>
-"
-
+<i>@lessov @GandalfRealDeal #сборка🚀</i>
+<b><ins>Новая сборка:</ins></b>
+    <i>Статус: </i>#{status}
+    <i>Платформа: iOS Версия: #{plist_version}(#{plist_build})</i>
+    <i>Ветка: </i><code>#{git_branch}</code>
+<b><ins>Изменения:</ins></b>
+#{changelog_from_git_commits(
+      pretty: "[%an] %n   - %s",
+      date_format: "short", 
+      merge_commit_filtering: "exclude_merges"
+)}
+    "
+ if options[:exception]
       message += "
-<u><b>Подробности:</b></u>
-"
+  #{options[:exception]}
+ "
     end
+    message
+  end
   
    desc "Send message to Marvin bot"
   private_lane :marvin_bot do |options|
-
-    uri = URI.parse(ENV["BOT_URL"])
-    request = Net::HTTP::Post.new(uri)
-    request.set_form_data(
-      "chat_id" => ENV["TG_CHAT_ID"],
-      "text" => build_message(success: options[:success], exception: options[:exception])
+    telegram(
+      token: ENV['TG_BOT_TOKEN'],
+      chat_id: ENV['TG_CHAT_ID'],
+      text: build_message(success: options[:success], exception: options[:exception]),
+      parse_mode: "HTML"
     )
-
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(request)
-    end
   end
   
   error do |lane, exception|
