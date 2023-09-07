@@ -1,0 +1,133 @@
+require 'net/http'
+require 'uri'
+
+#Common
+ENV["PROJECT_NAME"] = "SPaySdk"
+ENV["TARGET_NAME"] = "SPaySdkExample"
+ENV["SCHEME_NAME"] = "SPaySdkExample"
+ENV["PLIST_PATH"] = "./SberPayExample/SupportingFiles/Info.plist"
+
+#Appstore
+ENV["KEY_ID"] = "X7JDA74R7R"
+ENV["ISSUER_ID"] = "32c2a5e1-1bea-4fd8-8cff-4235733105fc"
+ENV["KEY_PATH"] = "./fastlane/AuthKey_X7JDA74R7R.p8"
+ENV["TEAM_ID"] = "582949"
+
+# Marvin Bot
+ENV["BOT_URL"] = "https://api.telegram.org/bot5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4/sendMessage"
+ENV["TG_BOT_TOKEN"] = "5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4"
+ENV["TG_CHAT_ID"] = "-1001899215484"
+
+# GIT
+ENV["REPO_URL"] = "https://github.com/sdkpay/paySDK-ios"
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Builds, achieves and uploads IPA to testflight"
+  lane :release_to_testflight do
+    # prebuild
+    # build_and_upload
+    upload_to_repo
+    # add_and_upload_tags
+    # marvin_bot(success: true)
+  end
+
+  private_lane :add_and_upload_tags do
+    add_git_tag
+    sh("git push --tags -o ci-skip #{ENV["REPO_URL"]} HEAD:develop")
+  end
+
+  desc "Commit and upload changes"
+  private_lane :build_and_upload do
+    cert
+    sigh
+    gym(
+      scheme: ENV["SCHEME_NAME"],
+      output_directory: "./buildApp/ipa"
+    )
+    app_store_connect_api_key(
+      key_id: ENV["KEY_ID"],
+      issuer_id: ENV["ISSUER_ID"],
+      key_filepath: ENV["KEY_PATH"],
+      duration: 1200,
+      in_house: false
+    )
+    upload_to_testflight(
+           skip_submission: true,
+           skip_waiting_for_build_processing: true
+    )
+  end
+
+  desc "Commit and upload changes"
+  private_lane :upload_to_repo do
+    git_commit(path: "./", message: "Release to Testflight. Version: #{plist_version} (#{plist_build})")
+    # sh("git pull --rebase origin HEAD")
+    # sh("git push -o ci-skip #{ENV["REPO_URL"]} HEAD:develop")
+  end
+  
+  desc "Prebuild actions"
+  private_lane :prebuild do
+    get_certificates
+    get_provisioning_profile
+  end
+
+  desc "Version from plist"
+  private_lane :plist_version do 
+    version = get_version_number_from_plist(
+      target: ENV["TARGET_NAME"],
+      plist_build_setting_support: false
+    )
+    version
+  end
+
+  desc "Build from plist"
+  private_lane :plist_build do 
+    build = get_build_number_from_plist(
+      target: ENV["TARGET_NAME"],
+      plist_build_setting_support: false
+    )
+    build
+  end
+
+  desc "Build message for bot"
+  private_lane :build_message do |options|
+    status = (options[:success] ? "✅" : "❌")
+      
+    message = "
+<u><b>Новая сборка iOS:</b></u>  🚀
+  <i>Проект: </i><code>#{ENV["TARGET_NAME"]}</code>
+  <i>Статус: </i>#{status}
+  <i>Куда: </i><code>Testflight</code>
+  <i>Версия: </i><code> 1 1</code>
+  <i>Коммит: </i><code>1</code>
+  <i>Ветка: </i><code>1</code>
+
+<u><b>Изменения:</b></u>
+"
+
+      message += "
+<u><b>Подробности:</b></u>
+"
+    end
+  
+   desc "Send message to Marvin bot"
+  private_lane :marvin_bot do |options|
+
+    uri = URI.parse(ENV["BOT_URL"])
+    request = Net::HTTP::Post.new(uri)
+    request.set_form_data(
+      "chat_id" => ENV["CHAT_IDS"],
+      "text" => build_message(success: options[:success], exception: options[:exception])
+    )
+
+    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(request)
+    end
+  end
+  
+  error do |lane, exception|
+    marvin_bot(success: false, exception: exception)
+  end
+
+end
