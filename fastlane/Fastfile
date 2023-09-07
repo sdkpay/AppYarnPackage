@@ -26,16 +26,16 @@ default_platform(:ios)
 platform :ios do
   desc "Builds, achieves and uploads IPA to testflight"
   lane :release_to_testflight do
-    # prebuild
-    # build_and_upload
+    prebuild
+    build_and_upload
     upload_to_repo
-    # add_and_upload_tags
+    add_and_upload_tags
     # marvin_bot(success: true)
   end
 
   private_lane :add_and_upload_tags do
     add_git_tag
-    sh("git push --tags -o ci-skip #{ENV["REPO_URL"]} HEAD:develop")
+    sh("git push --tags")
   end
 
   desc "Commit and upload changes"

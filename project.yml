@@ -94,8 +94,8 @@ targets:
       properties:
         UILaunchStoryboardName: LaunchScreen.storyboard
         CFBundleDisplayName: $(BUNDLE_DISPLAY_NAME)
-        CFBundleShortVersionString: "$(MARKETING_VERSION)"
-        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleShortVersionString: 1.1
+        CFBundleVersion: 119
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSLocationWhenInUseUsageDescription: Need location
