@@ -94,13 +94,6 @@ final class DefaultSBPayService: SBPayService {
     var isReadyForSPay: Bool {
         SBLogger.log(.version)
         let service = locator.resolve(AnalyticsService.self)
-        // Для симулятора всегда true для удобства разработки
-#if targetEnvironment(simulator)
-        service.sendEvent(.IsReadyForSPay,
-                          with: "\(true)")
-        return true
-#else
-        
         let target = locator.resolve(EnvironmentManager.self).environment == .sandboxWithoutBankApp
         if target {
             service.sendEvent(.IsReadyForSPay,
@@ -116,7 +109,6 @@ final class DefaultSBPayService: SBPayService {
                               with: "\(!apps.isEmpty)")
             return !apps.isEmpty
         }
-#endif
     }
     
     func getPaymentToken(with viewController: UIViewController,
