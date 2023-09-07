@@ -30,7 +30,7 @@ platform :ios do
     build_and_upload
     upload_to_repo
     add_and_upload_tags
-    # marvin_bot(success: true)
+    marvin_bot(success: true)
   end
 
   private_lane :add_and_upload_tags do
@@ -74,20 +74,14 @@ platform :ios do
 
   desc "Version from plist"
   private_lane :plist_version do 
-    version = get_version_number_from_plist(
-      target: ENV["TARGET_NAME"],
-      plist_build_setting_support: false
-    )
+    version = get_version_number(xcodeproj: "SPaySdk.xcodeproj")
     version
   end
 
   desc "Build from plist"
   private_lane :plist_build do 
-    build = get_build_number_from_plist(
-      target: ENV["TARGET_NAME"],
-      plist_build_setting_support: false
-    )
-    build
+    build_number = get_build_number(xcodeproj: "SPaySdk.xcodeproj")
+    build_number
   end
 
   desc "Build message for bot"
@@ -117,7 +111,7 @@ platform :ios do
     uri = URI.parse(ENV["BOT_URL"])
     request = Net::HTTP::Post.new(uri)
     request.set_form_data(
-      "chat_id" => ENV["CHAT_IDS"],
+      "chat_id" => ENV["TG_CHAT_ID"],
       "text" => build_message(success: options[:success], exception: options[:exception])
     )
 

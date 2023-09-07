@@ -49,6 +49,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Need location</string>
 	<key>NSUserTrackingUsageDescription</key>

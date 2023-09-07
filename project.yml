@@ -94,8 +94,8 @@ targets:
       properties:
         UILaunchStoryboardName: LaunchScreen.storyboard
         CFBundleDisplayName: $(BUNDLE_DISPLAY_NAME)
-        CFBundleShortVersionString: 1.1
-        CFBundleVersion: 119
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSLocationWhenInUseUsageDescription: Need location
@@ -103,6 +103,8 @@ targets:
         LSSupportsOpeningDocumentsInPlace: true
         DTXAutoStart: false
         ITSAppUsesNonExemptEncryption: false
+        NSBluetoothPeripheralUsageDescription: Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
+        NSBluetoothAlwaysUsageDescription: Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
         CFBundleURLTypes:
           - CFBundleTypeRole: Editor
             CFBundleURLName: testapp
