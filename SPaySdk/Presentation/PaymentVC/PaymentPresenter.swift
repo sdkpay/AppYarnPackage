@@ -63,6 +63,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let timeManager: OptimizationCheсkerManager
     private var partPayService: PartPayService
     private let biometricAuthProvider: BiometricAuthProviderProtocol
+    private let otpService: OTPService
 
     private var cellData: [PaymentCellType] {
         var cellData: [PaymentCellType] = []
@@ -86,6 +87,7 @@ final class PaymentPresenter: PaymentPresenting {
          partPayService: PartPayService,
          authManager: AuthManager,
          biometricAuthProvider: BiometricAuthProviderProtocol,
+         otpService: OTPService,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
         self.userService = userService
@@ -100,6 +102,7 @@ final class PaymentPresenter: PaymentPresenting {
         self.bankManager = bankManager
         self.timeManager = timeManager
         self.authManager = authManager
+        self.otpService = otpService
         self.timeManager.startTraking()
     }
     
@@ -193,8 +196,29 @@ final class PaymentPresenter: PaymentPresenting {
         userService.getListCards { [weak self] result in
             switch result {
             case .success:
-                
                 self?.cardTapped()
+            case .failure(let error):
+                self?.view?.hideLoading(animate: true)
+                if error.represents(.noInternetConnection) {
+                    self?.alertService.show(on: self?.view,
+                                            type: .noInternet(retry: { self?.getListCards() },
+                                                              completion: { self?.dismissWithError(error) }))
+                } else {
+                    self?.alertService.show(on: self?.view,
+                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
+                }
+            }
+        }
+    }
+    
+    private func createOTP() {
+        view?.showLoading()
+        otpService.creteOTP { [weak self] result in
+            switch result {
+            case .success:
+                self?.router.presentOTPScreen(completion: { [weak self] in
+                    self?.pay()
+                })
             case .failure(let error):
                 self?.view?.hideLoading(animate: true)
                 if error.represents(.noInternetConnection) {
@@ -354,9 +378,7 @@ final class PaymentPresenter: PaymentPresenting {
         if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
             pay()
         } else {
-            router.presentOTPScreen(completion: { [weak self] in
-                self?.pay()
-            })
+            createOTP()
         }
     }
     

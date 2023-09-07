@@ -61,6 +61,7 @@
 "fake.title" = "Это тестовый режим\nТут происходит авторизация в мобильном приложении банка";
 
 // OTP
+"otp.placeholder.title" = "Код-подтверждение";
 "next.button.title" = "Продолжить";
 "back.button.title" = "Назад";
 "time.button.repeat.isActive" = "Отправить повторно";
