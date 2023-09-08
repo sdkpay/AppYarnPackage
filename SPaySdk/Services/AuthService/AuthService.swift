@@ -220,7 +220,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func auth(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
         guard let request = sdkManager.authInfo else { return }
-        network.requestFull(AuthTarget.auth(redirectUri: request.redirectUri,
+        network.requestFull(AuthTarget.auth(redirectUri: authManager.authMethod == .bank ? request.redirectUri : nil,
                                             authCode: authManager.authCode,
                                             sessionId: authManager.sessionId ?? "",
                                             state: authManager.state,
