@@ -28,6 +28,17 @@ struct AuthInfo: Hashable {
         self.frequency = nil
     }
     
+    init(fullPaymentRequest: SBankInvoicePaymentRequest) {
+        self.merchantLogin = fullPaymentRequest.merchantLogin
+        self.orderId = fullPaymentRequest.bankInvoiceId
+        self.redirectUri = fullPaymentRequest.redirectUri
+        self.amount = nil
+        self.currency = nil
+        self.orderNumber = nil
+        self.expiry = nil
+        self.frequency = nil
+    }
+    
     init(paymentTokenRequest: SPaymentTokenRequest) {
         self.merchantLogin = paymentTokenRequest.merchantLogin
         self.orderId = paymentTokenRequest.orderId

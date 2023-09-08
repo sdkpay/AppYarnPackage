@@ -41,6 +41,10 @@ final class PaymentViewBuilder {
     
     private(set) lazy var logoImageView: UIImageView = {
         let view = UIImageView()
+        view.contentMode = .scaleAspectFit
+        view.layer.borderColor = Asset.grayDisabled.color.cgColor
+        view.layer.borderWidth = Cost.ImageView.border
+        view.layer.cornerRadius = Cost.ImageView.radius
         return view
     }()
     
@@ -151,6 +155,8 @@ private extension PaymentViewBuilder {
             static let size: CGSize = .init(width: 56, height: 56)
             static let right: CGFloat = Cost.sideOffSet
             static let yOffSet: CGFloat = -6.0
+            static let radius: CGFloat = 12.0
+            static let border: CGFloat = 1.0
         }
         
         enum CollectionView {

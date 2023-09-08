@@ -95,7 +95,7 @@ final class PartPayPresenter: PartPayPresenting {
         },
                               textTapped: { [weak self] link in
             DispatchQueue.main.async {
-                self?.agreementTextTapped(link: link)
+                self?.agreementTextTapped(link: link.link)
             }
         })
     }

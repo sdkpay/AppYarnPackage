@@ -219,7 +219,6 @@ enum AnalyticsEvent: String {
     case MACCompletePayment
     /// Метод для авторизации банка
     case MAGetAuthURL
-    
 }
 
 enum AnalyticsValue: String {

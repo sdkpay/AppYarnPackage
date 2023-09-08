@@ -19,6 +19,8 @@ packages:
   Dynatrace-Static:
    url: https://github.com/Dynatrace/swift-mobile-sdk.git
    from: 8.0.0
+  FingerprintPackage:
+    path: ./FingerprintPack
 
 targetTemplates:
   Framework:
@@ -48,8 +50,7 @@ targetTemplates:
       - path: ./Generated
     dependencies:
       - package: Dynatrace-Static
-      - framework: ./SPaySdk/Resources/Frameworks/Fingerprint.xcframework
-      - framework: ./SPaySdk/Resources/Frameworks/BizoneCore.xcframework
+      - package: FingerprintPackage
       - sdk: libresolv.9.tbd
     info:
       path: ./SPaySdk/SupportingFiles/Info.plist
@@ -65,13 +66,12 @@ targets:
     settings:
       MARKETING_VERSION: 1.2
       CURRENT_PROJECT_VERSION: 13
-      PRODUCT_BUNDLE_IDENTIFIER: ru.ir.resheniya.PayTestApp
-      DEVELOPMENT_TEAM: 9C29T4D59W
+      PRODUCT_BUNDLE_IDENTIFIER: com.team11.spay.sdk
+      DEVELOPMENT_TEAM: 9CYS9A2HF7
       INFOPLIST_KEY_CFBundleDisplayName: SPayTest
       SWIFT_OBJC_BRIDGING_HEADER: SberPayExample/Presentation/ObjcCartVC/SberPayExample-Bridging-Header.h
     dependencies:
       - package: IQKeyboardManagerSwift
-      - framework: ./SberPayExample/SupportingFiles/SBLayout.xcframework
       - target: SPaySdkDEBUG
         link: true
     preBuildScripts: 
@@ -104,6 +104,9 @@ targets:
         LSSupportsOpeningDocumentsInPlace: true
         NSBluetoothAlwaysUsageDescription: Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
         DTXAutoStart: false
+        ITSAppUsesNonExemptEncryption: false
+        NSBluetoothPeripheralUsageDescription: Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
+        NSBluetoothAlwaysUsageDescription: Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
         CFBundleURLTypes:
           - CFBundleTypeRole: Editor
             CFBundleURLName: testapp

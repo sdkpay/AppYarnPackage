@@ -18,7 +18,7 @@ final class RemoteConfigServiceAssembly: Assembly {
 }
 
 protocol RemoteConfigService {
-    func getConfig(with apiKey: String, completion: @escaping (SDKError?) -> Void)
+    func getConfig(with apiKey: String?, completion: @escaping (SDKError?) -> Void)
 }
 
 final class DefaultRemoteConfigService: RemoteConfigService {
@@ -40,7 +40,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.sdkManager = sdkManager
     }
     
-    func getConfig(with apiKey: String,
+    func getConfig(with apiKey: String?,
                    completion: @escaping (SDKError?) -> Void) {
         self.apiKey = apiKey
         analytics.sendEvent(.RQRemoteConfig)

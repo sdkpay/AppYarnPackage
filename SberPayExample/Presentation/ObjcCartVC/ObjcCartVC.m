@@ -66,15 +66,17 @@
     if (SPay.isReadyForSPay) {
 
     }
+    
     SPaymentTokenRequest *requestModel = [[SPaymentTokenRequest alloc] initWithRedirectUri:@"sberPayExampleapp"
-                                                                        merchantLogin:@"Test shop"
-                                                                               amount:*(_totalCost)
-                                                                             currency:@""
-                                                                          mobilePhone:@""
-                                                                          orderNumber:@""
-                                                                     recurrentExipiry:@""
-                                                                   recurrentFrequency:0];
-
+                                                                             merchantLogin:@"Test shop"
+                                                                                    amount:*(_totalCost)
+                                                                                  currency:@""
+                                                                               mobilePhone:@""
+                                                                               orderNumber:@""
+                                                                          recurrentExipiry:@""
+                                                                        recurrentFrequency:0
+                                                                                    apiKey:@"a12312"];
+    
     [SPay getPaymentTokenWith:self with:requestModel completion:^(SPaymentTokenResponse * _Nonnull response) {
         if (response.error) {
             // Обработка ошибки
@@ -108,7 +110,8 @@
                                                                               orderId:@"12312312"
                                                                           orderNumber:@"12312312"
                                                                              language:nil
-                                                                          redirectUri:@"testapp://test"];
+                                                                          redirectUri:@"testapp://test"
+                                                                               apiKey: @"a12312"];
     [SPay payWithOrderIdWith:self with:request completion:^(enum SPayState state, NSString * _Nonnull info) {
         switch(state) {
             case SPayStateSuccess:

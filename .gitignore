@@ -96,3 +96,7 @@ Generated/
 RSwift/
 *.DS_Store
 
+*.cer
+*.mobileprovision
+*.entitlements
+
