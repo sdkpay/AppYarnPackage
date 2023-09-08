@@ -64,6 +64,7 @@ targets:
     sources:
        - path: ./SberPayExample
     settings:
+      TARGETED_DEVICE_FAMILY: 1
       MARKETING_VERSION: 1.2
       CURRENT_PROJECT_VERSION: 13
       PRODUCT_BUNDLE_IDENTIFIER: com.team11.spay.sdk
