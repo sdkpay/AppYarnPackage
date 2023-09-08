@@ -14,7 +14,6 @@ ENV["KEY_PATH"] = "./fastlane/AuthKey_X7JDA74R7R.p8"
 ENV["TEAM_ID"] = "582949"
 
 # Marvin Bot
-ENV["BOT_URL"] = "https://api.telegram.org/bot5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4/sendMessage"
 ENV["TG_BOT_TOKEN"] = "5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4"
 ENV["TG_CHAT_ID"] = "-866042957"
 
@@ -26,10 +25,10 @@ default_platform(:ios)
 platform :ios do
   desc "Builds, achieves and uploads IPA to testflight"
   lane :release_to_testflight do
-    # prebuild
-    # build_and_upload
-    # upload_to_repo
-    # add_and_upload_tags
+    prebuild
+    build_and_upload
+    upload_to_repo
+    add_and_upload_tags
     marvin_bot(success: true)
   end
 
@@ -95,8 +94,10 @@ platform :ios do
     message = "
 <i>@lessov @GandalfRealDeal #сборка🚀</i>
 <b><ins>Новая сборка:</ins></b>
+    <i>Проект: </i><code>#{ENV["TARGET_NAME"]}</code>
     <i>Статус: </i>#{status}
-    <i>Платформа: iOS Версия: #{plist_version}(#{plist_build})</i>
+    <i>Платформа: iOS </i>
+    <i>Версия: #{plist_version}(#{plist_build})</i>
     <i>Ветка: </i><code>#{git_branch}</code>
 <b><ins>Изменения:</ins></b>
 #{changelog_from_git_commits(
