@@ -15,7 +15,7 @@ ENV["TEAM_ID"] = "582949"
 
 # Marvin Bot
 ENV["TG_BOT_TOKEN"] = "5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4"
-ENV["TG_CHAT_ID"] = "-1001899215484"
+ENV["TG_CHAT_ID"] = "-866042957"
 
 #PROD BOT -866042957
 #DEV BOT -1001899215484
@@ -27,8 +27,8 @@ default_platform(:ios)
 platform :ios do
   desc "Builds, achieves and uploads IPA to testflight"
   lane :release_to_testflight do
-    # prebuild
-    # build_and_upload
+    prebuild
+    build_and_upload
     upload_to_repo
     add_and_upload_tags
     marvin_bot(success: true)
