@@ -10,6 +10,7 @@ import UIKit
 private extension CGFloat {
     static let arrowWidth = 24.0
     static let cardWidth = 36.0
+    static let letterSpacing = -0.3
 }
 
 final class CardInfoView: UICollectionViewCell {
@@ -29,14 +30,15 @@ final class CardInfoView: UICollectionViewCell {
         
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.font = .bodi1
+        view.font = .medium5
         view.textColor = .textPrimory
+        view.letterSpacing(.letterSpacing)
         return view
     }()
     
     private lazy var subtitleLabel: UILabel = {
         let view = UILabel()
-        view.font = .bodi2
+        view.font = .medium2
         view.textColor = .textSecondary
         return view
     }()

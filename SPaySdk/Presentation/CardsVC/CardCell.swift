@@ -19,6 +19,7 @@ private extension CGFloat {
     static let corner = 8.0
     static let checkWidth = 20.0
     static let cardWidth = 36.0
+    static let letterSpacing = -0.3
 }
 
 final class CardCell: UITableViewCell {    
@@ -27,17 +28,18 @@ final class CardCell: UITableViewCell {
         view.layer.cornerRadius = .corner
         return view
     }()
-
+    
     private lazy var titleLabel: UILabel = {
-       let view = UILabel()
-        view.font = .bodi1
+        let view = UILabel()
+        view.font = .medium5
         view.textColor = .textPrimory
+        view.letterSpacing(.letterSpacing)
         return view
     }()
     
     private lazy var cardLabel: UILabel = {
-       let view = UILabel()
-        view.font = .bodi2
+        let view = UILabel()
+        view.font = .medium2
         view.textColor = .textSecondary
         return view
     }()

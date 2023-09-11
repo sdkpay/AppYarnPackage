@@ -10,7 +10,7 @@ enum TextFieldState {
         case .alert:
             return .systemRed.withAlphaComponent(0.7)
         case .selected, .empty:
-            return ColorAsset.Color.gray
+            return ColorAsset.Color.backgroundSecondary
         }
     }
 }
