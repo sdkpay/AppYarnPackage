@@ -42,10 +42,10 @@ final class WebViewVC: ContentVC, IWebViewVC {
         return view
     }()
     
-    private lazy var webView: LoadableWebView = {
+    private lazy var webView: WKWebView = {
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .default()
-        let view = LoadableWebView(frame: .zero, configuration: configuration)
+        let view = WKWebView(frame: .zero, configuration: configuration)
         view.navigationDelegate = self
         return view
     }()
@@ -127,14 +127,8 @@ final class WebViewVC: ContentVC, IWebViewVC {
 }
 
 extension WebViewVC: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        (webView as? LoadableWebView)?.startLoading()
-    }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        (webView as? LoadableWebView)?.stopLoading()
         presenter.webTitle(webView.title)
     }
 }
-
-final class LoadableWebView: WKWebView, Loadable {}
