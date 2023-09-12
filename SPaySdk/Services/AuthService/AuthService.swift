@@ -143,7 +143,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             case .success(let result):
                 guard let self = self else { return }
                 self.authManager.sessionId = result.sessionId
-                self.authManager.state = result.state
                 self.appLink = result.deeplink
                 self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
                                                       enabledLevel: .server)
@@ -188,7 +187,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
         UIApplication.shared.open(link) { [weak self] success in
             if !success {
-                self?.analytics.sendEvent(.RedirectDenied)
+//                self?.analytics.sendEvent(.RedirectDenied)
             }
         }
         SBLogger.logRequestToSbolStarted(link)
@@ -214,7 +213,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func auth(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
         guard let request = sdkManager.authInfo else { return }
-        network.requestFull(AuthTarget.auth(redirectUri: request.redirectUri,
+        network.requestFull(AuthTarget.auth(redirectUri: authManager.authMethod == .bank ? request.redirectUri : nil,
                                             authCode: authManager.authCode,
                                             sessionId: authManager.sessionId ?? "",
                                             state: authManager.state,
@@ -236,9 +235,14 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             case .success(let authModel):
                 self?.saveRefreshIfNeeded(from: authModel.cookies)
                 self?.authManager.userInfo = authModel.result.userInfo
+                self?.analytics.sendEvent(.RSGoodAuth)
                 completion(.success)
             case .failure(let error):
-                self?.cookieStorage.cleanCookie()
+               if error.represents(.failDecode) {
+                    self?.analytics.sendEvent(.RSFailAuth, with: "error: \(error.localizedDescription)")
+                } else {
+//                    self?.analytics.sendEvent(.RQFailSessionId, with: "error: \(error.localizedDescription)")
+                }
                 completion(.failure(error))
             }
         }

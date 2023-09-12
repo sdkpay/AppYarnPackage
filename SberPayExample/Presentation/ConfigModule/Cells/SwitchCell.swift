@@ -5,7 +5,6 @@
 //  Created by Ипатов Александр Станиславович on 25.05.2023.
 //
 
-import SBLayout
 import UIKit
 
 private extension CGFloat {

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SBLayout
 
 private extension CGFloat {
     static let cellHeight = 50.0

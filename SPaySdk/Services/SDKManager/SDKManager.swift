@@ -31,6 +31,9 @@ protocol SDKManager {
     func configWithOrderId(apiKey: String,
                            paymentRequest: SFullPaymentRequest,
                            completion: @escaping PaymentCompletion)
+    func configWithBankInvoiceId(apiKey: String,
+                                 paymentRequest: SBankInvoicePaymentRequest,
+                                 completion: @escaping PaymentCompletion)
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
     func completionPaymentToken(with paymentToken: String?,
@@ -99,6 +102,18 @@ final class DefaultSDKManager: SDKManager {
         authManager.apiKey = apiKey
         authManager.lang = paymentRequest.language
         authManager.orderNumber = paymentRequest.orderNumber
+        self.paymentCompletion = completion
+    }
+    
+    func configWithBankInvoiceId(apiKey: String,
+                                 paymentRequest: SBankInvoicePaymentRequest,
+                                 completion: @escaping PaymentCompletion) {
+        let authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
+        newStart = isNewStart(check: authInfo)
+        if newStart { self.authInfo = authInfo }
+        payStrategy = .auto
+        authManager.apiKey = apiKey
+        authManager.lang = paymentRequest.language
         self.paymentCompletion = completion
     }
     

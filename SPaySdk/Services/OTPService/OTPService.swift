@@ -7,12 +7,12 @@
 
 import Foundation
 
-var modilePhone: String = ""
-
 final class OTPServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
             let service: OTPService = DefaultOTPService(network: container.resolve(),
+                                                        sdkManager: container.resolve(),
+                                                        userService: container.resolve(),
                                                         authManager: container.resolve())
             return service
         }
@@ -20,45 +20,51 @@ final class OTPServiceAssembly: Assembly {
 }
 
 protocol OTPService {
-    func creteOTP(orderId: String,
-                  paymentId: Int,
-                  completion: @escaping (Result<String?, SDKError>) -> Void)
-    func confirmOTP(orderId: String,
-                    orderHash: String,
-                    completion: @escaping (Result<Void, SDKError>) -> Void)
+    var otpModel: OTPModel? { get }
+    func creteOTP(completion: @escaping (Result<Void, SDKError>) -> Void)
+    func confirmOTP(otpHash: String,
+                    completion: @escaping (Result<Void, SDKError>) -> Void) 
 }
 
 final class DefaultOTPService: OTPService, ResponseDecoder {
     
     private let network: NetworkService
     private let authManager: AuthManager
+    private let sdkManager: SDKManager
+    private let userService: UserService
     
-    init(network: NetworkService, authManager: AuthManager) {
+    var otpModel: OTPModel?
+    
+    init(network: NetworkService,
+         sdkManager: SDKManager,
+         userService: UserService,
+         authManager: AuthManager) {
         self.network = network
+        self.sdkManager = sdkManager
+        self.userService = userService
         self.authManager = authManager
     }
     
-    func creteOTP(orderId: String,
-                  paymentId: Int,
-                  completion: @escaping (Result<String?, SDKError>) -> Void) {
-        network.request(OTPTarget.createOtpSdk(bankInvoiceId: orderId,
+    func creteOTP(completion: @escaping (Result<Void, SDKError>) -> Void) {
+        network.request(OTPTarget.createOtpSdk(bankInvoiceId: sdkManager.authInfo?.orderId ?? "",
                                                sessionId: authManager.sessionId ?? "",
-                                               paymentId: paymentId),
+                                               paymentId: userService.selectedCard?.paymentId ?? 0 ),
                         to: OTPModel.self) { result in
             switch result {
             case .success(let result):
-                completion(.success(result.mobilePhone))
+                self.otpModel = result
+                completion(.success)
             case .failure(let error):
-                completion(.failure(error))            }
+                completion(.failure(error))    
+            }
         }
     }
     
-    func confirmOTP(orderId: String,
-                    orderHash: String,
+    func confirmOTP(otpHash: String,
                     completion: @escaping (Result<Void, SDKError>) -> Void) {
-        network.request(OTPTarget.confirmOtp(bankInvoiceId: orderId,
-                                             otpHash: orderHash,
-                                             merchantLogin: nil,
+        network.request(OTPTarget.confirmOtp(bankInvoiceId: sdkManager.authInfo?.orderId ?? "",
+                                             otpHash: otpHash,
+                                             merchantLogin: sdkManager.authInfo?.merchantLogin ?? "",
                                              sessionId: authManager.sessionId ?? ""),
                         to: OTPModel.self) { result in
             switch result {

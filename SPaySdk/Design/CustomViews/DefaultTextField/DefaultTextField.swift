@@ -10,22 +10,23 @@ enum TextFieldState {
         case .alert:
             return .systemRed.withAlphaComponent(0.7)
         case .selected, .empty:
-            return ColorAsset.Color.gray
+            return ColorAsset.Color.backgroundSecondary
         }
     }
 }
 
 private extension CGFloat {
     static let backMargin = 4.0
+    static let textMargin = 20.0
     static let alertMargin = 20.0
-    static let height = 54.0
+    static let height = 64.0
     static let buttonHeight = 45.0
 }
 
 final class DefaultTextField: UIView {
     private lazy var backgroundView: UIView = {
         let view = UIView()
-        view.layer.borderColor = ColorAsset.Color.gray.cgColor
+        view.layer.borderColor = ColorAsset.Color.backgroundSecondary.cgColor
         view.layer.borderWidth = 1.5
         view.layer.cornerRadius = 7
         return view
@@ -52,7 +53,7 @@ final class DefaultTextField: UIView {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13, weight: .light)
         label.textColor = .gray
-        label.text = "Код-подтверждение"
+        label.text = Strings.Otp.Placeholder.title
         return label
     }()
     
@@ -94,7 +95,7 @@ final class DefaultTextField: UIView {
                 maxLength: Int?,
                 textEndEdited: @escaping (String) -> Void,
                 buttonTapped: (() -> Void)? = nil) {
-        textField.placeholder = "Код-подтверждение"
+        textField.placeholder = Strings.Otp.Placeholder.title
         self.maxLength = maxLength
         if maxLength != nil {
             valueChanged()

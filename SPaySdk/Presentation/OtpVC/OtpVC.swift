@@ -15,17 +15,21 @@ protocol IOtpVC: AnyObject {
     func setKeyboardHeight(height: CGFloat)
 }
 
+final class LoadableUIView: UIView, Loadable {}
+
 final class OtpVC: ContentVC, IOtpVC {
     private let presenter: OtpPresenting
     private var otpCode = ""
     private var maxLength = 6
     private var keyboardHeight: CGFloat = 330
+    
+    private lazy var backView = LoadableUIView()
         
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
         label.textAlignment = .left
-        label.font = .bodi3
+        label.font = .bodi4
         return label
     }()
     
@@ -120,34 +124,49 @@ final class OtpVC: ContentVC, IOtpVC {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func showLoading(with text: String? = nil, animate: Bool = true) {
+        backView.startLoading(with: text)
+    }
+    
+    override func hideLoading(animate: Bool = true) {
+        backView.stopLoading()
+    }
+    
     private func setupUI() {
-        titleLabel
+        backView
             .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left)
+            .touchEdge(.right, toSuperviewEdge: .right)
+            .touchEdge(.top, toSuperviewEdge: .top)
+
+        titleLabel
+            .add(toSuperview: backView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Stack.right)
             .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: Cost.Stack.top)
         
         textField
-            .add(toSuperview: view)
+            .add(toSuperview: backView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.TextField.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.TextField.right)
             .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Cost.TextField.top)
         
         timeButton
-            .add(toSuperview: view)
+            .add(toSuperview: backView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Time.left)
             .touchEdge(.top, toEdge: .bottom, ofView: textField, withInset: Cost.Button.Time.top)
                
         nextButton
-            .add(toSuperview: view)
+            .add(toSuperview: backView)
             .height(.defaultButtonHeight)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Next.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Next.right)
             .touchEdge(.top, toEdge: .bottom, ofView: timeButton, withInset: Cost.Button.Next.bottom)
         
         backButton
-            .add(toSuperview: view)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: CGFloat(keyboardHeight))
+            .add(toSuperview: backView)
+            .touchEdge(.bottom, toEdge: .bottom, ofView: backView, withInset: Cost.Button.Back.bottom)
+            .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: CGFloat(keyboardHeight))
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Back.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Back.right)
             .touchEdge(.top, toEdge: .bottom, ofView: nextButton, withInset: Cost.Button.Back.top)

@@ -85,7 +85,7 @@ extension ResponseDecoder {
         if let url = response.url {
             cookies = HTTPCookie.cookies(withResponseHeaderFields: headers, for: url)
         }
-        
+
         do {
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(type, from: data)

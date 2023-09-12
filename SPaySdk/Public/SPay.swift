@@ -20,7 +20,7 @@ public final class SPay: NSObject {
     
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     @objc
-    public static func setup(apiKey: String,
+    public static func setup(apiKey: String? = nil,
                              bnplPlan: Bool = false,
                              environment: SEnvironment = .prod,
                              completion: Action? = nil) {
@@ -57,11 +57,31 @@ public final class SPay: NSObject {
     /**
      Единый метод для оплаты
      */
+#if SDKDEBUG
     @objc
     public static func payWithOrderId(with viewController: UIViewController,
                                       with paymentRequest: SFullPaymentRequest,
                                       completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
         payService?.payWithOrderId(with: viewController, paymentRequest: paymentRequest, completion: completion)
+    }
+#else
+    @objc
+    @available(*, deprecated, message: "Метод устарел, используйте payWithBankInvoiceId")
+    public static func payWithOrderId(with viewController: UIViewController,
+                                      with paymentRequest: SFullPaymentRequest,
+                                      completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
+        payService?.payWithOrderId(with: viewController, paymentRequest: paymentRequest, completion: completion)
+    }
+#endif
+    
+    /**
+     Единый метод для оплаты
+     */
+    @objc
+    public static func payWithBankInvoiceId(with viewController: UIViewController,
+                                            paymentRequest: SBankInvoicePaymentRequest,
+                                            completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
+        payService?.payWithBankInvoiceId(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }
     
     /**

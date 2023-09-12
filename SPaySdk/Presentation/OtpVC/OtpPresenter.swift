@@ -9,7 +9,6 @@ import UIKit
 
 protocol OtpPresenting {
     func viewDidLoad()
-    func getOTP()
     func sendOTP(otpCode: String)
     func back()
 }
@@ -30,24 +29,23 @@ final class OtpPresenter: OtpPresenting {
 
     init(otpService: OTPService,
          userService: UserService,
+         authManager: AuthManager,
          sdkManager: SDKManager,
          alertService: AlertService,
          keyboardManager: KeyboardManager,
-         authManager: AuthManager,
          completion: @escaping Action) {
         self.otpService = otpService
         self.userService = userService
+        self.authManager = authManager
         self.sdkManager = sdkManager
         self.alertService = alertService
         self.completion = completion
         self.keyboardManager = keyboardManager
-        self.authManager = authManager
         self.setKeyboardHeight()
     }
     
     func viewDidLoad() {
         createTimer()
-        getOTP()
         configViews()
     }
     
@@ -56,40 +54,20 @@ final class OtpPresenter: OtpPresenting {
         view?.setKeyboardHeight(height: height)
     }
     
-    func getOTP() {
-        view?.showLoading()
-        otpService.creteOTP(orderId: sdkManager.authInfo?.orderId ?? "",
-                            paymentId: Int(userService.selectedCard?.paymentId ?? 0)) { [weak self] result in
-            switch result {
-            case .success(let mobilePhone):
-                guard let self else { return }
-                let mobilePhone = mobilePhone ?? self.authManager.userInfo?.mobilePhone
-                self.view?.updateMobilePhone(phoneNumber: mobilePhone ?? "none")
-                self.view?.hideLoading()
-            case .failure(let error):
-                self?.alertService.show(on: self?.view, type: .defaultError(completion: { self?.dismissWithError(error) }))
-                self?.view?.hideLoading()
-            }
-        }
-    }
-    
     private func configViews() {
         guard let user = userService.user else { return }
         view?.configProfileView(with: user.userInfo)
+        view?.updateMobilePhone(phoneNumber: otpService.otpModel?.mobilePhone ?? "none")
     }
     
     func sendOTP(otpCode: String) {
         let otpHash = getHashCode(code: otpCode)
         view?.showLoading()
-        otpService.confirmOTP(orderId: sdkManager.authInfo?.orderId ?? "",
-                              orderHash: otpHash) { result in
+        otpService.confirmOTP(otpHash: otpHash) { result in
             switch result {
             case .success:
                 self.view?.hideKeyboard()
-                self.view?.hideLoading()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                    self?.closeWithSuccess()
-                }
+                self.closeWithSuccess()
             case .failure(let error):
                 if error.represents(.errorWithErrorCode(number: OtpError.incorrectCode.rawValue)) {
                     DispatchQueue.main.async { [weak self] in
@@ -127,7 +105,7 @@ final class OtpPresenter: OtpPresenting {
     }
     
     private func getHashCode(code: String) -> String {
-        return code.hashValue.description + (userService.selectedCard?.cardNumber ?? "")
+        (code + (userService.selectedCard?.cardNumber ?? "")).sha256()
     }
     
     func createTimer() {

@@ -35,6 +35,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>DTXAutoStart</key>
 	<false/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>sbolidexternallogin</string>
@@ -74,6 +76,8 @@
 		</dict>
 	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Так вы подтвердите, что именно вы выполняете вход</string>

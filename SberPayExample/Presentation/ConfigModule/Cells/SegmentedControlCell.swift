@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SBLayout
 
 final class SegmentedControlCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {

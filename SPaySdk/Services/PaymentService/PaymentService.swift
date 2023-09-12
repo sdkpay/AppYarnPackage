@@ -82,8 +82,13 @@ final class DefaultPaymentService: PaymentService {
                     self.pay(with: paymentToken.paymentToken, orderId: orderid, completion: completion)
                 case .manual:
                     self.sdkManager.payHandler = { [weak self] payInfo in
+                        if isBnplEnabled {
+                            orderid = paymentToken.initiateBankInvoiceId
+                        } else {
+                            orderid = payInfo.orderId
+                        }
                         self?.pay(with: payInfo.paymentToken ?? paymentToken.paymentToken,
-                                  orderId: payInfo.orderId, completion: completion)
+                                  orderId: orderid, completion: completion)
                     }
                     self.sdkManager.completionPaymentToken(with: paymentToken.paymentToken)
                 }
@@ -154,8 +159,12 @@ final class DefaultPaymentService: PaymentService {
                                                       ipAddress: personalMetricsService.ipAddress,
                                                       paymentToken: token),
                         to: PaymentOrderModel.self,
-                        retrySettings: (4, [StatusCode.errorFormat.rawValue])) { result in
-            switch result {
+                        retrySettings: (4, [
+                            StatusCode.errorSystem.rawValue,
+                            StatusCode.unknownPayState.rawValue,
+                            StatusCode.unknownState.rawValue
+                        ])) { result in
+                            switch result {
             case .success:
                 completion(.success)
             case .failure(let error):
@@ -170,7 +179,7 @@ final class DefaultPaymentService: PaymentService {
             return .noInternetConnection
         case .timeOut:
             return .timeOut
-        case .badResponseWithStatus(code: .errorFormat):
+        case .badResponseWithStatus(code: .errorSystem):
             return .unknownStatus
         default:
             return .defaultError

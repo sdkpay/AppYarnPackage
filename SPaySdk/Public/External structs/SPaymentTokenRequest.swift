@@ -21,6 +21,8 @@ public final class SPaymentTokenRequest: NSObject {
     let orderNumber: String?
     /// Идентификатор заказа на стороне банка
     let orderId: String?
+    /// Идентификатор заказа на стороне банка
+    var bankInvoiceId: String?
     /// Описание к заказу
     let orderDescription: String?
     /// Выбранный язык локализации интерфейсов
@@ -31,19 +33,24 @@ public final class SPaymentTokenRequest: NSObject {
     let recurrentFrequency: Int
     /// Cсылка для редиректа обратно в приложение
     let redirectUri: String
+    /// Api key
+    let apiKey: String?
     
     @objc
     init(merchantLogin: String?,
          amount: Int = 0,
          currency: String? = nil,
          orderId: String? = nil,
+         bankInvoiceId: String? = nil,
          mobilePhone: String? = nil,
          orderNumber: String? = nil,
          orderDescription: String? = nil,
          language: String? = nil,
          recurrentExipiry: String? = nil,
          recurrentFrequency: Int,
-         redirectUri: String) {
+         redirectUri: String,
+         apiKey: String? = nil) {
+        self.apiKey = apiKey
         self.merchantLogin = merchantLogin
         self.amount = amount
         self.currency = currency
@@ -51,6 +58,10 @@ public final class SPaymentTokenRequest: NSObject {
         self.orderNumber = orderNumber
         self.orderDescription = orderDescription
         self.language = language
+        self.bankInvoiceId = bankInvoiceId
+        if let orderId, bankInvoiceId == nil {
+            self.bankInvoiceId = orderId
+        }
         self.orderId = orderId
         self.recurrentExipiry = recurrentExipiry
         self.recurrentFrequency = recurrentFrequency
@@ -61,11 +72,13 @@ public final class SPaymentTokenRequest: NSObject {
     @objc
     public convenience init(merchantLogin: String?,
                             orderNumber: String,
-                            orderId: String,
+                            orderId: String? = nil,
+                            bankInvoiceId: String? = nil,
                             redirectUri: String) {
         self.init(merchantLogin: merchantLogin,
                   currency: nil,
                   orderId: orderId,
+                  bankInvoiceId: bankInvoiceId,
                   mobilePhone: nil,
                   orderNumber: orderNumber,
                   orderDescription: nil,
@@ -84,14 +97,16 @@ public final class SPaymentTokenRequest: NSObject {
                             mobilePhone: String?,
                             orderNumber: String,
                             recurrentExipiry: String,
-                            recurrentFrequency: Int) {
-        self.init(merchantLogin: merchantLogin,
+                            recurrentFrequency: Int,
+                            apiKey: String? = nil) {
+        self.init(redirectUri: redirectUri,
+                  merchantLogin: merchantLogin,
                   amount: amount,
                   currency: currency,
                   mobilePhone: mobilePhone,
                   orderNumber: orderNumber,
                   recurrentExipiry: recurrentExipiry,
                   recurrentFrequency: recurrentFrequency,
-                  redirectUri: redirectUri)
+                  apiKey: apiKey)
     }
 }

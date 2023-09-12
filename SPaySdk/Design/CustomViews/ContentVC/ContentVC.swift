@@ -65,6 +65,19 @@ class ContentVC: LoggableVC {
         profileView.isHidden = false
         profileView.config(with: userInfo)
     }
+    
+    func showLoading(with text: String? = nil,
+                     animate: Bool = true) {
+        Loader(text: text)
+            .animated(with: animate)
+            .show(on: self)
+    }
+    
+    func hideLoading(animate: Bool = true) {
+        Loader()
+            .animated(with: animate)
+            .hide(from: self)
+    }
 
     func configUI() {
         profileView.isHidden = true
@@ -93,21 +106,5 @@ class ContentVC: LoggableVC {
             profileView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
             profileView.topAnchor.constraint(equalTo: logoImage.topAnchor)
         ])
-    }
-}
-
-// ContentVC + Loading
-extension ContentVC {
-    func showLoading(with text: String? = nil,
-                     animate: Bool = true) {
-        Loader(text: text)
-            .animated(with: animate)
-            .show(on: self)
-    }
-    
-    func hideLoading(animate: Bool = true) {
-        Loader()
-            .animated(with: animate)
-            .hide(from: self)
     }
 }

@@ -32,21 +32,8 @@ public class SPError: NSObject {
             errorDescription = Strings.Error.timeout
         case .ssl:
             errorDescription = Strings.Error.system
-        case .errorWithErrorCode(let code):
-            switch code {
-            case "1":
-                errorDescription = Strings.Error.validation
-            case "2":
-                errorDescription = Strings.Error.system
-            case "9":
-                errorDescription = Strings.Error.lifeTimeOut
-            case "5":
-                errorDescription = Strings.Error.inncorectCode
-            case "6":
-                errorDescription = Strings.Error.trying
-            default:
-                errorDescription = Strings.Error.system
-            }
+        case .errorWithErrorCode:
+            errorDescription = Strings.Error.system
         }
     }
 }

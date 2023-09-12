@@ -8,11 +8,11 @@
 import UIKit
 
 final class StubNetworkProvider: NSObject, NetworkProvider {
-    private let delayedSeconds: Int
+    private let delayedSeconds: Double
     private var dispatchWorkItem: DispatchWorkItem?
     private var hostManager: HostManager
 
-    init(delayedSeconds: Int = 0, hostManager: HostManager) {
+    init(delayedSeconds: Double = 0, hostManager: HostManager) {
         self.delayedSeconds = delayedSeconds
         self.hostManager = hostManager
         super.init()
@@ -29,7 +29,7 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
         dispatchWorkItem = DispatchWorkItem {
             completion(target.sampleData, response, nil)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.seconds(delayedSeconds),
+        DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.milliseconds(Int(1000)),
                                       execute: dispatchWorkItem!)
     }
     

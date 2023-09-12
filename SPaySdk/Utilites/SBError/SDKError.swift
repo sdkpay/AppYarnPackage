@@ -8,6 +8,7 @@
 import Foundation
 
 enum StatusCode: Int {
+    case unknownState = 403
     case unknownPayState = 423
     case errorFormat = 400
     case errorPath = 404
@@ -22,7 +23,6 @@ enum OtpError: String {
     case incorrectCode = "5"
     case tryingError = "6"
 }
-
 
 enum SDKError: Error, Hashable {
     case noInternetConnection

@@ -17,7 +17,7 @@ final class RemoteConfigServiceAssembly: Assembly {
 }
 
 protocol RemoteConfigService {
-    func getConfig(with apiKey: String, completion: @escaping (SDKError?) -> Void)
+    func getConfig(with apiKey: String?, completion: @escaping (SDKError?) -> Void)
 }
 
 final class DefaultRemoteConfigService: RemoteConfigService {
@@ -36,7 +36,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.featureToggle = featureToggle
     }
     
-    func getConfig(with apiKey: String,
+    func getConfig(with apiKey: String?,
                    completion: @escaping (SDKError?) -> Void) {
         self.apiKey = apiKey
         network.request(ConfigTarget.getConfig,
@@ -49,17 +49,20 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                 self.checkWhiteLogList(apikeys: config.apikey)
                 self.checkVersion(version: config.version)
                 self.setFeatures(config.featuresToggle)
+//                self.analytics.sendEvent(.RQGoodRemoteConfig)
                 completion(nil)
             case .failure(let error):
+//                let target: AnalyticsEvent = error.represents(.failDecode) ? .RQFailRemoteConfig : .RQFailRemoteConfig
+//                self.analytics.sendEvent(target, with: "error: \(error.localizedDescription)")
                 completion(error)
             }
         }
     }
     
     private func saveConfig(_ value: ConfigModel) {
-        optimizationManager.checkSavedDataSize(object: value) {
-            self.analytics.sendEvent(.DataSize, with: [$0])
-        }
+//        optimizationManager.checkSavedDataSize(object: value) {
+//            self.analytics.sendEvent(.DataSize, with: [$0])
+//        }
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
         UserDefaults.bankApps = value.bankApps
