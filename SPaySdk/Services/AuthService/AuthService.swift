@@ -128,7 +128,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private func authRequest(method: AuthMethod? = nil,
                              completion: @escaping (SDKError?, Bool) -> Void) {
         guard let request = sdkManager.authInfo else { return }
-        analytics.sendEvent(.RQSessionId)
         network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
                                                 merchantLogin: request.merchantLogin,
                                                 orderId: request.orderId,
@@ -145,7 +144,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 guard let self = self else { return }
                 self.authManager.sessionId = result.sessionId
                 self.appLink = result.deeplink
-                self.analytics.sendEvent(.RQGoodSessionId)
                 self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
                                                       enabledLevel: .server)
                 
@@ -165,11 +163,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     self.sIdAuth()
                 }
             case .failure(let error):
-                if error.represents(.failDecode) {
-                    self?.analytics.sendEvent(.RSFailSessionId, with: "error: \(error.localizedDescription)")
-                } else {
-                    self?.analytics.sendEvent(.RQFailSessionId, with: "error: \(error.localizedDescription)")
-                }
                 completion(error, false)
             }
         }

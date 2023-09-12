@@ -20,15 +20,11 @@ final class OtpPresenter: OtpPresenting {
     private var userService: UserService
     private let sdkManager: SDKManager
     private let alertService: AlertService
-    private let keyboardManager: KeyboardManager
     private let authManager: AuthManager
+    private let keyboardManager: KeyboardManager
     private var sec = 45
     private var countOfErrorPayment = 0
-    private lazy var timer = Timer(timeInterval: 1.0,
-                                   target: self,
-                                   selector: #selector(updateTime),
-                                   userInfo: nil,
-                                   repeats: true)
+    private var timer: Timer?
     private var completion: Action?
 
     init(otpService: OTPService,
@@ -90,7 +86,7 @@ final class OtpPresenter: OtpPresenting {
             }
         }
     }
-    
+        
     func back() {
         self.view?.hideKeyboard()
         view?.contentNavigationController?.popViewController(animated: true)
@@ -113,13 +109,20 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func createTimer() {
+        timer = Timer(timeInterval: 1.0,
+                      target: self,
+                      selector: #selector(updateTime),
+                      userInfo: nil,
+                      repeats: true)
+        guard let timer else { return }
         RunLoop.current.add(timer, forMode: .common)
     }
     
     @objc private func updateTime() {
         sec -= 1
         if sec < 0 {
-            timer.invalidate()
+            timer?.invalidate()
+            timer = nil
             sec = 45
         } else {
             view?.updateTimer(sec: sec)

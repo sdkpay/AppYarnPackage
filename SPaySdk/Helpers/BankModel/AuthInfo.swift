@@ -20,7 +20,7 @@ struct AuthInfo: Hashable {
     init(fullPaymentRequest: SFullPaymentRequest) {
         self.merchantLogin = fullPaymentRequest.merchantLogin
         self.orderId = fullPaymentRequest.orderId
-        self.redirectUri = UriValidator.validateUri(fullPaymentRequest.redirectUri)
+        self.redirectUri = fullPaymentRequest.redirectUri
         self.amount = nil
         self.currency = nil
         self.orderNumber = nil
@@ -43,7 +43,7 @@ struct AuthInfo: Hashable {
         self.merchantLogin = paymentTokenRequest.merchantLogin
         self.orderId = paymentTokenRequest.orderId
         self.orderNumber = paymentTokenRequest.orderNumber
-        self.redirectUri = UriValidator.validateUri(paymentTokenRequest.redirectUri)
+        self.redirectUri = paymentTokenRequest.redirectUri
         self.amount = paymentTokenRequest.amount
         self.currency = paymentTokenRequest.currency
         self.expiry = paymentTokenRequest.recurrentExipiry

@@ -12,8 +12,7 @@ final class UserServiceAssembly: Assembly {
         container.register {
             let service: UserService = DefaultUserService(network: container.resolve(),
                                                           sdkManager: container.resolve(),
-                                                          authManager: container.resolve(),
-                                                          analiticService: container.resolve())
+                                                          authManager: container.resolve())
             return service
         }
     }
@@ -34,19 +33,16 @@ final class DefaultUserService: UserService {
     private(set) var user: User?
     private let sdkManager: SDKManager
     private let authManager: AuthManager
-    private let analiticService: AnalyticsService
     var getListCards = false
     
     var selectedCard: PaymentToolInfo?
     
     init(network: NetworkService,
          sdkManager: SDKManager,
-         authManager: AuthManager,
-         analiticService: AnalyticsService) {
+         authManager: AuthManager) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
-        self.analiticService = analiticService
         SBLogger.log(.start(obj: self))
     }
     
@@ -58,7 +54,7 @@ final class DefaultUserService: UserService {
         guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId
         else { return }
-        analiticService.sendEvent(.RQListCards)
+        
         network.request(UserTarget.getListCards(sessionId: sessionId,
                                                 merchantLogin: authInfo.merchantLogin,
                                                 orderId: authInfo.orderId,
@@ -72,16 +68,10 @@ final class DefaultUserService: UserService {
             switch result {
             case .success(let user):
                 guard let self = self else { return }
-                self.analiticService.sendEvent(.RQGoodListCards)
                 self.user = user
                 self.selectedCard = self.selectCard(from: user.paymentToolInfo)
                 completion(nil)
             case .failure(let error):
-                if error.represents(.failDecode) {
-                    self?.analiticService.sendEvent(.RSFailListCards, with: "error: \(error.localizedDescription)")
-                 } else {
-                    self?.analiticService.sendEvent(.RQFailListCards, with: "error: \(error.localizedDescription)")
-                 }
                 completion(error)
             }
         }

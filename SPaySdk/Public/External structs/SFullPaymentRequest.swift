@@ -51,6 +51,8 @@ public final class SFullPaymentRequest: NSObject {
     let redirectUri: String
     /// Api key
     let apiKey: String?
+    /// Уникальный номер (идентификатор) заказа в системе Клиента.
+    let orderNumber: String
     
     @objc
     public init(merchantLogin: String? = nil,

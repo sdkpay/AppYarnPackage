@@ -6,10 +6,13 @@
 //
 
 import Foundation
+import UIKit
 
 protocol LogoutPresenting {
     func back()
     func logout()
+    func getNumber() -> String?
+    func getName() -> String 
 }
 
 final class LogoutPresenter: LogoutPresenting {
@@ -17,10 +20,20 @@ final class LogoutPresenter: LogoutPresenting {
     weak var view: (ILogoutVC & ContentVC)?
     private let sdkManager: SDKManager
     private var storage: KeychainStorage
+    private var authManager: AuthManager
     
-    init(sdkManager: SDKManager, storage: KeychainStorage) {
+    init(sdkManager: SDKManager, storage: KeychainStorage, authManager: AuthManager) {
         self.sdkManager = sdkManager
         self.storage = storage
+        self.authManager = authManager
+    }
+    
+    func getNumber() -> String? {
+        authManager.userInfo?.mobilePhone
+    }
+    
+    func getName() -> String {
+        (authManager.userInfo?.firstName ?? "") + " " + (authManager.userInfo?.lastName ?? "")
     }
     
     func back() {

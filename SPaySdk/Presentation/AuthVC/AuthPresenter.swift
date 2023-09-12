@@ -9,7 +9,6 @@ import UIKit
 
 protocol AuthPresenting {
     func viewDidLoad()
-    func viewDidDissapear()
 }
 
 final class AuthPresenter: AuthPresenting {
@@ -54,17 +53,10 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
-        checkNewStart()
-        
-        analytics.sendEvent(.LCBankAuthViewAppeared)
-    }
-    
-    func viewDidDissapear() {
-        if view?.bankCount ?? 0 > 1 {
-            analytics.sendEvent(.LCBankAppsViewDisappeared, with: "orderNumber: \(self.sdkManager.authInfo?.orderNumber ?? "")")
+        timeManager.endTraking(AuthVC.self.description()) { _ in 
+//            analytics.sendEvent(.AuthViewAppeared, with: [$0])
         }
-        
-        analytics.sendEvent(.LCBankAuthViewDisappeared)
+        checkNewStart()
     }
     
     private func checkNewStart() {
@@ -121,13 +113,10 @@ final class AuthPresenter: AuthPresenting {
     private func showBanksStack() {
         bankManager.removeSavedBank()
         view?.configBanksStack(banks: bankManager.avaliableBanks, selected: { [weak self] bank in
-            self?.analytics.sendEvent(.TouchBankApp, with: "orderNumber: \(self?.sdkManager.authInfo?.orderNumber ?? "")")
             self?.bankManager.selectedBank = bank
             self?.getAccessSPay()
         })
-        if view?.bankCount ?? 0 > 1 {
-            analytics.sendEvent(.LCBankAppsViewAppeared, with: "orderNumber: \(self.sdkManager.authInfo?.orderNumber ?? "")")
-        }
+//        analytics.sendEvent(.BankAppsViewAppear)
     }
     
     private func getAccessSPay() {
@@ -144,7 +133,7 @@ final class AuthPresenter: AuthPresenting {
             guard let self = self else { return }
             self.removeObserver()
             if let error = error {
-                self.analytics.sendEvent(.LCBankAppAuthFail)
+//                self.analytics.sendEvent(.BankAppAuthFailed)
                 self.validateAuthError(error: error)
             } else {
                 if isShowFakeScreen {
@@ -157,7 +146,7 @@ final class AuthPresenter: AuthPresenting {
                         case .success:
                             self?.loadPaymentData()
                         case .failure(let error):
-                            self?.analytics.sendEvent(.LCBankAppAuthFail)
+//                            self?.analytics.sendEvent(.BankAppAuthFailed)
                             self?.validateAuthError(error: error)
                         }
                     }
@@ -167,7 +156,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func loadPaymentData() {
-        analytics.sendEvent(.LCBankAppAuthGood)
+//        analytics.sendEvent(.BankAppAuthSuccess)
         view?.showLoading(with: Strings.Get.Data.title, animate: false)
         contentLoadManager.load { [weak self] error in
             if let error = error {
@@ -188,17 +177,17 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func validateAuthError(error: SDKError) {
-            if error.represents(.noInternetConnection) {
-                self.alertService.show(on: self.view,
-                                        type: .noInternet(retry: {
-                    self.getAccessSPay()
-                }, completion: {
-                    self.dismissWithError(error)
-                }))
-            } else {
-                self.alertService.show(on: self.view,
-                                   type: .defaultError(completion: { self.dismissWithError(error) }))
-            }
+        if error.represents(.noInternetConnection) {
+            alertService.show(on: view,
+                              type: .noInternet(retry: {
+                self.getAccessSPay()
+            }, completion: {
+                self.dismissWithError(error)
+            }))
+        } else {
+            alertService.show(on: view,
+                              type: .defaultError(completion: { self.dismissWithError(error) }))
+        }
     }
     
     private func dismissWithError(_ error: SDKError) {

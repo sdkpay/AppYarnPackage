@@ -24,6 +24,9 @@
 "error.format" = "Некорректный формат запроса/ответа.";
 "error.close" = "Клиент закрыл SDK.";
 "error.timeout" = "Истек таймаут ожидания ответа с сервера.";
+"error.lifeTimeOut" = "Истекло время жизни кода";
+"error.inncorectCode" = "Неверный код";
+"error.trying" = "Колличество попыток кода исчерпано";
 
 // Loading
 "try.to.pay.title" = "Проводим оплату...";
@@ -50,5 +53,5 @@
 "textField.suggestion.title" = "Код-подтверждение";
 
 // Logout
-"button.logout" = "Выйти";
-"button.logout.back" = "Назад";
+"button.logout" = "Вернуться к оплате";
+"button.logout.back" = "Выйти";

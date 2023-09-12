@@ -9,7 +9,7 @@ import Foundation
 
 final class AnalyticsServiceAssembly: Assembly {
     func register(in locator: LocatorService) {
-        let service: AnalyticsService = DefaultAnalyticsService(sdkManager: locator.resolve())
+        let service: AnalyticsService = DefaultAnalyticsService()
         locator.register(service: service)
     }
 }
@@ -17,34 +17,10 @@ final class AnalyticsServiceAssembly: Assembly {
 enum AnalyticsEvent: String {
     /// Версия SDK
     case SDKVersion
-    /// Отправлен запрос на получение ремоут конфига
-    case RQRemoteConfig
-    /// Получен положительный ответ на запрос получения remote config
-    case RQGoodRemoteConfig
-    /// Получена ошибка от шлюза при обработке запроса remote config
-    case RQFailRemoteConfig
-    /// Парсинг ответа от сервера проведен успешно
-    case RSGoodRemoteConfig
-    /// Парсинг ответа от сервера произведен с ошибкой
-    case RSFailRemoteConfig
-    /// Успешно достали сохраненное значение
-    case STGetGoodRemoteConfig
-    /// Не смогли достать сохраненное значение
-    case STGetFailRemoteConfig
-    /// Найдено приложение Банка на устройстве
-    case LCBankAppFound
     /// Не найдено приложение Банка на устройстве
-    case LCNoBankAppFound
-    /// Кнопка оплаты проиницализирована
-    case LCPayButtonInited
-    /// Пользователь нажал на наименование банка
-    case TouchBankApp
-    /// Успешно достали сохраненное значение выбранного банка
-    case STGetGoodBankApp
-    /// Не смогли достать сохраненное значение выбранного банка
-    case STGetFailBankApp
-    /// Сохранили приложение банка выбранное пользователем
-    case STSaveBankApp
+    case NoBankAppFound
+    /// Найдено приложение Банка на устройстве
+    case BankAppFound
     /// Отобразился экран выбора приложения для авторизации (кейс, когда стоят два приложения)
     case LCBankAppsViewAppeared
     /// Перестал отображаться экран выбора приложения для авторизации (кейс, когда стоят два приложения)
@@ -241,16 +217,12 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         DefaultDynatraceAnalyticsService()
     ]
     
-    private var sdkManager: SDKManager
-    
     func sendEvent(_ event: AnalyticsEvent) {
-        let string = "orderNumber: \(sdkManager.authInfo?.orderNumber ?? "")"
-        analyticServices.forEach({ $0.sendEvent(event, with: string) })
+        analyticServices.forEach({ $0.sendEvent(event) })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with strings: String...) {
-        let newString = "\(strings) orderNumber: \(sdkManager.authInfo?.orderNumber ?? "")"
-        analyticServices.forEach({ $0.sendEvent(event, with: newString)})
+        analyticServices.forEach({ $0.sendEvent(event, with: strings) })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with ints: Int...) {
@@ -273,8 +245,7 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         analyticServices.forEach({ $0.sendEvent(event, with: doubles) })
     }
     
-    init(sdkManager: SDKManager) {
-        self.sdkManager = sdkManager
+    override init() {
         super.init()
         SBLogger.log(.start(obj: self))
     }

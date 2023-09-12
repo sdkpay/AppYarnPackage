@@ -55,7 +55,7 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
                 self.otpModel = result
                 completion(.success)
             case .failure(let error):
-                completion(.failure(error))
+                completion(.failure(error))    
             }
         }
     }

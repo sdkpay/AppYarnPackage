@@ -108,6 +108,9 @@ final class PaymentPresenter: PaymentPresenting {
     
     func viewDidLoad() {
         configViews()
+        timeManager.endTraking(PaymentVC.self.description()) {_ in 
+//            self.analytics.sendEvent(.PayViewAppeared, with: [$0])
+        }
     }
     
     private func updatePayButtonTitle() {
@@ -116,13 +119,13 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func payButtonTapped() {
-        analytics.sendEvent(.TouchPay)
+//        analytics.sendEvent(.PayConfirmedByUser)
         let permission = locationManager.locationEnabled ? [AnalyticsValue.Location.rawValue] : []
+//        analytics.sendEvent(.Permissions, with: permission)
         goToPay()
     }
     
     func cancelTapped() {
-        analytics.sendEvent(.TouchCancel)
         view?.dismiss(animated: true, completion: { [weak self] in
             self?.sdkManager.completionWithError(error: .cancelled)
         })
@@ -144,7 +147,6 @@ final class PaymentPresenter: PaymentPresenting {
         case .card:
             cardTapped()
         case .partPay:
-            analytics.sendEvent(.TouchBNPL)
             router.presentPartPay { [weak self] in
                 self?.configViews()
                 self?.updatePayButtonTitle()
@@ -161,7 +163,7 @@ final class PaymentPresenter: PaymentPresenting {
         guard let selectedCard = userService.selectedCard,
               let user = userService.user,
               let authMethod = authManager.authMethod else { return }
-        analytics.sendEvent(.TouchCard)
+
         switch userService.getListCards {
         case true:
             guard user.paymentToolInfo.count > 1 else { return }
@@ -192,7 +194,6 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func getListCards() {
         view?.showLoading()
-        analytics.sendEvent(.RQListCards)
         userService.getListCards { [weak self] result in
             switch result {
             case .success:
