@@ -34,7 +34,7 @@ extension ResponseDecoder {
         guard (200...299).contains(response.statusCode) else {
             return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
         }
-        if let errorText = checkServerError(data: data) { return .failure(.errorFromServer(text: errorText)) }
+        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode)) }
         do {
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(type, from: data)
@@ -54,10 +54,10 @@ extension ResponseDecoder {
                         error: Error?) -> Result<Void, SDKError> {
         guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
         guard let data = data else { return .failure(.noData) }
+        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode)) }
         guard (200...299).contains(response.statusCode) else {
             return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
         }
-        if let errorText = checkServerError(data: data) { return .failure(.errorFromServer(text: errorText)) }
         return .success(())
     }
     
@@ -77,6 +77,7 @@ extension ResponseDecoder {
         guard (200...299).contains(response.statusCode) else {
             return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
         }
+        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode)) }
         let headers = response.allHeaderFields as? HTTPHeaders ?? [:]
         
         var cookies = [HTTPCookie]()
@@ -85,7 +86,6 @@ extension ResponseDecoder {
             cookies = HTTPCookie.cookies(withResponseHeaderFields: headers, for: url)
         }
         
-        if let errorText = checkServerError(data: data) { return .failure(.errorFromServer(text: errorText)) }
         do {
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(type, from: data)
@@ -165,13 +165,12 @@ extension ResponseDecoder {
         }
     }
     
-    private func checkServerError(data: Data) -> String? {
+    private func checkErrorCode(data: Data) -> String? {
         do {
             if let json = try JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary,
-               let message = json["description"] as? String,
                let errorCode = json["errorCode"] as? String,
                errorCode != "0" {
-                return message
+                return errorCode
             } else {
                 return nil
             }

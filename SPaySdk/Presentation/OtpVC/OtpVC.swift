@@ -25,14 +25,8 @@ final class OtpVC: ContentVC, IOtpVC {
         let label = UILabel()
         label.numberOfLines = 2
         label.textAlignment = .left
+        label.font = .bodi3
         return label
-    }()
-    
-    private lazy var loader: UIActivityIndicatorView = {
-        var loader = UIActivityIndicatorView(style: .whiteLarge)
-        loader.layer.cornerRadius = 10
-        loader.center = view.center
-        return loader
     }()
     
     private lazy var textField: DefaultTextField = {

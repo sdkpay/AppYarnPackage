@@ -21,14 +21,11 @@ final class OtpPresenter: OtpPresenting {
     private var userService: UserService
     private let sdkManager: SDKManager
     private let alertService: AlertService
+    private let authManager: AuthManager
     private let keyboardManager: KeyboardManager
     private var sec = 45
     private var countOfErrorPayment = 0
-    private lazy var timer = Timer(timeInterval: 1.0,
-                                   target: self,
-                                   selector: #selector(updateTime),
-                                   userInfo: nil,
-                                   repeats: true)
+    private var timer: Timer?
     private var completion: Action?
 
     init(otpService: OTPService,
@@ -36,6 +33,7 @@ final class OtpPresenter: OtpPresenting {
          sdkManager: SDKManager,
          alertService: AlertService,
          keyboardManager: KeyboardManager,
+         authManager: AuthManager,
          completion: @escaping Action) {
         self.otpService = otpService
         self.userService = userService
@@ -43,6 +41,7 @@ final class OtpPresenter: OtpPresenting {
         self.alertService = alertService
         self.completion = completion
         self.keyboardManager = keyboardManager
+        self.authManager = authManager
         self.setKeyboardHeight()
     }
     
@@ -60,16 +59,16 @@ final class OtpPresenter: OtpPresenting {
     func getOTP() {
         view?.showLoading()
         otpService.creteOTP(orderId: sdkManager.authInfo?.orderId ?? "",
-                            paymentId: Int(userService.selectedCard?.paymentId ?? 0)) { error, mobilePhone in
-            if let error {
-                self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
+                            paymentId: Int(userService.selectedCard?.paymentId ?? 0)) { [weak self] result in
+            switch result {
+            case .success(let mobilePhone):
+                guard let self else { return }
+                let mobilePhone = mobilePhone ?? self.authManager.userInfo?.mobilePhone
+                self.view?.updateMobilePhone(phoneNumber: mobilePhone ?? "none")
                 self.view?.hideLoading()
-                return
-            }
-            
-            if let mobilePhone {
-                self.view?.updateMobilePhone(phoneNumber: mobilePhone)
-                self.view?.hideLoading()
+            case .failure(let error):
+                self?.alertService.show(on: self?.view, type: .defaultError(completion: { self?.dismissWithError(error) }))
+                self?.view?.hideLoading()
             }
         }
     }
@@ -83,37 +82,33 @@ final class OtpPresenter: OtpPresenting {
         let otpHash = getHashCode(code: otpCode)
         view?.showLoading()
         otpService.confirmOTP(orderId: sdkManager.authInfo?.orderId ?? "",
-                              orderHash: otpHash) { errorCode, error in
-            if let error {
-                self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
-                self.view?.showLoading()
-                return
-            }
-            
-            if errorCode == "5" {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.view?.hideLoading(animate: true)
-                    self.view?.showError()
-                    return
+                              orderHash: otpHash) { result in
+            switch result {
+            case .success:
+                self.view?.hideKeyboard()
+                self.view?.hideLoading()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                    self?.closeWithSuccess()
                 }
-            }
-            
-            if errorCode == "6" {
-                self.alertService.show(on: self.view, type: .tryingError(back: {
-                    self.view?.dismiss(animated: true)
-                }))
-                return
-            }
-            
-            self.view?.hideKeyboard()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
-                guard let self = self else { return }
-                self.closeWithSuccess()
+            case .failure(let error):
+                if error.represents(.errorWithErrorCode(number: OtpError.incorrectCode.rawValue)) {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
+                        self.view?.hideLoading(animate: true)
+                        self.view?.showError()
+                    }
+                } else if error.represents(.errorWithErrorCode(number: OtpError.tryingError.rawValue)) {
+                    self.alertService.show(on: self.view, type: .tryingError(back: {
+                        self.view?.dismiss(animated: true)
+                    }))
+                } else {
+                    self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
+                    self.view?.hideLoading()
+                }
             }
         }
     }
-    
+        
     func back() {
         self.view?.hideKeyboard()
         view?.contentNavigationController?.popViewController(animated: true)
@@ -136,13 +131,20 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func createTimer() {
+        timer = Timer(timeInterval: 1.0,
+                      target: self,
+                      selector: #selector(updateTime),
+                      userInfo: nil,
+                      repeats: true)
+        guard let timer else { return }
         RunLoop.current.add(timer, forMode: .common)
     }
     
     @objc private func updateTime() {
         sec -= 1
         if sec < 0 {
-            timer.invalidate()
+            timer?.invalidate()
+            timer = nil
             sec = 45
         } else {
             view?.updateTimer(sec: sec)

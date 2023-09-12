@@ -23,7 +23,8 @@ final class LogoutAssembly {
 
     private func modulePresenter() -> LogoutPresenter {
         LogoutPresenter(sdkManager: locator.resolve(),
-                        storage: locator.resolve())
+                        storage: locator.resolve(),
+                        authManager: locator.resolve())
     }
 
     private func moduleView(presenter: LogoutPresenter, with userInfo: UserInfo) -> ContentVC & ILogoutVC {

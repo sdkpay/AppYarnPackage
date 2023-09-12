@@ -41,7 +41,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
         presenter.viewDidLoad()
         SBLogger.log(.didLoad(view: self))
         profileView.addAction {
-//            self.presenter.openProfile()
+            self.presenter.openProfile()
         }
     }
     

@@ -14,6 +14,31 @@ final class LogoutVC: ContentVC, ILogoutVC {
 
     private let presenter: LogoutPresenting
     
+    private lazy var avatarImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(base64: UserDefaults.images?.logoIcon ?? "")
+        imageView.layer.masksToBounds = true
+        imageView.layer.cornerRadius = 36
+        return imageView
+    }()
+    
+    private lazy var nameLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = .bodi3
+        label.text = presenter.getName()
+        return label
+    }()
+    
+    private lazy var phoneLabel: UILabel = {
+        let label = UILabel()
+        label.text = presenter.getNumber()
+        label.textColor = .textSecondary
+        label.font = .medium2
+        label.textAlignment = .center
+        return label
+    }()
+    
     private(set) lazy var nextButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
         let string = Strings.Button.logout
@@ -37,7 +62,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
     init(_ presenter: LogoutPresenting, with userInfo: UserInfo) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
-        self.profileView.config(with: userInfo)
+        self.avatarImage.image = userInfo.sdkGender.icon
     }
 
     required init?(coder: NSCoder) {
@@ -48,18 +73,34 @@ final class LogoutVC: ContentVC, ILogoutVC {
         super.viewDidLoad()
         
         setupView()
-        topBarIsHidden = false
+        topBarIsHidden = true
     }
     
     private func setupView() {
-//        view.height(.minScreenSize, priority: .defaultLow)
+        view.height(.minScreenSize, priority: .defaultLow)
+        
+        avatarImage
+            .add(toSuperview: view)
+            .centerInSuperview(.horizontal)
+            .size(.equal, to: .init(width: 72, height: 72))
+            .touchEdge(.top, toEdge: .top, ofView: view, withInset: 40)
+            
+        nameLabel
+            .add(toSuperview: view)
+            .centerInSuperview(.horizontal)
+            .touchEdge(.top, toEdge: .bottom, ofView: avatarImage, withInset: 12)
+        
+        phoneLabel
+            .add(toSuperview: view)
+            .centerInSuperview(.horizontal)
+            .touchEdge(.top, toEdge: .bottom, ofView: nameLabel, withInset: 8)
         
         nextButton
             .add(toSuperview: view)
             .height(.defaultButtonHeight)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Next.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Next.right)
-            .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: Cost.Button.Next.top)
+            .touchEdge(.top, toEdge: .bottom, ofView: phoneLabel, withInset: 40)
         
         backButton
             .add(toSuperview: view)
