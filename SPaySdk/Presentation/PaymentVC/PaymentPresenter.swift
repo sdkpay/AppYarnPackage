@@ -108,8 +108,8 @@ final class PaymentPresenter: PaymentPresenting {
     
     func viewDidLoad() {
         configViews()
-        timeManager.endTraking(PaymentVC.self.description()) {
-            self.analytics.sendEvent(.PayViewAppeared, with: [$0])
+        timeManager.endTraking(PaymentVC.self.description()) {_ in 
+//            self.analytics.sendEvent(.PayViewAppeared, with: [$0])
         }
     }
     
@@ -119,9 +119,9 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func payButtonTapped() {
-        analytics.sendEvent(.PayConfirmedByUser)
+//        analytics.sendEvent(.PayConfirmedByUser)
         let permission = locationManager.locationEnabled ? [AnalyticsValue.Location.rawValue] : []
-        analytics.sendEvent(.Permissions, with: permission)
+//        analytics.sendEvent(.Permissions, with: permission)
         goToPay()
     }
     
@@ -394,7 +394,7 @@ final class PaymentPresenter: PaymentPresenting {
             guard let self = self else { return }
             self.view?.userInteractionsEnabled = true
             if self.partPayService.bnplplanSelected {
-                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
+//                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
             }
             switch result {
             case .success:
@@ -405,7 +405,7 @@ final class PaymentPresenter: PaymentPresenting {
                 }))
             case .failure(let error):
                 if self.partPayService.bnplplanSelected {
-                    self.analytics.sendEvent(.PayWithBNPLFailed)
+//                    self.analytics.sendEvent(.PayWithBNPLFailed)
                 }
                 self.validatePayError(error)
             }

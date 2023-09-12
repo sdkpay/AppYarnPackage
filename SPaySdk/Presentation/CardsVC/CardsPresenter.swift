@@ -44,8 +44,8 @@ final class CardsPresenter: CardsPresenting {
     
     func viewDidLoad() {
         configViews()
-        timeManager.endTraking(CardsVC.self.description()) {
-            analytics.sendEvent(.CardsViewAppeared, with: [$0])
+        timeManager.endTraking(CardsVC.self.description()) { _  in
+//            analytics.sendEvent(.CardsViewAppeared, with: [$0])
         }
     }
 

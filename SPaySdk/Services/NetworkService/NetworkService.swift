@@ -140,11 +140,11 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
     
     private func sendNetErrorAnalytics(target: TargetType, error: SDKError) {
         if error.represents(.timeOut) {
-            analyticsService.sendEvent(.Error404, with: target.path)
+//            analyticsService.sendEvent(.Error404, with: target.path)
         } else if error.represents(.failDecode) {
-            analyticsService.sendEvent(.DecodeError, with: target.path)
+//            analyticsService.sendEvent(.DecodeError, with: target.path)
         } else if error.represents(.badResponseWithStatus(code: .errorPath)) {
-            analyticsService.sendEvent(.Error404, with: target.path)
+//            analyticsService.sendEvent(.Error404, with: target.path)
         }
     }
 }

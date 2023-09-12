@@ -53,8 +53,8 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
-        timeManager.endTraking(AuthVC.self.description()) {
-            analytics.sendEvent(.AuthViewAppeared, with: [$0])
+        timeManager.endTraking(AuthVC.self.description()) { _ in 
+//            analytics.sendEvent(.AuthViewAppeared, with: [$0])
         }
         checkNewStart()
     }
@@ -116,7 +116,7 @@ final class AuthPresenter: AuthPresenting {
             self?.bankManager.selectedBank = bank
             self?.getAccessSPay()
         })
-        analytics.sendEvent(.BankAppsViewAppear)
+//        analytics.sendEvent(.BankAppsViewAppear)
     }
     
     private func getAccessSPay() {
@@ -133,7 +133,7 @@ final class AuthPresenter: AuthPresenting {
             guard let self = self else { return }
             self.removeObserver()
             if let error = error {
-                self.analytics.sendEvent(.BankAppAuthFailed)
+//                self.analytics.sendEvent(.BankAppAuthFailed)
                 self.validateAuthError(error: error)
             } else {
                 if isShowFakeScreen {
@@ -146,7 +146,7 @@ final class AuthPresenter: AuthPresenting {
                         case .success:
                             self?.loadPaymentData()
                         case .failure(let error):
-                            self?.analytics.sendEvent(.BankAppAuthFailed)
+//                            self?.analytics.sendEvent(.BankAppAuthFailed)
                             self?.validateAuthError(error: error)
                         }
                     }
@@ -156,7 +156,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func loadPaymentData() {
-        analytics.sendEvent(.BankAppAuthSuccess)
+//        analytics.sendEvent(.BankAppAuthSuccess)
         view?.showLoading(with: Strings.Get.Data.title, animate: false)
         contentLoadManager.load { [weak self] error in
             if let error = error {

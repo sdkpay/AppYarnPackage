@@ -50,22 +50,22 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     func viewDidLoad() {
-        timeManager.endTraking(CardsVC.self.description()) {
-            analytics.sendEvent(.CardsViewAppeared, with: [$0])
+        timeManager.endTraking(CardsVC.self.description()) {_ in 
+//            analytics.sendEvent(.CardsViewAppeared, with: [$0])
         }
         configViews()
         configCheckView()
     }
     
     func acceptButtonTapped() {
-        analytics.sendEvent(.BNPLConfirmedByUser)
+//        analytics.sendEvent(.BNPLConfirmedByUser)
         partPayService.bnplplanSelected = true
         partPaySelected()
         view?.contentNavigationController?.popViewController(animated: true)
     }
     
     func backButtonTapped() {
-        analytics.sendEvent(.BNPLDeclinedByUser)
+//        analytics.sendEvent(.BNPLDeclinedByUser)
         partPayService.bnplplanSelected = false
         partPaySelected()
         view?.contentNavigationController?.popViewController(animated: true)

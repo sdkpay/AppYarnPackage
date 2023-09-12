@@ -96,7 +96,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
             manager.completionWithError(error: .cancelled)
         }
         let analytics: AnalyticsService = locator.resolve()
-        analytics.sendEvent(.ManuallyClosed)
+//        analytics.sendEvent(.ManuallyClosed)
         timeManager?.stopContectionTypeChecking()
     }
     
