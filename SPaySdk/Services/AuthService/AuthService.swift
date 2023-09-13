@@ -49,7 +49,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var storage: KeychainStorage
     private var cookieStorage: CookieStorage
     private var appCompletion: ((Result<Void, SDKError>) -> Void)?
-    private var refreshCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
     
     var bankCheck = false
@@ -115,12 +114,12 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             authManager.state = result.state
             authСompletion?(nil, false)
             appCompletion?(.success)
-            refreshCompletion?(.success)
         case .failure(let error):
             authСompletion?(error, false)
             appCompletion?(.failure(error))
-            refreshCompletion?(.failure(error))
         }
+        authСompletion = nil
+        appCompletion = nil
     }
     
     private func fillFakeData() {
@@ -161,6 +160,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 if refreshIsActive {
                     self.authManager.authMethod = .refresh
                     self.authСompletion?(nil, false)
+                    self.authСompletion = nil
                 } else {
                     self.authManager.authMethod = .bank
                     self.sIdAuth()
@@ -172,6 +172,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
     
     func appAuth(completion: @escaping (Result<Void, SDKError>) -> Void) {
+        self.authManager.authMethod = .bank
         self.appCompletion = completion
         sIdAuth()
     }

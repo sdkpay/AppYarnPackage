@@ -224,7 +224,7 @@ final class PaymentPresenter: PaymentPresenting {
                 self?.view?.hideLoading(animate: true)
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.getListCards() },
+                                            type: .noInternet(retry: { self?.createOTP() },
                                                               completion: { self?.dismissWithError(error) }))
                 } else {
                     self?.alertService.show(on: self?.view,
@@ -351,13 +351,23 @@ final class PaymentPresenter: PaymentPresenting {
         
         authService.appAuth { [weak self] result in
             guard let self else { return }
+            self.view?.showLoading()
             NotificationCenter.default.removeObserver(self,
                                                       name: UIApplication.didBecomeActiveNotification,
                                                       object: nil)
             switch result {
             case .success:
-                self.authService.bankCheck = true
-                self.getListCards()
+                self.authService.refreshAuth { result in
+                    switch result {
+                    case .success:
+                        self.authService.bankCheck = true
+                        self.getListCards()
+                    case .failure(_):
+                        self.alertService.show(on: self.view,
+                                               type: .defaultError(completion: {
+                            self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                    }
+                }
             case .failure(_):
                 self.alertService.show(on: self.view,
                                        type: .defaultError(completion: {
