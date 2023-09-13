@@ -63,7 +63,7 @@ platform :ios do
   desc "Commit and upload changes"
   private_lane :upload_to_repo do
     git_commit(path: "./", message: "Release to Testflight. Version: #{plist_version} (#{plist_build})")
-    sh("git pull")
+    sh("git pull --rebase origin HEAD")
     sh("git push")
   end
   
