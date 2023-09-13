@@ -170,6 +170,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     func appAuth(completion: @escaping (Result<Void, SDKError>) -> Void) {
         self.appCompletion = completion
+        self.authManager.authMethod = .bank
         sIdAuth()
     }
     
@@ -192,7 +193,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
         SBLogger.logRequestToSbolStarted(link)
     }
-    
+
     private func authURL(link: String) -> URL? {
         guard let url = bankAppManager.selectedBank?.link else { return nil }
         return URL(string: url + link)
@@ -243,7 +244,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 } else {
 //                    self?.analytics.sendEvent(.RQFailSessionId, with: "error: \(error.localizedDescription)")
                 }
-                completion(.failure(error))
+                self?.appAuth(completion: completion)
             }
         }
     }
