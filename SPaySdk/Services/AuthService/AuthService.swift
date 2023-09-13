@@ -49,6 +49,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var storage: KeychainStorage
     private var cookieStorage: CookieStorage
     private var appCompletion: ((Result<Void, SDKError>) -> Void)?
+    private var refreshCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
     
     var bankCheck = false
@@ -114,9 +115,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             authManager.state = result.state
             authСompletion?(nil, false)
             appCompletion?(.success)
+            refreshCompletion?(.success)
         case .failure(let error):
             authСompletion?(error, false)
             appCompletion?(.failure(error))
+            refreshCompletion?(.failure(error))
         }
     }
     
@@ -170,7 +173,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     func appAuth(completion: @escaping (Result<Void, SDKError>) -> Void) {
         self.appCompletion = completion
-        self.authManager.authMethod = .bank
         sIdAuth()
     }
     
@@ -239,12 +241,27 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self?.analytics.sendEvent(.RSGoodAuth)
                 completion(.success)
             case .failure(let error):
+                guard let self else { return }
                if error.represents(.failDecode) {
-                    self?.analytics.sendEvent(.RSFailAuth, with: "error: \(error.localizedDescription)")
-                } else {
-//                    self?.analytics.sendEvent(.RQFailSessionId, with: "error: \(error.localizedDescription)")
+                    self.analytics.sendEvent(.RSFailAuth, with: "error: \(error.localizedDescription)")
+               } else {
+                   // self?.analytics.sendEvent(.RQFailSessionId, with: "error: \(error.localizedDescription)")
+               }
+                
+                if self.authManager.authMethod == .bank {
+                    completion(.failure(error))
+                    return
                 }
-                self?.appAuth(completion: completion)
+                
+                self.authManager.authMethod = .bank
+                self.appAuth { result in
+                    switch result {
+                    case .success:
+                        self.refreshAuth(completion: completion)
+                    case .failure(let failure):
+                        completion(.failure(failure))
+                    }
+                }
             }
         }
     }
