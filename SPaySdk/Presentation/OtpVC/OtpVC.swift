@@ -20,7 +20,7 @@ final class LoadableUIView: UIView, Loadable {}
 final class OtpVC: ContentVC, IOtpVC {
     private let presenter: OtpPresenting
     private var otpCode = ""
-    private var maxLength = 5
+    private var maxLength = 6
     private var keyboardHeight: CGFloat = 330
     
     private lazy var backView = LoadableUIView()
@@ -81,12 +81,12 @@ final class OtpVC: ContentVC, IOtpVC {
     
     func updateTimer(sec: Int) {
         if sec > 0 {
-            timeButton.isEnabled = true
+            timeButton.isEnabled = false
             let string = Strings.Time.Button.Repeat.isNotActive(sec)
             timeButton.setTitle(string, for: .normal)
             timeButton.setTitleColor(.textSecondary, for: .normal)
         } else {
-            timeButton.isEnabled = false
+            timeButton.isEnabled = true
             let string = Strings.Time.Button.Repeat.isActive
             timeButton.setTitle(string, for: .normal)
             timeButton.setTitleColor(.main, for: .normal)
