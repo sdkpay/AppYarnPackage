@@ -20,7 +20,7 @@ final class LoadableUIView: UIView, Loadable {}
 final class OtpVC: ContentVC, IOtpVC {
     private let presenter: OtpPresenting
     private var otpCode = ""
-    private var maxLength = 6
+    private var maxLength = 5
     private var keyboardHeight: CGFloat = 330
     
     private lazy var backView = LoadableUIView()
