@@ -206,7 +206,7 @@ final class DefaultAlertService: AlertService {
                                                  type: .full,
                                                  action: back)
             showAlert(on: view,
-                      with: Strings.Alert.Otp.Error.title,
+                      with: Strings.Error.trying,
                       state: .failure,
                       buttons: [
                         fullPayButton
