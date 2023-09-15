@@ -116,11 +116,11 @@ extension AlertService {
 }
 
 final class DefaultAlertService: AlertService {
-    private let locator: LocatorService
     private var alertVC: ContentVC?
+    private let liveCircleManager: LiveCircleManager
     
-    init(locator: LocatorService) {
-        self.locator = locator
+    init(locator: LocatorService, liveCircleManager: LiveCircleManager) {
+        self.liveCircleManager = liveCircleManager
         SBLogger.log(.start(obj: self))
     }
     
@@ -140,7 +140,7 @@ final class DefaultAlertService: AlertService {
                                        sound: state.soundPath,
                                        feedBack: state.feedBack,
                                        completion: completion)
-            let alertVC = AlertAssembly().createModule(alertModel: model)
+            let alertVC = AlertAssembly().createModule(alertModel: model, liveCircleManager: liveCircleManager)
             view?.contentNavigationController?.pushViewController(alertVC, animated: true)
             self.alertVC?.contentNavigationController?.popViewController(animated: false)
             self.alertVC = alertVC
@@ -223,5 +223,9 @@ final class DefaultAlertService: AlertService {
     
     func close(animated: Bool = true, completion: Action? = nil) {
         alertVC?.dismiss(animated: animated, completion: completion)
+    }
+    
+    func cancelFeedback() {
+        
     }
 }

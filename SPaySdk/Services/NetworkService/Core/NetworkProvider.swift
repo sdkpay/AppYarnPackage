@@ -198,6 +198,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         if let geoCookie = requestManager.geoCookie {
             cookies.append(geoCookie)
         }
+        request.allHTTPHeaderFields = nil
         request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
     }
     

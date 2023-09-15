@@ -23,9 +23,13 @@ final class AlertPresenter: AlertPresenting {
 
     private var audioPlayer: AVAudioPlayer?
     private var model: AlertViewModel
+    private var feedbackDispatchWorkItem: DispatchWorkItem?
+    private var completionDispatchWorkItem: DispatchWorkItem?
+    private var liveCircleManager: LiveCircleManager
     
-    init(with model: AlertViewModel) {
+    init(with model: AlertViewModel, liveCircleManager: LiveCircleManager) {
         self.model = model
+        self.liveCircleManager = liveCircleManager
     }
     
     func viewDidLoad() {
@@ -48,15 +52,30 @@ final class AlertPresenter: AlertPresenting {
     }
 
     private func completeConfig() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .animationDuration) { [weak self] in
-            self?.playFeedback()
-            self?.playSound()
+        let feedbackDispatchWorkItem = DispatchWorkItem {
+            self.playFeedback()
+            self.playSound()
         }
-        if model.buttons.isEmpty {
-            DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration) { [weak self] in
-                self?.model.completion()
+
+        let completionDispatchWorkItem = DispatchWorkItem {
+            if self.model.buttons.isEmpty {
+                self.model.completion()
             }
         }
+
+        self.completionDispatchWorkItem = completionDispatchWorkItem
+        self.feedbackDispatchWorkItem = feedbackDispatchWorkItem
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + .animationDuration,
+                                      execute: feedbackDispatchWorkItem)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration,
+                                      execute: completionDispatchWorkItem)
+    }
+    
+    private func cancelFeedback() {
+        completionDispatchWorkItem?.cancel()
+        feedbackDispatchWorkItem?.cancel()
     }
 
     private func playSound() {

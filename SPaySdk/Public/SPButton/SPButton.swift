@@ -43,7 +43,9 @@ public final class SBPButton: UIView {
     private lazy var backgroundButton: ActionButton = {
         let view = ActionButton()
         view.addAction { [weak self] in
+            view.isEnabled = false
             self?.tapAction?()
+            view.isEnabled = true
         }
         return view
     }()
@@ -71,11 +73,6 @@ public final class SBPButton: UIView {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
-    }
-    
-    @objc
-    private func handleTap(sender: UIGestureRecognizer) {
-        tapAction?()
     }
     
     private func setupUI() {
