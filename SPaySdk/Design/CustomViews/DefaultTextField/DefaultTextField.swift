@@ -38,6 +38,7 @@ final class DefaultTextField: UIView {
         view.numberOfLines = 1
         view.textAlignment = .left
         view.alpha = 1
+        view.text = Strings.TextField.Error.title
         return view
     }()
     
@@ -143,6 +144,8 @@ final class DefaultTextField: UIView {
         mainStack.removeArrangedSubview(backgroundView)
         mainStack.addArrangedSubview(backgroundView)
         mainStack.addArrangedSubview(descriptionLabel)
+        textField.text = nil
+        textField.placeholder = nil
         setState(.alert)
     }
     
