@@ -76,6 +76,7 @@
 "textField.error.title" = "Неверный код. Повторите попытку";
 "textField.placeholder" = "Введите код";
 "titleLabel.message.title" = "Отправили СМС с кодом-подтверждением\nоплата на номер %@";
+"button.otp.back" = "Вернуться в магазин";
 
 // Logout
 "button.logout" = "Вернуться к оплате";

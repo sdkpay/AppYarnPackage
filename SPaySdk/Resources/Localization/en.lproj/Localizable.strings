@@ -51,6 +51,7 @@
 "textField.placeholder" = "Введите код";
 "titleLabel.message.title" = "Отправили СМС с кодом-подтверждением\nоплата на номер %@";
 "textField.suggestion.title" = "Код-подтверждение";
+"button.otp.back" = "Вернуться в магазин";
 
 // Logout
 "button.logout" = "Вернуться к оплате";
