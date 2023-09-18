@@ -79,7 +79,7 @@ enum AlertType {
 final class AlertServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register(reference: {
-            let service: AlertService = DefaultAlertService(locator: container)
+            let service: AlertService = DefaultAlertService(liveCircleManager: container.resolve())
             return service
         })
     }
@@ -119,7 +119,7 @@ final class DefaultAlertService: AlertService {
     private var alertVC: ContentVC?
     private let liveCircleManager: LiveCircleManager
     
-    init(locator: LocatorService, liveCircleManager: LiveCircleManager) {
+    init(liveCircleManager: LiveCircleManager) {
         self.liveCircleManager = liveCircleManager
         SBLogger.log(.start(obj: self))
     }
@@ -140,7 +140,8 @@ final class DefaultAlertService: AlertService {
                                        sound: state.soundPath,
                                        feedBack: state.feedBack,
                                        completion: completion)
-            let alertVC = AlertAssembly().createModule(alertModel: model, liveCircleManager: liveCircleManager)
+            let alertVC = AlertAssembly().createModule(alertModel: model,
+                                                       liveCircleManager: self.liveCircleManager)
             view?.contentNavigationController?.pushViewController(alertVC, animated: true)
             self.alertVC?.contentNavigationController?.popViewController(animated: false)
             self.alertVC = alertVC

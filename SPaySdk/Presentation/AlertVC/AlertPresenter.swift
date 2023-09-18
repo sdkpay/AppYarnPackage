@@ -27,7 +27,8 @@ final class AlertPresenter: AlertPresenting {
     private var completionDispatchWorkItem: DispatchWorkItem?
     private var liveCircleManager: LiveCircleManager
     
-    init(with model: AlertViewModel, liveCircleManager: LiveCircleManager) {
+    init(with model: AlertViewModel,
+         liveCircleManager: LiveCircleManager) {
         self.model = model
         self.liveCircleManager = liveCircleManager
     }
@@ -71,6 +72,14 @@ final class AlertPresenter: AlertPresenting {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration,
                                       execute: completionDispatchWorkItem)
+        
+        liveCircleManager.closeWithGesture = {
+            self.cancelFeedback()
+        }
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
     
     private func cancelFeedback() {

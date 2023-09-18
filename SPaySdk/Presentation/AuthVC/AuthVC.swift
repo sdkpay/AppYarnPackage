@@ -66,6 +66,10 @@ final class AuthVC: ContentVC, IAuthVC {
         SBLogger.log(.didDissapear(view: self))
     }
     
+    deinit {
+        SBLogger.log(.stop(obj: self))
+    }
+    
     func configBanksStack(banks: [BankApp], selected: @escaping (BankApp) -> Void) {
         topBarIsHidden = false
         banksStack.alpha = 1

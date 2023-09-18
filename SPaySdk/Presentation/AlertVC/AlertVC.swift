@@ -104,6 +104,10 @@ final class AlertVC: ContentVC, IAlertVC {
         SBLogger.log(.didDissapear(view: self))
     }
     
+    deinit {
+        SBLogger.log(.stop(obj: self))
+    }
+    
     func setupUI() {
         view.height(.minScreenSize, priority: .defaultLow)
 

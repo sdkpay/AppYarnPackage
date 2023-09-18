@@ -14,7 +14,7 @@ protocol LiveCircleManager {
                            with locator: LocatorService)
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
-    var closeWithGesture: Action? { get }
+    var closeWithGesture: Action? { get set }
     func closeSDKWindow()
 }
 
@@ -23,7 +23,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     private var locator: LocatorService?
     private weak var rootController: RootVC?
     private let timeManager: OptimizationCheсkerManager?
-    private(set) var closeWithGesture: Action?
+    var closeWithGesture: Action?
     
     init(timeManager: OptimizationCheсkerManager) {
         self.timeManager = timeManager
@@ -92,6 +92,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         guard let locator = locator else { return }
         let network: NetworkService = locator.resolve()
         network.cancelTask()
+        closeWithGesture?()
         closeSDKWindow()
         if !isErrorCompleted {
             let manager: SDKManager = locator.resolve()

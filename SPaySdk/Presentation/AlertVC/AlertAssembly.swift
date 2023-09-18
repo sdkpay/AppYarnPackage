@@ -9,7 +9,7 @@ import UIKit
 
 final class AlertAssembly {
     func createModule(alertModel: AlertViewModel, liveCircleManager: LiveCircleManager) -> ContentVC {
-        let presenter = modulePresenter(alertModel: alertModel)
+        let presenter = modulePresenter(alertModel: alertModel, liveCircleManager: liveCircleManager)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         return contentView

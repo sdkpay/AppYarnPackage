@@ -45,4 +45,8 @@ final class AuthAssembly {
         presenter.view = view
         return view
     }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
+    }
 }

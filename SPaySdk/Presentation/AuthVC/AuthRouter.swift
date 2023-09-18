@@ -32,4 +32,8 @@ final class AuthRouter: AuthRouting {
             fakeViewController.dismiss(animated: true, completion: completion)
         }
     }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
+    }
 }

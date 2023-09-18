@@ -50,6 +50,7 @@ final class AuthPresenter: AuthPresenting {
     
     deinit {
         removeObserver()
+        SBLogger.log(.stop(obj: self))
     }
     
     func viewDidLoad() {
@@ -219,4 +220,5 @@ final class AuthPresenter: AuthPresenting {
                                                   name: UIApplication.didBecomeActiveNotification,
                                                   object: nil)
     }
+    
 }
