@@ -51,6 +51,7 @@ final class OtpVC: ContentVC, IOtpVC {
         timeButton.isEnabled = true
         timeButton.titleLabel?.font = .medium2
         timeButton.titleLabel?.textAlignment = .left
+        timeButton.addTarget(self, action: #selector(timeButtonDidTap), for: .touchUpInside)
         return timeButton
     }()
     
@@ -91,6 +92,10 @@ final class OtpVC: ContentVC, IOtpVC {
             timeButton.setTitle(string, for: .normal)
             timeButton.setTitleColor(.main, for: .normal)
         }
+    }
+    
+    @objc func timeButtonDidTap() {
+        self.presenter.createOTP()
     }
     
     func hideKeyboard() {

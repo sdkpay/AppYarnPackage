@@ -10,6 +10,7 @@ import UIKit
 protocol OtpPresenting {
     func viewDidLoad()
     func sendOTP(otpCode: String)
+    func createOTP()
     func back()
 }
 
@@ -58,6 +59,28 @@ final class OtpPresenter: OtpPresenting {
         guard let user = userService.user else { return }
         view?.configProfileView(with: user.userInfo)
         view?.updateMobilePhone(phoneNumber: otpService.otpModel?.mobilePhone ?? "none")
+    }
+    
+    func createOTP() {
+        view?.showLoading()
+        otpService.creteOTP { [weak self] result in
+            switch result {
+            case .success:
+                self?.view?.hideLoading(animate: true)
+                self?.updateTimerView()
+                self?.createTimer()
+            case .failure(let error):
+                self?.view?.hideLoading(animate: true)
+                if error.represents(.noInternetConnection) {
+                    self?.alertService.show(on: self?.view,
+                                            type: .noInternet(retry: { self?.createOTP() },
+                                                              completion: { self?.dismissWithError(error) }))
+                } else {
+                    self?.alertService.show(on: self?.view,
+                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
+                }
+            }
+        }
     }
     
     func sendOTP(otpCode: String) {
@@ -119,13 +142,17 @@ final class OtpPresenter: OtpPresenting {
     }
     
     @objc private func updateTime() {
-        sec -= 1
         if sec < 0 {
             timer?.invalidate()
             timer = nil
             sec = 45
         } else {
-            view?.updateTimer(sec: sec)
+            updateTimerView()
         }
+    }
+    
+    private func updateTimerView() {
+        view?.updateTimer(sec: sec)
+        sec -= 1
     }
 }

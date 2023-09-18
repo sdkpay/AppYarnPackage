@@ -171,7 +171,7 @@ final class DefaultTextField: UIView {
 }
 
 final class InsertTextField: UITextField {
-    private var padding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .buttonHeight)
+    private var padding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     
     override func textRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: padding)
