@@ -12,7 +12,8 @@ final class UserServiceAssembly: Assembly {
         container.register {
             let service: UserService = DefaultUserService(network: container.resolve(),
                                                           sdkManager: container.resolve(),
-                                                          authManager: container.resolve())
+                                                          authManager: container.resolve(),
+                                                          analytics: container.resolve())
             return service
         }
     }
@@ -33,16 +34,19 @@ final class DefaultUserService: UserService {
     private(set) var user: User?
     private let sdkManager: SDKManager
     private let authManager: AuthManager
+    private let analytics: AnalyticsService
     var getListCards = false
     
     var selectedCard: PaymentToolInfo?
     
     init(network: NetworkService,
          sdkManager: SDKManager,
-         authManager: AuthManager) {
+         authManager: AuthManager,
+         analytics: AnalyticsService) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
+        self.analytics = analytics
         SBLogger.log(.start(obj: self))
     }
     
@@ -54,7 +58,6 @@ final class DefaultUserService: UserService {
         guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId
         else { return }
-        
         network.request(UserTarget.getListCards(sessionId: sessionId,
                                                 merchantLogin: authInfo.merchantLogin,
                                                 orderId: authInfo.orderId,
@@ -81,7 +84,7 @@ final class DefaultUserService: UserService {
         guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId
         else { return }
-        
+        analytics.sendEvent(.RQListCards)
         network.request(UserTarget.getListCards(sessionId: sessionId,
                                                 merchantLogin: authInfo.merchantLogin,
                                                 orderId: authInfo.orderId,
@@ -97,8 +100,11 @@ final class DefaultUserService: UserService {
                 guard let self = self else { return }
                 self.user = user
                 self.getListCards = true
+                analytics.sendEvent(.RQGoodListCards)
                 completion(.success)
             case .failure(let error):
+                let target: AnalyticsEvent = error.represents(.failDecode) ? .RSFailListCards : .RQFailListCards
+                self?.analytics.sendEvent(target, with: "error: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }

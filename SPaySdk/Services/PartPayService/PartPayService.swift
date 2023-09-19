@@ -13,6 +13,7 @@ final class PartPayServiceAssembly: Assembly {
             let service: PartPayService = DefaultPartPayService(network: container.resolve(),
                                                                 sdkManager: container.resolve(),
                                                                 authManager: container.resolve(),
+                                                                analitics: container.resolve(),
                                                                 featureToggle: container.resolve())
             return service
         })
@@ -49,15 +50,18 @@ final class DefaultPartPayService: PartPayService {
     private let authManager: AuthManager
     private let featureToggle: FeatureToggleService
     private var userEnableBnpl = false
+    private let analitics: AnalyticsService
     private(set) var bnplplan: BnplModel?
     
     init(network: NetworkService,
          sdkManager: SDKManager,
          authManager: AuthManager,
+         analitics: AnalyticsService,
          featureToggle: FeatureToggleService) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
+        self.analitics = analitics
         self.featureToggle = featureToggle
         SBLogger.log(.start(obj: self))
     }
@@ -83,6 +87,7 @@ final class DefaultPartPayService: PartPayService {
               let merchantLogin = authInfo.merchantLogin,
               let orderId = authInfo.orderId
         else { return completion(nil) }
+        analitics.sendEvent(.RQBnpl)
         network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
                                                merchantLogin: merchantLogin,
                                                orderId: orderId),
@@ -90,8 +95,11 @@ final class DefaultPartPayService: PartPayService {
             switch result {
             case .success(let bnplplan):
                 self?.bnplplan = bnplplan
+                self?.analitics.sendEvent(.RQGoodBnpl)
                 completion(nil)
             case .failure(let error):
+                let target: AnalyticsEvent = error.represents(.failDecode) ? .RSFailBnpl : .RQFailBnpl
+                self?.analitics.sendEvent(target, with: "error: \(error.localizedDescription)")
                 completion(error)
             }
         }

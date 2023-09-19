@@ -9,7 +9,7 @@ import Foundation
 
 final class AnalyticsServiceAssembly: Assembly {
     func register(in locator: LocatorService) {
-        let service: AnalyticsService = DefaultAnalyticsService()
+        let service: AnalyticsService = DefaultAnalyticsService(sdkManager: locator.resolve())
         locator.register(service: service)
     }
 }
@@ -18,13 +18,19 @@ enum AnalyticsEvent: String {
     /// Версия SDK
     case SDKVersion
     /// Не найдено приложение Банка на устройстве
-    case NoBankAppFound
+    case LCNoBankAppFound
     /// Найдено приложение Банка на устройстве
-    case BankAppFound
+    case LCBankAppFound
     /// Отобразился экран выбора приложения для авторизации (кейс, когда стоят два приложения)
     case LCBankAppsViewAppeared
     /// Перестал отображаться экран выбора приложения для авторизации (кейс, когда стоят два приложения)
     case LCBankAppsViewDisappeared
+    /// Отправлен запрос на remote config
+    case RQRemoteConfig
+    ///  Получен положительный ответ на запрос получения  remote config
+    case RQGoodRemoteConfig
+    ///  Получена ошибка на запрос получения  remote config
+    case RQFailRemoteConfig
     /// Отправлен запрос на получение сессии
     case RQSessionId
     /// Получен положительный ответ на запрос получения SessionId
@@ -217,12 +223,15 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         DefaultDynatraceAnalyticsService()
     ]
     
+    private var sdkManager: SDKManager
+    
     func sendEvent(_ event: AnalyticsEvent) {
-        analyticServices.forEach({ $0.sendEvent(event) })
+        analyticServices.forEach({ $0.sendEvent(event, with: "") })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with strings: String...) {
-        analyticServices.forEach({ $0.sendEvent(event, with: strings) })
+        let string = "orderNumber: \(sdkManager.authInfo?.orderNumber ?? "")"
+        analyticServices.forEach({ $0.sendEvent(event, with: "\(strings)" + string) })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with ints: Int...) {
@@ -245,7 +254,8 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         analyticServices.forEach({ $0.sendEvent(event, with: doubles) })
     }
     
-    override init() {
+    init(sdkManager: SDKManager) {
+        self.sdkManager = sdkManager
         super.init()
         SBLogger.log(.start(obj: self))
     }

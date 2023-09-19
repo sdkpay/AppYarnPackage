@@ -12,6 +12,8 @@ protocol OtpPresenting {
     func sendOTP(otpCode: String)
     func createOTP()
     func back()
+    func viewDidAppear()
+    func viewDidDisappear()
 }
 
 final class OtpPresenter: OtpPresenting {
@@ -22,6 +24,7 @@ final class OtpPresenter: OtpPresenting {
     private let sdkManager: SDKManager
     private let alertService: AlertService
     private let authManager: AuthManager
+    private let analitics: AnalyticsService
     private let keyboardManager: KeyboardManager
     private var sec = 45
     private var countOfErrorPayment = 0
@@ -33,6 +36,7 @@ final class OtpPresenter: OtpPresenting {
          authManager: AuthManager,
          sdkManager: SDKManager,
          alertService: AlertService,
+         analitics: AnalyticsService,
          keyboardManager: KeyboardManager,
          completion: @escaping Action) {
         self.otpService = otpService
@@ -41,6 +45,7 @@ final class OtpPresenter: OtpPresenting {
         self.sdkManager = sdkManager
         self.alertService = alertService
         self.completion = completion
+        self.analitics = analitics
         self.keyboardManager = keyboardManager
         self.setKeyboardHeight()
     }
@@ -62,6 +67,7 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func createOTP() {
+        analitics.sendEvent(.RQCreteOTP)
         view?.showLoading()
         otpService.creteOTP { [weak self] result in
             switch result {
@@ -69,7 +75,9 @@ final class OtpPresenter: OtpPresenting {
                 self?.view?.hideLoading(animate: true)
                 self?.updateTimerView()
                 self?.createTimer()
+                self?.analitics.sendEvent(.RQGoodCreteOTP)
             case .failure(let error):
+                self?.analitics.sendEvent(.RSFailCreteOTP)
                 self?.view?.hideLoading(animate: true)
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
@@ -86,13 +94,16 @@ final class OtpPresenter: OtpPresenting {
     func sendOTP(otpCode: String) {
         let otpHash = getHashCode(code: otpCode)
         view?.showLoading()
+       analitics.sendEvent(.RQConfirmOTP)
         otpService.confirmOTP(otpHash: otpHash) { [weak self]  result in
             guard let self = self else { return }
             switch result {
             case .success:
+                self.analitics.sendEvent(.RSGoodConfirmOTP)
                 self.view?.hideKeyboard()
                 self.closeWithSuccess()
             case .failure(let error):
+                self.analitics.sendEvent(.RSFailConfirmOTP)
                 if error.represents(.errorWithErrorCode(number: OtpError.incorrectCode.rawValue)) {
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
@@ -112,8 +123,17 @@ final class OtpPresenter: OtpPresenting {
     }
         
     func back() {
+        analitics.sendEvent(.TouchBack, with: "screen: OtpVC")
         self.view?.hideKeyboard()
         view?.contentNavigationController?.popViewController(animated: true)
+    }
+    
+    func viewDidAppear() {
+        analitics.sendEvent(.LCOTPViewAppeared)
+    }
+    
+    func viewDidDisappear() {
+        analitics.sendEvent(.LCOTPViewDisappeared)
     }
     
     private func closeWithSuccess() {

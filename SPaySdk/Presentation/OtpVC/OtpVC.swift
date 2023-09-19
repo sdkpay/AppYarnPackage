@@ -120,6 +120,16 @@ final class OtpVC: ContentVC, IOtpVC {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        presenter.viewDidAppear()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        presenter.viewDidDisappear()
+    }
+    
     init(_ presenter: OtpPresenting) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)

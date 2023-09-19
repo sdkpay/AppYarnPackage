@@ -61,7 +61,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkNewStart() {
-        
+        analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
         if enviromentManager.environment == .sandboxWithoutBankApp {
             checkSession()
         } else {

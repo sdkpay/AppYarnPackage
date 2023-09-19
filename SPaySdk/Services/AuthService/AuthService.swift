@@ -130,6 +130,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private func authRequest(method: AuthMethod? = nil,
                              completion: @escaping (SDKError?, Bool) -> Void) {
         guard let request = sdkManager.authInfo else { return }
+        analytics.sendEvent(.RQSessionId)
         network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
                                                 merchantLogin: request.merchantLogin,
                                                 orderId: request.orderId,
@@ -144,6 +145,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             switch result {
             case .success(let result):
                 guard let self = self else { return }
+                self.analytics.sendEvent(.RQGoodSessionId)
                 self.authManager.sessionId = result.sessionId
                 self.appLink = result.deeplink
                 self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
@@ -155,6 +157,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     refreshIsActive = self.buildSettings.refresh
                 } else {
                     refreshIsActive = result.refreshTokenIsActive ?? false
+                    let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
+                    analytics.sendEvent(event)
                 }
                 
                 if refreshIsActive {
@@ -166,6 +170,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     self.sIdAuth()
                 }
             case .failure(let error):
+                let target: AnalyticsEvent = error.represents(.failDecode) ? .RSFailSessionId : .RQFailSessionId
+                self?.analytics.sendEvent(target, with: "error: \(error.localizedDescription)")
                 completion(error, false)
             }
         }
@@ -217,6 +223,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func auth(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
         guard let request = sdkManager.authInfo else { return }
+        analytics.sendEvent(.RQAuth)
         network.requestFull(AuthTarget.auth(redirectUri: authManager.authMethod == .bank ? request.redirectUri : nil,
                                             authCode: authManager.authCode,
                                             sessionId: authManager.sessionId ?? "",

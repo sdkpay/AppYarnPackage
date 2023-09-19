@@ -9,7 +9,9 @@ import UIKit
 
 protocol WebViewPresenting {
     func viewDidLoad()
+    func viewDidAppear()
     func backButtonTapped()
+    func viewDidDisappear()
     func shareButtonTapped()
     func webTitle(_ title: String?)
 }
@@ -23,11 +25,14 @@ final class WebViewPresenter: WebViewPresenting {
     private let url: String
     @UserDefault(key: .offerTitle, defaultValue: nil)
     private var title: String?
+    private let analitics: AnalyticsService
     
     weak var view: (IWebViewVC & ContentVC)?
     
-    init(with url: String) {
+    init(with url: String,
+         analitics: AnalyticsService) {
         self.url = url
+        self.analitics = analitics
     }
     
     func viewDidLoad() {
@@ -42,6 +47,15 @@ final class WebViewPresenter: WebViewPresenting {
         shareUrlAddress()
     }
     
+    func viewDidAppear() {
+        analitics.sendEvent(.LCWebViewAppeared)
+    }
+    
+    func viewDidDisappear() {
+        analitics.sendEvent(.LCWebViewDisappeared)
+    }
+    
+    
     private func setupWebView() {
         guard let url = URL(string: url) else { return }
         view?.goTo(to: url)
@@ -55,6 +69,7 @@ final class WebViewPresenter: WebViewPresenting {
     }
     
     private func shareUrlAddress() {
+        analitics.sendEvent(.TouchShare)
         DispatchQueue.global(qos: .userInteractive).async {
             guard let url = URL(string: self.url) else { return }
             let text = self.title ?? ""

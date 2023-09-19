@@ -77,6 +77,16 @@ final class WebViewVC: ContentVC, IWebViewVC {
         setupUI()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+    }
+    
     func goTo(to url: URL) {
         let request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
         webView.load(request)

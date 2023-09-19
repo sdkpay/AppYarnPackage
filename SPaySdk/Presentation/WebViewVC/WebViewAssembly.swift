@@ -22,7 +22,7 @@ final class WebViewAssembly {
     }
     
     private func modulePresenter(with url: String) -> WebViewPresenter {
-        WebViewPresenter(with: url)
+        WebViewPresenter(with: url, analitics: locator.resolve())
     }
 
     private func moduleView(presenter: WebViewPresenter) -> ContentVC & IWebViewVC {
