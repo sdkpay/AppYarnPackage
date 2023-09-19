@@ -94,7 +94,7 @@ final class OtpPresenter: OtpPresenting {
     func sendOTP(otpCode: String) {
         let otpHash = getHashCode(code: otpCode)
         view?.showLoading()
-        analitics.sendEvent(.RQConfirmOTP)
+       analitics.sendEvent(.RQConfirmOTP)
         otpService.confirmOTP(otpHash: otpHash) { [weak self]  result in
             guard let self = self else { return }
             switch result {
