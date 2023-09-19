@@ -48,6 +48,7 @@ final class OtpPresenter: OtpPresenting {
     func viewDidLoad() {
         createTimer()
         configViews()
+        userService.clearData()
     }
     
     func setKeyboardHeight() {
@@ -112,8 +113,9 @@ final class OtpPresenter: OtpPresenting {
     }
         
     func back() {
-        self.view?.hideKeyboard()
-        view?.contentNavigationController?.popViewController(animated: true)
+        view?.dismiss(animated: true, completion: { [weak self] in
+            self?.sdkManager.completionWithError(error: .cancelled)
+        })
     }
     
     private func closeWithSuccess() {

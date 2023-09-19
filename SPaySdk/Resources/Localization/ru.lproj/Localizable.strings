@@ -8,7 +8,7 @@
 // Common
 "pay.title" = "Оплатить";
 "pay.full.title" = "Оплатить полностью";
-"cancel.title" = "Отменить оплату";
+"cancel.title" = "Отменить";
 "ok.title" = "Понятно";
 "return.title" = "К способам оплаты";
 "try.title" = "Попробовать ещё раз";

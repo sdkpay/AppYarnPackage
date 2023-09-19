@@ -68,7 +68,6 @@ final class CheckView: UIView {
         if let text = text {
             titleLabel.setLinkText(string: text, with: [.foregroundColor: UIColor.main])
             titleLabel.setAttributedString(lineHeightMultiple: 1.06, kern: 0, string: text)
-
         }
         setupUI()
     }

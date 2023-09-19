@@ -220,5 +220,4 @@ final class AuthPresenter: AuthPresenting {
                                                   name: UIApplication.didBecomeActiveNotification,
                                                   object: nil)
     }
-    
 }
