@@ -30,6 +30,8 @@ final class OtpPresenter: OtpPresenting {
     private var countOfErrorPayment = 0
     private var timer: Timer?
     private var completion: Action?
+    private var otpRetryMaxCount = 3
+    private var otpRetryCount = 1
 
     init(otpService: OTPService,
          userService: UserService,
@@ -95,7 +97,8 @@ final class OtpPresenter: OtpPresenting {
     func sendOTP(otpCode: String) {
         let otpHash = getHashCode(code: otpCode)
         view?.showLoading()
-       analitics.sendEvent(.RQConfirmOTP)
+        analitics.sendEvent(.RQConfirmOTP)
+        otpRetryCount += 1
         otpService.confirmOTP(otpHash: otpHash) { [weak self]  result in
             guard let self = self else { return }
             switch result {
@@ -106,6 +109,12 @@ final class OtpPresenter: OtpPresenting {
             case .failure(let error):
                 self.analitics.sendEvent(.RSFailConfirmOTP)
                 if error.represents(.errorWithErrorCode(number: OtpError.incorrectCode.rawValue)) {
+                    if self.otpRetryCount > self.otpRetryMaxCount {
+                        self.alertService.show(on: self.view, type: .tryingError(back: {
+                            self.dismissWithError(.cancelled)
+                        }))
+                        return
+                    }
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         self.view?.hideLoading(animate: true)
@@ -116,6 +125,7 @@ final class OtpPresenter: OtpPresenting {
                         self.dismissWithError(.cancelled)
                     }))
                 } else {
+
                     self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
                     self.view?.hideLoading()
                 }
