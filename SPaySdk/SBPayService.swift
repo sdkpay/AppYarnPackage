@@ -94,7 +94,7 @@ final class DefaultSBPayService: SBPayService {
         let apps = locator.resolve(BankAppManager.self).avaliableBanks
         locator
             .resolve(AnalyticsService.self)
-            .sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
+            .sendEvent(apps.isEmpty ? .LCNoBankAppFound : .LCBankAppFound)
         SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
         return !apps.isEmpty
     }
