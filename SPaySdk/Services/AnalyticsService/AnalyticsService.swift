@@ -226,12 +226,12 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     private var sdkManager: SDKManager
     
     func sendEvent(_ event: AnalyticsEvent) {
-        let string = "orderNumber: \(sdkManager.authInfo?.orderNumber ?? "")"
-        analyticServices.forEach({ $0.sendEvent(event, with: string) })
+        analyticServices.forEach({ $0.sendEvent(event, with: "") })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with strings: String...) {
-        analyticServices.forEach({ $0.sendEvent(event, with: strings) })
+        let string = "orderNumber: \(sdkManager.authInfo?.orderNumber ?? "")"
+        analyticServices.forEach({ $0.sendEvent(event, with: "\(strings)" + string) })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with ints: Int...) {
