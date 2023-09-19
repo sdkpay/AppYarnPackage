@@ -79,7 +79,7 @@ enum AlertType {
 final class AlertServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register(reference: {
-            let service: AlertService = DefaultAlertService(liveCircleManager: container.resolve())
+            let service: AlertService = DefaultAlertService(liveCircleManager: container.resolve(), analitics: container.resolve())
             return service
         })
     }
@@ -117,10 +117,12 @@ extension AlertService {
 
 final class DefaultAlertService: AlertService {
     private var alertVC: ContentVC?
+    private let analitics: AnalyticsService
     private let liveCircleManager: LiveCircleManager
     
-    init(liveCircleManager: LiveCircleManager) {
+    init(liveCircleManager: LiveCircleManager, analitics: AnalyticsService) {
         self.liveCircleManager = liveCircleManager
+        self.analitics = analitics
         SBLogger.log(.start(obj: self))
     }
     
@@ -160,18 +162,21 @@ final class DefaultAlertService: AlertService {
     func show(on view: ContentVC?, type: AlertType) {
         switch type {
         case .paySuccess(let completion):
+            analitics.sendEvent(.LCStatusSuccessViewAppeared)
             showAlert(on: view,
                       with: Strings.Alert.Pay.Success.title,
                       state: .success,
                       buttons: [],
                       completion: completion)
         case .defaultError(let completion):
+            analitics.sendEvent(.LCStatusErrorViewAppeared, with: "error: default")
             showAlert(on: view,
                       with: Strings.Alert.Error.Main.title,
                       state: .failure,
                       buttons: [],
                       completion: completion)
         case let .noInternet(retry, completion):
+            analitics.sendEvent(.LCStatusErrorViewAppeared, with: "errror: noInternet")
             let tryButton = AlertButtonModel(title: Strings.Try.title,
                                              type: .full,
                                              action: retry)
@@ -188,6 +193,7 @@ final class DefaultAlertService: AlertService {
                         ],
                       completion: completion)
         case let .partPayError(fullPay: fullPay, back: back):
+            analitics.sendEvent(.LCStatusErrorViewAppeared, with: "error: partPayError")
             let fullPayButton = AlertButtonModel(title: Strings.Pay.Full.title,
                                                  type: .full,
                                                  action: fullPay)
@@ -203,6 +209,7 @@ final class DefaultAlertService: AlertService {
                       ],
                       completion: back)
         case .tryingError(back: let back):
+            analitics.sendEvent(.LCStatusErrorViewAppeared)
             let fullPayButton = AlertButtonModel(title: Strings.Button.Otp.back,
                                                  type: .full,
                                                  action: back)
