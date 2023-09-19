@@ -42,6 +42,8 @@ protocol PaymentPresenting {
     func payButtonTapped()
     func cancelTapped()
     func openProfile()
+    func viewDidAppear()
+    func viewDidDisappear()
 }
 
 final class PaymentPresenter: PaymentPresenting {
@@ -74,6 +76,8 @@ final class PaymentPresenter: PaymentPresenting {
         }
         return cellData
     }
+    
+    private let screenEvent = "screen: PaymentVC"
     
     init(_ router: PaymentRouting,
          manager: SDKManager,
@@ -119,13 +123,20 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func payButtonTapped() {
-//        analytics.sendEvent(.PayConfirmedByUser)
-        let permission = locationManager.locationEnabled ? [AnalyticsValue.Location.rawValue] : []
-//        analytics.sendEvent(.Permissions, with: permission)
+        analytics.sendEvent(.TouchPay, with: screenEvent)
         goToPay()
     }
     
+    func viewDidAppear() {
+        analytics.sendEvent(.LCPayViewAppeared, with: screenEvent)
+    }
+    
+    func viewDidDisappear() {
+        analytics.sendEvent(.LCPayViewDisappeared, with: screenEvent)
+    }
+    
     func cancelTapped() {
+        analytics.sendEvent(.TouchCancel, with: screenEvent)
         view?.dismiss(animated: true, completion: { [weak self] in
             self?.sdkManager.completionWithError(error: .cancelled)
         })
@@ -145,8 +156,10 @@ final class PaymentPresenter: PaymentPresenting {
         let cellType = cellData[indexPath.row]
         switch cellType {
         case .card:
+            analytics.sendEvent(.TouchCard, with: screenEvent)
             cardTapped()
         case .partPay:
+            analytics.sendEvent(.TouchBNPL, with: screenEvent)
             router.presentPartPay { [weak self] in
                 self?.configViews()
                 self?.updatePayButtonTitle()
@@ -179,10 +192,13 @@ final class PaymentPresenter: PaymentPresenting {
             switch authMethod {
             case .refresh:
                 biometricAuthProvider.evaluate { result, _ in
+                    self.analytics.sendEvent(.LСBioAuthStart, with: self.screenEvent)
                     switch result {
                     case true:
+                        self.analytics.sendEvent(.LСGoodBioAuth, with: self.screenEvent)
                         self.getListCards()
                     case false:
+                        self.analytics.sendEvent(.LСFailBioAuth, with: self.screenEvent)
                         self.appAuth()
                     }
                 }
@@ -344,6 +360,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func appAuth() {
+        analytics.sendEvent(.LCBankAppAuth, with: screenEvent)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
@@ -357,12 +374,14 @@ final class PaymentPresenter: PaymentPresenting {
                                                       object: nil)
             switch result {
             case .success:
+                self.analytics.sendEvent(.LCBankAppAuthGood, with: self.screenEvent)
                 self.authService.refreshAuth { result in
                     switch result {
                     case .success:
                         self.authService.bankCheck = true
                         self.getListCards()
                     case .failure(_):
+                        self.analytics.sendEvent(.LCBankAppAuthFail, with: self.screenEvent)
                         self.alertService.show(on: self.view,
                                                type: .defaultError(completion: {
                             self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))

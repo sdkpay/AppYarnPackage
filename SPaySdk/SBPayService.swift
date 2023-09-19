@@ -94,7 +94,7 @@ final class DefaultSBPayService: SBPayService {
         let apps = locator.resolve(BankAppManager.self).avaliableBanks
         locator
             .resolve(AnalyticsService.self)
-            .sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
+            .sendEvent(apps.isEmpty ? .LCNoBankAppFound : .LCBankAppFound)
         SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
         return !apps.isEmpty
     }
@@ -102,6 +102,9 @@ final class DefaultSBPayService: SBPayService {
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
+        locator
+            .resolve(AnalyticsService.self)
+            .sendEvent(.MAGetPaymentToken)
         if apiKey == nil {
             apiKey = request.apiKey
         }
@@ -116,13 +119,22 @@ final class DefaultSBPayService: SBPayService {
                 completion(response)
             })
         liveCircleManager.openInitialScreen(with: viewController, with: locator)
+        locator
+            .resolve(AnalyticsService.self)
+            .sendEvent(.MACGetPaymentToken)
     }
     
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
         locator
+            .resolve(AnalyticsService.self)
+            .sendEvent(.MAPay)
+        locator
             .resolve(SDKManager.self)
             .pay(with: paymentRequest, completion: completion)
+        locator
+            .resolve(AnalyticsService.self)
+            .sendEvent(.MACPay)
     }
     
     func completePayment(paymentSuccess: SPayState,
@@ -153,6 +165,9 @@ final class DefaultSBPayService: SBPayService {
                               completion: @escaping PaymentCompletion) {
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
+        locator
+            .resolve(AnalyticsService.self)
+            .sendEvent(.MAPayWithBankInvoiceId)
         if apiKey == nil {
             apiKey = paymentRequest.apiKey
         }
@@ -167,6 +182,9 @@ final class DefaultSBPayService: SBPayService {
                                      completion: completion)
         liveCircleManager.openInitialScreen(with: viewController,
                                             with: locator)
+        locator
+            .resolve(AnalyticsService.self)
+            .sendEvent(.MACPayWithBankInvoiceId)
     }
     
     func getResponseFrom(_ url: URL) {
