@@ -124,15 +124,10 @@ final class OtpPresenter: OtpPresenting {
     }
         
     func back() {
-<<<<<<< HEAD
+        analitics.sendEvent(.TouchBack, with: "screen: OtpVC")
         view?.dismiss(animated: true, completion: { [weak self] in
             self?.sdkManager.completionWithError(error: .cancelled)
         })
-=======
-        analitics.sendEvent(.TouchBack, with: "screen: OtpVC")
-        self.view?.hideKeyboard()
-        view?.contentNavigationController?.popViewController(animated: true)
->>>>>>> Dante
     }
     
     func viewDidAppear() {
