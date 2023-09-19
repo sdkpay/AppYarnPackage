@@ -158,7 +158,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 } else {
                     refreshIsActive = result.refreshTokenIsActive ?? false
                     let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
-                    analytics.sendEvent(event)
+                    self.analytics.sendEvent(event)
                 }
                 
                 if refreshIsActive {

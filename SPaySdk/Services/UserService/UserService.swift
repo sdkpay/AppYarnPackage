@@ -100,7 +100,7 @@ final class DefaultUserService: UserService {
                 guard let self = self else { return }
                 self.user = user
                 self.getListCards = true
-                analytics.sendEvent(.RQGoodListCards)
+                self.analytics.sendEvent(.RQGoodListCards)
                 completion(.success)
             case .failure(let error):
                 let target: AnalyticsEvent = error.represents(.failDecode) ? .RSFailListCards : .RQFailListCards
