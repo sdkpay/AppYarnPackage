@@ -86,7 +86,8 @@ final class OtpPresenter: OtpPresenting {
     func sendOTP(otpCode: String) {
         let otpHash = getHashCode(code: otpCode)
         view?.showLoading()
-        otpService.confirmOTP(otpHash: otpHash) { result in
+        otpService.confirmOTP(otpHash: otpHash) { [weak self]  result in
+            guard let self = self else { return }
             switch result {
             case .success:
                 self.view?.hideKeyboard()
@@ -100,7 +101,7 @@ final class OtpPresenter: OtpPresenting {
                     }
                 } else if error.represents(.errorWithErrorCode(number: OtpError.tryingError.rawValue)) {
                     self.alertService.show(on: self.view, type: .tryingError(back: {
-                        self.view?.dismiss(animated: true)
+                        self.dismissWithError(.cancelled)
                     }))
                 } else {
                     self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
