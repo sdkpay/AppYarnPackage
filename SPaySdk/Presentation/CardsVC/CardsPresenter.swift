@@ -9,6 +9,8 @@ import UIKit
 
 protocol CardsPresenting {
     func viewDidLoad()
+    func viewDidAppear()
+    func viewDidDisappear()
     var cardsCount: Int { get }
     func model(for indexPath: IndexPath) -> CardCellModel
     func didSelectRow(at indexPath: IndexPath)
@@ -26,6 +28,7 @@ final class CardsPresenter: CardsPresenting {
     private let selectedCard: (PaymentToolInfo) -> Void
     private let selectedId: Int
     private var timeManager: OptimizationCheсkerManager
+    private let screenEvent = "screen: CardsVc"
 
     init(userService: UserService,
          analytics: AnalyticsService,
@@ -58,9 +61,19 @@ final class CardsPresenter: CardsPresenting {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
+        analytics.sendEvent(.TouchCard, with: screenEvent)
         selectedCard(cards[indexPath.row])
         view?.contentNavigationController?.popViewController(animated: true)
     }
+    
+    func viewDidAppear() {
+        analytics.sendEvent(.LCPayViewAppeared, with: screenEvent)
+    }
+    
+    func viewDidDisappear() {
+        analytics.sendEvent(.LCPayViewDisappeared, with: screenEvent)
+    }
+    
     
     private func configViews() {
         guard let user = userService.user else { return }

@@ -12,7 +12,8 @@ final class UserServiceAssembly: Assembly {
         container.register {
             let service: UserService = DefaultUserService(network: container.resolve(),
                                                           sdkManager: container.resolve(),
-                                                          authManager: container.resolve())
+                                                          authManager: container.resolve(),
+                                                          analytics: container.resolve())
             return service
         }
     }

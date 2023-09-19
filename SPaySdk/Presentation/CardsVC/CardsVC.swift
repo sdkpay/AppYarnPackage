@@ -33,11 +33,13 @@ final class CardsVC: ContentVC, ICardsVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        presenter.viewDidAppear()
         SBLogger.log(.didAppear(view: self))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        presenter.viewDidDisappear()
         SBLogger.log(.didDissapear(view: self))
     }
 }
