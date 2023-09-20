@@ -73,8 +73,7 @@ final class CardsPresenter: CardsPresenting {
     func viewDidDisappear() {
         analytics.sendEvent(.LCPayViewDisappeared, with: screenEvent)
     }
-    
-    
+
     private func configViews() {
         guard let user = userService.user else { return }
         view?.configProfileView(with: user.userInfo)

@@ -45,21 +45,22 @@ final class OtpVC: ContentVC, IOtpVC {
         return textField
     }()
     
-    private lazy var timeButton: UIButton = {
-        let timeButton = UIButton()
+    private lazy var timeButton: ActionButton = {
+        let timeButton = ActionButton()
         timeButton.setTitleColor(.textSecondary, for: .normal)
         timeButton.isEnabled = true
         timeButton.titleLabel?.font = .medium2
         timeButton.titleLabel?.textAlignment = .left
-        timeButton.addTarget(self, action: #selector(timeButtonDidTap), for: .touchUpInside)
+        timeButton.addAction({
+            self.presenter.createOTP()
+        })
         return timeButton
     }()
     
     private(set) lazy var nextButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
         view.isEnabled = false
-        let string = Strings.Next.Button.title
-        view.setTitle(String(stringLiteral: "Продолжить"), for: .normal)
+        view.setTitle(Strings.Next.Button.title, for: .normal)
         view.addAction {
             self.textField.addDefaultLabel()
             self.presenter.sendOTP(otpCode: self.otpCode)
@@ -69,8 +70,7 @@ final class OtpVC: ContentVC, IOtpVC {
     
     private(set) lazy var backButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .cancel)
-        let string = Strings.Back.Button.title
-        view.setTitle(String(stringLiteral: string), for: .normal)
+        view.setTitle(Strings.Cancel.title, for: .normal)
         view.addAction {
             self.presenter.back()
         }
@@ -94,11 +94,7 @@ final class OtpVC: ContentVC, IOtpVC {
             timeButton.setTitleColor(.main, for: .normal)
         }
     }
-    
-    @objc func timeButtonDidTap() {
-        self.presenter.createOTP()
-    }
-    
+
     func hideKeyboard() {
         view.endEditing(true)
     }

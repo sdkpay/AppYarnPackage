@@ -232,8 +232,4 @@ final class DefaultAlertService: AlertService {
     func close(animated: Bool = true, completion: Action? = nil) {
         alertVC?.dismiss(animated: animated, completion: completion)
     }
-    
-    func cancelFeedback() {
-        
-    }
 }

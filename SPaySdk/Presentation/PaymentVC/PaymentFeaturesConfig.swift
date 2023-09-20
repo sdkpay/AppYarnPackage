@@ -9,12 +9,11 @@ import Foundation
 
 enum PaymentFeaturesConfig {
     static func configCardModel(userService: UserService) -> PaymentCellModel {
-        guard let selectedCard = userService.selectedCard,
-              let user = userService.user else { return PaymentCellModel() }
+        guard let selectedCard = userService.selectedCard else { return PaymentCellModel() }
         return PaymentCellModel(title: selectedCard.productName ?? "",
                                 subtitle: selectedCard.cardNumber.card,
                                 iconURL: selectedCard.cardLogoUrl,
-                                needArrow: user.paymentToolInfo.count > 1 || user.additionalCards == true)
+                                needArrow: userService.additionalCards)
     }
     
     static func configPartModel(partPayService: PartPayService) -> PaymentCellModel {
