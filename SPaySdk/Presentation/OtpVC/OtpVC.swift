@@ -52,6 +52,8 @@ final class OtpVC: ContentVC, IOtpVC {
         timeButton.titleLabel?.font = .medium2
         timeButton.titleLabel?.textAlignment = .left
         timeButton.addAction({
+            self.nextButton.isEnabled = false
+            self.textField.addDefaultLabel()
             self.presenter.createOTP()
         })
         return timeButton

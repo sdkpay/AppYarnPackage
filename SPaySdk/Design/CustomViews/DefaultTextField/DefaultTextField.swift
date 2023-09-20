@@ -156,6 +156,7 @@ final class DefaultTextField: UIView {
         mainStack.addArrangedSubview(backgroundView)
         mainStack.removeArrangedSubview(descriptionLabel)
         descriptionLabel.alpha = 0
+        setState(.selected)
     }
     
     private func setupUI() {
