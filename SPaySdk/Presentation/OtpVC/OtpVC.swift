@@ -61,6 +61,7 @@ final class OtpVC: ContentVC, IOtpVC {
         let string = Strings.Next.Button.title
         view.setTitle(String(stringLiteral: "Продолжить"), for: .normal)
         view.addAction {
+            self.textField.addDefaultLabel()
             self.presenter.sendOTP(otpCode: self.otpCode)
         }
         return view

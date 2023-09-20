@@ -20,6 +20,7 @@ final class AuthServiceAssembly: Assembly {
                                                           personalMetricsService: container.resolve(),
                                                           enviromentManager: container.resolve(),
                                                           cookieStorage: container.resolve(),
+                                                          featureToggleService: container.resolve(),
                                                           buildSettings: container.resolve())
             return service
         }
@@ -46,6 +47,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var partPayService: PartPayService
     private var personalMetricsService: PersonalMetricsService
     private var enviromentManager: EnvironmentManager
+    private let featureToggleService: FeatureToggleService
     private var storage: KeychainStorage
     private var cookieStorage: CookieStorage
     private var appCompletion: ((Result<Void, SDKError>) -> Void)?
@@ -70,6 +72,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
          personalMetricsService: PersonalMetricsService,
          enviromentManager: EnvironmentManager,
          cookieStorage: CookieStorage,
+         featureToggleService: FeatureToggleService,
          buildSettings: BuildSettings) {
         self.analytics = analytics
         self.network = network
@@ -82,6 +85,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.buildSettings = buildSettings
         self.storage = storage
         self.cookieStorage = cookieStorage
+        self.featureToggleService = featureToggleService
         SBLogger.log(.start(obj: self))
     }
     
@@ -161,7 +165,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     analytics.sendEvent(event)
                 }
                 
-                if refreshIsActive {
+                if refreshIsActive && featureToggleService.isEnabled(.refresh) {
                     self.authManager.authMethod = .refresh
                     self.authСompletion?(nil, false)
                     self.authСompletion = nil

@@ -55,7 +55,6 @@ final class WebViewPresenter: WebViewPresenting {
         analitics.sendEvent(.LCWebViewDisappeared)
     }
     
-    
     private func setupWebView() {
         guard let url = URL(string: url) else { return }
         view?.goTo(to: url)

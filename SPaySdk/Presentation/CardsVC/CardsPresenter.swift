@@ -28,7 +28,7 @@ final class CardsPresenter: CardsPresenting {
     private let selectedCard: (PaymentToolInfo) -> Void
     private let selectedId: Int
     private var timeManager: OptimizationCheсkerManager
-    private let screenEvent = "screen: CardsVc"
+    private let screenEvent = "screen: \(AnlyticsScreenEvent.CardsVC.rawValue)"
 
     init(userService: UserService,
          analytics: AnalyticsService,

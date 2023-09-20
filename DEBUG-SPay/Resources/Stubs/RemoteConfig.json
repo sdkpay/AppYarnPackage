@@ -17,7 +17,7 @@
         },
         {
             "name": "refresh",
-            "value": true
+            "value": false
         }
     ],
     "bankApps":[

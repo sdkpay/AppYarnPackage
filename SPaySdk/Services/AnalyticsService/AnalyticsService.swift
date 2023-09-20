@@ -14,6 +14,15 @@ final class AnalyticsServiceAssembly: Assembly {
     }
 }
 
+enum AnlyticsScreenEvent: String {
+    case AuthVC
+    case CardsVC
+    case OtpVC
+    case PartPayVC
+    case PaymentVC
+    case WebViewVC
+}
+
 enum AnalyticsEvent: String {
     /// Версия SDK
     case SDKVersion
