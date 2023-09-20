@@ -77,7 +77,7 @@ final class PaymentPresenter: PaymentPresenting {
         return cellData
     }
     
-    private let screenEvent = "screen: PaymentVC"
+    private let screenEvent = "screen: \(AnlyticsScreenEvent.PaymentVC.rawValue)"
     
     init(_ router: PaymentRouting,
          manager: SDKManager,

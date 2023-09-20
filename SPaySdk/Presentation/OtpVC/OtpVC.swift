@@ -62,6 +62,7 @@ final class OtpVC: ContentVC, IOtpVC {
         view.isEnabled = false
         view.setTitle(Strings.Next.Button.title, for: .normal)
         view.addAction {
+            self.textField.addDefaultLabel()
             self.presenter.sendOTP(otpCode: self.otpCode)
         }
         return view

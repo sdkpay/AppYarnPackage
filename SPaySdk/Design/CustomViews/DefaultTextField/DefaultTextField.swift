@@ -39,6 +39,7 @@ final class DefaultTextField: UIView {
         view.textAlignment = .left
         view.alpha = 1
         view.text = Strings.TextField.Error.title
+        view.textColor = TextFieldState.alert.color
         return view
     }()
     
@@ -117,7 +118,6 @@ final class DefaultTextField: UIView {
                        options: .transitionCrossDissolve,
                        animations: {
             self.backgroundView.layer.borderColor = state.color.cgColor
-            self.descriptionLabel.textColor = state.color
         }, completion: nil)
     }
     
@@ -137,6 +137,7 @@ final class DefaultTextField: UIView {
     
     @objc
     private func valueChanged() {
+        descriptionLabel.alpha = 0
         textEndEdited?(textField.text ?? "")
     }
     
@@ -144,9 +145,17 @@ final class DefaultTextField: UIView {
         mainStack.removeArrangedSubview(backgroundView)
         mainStack.addArrangedSubview(backgroundView)
         mainStack.addArrangedSubview(descriptionLabel)
+        descriptionLabel.alpha = 1
         textField.text = nil
         textField.placeholder = nil
         setState(.alert)
+    }
+    
+    func addDefaultLabel() {
+        mainStack.removeArrangedSubview(backgroundView)
+        mainStack.addArrangedSubview(backgroundView)
+        mainStack.removeArrangedSubview(descriptionLabel)
+        descriptionLabel.alpha = 0
     }
     
     private func setupUI() {
