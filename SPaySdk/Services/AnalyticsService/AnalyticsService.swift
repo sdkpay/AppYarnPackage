@@ -216,6 +216,14 @@ enum AnalyticsValue: String {
     case Location
 }
 
+enum AnalyticsKey: String {
+    case view
+    case orderNumber
+    case errorCode
+    case ParsingError
+    case httpCode
+}
+
 protocol AnalyticsService {
     func sendEvent(_ event: AnalyticsEvent)
     func sendEvent(_ event: AnalyticsEvent, with strings: String...)
@@ -224,6 +232,7 @@ protocol AnalyticsService {
     func sendEvent(_ event: AnalyticsEvent, with strings: [String])
     func sendEvent(_ event: AnalyticsEvent, with ints: [Int])
     func sendEvent(_ event: AnalyticsEvent, with doubles: [Double])
+    func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any])
     func config()
 }
 
@@ -261,6 +270,10 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     
     func sendEvent(_ event: AnalyticsEvent, with doubles: [Double]) {
         analyticServices.forEach({ $0.sendEvent(event, with: doubles) })
+    }
+    
+    func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any]) {
+        analyticServices.forEach({ $0.sendEvent(event, with: dictionaty) })
     }
     
     init(sdkManager: SDKManager) {

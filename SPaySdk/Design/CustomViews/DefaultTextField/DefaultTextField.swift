@@ -38,7 +38,6 @@ final class DefaultTextField: UIView {
         view.numberOfLines = 1
         view.textAlignment = .left
         view.alpha = 1
-        view.text = Strings.TextField.Error.title
         view.textColor = TextFieldState.alert.color
         return view
     }()
@@ -141,7 +140,8 @@ final class DefaultTextField: UIView {
         textEndEdited?(textField.text ?? "")
     }
     
-    func addDescriptionLabel() {
+    func addDescriptionLabel(with text: String) {
+        descriptionLabel.text = text
         mainStack.removeArrangedSubview(backgroundView)
         mainStack.addArrangedSubview(backgroundView)
         mainStack.addArrangedSubview(descriptionLabel)

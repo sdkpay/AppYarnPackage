@@ -118,14 +118,25 @@ final class OtpPresenter: OtpPresenting {
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         self.view?.hideLoading(animate: true)
-                        self.view?.showError()
+                        self.view?.showError(with: Strings.TextField.Error.Wrong.title)
                     }
                 } else if error.represents(.errorWithErrorCode(number: OtpError.tryingError.rawValue)) {
                     self.alertService.show(on: self.view, type: .tryingError(back: {
                         self.dismissWithError(.cancelled)
                     }))
+                } else if error.represents(.errorWithErrorCode(number: OtpError.timeOut.rawValue)) {
+                    if self.otpRetryCount > self.otpRetryMaxCount {
+                        self.alertService.show(on: self.view, type: .tryingError(back: {
+                            self.dismissWithError(.cancelled)
+                        }))
+                        return
+                    }
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
+                        self.view?.hideLoading(animate: true)
+                        self.view?.showError(with: Strings.TextField.Error.Timeout.title)
+                    }
                 } else {
-
                     self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
                     self.view?.hideLoading()
                 }

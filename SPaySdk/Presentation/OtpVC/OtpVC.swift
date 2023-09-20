@@ -10,7 +10,7 @@ import UIKit
 protocol IOtpVC: AnyObject {
     func updateTimer(sec: Int)
     func updateMobilePhone(phoneNumber: String)
-    func showError()
+    func showError(with text: String)
     func hideKeyboard()
     func setKeyboardHeight(height: CGFloat)
 }
@@ -103,8 +103,8 @@ final class OtpVC: ContentVC, IOtpVC {
         titleLabel.text = Strings.TitleLabel.Message.title(phoneNumber)
     }
     
-    func showError() {
-        textField.addDescriptionLabel()
+    func showError(with text: String) {
+        textField.addDescriptionLabel(with: text)
     }
 
     override func viewDidLoad() {

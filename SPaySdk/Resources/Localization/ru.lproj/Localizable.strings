@@ -73,8 +73,9 @@
 "back.button.title" = "Назад";
 "time.button.repeat.isActive" = "Отправить повторно";
 "time.button.repeat.isNotActive" = "Отправить повторно через %@ секунд";
-"textField.error.title" = "Неверный код. Повторите попытку";
+"textField.error.wrong.title" = "Неверный код. Повторите попытку";
 "textField.placeholder" = "Введите код";
+"textField.error.timeout.title" = "Истёк срок действия этого кода";
 "titleLabel.message.title" = "Отправили СМС с кодом-подтверждением\nоплата на номер %@";
 "button.otp.back" = "Вернуться в магазин";
 

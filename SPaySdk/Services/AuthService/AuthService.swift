@@ -165,7 +165,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     self.analytics.sendEvent(event)
                 }
                 
-                if refreshIsActive && featureToggleService.isEnabled(.refresh) {
+                if refreshIsActive && self.featureToggleService.isEnabled(.refresh) {
                     self.authManager.authMethod = .refresh
                     self.authСompletion?(nil, false)
                     self.authСompletion = nil
