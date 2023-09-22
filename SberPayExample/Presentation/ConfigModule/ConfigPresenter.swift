@@ -214,7 +214,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             environment = .sandboxRealBankApp
         }
         SPay.debugConfig(network: configValues.network, ssl: configValues.ssl)
-        SPay.setup(apiKey: configValues.apiKey ?? "",
+        SPay.setup(apiKey: nil,
                    bnplPlan: configValues.bnpl,
                    environment: environment) {
             self.view?.stopLoader()
