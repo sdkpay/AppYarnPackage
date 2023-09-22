@@ -118,8 +118,8 @@ final class DefaultSBPayService: SBPayService {
             .sendEvent(.GetPaymentToken,
                        with: ["request: \(request)"])
         SBLogger.logRequestPaymentToken(with: request)
-        if apiKey == nil {
-            apiKey = request.apiKey
+        if let apiKey = request.apiKey {
+            self.apiKey = apiKey
         }
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         locator
@@ -154,8 +154,8 @@ final class DefaultSBPayService: SBPayService {
                         completion: @escaping PaymentCompletion) {
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
-        if apiKey == nil {
-            apiKey = paymentRequest.apiKey
+        if let apiKey = paymentRequest.apiKey {
+            self.apiKey = apiKey
         }
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         locator.resolve(AnalyticsService.self)
@@ -179,8 +179,8 @@ final class DefaultSBPayService: SBPayService {
                               completion: @escaping PaymentCompletion) {
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
-        if apiKey == nil {
-            apiKey = paymentRequest.apiKey
+        if let apiKey = paymentRequest.apiKey {
+            self.apiKey = apiKey
         }
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
