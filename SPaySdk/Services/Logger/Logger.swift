@@ -43,7 +43,7 @@ enum DebugLogLevel: String, CaseIterable {
 
 enum SBLogger {
     static var dateString = ""
-    static var writeLogs = true
+    static var writeLogs = false
     static var secureLogs = true
     private static var logger = Log()
     
