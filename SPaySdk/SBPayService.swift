@@ -69,7 +69,7 @@ final class DefaultSBPayService: SBPayService {
             .setEnvironment(environment)
         locator
             .resolve(PartPayService.self)
-            .setUserEnableBnpl(bnplPlan, enabledLevel: .merch)
+            .setEnabledBnpl(bnplPlan, enabledLevel: .merch)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         SBLogger.dateString = dateFormatter.string(from: Date())

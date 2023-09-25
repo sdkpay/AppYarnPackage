@@ -62,8 +62,7 @@ final class PaymentPresenter: PaymentPresenting {
     private var cellData: [PaymentCellType] {
         var cellData: [PaymentCellType] = []
         cellData.append(.card)
-        if partPayService.bnplplan != nil,
-           partPayService.bnplplanEnabled {
+        if partPayService.bnplplanEnabled {
             cellData.append(.partPay)
         }
         return cellData
@@ -210,7 +209,7 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func getPaymentToken() {
         partPayService.bnplplanSelected = false
-        partPayService.setUserEnableBnpl(false, enabledLevel: .server)
+        partPayService.setEnabledBnpl(false, enabledLevel: .paymentToken)
         guard let paymentId = userService.selectedCard?.paymentId else {
             alertService.show(on: view,
                               type: .defaultError(completion: {

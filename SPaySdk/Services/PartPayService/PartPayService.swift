@@ -19,36 +19,41 @@ final class PartPayServiceAssembly: Assembly {
     }
 }
 
-enum EnabledLevel {
+enum EnabledLevel: String {
+    case featureToggle
     case merch
-    case server
+    case session
+    case bnplPlan
+    case paymentToken
 }
 
 protocol PartPayService {
     var bnplplanSelected: Bool { get set }
     var bnplplanEnabled: Bool { get }
-    func setUserEnableBnpl(_ value: Bool, enabledLevel: EnabledLevel)
+    func setEnabledBnpl(_ value: Bool, enabledLevel: EnabledLevel)
     var bnplplan: BnplModel? { get }
     func getBnplPlan(completion: @escaping (SDKError?) -> Void)
 }
 
 final class DefaultPartPayService: PartPayService {
+    
     var bnplplanSelected = false
     
     var bnplplanEnabled: Bool {
-        if featureToggle.isEnabled(.bnpl),
-            bnplplan?.isBnplEnabled ?? false {
-            return userEnableBnpl
-        } else {
+        switch bnplAvaliable {
+        case true:
+            return bnplplan?.integrityCheck == true
+        case false:
             return false
         }
     }
+    
+    private var bnplEnabledLevels: [EnabledLevel: Bool] = [:]
     
     private let network: NetworkService
     private let sdkManager: SDKManager
     private let authManager: AuthManager
     private let featureToggle: FeatureToggleService
-    private var userEnableBnpl = false
     private(set) var bnplplan: BnplModel?
     
     init(network: NetworkService,
@@ -66,15 +71,8 @@ final class DefaultPartPayService: PartPayService {
         SBLogger.log(.stop(obj: self))
     }
     
-    func setUserEnableBnpl(_ value: Bool, enabledLevel: EnabledLevel) {
-        switch enabledLevel {
-        case .merch:
-            userEnableBnpl = value
-        case .server:
-            if userEnableBnpl {
-                userEnableBnpl = value
-            }
-        }
+    func setEnabledBnpl(_ value: Bool, enabledLevel: EnabledLevel) {
+        bnplEnabledLevels[enabledLevel] = value
     }
     
     func getBnplPlan(completion: @escaping (SDKError?) -> Void) {
@@ -95,10 +93,28 @@ final class DefaultPartPayService: PartPayService {
             switch result {
             case .success(let bnplplan):
                 self?.bnplplan = bnplplan
+                self?.setEnabledBnpl(bnplplan.isBnplEnabled, enabledLevel: .bnplPlan)
                 completion(nil)
             case .failure(let error):
                 completion(error)
             }
         }
+    }
+    
+    private func checkFeatureToggle() {
+        setEnabledBnpl(featureToggle.isEnabled(.bnpl), enabledLevel: .featureToggle)
+    }
+    
+    private var bnplAvaliable: Bool {
+        checkFeatureToggle()
+        let bnplEnabledLevelsLog = bnplEnabledLevels.reduce(into: [:]) { $0[$1.key.rawValue] = $1.value }.json
+        SBLogger
+            .log(
+                level: .debug(level: .defaultLevel),
+                """
+                💶 BNPL levels:
+                   path: \(bnplEnabledLevelsLog)
+                """)
+        return !bnplEnabledLevels.values.contains(false)
     }
 }

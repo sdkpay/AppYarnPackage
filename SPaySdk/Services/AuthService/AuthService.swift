@@ -114,8 +114,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 guard let self = self else { return }
                 self.authManager.sessionId = result.sessionId
                 self.authManager.state = result.state
-                self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
-                                                      enabledLevel: .server)
+                self.partPayService.setEnabledBnpl(result.isBnplEnabled == true,
+                                                   enabledLevel: .session)
                 self.sIdAuth(with: result)
             case .failure(let error):
                 completion(error, false)
