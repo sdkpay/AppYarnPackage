@@ -21,6 +21,7 @@ final class OTPServiceAssembly: Assembly {
 
 protocol OTPService {
     var otpModel: OTPModel? { get }
+    var otpRequired: Bool { get }
     func creteOTP(completion: @escaping (Result<Void, SDKError>) -> Void)
     func confirmOTP(otpHash: String,
                     completion: @escaping (Result<Void, SDKError>) -> Void) 
@@ -33,7 +34,13 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
     private let sdkManager: SDKManager
     private let userService: UserService
     
+    private var minOtpAmount = 500000
+    
     var otpModel: OTPModel?
+    var otpRequired: Bool {
+        guard let amount = userService.user?.orderAmount.amount else { return true }
+        return amount >= 5000
+    }
     
     init(network: NetworkService,
          sdkManager: SDKManager,

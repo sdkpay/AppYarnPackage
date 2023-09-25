@@ -408,7 +408,11 @@ final class PaymentPresenter: PaymentPresenting {
         if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
             pay()
         } else {
-            createOTP()
+            if otpService.otpRequired {
+                createOTP()
+            } else {
+                pay()
+            }
         }
     }
     
