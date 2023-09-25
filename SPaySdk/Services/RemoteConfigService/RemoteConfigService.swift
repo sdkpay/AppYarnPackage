@@ -52,8 +52,9 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                 self.analytics.sendEvent(.RQGoodRemoteConfig)
                 completion(nil)
             case .failure(let error):
-                let target: AnalyticsEvent = error.represents(.failDecode) ? .RQFailRemoteConfig : .RQFailRemoteConfig
-                self.analytics.sendEvent(target, with: "error: \(error.localizedDescription)")
+                if error.represents(.failDecode) {
+                    self.analytics.sendEvent(.RQFailRemoteConfig, with: [AnalyticsKey.ParsingError: error.localizedDescription])
+                } 
                 completion(error)
             }
         }

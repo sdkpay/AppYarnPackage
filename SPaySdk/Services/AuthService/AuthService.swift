@@ -174,8 +174,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     self.sIdAuth()
                 }
             case .failure(let error):
-                let target: AnalyticsEvent = error.represents(.failDecode) ? .RSFailSessionId : .RQFailSessionId
-                self?.analytics.sendEvent(target, with: "error: \(error.localizedDescription)")
+                if error.represents(.failDecode) {
+                    self?.analytics.sendEvent(.RQFailSessionId, with: [AnalyticsKey.ParsingError: error.localizedDescription])
+                } else {
+                    self?.analytics.sendEvent(.RSFailSessionId, with: [AnalyticsKey.errorCode: error.localizedDescription])
+                }
                 completion(error, false)
             }
         }
@@ -255,9 +258,9 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             case .failure(let error):
                 guard let self else { return }
                if error.represents(.failDecode) {
-                    self.analytics.sendEvent(.RSFailAuth, with: "error: \(error.localizedDescription)")
+                    self.analytics.sendEvent(.RQFailAuth, with: [AnalyticsKey.ParsingError: error.localizedDescription])
                } else {
-                   // self?.analytics.sendEvent(.RQFailSessionId, with: "error: \(error.localizedDescription)")
+                   self.analytics.sendEvent(.RSFailSessionId, with: [AnalyticsKey.ParsingError: error.localizedDescription])
                }
                 
                 if self.authManager.authMethod == .bank {

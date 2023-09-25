@@ -29,11 +29,11 @@ final class OtpVC: ContentVC, IOtpVC {
         let label = UILabel()
         label.numberOfLines = 2
         label.textAlignment = .left
-        label.font = .bodi4
+        label.font = .bodi3
         return label
     }()
     
-    private lazy var textField: DefaultTextField = {
+    private lazy var otpTextField: DefaultTextField = {
         let textField = DefaultTextField()
         textField.config(keyboardType: .numberPad,
                          maxLength: maxLength,
@@ -53,7 +53,7 @@ final class OtpVC: ContentVC, IOtpVC {
         timeButton.titleLabel?.textAlignment = .left
         timeButton.addAction({
             self.nextButton.isEnabled = false
-            self.textField.addDefaultLabel()
+            self.otpTextField.addDefaultLabel()
             self.presenter.createOTP()
         })
         return timeButton
@@ -64,7 +64,7 @@ final class OtpVC: ContentVC, IOtpVC {
         view.isEnabled = false
         view.setTitle(Strings.Next.Button.title, for: .normal)
         view.addAction {
-            self.textField.addDefaultLabel()
+            self.otpTextField.addDefaultLabel()
             self.presenter.sendOTP(otpCode: self.otpCode)
         }
         return view
@@ -106,7 +106,7 @@ final class OtpVC: ContentVC, IOtpVC {
     }
     
     func showError(with text: String) {
-        textField.addDescriptionLabel(with: text)
+        otpTextField.addDescriptionLabel(with: text)
     }
 
     override func viewDidLoad() {
@@ -115,7 +115,7 @@ final class OtpVC: ContentVC, IOtpVC {
         setupUI()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.textField.becomeFirst()
+            self.otpTextField.becomeFirst()
         }
     }
     
@@ -159,7 +159,7 @@ final class OtpVC: ContentVC, IOtpVC {
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Stack.right)
             .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: Cost.Stack.top)
         
-        textField
+        otpTextField
             .add(toSuperview: backView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.TextField.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.TextField.right)
@@ -168,7 +168,7 @@ final class OtpVC: ContentVC, IOtpVC {
         timeButton
             .add(toSuperview: backView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Time.left)
-            .touchEdge(.top, toEdge: .bottom, ofView: textField, withInset: Cost.Button.Time.top)
+            .touchEdge(.top, toEdge: .bottom, ofView: otpTextField, withInset: Cost.Button.Time.top)
                
         nextButton
             .add(toSuperview: backView)

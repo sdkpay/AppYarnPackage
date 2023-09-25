@@ -56,7 +56,7 @@
 "alert.pay.no.internet.title" = "Нет интернета. Проверьте подключение и попробуйте ещё раз.";
 "alert.pay.no.waiting.title" = "Обрабатываем заявку. Следите за статусом в Истории приложения %@";
 "alert.pay.error.title" = "Сервис оплаты частями недоступен. \nОплатите заказ полностью или выберите другой способ оплаты.";
-"alert.otp.error.title" = "Вы исчерпали попытки ввода кода.\nВыберете другой метод оплаты";
+"alert.otp.error.title" = "Вы исчерпали попытки ввода кода.\nВыберете другой метод оплаты.";
 
 // MerchantAlert
 "merchant.alert.apikey" = "⛔️ Передайте apiKey в методе setup или в текущем методе.";
@@ -73,7 +73,7 @@
 "back.button.title" = "Назад";
 "time.button.repeat.isActive" = "Отправить повторно";
 "time.button.repeat.isNotActive" = "Отправить повторно через %@ секунд";
-"textField.error.wrong.title" = "Неверный код. Повторите попытку";
+"textField.error.wrong.title" = "Неверный код. Повторите попытку.";
 "textField.placeholder" = "Введите код";
 "textField.error.timeout.title" = "Истёк срок действия этого кода";
 "titleLabel.message.title" = "Отправили СМС с кодом-подтверждением\nоплата на номер %@";
