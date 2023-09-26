@@ -98,6 +98,9 @@
             case SPayStateWaiting:
                 NSLog(@"Необходимо проверить статус оплаты");
                 break;
+            case SPayStateCancel:
+                NSLog(@"Отмена");
+                break;
             case SPayStateError:
                 NSLog(@"%@ - описание ошибки", info);
                 break;
@@ -118,6 +121,9 @@
                 break;
             case SPayStateWaiting:
                 NSLog(@"Необходимо проверить статус оплаты");
+                break;
+            case SPayStateCancel:
+                NSLog(@"Отмена");
                 break;
             case SPayStateError:
                 NSLog(@"%@ - описание ошибки", info);

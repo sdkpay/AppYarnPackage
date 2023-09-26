@@ -80,6 +80,12 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                               state: .failure,
                               buttons: [],
                               completion: completion)
+        case .cancel:
+            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+                              with: Strings.Alert.Error.Main.title,
+                              state: .failure,
+                              buttons: [],
+                              completion: completion)
         }
     
         closeSdk()

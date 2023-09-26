@@ -268,6 +268,8 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 self.showResult(title: "Отдали мерчу waiting", message: info)
             case .error:
                 self.showResult(title: "Отдали мерчу error", message: info)
+            case .cancel:
+                self.showResult(title: "Отдали мерчу cancel", message: info)
             @unknown default:
                 self.showResult(title: "Отдали мерчу @unknown default", message: info)
             }
@@ -286,6 +288,8 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                 self.showResult(title: "Отдали мерчу waiting", message: info)
             case .error:
                 self.showResult(title: "Отдали мерчу error", message: info)
+            case .cancel:
+                self.showResult(title: "Отдали мерчу cancel", message: info)
             @unknown default:
                 self.showResult(title: "Отдали мерчу @unknown default", message: info)
             }

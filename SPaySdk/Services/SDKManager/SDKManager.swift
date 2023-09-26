@@ -60,6 +60,10 @@ final class DefaultSDKManager: SDKManager {
     private var paymentCompletion: PaymentCompletion?
     private var paymentTokenCompletion: PaymentTokenCompletion?
 
+    private var payResult: SPayState?
+    private var paymentTokenResult: SPaymentTokenResponse?
+    private var errorResult: SDKError?
+
     private(set) var authInfo: AuthInfo?
     private(set) var payInfo: PayInfo?
     
@@ -150,6 +154,7 @@ final class DefaultSDKManager: SDKManager {
                                              tokenExpiration: tokenExpiration,
                                              error: nil)
         paymentTokenCompletion?(responce)
+        paymentTokenCompletion = nil
         liveCircleManager.closeSDKWindow()
     }
     
@@ -161,6 +166,8 @@ final class DefaultSDKManager: SDKManager {
             paymentCompletion?(.waiting, ConfigGlobal.localization?.payLoading ?? "")
         case .error:
             paymentCompletion?(.error, Strings.Alert.Error.Main.title)
+        case .cancel:
+            paymentCompletion?(.cancel, Strings.Alert.Error.Main.title)
         }
         paymentCompletion = nil
         liveCircleManager.closeSDKWindow()
