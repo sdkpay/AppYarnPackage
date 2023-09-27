@@ -31,6 +31,7 @@ final class AuthAssembly {
         AuthPresenter(router,
                       authService: locator.resolve(),
                       sdkManager: locator.resolve(),
+                      completionManager: locator.resolve(),
                       analytics: locator.resolve(),
                       userService: locator.resolve(),
                       alertService: locator.resolve(),

@@ -7,8 +7,8 @@
 
 import Foundation
 
-@objc(SPaymentTokenResponse)
-public final class SPaymentTokenResponse: NSObject {
+@objc(SPaymentTokenResponseModel)
+public final class SPaymentTokenResponseModel: NSObject {
     /// Платежный токен. Отсутствует, если заполнен paymentTokenId
     @objc public var paymentToken: String?
     /// Идентификатор платежного токена. Отсутствует, если заполнен paymentToken
@@ -16,13 +16,13 @@ public final class SPaymentTokenResponse: NSObject {
     /// Срок действия платежного токена в формате UNIX (POSIX) времени
     @objc public var tokenExpiration: Int
     /// Ошибка получения токена
-    @objc public var error: SPError?
+    @objc public var error: String?
     
     @objc
     public init(paymentToken: String? = nil,
                 paymentTokenId: String? = nil,
                 tokenExpiration: Int = 0,
-                error: SPError? = nil) {
+                error: String? = nil) {
         self.paymentToken = paymentToken
         self.paymentTokenId = paymentTokenId
         self.tokenExpiration = tokenExpiration

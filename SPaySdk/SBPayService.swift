@@ -7,8 +7,10 @@
 
 import UIKit
 
-typealias PaymentTokenCompletion = (SPaymentTokenResponse) -> Void
-typealias PaymentCompletion = (_ state: SPayState, _ info: String) -> Void
+typealias PaymentTokenResponse = (state: SPayTokenState, info: SPaymentTokenResponseModel)
+typealias PaymentTokenCompletion = (PaymentTokenResponse) -> Void
+typealias PaymentResponse = (state: SPayState, info: String)
+typealias PaymentCompletion = (PaymentResponse) -> Void
 
 protocol SBPayService {
     func setup(apiKey: String?, bnplPlan: Bool, environment: SEnvironment, completion: Action?)
@@ -127,7 +129,6 @@ final class DefaultSBPayService: SBPayService {
             .config(apiKey: apiKey,
                     paymentTokenRequest: request,
                     completion: { response in
-                SBLogger.logResponsePaymentToken(with: response)
                 completion(response)
             })
         liveCircleManager.openInitialScreen(with: viewController, with: locator)

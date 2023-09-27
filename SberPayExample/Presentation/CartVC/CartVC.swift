@@ -145,10 +145,10 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
 
     private func showResult(title: String, message: String) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let vc = UIAlertController(title: title, message: message, preferredStyle: .alert)
             vc.addAction(UIAlertAction(title: "OK", style: .cancel))
-            self.present(vc, animated: false)
+            self.present(vc, animated: true)
         }
     }
  
@@ -222,14 +222,19 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let request = SPaymentTokenRequest(merchantLogin: values.merchantLogin,
                                            orderId: values.orderId ?? "",
                                            redirectUri: "testapp://test")
-        SPay.getPaymentToken(with: self, with: request) { response in
-            if response.error != nil {
-                // Обработка ошибки
-                self.showResult(title: "Отдали мерчу error", message: response.error?.errorDescription ?? "")
-            } else {
-                self.showResult(title: "Отдали мерчу success", message: response.error?.errorDescription ?? "")
-                guard let paymentToken = response.paymentToken else { return }
+        SPay.getPaymentToken(with: self, with: request) { state, info in
+            switch state {
+            case .success:
+                self.showResult(title: "Отдали мерчу success", message: info.error ?? "")
+                guard let paymentToken = info.paymentToken else { return }
                 self.pay(with: paymentToken)
+            case .cancel:
+                self.showResult(title: "Отдали мерчу cancel", message: info.error ?? "")
+            case .error:
+                // Обработка ошибки
+                self.showResult(title: "Отдали мерчу error", message: info.error ?? "")
+            @unknown default:
+                fatalError()
             }
         }
     }
@@ -243,14 +248,19 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                            orderNumber: values.orderNumber ?? "",
                                            recurrentExipiry: "20230821",
                                            recurrentFrequency: 2)
-        SPay.getPaymentToken(with: self, with: request) { response in
-            if response.error != nil {
-                self.showResult(title: "Отдали мерчу error", message: response.error?.errorDescription ?? "")
-            } else {
-                // Обработка успешно полученных данных...
-                self.showResult(title: "Отдали мерчу success", message: response.error?.errorDescription ?? "")
-                guard let paymentToken = response.paymentToken else { return }
+        SPay.getPaymentToken(with: self, with: request) { state, info in
+            switch state {
+            case .success:
+                self.showResult(title: "Отдали мерчу success", message: info.error ?? "")
+                guard let paymentToken = info.paymentToken else { return }
                 self.pay(with: paymentToken)
+            case .cancel:
+                self.showResult(title: "Отдали мерчу cancel", message: info.error ?? "")
+            case .error:
+                // Обработка ошибки
+                self.showResult(title: "Отдали мерчу error", message: info.error ?? "")
+            @unknown default:
+                fatalError()
             }
         }
     }

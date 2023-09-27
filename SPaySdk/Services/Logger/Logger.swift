@@ -244,7 +244,7 @@ enum SBLogger {
         )
     }
     
-    static func logResponsePaymentToken(with params: SPaymentTokenResponse) {
+    static func logResponsePaymentToken(with params: SPaymentTokenResponseModel) {
         log(
             level: .debug(level: .defaultLevel),
             """
@@ -252,7 +252,7 @@ enum SBLogger {
                paymentToken: \(params.paymentToken ?? "none")
                paymentTokenId: \(params.paymentTokenId ?? "none")
                tokenExpiration: \(params.tokenExpiration)
-               error: \(params.error?.errorDescription ?? "none")
+               error: \(params.error ?? "none")
             """
         )
     }

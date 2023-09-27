@@ -78,7 +78,7 @@ enum AlertType {
 final class AlertServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register(reference: {
-            let service: AlertService = DefaultAlertService(locator: container)
+            let service: AlertService = DefaultAlertService(completionManager: container.resolve())
             return service
         })
     }
@@ -95,7 +95,7 @@ protocol AlertService {
                      animate: Bool)
     func hideLoading(animate: Bool)
     func hide(animated: Bool, completion: Action?)
-    func close(animated: Bool, completion: Action?)
+    func close()
 }
 
 extension AlertService {
@@ -115,11 +115,12 @@ extension AlertService {
 }
 
 final class DefaultAlertService: AlertService {
-    private let locator: LocatorService
+    private let completionManager: CompletionManager?
+    
     private var alertVC: ContentVC?
     
-    init(locator: LocatorService) {
-        self.locator = locator
+    init(completionManager: CompletionManager) {
+        self.completionManager = completionManager
         SBLogger.log(.start(obj: self))
     }
     
@@ -209,7 +210,7 @@ final class DefaultAlertService: AlertService {
         alertVC = nil
     }
     
-    func close(animated: Bool = true, completion: Action? = nil) {
-        alertVC?.dismiss(animated: animated, completion: completion)
+    func close() {
+        completionManager?.dismissCloseAction(alertVC)
     }
 }

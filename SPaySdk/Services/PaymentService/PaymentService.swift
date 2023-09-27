@@ -27,6 +27,7 @@ final class PaymentServiceAssembly: Assembly {
             let service: PaymentService = DefaultPaymentService(authManager: container.resolve(),
                                                                 network: container.resolve(), userService: container.resolve(),
                                                                 personalMetricsService: container.resolve(),
+                                                                completionManager: container.resolve(),
                                                                 sdkManager: container.resolve())
             return service
         }
@@ -46,6 +47,7 @@ final class DefaultPaymentService: PaymentService {
     private let network: NetworkService
     private var sdkManager: SDKManager
     private let userService: UserService
+    private let completionManager: CompletionManager
     private var authManager: AuthManager
     private let personalMetricsService: PersonalMetricsService
     private var paymentToken: PaymentTokenModel?
@@ -54,11 +56,13 @@ final class DefaultPaymentService: PaymentService {
          network: NetworkService,
          userService: UserService,
          personalMetricsService: PersonalMetricsService,
+         completionManager: CompletionManager,
          sdkManager: SDKManager) {
         self.authManager = authManager
         self.network = network
         self.userService = userService
         self.sdkManager = sdkManager
+        self.completionManager = completionManager
         self.personalMetricsService = personalMetricsService
         SBLogger.log(.start(obj: self))
     }
@@ -108,7 +112,7 @@ final class DefaultPaymentService: PaymentService {
                                   merchantLogin: merchantLogin,
                                   completion: completion)
                     }
-                    self.sdkManager.completionPaymentToken(with: paymentToken.paymentToken)
+                    self.completionManager.completePaymentToken(with: paymentToken.paymentToken)
                 }
             case .failure(let failure):
                 if isBnplEnabled {

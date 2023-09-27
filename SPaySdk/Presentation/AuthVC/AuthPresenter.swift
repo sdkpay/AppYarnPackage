@@ -17,6 +17,7 @@ final class AuthPresenter: AuthPresenting {
     private let analytics: AnalyticsService
     private let router: AuthRouter
     private let authService: AuthService
+    private let completionManager: CompletionManager
     private let sdkManager: SDKManager
     private let userService: UserService
     private var bankManager: BankAppManager
@@ -28,6 +29,7 @@ final class AuthPresenter: AuthPresenting {
     init(_ router: AuthRouter,
          authService: AuthService,
          sdkManager: SDKManager,
+         completionManager: CompletionManager,
          analytics: AnalyticsService,
          userService: UserService,
          alertService: AlertService,
@@ -39,6 +41,7 @@ final class AuthPresenter: AuthPresenting {
         self.router = router
         self.authService = authService
         self.sdkManager = sdkManager
+        self.completionManager = completionManager
         self.userService = userService
         self.alertService = alertService
         self.contentLoadManager = contentLoadManager
@@ -179,9 +182,8 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func dismissWithError(_ error: SDKError) {
-        alertService.close(animated: true, completion: { [weak self] in
-            self?.sdkManager.completionWithError(error: error)
-        })
+        self.completionManager.completeWithError(error)
+        self.alertService.close()
     }
     
     @objc
@@ -196,9 +198,7 @@ final class AuthPresenter: AuthPresenting {
         if bankManager.avaliableBanks.count > 1 {
             showBanksStack()
         } else {
-            view?.dismiss(animated: true, completion: { [weak self] in
-                self?.sdkManager.completionWithError(error: .cancelled)
-            })
+            self.completionManager.dismissCloseAction(view)
         }
     }
     

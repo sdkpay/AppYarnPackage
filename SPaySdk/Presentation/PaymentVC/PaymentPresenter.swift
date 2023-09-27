@@ -53,7 +53,7 @@ final class PaymentPresenter: PaymentPresenting {
     private var userService: UserService
     private let paymentService: PaymentService
     private let locationManager: LocationManager
-    private let sdkManager: SDKManager
+    private let completionManager: CompletionManager
     private let alertService: AlertService
     private let bankManager: BankAppManager
     private let timeManager: OptimizationCheсkerManager
@@ -75,12 +75,13 @@ final class PaymentPresenter: PaymentPresenting {
          bankManager: BankAppManager,
          paymentService: PaymentService,
          locationManager: LocationManager,
+         completionManager: CompletionManager,
          alertService: AlertService,
          partPayService: PartPayService,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
         self.userService = userService
-        self.sdkManager = manager
+        self.completionManager = completionManager
         self.analytics = analytics
         self.paymentService = paymentService
         self.locationManager = locationManager
@@ -111,9 +112,7 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func cancelTapped() {
-        view?.dismiss(animated: true, completion: { [weak self] in
-            self?.sdkManager.completionWithError(error: .cancelled)
-        })
+        self.completionManager.dismissCloseAction(view)
     }
     
     func model(for indexPath: IndexPath) -> PaymentCellModel {
@@ -174,11 +173,9 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func configWithNoCards() {
         let returnButton = AlertButtonModel(title: Strings.Return.title,
-                                            type: .full) {
-            self.view?.dismiss(animated: true,
-                               completion: {
-                self.sdkManager.completionWithError(error: .noCards)
-            })
+                                            type: .full) { [weak self] in
+            self?.completionManager.completeWithError(.noCards)
+            self?.completionManager.dismissCloseAction(self?.view)
         }
         alertService.showAlert(on: self.view,
                                with: Strings.Alert.Pay.No.Cards.title,
@@ -195,7 +192,9 @@ final class PaymentPresenter: PaymentPresenting {
                 self.pay()
             },
                                                 completion: {
-                self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
+                self.alertService.close()
+            }))
         case .timeOut, .unknownStatus:
             configForWaiting()
         case .partPayError:
@@ -203,7 +202,9 @@ final class PaymentPresenter: PaymentPresenting {
         default:
             alertService.show(on: view,
                               type: .defaultError(completion: {
-                self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
+                self.alertService.close()
+            }))
         }
     }
     
@@ -213,7 +214,9 @@ final class PaymentPresenter: PaymentPresenting {
         guard let paymentId = userService.selectedCard?.paymentId else {
             alertService.show(on: view,
                               type: .defaultError(completion: {
-                self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
+                self.alertService.close()
+            }))
             return
         }
         paymentService.tryToGetPaymenyToken(paymentId: paymentId,
@@ -235,11 +238,9 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func configForWaiting() {
         let okButton = AlertButtonModel(title: Strings.Ok.title,
-                                        type: .full) {
-            self.view?.dismiss(animated: true,
-                               completion: { [weak self] in
-                self?.sdkManager.completionPay(with: .waiting)
-            })
+                                        type: .full) { [weak self] in
+            self?.completionManager.completePay(with: .waiting)
+            self?.alertService.close()
         }
         alertService.showAlert(on: view,
                                with: ConfigGlobal.localization?.payLoading ?? "",
@@ -249,13 +250,7 @@ final class PaymentPresenter: PaymentPresenting {
             self.view?.hideLoading(animate: true)
         })
     }
-    
-    private func dismissWithError(_ error: SDKError) {
-        alertService.close(animated: true, completion: { [weak self] in
-            self?.sdkManager.completionWithError(error: error)
-        })
-    }
-    
+
     private func pay() {
         view?.userInteractionsEnabled = false
         DispatchQueue.main.async {
@@ -272,9 +267,8 @@ final class PaymentPresenter: PaymentPresenting {
             switch result {
             case .success:
                 self.alertService.show(on: self.view, type: .paySuccess(completion: {
-                    self.alertService.close(animated: true, completion: {
-                        self.sdkManager.completionPay(with: .success)
-                    })
+                    self.completionManager.completePay(with: .success)
+                    self.alertService.close()
                 }))
             case .failure(let error):
                 if self.partPayService.bnplplanSelected {
