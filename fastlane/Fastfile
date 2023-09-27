@@ -28,8 +28,8 @@ platform :ios do
     prebuild
     build_and_upload
     upload_to_repo
-    marvin_bot(success: true)
     add_and_upload_tags
+    marvin_bot(success: true)
   end
 
   private_lane :add_and_upload_tags do
@@ -103,7 +103,7 @@ platform :ios do
 #{changelog_from_git_commits(
       pretty: "[%an] %n   - %s",
       date_format: "short", 
-      merge_commit_filtering: "exclude_merges"
+      merge_commit_filtering: "include_merges"
 )}
     "
  if options[:exception]
