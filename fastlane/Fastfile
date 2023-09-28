@@ -28,8 +28,8 @@ platform :ios do
     prebuild
     build_and_upload
     upload_to_repo
-    add_and_upload_tags
     marvin_bot(success: true)
+    add_and_upload_tags
   end
 
   private_lane :add_and_upload_tags do
