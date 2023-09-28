@@ -109,6 +109,12 @@ final class DefaultUserService: UserService {
             case .failure(let error):
                 let target: AnalyticsEvent = error.represents(.failDecode) ? .RSFailListCards : .RQFailListCards
                 self?.analytics.sendEvent(target, with: "error: \(error.localizedDescription)")
+                if error.represents(.failDecode) {
+                    self?.analytics.sendEvent(.RQFailListCards, with: [AnalyticsKey.ParsingError: error.localizedDescription])
+                } else {
+                    self?.analytics.sendEvent(.RSFailListCards, with: [AnalyticsKey.errorCode: error.localizedDescription])
+                }
+                
                 completion(.failure(error))
             }
         }

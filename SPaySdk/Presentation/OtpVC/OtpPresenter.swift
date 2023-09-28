@@ -145,7 +145,7 @@ final class OtpPresenter: OtpPresenting {
     }
         
     func back() {
-        analitics.sendEvent(.TouchBack, with: "screen: OtpVC")
+        analitics.sendEvent(.TouchBack, with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         view?.dismiss(animated: true, completion: { [weak self] in
             self?.sdkManager.completionWithError(error: .cancelled)
         })

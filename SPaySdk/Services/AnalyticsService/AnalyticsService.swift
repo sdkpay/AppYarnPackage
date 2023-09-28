@@ -248,8 +248,7 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     }
     
     func sendEvent(_ event: AnalyticsEvent, with strings: String...) {
-        let string = "orderNumber: \(sdkManager.authInfo?.orderNumber ?? "")"
-        analyticServices.forEach({ $0.sendEvent(event, with: "\(strings)" + string) })
+        analyticServices.forEach({ $0.sendEvent(event, with: strings) })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with ints: Int...) {
@@ -273,7 +272,9 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     }
     
     func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any]) {
-        analyticServices.forEach({ $0.sendEvent(event, with: dictionaty) })
+        var dict = dictionaty
+        dict[.orderNumber] = sdkManager.authInfo?.orderNumber ?? ""
+        analyticServices.forEach({ $0.sendEvent(event, with: dict) })
     }
     
     init(sdkManager: SDKManager) {

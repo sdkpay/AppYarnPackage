@@ -35,7 +35,7 @@ final class PartPayPresenter: PartPayPresenting {
     private let analytics: AnalyticsService
     private var partPaySelected: Action
     private var isSelected = true
-    private var screenEvents = "screen: \(AnlyticsScreenEvent.PartPayVC.rawValue)"
+    private var screenEvents = [AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
 
     init(_ router: PartPayRouter,
          partPayService: PartPayService,

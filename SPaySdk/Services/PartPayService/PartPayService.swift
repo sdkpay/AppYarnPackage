@@ -98,8 +98,11 @@ final class DefaultPartPayService: PartPayService {
                 self?.analitics.sendEvent(.RQGoodBnpl)
                 completion(nil)
             case .failure(let error):
-                let target: AnalyticsEvent = error.represents(.failDecode) ? .RSFailBnpl : .RQFailBnpl
-                self?.analitics.sendEvent(target, with: "error: \(error.localizedDescription)")
+                if error.represents(.failDecode) {
+                    self?.analitics.sendEvent(.RQFailBnpl, with: [AnalyticsKey.ParsingError: error.localizedDescription])
+                } else {
+                    self?.analitics.sendEvent(.RSFailBnpl, with: [AnalyticsKey.errorCode: error.localizedDescription])
+                }
                 completion(error)
             }
         }
