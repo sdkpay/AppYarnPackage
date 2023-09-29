@@ -84,9 +84,10 @@ final class DefaultPaymentService: PaymentService {
                 var merchantLogin: String
                 
                 if isBnplEnabled {
-                    self.authManager.apiKey = BnplConstants.apiKey
+                 //   self.authManager.apiKey = BnplConstants.apiKey
                     orderid = paymentToken.initiateBankInvoiceId
-                    merchantLogin = BnplConstants.merchantLogin
+                  //  merchantLogin = BnplConstants.merchantLogin
+                    merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
                 } else {
                     orderid = authInfo.orderId
                     merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
@@ -100,9 +101,10 @@ final class DefaultPaymentService: PaymentService {
                 case .manual:
                     self.sdkManager.payHandler = { [weak self] payInfo in
                         if isBnplEnabled {
-                            self?.authManager.apiKey = BnplConstants.apiKey
+                        //    self?.authManager.apiKey = BnplConstants.apiKey
                             orderid = paymentToken.initiateBankInvoiceId
-                            merchantLogin = BnplConstants.merchantLogin
+                        //    merchantLogin = BnplConstants.merchantLogin
+                            merchantLogin = self?.sdkManager.authInfo?.merchantLogin ?? ""
                         } else {
                             orderid = payInfo.orderId
                             merchantLogin = self?.sdkManager.authInfo?.merchantLogin ?? ""
