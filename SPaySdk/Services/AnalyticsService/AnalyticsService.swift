@@ -210,6 +210,18 @@ enum AnalyticsEvent: String {
     case MACCompletePayment
     /// Метод для авторизации банка
     case MAGetAuthURL
+    /// Запуск логики по запросу необходимых разрешений
+    case SCPermissions
+    /// Все запрашиваемые разрешения были выданы
+    case SCGoodPermissions
+    /// Не все либо ни одно из разрешений не было выдано
+    case SCFailPermissions
+    /// Запуск логики SPaySDK бизоном
+    case SCBiZone
+    /// Проверка SPaySDK прошла успешно
+    case SCGoodBiZone
+    /// Проверка SPaySDK была провалена
+    case SCFailBiZone
 }
 
 enum AnalyticsValue: String {
@@ -222,6 +234,8 @@ enum AnalyticsKey: String {
     case errorCode
     case ParsingError
     case httpCode
+    case permisson
+    case biZoneCode
 }
 
 protocol AnalyticsService {

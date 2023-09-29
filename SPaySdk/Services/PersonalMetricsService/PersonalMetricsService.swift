@@ -40,6 +40,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     }
     
     func integrityCheck(completion: @escaping (Bool) -> Void) {
+        analyticsService.sendEvent(.SCPermissions)
         DispatchQueue.global().async { [weak self] in
             guard let data = self?.provider?.report(.mixedWithCoord) else {
                 completion(false)
@@ -55,24 +56,28 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
             // Проверяем значение
             if let emulator = emulator,
                let сompromised = сompromised {
-//                self?.analyticsService.sendEvent(.Emulator, with: "\(emulator)")
-//                self?.analyticsService.sendEvent(.Compromised, with: "\(сompromised)")
+
                 if сompromised == 0,
                    emulator == 0 {
+                    self?.analyticsService.sendEvent(.SCGoodPermissions)
                     completion(true)
                 }
             } else {
+                self?.analyticsService.sendEvent(.SCFailPermissions, with: [AnalyticsKey.permisson: emulator ?? сompromised ?? 0])
                 completion(false)
             }
         }
     }
     
     func getUserData(completion: @escaping (String?) -> Void) {
+        analyticsService.sendEvent(.SCBiZone)
         DispatchQueue.global().async { [weak self] in
             guard let data = self?.provider?.report(.mixedWithCoord) else {
+                self?.analyticsService.sendEvent(.SCFailBiZone)
                 completion(nil)
                 return
             }
+            self?.analyticsService.sendEvent(.SCGoodBiZone)
             SBLogger.log(.biZone + data)
             let dataDictionary = self?.convertToDictionary(text: data)
             self?.ipAddress = dataDictionary?["LocalIPv4"] as? String
