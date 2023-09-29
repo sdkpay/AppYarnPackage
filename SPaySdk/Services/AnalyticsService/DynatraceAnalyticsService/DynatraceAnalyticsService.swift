@@ -55,19 +55,19 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
         action?.leave()
     }
     
-    func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any]) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        dictionaty.forEach { key, value in
-            if let value = value as? Int64 {
-                action?.reportValue(withName: key.rawValue, intValue: value)
-            } else if let value = value as? String {
-                action?.reportValue(withName: key.rawValue, stringValue: value)
-            } else {
-                assertionFailure("Неверный тип для \(value)")
-            }
-        }
-        action?.leave()
-    }
+//    func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any]) {
+//        let action = DTXAction.enter(withName: event.rawValue)
+//        dictionaty.forEach { key, value in
+//            if let value = value as? Int64 {
+//                action?.reportValue(withName: key.rawValue, intValue: value)
+//            } else if let value = value as? String {
+//                action?.reportValue(withName: key.rawValue, stringValue: value)
+//            } else {
+//                assertionFailure("Неверный тип для \(value)")
+//            }
+//        }
+//        action?.leave()
+//    }
 
     func config() {
 #if SDKDEBUG
