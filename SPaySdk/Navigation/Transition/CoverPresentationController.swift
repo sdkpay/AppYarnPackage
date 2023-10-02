@@ -91,7 +91,7 @@ final class CoverPresentationController: UIPresentationController {
     @objc
     private func handleTap(_ sender: UITapGestureRecognizer) {
         presentingViewController.dismiss(animated: true) {
-            NotificationCenter.default.post(name: Notification.Name(closeSDKNotification), object: nil, userInfo: nil)
+            NotificationCenter.default.post(name: .closeSDKNotification, object: nil, userInfo: nil)
         }
     }
 }

@@ -12,10 +12,14 @@ enum PayStrategy {
     case manual
 }
 
+extension Notification.Name {
+    static let closeSDKNotification = NSNotification.Name("CloseSDKWithoutError")
+}
+
 final class SDKManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         let service: SDKManager = DefaultSDKManager(authManager: container.resolve(),
-                                                    liveCircleManager: container.resolve())
+                                                    completionManager: container.resolve())
         container.register(service: service)
     }
 }
@@ -36,29 +40,16 @@ protocol SDKManager {
                                  completion: @escaping PaymentCompletion)
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
-    func completionPaymentToken(with paymentToken: String?,
-                                paymentTokenId: String?,
-                                tokenExpiration: Int)
-    func completionWithError(error: SDKError)
-    func completionPay(with state: SPayState)
-}
-
-extension SDKManager {
-    func completionPaymentToken(with paymentToken: String? = nil,
-                                paymentTokenId: String? = nil,
-                                tokenExpiration: Int = 0) {
-        completionPaymentToken(with: paymentToken,
-                               paymentTokenId: paymentTokenId,
-                               tokenExpiration: tokenExpiration)
-    }
+//    func completionPaymentToken(with paymentToken: String?,
+//                                paymentTokenId: String?,
+//                                tokenExpiration: Int)
+//    func completionWithError(error: SDKError)
+//    func completionPay(with state: SPayState)
 }
 
 final class DefaultSDKManager: SDKManager {
     private var authManager: AuthManager
-    private var liveCircleManager: LiveCircleManager
-
-    private var paymentCompletion: PaymentCompletion?
-    private var paymentTokenCompletion: PaymentTokenCompletion?
+    private var completionManager: CompletionManager
 
     private(set) var authInfo: AuthInfo?
     private(set) var payInfo: PayInfo?
@@ -69,14 +60,19 @@ final class DefaultSDKManager: SDKManager {
     private(set) var newStart = true
     
     init(authManager: AuthManager,
-         liveCircleManager: LiveCircleManager) {
+         completionManager: CompletionManager) {
         self.authManager = authManager
-        self.liveCircleManager = liveCircleManager
+        self.completionManager = completionManager
         SBLogger.log(.start(obj: self))
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(closeSdk),
+                                               name: .closeSDKNotification,
+                                               object: nil)
     }
     
     deinit {
         SBLogger.log(.stop(obj: self))
+        NotificationCenter.default.removeObserver(self, name: .closeSDKNotification, object: nil)
     }
 
     func config(apiKey: String,
@@ -89,7 +85,7 @@ final class DefaultSDKManager: SDKManager {
         authManager.apiKey = apiKey
         authManager.lang = paymentTokenRequest.language
         authManager.orderNumber = paymentTokenRequest.orderNumber
-        self.paymentTokenCompletion = completion
+        completionManager.setPaymentTokenCompletion(completion)
     }
     
     func configWithOrderId(apiKey: String,
@@ -102,8 +98,7 @@ final class DefaultSDKManager: SDKManager {
         authManager.apiKey = apiKey
         authManager.lang = paymentRequest.language
         authManager.orderNumber = paymentRequest.orderNumber
-        self.paymentCompletion = completion
-    }
+        completionManager.setPaymentCompletion(completion)
     
     func configWithBankInvoiceId(apiKey: String,
                                  paymentRequest: SBankInvoicePaymentRequest,
@@ -114,64 +109,57 @@ final class DefaultSDKManager: SDKManager {
         payStrategy = .auto
         authManager.apiKey = apiKey
         authManager.lang = paymentRequest.language
-        self.paymentCompletion = completion
+        completionManager.setPaymentCompletion(completion)
     }
     
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
         payInfo = PayInfo(paymentRequest: paymentRequest)
         authInfo?.orderId = paymentRequest.orderId
-        paymentCompletion = completion
+        completionManager.setPaymentCompletion(completion)
         payHandler?(PayInfo(paymentRequest: paymentRequest))
     }
     
-    func completionWithError(error: SDKError) {
-        let responce = SPaymentTokenResponse()
-        responce.error = SPError(errorState: error)
-        switch payStrategy {
-        case .auto:
-            paymentCompletion?(.error, SPError(errorState: error).errorDescription)
-            paymentCompletion = nil
-        case .manual:
-            if payInfo == nil {
-                paymentTokenCompletion?(responce)
-                paymentTokenCompletion = nil
-            } else {
-                paymentCompletion?(.error, SPError(errorState: error).errorDescription)
-                paymentCompletion = nil
-            }
-        }
-        liveCircleManager.closeSDKWindow()
-    }
+//    func completionWithError(error: SDKError) {
+//        let responce = SPaymentTokenResponse()
+//        responce.error = SPError(errorState: error)
+//        switch payStrategy {
+//        case .auto:
+//            paymentCompletion?(.error, SPError(errorState: error).errorDescription)
+//            paymentCompletion = nil
+//        case .manual:
+//            if payInfo == nil {
+//                paymentTokenCompletion?(responce)
+//                paymentTokenCompletion = nil
+//            } else {
+//                paymentCompletion?(.error, SPError(errorState: error).errorDescription)
+//                paymentCompletion = nil
+//            }
+//        }
+//        liveCircleManager.closeSDKWindow()
+//    }
     
-    func completionPaymentToken(with paymentToken: String? = nil,
-                                paymentTokenId: String? = nil,
-                                tokenExpiration: Int = 0) {
-        let responce = SPaymentTokenResponse(paymentToken: paymentToken,
-                                             paymentTokenId: paymentTokenId,
-                                             tokenExpiration: tokenExpiration,
-                                             error: nil)
-        paymentTokenCompletion?(responce)
-        liveCircleManager.closeSDKWindow()
-    }
-    
-    func completionPay(with state: SPayState) {
-        switch state {
-        case .success:
-            paymentCompletion?(.success, Strings.Alert.Pay.Success.title)
-        case .waiting:
-            paymentCompletion?(.waiting, ConfigGlobal.localization?.payLoading ?? "")
-        case .error:
-            paymentCompletion?(.error, Strings.Alert.Error.Main.title)
-        }
-        paymentCompletion = nil
-        liveCircleManager.closeSDKWindow()
-    }
-    
+//    func completionPaymentToken(with paymentToken: String? = nil,
+//                                paymentTokenId: String? = nil,
+//                                tokenExpiration: Int = 0) {
+//        let responce = SPaymentTokenResponse(paymentToken: paymentToken,
+//                                             paymentTokenId: paymentTokenId,
+//                                             tokenExpiration: tokenExpiration,
+//                                             error: nil)
+//        paymentTokenCompletion?(responce)
+//        paymentTokenCompletion = nil
+//        liveCircleManager.closeSDKWindow()
+//    }
+//
     private func isNewStart(check authInfo: AuthInfo) -> Bool {
         // Проверяем наличие сохраненной информации о запросе
         guard let savedInfo = self.authInfo else { return true }
         // Сравниваем новый запрос с сохраненным
         return authInfo != savedInfo
+    }
+    
+    @objc
+    private func closeSdk() {
+        completionManager.closeAction()
     }
 }

@@ -31,6 +31,7 @@ final class PaymentAssembly {
                          bankManager: locator.resolve(),
                          paymentService: locator.resolve(),
                          locationManager: locator.resolve(),
+                         completionManager: locator.resolve(),
                          alertService: locator.resolve(),
                          authService: locator.resolve(),
                          partPayService: locator.resolve(),

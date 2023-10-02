@@ -13,6 +13,10 @@ struct BnplModel: Codable {
     let offerUrl: String?
     let offerText: String?
     let graphBnpl: GraphBnpl?
+    
+    var integrityCheck: Bool {
+        buttonBnpl?.integrityCheck == true && graphBnpl != nil
+    }
 }
 
 struct GraphBnpl: Codable {
@@ -42,4 +46,8 @@ struct ButtonBnpl: Codable {
     let inactiveButtonLogo: String?
     let header: String?
     let content: String?
+    
+    var integrityCheck: Bool {
+        activeButtonLogo != nil && inactiveButtonLogo != nil && header != nil && content != nil
+    }
 }

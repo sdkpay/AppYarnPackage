@@ -51,7 +51,7 @@ final class DefaultLocatorService: LocatorService {
             case .reference: register(service: instance)
             default: break
             }
-            SBLogger.logLocatorResolve("\(type(of: T.self))")
+           SBLogger.logLocatorResolve("\(type(of: T.self))")
             return instance
         } else {
             preconditionFailure("Could not resolve service for \(type(of: T.self))")

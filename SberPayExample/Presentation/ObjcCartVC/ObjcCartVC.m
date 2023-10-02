@@ -77,12 +77,17 @@
                                                                         recurrentFrequency:0
                                                                                     apiKey:@"a12312"];
     
-    [SPay getPaymentTokenWith:self with:requestModel completion:^(SPaymentTokenResponse * _Nonnull response) {
-        if (response.error) {
-            // Обработка ошибки
-            NSLog(@"%@ - описание ошибки", response.error.errorDescription);
-        } else {
-            // Обработка успешно полученных данных
+    [SPay getPaymentTokenWith:self with:requestModel completion:^(enum SPayTokenState state, SPaymentTokenResponseModel * _Nonnull info) {
+        switch(state) {
+            case SPayTokenStateSuccess:
+                NSLog(@"Успешный результат");
+                break;
+            case SPayTokenStateError:
+                NSLog(@"%@ - описание ошибки", info);
+                break;
+            case SPayTokenStateCancel:
+                NSLog(@"Отмена");
+                break;
         }
     }];
 }
@@ -97,6 +102,9 @@
                 break;
             case SPayStateWaiting:
                 NSLog(@"Необходимо проверить статус оплаты");
+                break;
+            case SPayStateCancel:
+                NSLog(@"Отмена");
                 break;
             case SPayStateError:
                 NSLog(@"%@ - описание ошибки", info);
@@ -119,6 +127,9 @@
                 break;
             case SPayStateWaiting:
                 NSLog(@"Необходимо проверить статус оплаты");
+                break;
+            case SPayStateCancel:
+                NSLog(@"Отмена");
                 break;
             case SPayStateError:
                 NSLog(@"%@ - описание ошибки", info);

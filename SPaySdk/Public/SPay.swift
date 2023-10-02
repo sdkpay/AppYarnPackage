@@ -41,7 +41,7 @@ public final class SPay: NSObject {
     @objc
     public static func getPaymentToken(with viewController: UIViewController,
                                        with paymentTokenRequest: SPaymentTokenRequest,
-                                       completion: @escaping (SPaymentTokenResponse) -> Void) {
+                                       completion: @escaping (_ state: SPayTokenState, _ info: SPaymentTokenResponseModel) -> Void) {
         payService?.getPaymentToken(with: viewController, with: paymentTokenRequest, completion: completion)
     }
     

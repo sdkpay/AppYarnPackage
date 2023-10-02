@@ -7,8 +7,6 @@
 
 import UIKit
 
-let closeSDKNotification = "CloseSDKWithoutError"
-
 protocol LiveCircleManager {
     func openInitialScreen(with viewController: UIViewController,
                            with locator: LocatorService)
@@ -38,10 +36,6 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         let analytics: AnalyticsService = locator.resolve()
         analytics.sendEvent(.LCBankAppFound)
         setenv("CFNETWORK_DIAGNOSTICS", "3", 1)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(closeSdk),
-                                               name: Notification.Name(closeSDKNotification),
-                                               object: nil)
     }
     
     deinit {
@@ -49,7 +43,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     }
     
     func closeSDKWindow() {
-        rootController?.dismiss(animated: true)
+        rootController?.dismiss(animated: false)
         rootController = nil
         sdkWindow = nil
     }
@@ -82,6 +76,12 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                               state: .failure,
                               buttons: [],
                               completion: completion)
+        case .cancel:
+            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+                              with: Strings.Alert.Error.Main.title,
+                              state: .failure,
+                              buttons: [],
+                              completion: completion)
         }
     
         closeSdk()
@@ -102,6 +102,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
 //        analytics.sendEvent(.ManuallyClosed)
         timeManager?.stopContectionTypeChecking()
     }
+
     
     private func setupWindows(viewController: UIViewController,
                               locator: LocatorService,

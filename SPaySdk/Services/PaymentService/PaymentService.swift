@@ -16,12 +16,18 @@ enum PayError: Error {
     case defaultError
 }
 
+private enum BnplConstants {
+    static let apiKey = "AHMjXmv8vkVhvybwIqlm2cIAAAAAAAAADHRDSikJqKmlyVz6NxPPBwS3tuDjhZMYQjoj4LwfvhrdJ2w5XUfZc8/nGNWtc0QVMH37jvx5G3B+HqJ8/eMEN6xOXD7cxvXGdN2eh1l7oc6wqq+IozWI+jtlX6R5ZfpqT2c0aEAEZegwFuhfg66gBKi4DdMcDw==" // swiftlint:disable:this line_length
+    static let merchantLogin = "bnpl-sbrf"
+}
+
 final class PaymentServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
             let service: PaymentService = DefaultPaymentService(authManager: container.resolve(),
                                                                 network: container.resolve(), userService: container.resolve(),
                                                                 personalMetricsService: container.resolve(),
+                                                                completionManager: container.resolve(),
                                                                 sdkManager: container.resolve())
             return service
         }
@@ -41,7 +47,8 @@ final class DefaultPaymentService: PaymentService {
     private let network: NetworkService
     private var sdkManager: SDKManager
     private let userService: UserService
-    private let authManager: AuthManager
+    private let completionManager: CompletionManager
+    private var authManager: AuthManager
     private let personalMetricsService: PersonalMetricsService
     private var paymentToken: PaymentTokenModel?
     
@@ -49,11 +56,13 @@ final class DefaultPaymentService: PaymentService {
          network: NetworkService,
          userService: UserService,
          personalMetricsService: PersonalMetricsService,
+         completionManager: CompletionManager,
          sdkManager: SDKManager) {
         self.authManager = authManager
         self.network = network
         self.userService = userService
         self.sdkManager = sdkManager
+        self.completionManager = completionManager
         self.personalMetricsService = personalMetricsService
         SBLogger.log(.start(obj: self))
     }
@@ -72,25 +81,40 @@ final class DefaultPaymentService: PaymentService {
                 guard let paymentToken = self.paymentToken else { return }
                 guard let authInfo = self.sdkManager.authInfo else { return }
                 var orderid: String?
+                var merchantLogin: String
+                
                 if isBnplEnabled {
+                 //   self.authManager.apiKey = BnplConstants.apiKey
                     orderid = paymentToken.initiateBankInvoiceId
+                  //  merchantLogin = BnplConstants.merchantLogin
+                    merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
                 } else {
                     orderid = authInfo.orderId
+                    merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
                 }
                 switch self.sdkManager.payStrategy {
                 case .auto:
-                    self.pay(with: paymentToken.paymentToken, orderId: orderid, completion: completion)
+                    self.pay(with: paymentToken.paymentToken,
+                             orderId: orderid,
+                             merchantLogin: merchantLogin,
+                             completion: completion)
                 case .manual:
                     self.sdkManager.payHandler = { [weak self] payInfo in
                         if isBnplEnabled {
+                        //    self?.authManager.apiKey = BnplConstants.apiKey
                             orderid = paymentToken.initiateBankInvoiceId
+                        //    merchantLogin = BnplConstants.merchantLogin
+                            merchantLogin = self?.sdkManager.authInfo?.merchantLogin ?? ""
                         } else {
                             orderid = payInfo.orderId
+                            merchantLogin = self?.sdkManager.authInfo?.merchantLogin ?? ""
                         }
                         self?.pay(with: payInfo.paymentToken ?? paymentToken.paymentToken,
-                                  orderId: orderid, completion: completion)
+                                  orderId: orderid,
+                                  merchantLogin: merchantLogin,
+                                  completion: completion)
                     }
-                    self.sdkManager.completionPaymentToken(with: paymentToken.paymentToken)
+                    self.completionManager.completePaymentToken(with: paymentToken.paymentToken)
                 }
             case .failure(let failure):
                 if isBnplEnabled {
@@ -110,8 +134,16 @@ final class DefaultPaymentService: PaymentService {
     func tryToGetPaymenyToken(paymentId: Int,
                               isBnplEnabled: Bool,
                               completion: @escaping (Result<Void, PayError>) -> Void) {
+        var merchantLogin: String
+        
+        if isBnplEnabled {
+            merchantLogin = BnplConstants.merchantLogin
+        } else {
+            merchantLogin = sdkManager.authInfo?.merchantLogin ?? ""
+        }
         getPaymenyToken(paymentId: paymentId,
-                        isBnplEnabled: isBnplEnabled) { result in
+                        isBnplEnabled: isBnplEnabled,
+                        merchantLogin: merchantLogin) { result in
             switch result {
             case .success(let success):
                 self.paymentToken = success
@@ -124,6 +156,7 @@ final class DefaultPaymentService: PaymentService {
     
     private func getPaymenyToken(paymentId: Int,
                                  isBnplEnabled: Bool,
+                                 merchantLogin: String,
                                  completion: @escaping (Result<PaymentTokenModel, SDKError>) -> Void) {
         guard let sessionId = authManager.sessionId,
               let authInfo = sdkManager.authInfo
@@ -133,7 +166,7 @@ final class DefaultPaymentService: PaymentService {
                 self.network.request(PaymentTarget.getPaymentToken(sessionId: sessionId,
                                                                    deviceInfo: deviceInfo,
                                                                    paymentId: paymentId,
-                                                                   merchantLogin: authInfo.merchantLogin,
+                                                                   merchantLogin: merchantLogin,
                                                                    orderId: authInfo.orderId,
                                                                    amount: authInfo.amount,
                                                                    currency: authInfo.currency,
@@ -151,11 +184,11 @@ final class DefaultPaymentService: PaymentService {
 
     private func pay(with token: String,
                      orderId: String?,
+                     merchantLogin: String,
                      completion: @escaping ((Result<Void, PayError>) -> Void)) {
-        guard let authInfo = sdkManager.authInfo else { return }
         network.request(PaymentTarget.getPaymentOrder(operationId: .generateRandom(with: 36),
                                                       orderId: orderId,
-                                                      merchantLogin: authInfo.merchantLogin,
+                                                      merchantLogin: merchantLogin,
                                                       ipAddress: personalMetricsService.ipAddress,
                                                       paymentToken: token),
                         to: PaymentOrderModel.self,
