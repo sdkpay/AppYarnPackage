@@ -152,8 +152,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self.analytics.sendEvent(.RQGoodSessionId)
                 self.authManager.sessionId = result.sessionId
                 self.appLink = result.deeplink
-                self.partPayService.setUserEnableBnpl(result.isBnplEnabled ?? false,
-                                                      enabledLevel: .server)
+                self.partPayService.setEnabledBnpl(result.isBnplEnabled ?? false, enabledLevel: .session)
                 
                 var refreshIsActive = false
                 

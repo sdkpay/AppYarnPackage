@@ -79,7 +79,9 @@ enum AlertType {
 final class AlertServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register(reference: {
-            let service: AlertService = DefaultAlertService(completionManager: container.resolve())
+            let service: AlertService = DefaultAlertService(completionManager: container.resolve(),
+                                                            liveCircleManager: container.resolve(),
+                                                            analytics: container.resolve())
             return service
         })
     }
@@ -96,7 +98,7 @@ protocol AlertService {
                      animate: Bool)
     func hideLoading(animate: Bool)
     func hide(animated: Bool, completion: Action?)
-    func close()
+    func close(animated: Bool, completion: Action?)
 }
 
 extension AlertService {
@@ -116,14 +118,18 @@ extension AlertService {
 }
 
 final class DefaultAlertService: AlertService {
-    private let completionManager: CompletionManager?
+    private let completionManager: CompletionManager
     
     private var alertVC: ContentVC?
-    private let analitics: AnalyticsService
+    private let analytics: AnalyticsService
     private let liveCircleManager: LiveCircleManager
     
-    init(completionManager: CompletionManager) {
+    init(completionManager: CompletionManager,
+         liveCircleManager: LiveCircleManager,
+         analytics: AnalyticsService) {
         self.completionManager = completionManager
+        self.liveCircleManager = liveCircleManager
+        self.analytics = analytics
         SBLogger.log(.start(obj: self))
     }
     
@@ -163,21 +169,21 @@ final class DefaultAlertService: AlertService {
     func show(on view: ContentVC?, type: AlertType) {
         switch type {
         case .paySuccess(let completion):
-            analitics.sendEvent(.LCStatusSuccessViewAppeared)
+            analytics.sendEvent(.LCStatusSuccessViewAppeared)
             showAlert(on: view,
                       with: Strings.Alert.Pay.Success.title,
                       state: .success,
                       buttons: [],
                       completion: completion)
         case .defaultError(let completion):
-            analitics.sendEvent(.LCStatusErrorViewAppeared, with: "error: default")
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "error: default")
             showAlert(on: view,
                       with: Strings.Alert.Error.Main.title,
                       state: .failure,
                       buttons: [],
                       completion: completion)
         case let .noInternet(retry, completion):
-            analitics.sendEvent(.LCStatusErrorViewAppeared, with: "errror: noInternet")
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "errror: noInternet")
             let tryButton = AlertButtonModel(title: Strings.Try.title,
                                              type: .full,
                                              action: retry)
@@ -194,7 +200,7 @@ final class DefaultAlertService: AlertService {
                         ],
                       completion: completion)
         case let .partPayError(fullPay: fullPay, back: back):
-            analitics.sendEvent(.LCStatusErrorViewAppeared, with: "error: partPayError")
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "error: partPayError")
             let fullPayButton = AlertButtonModel(title: Strings.Pay.Full.title,
                                                  type: .full,
                                                  action: fullPay)
@@ -210,7 +216,7 @@ final class DefaultAlertService: AlertService {
                       ],
                       completion: back)
         case .tryingError(back: let back):
-            analitics.sendEvent(.LCStatusErrorViewAppeared)
+            analytics.sendEvent(.LCStatusErrorViewAppeared)
             let fullPayButton = AlertButtonModel(title: Strings.Button.Otp.back,
                                                  type: .full,
                                                  action: back)
@@ -231,6 +237,6 @@ final class DefaultAlertService: AlertService {
     }
     
     func close() {
-        completionManager?.dismissCloseAction(alertVC)
+        completionManager.dismissCloseAction(alertVC)
     }
 }

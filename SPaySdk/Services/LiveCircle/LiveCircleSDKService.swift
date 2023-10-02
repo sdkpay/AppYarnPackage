@@ -84,25 +84,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                               completion: completion)
         }
     
-        closeSdk()
     }
-    
-    @objc
-    private func closeSdk(isErrorCompleted: Bool = false) {
-        guard let locator = locator else { return }
-        let network: NetworkService = locator.resolve()
-        network.cancelTask()
-        closeWithGesture?()
-        closeSDKWindow()
-        if !isErrorCompleted {
-            let manager: SDKManager = locator.resolve()
-            manager.completionWithError(error: .cancelled)
-        }
-        let analytics: AnalyticsService = locator.resolve()
-//        analytics.sendEvent(.ManuallyClosed)
-        timeManager?.stopContectionTypeChecking()
-    }
-
     
     private func setupWindows(viewController: UIViewController,
                               locator: LocatorService,

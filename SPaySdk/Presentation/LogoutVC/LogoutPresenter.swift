@@ -19,13 +19,18 @@ final class LogoutPresenter: LogoutPresenting {
     
     weak var view: (ILogoutVC & ContentVC)?
     private let sdkManager: SDKManager
-    private var storage: KeychainStorage
+    private var storage: CookieStorage
     private var authManager: AuthManager
+    private let completionManager: CompletionManager
     
-    init(sdkManager: SDKManager, storage: KeychainStorage, authManager: AuthManager) {
+    init(sdkManager: SDKManager,
+         storage: CookieStorage,
+         authManager: AuthManager,
+         completionManager: CompletionManager) {
         self.sdkManager = sdkManager
         self.storage = storage
         self.authManager = authManager
+        self.completionManager = completionManager
     }
     
     func getNumber() -> String? {
@@ -41,9 +46,7 @@ final class LogoutPresenter: LogoutPresenting {
     }
     
     func logout() {
-        try? storage.deleteAll()
-        view?.dismiss(animated: true) {
-            self.sdkManager.completionWithError(error: .cancelled)
-        }
+        storage.cleanCookie()
+        completionManager.closeAction()
     }
 }

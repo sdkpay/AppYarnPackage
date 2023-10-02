@@ -26,6 +26,7 @@ final class OtpPresenter: OtpPresenting {
     private let authManager: AuthManager
     private let analitics: AnalyticsService
     private let keyboardManager: KeyboardManager
+    private let completionManager: CompletionManager
     private var sec = 45
     private var countOfErrorPayment = 0
     private var timer: Timer?
@@ -39,6 +40,7 @@ final class OtpPresenter: OtpPresenting {
          sdkManager: SDKManager,
          alertService: AlertService,
          analitics: AnalyticsService,
+         completionManager: CompletionManager,
          keyboardManager: KeyboardManager,
          completion: @escaping Action) {
         self.otpService = otpService
@@ -48,6 +50,7 @@ final class OtpPresenter: OtpPresenting {
         self.alertService = alertService
         self.completion = completion
         self.analitics = analitics
+        self.completionManager = completionManager
         self.keyboardManager = keyboardManager
         self.setKeyboardHeight()
     }
@@ -146,9 +149,7 @@ final class OtpPresenter: OtpPresenting {
         
     func back() {
         analitics.sendEvent(.TouchBack, with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-        view?.dismiss(animated: true, completion: { [weak self] in
-            self?.sdkManager.completionWithError(error: .cancelled)
-        })
+        self.completionManager.closeAction()
     }
     
     func viewDidAppear() {
@@ -166,9 +167,8 @@ final class OtpPresenter: OtpPresenting {
     }
     
     private func dismissWithError(_ error: SDKError) {
-        alertService.close(animated: true, completion: { [weak self] in
-            self?.sdkManager.completionWithError(error: error)
-        })
+        self.completionManager.completeWithError(error)
+        self.alertService.close()
     }
     
     private func getHashCode(code: String) -> String {

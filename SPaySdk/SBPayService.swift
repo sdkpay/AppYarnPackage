@@ -20,9 +20,6 @@ protocol SBPayService {
                          completion: @escaping PaymentTokenCompletion)
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
-    func payWithOrderId(with viewController: UIViewController,
-                        paymentRequest: SFullPaymentRequest,
-                        completion: @escaping PaymentCompletion)
     func payWithBankInvoiceId(with viewController: UIViewController,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion)
@@ -143,24 +140,6 @@ final class DefaultSBPayService: SBPayService {
         liveCircleManager.completePayment(paymentSuccess: paymentSuccess, completion: completion)
     }
     
-    func payWithOrderId(with viewController: UIViewController,
-                        paymentRequest: SFullPaymentRequest,
-                        completion: @escaping PaymentCompletion) {
-        timeManager.startCheckingCPULoad()
-        timeManager.startContectionTypeChecking()
-        if let apiKey = paymentRequest.apiKey {
-            self.apiKey = apiKey
-        }
-        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
-        locator
-            .resolve(SDKManager.self)
-            .configWithOrderId(apiKey: apiKey,
-                               paymentRequest: paymentRequest,
-                               completion: completion)
-        liveCircleManager.openInitialScreen(with: viewController,
-                                            with: locator)
-    }
-    
     func payWithBankInvoiceId(with viewController: UIViewController,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
@@ -169,9 +148,7 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(AnalyticsService.self)
             .sendEvent(.MAPayWithBankInvoiceId)
-        if apiKey == nil {
-            apiKey = paymentRequest.apiKey
-        }
+        apiKey = paymentRequest.apiKey
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
             return assertionFailure(error)

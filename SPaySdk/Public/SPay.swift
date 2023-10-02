@@ -57,26 +57,6 @@ public final class SPay: NSObject {
     /**
      Единый метод для оплаты
      */
-#if SDKDEBUG
-    @objc
-    public static func payWithOrderId(with viewController: UIViewController,
-                                      with paymentRequest: SFullPaymentRequest,
-                                      completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
-        payService?.payWithOrderId(with: viewController, paymentRequest: paymentRequest, completion: completion)
-    }
-#else
-    @objc
-    @available(*, deprecated, message: "Метод устарел, используйте payWithBankInvoiceId")
-    public static func payWithOrderId(with viewController: UIViewController,
-                                      with paymentRequest: SFullPaymentRequest,
-                                      completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
-        payService?.payWithOrderId(with: viewController, paymentRequest: paymentRequest, completion: completion)
-    }
-#endif
-    
-    /**
-     Единый метод для оплаты
-     */
     @objc
     public static func payWithBankInvoiceId(with viewController: UIViewController,
                                             paymentRequest: SBankInvoicePaymentRequest,

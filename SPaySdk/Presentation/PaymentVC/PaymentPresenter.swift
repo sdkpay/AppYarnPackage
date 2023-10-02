@@ -95,6 +95,7 @@ final class PaymentPresenter: PaymentPresenting {
          otpService: OTPService,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
+        self.sdkManager = manager
         self.userService = userService
         self.completionManager = completionManager
         self.analytics = analytics
@@ -410,6 +411,12 @@ final class PaymentPresenter: PaymentPresenting {
         }
     }
     
+    
+    private func dismissWithError(_ error: SDKError) {
+        self.completionManager.completeWithError(error)
+        alertService.close()
+    }
+    
 
     private func pay() {
         view?.userInteractionsEnabled = false
@@ -421,9 +428,6 @@ final class PaymentPresenter: PaymentPresenting {
                                 isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
             guard let self = self else { return }
             self.view?.userInteractionsEnabled = true
-            if self.partPayService.bnplplanSelected {
-//                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
-            }
             switch result {
             case .success:
                 self.alertService.show(on: self.view, type: .paySuccess(completion: {
@@ -431,9 +435,6 @@ final class PaymentPresenter: PaymentPresenting {
                     self.alertService.close()
                 }))
             case .failure(let error):
-                if self.partPayService.bnplplanSelected {
-//                    self.analytics.sendEvent(.PayWithBNPLFailed)
-                }
                 self.validatePayError(error)
             }
         }

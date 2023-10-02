@@ -32,19 +32,11 @@ protocol SDKManager {
     func config(apiKey: String,
                 paymentTokenRequest: SPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion)
-    func configWithOrderId(apiKey: String,
-                           paymentRequest: SFullPaymentRequest,
-                           completion: @escaping PaymentCompletion)
     func configWithBankInvoiceId(apiKey: String,
                                  paymentRequest: SBankInvoicePaymentRequest,
                                  completion: @escaping PaymentCompletion)
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
-//    func completionPaymentToken(with paymentToken: String?,
-//                                paymentTokenId: String?,
-//                                tokenExpiration: Int)
-//    func completionWithError(error: SDKError)
-//    func completionPay(with state: SPayState)
 }
 
 final class DefaultSDKManager: SDKManager {
@@ -88,18 +80,6 @@ final class DefaultSDKManager: SDKManager {
         completionManager.setPaymentTokenCompletion(completion)
     }
     
-    func configWithOrderId(apiKey: String,
-                           paymentRequest: SFullPaymentRequest,
-                           completion: @escaping PaymentCompletion) {
-        let authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
-        newStart = isNewStart(check: authInfo)
-        if newStart { self.authInfo = authInfo }
-        payStrategy = .auto
-        authManager.apiKey = apiKey
-        authManager.lang = paymentRequest.language
-        authManager.orderNumber = paymentRequest.orderNumber
-        completionManager.setPaymentCompletion(completion)
-    
     func configWithBankInvoiceId(apiKey: String,
                                  paymentRequest: SBankInvoicePaymentRequest,
                                  completion: @escaping PaymentCompletion) {
@@ -109,6 +89,7 @@ final class DefaultSDKManager: SDKManager {
         payStrategy = .auto
         authManager.apiKey = apiKey
         authManager.lang = paymentRequest.language
+        authManager.orderNumber = paymentRequest.orderNumber
         completionManager.setPaymentCompletion(completion)
     }
     
@@ -120,37 +101,6 @@ final class DefaultSDKManager: SDKManager {
         payHandler?(PayInfo(paymentRequest: paymentRequest))
     }
     
-//    func completionWithError(error: SDKError) {
-//        let responce = SPaymentTokenResponse()
-//        responce.error = SPError(errorState: error)
-//        switch payStrategy {
-//        case .auto:
-//            paymentCompletion?(.error, SPError(errorState: error).errorDescription)
-//            paymentCompletion = nil
-//        case .manual:
-//            if payInfo == nil {
-//                paymentTokenCompletion?(responce)
-//                paymentTokenCompletion = nil
-//            } else {
-//                paymentCompletion?(.error, SPError(errorState: error).errorDescription)
-//                paymentCompletion = nil
-//            }
-//        }
-//        liveCircleManager.closeSDKWindow()
-//    }
-    
-//    func completionPaymentToken(with paymentToken: String? = nil,
-//                                paymentTokenId: String? = nil,
-//                                tokenExpiration: Int = 0) {
-//        let responce = SPaymentTokenResponse(paymentToken: paymentToken,
-//                                             paymentTokenId: paymentTokenId,
-//                                             tokenExpiration: tokenExpiration,
-//                                             error: nil)
-//        paymentTokenCompletion?(responce)
-//        paymentTokenCompletion = nil
-//        liveCircleManager.closeSDKWindow()
-//    }
-//
     private func isNewStart(check authInfo: AuthInfo) -> Bool {
         // Проверяем наличие сохраненной информации о запросе
         guard let savedInfo = self.authInfo else { return true }
@@ -158,8 +108,8 @@ final class DefaultSDKManager: SDKManager {
         return authInfo != savedInfo
     }
     
-    @objc
-    private func closeSdk() {
+        
+    @objc private func closeSdk() {
         completionManager.closeAction()
     }
 }
