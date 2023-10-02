@@ -411,13 +411,11 @@ final class PaymentPresenter: PaymentPresenting {
         }
     }
     
-    
     private func dismissWithError(_ error: SDKError) {
         self.completionManager.completeWithError(error)
         alertService.close()
     }
     
-
     private func pay() {
         view?.userInteractionsEnabled = false
         DispatchQueue.main.async {

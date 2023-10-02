@@ -83,7 +83,6 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                               buttons: [],
                               completion: completion)
         }
-    
     }
     
     private func setupWindows(viewController: UIViewController,

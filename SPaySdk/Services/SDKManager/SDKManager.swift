@@ -108,7 +108,6 @@ final class DefaultSDKManager: SDKManager {
         return authInfo != savedInfo
     }
     
-        
     @objc private func closeSdk() {
         completionManager.closeAction()
     }
