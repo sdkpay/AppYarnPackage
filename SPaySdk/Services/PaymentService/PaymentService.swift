@@ -108,9 +108,9 @@ final class DefaultPaymentService: PaymentService {
                             merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
                         }
                         self.pay(with: payInfo.paymentToken ?? paymentToken.paymentToken,
-                                  orderId: orderid,
-                                  merchantLogin: merchantLogin,
-                                  completion: completion)
+                                 orderId: orderid,
+                                 merchantLogin: merchantLogin,
+                                 completion: completion)
                     }
                     self.completionManager.completePaymentToken(with: paymentToken.paymentToken)
                 }
