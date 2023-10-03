@@ -49,12 +49,11 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                 self.checkWhiteLogList(apikeys: config.apikey)
                 self.checkVersion(version: config.version)
                 self.setFeatures(config.featuresToggle)
-                self.analytics.sendEvent(.RQGoodRemoteConfig)
+                self.analytics.sendEvent(.RQGoodRemoteConfig,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
                 completion(nil)
             case .failure(let error):
-                if error.represents(.failDecode) {
-                    self.analytics.sendEvent(.RQFailRemoteConfig, with: [AnalyticsKey.ParsingError: error.localizedDescription])
-                } 
+                self.sendAnaliticsError(error: error)
                 completion(error)
             }
         }
@@ -81,6 +80,97 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         let currentVesion = Bundle.sdkVersion
         if version != currentVesion {
             SBLogger.log(level: .merchant, Strings.Merchant.Alert.version)
+        }
+    }
+    
+    private func sendAnaliticsError(error: SDKError) {
+        switch error {
+            
+        case .noInternetConnection:
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
+        case .noData:
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
+        case .badResponseWithStatus(let code):
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: code.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
+        case .failDecode(let text):
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: 200,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
+            self.analytics.sendEvent(
+                .RSFailRemoteConfig,
+                with: [AnalyticsKey.ParsingError: text])
+        case .badDataFromSBOL(let httpCode):
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: httpCode]
+            )
+        case .unauthorizedClient(let httpCode):
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
+        case .personalInfo:
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
+        case .errorWithErrorCode(let number, let httpCode):
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.errorCode: number,
+                       AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
+        case .noCards:
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
+        case .cancelled:
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
+        case .timeOut(let httpCode):
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
+        case .ssl(let httpCode):
+            self.analytics.sendEvent(
+                .RQFailRemoteConfig,
+                with: [AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+            )
         }
     }
 }

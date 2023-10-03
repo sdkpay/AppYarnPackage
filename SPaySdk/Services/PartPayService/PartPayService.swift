@@ -13,7 +13,7 @@ final class PartPayServiceAssembly: Assembly {
             let service: PartPayService = DefaultPartPayService(network: container.resolve(),
                                                                 sdkManager: container.resolve(),
                                                                 authManager: container.resolve(),
-                                                                analitics: container.resolve(),
+                                                                analytics: container.resolve(),
                                                                 featureToggle: container.resolve())
             return service
         })
@@ -50,18 +50,18 @@ final class DefaultPartPayService: PartPayService {
     private let authManager: AuthManager
     private let featureToggle: FeatureToggleService
     private var userEnableBnpl = false
-    private let analitics: AnalyticsService
+    private let analytics: AnalyticsService
     private(set) var bnplplan: BnplModel?
     
     init(network: NetworkService,
          sdkManager: SDKManager,
          authManager: AuthManager,
-         analitics: AnalyticsService,
+         analytics: AnalyticsService,
          featureToggle: FeatureToggleService) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
-        self.analitics = analitics
+        self.analytics = analytics
         self.featureToggle = featureToggle
         SBLogger.log(.start(obj: self))
     }
@@ -87,7 +87,8 @@ final class DefaultPartPayService: PartPayService {
               let merchantLogin = authInfo.merchantLogin,
               let orderId = authInfo.orderId
         else { return completion(nil) }
-        analitics.sendEvent(.RQBnpl)
+        analytics.sendEvent(.RQBnpl,
+                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
         network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
                                                merchantLogin: merchantLogin,
                                                orderId: orderId),
@@ -95,16 +96,103 @@ final class DefaultPartPayService: PartPayService {
             switch result {
             case .success(let bnplplan):
                 self?.bnplplan = bnplplan
-                self?.analitics.sendEvent(.RQGoodBnpl)
+                self?.analytics.sendEvent(.RQGoodBnpl)
                 completion(nil)
             case .failure(let error):
-                if error.represents(.failDecode) {
-                    self?.analitics.sendEvent(.RQFailBnpl, with: [AnalyticsKey.ParsingError: error.localizedDescription])
-                } else {
-                    self?.analitics.sendEvent(.RSFailBnpl, with: [AnalyticsKey.errorCode: error.localizedDescription])
-                }
+                self?.sendAnaliticsError(error: error)
                 completion(error)
             }
+        }
+    }
+    
+    private func sendAnaliticsError(error: SDKError) {
+        switch error {
+            
+        case .noInternetConnection:
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
+        case .noData:
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
+        case .badResponseWithStatus(let code):
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: code.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
+        case .failDecode(let text):
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: 200,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
+            self.analytics.sendEvent(
+                .RSFailBnpl,
+                with: [AnalyticsKey.ParsingError: text])
+        case .badDataFromSBOL(let httpCode):
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: httpCode]
+            )
+        case .unauthorizedClient(let httpCode):
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
+        case .personalInfo:
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
+        case .errorWithErrorCode(let number, let httpCode):
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.errorCode: number,
+                       AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
+        case .noCards:
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
+        case .cancelled:
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
+        case .timeOut(let httpCode):
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
+        case .ssl(let httpCode):
+            self.analytics.sendEvent(
+                .RQFailBnpl,
+                with: [AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+            )
         }
     }
 }
