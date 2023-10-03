@@ -90,28 +90,28 @@ final class DefaultRemoteConfigService: RemoteConfigService {
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
             )
         case .noData:
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
             )
         case .badResponseWithStatus(let code):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
                 with: [AnalyticsKey.httpCode: code.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
             )
         case .failDecode(let text):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: 200,
-                       AnalyticsKey.errorCode: -1,
+                with: [AnalyticsKey.httpCode: Int64(200),
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
             )
             self.analytics.sendEvent(
@@ -126,14 +126,14 @@ final class DefaultRemoteConfigService: RemoteConfigService {
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
                 with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
             )
         case .personalInfo:
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
             )
         case .errorWithErrorCode(let number, let httpCode):
@@ -147,28 +147,28 @@ final class DefaultRemoteConfigService: RemoteConfigService {
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
             )
         case .cancelled:
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
             )
         case .timeOut(let httpCode):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
                 with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
             )
         case .ssl(let httpCode):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
                 with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
             )
         }

@@ -112,28 +112,28 @@ final class DefaultPartPayService: PartPayService {
             self.analytics.sendEvent(
                 .RQFailBnpl,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
             )
         case .noData:
             self.analytics.sendEvent(
                 .RQFailBnpl,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
             )
         case .badResponseWithStatus(let code):
             self.analytics.sendEvent(
                 .RQFailBnpl,
                 with: [AnalyticsKey.httpCode: code.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
             )
         case .failDecode(let text):
             self.analytics.sendEvent(
                 .RQFailBnpl,
-                with: [AnalyticsKey.httpCode: 200,
-                       AnalyticsKey.errorCode: -1,
+                with: [AnalyticsKey.httpCode: Int64(200),
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
             )
             self.analytics.sendEvent(
@@ -148,14 +148,14 @@ final class DefaultPartPayService: PartPayService {
             self.analytics.sendEvent(
                 .RQFailBnpl,
                 with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
             )
         case .personalInfo:
             self.analytics.sendEvent(
                 .RQFailBnpl,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
             )
         case .errorWithErrorCode(let number, let httpCode):
@@ -169,28 +169,28 @@ final class DefaultPartPayService: PartPayService {
             self.analytics.sendEvent(
                 .RQFailBnpl,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
             )
         case .cancelled:
             self.analytics.sendEvent(
                 .RQFailBnpl,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
             )
         case .timeOut(let httpCode):
             self.analytics.sendEvent(
                 .RQFailBnpl,
                 with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
             )
         case .ssl(let httpCode):
             self.analytics.sendEvent(
                 .RQFailBnpl,
                 with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
             )
         }

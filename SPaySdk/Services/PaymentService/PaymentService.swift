@@ -160,9 +160,9 @@ final class DefaultPaymentService: PaymentService {
                                                       paymentToken: token),
                         to: PaymentOrderModel.self,
                         retrySettings: (4, [
-                            StatusCode.errorSystem.rawValue,
-                            StatusCode.unknownPayState.rawValue,
-                            StatusCode.unknownState.rawValue
+                            Int(StatusCode.errorSystem.rawValue),
+                            Int(StatusCode.unknownPayState.rawValue),
+                            Int(StatusCode.unknownState.rawValue)
                         ])) { result in
                             switch result {
             case .success:
