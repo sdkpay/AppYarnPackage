@@ -114,7 +114,8 @@ final class OtpPresenter: OtpPresenting {
             case .success:
                 self.analytics.sendEvent(.RSGoodConfirmOTP,
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-                self.analytics.sendEvent(.RSGoodConfirmOTP)
+                self.analytics.sendEvent(.RQGoodConfirmOTP,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
                 self.view?.hideKeyboard()
                 self.closeWithSuccess()
             case .failure(let error):
