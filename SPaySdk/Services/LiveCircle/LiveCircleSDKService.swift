@@ -85,7 +85,6 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         closeSDKWindow()
     }
 
-    
     private func setupWindows(viewController: UIViewController,
                               locator: LocatorService,
                               rootVC: UIViewController) {
