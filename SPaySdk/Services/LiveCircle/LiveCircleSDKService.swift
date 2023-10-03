@@ -36,7 +36,8 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         setupWindows(viewController: viewController, locator: locator, rootVC: rootVC)
         self.locator = locator
         let analytics: AnalyticsService = locator.resolve()
-        analytics.sendEvent(.LCBankAppFound)
+        analytics.sendEvent(.LCBankAppFound,
+                            with: [.view: AnlyticsScreenEvent.None.rawValue])
         setenv("CFNETWORK_DIAGNOSTICS", "3", 1)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(closeSdk),

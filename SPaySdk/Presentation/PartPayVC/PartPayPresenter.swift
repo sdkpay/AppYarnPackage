@@ -59,14 +59,16 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     func acceptButtonTapped() {
-        analytics.sendEvent(.TouchConfirmedByUser)
+        analytics.sendEvent(.TouchConfirmedByUser,
+                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
         partPayService.bnplplanSelected = true
         partPaySelected()
         view?.contentNavigationController?.popViewController(animated: true)
     }
     
     func backButtonTapped() {
-        analytics.sendEvent(.TouchDeclinedByUser)
+        analytics.sendEvent(.TouchDeclinedByUser,
+                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
         partPayService.bnplplanSelected = false
         partPaySelected()
         view?.contentNavigationController?.popViewController(animated: true)
@@ -106,12 +108,14 @@ final class PartPayPresenter: PartPayPresenting {
     }
 
     private func checkTapped(_ value: Bool) {
-        analytics.sendEvent(.TouchApproveBNPL)
+        analytics.sendEvent(.TouchApproveBNPL,
+                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
         view?.setButtonEnabled(value: value)
     }
     
     private func agreementTextTapped(link: String) {
-        analytics.sendEvent(.TouchAgreementView)
+        analytics.sendEvent(.TouchAgreementView,
+                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
         router.presentWebView(with: link)
     }
 }

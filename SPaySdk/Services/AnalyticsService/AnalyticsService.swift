@@ -21,6 +21,7 @@ enum AnlyticsScreenEvent: String {
     case PartPayVC
     case PaymentVC
     case WebViewVC
+    case None
 }
 
 enum AnalyticsEvent: String {
@@ -40,6 +41,8 @@ enum AnalyticsEvent: String {
     case RQGoodRemoteConfig
     ///  Получена ошибка на запрос получения  remote config
     case RQFailRemoteConfig
+    ///  Получена ошибка при декодировании remote config
+    case RSFailRemoteConfig
     /// Отправлен запрос на получение сессии
     case RQSessionId
     /// Получен положительный ответ на запрос получения SessionId
