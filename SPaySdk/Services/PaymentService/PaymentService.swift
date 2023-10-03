@@ -83,9 +83,10 @@ final class DefaultPaymentService: PaymentService {
                 var merchantLogin: String
                 
                 if isBnplEnabled {
-                    self.authManager.apiKey = BnplConstants.apiKey(for: self.buildSettings.networkState)
+                  //  self.authManager.apiKey = BnplConstants.apiKey(for: self.buildSettings.networkState)
                     orderid = paymentToken.initiateBankInvoiceId
-                    merchantLogin = BnplConstants.merchantLogin(for: self.buildSettings.networkState)
+                  //  merchantLogin = BnplConstants.merchantLogin(for: self.buildSettings.networkState)
+                    merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
                 } else {
                     orderid = authInfo.orderId
                     merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
@@ -100,7 +101,7 @@ final class DefaultPaymentService: PaymentService {
                     self.sdkManager.payHandler = { [weak self] payInfo in
                         guard let self else {return }
                         if isBnplEnabled {
-                            self.authManager.apiKey = BnplConstants.apiKey(for: self.buildSettings.networkState)
+                           // self.authManager.apiKey = BnplConstants.apiKey(for: self.buildSettings.networkState)
                             orderid = paymentToken.initiateBankInvoiceId
                             merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
                         } else {
@@ -135,7 +136,8 @@ final class DefaultPaymentService: PaymentService {
         var merchantLogin: String
         
         if isBnplEnabled {
-            merchantLogin = BnplConstants.merchantLogin(for: buildSettings.networkState)
+            merchantLogin = sdkManager.authInfo?.merchantLogin ?? ""
+           // merchantLogin = BnplConstants.merchantLogin(for: buildSettings.networkState)
         } else {
             merchantLogin = sdkManager.authInfo?.merchantLogin ?? ""
         }
