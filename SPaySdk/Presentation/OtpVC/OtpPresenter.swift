@@ -226,28 +226,28 @@ final class OtpPresenter: OtpPresenting {
             self.analytics.sendEvent(
                 rqFail,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
             )
         case .noData:
             self.analytics.sendEvent(
                 rqFail,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
             )
         case .badResponseWithStatus(let code):
             self.analytics.sendEvent(
                 rqFail,
                 with: [AnalyticsKey.httpCode: code.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
             )
         case .failDecode(let text):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: 200,
-                       AnalyticsKey.errorCode: -1,
+                with: [AnalyticsKey.httpCode: Int64(200),
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
             )
             self.analytics.sendEvent(
@@ -262,14 +262,14 @@ final class OtpPresenter: OtpPresenting {
             self.analytics.sendEvent(
                 rqFail,
                 with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
             )
         case .personalInfo:
             self.analytics.sendEvent(
                 rqFail,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
             )
         case .errorWithErrorCode(let number, let httpCode):
@@ -283,28 +283,28 @@ final class OtpPresenter: OtpPresenting {
             self.analytics.sendEvent(
                 rqFail,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
             )
         case .cancelled:
             self.analytics.sendEvent(
                 rqFail,
                 with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
             )
         case .timeOut(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
                 with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
             )
         case .ssl(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
                 with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: -1,
+                       AnalyticsKey.errorCode: Int64(-1),
                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
             )
         }

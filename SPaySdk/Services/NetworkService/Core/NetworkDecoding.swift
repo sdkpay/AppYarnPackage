@@ -36,9 +36,9 @@ extension ResponseDecoder {
 
         guard let data = data else { return .failure(.noData) }
         guard (200...299).contains(response.statusCode) else {
-            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: Int64(response.statusCode)) ?? .unowned))
         }
-        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode, httpCode: response.statusCode)) }
+        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode, httpCode: Int64(response.statusCode))) }
         do {
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(type, from: data)
@@ -59,9 +59,9 @@ extension ResponseDecoder {
                         error: Error?) -> Result<Void, SDKError> {
         guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
         guard let data = data else { return .failure(.noData) }
-        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode, httpCode: response.statusCode)) }
+        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode, httpCode: Int64(response.statusCode))) }
         guard (200...299).contains(response.statusCode) else {
-            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: Int64(Int(Int64(response.statusCode)))) ?? .unowned))
         }
         return .success(())
     }
@@ -80,9 +80,9 @@ extension ResponseDecoder {
 
         guard let data = data else { return .failure(.noData) }
         guard (200...299).contains(response.statusCode) else {
-            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: Int64(Int(Int64(response.statusCode)))) ?? .unowned))
         }
-        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode, httpCode: response.statusCode)) }
+        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode, httpCode: Int64(response.statusCode))) }
         let headers = response.allHeaderFields as? HTTPHeaders ?? [:]
         
         var cookies = [HTTPCookie]()
@@ -108,10 +108,10 @@ extension ResponseDecoder {
     
     func decodeParametersFrom(url: URL) -> Result<BankModel, SDKError> {
         guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-            return .failure(.badDataFromSBOL(httpCode: StatusCode.errorSystem.rawValue))
+            return .failure(.badDataFromSBOL(httpCode: Int64(StatusCode.errorSystem.rawValue)))
         }
         guard let queryItems = urlComponents.queryItems else {
-            return .failure(.badDataFromSBOL(httpCode: StatusCode.errorSystem.rawValue))
+            return .failure(.badDataFromSBOL(httpCode: Int64(Int(StatusCode.errorSystem.rawValue))))
         }
         var parameters = [String: String]()
         queryItems.forEach {
@@ -155,9 +155,9 @@ extension ResponseDecoder {
         }
         
         if sslErrors.contains(where: { $0.rawValue == error._code }) {
-            return .ssl(httpCode: httpCode)
+            return .ssl(httpCode: Int64(httpCode))
         } else if timeOutErrors.contains(where: { $0.rawValue == error._code }) {
-            return .timeOut(httpCode: httpCode)
+            return .timeOut(httpCode: Int64(httpCode))
         } else {
             return nil
         }
@@ -165,9 +165,9 @@ extension ResponseDecoder {
     
     private func checkBankError(error: String) -> SDKError {
         if error == "unauthorized_client" {
-            return .unauthorizedClient(httpCode: StatusCode.errorSystem.rawValue)
+            return .unauthorizedClient(httpCode: Int64(Int(StatusCode.errorSystem.rawValue)))
         } else {
-            return .badDataFromSBOL(httpCode: StatusCode.errorSystem.rawValue)
+            return .badDataFromSBOL(httpCode: Int64(Int(StatusCode.errorSystem.rawValue)))
         }
     }
     

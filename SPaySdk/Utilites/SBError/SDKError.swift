@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum StatusCode: Int {
+enum StatusCode: Int64 {
     case unknownState = 403
     case unknownPayState = 423
     case errorFormat = 400
@@ -29,14 +29,14 @@ enum SDKError: Error, Hashable {
     case noData
     case badResponseWithStatus(code: StatusCode)
     case failDecode(text: String)
-    case badDataFromSBOL(httpCode: Int)
-    case unauthorizedClient(httpCode: Int)
+    case badDataFromSBOL(httpCode: Int64)
+    case unauthorizedClient(httpCode: Int64)
     case personalInfo
-    case errorWithErrorCode(number: String, httpCode: Int)
+    case errorWithErrorCode(number: String, httpCode: Int64)
     case noCards
     case cancelled
-    case timeOut(httpCode: Int)
-    case ssl(httpCode: Int)
+    case timeOut(httpCode: Int64)
+    case ssl(httpCode: Int64)
     
     func represents(_ error: SDKError) -> Bool {
         self == error
