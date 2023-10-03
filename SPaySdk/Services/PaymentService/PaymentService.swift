@@ -83,10 +83,9 @@ final class DefaultPaymentService: PaymentService {
                 var merchantLogin: String
                 
                 if isBnplEnabled {
-                  //  self.authManager.apiKey = BnplConstants.apiKey(for: self.buildSettings.networkState)
+                   self.authManager.apiKey = BnplConstants.apiKey(for: self.buildSettings.networkState)
                     orderid = paymentToken.initiateBankInvoiceId
-                  //  merchantLogin = BnplConstants.merchantLogin(for: self.buildSettings.networkState)
-                    merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
+                    merchantLogin = BnplConstants.merchantLogin(for: self.buildSettings.networkState)
                 } else {
                     orderid = authInfo.orderId
                     merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
@@ -101,9 +100,9 @@ final class DefaultPaymentService: PaymentService {
                     self.sdkManager.payHandler = { [weak self] payInfo in
                         guard let self else {return }
                         if isBnplEnabled {
-                           // self.authManager.apiKey = BnplConstants.apiKey(for: self.buildSettings.networkState)
+                            self.authManager.apiKey = BnplConstants.apiKey(for: self.buildSettings.networkState)
                             orderid = paymentToken.initiateBankInvoiceId
-                            merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
+                            merchantLogin = BnplConstants.merchantLogin(for: self.buildSettings.networkState)
                         } else {
                             orderid = payInfo.orderId
                             merchantLogin = self.sdkManager.authInfo?.merchantLogin ?? ""
@@ -133,17 +132,9 @@ final class DefaultPaymentService: PaymentService {
     func tryToGetPaymenyToken(paymentId: Int,
                               isBnplEnabled: Bool,
                               completion: @escaping (Result<Void, PayError>) -> Void) {
-        var merchantLogin: String
-        
-        if isBnplEnabled {
-            merchantLogin = sdkManager.authInfo?.merchantLogin ?? ""
-           // merchantLogin = BnplConstants.merchantLogin(for: buildSettings.networkState)
-        } else {
-            merchantLogin = sdkManager.authInfo?.merchantLogin ?? ""
-        }
         getPaymenyToken(paymentId: paymentId,
                         isBnplEnabled: isBnplEnabled,
-                        merchantLogin: merchantLogin) { result in
+                        merchantLogin: sdkManager.authInfo?.merchantLogin ?? "") { result in
             switch result {
             case .success(let success):
                 self.paymentToken = success
