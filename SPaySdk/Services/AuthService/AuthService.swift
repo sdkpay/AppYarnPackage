@@ -17,6 +17,7 @@ final class AuthServiceAssembly: Assembly {
                                                           authManager: container.resolve(),
                                                           partPayService: container.resolve(),
                                                           storage: container.resolve(),
+                                                          baseRequestManager: container.resolve(),
                                                           personalMetricsService: container.resolve(),
                                                           enviromentManager: container.resolve(),
                                                           cookieStorage: container.resolve(),
@@ -55,6 +56,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var enviromentManager: EnvironmentManager
     private let featureToggleService: FeatureToggleService
     private var storage: KeychainStorage
+    private var baseRequestManager: BaseRequestManager
     private var cookieStorage: CookieStorage
     private var appCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
@@ -75,6 +77,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
          authManager: AuthManager,
          partPayService: PartPayService,
          storage: KeychainStorage,
+         baseRequestManager: BaseRequestManager,
          personalMetricsService: PersonalMetricsService,
          enviromentManager: EnvironmentManager,
          cookieStorage: CookieStorage,
@@ -85,6 +88,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.sdkManager = sdkManager
         self.bankAppManager = bankAppManager
         self.authManager = authManager
+        self.baseRequestManager = baseRequestManager
         self.partPayService = partPayService
         self.personalMetricsService = personalMetricsService
         self.enviromentManager = enviromentManager
@@ -137,9 +141,14 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         authСompletion?(nil, true)
     }
     
+    private func addFrontHeaders() {
+        baseRequestManager.generateB3Cookie()
+    }
+    
     private func authRequest(method: AuthMethod? = nil,
                              completion: @escaping (SDKError?, Bool) -> Void) {
         guard let request = sdkManager.authInfo else { return }
+        addFrontHeaders()
         analytics.sendEvent(.RQSessionId,
                             with: [.view: AnlyticsScreenEvent.AuthVC.rawValue])
         network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
