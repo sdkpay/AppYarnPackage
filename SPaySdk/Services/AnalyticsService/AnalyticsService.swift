@@ -67,6 +67,8 @@ enum AnalyticsEvent: String {
     case RQListCards
     /// Получен положительный ответ на запрос получения ListCards
     case RQGoodListCards
+    /// Парсинг ответа от сервера на запрос ListCards проведен успешно
+    case RSGoodListCards
     /// Получена ошибка от шлюза при обработке запроса ListCards
     case RQFailListCards
     ///  Получена ошибка при парсинге ListCards
@@ -85,8 +87,12 @@ enum AnalyticsEvent: String {
     case STGetGoodRefresh
     /// Не смогли получить из хранилища Refresh token
     case STGetFailRefresh
+    /// Не удалось достать выбранный банк
+    case STGetFailBankApp
     /// Сохранили Refresh token
     case STSaveRefresh
+    ///  Сохранили приложение банка выбранного пользователем
+    case STSaveBankApp
     /// Отобразился экран авторизации
     case LCBankAuthViewAppeared
     /// Перестал отображаться экран авторизации
@@ -103,6 +109,8 @@ enum AnalyticsEvent: String {
     case TouchBNPL
     /// Пользователь нажал на ячейку с BNPL
     case TouchPay
+    /// Пользователь нажал кнопку Продолжит
+    case TouchNext
     /// Пользователь нажал на кнопку отмены оплаты
     case TouchCancel
     /// Отправлен запрос PaymentToken
@@ -112,7 +120,7 @@ enum AnalyticsEvent: String {
     /// Парсинг ответа от сервера на запрос PaymentToken произведен с ошибкой
     case RQFailPaymentToken
     /// Парсинг ответа от сервера на запрос PaymentToken проведен успешно
-    case RSGoodPaymentToke
+    case RSGoodPaymentToken
     /// Получена ошибка от шлюза при обработке запроса PaymentToken
     case RSFailPaymentToken
     /// Отправлен запрос на получение ListCards
@@ -161,12 +169,16 @@ enum AnalyticsEvent: String {
     case RQCreteOTP
     /// Получен положительный ответ на запрос получения CreteOTP
     case RQGoodCreteOTP
+    ///  Парсинг ответа на запрос получения CreteOTP успешен
+    case RSGoodCreteOTP
     /// Получена ошибка от шлюза при обработке запроса CreteOTP
     case RQFailCreteOTP
     /// Парсинг ответа от сервера на запрос CreteOTP произведен с ошибкой
     case RSFailCreteOTP
     /// Отправлен запрос на получение ConfirmOTP
     case RQConfirmOTP
+    /// Парсинг ответа на запрос получения ConfirmOTP успешен
+    case RSConfirmOTP
     /// Получен положительный ответ на запрос получения ConfirmOTP
     case RQGoodConfirmOTP
     /// Получена ошибка от шлюза при обработке запроса ConfirmOTP

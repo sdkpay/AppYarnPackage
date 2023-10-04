@@ -22,6 +22,7 @@ final class PaymentServiceAssembly: Assembly {
             let service: PaymentService = DefaultPaymentService(authManager: container.resolve(),
                                                                 network: container.resolve(), userService: container.resolve(),
                                                                 personalMetricsService: container.resolve(),
+                                                                analytics: container.resolve(),
                                                                 sdkManager: container.resolve())
             return service
         }
@@ -42,18 +43,26 @@ final class DefaultPaymentService: PaymentService {
     private var sdkManager: SDKManager
     private let userService: UserService
     private let authManager: AuthManager
+    private let analytics: AnalyticsService
     private let personalMetricsService: PersonalMetricsService
     private var paymentToken: PaymentTokenModel?
+    
+    private enum RequestType {
+        case paymentOrder
+        case paymentToken
+    }
     
     init(authManager: AuthManager,
          network: NetworkService,
          userService: UserService,
          personalMetricsService: PersonalMetricsService,
+         analytics: AnalyticsService,
          sdkManager: SDKManager) {
         self.authManager = authManager
         self.network = network
         self.userService = userService
         self.sdkManager = sdkManager
+        self.analytics = analytics
         self.personalMetricsService = personalMetricsService
         SBLogger.log(.start(obj: self))
     }
@@ -110,14 +119,22 @@ final class DefaultPaymentService: PaymentService {
     func tryToGetPaymenyToken(paymentId: Int,
                               isBnplEnabled: Bool,
                               completion: @escaping (Result<Void, PayError>) -> Void) {
+        self.analytics.sendEvent(.RQPaymentToken,
+                                 with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
         getPaymenyToken(paymentId: paymentId,
                         isBnplEnabled: isBnplEnabled) { result in
             switch result {
             case .success(let success):
+                self.analytics.sendEvent(.RQGoodPaymentToken,
+                                         with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                self.analytics.sendEvent(.RSGoodPaymentToken,
+                                         with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
                 self.paymentToken = success
                 completion(.success)
-            case .failure(let failure):
-                completion(.failure(self.parseError(failure)))
+            case .failure(let error):
+                self.sendAnaliticsError(error: error,
+                                        requestType: .paymentToken)
+                completion(.failure(self.parseError(error)))
             }
         }
     }
@@ -166,8 +183,14 @@ final class DefaultPaymentService: PaymentService {
                         ])) { result in
                             switch result {
             case .success:
+            self.analytics.sendEvent(.RQGoodPaymentOrder,
+                                     with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+            self.analytics.sendEvent(.RSGoodPaymentOrder,
+                                     with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
                 completion(.success)
             case .failure(let error):
+                 self.sendAnaliticsError(error: error,
+                                         requestType: .paymentOrder)
                 completion(.failure(self.parseError(error)))
             }
         }
@@ -183,6 +206,102 @@ final class DefaultPaymentService: PaymentService {
             return .unknownStatus
         default:
             return .defaultError
+        }
+    }
+    
+    private func sendAnaliticsError(error: SDKError, requestType: RequestType) {
+        let rqFail: AnalyticsEvent = requestType == .paymentOrder ?
+            .RQFailPaymentOrder : .RQFailPaymentToken
+        let rsFail: AnalyticsEvent = requestType == .paymentOrder ?
+            .RSFailPaymentOrder : .RSFailPaymentToken
+        
+        switch error {
+            
+        case .noInternetConnection:
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: Int64(-1),
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
+        case .noData:
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: Int64(-1),
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
+        case .badResponseWithStatus(let code):
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: code.rawValue,
+                       AnalyticsKey.errorCode: Int64(-1),
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
+        case .failDecode(let text):
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: Int64(200),
+                       AnalyticsKey.errorCode: Int64(-1),
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
+            self.analytics.sendEvent(
+                rsFail,
+                with: [AnalyticsKey.ParsingError: text])
+        case .badDataFromSBOL(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: httpCode]
+            )
+        case .unauthorizedClient(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.errorCode: Int64(-1),
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
+        case .personalInfo:
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: Int64(-1),
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
+        case .errorWithErrorCode(let number, let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.errorCode: number,
+                       AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
+        case .noCards:
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: Int64(-1),
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
+        case .cancelled:
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                       AnalyticsKey.errorCode: Int64(-1),
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
+        case .timeOut(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.errorCode: Int64(-1),
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
+        case .ssl(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with: [AnalyticsKey.httpCode: httpCode,
+                       AnalyticsKey.errorCode: Int64(-1),
+                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+            )
         }
     }
 }

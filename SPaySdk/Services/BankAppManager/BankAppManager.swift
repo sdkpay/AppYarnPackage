@@ -10,7 +10,7 @@ import UIKit
 final class BankAppManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
-            let service: BankAppManager = DefaultBankAppManager()
+            let service: BankAppManager = DefaultBankAppManager(analytics: container.resolve())
             return service
         }
     }
@@ -26,6 +26,12 @@ protocol BankAppManager {
 final class DefaultBankAppManager: BankAppManager {
     var avaliableBanks: [BankApp] {
         UserDefaults.bankApps?.filter({ canOpen(link: $0.link) }) ?? []
+    }
+    
+    private let analytics: AnalyticsService
+    
+    init(analytics: AnalyticsService) {
+        self.analytics = analytics
     }
     
     private var _selectedBank: BankApp?
@@ -49,6 +55,8 @@ final class DefaultBankAppManager: BankAppManager {
     }
     
     func saveSelectedBank() {
+        analytics.sendEvent(.STSaveBankApp,
+                            with: [.view:AnlyticsScreenEvent.AuthVC.rawValue])
         UserDefaults.bankApp = _selectedBank?.name
     }
     
@@ -63,6 +71,8 @@ final class DefaultBankAppManager: BankAppManager {
                 _selectedBank = UserDefaults.bankApps?.first(where: { $0.name == savedBank })
                 return _selectedBank
             } else {
+                analytics.sendEvent(.STGetFailBankApp,
+                                    with: [.view:AnlyticsScreenEvent.AuthVC.rawValue])
                 return nil
             }
         } else {

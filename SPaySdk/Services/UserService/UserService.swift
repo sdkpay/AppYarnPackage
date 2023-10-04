@@ -104,7 +104,11 @@ final class DefaultUserService: UserService {
                 guard let self = self else { return }
                 self.user = user
                 self.getListCards = true
-                self.analytics.sendEvent(.RQGoodListCards)
+                self.analytics.sendEvent(.RQGoodListCards,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                self.analytics.sendEvent(.RSGoodListCards,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                completion(.success)
                 completion(.success)
             case .failure(let error):
                 self?.sendAnaliticsError(error: error)

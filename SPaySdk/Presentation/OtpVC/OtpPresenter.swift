@@ -87,6 +87,8 @@ final class OtpPresenter: OtpPresenting {
                 self?.createTimer()
                 self?.analytics.sendEvent(.RQGoodCreteOTP,
                                           with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
+                self?.analytics.sendEvent(.RSGoodCreteOTP,
+                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
             case .failure(let error):
                 self?.sendAnaliticsError(error: error, typeRequest: .confirmOTP)
                 self?.view?.hideLoading(animate: true)
@@ -103,9 +105,13 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func sendOTP(otpCode: String) {
+        analytics.sendEvent(.TouchNext,
+                            with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         let otpHash = getHashCode(code: otpCode)
         view?.showLoading()
         analytics.sendEvent(.RQConfirmOTP,
+                            with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
+        analytics.sendEvent(.RSConfirmOTP,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         otpRetryCount += 1
         otpService.confirmOTP(otpHash: otpHash) { [weak self]  result in
