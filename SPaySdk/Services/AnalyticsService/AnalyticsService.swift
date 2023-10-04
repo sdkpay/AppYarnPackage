@@ -9,7 +9,7 @@ import Foundation
 
 final class AnalyticsServiceAssembly: Assembly {
     func register(in locator: LocatorService) {
-        let service: AnalyticsService = DefaultAnalyticsService(sdkManager: locator.resolve())
+        let service: AnalyticsService = DefaultAnalyticsService(authManager: locator.resolve())
         locator.register(service: service)
     }
 }
@@ -270,7 +270,7 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         DefaultDynatraceAnalyticsService()
     ]
     
-    private var sdkManager: SDKManager
+    private var authManager: AuthManager
     
     func sendEvent(_ event: AnalyticsEvent) {
         analyticServices.forEach({ $0.sendEvent(event, with: "") })
@@ -302,12 +302,13 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     
     func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any]) {
         var dict = dictionaty
-        dict[.orderNumber] = sdkManager.authInfo?.orderNumber ?? ""
+        let orderNumber = authManager.orderNumber
+        dict[.orderNumber] = orderNumber
         analyticServices.forEach({ $0.sendEvent(event, with: dict) })
     }
     
-    init(sdkManager: SDKManager) {
-        self.sdkManager = sdkManager
+    init(authManager: AuthManager) {
+        self.authManager = authManager
         super.init()
         SBLogger.log(.start(obj: self))
     }
