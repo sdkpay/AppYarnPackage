@@ -40,11 +40,6 @@ protocol SDKManager {
                                  completion: @escaping PaymentCompletion)
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
-//    func completionPaymentToken(with paymentToken: String?,
-//                                paymentTokenId: String?,
-//                                tokenExpiration: Int)
-//    func completionWithError(error: SDKError)
-//    func completionPay(with state: SPayState)
 }
 
 final class DefaultSDKManager: SDKManager {
@@ -118,38 +113,7 @@ final class DefaultSDKManager: SDKManager {
         completionManager.setPaymentCompletion(completion)
         payHandler?(PayInfo(paymentRequest: paymentRequest))
     }
-    
-//    func completionWithError(error: SDKError) {
-//        let responce = SPaymentTokenResponse()
-//        responce.error = SPError(errorState: error)
-//        switch payStrategy {
-//        case .auto:
-//            paymentCompletion?(.error, SPError(errorState: error).errorDescription)
-//            paymentCompletion = nil
-//        case .manual:
-//            if payInfo == nil {
-//                paymentTokenCompletion?(responce)
-//                paymentTokenCompletion = nil
-//            } else {
-//                paymentCompletion?(.error, SPError(errorState: error).errorDescription)
-//                paymentCompletion = nil
-//            }
-//        }
-//        liveCircleManager.closeSDKWindow()
-//    }
-    
-//    func completionPaymentToken(with paymentToken: String? = nil,
-//                                paymentTokenId: String? = nil,
-//                                tokenExpiration: Int = 0) {
-//        let responce = SPaymentTokenResponse(paymentToken: paymentToken,
-//                                             paymentTokenId: paymentTokenId,
-//                                             tokenExpiration: tokenExpiration,
-//                                             error: nil)
-//        paymentTokenCompletion?(responce)
-//        paymentTokenCompletion = nil
-//        liveCircleManager.closeSDKWindow()
-//    }
-//
+
     private func isNewStart(check authInfo: AuthInfo) -> Bool {
         // Проверяем наличие сохраненной информации о запросе
         guard let savedInfo = self.authInfo else { return true }
