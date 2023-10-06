@@ -16,9 +16,9 @@ protocol LiveCircleManager {
 }
 
 final class DefaultLiveCircleManager: LiveCircleManager {
-    private var sdkWindow: TransparentWindow?
     private var locator: LocatorService?
-    private weak var rootController: RootVC?
+    private var rootController: RootVC?
+    private weak var metchVC: UIViewController?
     private let timeManager: OptimizationCheсkerManager?
     
     init(timeManager: OptimizationCheсkerManager) {
@@ -29,6 +29,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                            with locator: LocatorService) {
         let rootVC = RootAssembly(locator: locator).createModule()
         rootController = rootVC
+        metchVC = viewController
         setupWindows(viewController: viewController, locator: locator, rootVC: rootVC)
         self.locator = locator
         let analytics: AnalyticsService = locator.resolve()
@@ -42,9 +43,10 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     
     func closeSDKWindow() {
         locator?.resolve(NetworkService.self).cancelTask()
-        rootController?.dismiss(animated: false)
-        rootController = nil
-        sdkWindow = nil
+        DispatchQueue.main.async {
+            self.rootController?.dismiss(animated: false)
+            self.rootController = nil
+        }
     }
     
     func completePayment(paymentSuccess: SPayState,
@@ -55,7 +57,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         
         switch paymentSuccess {
         case .success:
-            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+            service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
                               with: Strings.Alert.Pay.Success.title,
                               state: .success,
                               buttons: [],
@@ -64,19 +66,19 @@ final class DefaultLiveCircleManager: LiveCircleManager {
             let button = AlertButtonModel(title: Strings.Ok.title,
                                           type: .full,
                                           action: completion)
-            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+            service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
                               with: ConfigGlobal.localization?.payLoading ?? "",
                               state: .waiting,
                               buttons: [button],
                               completion: {})
         case .error:
-            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+            service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
                               with: Strings.Alert.Error.Main.title,
                               state: .failure,
                               buttons: [],
                               completion: completion)
         case .cancel:
-            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
+            service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
                               with: Strings.Alert.Error.Main.title,
                               state: .failure,
                               buttons: [],
@@ -91,5 +93,13 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                               rootVC: UIViewController) {
         rootVC.modalPresentationStyle = .custom
         viewController.present(rootVC, animated: true)
+    }
+    
+    private func topVC(for window: UIWindow?) -> UIViewController? {
+        var topController: UIViewController? = window?.rootViewController
+           while topController?.presentedViewController != nil {
+               topController = topController?.presentedViewController
+           }
+           return topController
     }
 }

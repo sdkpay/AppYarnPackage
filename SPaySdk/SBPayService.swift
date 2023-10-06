@@ -49,6 +49,7 @@ final class DefaultSBPayService: SBPayService {
     private lazy var locator: LocatorService = DefaultLocatorService()
     private lazy var buildSettings: BuildSettings = DefaultBuildSettings()
     private lazy var logService: LogService = DefaultLogService()
+    private lazy var inProgress = false
     private let assemblyManager = AssemblyManager()
     private let timeManager = OptimizationCheсkerManager()
     private var apiKey: String?
@@ -178,6 +179,8 @@ final class DefaultSBPayService: SBPayService {
     func payWithBankInvoiceId(with viewController: UIViewController,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
+        guard !inProgress else { return }
+        inProgress = true
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
         if let apiKey = paymentRequest.apiKey {
@@ -192,8 +195,10 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(SDKManager.self)
             .configWithBankInvoiceId(apiKey: apiKey,
-                                     paymentRequest: paymentRequest,
-                                     completion: completion)
+                                     paymentRequest: paymentRequest) { response in
+                self.inProgress = false
+                completion(response)
+            }
         liveCircleManager.openInitialScreen(with: viewController,
                                             with: locator)
         timeManager.stopCheckingCPULoad {
