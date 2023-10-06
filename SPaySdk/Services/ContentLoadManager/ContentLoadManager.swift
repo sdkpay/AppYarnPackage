@@ -55,7 +55,7 @@ final class DefaultContentLoadManager: ContentLoadManager {
         var contentTypes: [ContentLoadType] = [
             (.userData, .high)
         ]
-        if featureToggleService.isEnabled(.bnpl) {
+        if featureToggleService.isEnabled(.bnpl2) {
             contentTypes.append((.bnplPlan, .low))
         }
         load(contentTypes: contentTypes, completion: completion)

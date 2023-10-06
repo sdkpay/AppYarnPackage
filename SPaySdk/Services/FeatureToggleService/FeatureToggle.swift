@@ -9,6 +9,7 @@ import Foundation
 
 enum Feature: String, Codable {
     case bnpl
+    case bnpl2
 }
 
 final class FeatureToggleServiceAssembly: Assembly {
