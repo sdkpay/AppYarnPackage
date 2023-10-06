@@ -260,6 +260,7 @@ final class PaymentPresenter: PaymentPresenting {
         paymentService.tryToPay(paymentId: paymentId,
                                 isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
             guard let self = self else { return }
+            self.userService.clearData()
             self.view?.userInteractionsEnabled = true
             if self.partPayService.bnplplanSelected {
                 self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
