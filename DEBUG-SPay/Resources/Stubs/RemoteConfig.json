@@ -18,6 +18,10 @@
         {
             "name": "bnpl2",
             "value": true
+        },
+        {
+            "name": "refresh",
+            "value": true
         }
     ],
     "bankApps":[

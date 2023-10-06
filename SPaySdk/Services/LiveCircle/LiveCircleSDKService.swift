@@ -41,6 +41,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     }
     
     func closeSDKWindow() {
+        locator?.resolve(NetworkService.self).cancelTask()
         rootController?.dismiss(animated: false)
         rootController = nil
         sdkWindow = nil
