@@ -268,6 +268,7 @@ final class PaymentPresenter: PaymentPresenting {
             switch result {
             case .success:
                 self.completionManager.completePay(with: .success)
+                self.partPayService.bnplplanSelected = false
                 self.alertService.show(on: self.view, type: .paySuccess(completion: {
                     self.alertService.close()
                 }))
@@ -275,6 +276,7 @@ final class PaymentPresenter: PaymentPresenting {
                 if self.partPayService.bnplplanSelected {
                     self.analytics.sendEvent(.PayWithBNPLFailed)
                 }
+                self.partPayService.bnplplanSelected = false
                 self.validatePayError(error)
             }
         }
