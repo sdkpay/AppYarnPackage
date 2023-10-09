@@ -98,7 +98,7 @@ protocol AlertService {
                      animate: Bool)
     func hideLoading(animate: Bool)
     func hide(animated: Bool, completion: Action?)
-    func close(animated: Bool, completion: Action?)
+    func close()
 }
 
 extension AlertService {
