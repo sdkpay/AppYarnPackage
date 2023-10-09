@@ -88,6 +88,7 @@ final class AuthPresenter: AuthPresenting {
             case .success:
                 self?.router.presentPayment()
             case .failure(let error):
+                self?.completionManager.completeWithError(error)
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
                                             type: .noInternet(retry: { self?.checkSession() },
@@ -164,6 +165,7 @@ final class AuthPresenter: AuthPresenting {
         view?.showLoading(with: Strings.Get.Data.title, animate: false)
         contentLoadManager.load { [weak self] error in
             if let error = error {
+                self?.completionManager.completeWithError(error)
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
                                             type: .noInternet(retry: { self?.loadPaymentData() },

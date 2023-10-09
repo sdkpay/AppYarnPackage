@@ -113,6 +113,9 @@ final class DefaultCompletionManager: CompletionManager {
             let response = PaymentResponse((state: .cancel, info: Strings.Error.close))
             paymentCompletion?(response)
         }
+        error = nil
+        payResponse = nil
+        paymentTokenResponse = nil
         paymentCompletion = nil
         closeActionInProgress = false
         liveCircleManager.closeSDKWindow()

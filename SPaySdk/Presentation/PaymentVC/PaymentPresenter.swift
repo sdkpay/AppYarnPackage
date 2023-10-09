@@ -290,12 +290,12 @@ final class PaymentPresenter: PaymentPresenting {
     private func validatePayError(_ error: PayError) {
         switch error {
         case .noInternetConnection:
+            self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
             alertService.show(on: view,
                               type: .noInternet(retry: {
                 self.pay()
             },
                                                 completion: {
-                self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
                 self.alertService.close()
             }))
         case .timeOut, .unknownStatus:
@@ -303,9 +303,9 @@ final class PaymentPresenter: PaymentPresenting {
         case .partPayError:
             getPaymentToken()
         default:
+            self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
             alertService.show(on: view,
                               type: .defaultError(completion: {
-                self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
                 self.alertService.close()
             }))
         }
@@ -315,9 +315,9 @@ final class PaymentPresenter: PaymentPresenting {
         partPayService.bnplplanSelected = false
         partPayService.setEnabledBnpl(false, enabledLevel: .paymentToken)
         guard let paymentId = userService.selectedCard?.paymentId else {
+            self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
             alertService.show(on: view,
                               type: .defaultError(completion: {
-                self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
                 self.alertService.close()
             }))
             return
@@ -340,9 +340,9 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func configForWaiting() {
+        self.completionManager.completePay(with: .waiting)
         let okButton = AlertButtonModel(title: Strings.Ok.title,
                                         type: .full) { [weak self] in
-            self?.completionManager.completePay(with: .waiting)
             self?.alertService.close()
         }
         alertService.showAlert(on: view,
@@ -425,11 +425,12 @@ final class PaymentPresenter: PaymentPresenting {
         paymentService.tryToPay(paymentId: paymentId,
                                 isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
             guard let self = self else { return }
+            self.userService.clearData()
             self.view?.userInteractionsEnabled = true
             switch result {
             case .success:
+                self.completionManager.completePay(with: .success)
                 self.alertService.show(on: self.view, type: .paySuccess(completion: {
-                    self.completionManager.completePay(with: .success)
                     self.alertService.close()
                 }))
             case .failure(let error):

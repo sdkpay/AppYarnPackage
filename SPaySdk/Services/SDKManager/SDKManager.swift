@@ -100,7 +100,7 @@ final class DefaultSDKManager: SDKManager {
         completionManager.setPaymentCompletion(completion)
         payHandler?(PayInfo(paymentRequest: paymentRequest))
     }
-    
+
     private func isNewStart(check authInfo: AuthInfo) -> Bool {
         // Проверяем наличие сохраненной информации о запросе
         guard let savedInfo = self.authInfo else { return true }

@@ -112,9 +112,6 @@ extension AlertService {
     func hide(animated: Bool = true, completion: Action? = nil) {
         hide(animated: animated, completion: completion)
     }
-    func close(animated: Bool = true, completion: Action? = nil) {
-        close(animated: animated, completion: completion)
-    }
 }
 
 final class DefaultAlertService: AlertService {
