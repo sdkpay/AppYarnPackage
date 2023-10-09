@@ -17,6 +17,7 @@ final class AuthServiceAssembly: Assembly {
                                                           authManager: container.resolve(),
                                                           partPayService: container.resolve(),
                                                           storage: container.resolve(),
+                                                          baseRequestManager: container.resolve(),
                                                           personalMetricsService: container.resolve(),
                                                           enviromentManager: container.resolve(),
                                                           cookieStorage: container.resolve(),
@@ -37,6 +38,12 @@ protocol AuthService {
 }
 
 final class DefaultAuthService: AuthService, ResponseDecoder {
+    
+    private enum AuthRequestType {
+        case auth
+        case sessionId
+    }
+    
     private var authСompletion: ((SDKError?, Bool) -> Void)?
     private var analytics: AnalyticsService
     private let network: NetworkService
@@ -49,6 +56,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var enviromentManager: EnvironmentManager
     private let featureToggleService: FeatureToggleService
     private var storage: KeychainStorage
+    private var baseRequestManager: BaseRequestManager
     private var cookieStorage: CookieStorage
     private var appCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
@@ -69,6 +77,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
          authManager: AuthManager,
          partPayService: PartPayService,
          storage: KeychainStorage,
+         baseRequestManager: BaseRequestManager,
          personalMetricsService: PersonalMetricsService,
          enviromentManager: EnvironmentManager,
          cookieStorage: CookieStorage,
@@ -79,6 +88,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.sdkManager = sdkManager
         self.bankAppManager = bankAppManager
         self.authManager = authManager
+        self.baseRequestManager = baseRequestManager
         self.partPayService = partPayService
         self.personalMetricsService = personalMetricsService
         self.enviromentManager = enviromentManager
@@ -131,10 +141,16 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         authСompletion?(nil, true)
     }
     
+    private func addFrontHeaders() {
+        baseRequestManager.generateB3Cookie()
+    }
+    
     private func authRequest(method: AuthMethod? = nil,
                              completion: @escaping (SDKError?, Bool) -> Void) {
         guard let request = sdkManager.authInfo else { return }
-        analytics.sendEvent(.RQSessionId)
+        addFrontHeaders()
+        analytics.sendEvent(.RQSessionId,
+                            with: [.view: AnlyticsScreenEvent.AuthVC.rawValue])
         network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
                                                 merchantLogin: request.merchantLogin,
                                                 orderId: request.orderId,
@@ -149,7 +165,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             switch result {
             case .success(let result):
                 guard let self = self else { return }
-                self.analytics.sendEvent(.RQGoodSessionId)
+                self.analytics.sendEvent(.RQGoodSessionId,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.AuthVC.rawValue])
                 self.authManager.sessionId = result.sessionId
                 self.appLink = result.deeplink
                 self.partPayService.setEnabledBnpl(result.isBnplEnabled ?? false, enabledLevel: .session)
@@ -173,11 +190,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     self.sIdAuth()
                 }
             case .failure(let error):
-                if error.represents(.failDecode) {
-                    self?.analytics.sendEvent(.RQFailSessionId, with: [AnalyticsKey.ParsingError: error.localizedDescription])
-                } else {
-                    self?.analytics.sendEvent(.RSFailSessionId, with: [AnalyticsKey.errorCode: error.localizedDescription])
-                }
+                self?.sendAnaliticsError(error: error, requestType: .sessionId)
                 completion(error, false)
             }
         }
@@ -203,12 +216,12 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
         UIApplication.shared.open(link) { [weak self] success in
             if !success {
-//                self?.analytics.sendEvent(.RedirectDenied)
+                //                self?.analytics.sendEvent(.RedirectDenied)
             }
         }
         SBLogger.logRequestToSbolStarted(link)
     }
-
+    
     private func authURL(link: String) -> URL? {
         guard let url = bankAppManager.selectedBank?.link else { return nil }
         return URL(string: url + link)
@@ -229,7 +242,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     private func auth(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
         guard let request = sdkManager.authInfo else { return }
-        analytics.sendEvent(.RQAuth)
+        analytics.sendEvent(.RQAuth,
+                            with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
         network.requestFull(AuthTarget.auth(redirectUri: authManager.authMethod == .bank ? request.redirectUri : nil,
                                             authCode: authManager.authCode,
                                             sessionId: authManager.sessionId ?? "",
@@ -252,15 +266,12 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             case .success(let authModel):
                 self?.saveRefreshIfNeeded(from: authModel.cookies)
                 self?.authManager.userInfo = authModel.result.userInfo
-                self?.analytics.sendEvent(.RSGoodAuth)
+                self?.analytics.sendEvent(.RSGoodAuth,
+                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
                 completion(.success)
             case .failure(let error):
                 guard let self else { return }
-               if error.represents(.failDecode) {
-                    self.analytics.sendEvent(.RQFailAuth, with: [AnalyticsKey.ParsingError: error.localizedDescription])
-               } else {
-                   self.analytics.sendEvent(.RSFailSessionId, with: [AnalyticsKey.ParsingError: error.localizedDescription])
-               }
+                self.sendAnaliticsError(error: error, requestType: .auth)
                 
                 if self.authManager.authMethod == .bank {
                     completion(.failure(error))
@@ -285,14 +296,150 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         if let idCookie = cookies.first(where: { $0.name == Cookies.id.rawValue }) {
             cookieStorage.setCookie(cookie: idCookie, for: .id)
         }
-
+        
         if let dataCookie = cookies.first(where: { $0.name == Cookies.refreshData.rawValue }) {
             cookieStorage.setCookie(cookie: dataCookie, for: .refreshData)
         }
     }
     
+    private func sendAnaliticsError(error: SDKError, requestType: AuthRequestType) {
+        let rqFail: AnalyticsEvent = requestType == .auth ? .RQFailAuth :
+            .RQFailSessionId
+        let rsFail: AnalyticsEvent = requestType == .auth ? .RSFailAuth :
+            .RSFailSessionId
+        let screen = requestType == .sessionId ? AnlyticsScreenEvent.AuthVC.rawValue : AnlyticsScreenEvent.PaymentVC.rawValue
+        
+        switch error {
+            
+        case .noInternetConnection:
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
+            )
+        case .noData:
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
+            )
+        case .badResponseWithStatus(let code):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: code.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
+            )
+        case .failDecode(let text):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: Int64(200),
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
+            )
+            self.analytics.sendEvent(
+                rsFail,
+                with:
+                    [
+                        AnalyticsKey.ParsingError: text
+                    ]
+            )
+        case .badDataFromSBOL(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with: [
+                    AnalyticsKey.httpCode: httpCode
+                ]
+            )
+        case .unauthorizedClient(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
+            )
+        case .personalInfo:
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
+            )
+        case .errorWithErrorCode(let number, let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.errorCode: number,
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.view: screen
+                    ]
+            )
+        case .noCards:
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
+            )
+        case .cancelled:
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
+            )
+        case .timeOut(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
+            )
+        case .ssl(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
+            )
+        }
+    }
+    
     private func getRefreshCookies() -> [HTTPCookie] {
-
+        
         var cookies = [HTTPCookie]()
         
         if let idCookie = cookieStorage.getCookie(for: .id) {

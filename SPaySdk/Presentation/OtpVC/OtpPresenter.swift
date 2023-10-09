@@ -17,6 +17,12 @@ protocol OtpPresenting {
 }
 
 final class OtpPresenter: OtpPresenting {
+    
+    private enum OtpTypeRequest {
+        case creteOTP
+        case confirmOTP
+    }
+    
     weak var view: (IOtpVC & ContentVC)?
     
     private var otpService: OTPService
@@ -24,7 +30,7 @@ final class OtpPresenter: OtpPresenting {
     private let sdkManager: SDKManager
     private let alertService: AlertService
     private let authManager: AuthManager
-    private let analitics: AnalyticsService
+    private let analytics: AnalyticsService
     private let keyboardManager: KeyboardManager
     private let completionManager: CompletionManager
     private var sec = 45
@@ -33,7 +39,7 @@ final class OtpPresenter: OtpPresenting {
     private var completion: Action?
     private var otpRetryMaxCount = 3
     private var otpRetryCount = 1
-
+    
     init(otpService: OTPService,
          userService: UserService,
          authManager: AuthManager,
@@ -69,11 +75,12 @@ final class OtpPresenter: OtpPresenting {
     private func configViews() {
         guard let user = userService.user else { return }
         view?.configProfileView(with: user.userInfo)
-        view?.updateMobilePhone(phoneNumber: otpService.otpModel?.mobilePhone ?? "none")
+        view?.updateMobilePhone(phoneNumber: "none")
     }
     
     func createOTP() {
-        analitics.sendEvent(.RQCreteOTP)
+        analytics.sendEvent(.RQCreteOTP,
+                            with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         view?.showLoading()
         otpService.creteOTP { [weak self] result in
             switch result {
@@ -81,9 +88,12 @@ final class OtpPresenter: OtpPresenting {
                 self?.view?.hideLoading(animate: true)
                 self?.updateTimerView()
                 self?.createTimer()
-                self?.analitics.sendEvent(.RQGoodCreteOTP)
+                self?.analytics.sendEvent(.RQGoodCreteOTP,
+                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
+                self?.analytics.sendEvent(.RSGoodCreteOTP,
+                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
             case .failure(let error):
-                self?.analitics.sendEvent(.RSFailCreteOTP)
+                self?.sendAnaliticsError(error: error, typeRequest: .confirmOTP)
                 self?.view?.hideLoading(animate: true)
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
@@ -98,20 +108,29 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func sendOTP(otpCode: String) {
+        analytics.sendEvent(.TouchNext,
+                            with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         let otpHash = getHashCode(code: otpCode)
         view?.showLoading()
-        analitics.sendEvent(.RQConfirmOTP)
+        analytics.sendEvent(.RQConfirmOTP,
+                            with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
+        analytics.sendEvent(.RSConfirmOTP,
+                            with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         otpRetryCount += 1
         otpService.confirmOTP(otpHash: otpHash) { [weak self]  result in
             guard let self = self else { return }
             switch result {
             case .success:
-                self.analitics.sendEvent(.RSGoodConfirmOTP)
+                self.analytics.sendEvent(.RSGoodConfirmOTP,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
+                self.analytics.sendEvent(.RQGoodConfirmOTP,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
                 self.view?.hideKeyboard()
                 self.closeWithSuccess()
             case .failure(let error):
-                self.analitics.sendEvent(.RSFailConfirmOTP)
-                if error.represents(.errorWithErrorCode(number: OtpError.incorrectCode.rawValue)) {
+                self.sendAnaliticsError(error: error, typeRequest: .confirmOTP)
+                if error.represents(.errorWithErrorCode(number: OtpError.incorrectCode.rawValue, httpCode: 200)) {
+                    self.analytics.sendEvent(.RQFailConfirmOTP)
                     if self.otpRetryCount > self.otpRetryMaxCount {
                         self.alertService.show(on: self.view, type: .tryingError(back: {
                             self.dismissWithError(.cancelled)
@@ -123,11 +142,11 @@ final class OtpPresenter: OtpPresenting {
                         self.view?.hideLoading(animate: true)
                         self.view?.showError(with: Strings.TextField.Error.Wrong.title)
                     }
-                } else if error.represents(.errorWithErrorCode(number: OtpError.tryingError.rawValue)) {
+                } else if error.represents(.errorWithErrorCode(number: OtpError.tryingError.rawValue, httpCode: 200)) {
                     self.alertService.show(on: self.view, type: .tryingError(back: {
                         self.dismissWithError(.cancelled)
                     }))
-                } else if error.represents(.errorWithErrorCode(number: OtpError.timeOut.rawValue)) {
+                } else if error.represents(.errorWithErrorCode(number: OtpError.timeOut.rawValue, httpCode: 200)) {
                     if self.otpRetryCount > self.otpRetryMaxCount {
                         self.alertService.show(on: self.view, type: .tryingError(back: {
                             self.dismissWithError(.cancelled)
@@ -146,18 +165,18 @@ final class OtpPresenter: OtpPresenting {
             }
         }
     }
-        
+    
     func back() {
         analitics.sendEvent(.TouchBack, with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         self.completionManager.closeAction()
     }
     
     func viewDidAppear() {
-        analitics.sendEvent(.LCOTPViewAppeared)
+        analytics.sendEvent(.LCOTPViewAppeared)
     }
     
     func viewDidDisappear() {
-        analitics.sendEvent(.LCOTPViewDisappeared)
+        analytics.sendEvent(.LCOTPViewDisappeared)
     }
     
     private func closeWithSuccess() {
@@ -198,5 +217,140 @@ final class OtpPresenter: OtpPresenting {
     private func updateTimerView() {
         view?.updateTimer(sec: sec)
         sec -= 1
+    }
+    
+    private func sendAnaliticsError(error: SDKError, typeRequest: OtpTypeRequest) {
+        let rqFail: AnalyticsEvent = typeRequest == .confirmOTP ? .RQFailConfirmOTP :
+            .RQFailCreteOTP
+        let rsFail: AnalyticsEvent = typeRequest == .confirmOTP ? .RSFailConfirmOTP :
+            .RSFailCreteOTP
+        
+        switch error {
+            
+        case .noInternetConnection:
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+        case .noData:
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+        case .badResponseWithStatus(let code):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: code.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+        case .failDecode(let text):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: Int64(200),
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+            self.analytics.sendEvent(
+                rsFail,
+                with:
+                    [
+                        AnalyticsKey.ParsingError: text
+                    ])
+        case .badDataFromSBOL(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode
+                    ]
+            )
+        case .unauthorizedClient(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+        case .personalInfo:
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+        case .errorWithErrorCode(let number, let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.errorCode: number,
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+        case .noCards:
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+        case .cancelled:
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+        case .timeOut(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+        case .ssl(let httpCode):
+            self.analytics.sendEvent(
+                rqFail,
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
+            )
+        }
     }
 }

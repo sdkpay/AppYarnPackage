@@ -91,11 +91,6 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error)
             completion(result)
-            switch result {
-            case .failure(let failure):
-                self.sendNetErrorAnalytics(target: target, error: failure)
-            default: return
-            }
         }
     }
     
@@ -107,11 +102,6 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
             completion(result)
-            switch result {
-            case .failure(let failure):
-                self.sendNetErrorAnalytics(target: target, error: failure)
-            default: return
-            }
         }
     }
     
@@ -126,25 +116,10 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
             let result = self.decodeResponseFull(data: data, response: response, error: error, type: to)
             completion(result)
-            switch result {
-            case .failure(let failure):
-                self.sendNetErrorAnalytics(target: target, error: failure)
-            default: return
-            }
         }
     }
     
     func cancelTask() {
         provider.cancel()
-    }
-    
-    private func sendNetErrorAnalytics(target: TargetType, error: SDKError) {
-        if error.represents(.timeOut) {
-//            analyticsService.sendEvent(.Error404, with: target.path)
-        } else if error.represents(.failDecode) {
-//            analyticsService.sendEvent(.DecodeError, with: target.path)
-        } else if error.represents(.badResponseWithStatus(code: .errorPath)) {
-//            analyticsService.sendEvent(.Error404, with: target.path)
-        }
     }
 }

@@ -18,7 +18,7 @@ public class SPError: NSObject {
         switch errorState {
         case .noInternetConnection, .badDataFromSBOL, .unauthorizedClient, .personalInfo, .noCards:
             errorDescription = Strings.Error.system
-        case .noData, .failDecode, .errorFromServer:
+        case .noData, .failDecode:
             errorDescription = Strings.Error.format
         case .badResponseWithStatus(let code):
             if code == .errorFormat {

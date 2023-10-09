@@ -25,16 +25,20 @@ extension ResponseDecoder {
                                     error: Error?,
                                     type: T.Type) -> Result<T, SDKError> {
 
-        if let error = systemError(error) {
+        guard error == nil, let response = response as? HTTPURLResponse else {
+            return .failure(.noInternetConnection)
+        }
+        
+        if let error = systemError(error, httpCode: response.statusCode) {
             return .failure(error)
         }
     
-        guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
+
         guard let data = data else { return .failure(.noData) }
         guard (200...299).contains(response.statusCode) else {
-            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: Int64(response.statusCode)) ?? .unowned))
         }
-        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode)) }
+        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode, httpCode: Int64(response.statusCode))) }
         do {
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(type, from: data)
@@ -42,10 +46,11 @@ extension ResponseDecoder {
             return .success(decodedData)
         } catch let error as DecodingError {
             SBLogger.responseDecodedWithError(for: type, decodingError: error)
-            return .failure(.failDecode)
+            let description = ErrorConvertDecoder.getErrorDescription(decodingError: error)
+            return .failure(.failDecode(text: description))
         } catch {
             print("error: ", error)
-            return .failure(.failDecode)
+            return .failure(.failDecode(text: error.localizedDescription))
         }
     }
     
@@ -54,9 +59,9 @@ extension ResponseDecoder {
                         error: Error?) -> Result<Void, SDKError> {
         guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
         guard let data = data else { return .failure(.noData) }
-        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode)) }
+        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode, httpCode: Int64(response.statusCode))) }
         guard (200...299).contains(response.statusCode) else {
-            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: Int64(Int(Int64(response.statusCode)))) ?? .unowned))
         }
         return .success(())
     }
@@ -67,17 +72,17 @@ extension ResponseDecoder {
                                         type: T.Type) -> Result<(result: T,
                                                                  headers: HTTPHeaders,
                                                                  cookies: [HTTPCookie]), SDKError> {
+        guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
         
-        if let error = systemError(error) {
+        if let error = systemError(error, httpCode: response.statusCode) {
             return .failure(error)
         }
-        
-        guard error == nil, let response = response as? HTTPURLResponse else { return .failure(.noInternetConnection) }
+
         guard let data = data else { return .failure(.noData) }
         guard (200...299).contains(response.statusCode) else {
-            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: response.statusCode) ?? .unowned))
+            return .failure(.badResponseWithStatus(code: StatusCode(rawValue: Int64(Int(Int64(response.statusCode)))) ?? .unowned))
         }
-        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode)) }
+        if let errorCode = checkErrorCode(data: data) { return .failure(.errorWithErrorCode(number: errorCode, httpCode: Int64(response.statusCode))) }
         let headers = response.allHeaderFields as? HTTPHeaders ?? [:]
         
         var cookies = [HTTPCookie]()
@@ -93,19 +98,20 @@ extension ResponseDecoder {
             return .success((decodedData, headers, cookies))
         } catch let error as DecodingError {
             SBLogger.responseDecodedWithError(for: type, decodingError: error)
-            return .failure(.failDecode)
+            let description = ErrorConvertDecoder.getErrorDescription(decodingError: error)
+            return .failure(.failDecode(text: description))
         } catch {
             print("error: ", error)
-            return .failure(.failDecode)
+            return .failure(.failDecode(text: error.localizedDescription))
         }
     }
     
     func decodeParametersFrom(url: URL) -> Result<BankModel, SDKError> {
         guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
-            return .failure(.badDataFromSBOL)
+            return .failure(.badDataFromSBOL(httpCode: Int64(StatusCode.errorSystem.rawValue)))
         }
         guard let queryItems = urlComponents.queryItems else {
-            return .failure(.badDataFromSBOL)
+            return .failure(.badDataFromSBOL(httpCode: Int64(Int(StatusCode.errorSystem.rawValue))))
         }
         var parameters = [String: String]()
         queryItems.forEach {
@@ -125,7 +131,7 @@ extension ResponseDecoder {
         return .success(BankModel(dictionary: parameters))
     }
     
-    private func systemError(_ error: Error?) -> SDKError? {
+    private func systemError(_ error: Error?, httpCode: Int) -> SDKError? {
     
         guard let error = error as? NSError else { return nil }
 
@@ -149,9 +155,9 @@ extension ResponseDecoder {
         }
         
         if sslErrors.contains(where: { $0.rawValue == error._code }) {
-            return .ssl
+            return .ssl(httpCode: Int64(httpCode))
         } else if timeOutErrors.contains(where: { $0.rawValue == error._code }) {
-            return .timeOut
+            return .timeOut(httpCode: Int64(httpCode))
         } else {
             return nil
         }
@@ -159,9 +165,9 @@ extension ResponseDecoder {
     
     private func checkBankError(error: String) -> SDKError {
         if error == "unauthorized_client" {
-            return .unauthorizedClient
+            return .unauthorizedClient(httpCode: Int64(Int(StatusCode.errorSystem.rawValue)))
         } else {
-            return .badDataFromSBOL
+            return .badDataFromSBOL(httpCode: Int64(Int(StatusCode.errorSystem.rawValue)))
         }
     }
     

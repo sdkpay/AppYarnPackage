@@ -121,7 +121,6 @@ final class AuthPresenter: AuthPresenting {
             self?.bankManager.selectedBank = bank
             self?.getAccessSPay()
         })
-//        analytics.sendEvent(.BankAppsViewAppear)
     }
     
     private func getAccessSPay() {
@@ -161,7 +160,6 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func loadPaymentData() {
-//        analytics.sendEvent(.BankAppAuthSuccess)
         view?.showLoading(with: Strings.Get.Data.title, animate: false)
         contentLoadManager.load { [weak self] error in
             if let error = error {

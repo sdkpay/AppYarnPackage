@@ -19,6 +19,8 @@ extension String {
         static let os = "OS"
         static let deviceName = "deviceName"
         static let orderNumber = "orderNumber"
+        static let b3TraceId = "x-b3-traceid"
+        static let b3SpanId = "x-b3-spanid"
     }
 }
 
@@ -53,11 +55,15 @@ protocol BaseRequestManager {
     var headers: HTTPHeaders { get }
     var geoCookie: HTTPCookie? { get set }
     var pod: String? { get set }
+    func generateB3Cookie()
 }
 
 final class DefaultBaseRequestManager: BaseRequestManager {
+    
     var geoCookie: HTTPCookie?
     var pod: String?
+    var b3TraceId: String?
+    var b3SpanId: String?
     
     private let authManager: AuthManager
     private let storage: KeychainStorage
@@ -76,6 +82,12 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         if let orderNumber = authManager.orderNumber {
             headers[.Headers.orderNumber] = orderNumber
         }
+        if let b3TraceId = b3TraceId {
+            headers[.Headers.b3TraceId] = b3TraceId
+        }
+        if let b3SpanId = b3SpanId {
+            headers[.Headers.b3SpanId] = b3SpanId
+        }
         
         headers[.Headers.os] = UIDevice.current.fullSystemVersion
         headers[.Headers.deviceName] = Device.current.rawValue
@@ -86,5 +98,10 @@ final class DefaultBaseRequestManager: BaseRequestManager {
          storage: KeychainStorage) {
         self.authManager = authManager
         self.storage = storage
+    }
+    
+    func generateB3Cookie() {
+        b3TraceId = .generateRandom(with: 32)
+        b3SpanId = .generateRandom(with: 16)
     }
 }

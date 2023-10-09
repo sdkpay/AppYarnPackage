@@ -40,19 +40,25 @@ final class WebViewPresenter: WebViewPresenting {
     }
     
     func backButtonTapped() {
+        analitics.sendEvent(.TouchBack,
+                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
         view?.contentNavigationController?.popViewController(animated: true)
     }
     
     func shareButtonTapped() {
+        analitics.sendEvent(.TouchShare,
+                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
         shareUrlAddress()
     }
     
     func viewDidAppear() {
-        analitics.sendEvent(.LCWebViewAppeared)
+        analitics.sendEvent(.LCWebViewAppeared,
+                            with: [.view: AnlyticsScreenEvent.WebViewVC.rawValue])
     }
     
     func viewDidDisappear() {
-        analitics.sendEvent(.LCWebViewDisappeared)
+        analitics.sendEvent(.LCWebViewDisappeared,
+                            with: [.view: AnlyticsScreenEvent.WebViewVC.rawValue])
     }
 
     private func setupWebView() {

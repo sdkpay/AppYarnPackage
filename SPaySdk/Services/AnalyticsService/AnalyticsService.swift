@@ -9,7 +9,7 @@ import Foundation
 
 final class AnalyticsServiceAssembly: Assembly {
     func register(in locator: LocatorService) {
-        let service: AnalyticsService = DefaultAnalyticsService(sdkManager: locator.resolve())
+        let service: AnalyticsService = DefaultAnalyticsService(authManager: locator.resolve())
         locator.register(service: service)
     }
 }
@@ -21,6 +21,7 @@ enum AnlyticsScreenEvent: String {
     case PartPayVC
     case PaymentVC
     case WebViewVC
+    case None
 }
 
 enum AnalyticsEvent: String {
@@ -40,6 +41,8 @@ enum AnalyticsEvent: String {
     case RQGoodRemoteConfig
     ///  Получена ошибка на запрос получения  remote config
     case RQFailRemoteConfig
+    ///  Получена ошибка при декодировании remote config
+    case RSFailRemoteConfig
     /// Отправлен запрос на получение сессии
     case RQSessionId
     /// Получен положительный ответ на запрос получения SessionId
@@ -64,6 +67,8 @@ enum AnalyticsEvent: String {
     case RQListCards
     /// Получен положительный ответ на запрос получения ListCards
     case RQGoodListCards
+    /// Парсинг ответа от сервера на запрос ListCards проведен успешно
+    case RSGoodListCards
     /// Получена ошибка от шлюза при обработке запроса ListCards
     case RQFailListCards
     ///  Получена ошибка при парсинге ListCards
@@ -82,8 +87,12 @@ enum AnalyticsEvent: String {
     case STGetGoodRefresh
     /// Не смогли получить из хранилища Refresh token
     case STGetFailRefresh
+    /// Не удалось достать выбранный банк
+    case STGetFailBankApp
     /// Сохранили Refresh token
     case STSaveRefresh
+    ///  Сохранили приложение банка выбранного пользователем
+    case STSaveBankApp
     /// Отобразился экран авторизации
     case LCBankAuthViewAppeared
     /// Перестал отображаться экран авторизации
@@ -100,6 +109,8 @@ enum AnalyticsEvent: String {
     case TouchBNPL
     /// Пользователь нажал на ячейку с BNPL
     case TouchPay
+    /// Пользователь нажал кнопку Продолжит
+    case TouchNext
     /// Пользователь нажал на кнопку отмены оплаты
     case TouchCancel
     /// Отправлен запрос PaymentToken
@@ -109,7 +120,7 @@ enum AnalyticsEvent: String {
     /// Парсинг ответа от сервера на запрос PaymentToken произведен с ошибкой
     case RQFailPaymentToken
     /// Парсинг ответа от сервера на запрос PaymentToken проведен успешно
-    case RSGoodPaymentToke
+    case RSGoodPaymentToken
     /// Получена ошибка от шлюза при обработке запроса PaymentToken
     case RSFailPaymentToken
     /// Отправлен запрос на получение ListCards
@@ -158,12 +169,16 @@ enum AnalyticsEvent: String {
     case RQCreteOTP
     /// Получен положительный ответ на запрос получения CreteOTP
     case RQGoodCreteOTP
+    ///  Парсинг ответа на запрос получения CreteOTP успешен
+    case RSGoodCreteOTP
     /// Получена ошибка от шлюза при обработке запроса CreteOTP
     case RQFailCreteOTP
     /// Парсинг ответа от сервера на запрос CreteOTP произведен с ошибкой
     case RSFailCreteOTP
     /// Отправлен запрос на получение ConfirmOTP
     case RQConfirmOTP
+    /// Парсинг ответа на запрос получения ConfirmOTP успешен
+    case RSConfirmOTP
     /// Получен положительный ответ на запрос получения ConfirmOTP
     case RQGoodConfirmOTP
     /// Получена ошибка от шлюза при обработке запроса ConfirmOTP
@@ -255,7 +270,7 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         DefaultDynatraceAnalyticsService()
     ]
     
-    private var sdkManager: SDKManager
+    private var authManager: AuthManager
     
     func sendEvent(_ event: AnalyticsEvent) {
         analyticServices.forEach({ $0.sendEvent(event, with: "") })
@@ -287,12 +302,13 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     
     func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any]) {
         var dict = dictionaty
-        dict[.orderNumber] = sdkManager.authInfo?.orderNumber ?? ""
+        let orderNumber = authManager.orderNumber
+        dict[.orderNumber] = orderNumber
         analyticServices.forEach({ $0.sendEvent(event, with: dict) })
     }
     
-    init(sdkManager: SDKManager) {
-        self.sdkManager = sdkManager
+    init(authManager: AuthManager) {
+        self.authManager = authManager
         super.init()
         SBLogger.log(.start(obj: self))
     }

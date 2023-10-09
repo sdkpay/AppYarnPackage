@@ -427,6 +427,7 @@ final class PaymentPresenter: PaymentPresenting {
             guard let self = self else { return }
             self.userService.clearData()
             self.view?.userInteractionsEnabled = true
+            self.partPayService.bnplplanSelected = false
             switch result {
             case .success:
                 self.completionManager.completePay(with: .success)
