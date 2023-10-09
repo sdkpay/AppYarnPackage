@@ -38,7 +38,7 @@ final class OtpPresenter: OtpPresenting {
     private var completion: Action?
     private var otpRetryMaxCount = 3
     private var otpRetryCount = 1
-
+    
     init(otpService: OTPService,
          userService: UserService,
          authManager: AuthManager,
@@ -162,7 +162,7 @@ final class OtpPresenter: OtpPresenting {
             }
         }
     }
-        
+    
     func back() {
         analytics.sendEvent(.TouchBack,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
@@ -231,87 +231,126 @@ final class OtpPresenter: OtpPresenting {
         case .noInternetConnection:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
         case .noData:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
         case .badResponseWithStatus(let code):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: code.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.httpCode: code.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
         case .failDecode(let text):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: Int64(200),
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.httpCode: Int64(200),
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
             self.analytics.sendEvent(
                 rsFail,
-                with: [AnalyticsKey.ParsingError: text])
+                with:
+                    [
+                        AnalyticsKey.ParsingError: text
+                    ])
         case .badDataFromSBOL(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: httpCode]
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode
+                    ]
             )
         case .unauthorizedClient(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
         case .personalInfo:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
         case .errorWithErrorCode(let number, let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.errorCode: number,
-                       AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.errorCode: number,
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
         case .noCards:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
         case .cancelled:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
         case .timeOut(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
         case .ssl(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue]
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
+                    ]
             )
         }
     }

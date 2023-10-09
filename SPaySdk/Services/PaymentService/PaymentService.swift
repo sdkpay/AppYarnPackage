@@ -165,7 +165,7 @@ final class DefaultPaymentService: PaymentService {
             }
         }
     }
-
+    
     private func pay(with token: String,
                      orderId: String?,
                      completion: @escaping ((Result<Void, PayError>) -> Void)) {
@@ -182,18 +182,18 @@ final class DefaultPaymentService: PaymentService {
                             Int(StatusCode.unknownState.rawValue)
                         ])) { result in
                             switch result {
-            case .success:
-            self.analytics.sendEvent(.RQGoodPaymentOrder,
-                                     with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
-            self.analytics.sendEvent(.RSGoodPaymentOrder,
-                                     with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
-                completion(.success)
-            case .failure(let error):
-                 self.sendAnaliticsError(error: error,
-                                         requestType: .paymentOrder)
-                completion(.failure(self.parseError(error)))
-            }
-        }
+                            case .success:
+                                self.analytics.sendEvent(.RQGoodPaymentOrder,
+                                                         with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                                self.analytics.sendEvent(.RSGoodPaymentOrder,
+                                                         with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                                completion(.success)
+                            case .failure(let error):
+                                self.sendAnaliticsError(error: error,
+                                                        requestType: .paymentOrder)
+                                completion(.failure(self.parseError(error)))
+                            }
+                        }
     }
     
     private func parseError(_ sdkError: SDKError) -> PayError {
@@ -220,87 +220,126 @@ final class DefaultPaymentService: PaymentService {
         case .noInternetConnection:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
         case .noData:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
         case .badResponseWithStatus(let code):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: code.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: code.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
         case .failDecode(let text):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: Int64(200),
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: Int64(200),
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
             self.analytics.sendEvent(
                 rsFail,
-                with: [AnalyticsKey.ParsingError: text])
+                with: [
+                    AnalyticsKey.ParsingError: text
+                ]
+            )
         case .badDataFromSBOL(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: httpCode]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: httpCode
+                    ]
             )
         case .unauthorizedClient(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
         case .personalInfo:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
         case .errorWithErrorCode(let number, let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.errorCode: number,
-                       AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.errorCode: number,
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
         case .noCards:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
         case .cancelled:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
         case .timeOut(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
         case .ssl(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
+                    ]
             )
         }
     }

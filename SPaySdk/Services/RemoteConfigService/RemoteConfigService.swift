@@ -27,7 +27,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private let featureToggle: FeatureToggleService
     private let analytics: AnalyticsService
     private var retryWithCerts = true
-
+    
     init(network: NetworkService,
          analytics: AnalyticsService,
          featureToggle: FeatureToggleService) {
@@ -60,9 +60,9 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     }
     
     private func saveConfig(_ value: ConfigModel) {
-//        optimizationManager.checkSavedDataSize(object: value) {
-//            self.analytics.sendEvent(.DataSize, with: [$0])
-//        }
+        //        optimizationManager.checkSavedDataSize(object: value) {
+        //            self.analytics.sendEvent(.DataSize, with: [$0])
+        //        }
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
         UserDefaults.bankApps = value.bankApps
@@ -89,87 +89,126 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         case .noInternetConnection:
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
         case .noData:
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
         case .badResponseWithStatus(let code):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: code.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: code.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
         case .failDecode(let text):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: Int64(200),
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: Int64(200),
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
             self.analytics.sendEvent(
                 .RSFailRemoteConfig,
-                with: [AnalyticsKey.ParsingError: text])
+                with: 
+                    [
+                        AnalyticsKey.ParsingError: text
+                    ]
+            )
         case .badDataFromSBOL(let httpCode):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: httpCode]
+                with: [
+                    AnalyticsKey.httpCode: httpCode
+                ]
             )
         case .unauthorizedClient(let httpCode):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
         case .personalInfo:
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
         case .errorWithErrorCode(let number, let httpCode):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.errorCode: number,
-                       AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.errorCode: number,
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
         case .noCards:
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
         case .cancelled:
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
         case .timeOut(let httpCode):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
         case .ssl(let httpCode):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
-                with: [AnalyticsKey.httpCode: httpCode,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue]
+                with: 
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
+                    ]
             )
         }
     }

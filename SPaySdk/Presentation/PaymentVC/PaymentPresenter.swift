@@ -426,9 +426,7 @@ final class PaymentPresenter: PaymentPresenting {
                                 isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
             guard let self = self else { return }
             self.view?.userInteractionsEnabled = true
-            if self.partPayService.bnplplanSelected {
-//                self.analytics.sendEvent(.PayWithBNPLConfirmedByUser)
-            }
+            self.partPayService.bnplplanSelected = false
             switch result {
             case .success:
                 self.alertService.show(on: self.view, type: .paySuccess(completion: {
@@ -437,9 +435,6 @@ final class PaymentPresenter: PaymentPresenting {
                     })
                 }))
             case .failure(let error):
-                if self.partPayService.bnplplanSelected {
-//                    self.analytics.sendEvent(.PayWithBNPLFailed)
-                }
                 self.validatePayError(error)
             }
         }

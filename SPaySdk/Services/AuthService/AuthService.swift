@@ -315,101 +315,126 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         case .noInternetConnection:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: screen]
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
             )
         case .noData:
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: screen]
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
             )
         case .badResponseWithStatus(let code):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: code.rawValue,
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: screen]
+                with:
+                    [
+                        AnalyticsKey.httpCode: code.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
             )
         case .failDecode(let text):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: Int64(200),
-                       AnalyticsKey.errorCode: Int64(-1),
-                       AnalyticsKey.view: screen]
+                with:
+                    [
+                        AnalyticsKey.httpCode: Int64(200),
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
             )
             self.analytics.sendEvent(
                 rsFail,
-                with: [AnalyticsKey.ParsingError: text])
+                with:
+                    [
+                        AnalyticsKey.ParsingError: text
+                    ]
+            )
         case .badDataFromSBOL(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [AnalyticsKey.httpCode: httpCode]
+                with: [
+                    AnalyticsKey.httpCode: httpCode
+                ]
             )
         case .unauthorizedClient(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [
-                    AnalyticsKey.httpCode: httpCode,
-                    AnalyticsKey.errorCode: Int64(-1),
-                    AnalyticsKey.view: screen
-                ]
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
             )
         case .personalInfo:
             self.analytics.sendEvent(
                 rqFail,
-                with: [
-                    AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                    AnalyticsKey.errorCode: Int64(-1),
-                    AnalyticsKey.view: screen
-                ]
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
             )
         case .errorWithErrorCode(let number, let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [
-                    AnalyticsKey.errorCode: number,
-                    AnalyticsKey.httpCode: httpCode,
-                    AnalyticsKey.view: screen
-                ]
+                with:
+                    [
+                        AnalyticsKey.errorCode: number,
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.view: screen
+                    ]
             )
         case .noCards:
             self.analytics.sendEvent(
                 rqFail,
-                with: [
-                    AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                    AnalyticsKey.errorCode: Int64(-1),
-                    AnalyticsKey.view: screen
-                ]
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
             )
         case .cancelled:
             self.analytics.sendEvent(
                 rqFail,
-                with: [
-                    AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                    AnalyticsKey.errorCode: Int64(-1),
-                    AnalyticsKey.view: screen
-                ]
+                with:
+                    [
+                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
             )
         case .timeOut(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [
-                    AnalyticsKey.httpCode: httpCode,
-                    AnalyticsKey.errorCode: Int64(-1),
-                    AnalyticsKey.view: screen
-                ]
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
             )
         case .ssl(let httpCode):
             self.analytics.sendEvent(
                 rqFail,
-                with: [
-                    AnalyticsKey.httpCode: httpCode,
-                    AnalyticsKey.errorCode: Int64(-1),
-                    AnalyticsKey.view: screen
-                ]
+                with:
+                    [
+                        AnalyticsKey.httpCode: httpCode,
+                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.view: screen
+                    ]
             )
         }
     }
