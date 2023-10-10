@@ -24,6 +24,7 @@ final class PaymentServiceAssembly: Assembly {
                                                                 personalMetricsService: container.resolve(),
                                                                 completionManager: container.resolve(),
                                                                 buildSettings: container.resolve(),
+                                                                analytics: container.resolve(),
                                                                 sdkManager: container.resolve())
             return service
         }
@@ -45,7 +46,6 @@ final class DefaultPaymentService: PaymentService {
     private let userService: UserService
     private let completionManager: CompletionManager
     private var authManager: AuthManager
-    private let authManager: AuthManager
     private let analytics: AnalyticsService
     private let personalMetricsService: PersonalMetricsService
     private let buildSettings: BuildSettings
@@ -315,7 +315,7 @@ final class DefaultPaymentService: PaymentService {
                         AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
                     ]
             )
-        case .errorWithErrorCode(let number, let httpCode):
+        case let .errorWithErrorCode(number, httpCode):
             self.analytics.sendEvent(
                 rqFail,
                 with: 

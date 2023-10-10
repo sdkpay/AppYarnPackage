@@ -45,7 +45,7 @@ final class OtpPresenter: OtpPresenting {
          authManager: AuthManager,
          sdkManager: SDKManager,
          alertService: AlertService,
-         analitics: AnalyticsService,
+         analytics: AnalyticsService,
          completionManager: CompletionManager,
          keyboardManager: KeyboardManager,
          completion: @escaping Action) {
@@ -55,7 +55,7 @@ final class OtpPresenter: OtpPresenting {
         self.sdkManager = sdkManager
         self.alertService = alertService
         self.completion = completion
-        self.analitics = analitics
+        self.analytics = analytics
         self.completionManager = completionManager
         self.keyboardManager = keyboardManager
         self.setKeyboardHeight()
@@ -167,7 +167,7 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func back() {
-        analitics.sendEvent(.TouchBack, with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
+        analytics.sendEvent(.TouchBack, with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         self.completionManager.closeAction()
     }
     
@@ -301,7 +301,7 @@ final class OtpPresenter: OtpPresenting {
                         AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
                     ]
             )
-        case .errorWithErrorCode(let number, let httpCode):
+        case let .errorWithErrorCode(number, httpCode):
             self.analytics.sendEvent(
                 rqFail,
                 with:

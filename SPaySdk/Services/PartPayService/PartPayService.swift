@@ -118,7 +118,7 @@ final class DefaultPartPayService: PartPayService {
             switch result {
             case .success(let bnplplan):
                 self?.bnplplan = bnplplan
-                self?.analitics.sendEvent(.RQGoodBnpl)
+                self?.analytics.sendEvent(.RQGoodBnpl)
                 self?.setEnabledBnpl(bnplplan.isBnplEnabled, enabledLevel: .bnplPlan)
                 completion(nil)
             case .failure(let error):

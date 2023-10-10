@@ -211,7 +211,7 @@ final class DefaultUserService: UserService {
                         AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
                     ]
             )
-        case .errorWithErrorCode(let number, let httpCode):
+        case let .errorWithErrorCode(number, httpCode):
             self.analytics.sendEvent(
                 .RQFailListCards,
                 with:

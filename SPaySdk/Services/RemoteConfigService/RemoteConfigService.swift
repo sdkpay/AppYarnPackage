@@ -160,7 +160,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                         AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
                     ]
             )
-        case .errorWithErrorCode(let number, let httpCode):
+        case let .errorWithErrorCode(number, httpCode):
             self.analytics.sendEvent(
                 .RQFailRemoteConfig,
                 with: 

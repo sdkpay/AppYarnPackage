@@ -385,7 +385,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                         AnalyticsKey.view: screen
                     ]
             )
-        case .errorWithErrorCode(let number, let httpCode):
+        case let .errorWithErrorCode(number, httpCode):
             self.analytics.sendEvent(
                 rqFail,
                 with:

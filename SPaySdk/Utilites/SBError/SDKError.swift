@@ -43,7 +43,7 @@ enum SDKError: Error, Hashable {
     }
 }
 
-final class ErrorConvertDecoder {
+enum ErrorConvertDecoder {
     
     static func getErrorDescription(decodingError: DecodingError) -> String {
         switch decodingError {

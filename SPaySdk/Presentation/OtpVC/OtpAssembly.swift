@@ -27,7 +27,7 @@ final class OtpAssembly {
                                      authManager: locator.resolve(),
                                      sdkManager: locator.resolve(),
                                      alertService: locator.resolve(),
-                                     analitics: locator.resolve(),
+                                     analytics: locator.resolve(),
                                      completionManager: locator.resolve(),
                                      keyboardManager: locator.resolve(),
                                      completion: completion)
