@@ -7,12 +7,18 @@
 
 import Foundation
 
+enum BankSchemeAuthType: String {
+    case preffix
+    case withOutPreffix
+}
+
 // MARK: - ConfigModel
 struct ConfigModel: Codable {
     let version: String
     let localization: Localization
     let bankApps: [BankApp]
     let schemas: Schemas
+    let bankSchemes: BankSchemes
     let featuresToggle: [FeaturesToggle]
     let apikey: [String]
     let images: Images
@@ -22,6 +28,15 @@ struct ConfigModel: Codable {
 struct Localization: Codable {
     let authTitle: String
     let payLoading: String
+}
+
+struct BankSchemes: Codable {
+    let scheme: String
+    let authType: String
+    
+    var authTypeEnum: BankSchemeAuthType {
+        BankSchemeAuthType(rawValue: authType) ?? .withOutPreffix
+    }
 }
 
 struct FeaturesToggle: Codable {
