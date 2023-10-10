@@ -18,7 +18,7 @@ struct ConfigModel: Codable {
     let localization: Localization
     let bankApps: [BankApp]
     let schemas: Schemas
-    let bankSchemes: BankSchemes
+    let bankSchemes: [BankScheme]
     let featuresToggle: [FeaturesToggle]
     let apikey: [String]
     let images: Images
@@ -30,7 +30,7 @@ struct Localization: Codable {
     let payLoading: String
 }
 
-struct BankSchemes: Codable {
+struct BankScheme: Codable {
     let scheme: String
     let authType: String
     

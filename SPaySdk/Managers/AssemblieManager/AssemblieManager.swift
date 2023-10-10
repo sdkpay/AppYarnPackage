@@ -11,6 +11,7 @@ final class AssemblyManager {
     private var assemblies: [Assembly] = [
         KeychainStorageAssembly(),
         AuthManagerAssembly(),
+        CompletionManagerAssembly(),
         SDKManagerAssembly(),
         CookieStorageAssembly(),
         BiometricAuthProviderAssembly(),
@@ -23,7 +24,6 @@ final class AssemblyManager {
         BaseRequestManagerAssembly(),
         NetworkServiceAssembly(),
         RemoteConfigServiceAssembly(),
-        CompletionManagerAssembly(),
         SDKManagerAssembly(),
         AlertServiceAssembly(),
         AuthServiceAssembly(),
