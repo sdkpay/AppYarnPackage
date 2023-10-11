@@ -32,10 +32,6 @@
         {
             "name": "refresh",
             "value": true
-        },
-        {
-            "name": "refresh",
-            "value": false
         }
     ],
     "bankApps":[

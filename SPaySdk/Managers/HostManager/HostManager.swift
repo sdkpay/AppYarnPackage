@@ -9,10 +9,12 @@ import Foundation
 
 enum HostSettings {
     case main
+    case safepayonline
 }
 
 private enum Host: String {
     case sandBox = "https://ift.gate2.spaymentsplus.ru"
+    case safepayonlineIft = "https://ift.safepayonline.ru"
     case mocker = "https://api.mocki.io/v2/071c7c55"
     case ift = "https://ift.gate1.spaymentsplus.ru"
     case psi = "https://psi.gate1.spaymentsplus.ru"
@@ -56,6 +58,13 @@ final class DefaultHostManager: HostManager {
                 return Host.psi.url
             case .Local:
                 return Host.mocker.url
+            }
+        case .safepayonline:
+            switch buildSettings.networkState {
+            case .Ift:
+                return Host.safepayonlineIft.url
+            default:
+                return Host.safepayonlineIft.url
             }
         }
     }

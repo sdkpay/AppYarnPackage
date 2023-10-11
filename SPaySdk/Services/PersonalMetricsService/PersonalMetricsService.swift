@@ -11,7 +11,8 @@ import Foundation
 final class PersonalMetricsServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
-            let service: PersonalMetricsService = DefaultPersonalMetricsService(analyticsService: container.resolve())
+            let service: PersonalMetricsService = DefaultPersonalMetricsService(analyticsService: container.resolve(),
+                                                                                network: container.resolve())
             return service
         }
     }
@@ -27,9 +28,12 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     private var provider: FPReportProviderProtocol?
     private(set) var ipAddress: String?
     private let analyticsService: AnalyticsService
+    private let network: NetworkService
     
-    init(analyticsService: AnalyticsService) {
+    init(analyticsService: AnalyticsService,
+         network: NetworkService) {
         self.analyticsService = analyticsService
+        self.network = network
         super.init()
         config()
         SBLogger.log(.start(obj: self))
@@ -69,6 +73,18 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
         }
     }
     
+    private func getIp(completion: @escaping StringAction) {
+        network.requestString(IpTarget.getIp,
+                              host: .safepayonline) { result in
+            switch result {
+            case .success(let ip):
+                completion(ip)
+            case .failure:
+                completion("")
+            }
+        }
+    }
+    
     func getUserData(completion: @escaping (String?) -> Void) {
         analyticsService.sendEvent(.SCBiZone)
         DispatchQueue.global().async { [weak self] in
@@ -79,9 +95,10 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
             }
             self?.analyticsService.sendEvent(.SCGoodBiZone)
             SBLogger.log(.biZone + data)
-            let dataDictionary = self?.convertToDictionary(text: data)
-            self?.ipAddress = dataDictionary?["LocalIPv4"] as? String
-            completion(self?.formatString(data))
+            self?.getIp { [weak self] ip in
+                self?.ipAddress = ip
+                completion(self?.formatString(data))
+            }
         }
     }
     

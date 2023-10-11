@@ -36,6 +36,10 @@ protocol NetworkService: AnyObject {
                     host: HostSettings,
                     retrySettings: RetrySettings,
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable
+    func requestString(_ target: TargetType,
+                       host: HostSettings,
+                       retrySettings: RetrySettings,
+                       completion: @escaping (Result<String, SDKError>) -> Void)
     func requestFull<T>(_ target: TargetType,
                         to: T.Type,
                         host: HostSettings,
@@ -54,12 +58,20 @@ extension NetworkService {
                  completion: @escaping (Result<Void, SDKError>) -> Void) {
         request(target, host: host, retrySettings: retrySettings, completion: completion)
     }
+    
     func request<T>(_ target: TargetType,
                     to: T.Type,
                     host: HostSettings = .main,
                     retrySettings: RetrySettings = (1, []),
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
         request(target, to: to, host: host, retrySettings: retrySettings, completion: completion)
+    }
+    
+    func requestString(_ target: TargetType,
+                       host: HostSettings = .main,
+                       retrySettings: RetrySettings = (1, []),
+                       completion: @escaping (Result<String, SDKError>) -> Void) {
+        requestString(target, host: host, retrySettings: retrySettings, completion: completion)
     }
     
     func requestFull<T>(_ target: TargetType,
@@ -101,6 +113,16 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                     completion: @escaping (Result<T, SDKError>) -> Void) where T: Codable {
         provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
             let result = self.decodeResponse(data: data, response: response, error: error, type: to)
+            completion(result)
+        }
+    }
+    
+    func requestString(_ target: TargetType,
+                       host: HostSettings = .main,
+                       retrySettings: RetrySettings = (1, []),
+                       completion: @escaping (Result<String, SDKError>) -> Void) {
+        provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
+            let result = self.decodeResponse(data: data, response: response, error: error, type: String.self)
             completion(result)
         }
     }
