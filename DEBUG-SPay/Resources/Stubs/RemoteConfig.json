@@ -11,11 +11,12 @@
         "dynatraceId": "656e76e7-76f4-40ca-86bf-39db12cbc857"
     },
     "bankSchemes": [
-        {
+        {   "name": "СБОЛ",
             "scheme": "sberbankidexternallogin://",
             "authType": "withOutPreffix"
         },
         {
+            "name": "СберБанк Онлайн",
             "scheme": "sbolidexternallogin://",
             "authType": "withOutPreffix"
         }

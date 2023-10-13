@@ -60,11 +60,14 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
             // Проверяем значение
             if let emulator = emulator,
                let сompromised = сompromised {
-
+                
                 if сompromised == 0,
                    emulator == 0 {
                     self?.analyticsService.sendEvent(.SCGoodPermissions)
-                    completion(true)
+                    self?.getIp { [weak self] ip in
+                        self?.ipAddress = ip
+                        completion(true)
+                    }
                 }
             } else {
                 self?.analyticsService.sendEvent(.SCFailPermissions, with: [AnalyticsKey.permisson: emulator ?? сompromised ?? 0])

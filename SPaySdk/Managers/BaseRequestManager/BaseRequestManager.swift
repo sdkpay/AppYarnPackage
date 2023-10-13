@@ -21,6 +21,7 @@ extension String {
         static let orderNumber = "orderNumber"
         static let b3TraceId = "x-b3-traceid"
         static let b3SpanId = "x-b3-spanid"
+        static let netAdd = "X-Net-Add-Sourсe"
     }
 }
 
@@ -45,7 +46,8 @@ final class BaseRequestManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
             let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve(),
-                                                                        storage: container.resolve())
+                                                                        storage: container.resolve(),
+                                                                        personalMetricsService: container.resolve())
             return service
         }
     }
@@ -67,6 +69,7 @@ final class DefaultBaseRequestManager: BaseRequestManager {
     
     private let authManager: AuthManager
     private let storage: KeychainStorage
+    private let personalMetricsService: PersonalMetricsService
 
     var headers: HTTPHeaders {
         var headers = HTTPHeaders()
@@ -88,6 +91,9 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         if let b3SpanId = b3SpanId {
             headers[.Headers.b3SpanId] = b3SpanId
         }
+        if let ip = personalMetricsService.ipAddress {
+            headers[.Headers.netAdd] = ip
+        }
         
         headers[.Headers.os] = UIDevice.current.fullSystemVersion
         headers[.Headers.deviceName] = Device.current.rawValue
@@ -95,8 +101,10 @@ final class DefaultBaseRequestManager: BaseRequestManager {
     }
 
     init(authManager: AuthManager,
-         storage: KeychainStorage) {
+         storage: KeychainStorage,
+         personalMetricsService: PersonalMetricsService) {
         self.authManager = authManager
+        self.personalMetricsService = personalMetricsService
         self.storage = storage
     }
     

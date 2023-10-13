@@ -29,7 +29,7 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
         dispatchWorkItem = DispatchWorkItem {
             completion(target.sampleData, response, nil)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.milliseconds(Int(1000)),
+        DispatchQueue.main.asyncAfter(deadline: .now() + DispatchTimeInterval.milliseconds(Int(500)),
                                       execute: dispatchWorkItem!)
     }
     

@@ -39,7 +39,7 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
     var otpModel: OTPModel?
     var otpRequired: Bool {
         guard let amount = userService.user?.orderAmount.amount else { return true }
-        return amount >= 5000
+        return amount >= minOtpAmount
     }
     
     init(network: NetworkService,
