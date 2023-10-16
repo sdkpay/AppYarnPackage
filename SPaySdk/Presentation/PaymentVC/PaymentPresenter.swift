@@ -67,6 +67,7 @@ final class PaymentPresenter: PaymentPresenting {
     private var partPayService: PartPayService
     private let biometricAuthProvider: BiometricAuthProviderProtocol
     private let otpService: OTPService
+    private let featureToggle: FeatureToggleService
 
     private var cellData: [PaymentCellType] {
         var cellData: [PaymentCellType] = []
@@ -92,6 +93,7 @@ final class PaymentPresenter: PaymentPresenting {
          partPayService: PartPayService,
          authManager: AuthManager,
          biometricAuthProvider: BiometricAuthProviderProtocol,
+         featureToggle: FeatureToggleService,
          otpService: OTPService,
          timeManager: OptimizationCheсkerManager) {
         self.router = router
@@ -109,6 +111,7 @@ final class PaymentPresenter: PaymentPresenting {
         self.timeManager = timeManager
         self.authManager = authManager
         self.otpService = otpService
+        self.featureToggle = featureToggle
         self.timeManager.startTraking()
     }
     
@@ -145,7 +148,8 @@ final class PaymentPresenter: PaymentPresenting {
         let cellType = cellData[indexPath.row]
         switch cellType {
         case .card:
-            return PaymentFeaturesConfig.configCardModel(userService: userService)
+            return PaymentFeaturesConfig.configCardModel(userService: userService,
+                                                         featureToggle: featureToggle)
         case .partPay:
             return PaymentFeaturesConfig.configPartModel(partPayService: partPayService)
         }

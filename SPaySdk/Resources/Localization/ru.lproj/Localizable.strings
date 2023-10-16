@@ -18,6 +18,10 @@
 // Payment
 "payment.noCards.title" = "Нет карт для оплаты";
 "payment.noCards.subtitle" = "Выберите другой способ";
+"payment.cards.compoundWallet.title" = " c %@";
+
+"payment.cards.compoundWallet.one" = "счетом";
+"payment.cards.compoundWallet.two" = "счетами";
 
 // Cards
 "cards.title" = "Выберите карту для оплаты";

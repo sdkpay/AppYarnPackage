@@ -8,10 +8,23 @@
 import Foundation
 
 enum PaymentFeaturesConfig {
-    static func configCardModel(userService: UserService) -> PaymentCellModel {
+    static func configCardModel(userService: UserService,
+                                featureToggle: FeatureToggleService) -> PaymentCellModel {
         guard let selectedCard = userService.selectedCard else { return PaymentCellModel() }
+        guard let user = userService.user else { return PaymentCellModel() }
+        
+        var subtitle = selectedCard.cardNumber.card
+        
+        if let count = user.countAdditionalCards, featureToggle.isEnabled(.compoundWallet) {
+            subtitle += Strings.Payment.Cards.CompoundWallet.title(String(count).addEnding(ends: [
+                "1": Strings.Payment.Cards.CompoundWallet.one,
+                "234": Strings.Payment.Cards.CompoundWallet.two,
+                "567890": Strings.Payment.Cards.CompoundWallet.two
+            ]))
+        }
+        
         return PaymentCellModel(title: selectedCard.productName ?? "",
-                                subtitle: selectedCard.cardNumber.card,
+                                subtitle: subtitle,
                                 iconURL: selectedCard.cardLogoUrl,
                                 needArrow: userService.additionalCards)
     }

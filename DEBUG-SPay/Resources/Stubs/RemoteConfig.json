@@ -31,6 +31,10 @@
             "value": true
         },
         {
+            "name": "compoundWallet",
+            "value": true
+        },
+        {
             "name": "refresh",
             "value": true
         }
