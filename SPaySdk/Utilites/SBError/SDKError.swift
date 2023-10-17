@@ -27,6 +27,7 @@ enum OtpError: String {
 enum SDKError: Error, Hashable {
     case noInternetConnection
     case noData
+    case bankAppNotFound
     case badResponseWithStatus(code: StatusCode)
     case failDecode(text: String)
     case badDataFromSBOL(httpCode: Int64)

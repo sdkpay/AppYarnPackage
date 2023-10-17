@@ -29,8 +29,8 @@ final class AuthServiceAssembly: Assembly {
 }
 
 protocol AuthService {
-    func tryToAuth(completion: @escaping (SDKError?, Bool) -> Void)
-    func refreshAuth(completion: @escaping (Result<Void, SDKError>) -> Void)
+    func auth(completion: @escaping (Result<Void, SDKError>) -> Void)
+    func tryToGetSessionId(completion: @escaping (Result<AuthMethod, SDKError>) -> Void)
     func appAuth(completion: @escaping (Result<Void, SDKError>) -> Void)
     func completeAuth(with url: URL)
     var tokenInStorage: Bool { get }
@@ -103,19 +103,19 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         SBLogger.log(.stop(obj: self))
     }
     
-    func tryToAuth(completion: @escaping (SDKError?, Bool) -> Void) {
+    func tryToGetSessionId(completion: @escaping (Result<AuthMethod, SDKError>) -> Void) {
         personalMetricsService.getIp { [weak self] ip in
             self?.authManager.ipAddress = ip
             // Проверка на целостность
             if self?.enviromentManager.environment != .prod {
-                self?.authRequest(completion: completion)
+                self?.getSessionId(completion: completion)
             } else {
                 self?.personalMetricsService.integrityCheck { [weak self] result in
                     switch result {
                     case true:
-                        self?.authRequest(completion: completion)
+                        self?.getSessionId(completion: completion)
                     case false:
-                        completion(.personalInfo, false)
+                        completion(.failure(.personalInfo))
                     }
                 }
             }
@@ -148,8 +148,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         baseRequestManager.generateB3Cookie()
     }
     
-    private func authRequest(method: AuthMethod? = nil,
-                             completion: @escaping (SDKError?, Bool) -> Void) {
+    private func getSessionId(completion: @escaping (Result<AuthMethod, SDKError>) -> Void) {
         guard let request = sdkManager.authInfo else { return }
         addFrontHeaders()
         analytics.sendEvent(.RQSessionId,
@@ -164,7 +163,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                                 frequency: request.frequency,
                                                 authCookie: getRefreshCookies()),
                         to: AuthModel.self) { [weak self] result in
-            self?.authСompletion = completion
             switch result {
             case .success(let result):
                 guard let self = self else { return }
@@ -186,15 +184,13 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 
                 if refreshIsActive && self.featureToggleService.isEnabled(.refresh) {
                     self.authManager.authMethod = .refresh
-                    self.authСompletion?(nil, false)
-                    self.authСompletion = nil
                 } else {
                     self.authManager.authMethod = .bank
-                    self.sIdAuth()
                 }
+                completion(.success(self.authManager.authMethod ?? .bank))
             case .failure(let error):
                 self?.sendAnaliticsError(error: error, requestType: .sessionId)
-                completion(error, false)
+                completion(.failure(error))
             }
         }
     }
@@ -215,11 +211,16 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         
         guard let appLink,
               let link = authURL(link: appLink) else {
+            appCompletion?(.failure(.noData))
+            appCompletion = nil
             return
         }
+        
         UIApplication.shared.open(link) { [weak self] success in
             if !success {
-                //                self?.analytics.sendEvent(.RedirectDenied)
+                self?.appCompletion?(.failure(.bankAppNotFound))
+                self?.appCompletion = nil
+                return
             }
         }
         SBLogger.logRequestToSbolStarted(link)
@@ -230,7 +231,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         return URL(string: url + link)
     }
     
-    func refreshAuth(completion: @escaping (Result<Void, SDKError>) -> Void) {
+    func auth(completion: @escaping (Result<Void, SDKError>) -> Void) {
         personalMetricsService.getUserData { [weak self] data in
             guard let data else {
                 DispatchQueue.main.async {
@@ -239,11 +240,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 return
             }
             
-            self?.auth(deviceInfo: data, completion: completion)
+            self?.authMethod(deviceInfo: data, completion: completion)
         }
     }
     
-    private func auth(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
+    private func authMethod(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
         guard let request = sdkManager.authInfo else { return }
         analytics.sendEvent(.RQAuth,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
@@ -285,7 +286,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self.appAuth { result in
                     switch result {
                     case .success:
-                        self.refreshAuth(completion: completion)
+                        self.auth(completion: completion)
                     case .failure(let failure):
                         completion(.failure(failure))
                     }
@@ -438,6 +439,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                         AnalyticsKey.view: screen
                     ]
             )
+        case .bankAppNotFound:
+            return
         }
     }
     

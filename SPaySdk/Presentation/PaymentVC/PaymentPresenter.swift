@@ -374,7 +374,8 @@ final class PaymentPresenter: PaymentPresenting {
             switch result {
             case .success:
                 self.analytics.sendEvent(.LCBankAppAuthGood, with: self.screenEvent)
-                self.authService.refreshAuth { result in
+                self.authService.auth {  [weak self] result in
+                    guard let self else { return }
                     switch result {
                     case .success:
                         self.authService.bankCheck = true

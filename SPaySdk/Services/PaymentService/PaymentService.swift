@@ -365,6 +365,8 @@ final class DefaultPaymentService: PaymentService {
                         AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
                     ]
             )
+        case .bankAppNotFound:
+            return
         }
     }
 }

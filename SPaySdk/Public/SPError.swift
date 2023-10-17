@@ -34,6 +34,8 @@ public class SPError: NSObject {
             errorDescription = Strings.Error.system
         case .errorWithErrorCode:
             errorDescription = Strings.Error.system
+        case .bankAppNotFound:
+            errorDescription = Strings.Error.system
         }
     }
 }

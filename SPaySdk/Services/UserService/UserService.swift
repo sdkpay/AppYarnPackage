@@ -261,6 +261,8 @@ final class DefaultUserService: UserService {
                         AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
                     ]
             )
+        case .bankAppNotFound:
+            return
         }
     }
 }

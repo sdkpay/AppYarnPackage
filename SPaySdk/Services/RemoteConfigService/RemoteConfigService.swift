@@ -210,6 +210,8 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                         AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
                     ]
             )
+        case .bankAppNotFound:
+            return
         }
     }
 }

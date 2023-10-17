@@ -128,33 +128,59 @@ final class AuthPresenter: AuthPresenting {
             guard let self = self else { return }
             let title: String = Strings.To.Bank.title(self.bankManager.selectedBank?.name ?? "Банк")
             self.view?.showLoading(with: self.authService.tokenInStorage ? nil : title)
-            self.openSId()
+            self.getSessiond()
         }
     }
     
-    private func openSId() {
-        authService.tryToAuth { [weak self] error, isShowFakeScreen in
-            guard let self = self else { return }
-            self.removeObserver()
-            if let error = error {
-//                self.analytics.sendEvent(.BankAppAuthFailed)
-                self.validateAuthError(error: error)
-            } else {
-                if isShowFakeScreen {
-                    self.router.presentFakeScreen {
-                        self.loadPaymentData()
-                    }
-                } else {
-                    self.authService.refreshAuth { [weak self] result in
-                        switch result {
-                        case .success:
-                            self?.loadPaymentData()
-                        case .failure(let error):
-//                            self?.analytics.sendEvent(.BankAppAuthFailed)
-                            self?.validateAuthError(error: error)
-                        }
-                    }
+    private func getSessiond() {
+        
+        authService.tryToGetSessionId { [weak self] result in
+            switch result {
+            case .success(let authMethod):
+                switch authMethod {
+                case .bank:
+                    self?.appAuth()
+                case .refresh:
+                    self?.auth()
                 }
+            case .failure(let error):
+                self?.validateAuthError(error: error)
+            }
+        }
+    }
+    
+    private func appAuth() {
+        if enviromentManager.environment == .sandboxWithoutBankApp {
+            router.presentFakeScreen(completion: {
+                self.auth()
+                return
+            })
+        }
+        
+        authService.appAuth(completion: { [weak self] result in
+            self?.removeObserver()
+            switch result {
+            case .success:
+                self?.auth()
+            case .failure(let error):
+                self?.bankManager.selectedBank = nil
+                self?.showBanksStack()
+                if error.represents(.bankAppNotFound) {
+                    self?.view?.hideLoading()
+                } else {
+                    self?.validateAuthError(error: error)
+                }
+            }
+        })
+    }
+    
+    private func auth() {
+        authService.auth { [weak self] result in
+            switch result {
+            case .success:
+                self?.loadPaymentData()
+            case .failure(let error):
+                self?.validateAuthError(error: error)
             }
         }
     }

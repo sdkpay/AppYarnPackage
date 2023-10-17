@@ -351,6 +351,8 @@ final class OtpPresenter: OtpPresenting {
                         AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
                     ]
             )
+        case .bankAppNotFound:
+            return
         }
     }
 }

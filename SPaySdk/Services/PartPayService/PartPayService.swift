@@ -273,6 +273,8 @@ final class DefaultPartPayService: PartPayService {
                         AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
                     ]
             )
+        case .bankAppNotFound:
+            return
         }
     }
 }
