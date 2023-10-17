@@ -197,7 +197,7 @@ final class DefaultPaymentService: PaymentService {
         network.request(PaymentTarget.getPaymentOrder(operationId: .generateRandom(with: 36),
                                                       orderId: orderId,
                                                       merchantLogin: merchantLogin,
-                                                      ipAddress: personalMetricsService.ipAddress,
+                                                      ipAddress: authManager.ipAddress,
                                                       paymentToken: token),
                         to: PaymentOrderModel.self,
                         retrySettings: (4, [

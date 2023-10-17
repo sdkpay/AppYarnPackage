@@ -104,16 +104,19 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
     
     func tryToAuth(completion: @escaping (SDKError?, Bool) -> Void) {
-        // Проверка на целостность
-        if enviromentManager.environment != .prod {
-            authRequest(completion: completion)
-        } else {
-            personalMetricsService.integrityCheck { [weak self] result in
-                switch result {
-                case true:
-                    self?.authRequest(completion: completion)
-                case false:
-                    completion(.personalInfo, false)
+        personalMetricsService.getIp { [weak self] ip in
+            self?.authManager.ipAddress = ip
+            // Проверка на целостность
+            if self?.enviromentManager.environment != .prod {
+                self?.authRequest(completion: completion)
+            } else {
+                self?.personalMetricsService.integrityCheck { [weak self] result in
+                    switch result {
+                    case true:
+                        self?.authRequest(completion: completion)
+                    case false:
+                        completion(.personalInfo, false)
+                    }
                 }
             }
         }

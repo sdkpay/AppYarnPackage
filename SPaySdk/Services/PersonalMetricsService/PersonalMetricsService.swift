@@ -19,14 +19,13 @@ final class PersonalMetricsServiceAssembly: Assembly {
 }
 
 protocol PersonalMetricsService {
-    var ipAddress: String? { get }
     func getUserData(completion: @escaping (String?) -> Void)
     func integrityCheck(completion: @escaping (Bool) -> Void)
+    func getIp(completion: @escaping StringAction)
 }
 
 final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     private var provider: FPReportProviderProtocol?
-    private(set) var ipAddress: String?
     private let analyticsService: AnalyticsService
     private let network: NetworkService
     
@@ -64,10 +63,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
                 if сompromised == 0,
                    emulator == 0 {
                     self?.analyticsService.sendEvent(.SCGoodPermissions)
-                    self?.getIp { [weak self] ip in
-                        self?.ipAddress = ip
-                        completion(true)
-                    }
+                    completion(true)
                 }
             } else {
                 self?.analyticsService.sendEvent(.SCFailPermissions, with: [AnalyticsKey.permisson: emulator ?? сompromised ?? 0])
@@ -76,7 +72,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
         }
     }
     
-    private func getIp(completion: @escaping StringAction) {
+    func getIp(completion: @escaping StringAction) {
         network.requestString(IpTarget.getIp,
                               host: .safepayonline) { result in
             switch result {
@@ -98,10 +94,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
             }
             self?.analyticsService.sendEvent(.SCGoodBiZone)
             SBLogger.log(.biZone + data)
-            self?.getIp { [weak self] ip in
-                self?.ipAddress = ip
-                completion(self?.formatString(data))
-            }
+            completion(self?.formatString(data))
         }
     }
     

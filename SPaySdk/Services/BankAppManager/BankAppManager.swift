@@ -25,7 +25,7 @@ protocol BankAppManager {
  
 final class DefaultBankAppManager: BankAppManager {
     var avaliableBanks: [BankApp] {
-        UserDefaults.bankApps?.filter({ canOpen(link: $0.link) }) ?? []
+        UserDefaults.bankApps!
     }
     
     private let analytics: AnalyticsService

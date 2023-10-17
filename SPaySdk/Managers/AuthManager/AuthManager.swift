@@ -30,6 +30,7 @@ protocol AuthManager {
     var lang: String? { get set }
     var userInfo: UserInfoModel? { get set }
     var authMethod: AuthMethod? { get set }
+    var ipAddress: String? { get set }
 }
 
 final class DefaultAuthManager: AuthManager {
@@ -39,6 +40,7 @@ final class DefaultAuthManager: AuthManager {
     var authCode: String?
     var state: String?
     var lang: String?
+    var ipAddress: String?
     var userInfo: UserInfoModel?
     var authMethod: AuthMethod?
 }

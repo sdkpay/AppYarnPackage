@@ -15,7 +15,7 @@ extension IpTarget: TargetType {
     var path: String {
         switch self {
         case .getIp:
-            return "api/getIp"
+            return "sdk-api/getIp"
         }
     }
     

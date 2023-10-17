@@ -46,8 +46,7 @@ final class BaseRequestManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
             let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve(),
-                                                                        storage: container.resolve(),
-                                                                        personalMetricsService: container.resolve())
+                                                                        storage: container.resolve())
             return service
         }
     }
@@ -69,7 +68,6 @@ final class DefaultBaseRequestManager: BaseRequestManager {
     
     private let authManager: AuthManager
     private let storage: KeychainStorage
-    private let personalMetricsService: PersonalMetricsService
 
     var headers: HTTPHeaders {
         var headers = HTTPHeaders()
@@ -91,7 +89,7 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         if let b3SpanId = b3SpanId {
             headers[.Headers.b3SpanId] = b3SpanId
         }
-        if let ip = personalMetricsService.ipAddress {
+        if let ip = authManager.ipAddress {
             headers[.Headers.netAdd] = ip
         }
         
@@ -101,10 +99,8 @@ final class DefaultBaseRequestManager: BaseRequestManager {
     }
 
     init(authManager: AuthManager,
-         storage: KeychainStorage,
-         personalMetricsService: PersonalMetricsService) {
+         storage: KeychainStorage) {
         self.authManager = authManager
-        self.personalMetricsService = personalMetricsService
         self.storage = storage
     }
     
