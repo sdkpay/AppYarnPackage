@@ -25,7 +25,7 @@ protocol BankAppManager {
  
 final class DefaultBankAppManager: BankAppManager {
     var avaliableBanks: [BankApp] {
-        UserDefaults.bankApps!
+        UserDefaults.bankApps ?? []
     }
     
     private let analytics: AnalyticsService
@@ -38,8 +38,7 @@ final class DefaultBankAppManager: BankAppManager {
     
     var selectedBank: BankApp? {
         get {
-            if let bankApp = getSelectedBank(),
-               canOpen(link: bankApp.link) {
+            if let bankApp = getSelectedBank() {
                 return bankApp
             } else {
                 return nil
@@ -80,10 +79,5 @@ final class DefaultBankAppManager: BankAppManager {
             _selectedBank = avaliableBanks.first
             return _selectedBank
         }
-    }
-    
-    private func canOpen(link: String) -> Bool {
-        guard let url = URL(string: link) else { return false }
-        return UIApplication.shared.canOpenURL(url)
     }
 }

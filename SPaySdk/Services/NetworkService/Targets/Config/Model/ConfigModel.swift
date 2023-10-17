@@ -18,7 +18,6 @@ struct ConfigModel: Codable {
     let localization: Localization
     let bankApps: [BankApp]
     let schemas: Schemas
-    let bankSchemes: [BankScheme]
     let featuresToggle: [FeaturesToggle]
     let apikey: [String]
     let images: Images
@@ -28,15 +27,6 @@ struct ConfigModel: Codable {
 struct Localization: Codable {
     let authTitle: String
     let payLoading: String
-}
-
-struct BankScheme: Codable {
-    let scheme: String
-    let authType: String
-    
-    var authTypeEnum: BankSchemeAuthType {
-        BankSchemeAuthType(rawValue: authType) ?? .withOutPreffix
-    }
 }
 
 struct FeaturesToggle: Codable {
