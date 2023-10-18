@@ -37,9 +37,9 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
     private var minOtpAmount = 500000
     
     var otpModel: OTPModel?
+    
     var otpRequired: Bool {
-        guard let amount = userService.user?.orderAmount.amount else { return true }
-        return amount >= minOtpAmount
+        authManager.isOtpNeed ?? true
     }
     
     init(network: NetworkService,

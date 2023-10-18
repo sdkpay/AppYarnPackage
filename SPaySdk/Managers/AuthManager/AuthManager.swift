@@ -28,6 +28,7 @@ protocol AuthManager {
     var authCode: String? { get set }
     var state: String? { get set }
     var lang: String? { get set }
+    var isOtpNeed: Bool? { get set }
     var userInfo: UserInfoModel? { get set }
     var authMethod: AuthMethod? { get set }
     var ipAddress: String? { get set }
@@ -43,4 +44,5 @@ final class DefaultAuthManager: AuthManager {
     var ipAddress: String?
     var userInfo: UserInfoModel?
     var authMethod: AuthMethod?
+    var isOtpNeed: Bool?
 }

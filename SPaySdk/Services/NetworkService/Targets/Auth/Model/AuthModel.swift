@@ -25,6 +25,7 @@ struct AuthRefreshModel: Codable {
     let userInfo: UserInfoModel
     let merchantName: String?
     let logo: String?
+    let isOtpNeed: Bool?
 }
 
 struct UserInfoModel: Codable {

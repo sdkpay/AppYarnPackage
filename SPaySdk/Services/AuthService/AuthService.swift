@@ -270,6 +270,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             case .success(let authModel):
                 self?.saveRefreshIfNeeded(from: authModel.cookies)
                 self?.authManager.userInfo = authModel.result.userInfo
+                self?.authManager.isOtpNeed = authModel.result.isOtpNeed
                 self?.analytics.sendEvent(.RSGoodAuth,
                                           with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
                 completion(.success)
