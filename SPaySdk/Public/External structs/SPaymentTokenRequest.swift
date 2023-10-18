@@ -99,7 +99,7 @@ public final class SPaymentTokenRequest: NSObject {
                             recurrentExipiry: String,
                             recurrentFrequency: Int,
                             apiKey: String? = nil) {
-        self.init(merchantLogin: redirectUri,
+        self.init(merchantLogin: merchantLogin,
                   amount: amount,
                   currency: currency,
                   orderId: nil,
