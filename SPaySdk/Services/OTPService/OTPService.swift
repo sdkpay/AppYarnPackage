@@ -34,8 +34,6 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
     private let sdkManager: SDKManager
     private let userService: UserService
     
-    private var minOtpAmount = 500000
-    
     var otpModel: OTPModel?
     
     var otpRequired: Bool {
