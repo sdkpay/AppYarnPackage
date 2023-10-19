@@ -121,9 +121,6 @@ final class DefaultSBPayService: SBPayService {
             .sendEvent(.GetPaymentToken,
                        with: ["request: \(request)"])
         SBLogger.logRequestPaymentToken(with: request)
-        if let apiKey = request.apiKey {
-            self.apiKey = apiKey
-        }
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         locator
             .resolve(SDKManager.self)

@@ -247,7 +247,8 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                            mobilePhone: nil,
                                            orderNumber: values.orderNumber ?? "",
                                            recurrentExipiry: "20230821",
-                                           recurrentFrequency: 2)
+                                           recurrentFrequency: 2,
+                                           apiKey: values.apiKey)
         SPay.getPaymentToken(with: self, with: request) { state, info in
             switch state {
             case .success:
