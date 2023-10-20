@@ -69,7 +69,7 @@ final class AuthPresenter: AuthPresenting {
             checkSession()
         } else {
             if sdkManager.newStart || userService.user == nil {
-                configAuthSettings()
+                getSessiond()
             } else {
                 checkSession()
             }
@@ -117,6 +117,7 @@ final class AuthPresenter: AuthPresenting {
     
     private func showBanksStack() {
         bankManager.removeSavedBank()
+        view?.hideLoading()
         view?.configBanksStack(banks: bankManager.avaliableBanks, selected: { [weak self] bank in
             self?.bankManager.selectedBank = bank
             self?.getAccessSPay()
@@ -133,7 +134,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func getSessiond() {
-        
+        self.view?.showLoading()
         authService.tryToGetSessionId { [weak self] result in
             switch result {
             case .success(let authMethod):
@@ -150,6 +151,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func appAuth() {
+        self.view?.showLoading()
         if enviromentManager.environment == .sandboxWithoutBankApp {
             router.presentFakeScreen(completion: {
                 self.auth()
@@ -157,6 +159,14 @@ final class AuthPresenter: AuthPresenting {
             })
         }
         
+        if bankManager.selectedBank == nil {
+            showBanksStack()
+        } else {
+            appAuthMethod()
+        }
+    }
+    
+    private func appAuthMethod() {
         authService.appAuth(completion: { [weak self] result in
             self?.removeObserver()
             switch result {
@@ -175,6 +185,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func auth() {
+        self.view?.showLoading()
         authService.auth { [weak self] result in
             switch result {
             case .success:

@@ -62,6 +62,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var appLink: String?
     
     var bankCheck = false
+    
     var tokenInStorage: Bool {
         if self.buildSettings.refresh {
             return (try? storage.exists(.cookieId)) ?? false

@@ -11,11 +11,9 @@ enum PaymentFeaturesConfig {
     static func configCardModel(userService: UserService,
                                 featureToggle: FeatureToggleService) -> PaymentCellModel {
         guard let selectedCard = userService.selectedCard else { return PaymentCellModel() }
-        guard let user = userService.user else { return PaymentCellModel() }
-        
         var subtitle = selectedCard.cardNumber.card
         
-        if let count = user.countAdditionalCards, featureToggle.isEnabled(.compoundWallet) {
+        if let count = selectedCard.countAdditionalCards, featureToggle.isEnabled(.compoundWallet) {
             subtitle += Strings.Payment.Cards.CompoundWallet.title(String(count).addEnding(ends: [
                 "1": Strings.Payment.Cards.CompoundWallet.one,
                 "234": Strings.Payment.Cards.CompoundWallet.two,

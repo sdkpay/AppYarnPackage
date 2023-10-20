@@ -29,11 +29,13 @@ final class CardsPresenter: CardsPresenting {
     private let selectedId: Int
     private var timeManager: OptimizationCheсkerManager
     private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.CardsVC.rawValue]
+    private var featureToggle: FeatureToggleService
 
     init(userService: UserService,
          analytics: AnalyticsService,
          cards: [PaymentToolInfo],
          selectedId: Int,
+         featureToggle: FeatureToggleService,
          timeManager: OptimizationCheсkerManager,
          selectedCard: @escaping (PaymentToolInfo) -> Void) {
         self.analytics = analytics
@@ -41,6 +43,7 @@ final class CardsPresenter: CardsPresenting {
         self.cards = cards
         self.selectedCard = selectedCard
         self.selectedId = selectedId
+        self.featureToggle = featureToggle
         self.timeManager = timeManager
         self.timeManager.startTraking()
     }
@@ -54,8 +57,19 @@ final class CardsPresenter: CardsPresenting {
 
     func model(for indexPath: IndexPath) -> CardCellModel {
         let card = cards[indexPath.row]
+        
+        var number = card.cardNumber.card
+        
+        if let count = card.countAdditionalCards, featureToggle.isEnabled(.compoundWallet) {
+            number += Strings.Payment.Cards.CompoundWallet.title(String(count).addEnding(ends: [
+                "1": Strings.Payment.Cards.CompoundWallet.one,
+                "234": Strings.Payment.Cards.CompoundWallet.two,
+                "567890": Strings.Payment.Cards.CompoundWallet.two
+            ]))
+        }
+        
         return CardCellModel(title: card.productName ?? "",
-                             number: card.cardNumber.card,
+                             number: number,
                              selected: card.paymentId == selectedId,
                              cardURL: card.cardLogoUrl)
     }
