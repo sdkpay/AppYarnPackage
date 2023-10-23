@@ -75,7 +75,7 @@ final class OtpPresenter: OtpPresenting {
     private func configViews() {
         guard let user = userService.user else { return }
         view?.configProfileView(with: user.userInfo)
-        view?.updateMobilePhone(phoneNumber: "none")
+        view?.updateMobilePhone(phoneNumber: otpService.otpModel?.mobilePhone ?? "none")
     }
     
     func createOTP() {
