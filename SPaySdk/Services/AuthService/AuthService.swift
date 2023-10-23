@@ -173,7 +173,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self.appLink = result.deeplink
                 self.partPayService.setEnabledBnpl(result.isBnplEnabled ?? false, enabledLevel: .session)
                 
-                var refreshIsActive = result.refreshTokenIsActive ?? false
+                let refreshIsActive = result.refreshTokenIsActive ?? false
 
                 let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
                 self.analytics.sendEvent(event)
