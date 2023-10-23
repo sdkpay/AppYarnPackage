@@ -43,6 +43,10 @@ final class DefaultAuthManager: AuthManager {
     var lang: String?
     var ipAddress: String?
     var userInfo: UserInfoModel?
-    var authMethod: AuthMethod?
+    var authMethod: AuthMethod? {
+        didSet {
+            SBLogger.log("🚪 Метод авторизации изменился на \(String(describing: authMethod))")
+        }
+    }
     var isOtpNeed: Bool?
 }

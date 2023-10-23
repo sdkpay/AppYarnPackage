@@ -173,15 +173,10 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self.appLink = result.deeplink
                 self.partPayService.setEnabledBnpl(result.isBnplEnabled ?? false, enabledLevel: .session)
                 
-                var refreshIsActive = false
-                
-                if self.buildSettings.networkState == .Local {
-                    refreshIsActive = self.buildSettings.refresh
-                } else {
-                    refreshIsActive = result.refreshTokenIsActive ?? false
-                    let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
-                    self.analytics.sendEvent(event)
-                }
+                var refreshIsActive = result.refreshTokenIsActive ?? false
+
+                let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
+                self.analytics.sendEvent(event)
                 
                 if refreshIsActive && self.featureToggleService.isEnabled(.refresh) {
                     self.authManager.authMethod = .refresh
