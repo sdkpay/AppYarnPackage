@@ -30,6 +30,7 @@ final class OtpAssembly {
                                      analytics: locator.resolve(),
                                      completionManager: locator.resolve(),
                                      keyboardManager: locator.resolve(),
+                                     parsingErrorAnaliticManager: locator.resolve(),
                                      completion: completion)
         return presenter
     }

@@ -18,11 +18,6 @@ protocol OtpPresenting {
 
 final class OtpPresenter: OtpPresenting {
     
-    private enum OtpTypeRequest {
-        case creteOTP
-        case confirmOTP
-    }
-    
     weak var view: (IOtpVC & ContentVC)?
     
     private var otpService: OTPService
@@ -33,6 +28,7 @@ final class OtpPresenter: OtpPresenting {
     private let analytics: AnalyticsService
     private let keyboardManager: KeyboardManager
     private let completionManager: CompletionManager
+    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private var sec = 45
     private var countOfErrorPayment = 0
     private var timer: Timer?
@@ -48,6 +44,7 @@ final class OtpPresenter: OtpPresenting {
          analytics: AnalyticsService,
          completionManager: CompletionManager,
          keyboardManager: KeyboardManager,
+         parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          completion: @escaping Action) {
         self.otpService = otpService
         self.userService = userService
@@ -58,6 +55,7 @@ final class OtpPresenter: OtpPresenting {
         self.analytics = analytics
         self.completionManager = completionManager
         self.keyboardManager = keyboardManager
+        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         self.setKeyboardHeight()
     }
     
@@ -93,7 +91,8 @@ final class OtpPresenter: OtpPresenting {
                 self?.analytics.sendEvent(.RSGoodCreteOTP,
                                           with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
             case .failure(let error):
-                self?.sendAnaliticsError(error: error, typeRequest: .confirmOTP)
+                self?.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                                     type: .otp(type: .creteOTP))
                 self?.view?.hideLoading(animate: true)
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
@@ -128,7 +127,8 @@ final class OtpPresenter: OtpPresenting {
                 self.view?.hideKeyboard()
                 self.closeWithSuccess()
             case .failure(let error):
-                self.sendAnaliticsError(error: error, typeRequest: .confirmOTP)
+                self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                                    type: .otp(type: .confirmOTP))
                 if error.represents(.errorWithErrorCode(number: OtpError.incorrectCode.rawValue, httpCode: 200)) {
                     self.analytics.sendEvent(.RQFailConfirmOTP)
                     if self.otpRetryCount > self.otpRetryMaxCount {
@@ -217,142 +217,5 @@ final class OtpPresenter: OtpPresenting {
     private func updateTimerView() {
         view?.updateTimer(sec: sec)
         sec -= 1
-    }
-    
-    private func sendAnaliticsError(error: SDKError, typeRequest: OtpTypeRequest) {
-        let rqFail: AnalyticsEvent = typeRequest == .confirmOTP ? .RQFailConfirmOTP :
-            .RQFailCreteOTP
-        let rsFail: AnalyticsEvent = typeRequest == .confirmOTP ? .RSFailConfirmOTP :
-            .RSFailCreteOTP
-        
-        switch error {
-            
-        case .noInternetConnection:
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-        case .noData:
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-        case .badResponseWithStatus(let code):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: code.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-        case .failDecode(let text):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: Int64(200),
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-            self.analytics.sendEvent(
-                rsFail,
-                with:
-                    [
-                        AnalyticsKey.ParsingError: text
-                    ])
-        case .badDataFromSBOL(let httpCode):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode
-                    ]
-            )
-        case .unauthorizedClient(let httpCode):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-        case .personalInfo:
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-        case let .errorWithErrorCode(number, httpCode):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.errorCode: number,
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-        case .noCards:
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-        case .cancelled:
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-        case .timeOut(let httpCode):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-        case .ssl(let httpCode):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue
-                    ]
-            )
-        case .bankAppNotFound:
-            return
-        }
     }
 }

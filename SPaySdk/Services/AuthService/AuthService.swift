@@ -21,6 +21,7 @@ final class AuthServiceAssembly: Assembly {
                                                           personalMetricsService: container.resolve(),
                                                           enviromentManager: container.resolve(),
                                                           cookieStorage: container.resolve(),
+                                                          parsingErrorAnaliticManager: container.resolve(),
                                                           featureToggleService: container.resolve(),
                                                           buildSettings: container.resolve())
             return service
@@ -58,6 +59,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var storage: KeychainStorage
     private var baseRequestManager: BaseRequestManager
     private var cookieStorage: CookieStorage
+    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private var appCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
     
@@ -82,6 +84,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
          personalMetricsService: PersonalMetricsService,
          enviromentManager: EnvironmentManager,
          cookieStorage: CookieStorage,
+         parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          featureToggleService: FeatureToggleService,
          buildSettings: BuildSettings) {
         self.analytics = analytics
@@ -97,6 +100,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.storage = storage
         self.cookieStorage = cookieStorage
         self.featureToggleService = featureToggleService
+        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         SBLogger.log(.start(obj: self))
     }
     
@@ -185,7 +189,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 }
                 completion(.success(self.authManager.authMethod ?? .bank))
             case .failure(let error):
-                self?.sendAnaliticsError(error: error, requestType: .sessionId)
+                self?.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                                     type: .auth(type: .sessionId))
                 completion(.failure(error))
             }
         }
@@ -272,7 +277,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 completion(.success)
             case .failure(let error):
                 guard let self else { return }
-                self.sendAnaliticsError(error: error, requestType: .auth)
+                self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                                    type: .auth(type: .auth))
                 
                 if self.authManager.authMethod == .bank {
                     completion(.failure(error))
@@ -302,145 +308,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             cookieStorage.setCookie(cookie: dataCookie, for: .refreshData)
         }
     }
-    
-    private func sendAnaliticsError(error: SDKError, requestType: AuthRequestType) {
-        let rqFail: AnalyticsEvent = requestType == .auth ? .RQFailAuth :
-            .RQFailSessionId
-        let rsFail: AnalyticsEvent = requestType == .auth ? .RSFailAuth :
-            .RSFailSessionId
-        let screen = requestType == .sessionId ? AnlyticsScreenEvent.AuthVC.rawValue : AnlyticsScreenEvent.PaymentVC.rawValue
         
-        switch error {
-            
-        case .noInternetConnection:
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: screen
-                    ]
-            )
-        case .noData:
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: screen
-                    ]
-            )
-        case .badResponseWithStatus(let code):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: code.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: screen
-                    ]
-            )
-        case .failDecode(let text):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: Int64(200),
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: screen
-                    ]
-            )
-            self.analytics.sendEvent(
-                rsFail,
-                with:
-                    [
-                        AnalyticsKey.ParsingError: text
-                    ]
-            )
-        case .badDataFromSBOL(let httpCode):
-            self.analytics.sendEvent(
-                rqFail,
-                with: [
-                    AnalyticsKey.httpCode: httpCode
-                ]
-            )
-        case .unauthorizedClient(let httpCode):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: screen
-                    ]
-            )
-        case .personalInfo:
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: screen
-                    ]
-            )
-        case let .errorWithErrorCode(number, httpCode):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.errorCode: number,
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.view: screen
-                    ]
-            )
-        case .noCards:
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: screen
-                    ]
-            )
-        case .cancelled:
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: screen
-                    ]
-            )
-        case .timeOut(let httpCode):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: screen
-                    ]
-            )
-        case .ssl(let httpCode):
-            self.analytics.sendEvent(
-                rqFail,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: screen
-                    ]
-            )
-        case .bankAppNotFound:
-            return
-        }
-    }
-    
     private func getRefreshCookies() -> [HTTPCookie] {
         
         var cookies = [HTTPCookie]()

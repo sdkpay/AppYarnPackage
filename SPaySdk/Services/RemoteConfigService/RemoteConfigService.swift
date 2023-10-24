@@ -11,7 +11,8 @@ final class RemoteConfigServiceAssembly: Assembly {
     func register(in container: LocatorService) {
         let service: RemoteConfigService = DefaultRemoteConfigService(network: container.resolve(),
                                                                       analytics: container.resolve(),
-                                                                      featureToggle: container.resolve())
+                                                                      featureToggle: container.resolve(),
+                                                                      parsingErrorAnaliticManager: container.resolve())
         container.register(service: service)
     }
 }
@@ -26,14 +27,17 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private var apiKey: String?
     private let featureToggle: FeatureToggleService
     private let analytics: AnalyticsService
+    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private var retryWithCerts = true
     
     init(network: NetworkService,
          analytics: AnalyticsService,
-         featureToggle: FeatureToggleService) {
+         featureToggle: FeatureToggleService,
+         parsingErrorAnaliticManager: ParsingErrorAnaliticManager) {
         self.network = network
         self.analytics = analytics
         self.featureToggle = featureToggle
+        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
     }
     
     func getConfig(with apiKey: String?,
@@ -53,7 +57,8 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
                 completion(nil)
             case .failure(let error):
-                self.sendAnaliticsError(error: error)
+                self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                                    type: .remote)
                 completion(error)
             }
         }
@@ -80,138 +85,6 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         let currentVesion = Bundle.sdkVersion
         if version != currentVesion {
             SBLogger.log(level: .merchant, Strings.Merchant.Alert.version)
-        }
-    }
-    
-    private func sendAnaliticsError(error: SDKError) {
-        switch error {
-            
-        case .noInternetConnection:
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-        case .noData:
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-        case .badResponseWithStatus(let code):
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: code.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-        case .failDecode(let text):
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: Int64(200),
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-            self.analytics.sendEvent(
-                .RSFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.ParsingError: text
-                    ]
-            )
-        case .badDataFromSBOL(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: [
-                    AnalyticsKey.httpCode: httpCode
-                ]
-            )
-        case .unauthorizedClient(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-        case .personalInfo:
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-        case let .errorWithErrorCode(number, httpCode):
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.errorCode: number,
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-        case .noCards:
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-        case .cancelled:
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-        case .timeOut(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-        case .ssl(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailRemoteConfig,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue
-                    ]
-            )
-        case .bankAppNotFound:
-            return
         }
     }
 }

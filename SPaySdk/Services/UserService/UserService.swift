@@ -13,7 +13,8 @@ final class UserServiceAssembly: Assembly {
             let service: UserService = DefaultUserService(network: container.resolve(),
                                                           sdkManager: container.resolve(),
                                                           authManager: container.resolve(),
-                                                          analytics: container.resolve())
+                                                          analytics: container.resolve(),
+                                                          parsingErrorAnaliticManager: container.resolve())
             return service
         }
     }
@@ -36,6 +37,7 @@ final class DefaultUserService: UserService {
     private let sdkManager: SDKManager
     private let authManager: AuthManager
     private let analytics: AnalyticsService
+    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     var getListCards = false
     
     var selectedCard: PaymentToolInfo?
@@ -45,11 +47,13 @@ final class DefaultUserService: UserService {
     init(network: NetworkService,
          sdkManager: SDKManager,
          authManager: AuthManager,
-         analytics: AnalyticsService) {
+         analytics: AnalyticsService,
+         parsingErrorAnaliticManager: ParsingErrorAnaliticManager) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
         self.analytics = analytics
+        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         SBLogger.log(.start(obj: self))
     }
     
@@ -111,7 +115,8 @@ final class DefaultUserService: UserService {
                 completion(.success)
                 completion(.success)
             case .failure(let error):
-                self?.sendAnaliticsError(error: error)
+                self?.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                                     type: .listCards)
                 completion(.failure(error))
             }
         }
@@ -132,137 +137,5 @@ final class DefaultUserService: UserService {
     
     private func selectCard(from cards: [PaymentToolInfo]) -> PaymentToolInfo? {
         cards.first(where: { $0.priorityCard }) ?? cards.first
-    }
-    
-    private func sendAnaliticsError(error: SDKError) {
-        switch error {
-            
-        case .noInternetConnection:
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-        case .noData:
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-        case .badResponseWithStatus(let code):
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.httpCode: code.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-        case .failDecode(let text):
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.httpCode: Int64(200),
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-            self.analytics.sendEvent(
-                .RSFailListCards,
-                with:
-                    [
-                        AnalyticsKey.ParsingError: text
-                    ])
-        case .badDataFromSBOL(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: httpCode
-                    ]
-            )
-        case .unauthorizedClient(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-        case .personalInfo:
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-        case let .errorWithErrorCode(number, httpCode):
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.errorCode: number,
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-        case .noCards:
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-        case .cancelled:
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-        case .timeOut(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-        case .ssl(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailListCards,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue
-                    ]
-            )
-        case .bankAppNotFound:
-            return
-        }
     }
 }

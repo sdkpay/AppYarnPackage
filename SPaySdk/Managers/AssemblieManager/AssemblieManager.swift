@@ -19,6 +19,7 @@ final class AssemblyManager {
         HostManagerAssembly(),
         FeatureToggleServiceAssembly(),
         AnalyticsServiceAssembly(),
+        ParsingErrorAnaliticManagerAssembly(),
         BankAppManagerAssembly(),
         BaseRequestManagerAssembly(),
         NetworkServiceAssembly(),
