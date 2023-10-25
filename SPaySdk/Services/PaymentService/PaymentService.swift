@@ -231,5 +231,4 @@ final class DefaultPaymentService: PaymentService {
             return .defaultError
         }
     }
-    
 }

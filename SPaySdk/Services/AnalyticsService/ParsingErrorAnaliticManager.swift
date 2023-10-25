@@ -42,7 +42,6 @@ protocol ParsingErrorAnaliticManager {
     func sendAnaliticsError(error: SDKError, type: AnaliticTypeRequest)
 }
 
-
 public final class DefaultParsingErrorAnaliticManager: ParsingErrorAnaliticManager {
     
     private let analytics: AnalyticsService
@@ -52,8 +51,8 @@ public final class DefaultParsingErrorAnaliticManager: ParsingErrorAnaliticManag
     }
     
     func sendAnaliticsError(error: SDKError, type: AnaliticTypeRequest) {
-        var result = parseAnaliticsType(type: type)
-        
+        let result = parseAnaliticsType(type: type)
+
         switch error {
             
         case .noInternetConnection:
@@ -235,5 +234,4 @@ public final class DefaultParsingErrorAnaliticManager: ParsingErrorAnaliticManag
             return (rqFail, rsFail, screen)
         }
     }
-    
 }
