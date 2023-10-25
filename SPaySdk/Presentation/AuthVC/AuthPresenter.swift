@@ -116,12 +116,9 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func showBanksStack() {
-        bankManager.removeSavedBank()
-        view?.hideLoading()
-        view?.configBanksStack(banks: bankManager.avaliableBanks, selected: { [weak self] bank in
-            self?.bankManager.selectedBank = bank
-            self?.getAccessSPay()
-        })
+        router.presentBankAppPicker { [weak self] in
+            self?.auth()
+        }
     }
     
     private func getAccessSPay() {

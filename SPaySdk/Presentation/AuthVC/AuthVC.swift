@@ -13,29 +13,9 @@ private extension CGFloat {
     static let topMargin = 20.0
 }
 
-protocol IAuthVC {
-    func configBanksStack(banks: [BankApp],
-                          selected: @escaping (BankApp) -> Void)
-}
+protocol IAuthVC {}
 
-final class AuthVC: ContentVC, IAuthVC {    
-    private lazy var titleLabel: UILabel = {
-        let view = UILabel()
-        view.font = .bodi2
-        view.textColor = .textSecondary
-        view.numberOfLines = 0
-        view.text = ConfigGlobal.localization?.authTitle
-        view.alpha = 0
-        return view
-    }()
-    
-    private lazy var banksStack: UIStackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        view.spacing = .banksSpacing
-        view.alpha = 0
-        return view
-    }()
+final class AuthVC: ContentVC, IAuthVC {
     
     private let presenter: AuthPresenting
     
@@ -70,36 +50,7 @@ final class AuthVC: ContentVC, IAuthVC {
         SBLogger.log(.stop(obj: self))
     }
     
-    func configBanksStack(banks: [BankApp], selected: @escaping (BankApp) -> Void) {
-        topBarIsHidden = false
-        banksStack.alpha = 1
-        titleLabel.alpha = 1
-        if !banksStack.arrangedSubviews.isEmpty {
-            banksStack.arrangedSubviews.forEach({ $0.removeFromSuperview() })
-        }
-        for bank in banks {
-            let bankView = BankView()
-            bankView.config(with: bank) {
-                selected(bank)
-            }
-            banksStack.addArrangedSubview(bankView)
-        }
-    }
-    
     private func setupUI() {
         view.height(.minScreenSize, priority: .defaultLow)
-        
-        banksStack
-            .add(toSuperview: view)
-            .centerInSuperview()
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-        
-        titleLabel
-            .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: .topMargin)
-            .touchEdge(.left, toEdge: .left, ofView: logoImage)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-            .touchEdge(.bottom, toEdge: .top, ofView: banksStack, withInset: .banksSpacing)
     }
 }

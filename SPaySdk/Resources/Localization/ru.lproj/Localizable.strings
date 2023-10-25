@@ -61,6 +61,8 @@
 "alert.pay.no.waiting.title" = "Обрабатываем заявку. Следите за статусом в Истории приложения %@";
 "alert.pay.error.title" = "Сервис оплаты частями недоступен. \nОплатите заказ полностью или выберите другой способ оплаты.";
 "alert.otp.error.title" = "Вы исчерпали попытки ввода кода.\nВыберете другой метод оплаты.";
+"alert.bankAppPicker.error.title" = "Не получилось открыть ни одну версию приложения.\n Убедитесь, что приложение установлено, либо оплатите другим способом";
+
 
 // MerchantAlert
 "merchant.alert.apikey" = "⛔️ Передайте apiKey в методе setup или в текущем методе.";
@@ -86,3 +88,8 @@
 // Logout
 "button.logout" = "Вернуться к оплате";
 "button.logout.back" = "Выйти";
+
+// BankAppPicker
+"bankAppPicker.subtitle" = "Разрешите «%@» открыть приложение";
+"bankAppPicker.close" = "Закрыть";
+"bankAppPicker.deprecated" = "Не получилось открыть приложение";

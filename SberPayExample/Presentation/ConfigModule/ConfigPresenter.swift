@@ -33,6 +33,7 @@ protocol ConfigPresenterProtocol {
     func removeButtonTapped()
     func removeLogsTapped()
     func removeKeychainTapped()
+    func removeSavedBank()
     func generateOrderIdTapped()
     func refreshData()
     func viewDidLoad()
@@ -254,6 +255,12 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         } else {
             view?.showAlert(with: "Local storage is cleare")
         }
+    }
+    
+    func removeSavedBank() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "selectedBank")
+        view?.showAlert(with: "Removed selectedBank")
     }
     
     @available(iOS 13.0, *)

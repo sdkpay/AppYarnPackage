@@ -113,9 +113,6 @@ targets:
             CFBundleURLName: testapp
             CFBundleURLSchemes:
               - testapp
-        LSApplicationQueriesSchemes:
-          - sbolidexternallogin
-          - sberbankidexternallogin
         NSAppTransportSecurity: 
           NSExceptionDomains:
             psi.gate1.spaymentsplus.ru:

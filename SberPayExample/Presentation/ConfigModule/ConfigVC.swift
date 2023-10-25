@@ -147,6 +147,12 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
                          attributes: .destructive,
                          handler: { _ in
                              self.presenter.removeButtonTapped()
+                         }),
+                UIAction(title: "Cleare selected bank app",
+                         image: UIImage(systemName: "trash"),
+                         attributes: .destructive,
+                         handler: { _ in
+                             self.presenter.removeSavedBank()
                          })
             ]
         }

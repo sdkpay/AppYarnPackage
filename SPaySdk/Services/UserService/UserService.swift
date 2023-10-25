@@ -113,7 +113,6 @@ final class DefaultUserService: UserService {
                 self.analytics.sendEvent(.RSGoodListCards,
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
                 completion(.success)
-                completion(.success)
             case .failure(let error):
                 self?.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                      type: .listCards)

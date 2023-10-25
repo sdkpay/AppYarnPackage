@@ -13,6 +13,7 @@ protocol PaymentRouting {
                       selectedCard: @escaping (PaymentToolInfo) -> Void)
     func presentPartPay(partPaySelected: @escaping Action)
     func presentOTPScreen(completion: @escaping Action)
+    func presentBankAppPicker(completion: @escaping Action)
     func openProfile(with userInfo: UserInfo)
 }
 
@@ -35,6 +36,11 @@ final class PaymentRouter: PaymentRouting {
     
     func presentPartPay(partPaySelected: @escaping Action) {
         let vc = PartPayAssembly(locator: locator).createModule(partPaySelected: partPaySelected)
+        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func presentBankAppPicker(completion: @escaping Action) {
+        let vc = BankAppPickerAssembly(locator: locator).createModule(completion: completion)
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
     

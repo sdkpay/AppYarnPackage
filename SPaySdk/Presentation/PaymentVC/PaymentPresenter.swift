@@ -388,9 +388,21 @@ final class PaymentPresenter: PaymentPresenting {
                     }
                 }
             case .failure(_):
-                self.alertService.show(on: self.view,
-                                       type: .defaultError(completion: {
-                    self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                self.router.presentBankAppPicker {
+                    self.authService.auth {  [weak self] result in
+                        guard let self else { return }
+                        switch result {
+                        case .success:
+                            self.authService.bankCheck = true
+                            self.getListCards()
+                        case .failure(_):
+                            self.analytics.sendEvent(.LCBankAppAuthFail, with: self.screenEvent)
+                            self.alertService.show(on: self.view,
+                                                   type: .defaultError(completion: {
+                                self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                        }
+                    }
+                }
             }
         }
     }
