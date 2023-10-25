@@ -12,7 +12,8 @@ final class RemoteConfigServiceAssembly: Assembly {
         let service: RemoteConfigService = DefaultRemoteConfigService(network: container.resolve(),
                                                                       analytics: container.resolve(),
                                                                       featureToggle: container.resolve(),
-                                                                      parsingErrorAnaliticManager: container.resolve())
+                                                                      parsingErrorAnaliticManager: container.resolve(),
+                                                                      versionСontrolManager: container.resolve())
         container.register(service: service)
     }
 }
@@ -28,14 +29,17 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private let featureToggle: FeatureToggleService
     private let analytics: AnalyticsService
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
+    private let versionСontrolManager: VersionСontrolManager
     private var retryWithCerts = true
     
     init(network: NetworkService,
          analytics: AnalyticsService,
          featureToggle: FeatureToggleService,
-         parsingErrorAnaliticManager: ParsingErrorAnaliticManager) {
+         parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
+         versionСontrolManager: VersionСontrolManager) {
         self.network = network
         self.analytics = analytics
+        self.versionСontrolManager = versionСontrolManager
         self.featureToggle = featureToggle
         self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
     }
@@ -49,6 +53,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
             guard let self else { return }
             switch result {
             case .success(let config):
+                self.versionСontrolManager.setVersionsInfo(config.versionInfo)
                 self.saveConfig(config)
                 self.checkWhiteLogList(apikeys: config.apikey)
                 self.checkVersion(version: config.version)
@@ -65,9 +70,6 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     }
     
     private func saveConfig(_ value: ConfigModel) {
-        //        optimizationManager.checkSavedDataSize(object: value) {
-        //            self.analytics.sendEvent(.DataSize, with: [$0])
-        //        }
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
         UserDefaults.bankApps = value.bankApps

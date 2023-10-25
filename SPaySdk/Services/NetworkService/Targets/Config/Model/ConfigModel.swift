@@ -18,9 +18,15 @@ struct ConfigModel: Codable {
     let localization: Localization
     let bankApps: [BankApp]
     let schemas: Schemas
+    let versionInfo: VersionInfo?
     let featuresToggle: [FeaturesToggle]
     let apikey: [String]
     let images: Images
+}
+
+struct VersionInfo: Codable {
+    let deprecated: [String]
+    let active: String
 }
 
 // MARK: - Localization

@@ -96,7 +96,10 @@ final class DefaultSBPayService: SBPayService {
             .resolve(AnalyticsService.self)
             .sendEvent(apps.isEmpty ? .LCNoBankAppFound : .LCBankAppFound)
         SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
-        return !apps.isEmpty
+        let isDeprecated = locator
+            .resolve(VersionСontrolManager.self)
+            .isVersionDepicated
+        return !apps.isEmpty && !isDeprecated
     }
     
     func getPaymentToken(with viewController: UIViewController,
