@@ -49,7 +49,9 @@ struct Schemas: Codable {
 }
 
 struct BankApp: Codable {
-    let name, link, icon: String
+    let name: String
+    let link: String
+    let iconURL: String?
 }
 
 // MARK: - Images

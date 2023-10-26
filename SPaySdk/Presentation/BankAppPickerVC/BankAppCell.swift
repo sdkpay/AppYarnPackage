@@ -9,7 +9,7 @@ import UIKit
 
 struct BankAppCellModel {
     let title: String
-    let icondURL: String?
+    let iconURL: String?
     let link: String
     
     var deprecated = false
@@ -18,7 +18,7 @@ struct BankAppCellModel {
     init(with bankApp: BankApp) {
         title = bankApp.name
         link = bankApp.link
-        icondURL = bankApp.icon
+        iconURL = bankApp.iconURL
     }
 }
 
@@ -84,9 +84,7 @@ final class BankAppCell: UITableViewCell {
             sutitleLabel.text = nil
         }
         
-        bankIconView.shimmer(true, animate: true)
-        
-//        bankIconView.downloadImage(from: model.icondURL, placeholder: .Cards.stockCard)
+        bankIconView.downloadImage(from: model.iconURL, placeholder: .Cards.stockCard)
     }
     
     private func setupUI() {

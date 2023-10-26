@@ -63,7 +63,7 @@ extension UserDefaults {
     static var images: Images?
     
     @UserDefault(key: .bankApps,
-                 defaultValue: [BankApp(name: "", link: "", icon: "")])
+                 defaultValue: [BankApp(name: "", link: "", iconURL: "")])
     static var bankApps: [BankApp]?
     
     @UserDefault(key: .certKeys, defaultValue: [String]())
