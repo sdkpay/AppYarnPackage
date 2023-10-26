@@ -30,11 +30,8 @@ final class OtpPresenter: OtpPresenting {
     private let completionManager: CompletionManager
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private var sec = 45
-    private var countOfErrorPayment = 0
     private var timer: Timer?
     private var completion: Action?
-    private var otpRetryMaxCount = 3
-    private var otpRetryCount = 1
     
     init(otpService: OTPService,
          userService: UserService,
@@ -115,7 +112,6 @@ final class OtpPresenter: OtpPresenting {
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         analytics.sendEvent(.RSConfirmOTP,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-        otpRetryCount += 1
         otpService.confirmOTP(otpHash: otpHash) { [weak self]  result in
             guard let self = self else { return }
             switch result {
@@ -131,12 +127,6 @@ final class OtpPresenter: OtpPresenting {
                                                                     type: .otp(type: .confirmOTP))
                 if error.represents(.errorWithErrorCode(number: OtpError.incorrectCode.rawValue, httpCode: 200)) {
                     self.analytics.sendEvent(.RQFailConfirmOTP)
-                    if self.otpRetryCount > self.otpRetryMaxCount {
-                        self.alertService.show(on: self.view, type: .tryingError(back: {
-                            self.dismissWithError(.cancelled)
-                        }))
-                        return
-                    }
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         self.view?.hideLoading(animate: true)
@@ -147,12 +137,6 @@ final class OtpPresenter: OtpPresenting {
                         self.dismissWithError(.cancelled)
                     }))
                 } else if error.represents(.errorWithErrorCode(number: OtpError.timeOut.rawValue, httpCode: 200)) {
-                    if self.otpRetryCount > self.otpRetryMaxCount {
-                        self.alertService.show(on: self.view, type: .tryingError(back: {
-                            self.dismissWithError(.cancelled)
-                        }))
-                        return
-                    }
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         self.view?.hideLoading(animate: true)
