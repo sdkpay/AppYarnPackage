@@ -60,6 +60,10 @@ final class AuthPresenter: AuthPresenting {
         timeManager.endTraking(AuthVC.self.description()) { _ in 
 //            analytics.sendEvent(.AuthViewAppeared, with: [$0])
         }
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationDidBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
         checkNewStart()
     }
     
@@ -100,11 +104,6 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func configAuthSettings() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(applicationDidBecomeActive),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
-
         if enviromentManager.environment == .sandboxWithoutBankApp {
             getAccessSPay()
         } else if bankManager.selectedBank == nil {
