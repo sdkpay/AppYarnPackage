@@ -114,6 +114,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func showBanksStack() {
+        removeObserver()
         router.presentBankAppPicker { [weak self] in
             self?.auth()
         }
