@@ -79,12 +79,12 @@ final class AuthPresenter: AuthPresenting {
     private func checkSession() {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            view?.showLoading()
+            self.view?.showLoading()
         }
         userService.checkUserSession { [weak self] result in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
-                view?.hideLoading()
+                self.view?.hideLoading()
             }
             switch result {
             case .success:
