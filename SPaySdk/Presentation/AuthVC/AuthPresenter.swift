@@ -64,6 +64,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkNewStart() {
+        view?.showLoading()
         analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
         if enviromentManager.environment == .sandboxWithoutBankApp {
             checkSession()
@@ -82,10 +83,6 @@ final class AuthPresenter: AuthPresenting {
             self.view?.showLoading()
         }
         userService.checkUserSession { [weak self] result in
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                self.view?.hideLoading()
-            }
             switch result {
             case .success:
                 self?.router.presentPayment()
@@ -195,10 +192,6 @@ final class AuthPresenter: AuthPresenting {
     private func loadPaymentData() {
         view?.showLoading(with: Strings.Get.Data.title, animate: true)
         contentLoadManager.load { [weak self] error in
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                self.view?.hideLoading()
-            }
             if let error = error {
                 self?.completionManager.completeWithError(error)
                 if error.represents(.noInternetConnection) {
