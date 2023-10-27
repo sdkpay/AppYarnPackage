@@ -26,6 +26,7 @@ extension String {
 }
 
 enum Cookies: String {
+    case spdm = "X-SP-D-M"
     case geo = "X-Geo-Sticky"
     case refreshData = "X-Sdk-Refresh-Data"
     case id = "X-Sdk-Id-Key"
@@ -38,6 +39,8 @@ enum Cookies: String {
             return .cookieData
         case .id:
             return .cookieId
+        case .spdm:
+            return nil
         }
     }
 }
@@ -54,6 +57,7 @@ final class BaseRequestManagerAssembly: Assembly {
 
 protocol BaseRequestManager {
     var headers: HTTPHeaders { get }
+    var spdmCookie: HTTPCookie? { get set }
     var geoCookie: HTTPCookie? { get set }
     var pod: String? { get set }
     func generateB3Cookie()
@@ -61,6 +65,7 @@ protocol BaseRequestManager {
 
 final class DefaultBaseRequestManager: BaseRequestManager {
     
+    var spdmCookie: HTTPCookie?
     var geoCookie: HTTPCookie?
     var pod: String?
     var b3TraceId: String?
