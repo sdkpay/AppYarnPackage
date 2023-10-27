@@ -152,7 +152,7 @@ final class OtpPresenter: OtpPresenting {
     
     func back() {
         analytics.sendEvent(.TouchBack, with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-        self.completionManager.closeAction()
+        self.completionManager.dismissCloseAction(view)
     }
     
     func viewDidAppear() {
