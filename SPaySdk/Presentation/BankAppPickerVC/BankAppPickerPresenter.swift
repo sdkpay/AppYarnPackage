@@ -98,6 +98,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     @objc
     private func applicationDidBecomeActive() {
         view?.reloadTableView()
+        checkTappedAppsCount()
     }
     
     private func findIndexPath(_ bankApp: BankApp) -> IndexPath? {
