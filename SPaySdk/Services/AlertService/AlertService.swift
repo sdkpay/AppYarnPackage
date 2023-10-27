@@ -149,7 +149,7 @@ final class DefaultAlertService: AlertService {
             let alertVC = AlertAssembly().createModule(alertModel: model,
                                                        liveCircleManager: self.liveCircleManager)
             view?.contentNavigationController?.pushViewController(alertVC, animated: true)
-            self.alertVC?.contentNavigationController?.popViewController(animated: false)
+            self.alertVC?.contentNavigationController?.popViewController(animated: true)
             self.alertVC = alertVC
         }
     }

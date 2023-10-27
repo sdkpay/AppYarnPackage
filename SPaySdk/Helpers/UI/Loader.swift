@@ -48,7 +48,7 @@ struct Loader {
     func show(on vc: UIViewController) -> Loader {
         guard window != nil else { return self }
         if let oldLaoding = vc.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView {
-            oldLaoding.removeFromSuperview()
+            hide(from: vc)
         }
         let subview = LoadingView(with: text)
         guard let rootView = vc.view else { return self }

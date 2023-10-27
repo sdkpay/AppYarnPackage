@@ -77,13 +77,15 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkSession() {
-        DispatchQueue.main.async {  [weak self] in
-            guard let self = self else { return }
-            self.alertService.hide()
-            self.view?.showLoading(animate: false)
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            view?.showLoading()
         }
-       
         userService.checkUserSession { [weak self] result in
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                view?.hideLoading()
+            }
             switch result {
             case .success:
                 self?.router.presentPayment()
@@ -131,7 +133,6 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func getSessiond() {
-        self.view?.showLoading()
         authService.tryToGetSessionId { [weak self] result in
             switch result {
             case .success(let authMethod):
@@ -148,7 +149,6 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func appAuth() {
-        self.view?.showLoading()
         if enviromentManager.environment == .sandboxWithoutBankApp {
             router.presentFakeScreen(completion: {
                 self.auth()
@@ -182,7 +182,6 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func auth() {
-        self.view?.showLoading()
         authService.auth { [weak self] result in
             switch result {
             case .success:
@@ -194,8 +193,12 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func loadPaymentData() {
-        view?.showLoading(with: Strings.Get.Data.title, animate: false)
+        view?.showLoading(with: Strings.Get.Data.title, animate: true)
         contentLoadManager.load { [weak self] error in
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.view?.hideLoading()
+            }
             if let error = error {
                 self?.completionManager.completeWithError(error)
                 if error.represents(.noInternetConnection) {
@@ -215,6 +218,10 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func validateAuthError(error: SDKError) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.view?.hideLoading()
+        }
         if error.represents(.noInternetConnection) {
             alertService.show(on: view,
                               type: .noInternet(retry: {
