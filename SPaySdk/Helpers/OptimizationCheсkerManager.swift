@@ -16,7 +16,7 @@ final class OptimizationCheсkerManager {
     private let networkMonitorManager = NetworkMonitorManager()
     
     func startTraking() {
-        startTime = CFAbsoluteTimeGetCurrent()
+      //  startTime = CFAbsoluteTimeGetCurrent()
     }
     
     func checkSavedDataSize(object: Codable, clouser: (Int) -> Void) {
