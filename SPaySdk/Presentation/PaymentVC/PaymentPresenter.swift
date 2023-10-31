@@ -94,9 +94,7 @@ final class PaymentPresenter: PaymentPresenting {
     
     func viewDidLoad() {
         configViews()
-        timeManager.endTraking(PaymentVC.self.description()) {
-            self.analytics.sendEvent(.PayViewAppeared, with: [$0])
-        }
+        self.analytics.sendEvent(.PayViewAppeared)
     }
     
     private func updatePayButtonTitle() {
@@ -269,10 +267,12 @@ final class PaymentPresenter: PaymentPresenting {
             case .success:
                 self.completionManager.completePay(with: .success)
                 self.partPayService.bnplplanSelected = false
+                self.analytics.sendEvent(.PaySuccess)
                 self.alertService.show(on: self.view, type: .paySuccess(completion: {
                     self.alertService.close()
                 }))
             case .failure(let error):
+                self.analytics.sendEvent(.PayFailed)
                 if self.partPayService.bnplplanSelected {
                     self.analytics.sendEvent(.PayWithBNPLFailed)
                 }

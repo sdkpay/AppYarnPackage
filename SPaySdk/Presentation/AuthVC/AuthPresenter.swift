@@ -56,9 +56,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
-        timeManager.endTraking(AuthVC.self.description()) {
-            analytics.sendEvent(.AuthViewAppeared, with: [$0])
-        }
+        analytics.sendEvent(.AuthViewAppeared)
         checkNewStart()
     }
     
