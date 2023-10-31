@@ -136,7 +136,6 @@ final class AuthPresenter: AuthPresenting {
             self.removeObserver()
             if let error = error {
                 self.completionManager.completeWithError(error)
-                self.analytics.sendEvent(.BankAppAuthFailed)
                 if error.represents(.noInternetConnection) {
                     self.alertService.show(on: self.view,
                                            type: .noInternet(retry: {
@@ -191,6 +190,7 @@ final class AuthPresenter: AuthPresenting {
     private func applicationDidBecomeActive() {
         // Если пользователь не смог получить обратный редирект
         // от банковского приложения и перешел самостоятельно
+        self.analytics.sendEvent(.BankAppAuthFailed)
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.view?.hideLoading()
