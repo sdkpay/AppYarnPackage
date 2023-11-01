@@ -50,9 +50,7 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     func viewDidLoad() {
-        timeManager.endTraking(CardsVC.self.description()) {
-            analytics.sendEvent(.CardsViewAppeared, with: [$0])
-        }
+        analytics.sendEvent(.BNPLViewAppeared)
         configViews()
         configCheckView()
     }

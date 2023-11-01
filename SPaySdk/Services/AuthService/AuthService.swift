@@ -118,6 +118,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                                    enabledLevel: .session)
                 self.sIdAuth(with: result)
             case .failure(let error):
+                self?.analytics.sendEvent(.BackAuthFailed)
                 completion(error, false)
             }
         }

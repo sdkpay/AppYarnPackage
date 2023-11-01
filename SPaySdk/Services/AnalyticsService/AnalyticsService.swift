@@ -93,6 +93,12 @@ enum AnalyticsEvent: String {
     case GetResponseFrom
     /// Уровень соединения
     case DebugConfig
+    /// вызова статус сешн: успешно восстановили сессию после смахивания
+    case RepairSessionSuccess
+    /// вызова статус сешн: неуспешно
+    case RepairSessionFailed
+    /// Оплата в обработке
+    case PayProcess
 }
 
 enum AnalyticsValue: String {

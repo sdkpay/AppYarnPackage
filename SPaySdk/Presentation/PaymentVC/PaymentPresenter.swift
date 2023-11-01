@@ -185,6 +185,7 @@ final class PaymentPresenter: PaymentPresenting {
     private func validatePayError(_ error: PayError) {
         switch error {
         case .noInternetConnection:
+            self.analytics.sendEvent(.PayFailed)
             self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
             alertService.show(on: view,
                               type: .noInternet(retry: {
@@ -194,10 +195,12 @@ final class PaymentPresenter: PaymentPresenting {
                 self.alertService.close()
             }))
         case .timeOut, .unknownStatus:
+            self.analytics.sendEvent(.PayProcess)
             configForWaiting()
         case .partPayError:
             getPaymentToken()
         default:
+            self.analytics.sendEvent(.PayFailed)
             self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
             alertService.show(on: view,
                               type: .defaultError(completion: {

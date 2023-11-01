@@ -9,7 +9,8 @@ import UIKit
 
 final class CompletionManagerAssembly: Assembly {
     func register(in container: LocatorService) {
-        let service: CompletionManager = DefaultCompletionManager(liveCircleManager: container.resolve())
+        let service: CompletionManager = DefaultCompletionManager(liveCircleManager: container.resolve(),
+                                                                  analytics:  container.resolve())
         container.register(service: service)
     }
 }
@@ -37,7 +38,7 @@ extension CompletionManager {
 final class DefaultCompletionManager: CompletionManager {
     
     private let liveCircleManager: LiveCircleManager
-    
+    private let analytics: AnalyticsService
     private var paymentCompletion: PaymentCompletion?
     private var paymentTokenCompletion: PaymentTokenCompletion?
     
@@ -47,8 +48,10 @@ final class DefaultCompletionManager: CompletionManager {
     
     private var closeActionInProgress = false
     
-    init(liveCircleManager: LiveCircleManager) {
+    init(liveCircleManager: LiveCircleManager,
+         analytics: AnalyticsService) {
         self.liveCircleManager = liveCircleManager
+        self.analytics = analytics
     }
     
     func setPaymentCompletion(_ completion: @escaping PaymentCompletion) {
@@ -110,6 +113,7 @@ final class DefaultCompletionManager: CompletionManager {
             let response = PaymentResponse((state: .error, info: error.errorDescription))
             paymentCompletion?(response)
         } else {
+            analytics.sendEvent(.ManuallyClosed)
             let response = PaymentResponse((state: .cancel, info: Strings.Error.close))
             paymentCompletion?(response)
         }
@@ -128,6 +132,7 @@ final class DefaultCompletionManager: CompletionManager {
             let response = PaymentTokenResponse((state: .error, info: SPaymentTokenResponseModel(error: error.errorDescription)))
             paymentTokenCompletion?(response)
         } else {
+            analytics.sendEvent(.ManuallyClosed)
             let response = PaymentTokenResponse((state: .cancel, info: SPaymentTokenResponseModel(error: Strings.Error.close)))
             paymentTokenCompletion?(response)
         }

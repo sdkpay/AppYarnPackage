@@ -79,12 +79,13 @@ final class AuthPresenter: AuthPresenting {
             self.alertService.hide()
             self.view?.showLoading(animate: false)
         }
-       
         userService.checkUserSession { [weak self] result in
             switch result {
             case .success:
                 self?.router.presentPayment()
+                self?.analytics.sendEvent(.RepairSessionSuccess)
             case .failure(let error):
+                self?.analytics.sendEvent(.RepairSessionFailed)
                 self?.completionManager.completeWithError(error)
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
