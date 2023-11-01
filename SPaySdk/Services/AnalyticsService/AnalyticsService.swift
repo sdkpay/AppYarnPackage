@@ -263,9 +263,20 @@ protocol AnalyticsService {
     func sendEvent(_ event: AnalyticsEvent, with doubles: [Double])
     func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any])
     func config()
+    func startSession(orderNumber: String)
+    func finishSession()
 }
 
 final class DefaultAnalyticsService: NSObject, AnalyticsService {
+    
+    func startSession(orderNumber: String) {
+        analyticServices.forEach { $0.startSession(orderNumber: orderNumber) }
+    }
+    
+    func finishSession() {
+        analyticServices.forEach { $0.finishSession() }
+    }
+    
     private lazy var analyticServices: [AnalyticsService] = [
         DefaultDynatraceAnalyticsService()
     ]
@@ -310,10 +321,12 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     init(authManager: AuthManager) {
         self.authManager = authManager
         super.init()
+        self.startSession(orderNumber: authManager.orderNumber ?? "")
         SBLogger.log(.start(obj: self))
     }
     
     deinit {
+        self.finishSession()
         SBLogger.log(.stop(obj: self))
     }
     

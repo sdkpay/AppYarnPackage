@@ -81,7 +81,7 @@ final class PaymentViewBuilder {
         
         cancelButton
             .add(toSuperview: view)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.Cancel.bottom, usingRelation: .lessThanOrEqual)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.Cancel.bottom, usingRelation: .equal)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Cancel.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Cancel.right)
             .height(.defaultButtonHeight)

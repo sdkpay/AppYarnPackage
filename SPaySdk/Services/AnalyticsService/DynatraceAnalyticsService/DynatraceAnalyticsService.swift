@@ -55,6 +55,14 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
         action?.leave()
     }
     
+    func startSession(orderNumber: String) {
+        Dynatrace.identifyUser(orderNumber)
+    }
+    
+    func finishSession() {
+        Dynatrace.endVisit()
+    }
+    
     func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any]) {
         let action = DTXAction.enter(withName: event.rawValue)
         dictionaty.forEach { key, value in

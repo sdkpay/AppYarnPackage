@@ -157,7 +157,8 @@ final class DefaultSBPayService: SBPayService {
         apiKey = paymentRequest.apiKey
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
-            return assertionFailure(error)
+            let response = PaymentResponse(SPayState.error, error)
+            completion(response)
         }
         locator
             .resolve(SDKManager.self)
