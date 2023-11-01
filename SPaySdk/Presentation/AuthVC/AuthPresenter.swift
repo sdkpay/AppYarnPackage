@@ -165,6 +165,7 @@ final class AuthPresenter: AuthPresenting {
         contentLoadManager.load { [weak self] error in
             if let error = error {
                 self?.completionManager.completeWithError(error)
+                self?.analytics.sendEvent(.PayViewFailed)
                 if error.represents(.noInternetConnection) {
                     self?.alertService.show(on: self?.view,
                                             type: .noInternet(retry: { self?.loadPaymentData() },
