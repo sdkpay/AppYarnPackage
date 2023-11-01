@@ -25,6 +25,7 @@ final class AuthPresenter: AuthPresenting {
     private let timeManager: OptimizationCheсkerManager
     private let contentLoadManager: ContentLoadManager
     private let enviromentManager: EnvironmentManager
+    private let versionСontrolManager: VersionСontrolManager
     
     init(_ router: AuthRouter,
          authService: AuthService,
@@ -34,12 +35,14 @@ final class AuthPresenter: AuthPresenting {
          userService: UserService,
          alertService: AlertService,
          bankManager: BankAppManager,
+         versionСontrolManager: VersionСontrolManager,
          contentLoadManager: ContentLoadManager,
          timeManager: OptimizationCheсkerManager,
          enviromentManager: EnvironmentManager) {
         self.analytics = analytics
         self.router = router
         self.authService = authService
+        self.versionСontrolManager = versionСontrolManager
         self.sdkManager = sdkManager
         self.completionManager = completionManager
         self.userService = userService
@@ -57,9 +60,22 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
-        timeManager.endTraking(AuthVC.self.description()) { _ in 
-//            analytics.sendEvent(.AuthViewAppeared, with: [$0])
+        if true {
+            alertService.showAlert(on: view,
+                                   with: Strings.Error.version,
+                                   state: .failure,
+                                   buttons: [
+                                    AlertButtonModel(title: Strings.Return.title,
+                                                     type: .full,
+                                                     action: { [weak self] in
+                                                         self?.completionManager.dismissCloseAction(self?.view)
+                                                     })
+                                   ]) { [weak self] in
+                                       self?.completionManager.dismissCloseAction(self?.view)
+                                   }
+            return
         }
+        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
