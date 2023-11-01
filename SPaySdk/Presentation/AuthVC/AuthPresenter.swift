@@ -60,7 +60,19 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
-        if true {
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationDidBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
+        checkNewStart()
+    }
+    
+    private func checkNewStart() {
+        view?.showLoading()
+        analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
+        
+        guard versionСontrolManager.isVersionDepicated else {
             alertService.showAlert(on: view,
                                    with: Strings.Error.version,
                                    state: .failure,
@@ -76,16 +88,6 @@ final class AuthPresenter: AuthPresenting {
             return
         }
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(applicationDidBecomeActive),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
-        checkNewStart()
-    }
-    
-    private func checkNewStart() {
-        view?.showLoading()
-        analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
         if enviromentManager.environment == .sandboxWithoutBankApp {
             checkSession()
         } else {
