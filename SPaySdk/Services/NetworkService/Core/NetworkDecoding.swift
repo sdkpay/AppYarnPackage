@@ -110,9 +110,11 @@ extension ResponseDecoder {
     
     func decodeParametersFrom(url: URL) -> Result<BankModel, SDKError> {
         guard let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            SBLogger.log("🏦 Cant parse url from bank app \(url.absoluteString)")
             return .failure(.badDataFromSBOL(httpCode: Int64(StatusCode.errorSystem.rawValue)))
         }
         guard let queryItems = urlComponents.queryItems else {
+            SBLogger.log("🏦 Cant parse url from bank app \(url.absoluteString)")
             return .failure(.badDataFromSBOL(httpCode: Int64(Int(StatusCode.errorSystem.rawValue))))
         }
         var parameters = [String: String]()

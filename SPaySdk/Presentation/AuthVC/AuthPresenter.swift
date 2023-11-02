@@ -72,7 +72,7 @@ final class AuthPresenter: AuthPresenting {
         view?.showLoading()
         analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
         
-        guard versionСontrolManager.isVersionDepicated else {
+        guard !versionСontrolManager.isVersionDepicated else {
             alertService.showAlert(on: view,
                                    with: Strings.Error.version,
                                    state: .failure,

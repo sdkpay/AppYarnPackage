@@ -97,6 +97,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     // Клиент сам перешел из приложения банка
     @objc
     private func applicationDidBecomeActive() {
+        SBLogger.log("📲 Become active without redirect")
         view?.reloadTableView()
         checkTappedAppsCount()
     }

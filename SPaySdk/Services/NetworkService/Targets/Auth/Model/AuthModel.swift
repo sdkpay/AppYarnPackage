@@ -14,9 +14,9 @@ struct AuthModel: Codable {
     let clientId: String?
     let nonce: String?
     let isBnplEnabled: Bool?
-    let codeChallengeMethod: String
-    let codeChallenge: String
-    let scope: String
+    let codeChallengeMethod: String?
+    let codeChallenge: String?
+    let scope: String?
     let refreshTokenIsActive: Bool?
 }
 
