@@ -54,6 +54,16 @@ targetTemplates:
       - sdk: libresolv.9.tbd
     info:
       path: ./SPaySdk/SupportingFiles/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: $(DEVELOPMENT_LANGUAGE)
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleInfoDictionaryVersion: 6.0
+        CFBundleName: $(PRODUCT_NAME)
+        CFBundlePackageType: FMWK
+        CFBundleShortVersionString: 2.0.0
+        CFBundleVersion: 2.0.0
+        SDKVersion: "2.0.0"
   
 targets:
   SPaySdkExample:

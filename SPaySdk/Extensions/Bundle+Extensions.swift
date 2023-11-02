@@ -18,7 +18,7 @@ extension Bundle {
     }()
 
     static var sdkVersion: String {
-        sdkBundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? "No info"
+        sdkBundle.infoDictionary?["SDKVersion"] as? String ?? "No info"
     }
     
     static var sdkBuild: String {
