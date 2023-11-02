@@ -135,6 +135,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         guard let link = authURL(link: model.deeplink) else {
             return
         }
+
         UIApplication.shared.open(link) { [weak self] success in
             if !success {
                 self?.analytics.sendEvent(.RedirectDenied)
