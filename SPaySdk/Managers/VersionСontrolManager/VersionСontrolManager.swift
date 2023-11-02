@@ -36,13 +36,12 @@ final class DefaultVersionСontrolManager: VersionСontrolManager {
     private func validateVersionDepicated() -> Bool {
         SBLogger.log("🧭 Check version model start")
         guard let versionInfo else { return false }
-        SBLogger.log("🛠 SDK VERSION: \(Bundle.sdkVersion)")
+        SBLogger.log("🛠 SDK VERSION: \(Bundle.sdkBuild)")
         for version in versionInfo.deprecated where Bundle.sdkVersion.contains(version) {
-            SBLogger.log("🛠 SDK VERSION: \(Bundle.sdkVersion) contains \(versionInfo.deprecated)")
+            SBLogger.log("🛠 SDK VERSION: \(Bundle.sdkBuild) contains \(versionInfo.deprecated)")
             return true
         }
-        SBLogger.log("🛠 SDK VERSION: \(Bundle.sdkVersion) not in deprecated list")
+        SBLogger.log("🛠 SDK VERSION: \(Bundle.sdkBuild) not in deprecated list")
         return false
     }
 }
-
