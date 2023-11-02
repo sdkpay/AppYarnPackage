@@ -12,6 +12,7 @@
     },
     "versionInfo": {
         "deprecated": [
+            "2.0.0"
         ],
         "active": "1.0"
     },
