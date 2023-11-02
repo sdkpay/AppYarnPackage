@@ -277,8 +277,6 @@ final class PaymentPresenter: PaymentPresenting {
             case .failure(let error):
                 if self.partPayService.bnplplanSelected {
                     self.analytics.sendEvent(.PayWithBNPLFailed)
-                } else {
-                    self.analytics.sendEvent(.PayFailed)
                 }
                 self.partPayService.bnplplanSelected = false
                 self.validatePayError(error)
