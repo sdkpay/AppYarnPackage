@@ -15,7 +15,7 @@ ENV["TEAM_ID"] = "582949"
 
 # Marvin Bot
 ENV["TG_BOT_TOKEN"] = "5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4"
-ENV["TG_CHAT_ID"] = "-866042957"
+ENV["TG_CHAT_ID"] = "-1001899215484"
 
 # PROD BOT -866042957
 # DEV BOT -1001899215484
@@ -121,7 +121,7 @@ platform :ios do
     message
   end
   
-   desc "Send message to Marvin bot"
+  desc "Send message to Marvin bot"
   private_lane :marvin_bot do |options|
     telegram(
       token: ENV['TG_BOT_TOKEN'],
@@ -133,6 +133,32 @@ platform :ios do
   
   error do |lane, exception|
     marvin_bot(success: false, exception: exception)
+  end
+
+  #  Build xcframework lanes
+
+  desc "Create xcframework"
+  lane :framework_plist_version do 
+    build_xcframework
+    framework_plist_version
+  end
+
+  desc "Framework version from plist"
+  private_lane :framework_plist_version do 
+    version = get_info_plist_value(
+      path: "./SPaySdk/SupportingFiles/Info.plist",
+      key: "SDKVersion"
+      )
+  end
+
+  desc "Create XCframework"
+  private_lane :build_xcframework do 
+    xcodebuild(
+    scheme: "SPayFramework",
+    configuration: "Release",
+    clean: true,
+    build: true
+  )
   end
 
 end

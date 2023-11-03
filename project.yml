@@ -152,3 +152,8 @@ targets:
     settings:
       base:
         OTHER_SWIFT_FLAGS: "-DSDKDEBUG"
+aggregateTargets:
+  SPayFramework:
+    buildScripts:
+      - path: ./build.sh
+
