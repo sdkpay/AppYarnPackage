@@ -15,7 +15,7 @@ ENV["TEAM_ID"] = "582949"
 
 # Marvin Bot
 ENV["TG_BOT_TOKEN"] = "5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4"
-ENV["TG_CHAT_ID"] = "-866042957"
+ENV["TG_CHAT_ID"] = "-1001899215484"
 
 # PROD BOT -866042957
 # DEV BOT -1001899215484
@@ -35,7 +35,12 @@ platform :ios do
   end
 
   private_lane :add_and_upload_tags do
-    add_git_tag
+    add_git_tag(
+      grouping: "fastlane-builds",
+      includes_lane: true,
+      prefix: "v",
+      build_number: "#{plist_version}(#{plist_build})"
+    )
     sh("git push --tags")
   end
 
