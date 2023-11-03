@@ -129,8 +129,9 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     func completeAuth(with url: URL) {
         // Сохраняем выбранный банк если произошел успешный редирект обратно в приложение
-        SBLogger.log("🏦 Bank app not found")
+        SBLogger.log("🏦 Bank app get url \(url.absoluteString)")
         bankAppManager.saveSelectedBank()
+        SBLogger.log("🏦 Save selected bank")
         switch decodeParametersFrom(url: url) {
         case .success(let result):
             authManager.authCode = result.code
