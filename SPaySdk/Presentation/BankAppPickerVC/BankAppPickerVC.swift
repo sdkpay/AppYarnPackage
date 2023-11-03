@@ -28,6 +28,20 @@ final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
         SBLogger.log(.didLoad(view: self))
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        SBLogger.log(.didAppear(view: self))
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        SBLogger.log(.didDissapear(view: self))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
+    }
+    
     init(_ presenter: BankAppPickerPresenting) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)

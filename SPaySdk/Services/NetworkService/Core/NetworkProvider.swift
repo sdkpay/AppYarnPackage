@@ -111,12 +111,12 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                                       host: host,
                                       completion: completion)
                     } else {
-                        completion(data, response, error)
                         SBLogger.logRequestCompleted(host: self.hostManager.host(for: host),
                                                      target,
                                                      response: response,
                                                      data: data,
                                                      error: error)
+                        completion(data, response, error)
                     }
                 }
             })
