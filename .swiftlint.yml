@@ -18,6 +18,7 @@ disabled_rules:
     - nslocalizedstring_key
     - discouraged_optional_boolean
     - file_length
+    - closure_end_indentation
     - literal_expression_end_indentation
 opt_in_rules:
     - trailing_whitespace
@@ -27,7 +28,6 @@ opt_in_rules:
     - closing_brace
     - array_init
     - block_based_kvo
-    - closure_end_indentation
     - closure_parameter_position
     - closure_spacing
     - collection_alignment

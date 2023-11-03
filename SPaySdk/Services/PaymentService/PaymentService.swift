@@ -215,8 +215,8 @@ final class DefaultPaymentService: PaymentService {
                                 self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                                     type: .payment(type: .paymentOrder))
                                 completion(.failure(self.parseError(error)))
+                                }
                             }
-                        }
     }
     
     private func parseError(_ sdkError: SDKError) -> PayError {

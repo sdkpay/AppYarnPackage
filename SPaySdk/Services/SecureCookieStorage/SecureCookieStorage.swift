@@ -90,6 +90,7 @@ final class CookieStorageAssembly: Assembly {
 }
 
 protocol CookieStorage {
+    func exists(_ key: Cookies) -> Bool
     func setCookie(cookie: HTTPCookie, for key: Cookies)
     func getCookie(for key: Cookies) -> HTTPCookie?
     func cleanCookie()
@@ -101,6 +102,16 @@ final class DefaultCookieStorage: CookieStorage {
 
     init(storage: KeychainStorage) {
         self.storage = storage
+    }
+    
+    func exists(_ key: Cookies) -> Bool {
+        guard let key = key.storage else { return false }
+        
+        do {
+           return try storage.exists(key)
+        } catch {
+            return false
+        }
     }
     
     func setCookie(cookie: HTTPCookie, for key: Cookies) {

@@ -184,7 +184,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
                 self.analytics.sendEvent(event)
                 
-                if refreshIsActive && self.featureToggleService.isEnabled(.refresh) {
+                if refreshIsActive && self.featureToggleService.isEnabled(.refresh) && self.cookieStorage.exists(.refreshData) {
                     self.authManager.authMethod = .refresh
                 } else {
                     self.authManager.authMethod = .bank
@@ -287,8 +287,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     completion(.failure(error))
                     return
                 }
-                
-                self.authManager.authMethod = .bank
+
                 self.appAuth { result in
                     switch result {
                     case .success:
