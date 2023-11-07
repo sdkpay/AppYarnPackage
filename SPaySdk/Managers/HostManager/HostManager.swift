@@ -61,6 +61,8 @@ final class DefaultHostManager: HostManager {
             }
         case .safepayonline:
             switch buildSettings.networkState {
+            case .Mocker:
+                return Host.mocker.url
             case .Ift:
                 return Host.safepayonlineIft.url
             default:
