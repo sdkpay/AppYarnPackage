@@ -123,7 +123,7 @@ final class DefaultUserService: UserService {
     
     func checkUserSession(completion: @escaping (Result<Void, SDKError>) -> Void) {
         guard let sessionId = authManager.sessionId, user != nil else {
-            completion(.failure(.noData))
+            completion(.failure(SDKError(.noData)))
             return
         }
         network.request(AuthTarget.checkSession(sessionId: sessionId),

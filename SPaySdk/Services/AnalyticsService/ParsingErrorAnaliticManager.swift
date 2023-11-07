@@ -52,46 +52,26 @@ public final class DefaultParsingErrorAnaliticManager: ParsingErrorAnaliticManag
     
     func sendAnaliticsError(error: SDKError, type: AnaliticTypeRequest) {
         let result = parseAnaliticsType(type: type)
-
-        switch error {
+        
+        switch ErrorCode(rawValue: error.code) ?? .unowned {
             
-        case .noInternetConnection:
+        case .noInternetConnection, .noData, .personalInfo, .noCards, .timeOut, .ssl:
             self.analytics.sendEvent(
                 result.0,
                 with:
                     [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.httpCode: Int64(error.httpCode ?? -1),
+                        AnalyticsKey.errorCode: error.code,
                         AnalyticsKey.view: result.2
                     ]
             )
-        case .noData:
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: result.2
-                    ]
-            )
-        case .badResponseWithStatus(let code):
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.httpCode: code.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: result.2
-                    ]
-            )
-        case .failDecode(let text):
+        case .failDecode:
             self.analytics.sendEvent(
                 result.0,
                 with:
                     [
                         AnalyticsKey.httpCode: Int64(200),
-                        AnalyticsKey.errorCode: Int64(-1),
+                        AnalyticsKey.errorCode: Int64(error.code),
                         AnalyticsKey.view: result.2
                     ]
             )
@@ -99,94 +79,17 @@ public final class DefaultParsingErrorAnaliticManager: ParsingErrorAnaliticManag
                 result.1,
                 with:
                     [
-                        AnalyticsKey.ParsingError: text
+                        AnalyticsKey.ParsingError: error.description,
+                        AnalyticsKey.view: result.2
                     ])
-        case .badDataFromSBOL(let httpCode):
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode
-                    ]
-            )
-        case .unauthorizedClient(let httpCode):
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: result.2
-                    ]
-            )
-        case .personalInfo:
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: result.2
-                    ]
-            )
-        case let .errorWithErrorCode(number, httpCode):
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.errorCode: number,
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.view: result.2
-                    ]
-            )
-        case .noCards:
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: result.2
-                    ]
-            )
-        case .cancelled:
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: result.2
-                    ]
-            )
-        case .timeOut(let httpCode):
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: result.2
-                    ]
-            )
-        case .ssl(let httpCode):
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: result.2
-                    ]
-            )
-        case .bankAppNotFound:
+        default:
             return
         }
     }
     
     private func parseAnaliticsType(type: AnaliticTypeRequest) -> (AnalyticsEvent,
-                                                                          AnalyticsEvent,
-                                                                          String) {
+                                                                   AnalyticsEvent,
+                                                                   String) {
         switch type {
         case .otp(let type):
             let rqFail: AnalyticsEvent = type == .confirmOTP ?

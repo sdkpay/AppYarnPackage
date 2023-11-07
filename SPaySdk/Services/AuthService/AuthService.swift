@@ -120,7 +120,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     case true:
                         self?.getSessionId(completion: completion)
                     case false:
-                        completion(.failure(.personalInfo))
+                        completion(.failure(SDKError(.personalInfo)))
                     }
                 }
             }
@@ -214,7 +214,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         
         guard let appLink,
               let link = authURL(link: appLink) else {
-            appCompletion?(.failure(.noData))
+            appCompletion?(.failure(SDKError(.noData)))
             appCompletion = nil
             return
         }
@@ -222,7 +222,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         UIApplication.shared.open(link) { [weak self] success in
             if !success {
                 SBLogger.log("🏦 Bank app not found")
-                self?.appCompletion?(.failure(.bankAppNotFound))
+                self?.appCompletion?(.failure(SDKError(.bankAppNotFound)))
                 self?.appCompletion = nil
                 return
             }
@@ -239,7 +239,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         personalMetricsService.getUserData { [weak self] data in
             guard let data else {
                 DispatchQueue.main.async {
-                    completion(.failure(.personalInfo))
+                    completion(.failure(SDKError(.personalInfo)))
                 }
                 return
             }

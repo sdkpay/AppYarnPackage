@@ -14,6 +14,7 @@ final class PartPayServiceAssembly: Assembly {
                                                                 sdkManager: container.resolve(),
                                                                 authManager: container.resolve(),
                                                                 analytics: container.resolve(),
+                                                                parsingErrorAnaliticManager: container.resolve(),
                                                                 featureToggle: container.resolve())
             return service
         })
@@ -80,17 +81,20 @@ final class DefaultPartPayService: PartPayService {
     private let featureToggle: FeatureToggleService
     private var userEnableBnpl = false
     private let analytics: AnalyticsService
+    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private(set) var bnplplan: BnplModel?
     
     init(network: NetworkService,
          sdkManager: SDKManager,
          authManager: AuthManager,
          analytics: AnalyticsService,
+         parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          featureToggle: FeatureToggleService) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
         self.analytics = analytics
+        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         self.featureToggle = featureToggle
         SBLogger.log(.start(obj: self))
     }
@@ -122,7 +126,7 @@ final class DefaultPartPayService: PartPayService {
                 self?.setEnabledBnpl(bnplplan.isBnplEnabled, enabledLevel: .bnplPlan)
                 completion(nil)
             case .failure(let error):
-                self?.sendAnaliticsError(error: error)
+                self?.parsingErrorAnaliticManager.sendAnaliticsError(error: error, type: .bnpl)
                 completion(error)
             }
         }
@@ -143,138 +147,5 @@ final class DefaultPartPayService: PartPayService {
                    path: \(bnplEnabledLevelsLog)
                 """)
         return !bnplEnabledLevels.values.contains(false)
-    }
-    
-    private func sendAnaliticsError(error: SDKError) {
-        switch error {
-            
-        case .noInternetConnection:
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-        case .noData:
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-        case .badResponseWithStatus(let code):
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: code.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-        case .failDecode(let text):
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: Int64(200),
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-            self.analytics.sendEvent(
-                .RSFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.ParsingError: text
-                    ]
-            )
-        case .badDataFromSBOL(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: httpCode
-                    ]
-            )
-        case .unauthorizedClient(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-        case .personalInfo:
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-        case let .errorWithErrorCode(number, httpCode):
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.errorCode: number,
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-        case .noCards:
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-        case .cancelled:
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: StatusCode.errorSystem.rawValue,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-        case .timeOut(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-        case .ssl(let httpCode):
-            self.analytics.sendEvent(
-                .RQFailBnpl,
-                with: 
-                    [
-                        AnalyticsKey.httpCode: httpCode,
-                        AnalyticsKey.errorCode: Int64(-1),
-                        AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue
-                    ]
-            )
-        case .bankAppNotFound:
-            return
-        }
     }
 }
