@@ -22,36 +22,42 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
     func sendEvent(_ event: AnalyticsEvent, with strings: String...) {
         let action = DTXAction.enter(withName: event.rawValue)
         strings.forEach({ action?.reportValue(withName: event.rawValue, stringValue: $0) })
+        SBLogger.logAnalyticsEvent(name: event.rawValue, values: strings.json)
         action?.leave()
     }
     
     func sendEvent(_ event: AnalyticsEvent, with ints: Int...) {
         let action = DTXAction.enter(withName: event.rawValue)
         ints.forEach({ action?.reportValue(withName: event.rawValue, intValue: Int64($0)) })
+        SBLogger.logAnalyticsEvent(name: event.rawValue, values: ints.json)
         action?.leave()
     }
     
     func sendEvent(_ event: AnalyticsEvent, with doubles: Double...) {
         let action = DTXAction.enter(withName: event.rawValue)
         doubles.forEach({ action?.reportValue(withName: event.rawValue, doubleValue: $0) })
+        SBLogger.logAnalyticsEvent(name: event.rawValue, values: doubles.json)
         action?.leave()
     }
     
     func sendEvent(_ event: AnalyticsEvent, with strings: [String]) {
         let action = DTXAction.enter(withName: event.rawValue)
         strings.forEach({ action?.reportValue(withName: event.rawValue, stringValue: $0) })
+        SBLogger.logAnalyticsEvent(name: event.rawValue, values: strings.json)
         action?.leave()
     }
     
     func sendEvent(_ event: AnalyticsEvent, with ints: [Int]) {
         let action = DTXAction.enter(withName: event.rawValue)
         ints.forEach({ action?.reportValue(withName: event.rawValue, intValue: Int64($0)) })
+        SBLogger.logAnalyticsEvent(name: event.rawValue, values: ints.json)
         action?.leave()
     }
     
     func sendEvent(_ event: AnalyticsEvent, with doubles: [Double]) {
         let action = DTXAction.enter(withName: event.rawValue)
         doubles.forEach({ action?.reportValue(withName: event.rawValue, doubleValue: $0) })
+        SBLogger.logAnalyticsEvent(name: event.rawValue, values: doubles.json)
         action?.leave()
     }
     
@@ -74,6 +80,8 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
                 assertionFailure("Неверный тип для \(value)")
             }
         }
+        let values = dictionaty.reduce(into: [:]) { $0[$1.key.rawValue] = $1.value }
+        SBLogger.logAnalyticsEvent(name: event.rawValue, values: values.json)
         action?.leave()
     }
 
@@ -91,6 +99,5 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
             kDTXLogLevel: "OFF"
         ]
         Dynatrace.startup(withConfig: startupDictionary as [String: Any])
-        Dynatrace.identifyUser(Bundle.main.displayName)
     }
 }

@@ -34,10 +34,6 @@ extension ResponseDecoder {
         }
         
         guard let data = data else { return .failure(.init(.noData)) }
-        guard (200...299).contains(response.statusCode) else {
-            return .failure(SDKError(ErrorCode(rawValue: response.statusCode) ?? .unowned,
-                                     httpCode: response.statusCode))
-        }
         
         if let error = SDKError(with: data, httpCode: response.statusCode) {
             return .failure(error)
@@ -72,11 +68,6 @@ extension ResponseDecoder {
         
         guard let data = data else { return .failure(.init(.noData)) }
         
-        guard (200...299).contains(response.statusCode) else {
-            return .failure(SDKError(ErrorCode(rawValue: response.statusCode) ?? .unowned,
-                                     httpCode: response.statusCode))
-        }
-        
         if let error = SDKError(with: data, httpCode: response.statusCode) {
             return .failure(error)
         }
@@ -101,14 +92,10 @@ extension ResponseDecoder {
             return .failure(error)
         }
         
-        guard (200...299).contains(response.statusCode) else {
-            return .failure(SDKError(ErrorCode(rawValue: response.statusCode) ?? .unowned,
-                                     httpCode: response.statusCode))
-        }
-        
         if let error = SDKError(with: data, httpCode: response.statusCode) {
             return .failure(error)
         }
+
         
         let headers = response.allHeaderFields as? HTTPHeaders ?? [:]
         

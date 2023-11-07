@@ -55,16 +55,6 @@ public final class DefaultParsingErrorAnaliticManager: ParsingErrorAnaliticManag
         
         switch ErrorCode(rawValue: error.code) ?? .unowned {
             
-        case .noInternetConnection, .noData, .personalInfo, .noCards, .timeOut, .ssl:
-            self.analytics.sendEvent(
-                result.0,
-                with:
-                    [
-                        AnalyticsKey.httpCode: Int64(error.httpCode ?? -1),
-                        AnalyticsKey.errorCode: error.code,
-                        AnalyticsKey.view: result.2
-                    ]
-            )
         case .failDecode:
             self.analytics.sendEvent(
                 result.0,
@@ -83,7 +73,15 @@ public final class DefaultParsingErrorAnaliticManager: ParsingErrorAnaliticManag
                         AnalyticsKey.view: result.2
                     ])
         default:
-            return
+            self.analytics.sendEvent(
+                result.0,
+                with:
+                    [
+                        AnalyticsKey.httpCode: Int64(error.httpCode ?? -1),
+                        AnalyticsKey.errorCode: Int64(error.code),
+                        AnalyticsKey.view: result.2
+                    ]
+            )
         }
     }
     
