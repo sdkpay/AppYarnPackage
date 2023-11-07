@@ -130,7 +130,7 @@ final class OtpPresenter: OtpPresenting {
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         self.view?.hideLoading(animate: true)
-                        self.view?.showError(with: Strings.TextField.Error.Wrong.title)
+                        self.view?.showError(with: error.description)
                     }
                 } else if error.represents(.tryingError) {
                     self.alertService.show(on: self.view, type: .tryingError(back: {
@@ -140,7 +140,7 @@ final class OtpPresenter: OtpPresenting {
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         self.view?.hideLoading(animate: true)
-                        self.view?.showError(with: Strings.TextField.Error.Timeout.title)
+                        self.view?.showError(with: error.description)
                     }
                 } else {
                     self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
