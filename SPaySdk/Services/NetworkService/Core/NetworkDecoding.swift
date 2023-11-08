@@ -96,7 +96,6 @@ extension ResponseDecoder {
             return .failure(error)
         }
 
-        
         let headers = response.allHeaderFields as? HTTPHeaders ?? [:]
         
         var cookies = [HTTPCookie]()
@@ -181,7 +180,6 @@ extension ResponseDecoder {
             return nil
         }
     }
-
 }
 
 // MARK: - KeyCodingStrategy
