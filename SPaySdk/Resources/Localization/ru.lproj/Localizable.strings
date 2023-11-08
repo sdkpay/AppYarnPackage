@@ -93,4 +93,4 @@
 // BankAppPicker
 "bankAppPicker.subtitle" = "Разрешите «%@» открыть приложение";
 "bankAppPicker.close" = "Закрыть";
-"bankAppPicker.deprecated" = "Не получилось открыть приложение";
+"bankAppPicker.deprecated" = "Не получилось авторизоваться";
