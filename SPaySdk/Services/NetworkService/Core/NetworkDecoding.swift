@@ -26,7 +26,7 @@ extension ResponseDecoder {
                                     type: T.Type) -> Result<T, SDKError> {
         
         guard let response = response as? HTTPURLResponse else {
-            return .failure(SDKError(.noInternetConnection))
+            return .failure(SDKError(.noData))
         }
         
         if let error = systemError(error, httpCode: response.statusCode) {
@@ -59,7 +59,7 @@ extension ResponseDecoder {
                         error: Error?) -> Result<Void, SDKError> {
         
         guard let response = response as? HTTPURLResponse else {
-            return .failure(SDKError(.noInternetConnection))
+            return .failure(SDKError(.noData))
         }
         
         if let error = systemError(error, httpCode: response.statusCode) {
@@ -83,7 +83,7 @@ extension ResponseDecoder {
                                                                  cookies: [HTTPCookie]), SDKError> {
         
         guard let response = response as? HTTPURLResponse else {
-            return .failure(SDKError(.noInternetConnection))
+            return .failure(SDKError(.noData))
         }
         
         guard let data = data else { return .failure(.init(.noData)) }

@@ -21,15 +21,18 @@ final class LogoutPresenter: LogoutPresenting {
     private let sdkManager: SDKManager
     private var storage: CookieStorage
     private var authManager: AuthManager
+    private let userService: UserService
     private let completionManager: CompletionManager
     
     init(sdkManager: SDKManager,
          storage: CookieStorage,
+         userService: UserService,
          authManager: AuthManager,
          completionManager: CompletionManager) {
         self.sdkManager = sdkManager
         self.storage = storage
         self.authManager = authManager
+        self.userService = userService
         self.completionManager = completionManager
     }
     
@@ -46,6 +49,7 @@ final class LogoutPresenter: LogoutPresenting {
     }
     
     func logout() {
+ //       userService.clearData()
         storage.cleanCookie()
         completionManager.dismissCloseAction(view)
     }

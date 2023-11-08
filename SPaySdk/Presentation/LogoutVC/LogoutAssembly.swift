@@ -24,6 +24,7 @@ final class LogoutAssembly {
     private func modulePresenter() -> LogoutPresenter {
         LogoutPresenter(sdkManager: locator.resolve(),
                         storage: locator.resolve(),
+                        userService: locator.resolve(),
                         authManager: locator.resolve(),
                         completionManager: locator.resolve())
     }
