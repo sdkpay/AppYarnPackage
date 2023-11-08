@@ -32,7 +32,7 @@
 "part.pay.cancel.title" = "Не хочу платить частями";
 "part.pay.final" = "Итого";
 "agreement.title" = "Условия договора";
-"part.inactive.title" = "Разбить на 4 платежа";
+"part.inactive.title" = "4 платежа раз в 2 недели";
 "part.active.button.title" = "Оплатить частями";
 "part.contract.title" = "условиями договора";
 "part.agreement.title" = "соглашения";
