@@ -49,7 +49,7 @@ final class LogoutPresenter: LogoutPresenting {
     }
     
     func logout() {
- //       userService.clearData()
+        userService.clearData()
         storage.cleanCookie()
         completionManager.dismissCloseAction(view)
     }
