@@ -125,22 +125,22 @@ final class OtpPresenter: OtpPresenting {
             case .failure(let error):
                 self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                     type: .otp(type: .confirmOTP))
-                if error.represents(.errorWithErrorCode(number: OtpError.incorrectCode.rawValue, httpCode: 200)) {
+                if error.represents(.incorrectCode) {
                     self.analytics.sendEvent(.RQFailConfirmOTP)
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         self.view?.hideLoading(animate: true)
-                        self.view?.showError(with: Strings.TextField.Error.Wrong.title)
+                        self.view?.showError(with: error.description)
                     }
-                } else if error.represents(.errorWithErrorCode(number: OtpError.tryingError.rawValue, httpCode: 200)) {
+                } else if error.represents(.tryingError) {
                     self.alertService.show(on: self.view, type: .tryingError(back: {
-                        self.dismissWithError(.cancelled)
+                        self.dismissWithError(nil)
                     }))
-                } else if error.represents(.errorWithErrorCode(number: OtpError.timeOut.rawValue, httpCode: 200)) {
+                } else if error.represents(.timeOut) {
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         self.view?.hideLoading(animate: true)
-                        self.view?.showError(with: Strings.TextField.Error.Timeout.title)
+                        self.view?.showError(with: error.description)
                     }
                 } else {
                     self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
@@ -169,8 +169,10 @@ final class OtpPresenter: OtpPresenting {
         })
     }
     
-    private func dismissWithError(_ error: SDKError) {
-        self.completionManager.completeWithError(error)
+    private func dismissWithError(_ error: SDKError?) {
+        if let error = error {
+            self.completionManager.completeWithError(error)
+        }
         self.alertService.close()
     }
     

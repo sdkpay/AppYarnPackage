@@ -281,7 +281,7 @@ final class PaymentPresenter: PaymentPresenting {
     private func configWithNoCards() {
         let returnButton = AlertButtonModel(title: Strings.Return.title,
                                             type: .full) { [weak self] in
-            self?.completionManager.completeWithError(.noCards)
+            self?.completionManager.completeWithError(SDKError(.noCards))
             self?.completionManager.dismissCloseAction(self?.view)
         }
         alertService.showAlert(on: self.view,
@@ -294,7 +294,7 @@ final class PaymentPresenter: PaymentPresenting {
     private func validatePayError(_ error: PayError) {
         switch error {
         case .noInternetConnection:
-            self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
+            self.completionManager.completeWithError(SDKError(.errorSystem))
             alertService.show(on: view,
                               type: .noInternet(retry: {
                 self.pay()
@@ -307,7 +307,7 @@ final class PaymentPresenter: PaymentPresenting {
         case .partPayError:
             getPaymentToken()
         default:
-            self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
+            self.completionManager.completeWithError(SDKError(.errorSystem))
             alertService.show(on: view,
                               type: .defaultError(completion: {
                 self.alertService.close()
@@ -319,7 +319,7 @@ final class PaymentPresenter: PaymentPresenting {
         partPayService.bnplplanSelected = false
         partPayService.setEnabledBnpl(false, enabledLevel: .paymentToken)
         guard let paymentId = userService.selectedCard?.paymentId else {
-            self.completionManager.completeWithError(.badResponseWithStatus(code: .errorSystem))
+            self.completionManager.completeWithError(SDKError(.errorSystem))
             alertService.show(on: view,
                               type: .defaultError(completion: {
                 self.alertService.close()
@@ -380,11 +380,12 @@ final class PaymentPresenter: PaymentPresenting {
                     case .success:
                         self.authService.bankCheck = true
                         self.getListCards()
-                    case .failure(_):
+                    case .failure(let error):
                         self.analytics.sendEvent(.LCBankAppAuthFail, with: self.screenEvent)
                         self.alertService.show(on: self.view,
                                                type: .defaultError(completion: {
-                            self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                            self.dismissWithError(error)
+                        }))
                     }
                 }
             case .failure(_):
@@ -395,11 +396,12 @@ final class PaymentPresenter: PaymentPresenting {
                         case .success:
                             self.authService.bankCheck = true
                             self.getListCards()
-                        case .failure(_):
+                        case .failure(let error):
                             self.analytics.sendEvent(.LCBankAppAuthFail, with: self.screenEvent)
                             self.alertService.show(on: self.view,
                                                    type: .defaultError(completion: {
-                                self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+                                self.dismissWithError(error)
+                            }))
                         }
                     }
                 }
@@ -413,7 +415,7 @@ final class PaymentPresenter: PaymentPresenting {
         // от банковского приложения и перешел самостоятельно
         alertService.show(on: view,
                           type: .defaultError(completion: {
-            self.dismissWithError(.badResponseWithStatus(code: .errorSystem)) }))
+            self.dismissWithError(SDKError(.errorSystem)) }))
     }
     
     private func goToPay() {

@@ -184,7 +184,7 @@ final class DefaultPaymentService: PaymentService {
                                      to: PaymentTokenModel.self,
                                      completion: completion)
             } else {
-                completion(.failure(.personalInfo))
+                completion(.failure(SDKError(.personalInfo)))
             }
         }
     }
@@ -220,15 +220,14 @@ final class DefaultPaymentService: PaymentService {
     }
     
     private func parseError(_ sdkError: SDKError) -> PayError {
-        switch sdkError {
-        case .noInternetConnection:
+        if sdkError.represents(.noInternetConnection) {
             return .noInternetConnection
-        case .timeOut:
+        } else if sdkError.represents(.timeOut) {
             return .timeOut
-        case .badResponseWithStatus(code: .errorSystem):
+        } else if sdkError.represents(.system) {
             return .unknownStatus
-        default:
-            return .defaultError
+        } else {
+            return  .defaultError
         }
     }
 }

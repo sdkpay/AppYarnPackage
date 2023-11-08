@@ -99,7 +99,7 @@ platform :ios do
     status = (options[:success] ? "✅" : "❌")
       
     message = "
-<i>@lessov @GandalfRealDeal #сборка🚀</i>
+<i>@lessov @DKovchina #сборка🚀</i>
 <b><ins>Новая сборка:</ins></b>
     <i>Проект: </i><code>#{ENV["TARGET_NAME"]}</code>
     <i>Статус: </i>#{status}
@@ -138,7 +138,7 @@ platform :ios do
   #  Build xcframework lanes
 
   desc "Create xcframework"
-  lane :framework_plist_version do 
+  lane :crate_xcframework do 
     build_xcframework
     framework_plist_version
   end

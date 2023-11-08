@@ -480,6 +480,17 @@ enum SBLogger {
         )
     }
     
+    static func logAnalyticsEvent(name: String, values: String) {
+           log(
+               level: .debug(level: .analytics),
+               """
+               🕵️‍♂️ Sent event with name: \(name)
+                  values: \(values)
+                  
+               """
+           )
+       }
+    
     static func logThread(obj: Any,
                           thread: Thread = .current,
                           functionName: String = #function,

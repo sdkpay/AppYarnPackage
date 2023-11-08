@@ -14,28 +14,6 @@ public class SPError: NSObject {
     @objc public var errorDescription: String
 
     init(errorState: SDKError) {
-        errorDescription = Strings.Error.system
-        switch errorState {
-        case .noInternetConnection, .badDataFromSBOL, .unauthorizedClient, .personalInfo, .noCards:
-            errorDescription = Strings.Error.system
-        case .noData, .failDecode:
-            errorDescription = Strings.Error.format
-        case .badResponseWithStatus(let code):
-            if code == .errorFormat {
-                errorDescription = Strings.Error.format
-            } else if code == .errorSystem {
-                errorDescription = Strings.Error.system
-            }
-        case .cancelled:
-            errorDescription = Strings.Error.close
-        case .timeOut:
-            errorDescription = Strings.Error.timeout
-        case .ssl:
-            errorDescription = Strings.Error.system
-        case .errorWithErrorCode:
-            errorDescription = Strings.Error.system
-        case .bankAppNotFound:
-            errorDescription = Strings.Error.system
-        }
+        errorDescription = errorState.publicDescription
     }
 }
