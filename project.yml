@@ -69,7 +69,7 @@ targets:
   SPaySdkExample:
     type: application
     platform: iOS
-    deploymentTarget: "12.0"
+    deploymentTarget: "13.0"
     scheme: {}
     sources:
        - path: ./SberPayExample
