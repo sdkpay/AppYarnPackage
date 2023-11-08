@@ -144,4 +144,13 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
     func cancelTask() {
         provider.cancel()
     }
+    
+    func request(_ target: TargetType,
+                 host: HostSettings,
+                 retrySettings: RetrySettings = (1, [])) async -> Result<Void, SDKError> {
+        provider.request(target, retrySettings: retrySettings, host: host) { data, response, error in
+            let result = self.decodeResponse(data: data, response: response, error: error)
+          
+        }
+    }
 }

@@ -82,6 +82,33 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     
     func request(_ target: TargetType,
                  retrySettings: RetrySettings = (1, []),
+                 host: HostSettings = .main) {
+        
+    }
+    
+    
+    private func _request(_ target: TargetType,
+                 retrySettings: RetrySettings = (1, []),
+                 host: HostSettings = .main) async throws -> (Data, URLResponse) {
+        
+        do {
+            
+            let request = try self.buildRequest(from: target, hostSettings: host)
+            guard let session else {
+                throw SDKError(.system)
+            }
+            
+            let (data, response) = try await session.data(for: request)
+            
+            self.saveGeobalancingData(from: response)
+            
+        } catch {
+            throw error
+        }
+    }
+    
+    func request(_ target: TargetType,
+                 retrySettings: RetrySettings = (1, []),
                  host: HostSettings = .main,
                  completion: @escaping NetworkProviderCompletion) {
         _request(target: target, retrySettings: retrySettings, host: host, completion: completion)
@@ -95,6 +122,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         do {
             let request = try self.buildRequest(from: target, hostSettings: host)
             SBLogger.logRequestStarted(request)
+            
             task = session?.dataTask(with: request, completionHandler: { data, response, error in
                 self.timeManager.checkNetworkDataSize(object: data)
                 DispatchQueue.main.async {
