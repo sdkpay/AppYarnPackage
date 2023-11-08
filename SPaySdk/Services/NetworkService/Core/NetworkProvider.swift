@@ -57,6 +57,9 @@ protocol NetworkProvider {
                  retrySettings: RetrySettings,
                  host: HostSettings,
                  completion: @escaping NetworkProviderCompletion)
+    func request(_ target: TargetType,
+                 retrySettings: RetrySettings,
+                 host: HostSettings) async throws -> (data: Data, response: URLResponse)
     func cancel()
 }
 
@@ -82,15 +85,15 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     
     func request(_ target: TargetType,
                  retrySettings: RetrySettings = (1, []),
-                 host: HostSettings = .main) {
-        
+                 host: HostSettings = .main) async throws -> (data: Data, response: URLResponse) {
+        try await _request(target: target, retrySettings: retrySettings, host: host)
     }
     
     
     private func _request(retry: Int = 1,
                           target: TargetType,
                           retrySettings: RetrySettings = (1, []),
-                          host: HostSettings = .main) async throws -> (Data, URLResponse) {
+                          host: HostSettings = .main) async throws -> (data: Data, response: URLResponse) {
         
         do {
             
@@ -108,17 +111,20 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                                          response: response,
                                          data: data,
                                          error: nil)
+            
             return (data, response)
         } catch {
             if  retrySettings.count != 1,
                 retry < retrySettings.count,
                 (error._code == URLError.Code.timedOut.rawValue || !retrySettings.retryCode.contains(error._code)) {
-                self._request(retry: retry + 1,
-                              target: target,
-                              retrySettings: retrySettings,
-                              host: host)
+                let (data, response) = try await self._request(retry: retry + 1,
+                                                               target: target,
+                                                               retrySettings: retrySettings,
+                                                               host: host)
+                return (data, response)
+            } else {
+                throw error
             }
-            throw error
         }
     }
     

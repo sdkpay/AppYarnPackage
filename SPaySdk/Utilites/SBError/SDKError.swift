@@ -43,6 +43,13 @@ struct SDKError: Error, LocalizedError {
         self.publicDescription = publicDescription
     }
     
+    init(with error: Error) {
+        self.code = error._code
+        self.httpCode = error._code
+        self.description = error.localizedDescription
+        self.publicDescription = error.localizedDescription
+    }
+    
     init?(with data: Data, httpCode: Int? = nil) {
         guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary else { return nil }
         

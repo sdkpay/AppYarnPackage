@@ -77,12 +77,16 @@ final class DefaultSBPayService: SBPayService {
         SBLogger.dateString = dateFormatter.string(from: Date())
         locator
             .resolve(RemoteConfigService.self)
-            .getConfig(with: apiKey) { error in
+            .getConfig(with: apiKey) { [ weak self] result in
                 completion?()
-                guard error == nil else { return }
-                self.locator
-                    .resolve(AnalyticsService.self)
-                    .config()
+                switch result {
+                case .success:
+                    self?.locator
+                        .resolve(AnalyticsService.self)
+                        .config()
+                case .failure:
+                    return
+                }
             }
     }
     

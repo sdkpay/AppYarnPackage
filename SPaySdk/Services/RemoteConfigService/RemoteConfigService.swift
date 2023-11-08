@@ -19,7 +19,9 @@ final class RemoteConfigServiceAssembly: Assembly {
 }
 
 protocol RemoteConfigService {
-    func getConfig(with apiKey: String?, completion: @escaping (SDKError?) -> Void)
+    
+    func getConfig(with apiKey: String?,
+                   completion: @escaping (Result<Void, SDKError>) -> Void)
 }
 
 final class DefaultRemoteConfigService: RemoteConfigService {
@@ -45,26 +47,27 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     }
     
     func getConfig(with apiKey: String?,
-                   completion: @escaping (SDKError?) -> Void) {
+                   completion: @escaping (Result<Void, SDKError>) -> Void) {
+        
         self.apiKey = apiKey
-        network.request(ConfigTarget.getConfig,
-                        to: ConfigModel.self,
-                        retrySettings: (2, [])) { [weak self] result in
-            guard let self else { return }
+        
+        Task(priority: .userInitiated) {
+            
+            let result = await network.request(ConfigTarget.getConfig,
+                                               to: ConfigModel.self,
+                                               retrySettings: (2, []))
+            
             switch result {
             case .success(let config):
                 self.versionСontrolManager.setVersionsInfo(config.versionInfo)
                 self.saveConfig(config)
-                self.checkWhiteLogList(apikeys: config.apikey)
                 self.checkVersion(version: config.version)
                 self.setFeatures(config.featuresToggle)
                 self.analytics.sendEvent(.RQGoodRemoteConfig,
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
-                completion(nil)
-            case .failure(let error):
-                self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                    type: .remote)
-                completion(error)
+                completion(.success)
+            case .failure(let failure):
+                completion(.failure(failure))
             }
         }
     }
@@ -79,10 +82,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private func setFeatures(_ values: [FeaturesToggle]) {
         featureToggle.setFeatures(values)
     }
-    
-    private func checkWhiteLogList(apikeys: [String]) {
-    }
-    
+
     private func checkVersion(version: String) {
         let currentVesion = Bundle.sdkVersion
         if version != currentVesion {

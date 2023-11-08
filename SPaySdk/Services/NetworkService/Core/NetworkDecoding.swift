@@ -10,32 +10,32 @@ import Foundation
 protocol ResponseDecoder {
     func decodeResponse<T: Codable>(data: Data?,
                                     response: URLResponse?,
-                                    error: Error?,
                                     type: T.Type) -> Result<T, SDKError>
     func decodeResponse(data: Data?,
-                        response: URLResponse?,
-                        error: Error?) -> Result<Void, SDKError>
+                        response: URLResponse?) -> Result<Void, SDKError>
     func decodeParametersFrom(url: URL) -> Result<BankModel, SDKError>
+    func decodeResponseFull<T: Codable>(data: Data?,
+                                        response: URLResponse?,
+                                        type: T.Type) -> Result<(result: T,
+                                                                 headers: HTTPHeaders,
+                                                                 cookies: [HTTPCookie]), SDKError>
+    func systemError(_ error: Error) -> SDKError
 }
 
 extension ResponseDecoder {
     
     func decodeResponse<T: Codable>(data: Data?,
                                     response: URLResponse?,
-                                    error: Error?,
                                     type: T.Type) -> Result<T, SDKError> {
         
         guard let response = response as? HTTPURLResponse else {
             return .failure(SDKError(.noData))
         }
         
-        if let error = systemError(error, httpCode: response.statusCode) {
-            return .failure(error)
-        }
-        
         guard let data = data else { return .failure(.init(.noData)) }
         
-        if let error = SDKError(with: data, httpCode: response.statusCode) {
+        if let error = SDKError(with: data,
+                                httpCode: response.statusCode) {
             return .failure(error)
         }
         
@@ -55,15 +55,10 @@ extension ResponseDecoder {
     }
     
     func decodeResponse(data: Data?,
-                        response: URLResponse?,
-                        error: Error?) -> Result<Void, SDKError> {
+                        response: URLResponse?) -> Result<Void, SDKError> {
         
         guard let response = response as? HTTPURLResponse else {
             return .failure(SDKError(.noData))
-        }
-        
-        if let error = systemError(error, httpCode: response.statusCode) {
-            return .failure(error)
         }
         
         guard let data = data else { return .failure(.init(.noData)) }
@@ -77,7 +72,6 @@ extension ResponseDecoder {
     
     func decodeResponseFull<T: Codable>(data: Data?,
                                         response: URLResponse?,
-                                        error: Error?,
                                         type: T.Type) -> Result<(result: T,
                                                                  headers: HTTPHeaders,
                                                                  cookies: [HTTPCookie]), SDKError> {
@@ -87,10 +81,6 @@ extension ResponseDecoder {
         }
         
         guard let data = data else { return .failure(.init(.noData)) }
-        
-        if let error = systemError(error, httpCode: response.statusCode) {
-            return .failure(error)
-        }
         
         if let error = SDKError(with: data, httpCode: response.statusCode) {
             return .failure(error)
@@ -149,9 +139,7 @@ extension ResponseDecoder {
         return .success(BankModel(dictionary: parameters))
     }
     
-    private func systemError(_ error: Error?, httpCode: Int) -> SDKError? {
-        
-        guard let error = error as? NSError else { return nil }
+    func systemError(_ error: Error) -> SDKError {
         
         var sslErrors: [URLError.Code] {
             return [
@@ -173,11 +161,11 @@ extension ResponseDecoder {
         }
         
         if sslErrors.contains(where: { $0.rawValue == error._code }) {
-            return SDKError(.ssl)
+            return SDKError(.ssl, httpCode: error._code)
         } else if timeOutErrors.contains(where: { $0.rawValue == error._code }) {
-            return SDKError(.timeOut)
+            return SDKError(.timeOut, httpCode: error._code)
         } else {
-            return nil
+            return SDKError(with: error)
         }
     }
 }
