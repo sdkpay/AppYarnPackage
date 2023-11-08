@@ -87,9 +87,10 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     }
     
     
-    private func _request(_ target: TargetType,
-                 retrySettings: RetrySettings = (1, []),
-                 host: HostSettings = .main) async throws -> (Data, URLResponse) {
+    private func _request(retry: Int = 1,
+                          target: TargetType,
+                          retrySettings: RetrySettings = (1, []),
+                          host: HostSettings = .main) async throws -> (Data, URLResponse) {
         
         do {
             
@@ -102,7 +103,21 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
             
             self.saveGeobalancingData(from: response)
             
+            SBLogger.logRequestCompleted(host: self.hostManager.host(for: host),
+                                         target,
+                                         response: response,
+                                         data: data,
+                                         error: nil)
+            return (data, response)
         } catch {
+            if  retrySettings.count != 1,
+                retry < retrySettings.count,
+                (error._code == URLError.Code.timedOut.rawValue || !retrySettings.retryCode.contains(error._code)) {
+                self._request(retry: retry + 1,
+                              target: target,
+                              retrySettings: retrySettings,
+                              host: host)
+            }
             throw error
         }
     }
