@@ -47,6 +47,6 @@ final class LogoutPresenter: LogoutPresenting {
     
     func logout() {
         storage.cleanCookie()
-        completionManager.closeAction()
+        completionManager.dismissCloseAction(view)
     }
 }

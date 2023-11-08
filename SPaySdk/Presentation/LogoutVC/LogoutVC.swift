@@ -44,7 +44,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         let string = Strings.Button.logout
         view.setTitle(string, for: .normal)
         view.addAction {
-            self.presenter.logout()
+            self.presenter.back()
         }
         return view
     }()
@@ -54,7 +54,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         let string = Strings.Button.Logout.back
         view.setTitle(string, for: .normal)
         view.addAction {
-            self.presenter.back()
+            self.presenter.logout()
         }
         return view
     }()
