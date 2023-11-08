@@ -23,10 +23,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Builds, achieves and uploads IPA to testflight
 
-### ios crate_xcframework
+### ios create_xcframework
 
 ```sh
-[bundle exec] fastlane ios crate_xcframework
+[bundle exec] fastlane ios create_xcframework
 ```
 
 Create xcframework
