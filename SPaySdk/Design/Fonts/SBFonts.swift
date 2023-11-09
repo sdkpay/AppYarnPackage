@@ -19,5 +19,5 @@ extension UIFont {
     static let medium2 = FontFamily.SBSansText.medium.font(size: 13)
     static let medium3 = FontFamily.SBSansText.medium.font(size: 12)
     static let medium4 = FontFamily.SBSansText.medium.font(size: 14)
-    static let medium5 = FontFamily.SBSansText.medium.font(size: 16)
+    static let medium5 = FontFamily.SBSansText.medium.font(size: 15)
 }

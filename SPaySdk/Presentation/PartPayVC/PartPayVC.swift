@@ -69,7 +69,9 @@ final class PartPayVC: ContentVC, IPartPayVC {
     }
     
     func setSubtitle(_ value: String) {
-        viewBuilder.subTitleLabel.setAttributedString(lineHeightMultiple: 1.1, kern: -0.3, string: value)
+        viewBuilder.subTitleLabel.setAttributedString(lineHeightMultiple: 0,
+                                                      kern: 0.3,
+                                                      string: value)
     }
     
     func setButtonEnabled(value: Bool) {

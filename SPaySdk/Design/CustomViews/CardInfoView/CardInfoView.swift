@@ -61,6 +61,7 @@ final class CardInfoView: UICollectionViewCell {
         view.axis = .vertical
         view.addArrangedSubview(titleLabel)
         view.addArrangedSubview(subtitleLabel)
+        view.spacing = 2
         return view
     }()
     

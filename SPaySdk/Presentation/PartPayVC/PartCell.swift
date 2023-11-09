@@ -62,6 +62,8 @@ final class PartCell: UITableViewCell {
         
         costLabel.textAlignment = .right
         costLabel.setAttributedString(lineHeightMultiple: 1.06, kern: -0.34, string: model.cost)
+        costLabel.font = model.isSelected ? .medium1 : .medium2
+        titleLabel.setAttributedString(lineHeightMultiple: 1.06, kern: -0.3, string: model.title)
     }
     
     private func setupUI() {

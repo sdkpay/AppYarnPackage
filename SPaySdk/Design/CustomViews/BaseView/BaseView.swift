@@ -8,7 +8,7 @@
 import UIKit
 
 private extension CGFloat {
-    static let corner = 8.0
+    static let corner = 12.0
 }
 
 extension UIView {
