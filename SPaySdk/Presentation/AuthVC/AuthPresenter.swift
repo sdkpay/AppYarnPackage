@@ -104,18 +104,21 @@ final class AuthPresenter: AuthPresenting {
             guard let self else { return }
             self.view?.showLoading()
         }
-        userService.checkUserSession { [weak self] result in
-            switch result {
-            case .success:
-                self?.router.presentPayment()
-            case .failure(let error):
-                self?.completionManager.completeWithError(error)
-                if error.represents(.noInternetConnection) {
-                    self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.checkSession() },
-                                                              completion: { self?.dismissWithError(error) }))
-                } else {
-                    self?.configAuthSettings()
+        
+        Task {
+            do {
+                try await userService.checkUserSession()
+                router.presentPayment()
+            } catch {
+                if let error = error as? SDKError {
+                    completionManager.completeWithError(error)
+                    if error.represents(.noInternetConnection) {
+                        alertService.show(on: view,
+                                          type: .noInternet(retry: { self.checkSession() },
+                                                            completion: { self.dismissWithError(error) }))
+                    } else {
+                        configAuthSettings()
+                    }
                 }
             }
         }
