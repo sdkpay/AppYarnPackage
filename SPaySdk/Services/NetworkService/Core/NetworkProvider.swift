@@ -55,10 +55,6 @@ enum HTTPTask {
 protocol NetworkProvider {
     func request(_ target: TargetType,
                  retrySettings: RetrySettings,
-                 host: HostSettings,
-                 completion: @escaping NetworkProviderCompletion)
-    func request(_ target: TargetType,
-                 retrySettings: RetrySettings,
                  host: HostSettings) async throws -> (data: Data, response: URLResponse)
     func cancel()
 }

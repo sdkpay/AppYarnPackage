@@ -165,7 +165,6 @@ final class AuthPresenter: AuthPresenting {
                     validateAuthError(error: error)
                 }
             }
-            
         }
     }
     

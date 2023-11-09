@@ -22,7 +22,7 @@ final class OTPServiceAssembly: Assembly {
 protocol OTPService {
     var otpModel: OTPModel? { get }
     var otpRequired: Bool { get }
-    func creteOTP(completion: @escaping (Result<Void, SDKError>) -> Void)
+    func creteOTP() async throws
     func confirmOTP(otpHash: String,
                     completion: @escaping (Result<Void, SDKError>) -> Void) 
 }
@@ -50,19 +50,13 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
         self.authManager = authManager
     }
     
-    func creteOTP(completion: @escaping (Result<Void, SDKError>) -> Void) {
-        network.request(OTPTarget.createOtpSdk(bankInvoiceId: sdkManager.authInfo?.orderId ?? "",
-                                               sessionId: authManager.sessionId ?? "",
-                                               paymentId: userService.selectedCard?.paymentId ?? 0 ),
-                        to: OTPModel.self) { result in
-            switch result {
-            case .success(let result):
-                self.otpModel = result
-                completion(.success)
-            case .failure(let error):
-                completion(.failure(error))    
-            }
-        }
+    func creteOTP() async throws {
+        
+        let otpResult = try await network.request(OTPTarget.createOtpSdk(bankInvoiceId: sdkManager.authInfo?.orderId ?? "",
+                                                                         sessionId: authManager.sessionId ?? "",
+                                                                         paymentId: userService.selectedCard?.paymentId ?? 0),
+                                                  to: OTPModel.self)
+        self.otpModel = otpResult
     }
     
     func confirmOTP(otpHash: String,

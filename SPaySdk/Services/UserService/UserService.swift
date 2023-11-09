@@ -25,9 +25,9 @@ protocol UserService {
     var additionalCards: Bool { get }
     var user: User? { get }
     var selectedCard: PaymentToolInfo? { get set }
-    func getUser(completion: @escaping (SDKError?) -> Void)
-    func getListCards(completion: @escaping (Result<Void, SDKError>) -> Void)
-    func checkUserSession(completion: @escaping (Result<Void, SDKError>) -> Void)
+    func getUser() async throws
+    func getListCards() async throws
+    func checkUserSession() async throws
     func clearData()
 }
 
@@ -61,73 +61,69 @@ final class DefaultUserService: UserService {
         SBLogger.log(.stop(obj: self))
     }
     
-    func getUser(completion: @escaping (SDKError?) -> Void) {
+    func getUser() async throws {
+        
         guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId
-        else { return }
-        network.request(UserTarget.getListCards(sessionId: sessionId,
-                                                merchantLogin: authInfo.merchantLogin,
-                                                orderId: authInfo.orderId,
-                                                amount: authInfo.amount,
-                                                currency: authInfo.currency,
-                                                orderNumber: authInfo.orderNumber,
-                                                expiry: authInfo.expiry,
-                                                frequency: authInfo.frequency,
-                                                priorityCardOnly: true),
-                        to: User.self) { [weak self] result in
-            switch result {
-            case .success(let user):
-                guard let self = self else { return }
-                self.user = user
-                self.additionalCards = user.additionalCards ?? false
-                self.selectedCard = self.selectCard(from: user.paymentToolInfo)
-                completion(nil)
-            case .failure(let error):
-                completion(error)
-            }
-        }
+        else { throw SDKError(.noData) }
+        
+        let listCardsResult = try await network.request(UserTarget.getListCards(sessionId: sessionId,
+                                                                                merchantLogin: authInfo.merchantLogin,
+                                                                                orderId: authInfo.orderId,
+                                                                                amount: authInfo.amount,
+                                                                                currency: authInfo.currency,
+                                                                                orderNumber: authInfo.orderNumber,
+                                                                                expiry: authInfo.expiry,
+                                                                                frequency: authInfo.frequency,
+                                                                                priorityCardOnly: true),
+                                                        to: User.self)
+        self.user = listCardsResult
+        additionalCards = listCardsResult.additionalCards ?? false
+        selectedCard = self.selectCard(from: listCardsResult.paymentToolInfo)
     }
     
-    func getListCards(completion: @escaping (Result<Void, SDKError>) -> Void) {
+    func getListCards() async throws {
+        
         guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId
-        else { return }
+        else { throw SDKError(.noData) }
+        
         analytics.sendEvent(.RQListCards, with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
-        network.request(UserTarget.getListCards(sessionId: sessionId,
-                                                merchantLogin: authInfo.merchantLogin,
-                                                orderId: authInfo.orderId,
-                                                amount: authInfo.amount,
-                                                currency: authInfo.currency,
-                                                orderNumber: authInfo.orderNumber,
-                                                expiry: authInfo.expiry,
-                                                frequency: authInfo.frequency,
-                                                priorityCardOnly: false),
-                        to: User.self) { [weak self] result in
-            switch result {
-            case .success(let user):
-                guard let self = self else { return }
-                self.user = user
-                self.getListCards = true
-                self.analytics.sendEvent(.RQGoodListCards,
-                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
-                self.analytics.sendEvent(.RSGoodListCards,
-                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
-                completion(.success)
-            case .failure(let error):
-                self?.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+        
+        do {
+            let listCardsResult = try await network.request(UserTarget.getListCards(sessionId: sessionId,
+                                                                                    merchantLogin: authInfo.merchantLogin,
+                                                                                    orderId: authInfo.orderId,
+                                                                                    amount: authInfo.amount,
+                                                                                    currency: authInfo.currency,
+                                                                                    orderNumber: authInfo.orderNumber,
+                                                                                    expiry: authInfo.expiry,
+                                                                                    frequency: authInfo.frequency,
+                                                                                    priorityCardOnly: false),
+                                                            to: User.self)
+            
+            self.user = listCardsResult
+            self.getListCards = true
+            
+            self.analytics.sendEvent(.RQGoodListCards,
+                                     with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+            self.analytics.sendEvent(.RSGoodListCards,
+                                     with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+        } catch {
+            if let error = error as? SDKError {
+                parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                      type: .listCards)
-                completion(.failure(error))
             }
+            throw error
         }
     }
     
-    func checkUserSession(completion: @escaping (Result<Void, SDKError>) -> Void) {
+    func checkUserSession() async throws {
         guard let sessionId = authManager.sessionId, user != nil else {
-            completion(.failure(SDKError(.noData)))
-            return
+            throw SDKError(.noData)
         }
-        network.request(AuthTarget.checkSession(sessionId: sessionId),
-                        completion: completion)
+        
+        try await network.request(AuthTarget.checkSession(sessionId: sessionId))
     }
     
     func clearData() {
