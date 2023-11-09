@@ -193,6 +193,8 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     }
     
     private func addCookies(request: inout URLRequest, cookies: [HTTPCookie]) {
+        HTTPCookieStorage.shared.cookies?.forEach({ HTTPCookieStorage.shared.deleteCookie($0) })
+        
         var cookies = cookies
         
         if let geoCookie = requestManager.geoCookie {
