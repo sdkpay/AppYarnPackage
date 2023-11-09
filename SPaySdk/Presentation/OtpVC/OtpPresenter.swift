@@ -95,6 +95,10 @@ final class OtpPresenter: OtpPresenting {
                     self?.alertService.show(on: self?.view,
                                             type: .noInternet(retry: { self?.createOTP() },
                                                               completion: { self?.dismissWithError(error) }))
+                } else if error.represents(.tryingError) || error.represents(.tryingErrorTry) {
+                    self?.alertService.show(on: self?.view, type: .tryingError(back: {
+                        self?.dismissWithError(nil)
+                    }))
                 } else {
                     self?.alertService.show(on: self?.view,
                                             type: .defaultError(completion: { self?.dismissWithError(error) }))
