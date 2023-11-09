@@ -87,6 +87,7 @@ enum ErrorCode: Int {
     case unowned = -666
     case validation = 1
     case system = 2
+    case tryingErrorTry = 3
     case timeOut = 9
     case incorrectCode = 5
     case tryingError = 6
@@ -129,6 +130,8 @@ enum ErrorCode: Int {
         case .tryingError:
             errorDescription = Strings.Error.system
         case .bankAppError:
+            errorDescription = Strings.Error.system
+        case .tryingErrorTry:
             errorDescription = Strings.Error.system
         }
         return errorDescription

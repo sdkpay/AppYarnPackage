@@ -10,6 +10,8 @@ import UIKit
 protocol BankAppPickerPresenting {
     var bankAppCount: Int { get }
     func closeButtonDidTapped()
+    func viewDidAppear()
+    func viewDidDisappear()
     func model(for indexPath: IndexPath) -> BankAppCellModel
     func didSelectRow(at indexPath: IndexPath)
     func viewDidLoad()
@@ -26,6 +28,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     weak var view: (IBankAppPickerVC & ContentVC)?
     private var bankManager: BankAppManager
     private var authService: AuthService
+    private var analytics: AnalyticsService
     private let completionManager: CompletionManager
     private let alertService: AlertService
     
@@ -34,10 +37,12 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     init(bankManager: BankAppManager,
          authService: AuthService,
          alertService: AlertService,
+         analytics: AnalyticsService,
          completionManager: CompletionManager,
          completion: @escaping Action) {
         self.completion = completion
         self.alertService = alertService
+        self.analytics = analytics
         self.completionManager = completionManager
         self.authService = authService
         self.bankManager = bankManager
@@ -47,6 +52,14 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         bankAppModels = bankManager.avaliableBanks.map({ BankAppCellModel(with: $0) })
         view?.setSubtilte(Strings.BankAppPicker.subtitle(Bundle.main.displayName ?? "None"))
         addObserver()
+    }
+    
+    func viewDidAppear() {
+        analytics.sendEvent(.LCBankAppsViewAppeared)
+    }
+    
+    func viewDidDisappear() {
+        analytics.sendEvent(.LCBankAppsViewDisappeared)
     }
     
     func model(for indexPath: IndexPath) -> BankAppCellModel {

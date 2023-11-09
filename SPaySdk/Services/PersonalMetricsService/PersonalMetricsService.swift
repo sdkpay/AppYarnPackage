@@ -73,12 +73,19 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     }
     
     func getIp(completion: @escaping StringAction) {
+        analyticsService.sendEvent(.RQIp)
         network.requestString(IpTarget.getIp,
                               host: .safepayonline) { result in
             switch result {
             case .success(let ip):
+                self.analyticsService.sendEvent(.RQGoodIp)
+                self.analyticsService.sendEvent(.RSGoodIp)
                 completion(ip)
-            case .failure:
+            case .failure(let error):
+                self.analyticsService.sendEvent(.RQFailIp)
+                if error.represents(.failDecode) {
+                    self.analyticsService.sendEvent(.RSFailIp)
+                }
                 completion("")
             }
         }

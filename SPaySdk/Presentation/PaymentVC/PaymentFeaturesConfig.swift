@@ -30,7 +30,7 @@ enum PaymentFeaturesConfig {
     static func configPartModel(partPayService: PartPayService) -> PaymentCellModel {
         guard let buttonBnpl = partPayService.bnplplan?.buttonBnpl else { return PaymentCellModel() }
         let icon = partPayService.bnplplanSelected ? buttonBnpl.activeButtonLogo : buttonBnpl.inactiveButtonLogo
-        let subtitle = (partPayService.bnplplanSelected ? buttonBnpl.content : Strings.Part.Inactive.title) ?? ""
+        let subtitle = (partPayService.bnplplanSelected ? Strings.Part.Inactive.title : buttonBnpl.content) ?? ""
         return PaymentCellModel(title: buttonBnpl.header ?? "",
                                 subtitle: subtitle,
                                 iconURL: icon,

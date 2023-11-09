@@ -237,6 +237,16 @@ enum AnalyticsEvent: String {
     case SCGoodBiZone
     /// Проверка SPaySDK была провалена
     case SCFailBiZone
+    /// Отправлен запрос ip
+    case RQIp
+    /// Получен положительный ответ на запрос получения ip
+    case RQGoodIp
+    /// Получена ошибка от шлюза при обработке запроса ip
+    case RQFailIp
+    /// Парсинг ответа от сервера на запрос ip проведен успешно
+    case RSGoodIp
+    /// Парсинг ответа от сервера на запрос ip произведен с ошибкой
+    case RSFailIp
 }
 
 enum AnalyticsValue: String {
