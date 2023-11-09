@@ -133,8 +133,10 @@ final class AuthPresenter: AuthPresenting {
     
     private func showBanksStack() {
         removeObserver()
-        router.presentBankAppPicker { [weak self] in
-            self?.auth()
+        router.presentBankAppPicker {
+            Task {
+                await self.auth()
+            }
         }
     }
     
@@ -148,26 +150,32 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func getSessiond() {
-        authService.tryToGetSessionId { [weak self] result in
-            switch result {
-            case .success(let authMethod):
+        Task {
+            do {
+                let authMethod = try await authService.tryToGetSessionId()
+
                 switch authMethod {
                 case .bank:
-                    self?.appAuth()
+                    appAuth()
                 case .refresh:
-                    self?.auth()
+                    await auth()
                 }
-            case .failure(let error):
-                self?.validateAuthError(error: error)
+            } catch {
+                if let error = error as? SDKError {
+                    validateAuthError(error: error)
+                }
             }
+            
         }
     }
     
     private func appAuth() {
         if enviromentManager.environment == .sandboxWithoutBankApp {
             router.presentFakeScreen(completion: {
-                self.auth()
-                return
+                Task {
+                    await self.auth()
+                    return
+                }
             })
         }
         
@@ -179,30 +187,32 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func appAuthMethod() {
-        authService.appAuth(completion: { [weak self] result in
-            self?.removeObserver()
-            switch result {
-            case .success:
-                self?.auth()
-            case .failure(let error):
-                self?.bankManager.selectedBank = nil
-                self?.showBanksStack()
-                if error.represents(.bankAppNotFound) {
-                    self?.view?.hideLoading()
-                } else {
-                    self?.validateAuthError(error: error)
+        Task {
+            do {
+                try await authService.appAuth()
+                await auth()
+            } catch {
+                if let error = error as? SDKError {
+                    bankManager.selectedBank = nil
+                    showBanksStack()
+                    if error.represents(.bankAppNotFound) {
+                        await view?.hideLoading()
+                    } else {
+                        validateAuthError(error: error)
+                    }
                 }
             }
-        })
+        }
     }
     
-    private func auth() {
-        authService.auth { [weak self] result in
-            switch result {
-            case .success:
-                self?.loadPaymentData()
-            case .failure(let error):
-                self?.validateAuthError(error: error)
+    private func auth() async {
+        
+        do {
+            try await authService.auth()
+            loadPaymentData()
+        } catch {
+            if let error = error as? SDKError {
+                validateAuthError(error: error)
             }
         }
     }

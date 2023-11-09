@@ -20,8 +20,7 @@ final class RemoteConfigServiceAssembly: Assembly {
 
 protocol RemoteConfigService {
     
-    func getConfig(with apiKey: String?,
-                   completion: @escaping (Result<Void, SDKError>) -> Void)
+    func getConfig(with apiKey: String?) async throws
 }
 
 final class DefaultRemoteConfigService: RemoteConfigService {
@@ -46,30 +45,20 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
     }
     
-    func getConfig(with apiKey: String?,
-                   completion: @escaping (Result<Void, SDKError>) -> Void) {
+    func getConfig(with apiKey: String?) async throws {
         
         self.apiKey = apiKey
         
-        Task(priority: .userInitiated) {
-            
-            let result = await network.request(ConfigTarget.getConfig,
+        let result = try await network.request(ConfigTarget.getConfig,
                                                to: ConfigModel.self,
                                                retrySettings: (2, []))
-            
-            switch result {
-            case .success(let config):
-                self.versionСontrolManager.setVersionsInfo(config.versionInfo)
-                self.saveConfig(config)
-                self.checkVersion(version: config.version)
-                self.setFeatures(config.featuresToggle)
-                self.analytics.sendEvent(.RQGoodRemoteConfig,
-                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
-                completion(.success)
-            case .failure(let failure):
-                completion(.failure(failure))
-            }
-        }
+        
+        self.versionСontrolManager.setVersionsInfo(result.versionInfo)
+        self.saveConfig(result)
+        self.checkVersion(version: result.version)
+        self.setFeatures(result.featuresToggle)
+        self.analytics.sendEvent(.RQGoodRemoteConfig,
+                                 with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
     }
     
     private func saveConfig(_ value: ConfigModel) {

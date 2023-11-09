@@ -75,19 +75,18 @@ final class DefaultSBPayService: SBPayService {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         SBLogger.dateString = dateFormatter.string(from: Date())
-        locator
-            .resolve(RemoteConfigService.self)
-            .getConfig(with: apiKey) { [ weak self] result in
-                completion?()
-                switch result {
-                case .success:
-                    self?.locator
-                        .resolve(AnalyticsService.self)
-                        .config()
-                case .failure:
-                    return
-                }
+        
+        Task(priority: .medium) {
+            
+            do {
+                try await locator
+                    .resolve(RemoteConfigService.self)
+                    .getConfig(with: apiKey)
+                locator
+                    .resolve(AnalyticsService.self)
+                    .config()
             }
+        }
     }
     
     var isReadyForSPay: Bool {

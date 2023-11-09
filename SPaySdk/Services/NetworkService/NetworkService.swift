@@ -29,24 +29,23 @@ protocol NetworkService: AnyObject {
     
     func request(_ target: TargetType,
                  host: HostSettings,
-                 retrySettings: RetrySettings) async -> Result<Void, SDKError>
+                 retrySettings: RetrySettings) async throws
     
     func request<T>(_ target: TargetType,
                     to: T.Type,
                     host: HostSettings,
-                    retrySettings: RetrySettings) async -> Result<T, SDKError> where T: Codable
-    
+                    retrySettings: RetrySettings) async throws -> T where T: Codable
+     
     func requestString(_ target: TargetType,
                        host: HostSettings,
-                       retrySettings: RetrySettings) async -> Result<String, SDKError>
+                       retrySettings: RetrySettings) async throws -> String
     
     func requestFull<T>(_ target: TargetType,
                         to: T.Type,
                         host: HostSettings,
-                        retrySettings: RetrySettings) async -> Result<(result: T,
+                        retrySettings: RetrySettings) async throws -> (result: T,
                                                                        headers: HTTPHeaders,
-                                                                       cookies: [HTTPCookie]),
-                                                                      SDKError> where T: Codable
+                                                                       cookies: [HTTPCookie]) where T: Codable
     func cancelTask()
 }
 
@@ -54,37 +53,35 @@ extension NetworkService {
     
     func request(_ target: TargetType,
                  host: HostSettings = .main,
-                 retrySettings: RetrySettings = (1, [])) async -> Result<Void, SDKError> {
-        await request(target, host: host, retrySettings: retrySettings)
+                 retrySettings: RetrySettings = (1, [])) async throws {
+        try await request(target, host: host, retrySettings: retrySettings)
     }
     
     func request<T>(_ target: TargetType,
                       to: T.Type,
                       host: HostSettings = .main,
-                      retrySettings: RetrySettings = (1, [])) async -> Result<T, SDKError> where T: Codable {
-        await request(target, to: to, host: host, retrySettings: retrySettings)
+                      retrySettings: RetrySettings = (1, [])) async throws -> T where T: Codable {
+        try await request(target, to: to, host: host, retrySettings: retrySettings)
     }
     
     func requestString(_ target: TargetType,
                        host: HostSettings = .main,
-                       retrySettings: RetrySettings = (1, [])) async -> Result<String, SDKError> {
-        await requestString(target, host: host, retrySettings: retrySettings)
+                       retrySettings: RetrySettings = (1, [])) async throws -> String {
+        try await requestString(target, host: host, retrySettings: retrySettings)
     }
     
     func requestFull<T>(_ target: TargetType,
                         to: T.Type,
                         host: HostSettings = .main,
-                        retrySettings: RetrySettings = (1, [])) async -> Result<(result: T,
-                                                                              headers: HTTPHeaders,
-                                                                              cookies: [HTTPCookie]),
-                                                                             SDKError> where T: Codable {
-                                                                                
-        await requestFull(target, to: to, host: host, retrySettings: retrySettings)
+                        retrySettings: RetrySettings = (1, [])) async throws -> (result: T,
+                                                                                 headers: HTTPHeaders,
+                                                                                 cookies: [HTTPCookie]) where T: Codable {
+        try await requestFull(target, to: to, host: host, retrySettings: retrySettings)
     }
 }
 
 final class DefaultNetworkService: NetworkService, ResponseDecoder {
-    
+
     private let provider: NetworkProvider
     
     init(provider: NetworkProvider) {
@@ -93,55 +90,53 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
     
     func request(_ target: TargetType,
                  host: HostSettings,
-                 retrySettings: RetrySettings = (1, [])) async -> Result<Void, SDKError> {
-    
+                 retrySettings: RetrySettings = (1, [])) async throws {
+
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
-            return self.decodeResponse(data: result.data, response: result.response)
+            return try self.decodeResponse(data: result.data, response: result.response)
         } catch {
-            return .failure(self.systemError(error))
+            throw self.systemError(error)
         }
     }
     
     func request<T>(_ target: TargetType,
                     to: T.Type,
                     host: HostSettings,
-                    retrySettings: RetrySettings = (1, [])) async -> Result<T, SDKError> where T: Codable {
+                    retrySettings: RetrySettings = (1, [])) async throws -> T where T: Codable {
         
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
-            return self.decodeResponse(data: result.data, response: result.response, type: to)
+            return try self.decodeResponse(data: result.data, response: result.response, type: to)
         } catch {
-            return .failure(self.systemError(error))
+            throw self.systemError(error)
         }
     }
     
     
     func requestString(_ target: TargetType,
                        host: HostSettings = .main,
-                       retrySettings: RetrySettings = (1, [])) async -> Result<String, SDKError> {
-        
+                       retrySettings: RetrySettings = (1, [])) async throws -> String {
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
-            return self.decodeResponse(data: result.data, response: result.response, type: String.self)
+            return try self.decodeResponse(data: result.data, response: result.response, type: String.self)
         } catch {
-            return .failure(self.systemError(error))
+            throw self.systemError(error)
         }
     }
     
     func requestFull<T>(_ target: TargetType,
                         to: T.Type,
                         host: HostSettings,
-                        retrySettings: RetrySettings = (1, [])) async -> Result<(result: T,
-                                                                              headers: HTTPHeaders,
-                                                                              cookies: [HTTPCookie]),
-                                                                             SDKError> where T: Codable {
+                        retrySettings: RetrySettings = (1, [])) async throws -> (result: T,
+                                                                                 headers: HTTPHeaders,
+                                                                                 cookies: [HTTPCookie]) where T: Codable {
         
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
-            return self.decodeResponseFull(data: result.data, response: result.response, type: to)
+            return try self.decodeResponseFull(data: result.data, response: result.response, type: to)
         } catch {
-            return .failure(self.systemError(error))
+            throw self.systemError(error)
         }
     }
     
