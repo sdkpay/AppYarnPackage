@@ -117,9 +117,6 @@ final class PaymentPresenter: PaymentPresenting {
     
     func viewDidLoad() {
         configViews()
-        timeManager.endTraking(PaymentVC.self.description()) {_ in 
-//            self.analytics.sendEvent(.PayViewAppeared, with: [$0])
-        }
     }
     
     private func updatePayButtonTitle() {

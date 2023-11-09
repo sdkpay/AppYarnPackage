@@ -131,6 +131,8 @@ enum ErrorCode: Int {
             errorDescription = Strings.Error.system
         case .bankAppError:
             errorDescription = Strings.Error.system
+        case .tryingErrorTry:
+            errorDescription = Strings.Error.system
         }
         return errorDescription
     }
