@@ -25,6 +25,7 @@ final class BankAppPickerAssembly {
         let presenter = BankAppPickerPresenter(bankManager: locator.resolve(),
                                                authService: locator.resolve(),
                                                alertService: locator.resolve(),
+                                               analytics: locator.resolve(),
                                                completionManager: locator.resolve(),
                                                completion: completion)
         return presenter

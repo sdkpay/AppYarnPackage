@@ -83,6 +83,8 @@ final class DefaultUserService: UserService {
                 self.selectedCard = self.selectCard(from: user.paymentToolInfo)
                 completion(nil)
             case .failure(let error):
+                self?.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                                     type: .listCards)
                 completion(error)
             }
         }

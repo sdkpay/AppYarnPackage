@@ -47,6 +47,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     func getConfig(with apiKey: String?,
                    completion: @escaping (SDKError?) -> Void) {
         self.apiKey = apiKey
+        analytics.sendEvent(.RQRemoteConfig)
         network.request(ConfigTarget.getConfig,
                         to: ConfigModel.self,
                         retrySettings: (2, [])) { [weak self] result in
@@ -59,6 +60,8 @@ final class DefaultRemoteConfigService: RemoteConfigService {
                 self.checkVersion(version: config.version)
                 self.setFeatures(config.featuresToggle)
                 self.analytics.sendEvent(.RQGoodRemoteConfig,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
+                self.analytics.sendEvent(.RSGoodRemoteConfig,
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
                 completion(nil)
             case .failure(let error):
@@ -74,6 +77,11 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         UserDefaults.schemas = value.schemas
         UserDefaults.bankApps = value.bankApps
         UserDefaults.images = value.images
+        
+        if UserDefaults.bankApps?.isEmpty != true {
+            self.analytics.sendEvent(.STGetRemoteConfig,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
+        }
     }
     
     private func setFeatures(_ values: [FeaturesToggle]) {

@@ -67,6 +67,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
+        analytics.sendEvent(.TouchBankApp)
         bankManager.selectedBank = bankManager.avaliableBanks[indexPath.row]
         bankAppModels.indices.forEach({ bankAppModels[$0].deprecated = false })
         bankAppModels[indexPath.row].deprecated = true

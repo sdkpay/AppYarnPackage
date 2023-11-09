@@ -41,6 +41,8 @@ enum AnalyticsEvent: String {
     case RQGoodRemoteConfig
     ///  Получена ошибка на запрос получения  remote config
     case RQFailRemoteConfig
+    /// Успешный декод
+    case RSGoodRemoteConfig
     ///  Получена ошибка при декодировании remote config
     case RSFailRemoteConfig
     /// Отправлен запрос на получение сессии
@@ -87,6 +89,10 @@ enum AnalyticsEvent: String {
     case STGetGoodRefresh
     /// Не смогли получить из хранилища Refresh token
     case STGetFailRefresh
+    case TouchBankApp
+    case STGetGoodBankApp
+    /// Достали из хранилища Refresh token
+    case STGetRemoteConfig
     /// Не удалось достать выбранный банк
     case STGetFailBankApp
     /// Сохранили Refresh token
@@ -143,6 +149,10 @@ enum AnalyticsEvent: String {
     case LCPayViewAppeared
     /// Перестал отображаться экран списка карт
     case LCPayViewDisappeared
+    /// Отобразился экран списка карт
+    case LCListCardsViewAppeared
+    /// Перестал отображаться экран списка карт
+    case LCListCardsViewDisappeared
     /// Пользователь нажал на кнопку "Подтвердить оплату частями"
     case TouchConfirmedByUser
     /// Пользователь нажал на кнопку "Не хочу платить частями"

@@ -81,11 +81,11 @@ final class CardsPresenter: CardsPresenting {
     }
     
     func viewDidAppear() {
-        analytics.sendEvent(.LCPayViewAppeared, with: screenEvent)
+        analytics.sendEvent(.LCListCardsViewAppeared, with: screenEvent)
     }
     
     func viewDidDisappear() {
-        analytics.sendEvent(.LCPayViewDisappeared, with: screenEvent)
+        analytics.sendEvent(.LCListCardsViewDisappeared, with: screenEvent)
     }
 
     private func configViews() {

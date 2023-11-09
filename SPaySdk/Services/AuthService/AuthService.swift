@@ -303,6 +303,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private func saveRefreshIfNeeded(from cookies: [HTTPCookie]) {
         
         if let idCookie = cookies.first(where: { $0.name == Cookies.id.rawValue }) {
+            analytics.sendEvent(.STSaveRefresh)
             cookieStorage.setCookie(cookie: idCookie, for: .id)
         }
         

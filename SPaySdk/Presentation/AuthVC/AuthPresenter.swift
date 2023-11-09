@@ -9,6 +9,8 @@ import UIKit
 
 protocol AuthPresenting {
     func viewDidLoad()
+    func viewDidAppear()
+    func viewDidDisappear()
 }
 
 final class AuthPresenter: AuthPresenting {
@@ -66,6 +68,14 @@ final class AuthPresenter: AuthPresenting {
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
         checkNewStart()
+    }
+    
+    func viewDidAppear() {
+        analytics.sendEvent(.LCBankAuthViewAppeared)
+    }
+    
+    func viewDidDisappear() {
+        analytics.sendEvent(.LCBankAuthViewDisappeared)
     }
     
     private func checkNewStart() {
@@ -179,12 +189,15 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func appAuthMethod() {
+        analytics.sendEvent(.LCBankAppAuth)
         authService.appAuth(completion: { [weak self] result in
             self?.removeObserver()
             switch result {
             case .success:
                 self?.auth()
+                self?.analytics.sendEvent(.LCBankAppAuthGood)
             case .failure(let error):
+                self?.analytics.sendEvent(.LCBankAppAuthFail)
                 self?.bankManager.selectedBank = nil
                 self?.showBanksStack()
                 if error.represents(.bankAppNotFound) {

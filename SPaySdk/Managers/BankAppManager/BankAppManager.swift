@@ -68,6 +68,7 @@ final class DefaultBankAppManager: BankAppManager {
             // Если больше 1 то смотрим на сохраненный банк
             if let savedBank = UserDefaults.bankApp {
                 _selectedBank = UserDefaults.bankApps?.first(where: { $0.name == savedBank })
+                analytics.sendEvent(.STGetGoodBankApp)
                 return _selectedBank
             } else {
                 analytics.sendEvent(.STGetFailBankApp,
