@@ -32,6 +32,7 @@ final class OtpPresenter: OtpPresenting {
     private var sec = 45
     private var timer: Timer?
     private var completion: Action?
+    private var appDidEnterBackgroundDate: Date?
     
     init(otpService: OTPService,
          userService: UserService,
@@ -57,9 +58,30 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func viewDidLoad() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(appDidEnterBackground),
+                                               name: UIApplication.didEnterBackgroundNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(appWillEnterForeground),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
+        
         createTimer()
         configViews()
         userService.clearData()
+    }
+    
+    @objc private func appDidEnterBackground() {
+        appDidEnterBackgroundDate = Date()
+    }
+    
+    @objc private func appWillEnterForeground() {
+        guard let previousDate = appDidEnterBackgroundDate else { return }
+        let calendar = Calendar.current
+        let difference = calendar.dateComponents([.second], from: previousDate, to: Date())
+        guard let seconds = difference.second else { return }
+        sec -= seconds
     }
     
     func setKeyboardHeight() {
@@ -192,6 +214,7 @@ final class OtpPresenter: OtpPresenting {
     
     @objc private func updateTime() {
         if sec < 0 {
+            updateTimerView()
             timer?.invalidate()
             timer = nil
             sec = 45
