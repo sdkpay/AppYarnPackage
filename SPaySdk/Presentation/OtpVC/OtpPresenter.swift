@@ -132,7 +132,7 @@ final class OtpPresenter: OtpPresenting {
                         self.view?.hideLoading(animate: true)
                         self.view?.showError(with: error.description)
                     }
-                } else if error.represents(.tryingError) {
+                } else if error.represents(.tryingError) || error.represents(.tryingErrorTry) {
                     self.alertService.show(on: self.view, type: .tryingError(back: {
                         self.dismissWithError(nil)
                     }))
