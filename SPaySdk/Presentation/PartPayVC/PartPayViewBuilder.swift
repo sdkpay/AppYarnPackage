@@ -25,7 +25,7 @@ private extension PartPayViewBuilder {
                 static let font = UIFont.medium2
                 static let textColor = UIColor.textSecondary
                 
-                static let topOffSet: CGFloat = 24.0
+                static let topOffSet: CGFloat = 2.0
                 static let leftOffSet: CGFloat = Consts.margin
                 static let rightOffSet: CGFloat = Consts.margin
             }
@@ -114,7 +114,7 @@ final class PartPayViewBuilder {
     
     private(set) lazy var subTitleLabel: UILabel = {
        let view = UILabel()
-        view.font = Consts.Label.Title.font
+        view.font = Consts.Label.SubTittle.font
         view.textColor = Consts.Label.SubTittle.textColor
         return view
     }()

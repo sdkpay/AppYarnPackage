@@ -53,6 +53,7 @@ final class PaymentViewBuilder {
         view.axis = .vertical
         view.addArrangedSubview(shopLabel)
         view.addArrangedSubview(costLabel)
+        view.spacing = 2
         return view
     }()
     
@@ -173,7 +174,7 @@ private extension PaymentViewBuilder {
             static let bottom: CGFloat = 10.0
             static let right: CGFloat = Cost.sideOffSet
             static let left: CGFloat = Cost.sideOffSet
-            static let top: CGFloat = 22.0
+            static let top: CGFloat = 20.0
             static let height: CGFloat = Cost.height
         }
     }

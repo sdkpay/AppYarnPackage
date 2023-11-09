@@ -28,6 +28,7 @@ final class RootVC: UIViewController {
         super.viewDidAppear(animated)
         SBLogger.log(.start)
         SBLogger.log(.didAppear(view: self))
+        view.backgroundColor = .clear.withAlphaComponent(0.7)
         presenter.viewDidLoad()
     }
     

@@ -11,7 +11,7 @@ private extension CGFloat {
     static let imageWidth = 80.0
     static let topMargin = 52.0
     static let buttonsMargin = 32.0
-    static let buttonSpacing = 2.0
+    static let buttonSpacing = 8.0
     static let bottomMargin = 66.0
 }
 

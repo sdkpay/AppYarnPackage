@@ -12,10 +12,10 @@ extension CGFloat {
     static let containerCorner = 20.0
     static let margin = 16.0
     static let marginHalf = 8.0
-    static let defaultButtonCorner = 8.0
+    static let defaultButtonCorner = 12.0
     static let defaultButtonHeight = 56.0
     static let defaultButtonWidth = UIScreen.main.bounds.width - (2 * .margin)
-    static let minScreenSize = 375.0
+    static let minScreenSize = 442.0
     static let vcMaxHeight = UIScreen.main.bounds.height * 0.9
 }
 

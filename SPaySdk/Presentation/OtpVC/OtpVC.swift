@@ -203,7 +203,7 @@ extension OtpVC {
         enum TextField {
             static let right: CGFloat = Cost.sideOffSet
             static let left: CGFloat = Cost.sideOffSet
-            static let top: CGFloat = 20
+            static let top: CGFloat = 12
         }
         
         enum Button {
@@ -228,7 +228,7 @@ extension OtpVC {
             enum Time {
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
-                static let top: CGFloat = 12
+                static let top: CGFloat = 10
             }
         }
     }
