@@ -28,6 +28,7 @@ final class AuthPresenter: AuthPresenting {
     private let contentLoadManager: ContentLoadManager
     private let enviromentManager: EnvironmentManager
     private let versionСontrolManager: VersionСontrolManager
+    private var authMethod: AuthMethod = .bank
     
     init(_ router: AuthRouter,
          authService: AuthService,
@@ -167,6 +168,7 @@ final class AuthPresenter: AuthPresenting {
                 case .refresh:
                     self?.auth()
                 }
+                self?.authMethod = authMethod
             case .failure(let error):
                 self?.validateAuthError(error: error)
             }
@@ -210,12 +212,17 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func auth() {
+        removeObserver()
         authService.auth { [weak self] result in
             switch result {
             case .success:
                 self?.loadPaymentData()
             case .failure(let error):
-                self?.validateAuthError(error: error)
+                if self?.authMethod == .bank {
+                    self?.validateAuthError(error: error)
+                } else {
+                    self?.appAuth()
+                }
             }
         }
     }
