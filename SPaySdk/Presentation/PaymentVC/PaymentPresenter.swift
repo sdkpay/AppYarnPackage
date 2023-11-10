@@ -183,13 +183,17 @@ final class PaymentPresenter: PaymentPresenting {
         switch userService.getListCards {
         case true:
             guard userService.additionalCards else { return }
-            router.presentCards(cards: user.paymentToolInfo,
-                                selectedId: selectedCard.paymentId,
-                                selectedCard: { [weak self] card in
-                self?.view?.hideLoading(animate: true)
-                self?.userService.selectedCard = card
-                self?.view?.reloadCollectionView()
-            })
+            DispatchQueue.main.async {
+                self.router.presentCards(cards: user.paymentToolInfo,
+                                         selectedId: selectedCard.paymentId,
+                                         selectedCard: { [weak self] card in
+                    DispatchQueue.main.async {
+                        self?.view?.hideLoading(animate: true)
+                    }
+                    self?.userService.selectedCard = card
+                    self?.view?.reloadCollectionView()
+                })
+            }
         case false:
             guard userService.additionalCards else { return }
             switch authMethod {
@@ -212,10 +216,10 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func getListCards() {
-        view?.showLoading()
         
         Task {
             do {
+                await view?.showLoading()
                 try await userService.getListCards()
                 self.cardTapped()
             } catch {
@@ -223,11 +227,11 @@ final class PaymentPresenter: PaymentPresenting {
                 if let error = error as? SDKError {
                     if error.represents(.noInternetConnection) {
                         self.alertService.show(on: self.view,
-                                                type: .noInternet(retry: { self.getListCards() },
-                                                                  completion: { self.dismissWithError(error) }))
+                                               type: .noInternet(retry: { self.getListCards() },
+                                                                 completion: { self.dismissWithError(error) }))
                     } else {
                         self.alertService.show(on: self.view,
-                                                type: .defaultError(completion: { self.dismissWithError(error) }))
+                                               type: .defaultError(completion: { self.dismissWithError(error) }))
                     }
                 }
             }
@@ -235,10 +239,10 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func createOTP() {
-        view?.showLoading()
         
         Task {
             do {
+                await view?.showLoading()
                 try await otpService.creteOTP()
                 self.router.presentOTPScreen(completion: { [weak self] in
                     self?.pay()
@@ -249,11 +253,11 @@ final class PaymentPresenter: PaymentPresenting {
                 if let error = error as? SDKError {
                     if error.represents(.noInternetConnection) {
                         self.alertService.show(on: self.view,
-                                                type: .noInternet(retry: { self.createOTP() },
-                                                                  completion: { self.dismissWithError(error) }))
+                                               type: .noInternet(retry: { self.createOTP() },
+                                                                 completion: { self.dismissWithError(error) }))
                     } else {
                         self.alertService.show(on: self.view,
-                                                type: .defaultError(completion: { self.dismissWithError(error) }))
+                                               type: .defaultError(completion: { self.dismissWithError(error) }))
                     }
                 }
             }
@@ -369,7 +373,9 @@ final class PaymentPresenter: PaymentPresenting {
                                state: .waiting,
                                buttons: [okButton],
                                completion: {
-            self.view?.hideLoading(animate: true)
+            Task {
+                await self.view?.hideLoading(animate: true)
+            }
         })
     }
     

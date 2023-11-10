@@ -83,7 +83,7 @@ final class DefaultPaymentService: PaymentService {
         do {
             let paymentToken = try await getPaymentToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled)
             
-            let (orderid, merchantLogin, apiKey) = try getCredPair(isBnplEnabled)
+            let (orderid, merchantLogin, _) = try getCredPair(isBnplEnabled)
             
             switch self.sdkManager.payStrategy {
             case .auto:

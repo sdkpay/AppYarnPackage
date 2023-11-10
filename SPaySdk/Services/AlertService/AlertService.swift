@@ -134,6 +134,7 @@ final class DefaultAlertService: AlertService {
         SBLogger.log(.stop(obj: self))
     }
     
+    @MainActor
     func showAlert(on view: ContentVC?,
                    with text: String,
                    state: AlertState,
@@ -154,15 +155,19 @@ final class DefaultAlertService: AlertService {
         }
     }
     
+    
+    @MainActor
     func showLoading(with text: String? = nil,
                      animate: Bool = true) {
         alertVC?.showLoading(with: text, animate: animate)
     }
     
+    @MainActor
     func hideLoading(animate: Bool = true) {
         alertVC?.hideLoading(animate: animate)
     }
     
+    @MainActor
     func show(on view: ContentVC?, type: AlertType) {
         switch type {
         case .paySuccess(let completion):
@@ -227,12 +232,14 @@ final class DefaultAlertService: AlertService {
         }
     }
     
+    @MainActor
     func hide(animated: Bool = true, completion: Action? = nil) {
         alertVC?.contentNavigationController?.popViewController(animated: animated,
                                                                 completion: completion)
         alertVC = nil
     }
     
+    @MainActor
     func close() {
         completionManager.dismissCloseAction(alertVC)
     }

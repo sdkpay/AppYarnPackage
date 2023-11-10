@@ -181,7 +181,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
             self.analytics.sendEvent(event)
             
-            if refreshIsActive && self.featureToggleService.isEnabled(.refresh) && self.cookieStorage.exists(.refreshData) {
+            if refreshIsActive && self.featureToggleService.isEnabled(.refresh) {
                 self.authManager.authMethod = .refresh
             } else {
                 self.authManager.authMethod = .bank
@@ -189,9 +189,10 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             
             return self.authManager.authMethod ?? .bank
         } catch {
-            // DEBUG
-            parsingErrorAnaliticManager.sendAnaliticsError(error: error as! SDKError,
-                                                           type: .auth(type: .sessionId))
+            if let error = error as? SDKError {
+                parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                               type: .auth(type: .sessionId))
+            }
             throw error
         }
     }
@@ -202,7 +203,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         return try await sIdAuth()
     }
 
-    private func sIdAuth() async throws  {
+    private func sIdAuth() async throws {
         
         let target = enviromentManager.environment == .sandboxWithoutBankApp
         guard !target else {
@@ -274,9 +275,10 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             analytics.sendEvent(.RSGoodAuth,
                                 with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
         } catch {
-            
-            parsingErrorAnaliticManager.sendAnaliticsError(error: error as! SDKError,
-                                                           type: .auth(type: .auth))
+            if let error = error as? SDKError {
+                parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                               type: .auth(type: .sessionId))
+            }
             
             if self.authManager.authMethod == .bank {
                 throw error
@@ -284,7 +286,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             
             try await appAuth()
             throw error
-            
         }
     }
     

@@ -138,10 +138,12 @@ final class OtpVC: ContentVC, IOtpVC {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @MainActor
     override func showLoading(with text: String? = nil, animate: Bool = true) {
         backView.startLoading(with: text)
     }
     
+    @MainActor
     override func hideLoading(animate: Bool = true) {
         backView.stopLoading()
     }

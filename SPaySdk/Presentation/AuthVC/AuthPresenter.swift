@@ -69,7 +69,10 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkNewStart() {
-        view?.showLoading()
+        
+        Task {
+            await view?.showLoading()
+        }
         analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
         
         guard !versionСontrolManager.isVersionDepicated else {
@@ -108,7 +111,7 @@ final class AuthPresenter: AuthPresenting {
         Task {
             do {
                 try await userService.checkUserSession()
-                router.presentPayment()
+                await router.presentPayment()
             } catch {
                 if let error = error as? SDKError {
                     completionManager.completeWithError(error)
@@ -128,12 +131,15 @@ final class AuthPresenter: AuthPresenting {
         if enviromentManager.environment == .sandboxWithoutBankApp {
             getAccessSPay()
         } else if bankManager.selectedBank == nil {
-            showBanksStack()
+            Task {
+                await showBanksStack()
+            }
         } else {
             getAccessSPay()
         }
     }
     
+    @MainActor
     private func showBanksStack() {
         removeObserver()
         router.presentBankAppPicker {
@@ -159,7 +165,7 @@ final class AuthPresenter: AuthPresenting {
 
                 switch authMethod {
                 case .bank:
-                    appAuth()
+                    await appAuth()
                 case .refresh:
                     await auth()
                 }
@@ -171,6 +177,7 @@ final class AuthPresenter: AuthPresenting {
         }
     }
     
+    @MainActor
     private func appAuth() {
         if enviromentManager.environment == .sandboxWithoutBankApp {
             router.presentFakeScreen(completion: {
@@ -196,7 +203,7 @@ final class AuthPresenter: AuthPresenting {
             } catch {
                 if let error = error as? SDKError {
                     bankManager.selectedBank = nil
-                    showBanksStack()
+                    await showBanksStack()
                     if error.represents(.bankAppNotFound) {
                         await view?.hideLoading()
                     } else {
@@ -220,30 +227,23 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func loadPaymentData() {
-        view?.showLoading(with: Strings.Get.Data.title, animate: true)
-        
         Task {
+            await self.view?.showLoading(with: Strings.Get.Data.title, animate: true)
+            
             do {
-               try await userService.getUser()
+                try await contentLoadManager.load()
+                await self.router.presentPayment()
             } catch {
-                
-            }
-        }
-        userService.getUser()
-        contentLoadManager.load { [weak self] error in
-            if let error = error {
-                self?.completionManager.completeWithError(error)
-                if error.represents(.noInternetConnection) {
-                    self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.loadPaymentData() },
-                                                              completion: { self?.dismissWithError(error) }))
-                } else {
-                    self?.alertService.show(on: self?.view,
-                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
-                }
-            } else {
-                DispatchQueue.main.async { [weak self] in
-                    self?.router.presentPayment()
+                if let error = error as? SDKError {
+                    self.completionManager.completeWithError(error)
+                    if error.represents(.noInternetConnection) {
+                        self.alertService.show(on: self.view,
+                                               type: .noInternet(retry: { self.loadPaymentData() },
+                                                                 completion: { self.dismissWithError(error) }))
+                    } else {
+                        self.alertService.show(on: self.view,
+                                               type: .defaultError(completion: { self.dismissWithError(error) }))
+                    }
                 }
             }
         }
@@ -272,6 +272,7 @@ final class AuthPresenter: AuthPresenting {
         self.alertService.close()
     }
     
+    @MainActor
     @objc
     private func applicationDidBecomeActive() {
         // Если пользователь не смог получить обратный редирект

@@ -90,6 +90,9 @@ final class CardsPresenter: CardsPresenting {
 
     private func configViews() {
         guard let user = userService.user else { return }
-        view?.configProfileView(with: user.userInfo)
+        
+        Task {
+            await view?.configProfileView(with: user.userInfo)
+        }
     }
 }

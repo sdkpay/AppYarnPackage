@@ -74,23 +74,12 @@ final class DefaultContentLoadManager: ContentLoadManager {
                 }
             }
         }
-    
-        for type in contentTypes {
-            self.group.enter()
-            self.loadContent(type.type) { error in
-                requestErrors.append((error, type.priority))
-                 self.group.leave()
-            }
-        }
         
-        group.notify(queue: .main) {
-
-            let error = requestErrors
-                .compactMap({ $0 })
-                .first(where: { $0.priority == .high })?
-                .error
-
-            completion(error)
+        if let error = requestErrors
+            .compactMap({ $0 })
+            .first(where: { $0.priority == .high })?
+            .error {
+            throw error
         }
     }
     

@@ -76,10 +76,11 @@ final class OtpPresenter: OtpPresenting {
     func createOTP() {
         analytics.sendEvent(.RQCreteOTP,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-        view?.showLoading()
         
         Task {
             do {
+                await view?.showLoading()
+                
                 try await otpService.creteOTP()
                 await view?.hideLoading(animate: true)
                 self.updateTimerView()
@@ -110,7 +111,6 @@ final class OtpPresenter: OtpPresenting {
         analytics.sendEvent(.TouchNext,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         let otpHash = getHashCode(code: otpCode)
-        view?.showLoading()
         analytics.sendEvent(.RQConfirmOTP,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         analytics.sendEvent(.RSConfirmOTP,
@@ -118,6 +118,7 @@ final class OtpPresenter: OtpPresenting {
         
         Task {
             do {
+                await view?.showLoading()
                 try await otpService.confirmOTP(otpHash: otpHash)
                 self.analytics.sendEvent(.RSGoodConfirmOTP,
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])

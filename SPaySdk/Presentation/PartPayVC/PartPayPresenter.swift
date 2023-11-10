@@ -113,6 +113,7 @@ final class PartPayPresenter: PartPayPresenting {
         view?.setButtonEnabled(value: value)
     }
     
+    @MainActor
     private func agreementTextTapped(link: String) {
         analytics.sendEvent(.TouchAgreementView,
                             with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])

@@ -66,6 +66,7 @@ class ContentVC: LoggableVC {
         profileView.config(with: userInfo)
     }
     
+    @MainActor
     func showLoading(with text: String? = nil,
                      animate: Bool = true) {
         Loader(text: text)
@@ -73,6 +74,7 @@ class ContentVC: LoggableVC {
             .show(on: self)
     }
     
+    @MainActor
     func hideLoading(animate: Bool = true) {
         Loader()
             .animated(with: animate)

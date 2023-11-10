@@ -18,8 +18,7 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
         self.hostManager = hostManager
         super.init()
     }
-    
-    
+
     func request(_ target: TargetType,
                  retrySettings: RetrySettings,
                  host: HostSettings) async throws -> (data: Data, response: URLResponse) {
@@ -31,8 +30,8 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
         }
         
         guard let response = HTTPURLResponse(url: hostManager.host(for: host),
-                                       statusCode: 200,
-                                       httpVersion: nil,
+                                             statusCode: 200,
+                                             httpVersion: nil,
                                              headerFields: nil) else {
             fatalError("Неправильно составлен стабовый запрос")
         }

@@ -19,6 +19,7 @@ final class PartPayRouter: PartPayRouting {
         self.locator = locator
     }
     
+    @MainActor
     func presentWebView(with url: String) {
         let vc = WebViewAssembly(locator: locator).createModule(with: url)
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)

@@ -85,6 +85,9 @@ final class DefaultSBPayService: SBPayService {
                 locator
                     .resolve(AnalyticsService.self)
                     .config()
+                DispatchQueue.main.async {
+                    completion?()
+                }
             }
         }
     }
