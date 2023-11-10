@@ -51,9 +51,8 @@ final class AlertVC: ContentVC, IAlertVC {
     
     private lazy var contentStack: UIStackView = {
         let view = UIStackView()
-        view.spacing = .margin
+        view.spacing = 77
         view.axis = .vertical
-        view.alignment = .center
         view.addArrangedSubview(infoStack)
         view.addArrangedSubview(buttonsStack)
         return view
