@@ -62,6 +62,7 @@ final class ContentNC: UIViewController {
         self.viewControllers.append(viewController)
     }
 
+    @MainActor
     @discardableResult
     func popViewController(animated: Bool, completion: Action? = nil) -> UIViewController? {
         guard let from = topViewController, from != viewControllers.first else { return nil }

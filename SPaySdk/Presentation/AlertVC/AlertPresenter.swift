@@ -39,16 +39,18 @@ final class AlertPresenter: AlertPresenting {
     }
     
     func buttonTapped(item: AlertButtonModel) {
-        switch item.type {
-        case .full, .info:
-            view?.contentNavigationController?.popViewController(animated: true, completion: {
+        DispatchQueue.main.async {
+            switch item.type {
+            case .full, .info:
+                self.view?.contentNavigationController?.popViewController(animated: true, completion: {
+                    item.action()
+                })
+            case .cancel:
                 item.action()
-            })
-        case .cancel:
-            item.action()
-        case .clear:
-            item.action()
-            view?.contentNavigationController?.popViewController(animated: true)
+            case .clear:
+                item.action()
+                self.view?.contentNavigationController?.popViewController(animated: true)
+            }
         }
     }
 

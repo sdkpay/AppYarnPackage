@@ -85,7 +85,6 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         try await _request(target: target, retrySettings: retrySettings, host: host)
     }
     
-    
     private func _request(retry: Int = 1,
                           target: TargetType,
                           retrySettings: RetrySettings = (1, []),

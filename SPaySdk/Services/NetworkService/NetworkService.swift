@@ -58,9 +58,9 @@ extension NetworkService {
     }
     
     func request<T>(_ target: TargetType,
-                      to: T.Type,
-                      host: HostSettings = .main,
-                      retrySettings: RetrySettings = (1, [])) async throws -> T where T: Codable {
+                    to: T.Type,
+                    host: HostSettings = .main,
+                    retrySettings: RetrySettings = (1, [])) async throws -> T where T: Codable {
         try await request(target, to: to, host: host, retrySettings: retrySettings)
     }
     
@@ -81,7 +81,7 @@ extension NetworkService {
 }
 
 final class DefaultNetworkService: NetworkService, ResponseDecoder {
-
+    
     private let provider: NetworkProvider
     
     init(provider: NetworkProvider) {
@@ -91,7 +91,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
     func request(_ target: TargetType,
                  host: HostSettings,
                  retrySettings: RetrySettings = (1, [])) async throws {
-
+        
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
             return try self.decodeResponse(data: result.data, response: result.response)
@@ -112,7 +112,6 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
             throw self.systemError(error)
         }
     }
-    
     
     func requestString(_ target: TargetType,
                        host: HostSettings = .main,

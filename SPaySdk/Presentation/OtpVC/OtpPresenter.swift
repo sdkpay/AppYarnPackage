@@ -80,15 +80,14 @@ final class OtpPresenter: OtpPresenting {
         Task {
             do {
                 await view?.showLoading()
-                
                 try await otpService.creteOTP()
                 await view?.hideLoading(animate: true)
                 self.updateTimerView()
                 self.createTimer()
                 self.analytics.sendEvent(.RQGoodCreteOTP,
-                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
                 self.analytics.sendEvent(.RSGoodCreteOTP,
-                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
             } catch {
                 if let error = error as? SDKError {
                     parsingErrorAnaliticManager.sendAnaliticsError(error: error,
@@ -124,7 +123,7 @@ final class OtpPresenter: OtpPresenting {
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
                 self.analytics.sendEvent(.RQGoodConfirmOTP,
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-                self.view?.hideKeyboard()
+                await self.view?.hideKeyboard()
                 self.closeWithSuccess()
             } catch {
                 if let error = error as? SDKError {
@@ -170,9 +169,11 @@ final class OtpPresenter: OtpPresenting {
     }
     
     private func closeWithSuccess() {
-        view?.contentNavigationController?.popViewController(animated: false, completion: {
-            self.completion?()
-        })
+        DispatchQueue.main.async {
+            self.view?.contentNavigationController?.popViewController(animated: false, completion: {
+                self.completion?()
+            })
+        }
     }
     
     private func dismissWithError(_ error: SDKError?) {

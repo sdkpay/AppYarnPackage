@@ -44,6 +44,7 @@ final class LogoutPresenter: LogoutPresenting {
         (authManager.userInfo?.firstName ?? "") + " " + (authManager.userInfo?.lastName ?? "")
     }
     
+    @MainActor
     func back() {
         view?.contentNavigationController?.popViewController(animated: true, completion: nil)
     }

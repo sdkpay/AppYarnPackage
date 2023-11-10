@@ -118,9 +118,9 @@ final class DefaultPartPayService: PartPayService {
         
         do {
             let bnplResult = try await network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
-                                                                                merchantLogin: merchantLogin,
-                                                                                orderId: orderId),
-                                                         to: BnplModel.self)
+                                                                              merchantLogin: merchantLogin,
+                                                                              orderId: orderId),
+                                                       to: BnplModel.self)
             
             self.bnplplan = bnplResult
             self.analytics.sendEvent(.RQGoodBnpl)

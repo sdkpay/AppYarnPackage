@@ -77,7 +77,9 @@ final class CardsPresenter: CardsPresenting {
     func didSelectRow(at indexPath: IndexPath) {
         analytics.sendEvent(.TouchCard, with: screenEvent)
         selectedCard(cards[indexPath.row])
-        view?.contentNavigationController?.popViewController(animated: true)
+        DispatchQueue.main.async {
+            self.view?.contentNavigationController?.popViewController(animated: true)
+        }
     }
     
     func viewDidAppear() {

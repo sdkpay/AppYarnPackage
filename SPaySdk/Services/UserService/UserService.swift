@@ -112,7 +112,7 @@ final class DefaultUserService: UserService {
         } catch {
             if let error = error as? SDKError {
                 parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                     type: .listCards)
+                                                               type: .listCards)
             }
             throw error
         }

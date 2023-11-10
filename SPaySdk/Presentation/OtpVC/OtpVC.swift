@@ -11,7 +11,7 @@ protocol IOtpVC: AnyObject {
     func updateTimer(sec: Int)
     func updateMobilePhone(phoneNumber: String)
     func showError(with text: String)
-    func hideKeyboard()
+    func hideKeyboard() async
     func setKeyboardHeight(height: CGFloat)
 }
 
@@ -97,7 +97,8 @@ final class OtpVC: ContentVC, IOtpVC {
         }
     }
 
-    func hideKeyboard() {
+    @MainActor
+    func hideKeyboard() async {
         view.endEditing(true)
     }
     

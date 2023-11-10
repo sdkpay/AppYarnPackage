@@ -172,7 +172,6 @@ final class DefaultPaymentService: PaymentService {
                                      with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
             self.analytics.sendEvent(.RSGoodPaymentOrder,
                                      with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
-            
         } catch {
             if let error = error as? SDKError {
                 self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
@@ -203,7 +202,6 @@ final class DefaultPaymentService: PaymentService {
                 apiKey: self.authManager.apiKey ?? ""
             )
         }
-        
     }
     
     private func parseError(_ sdkError: SDKError) -> PayError {

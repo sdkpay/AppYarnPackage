@@ -63,7 +63,9 @@ final class PartPayPresenter: PartPayPresenting {
                             with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
         partPayService.bnplplanSelected = true
         partPaySelected()
-        view?.contentNavigationController?.popViewController(animated: true)
+        DispatchQueue.main.async {
+            self.view?.contentNavigationController?.popViewController(animated: true)
+        }
     }
     
     func backButtonTapped() {
@@ -71,7 +73,9 @@ final class PartPayPresenter: PartPayPresenting {
                             with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
         partPayService.bnplplanSelected = false
         partPaySelected()
-        view?.contentNavigationController?.popViewController(animated: true)
+        DispatchQueue.main.async {
+            self.view?.contentNavigationController?.popViewController(animated: true)
+        }
     }
     
     func model(for indexPath: IndexPath) -> PartCellModel {
