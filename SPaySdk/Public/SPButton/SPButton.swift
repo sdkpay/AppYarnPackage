@@ -62,6 +62,7 @@ public final class SBPButton: UIView {
     public init() {
         super.init(frame: .zero)
         setupUI()
+        DefaultAnalyticsService.shared.sendEvent(.LCPayButtonInited)
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
@@ -70,6 +71,7 @@ public final class SBPButton: UIView {
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
+        DefaultAnalyticsService.shared.sendEvent(.LCPayButtonInited)
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }

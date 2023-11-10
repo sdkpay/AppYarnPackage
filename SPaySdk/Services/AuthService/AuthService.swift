@@ -175,6 +175,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 guard let self = self else { return }
                 self.analytics.sendEvent(.RQGoodSessionId,
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.AuthVC.rawValue])
+                self.analytics.sendEvent(.RSGoodSessionId,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.AuthVC.rawValue])
                 self.authManager.sessionId = result.sessionId
                 self.appLink = result.deeplink
                 self.partPayService.setEnabledBnpl(result.isBnplEnabled ?? false, enabledLevel: .session)

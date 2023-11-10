@@ -196,8 +196,8 @@ final class AuthPresenter: AuthPresenting {
             self?.removeObserver()
             switch result {
             case .success:
-                self?.auth()
                 self?.analytics.sendEvent(.LCBankAppAuthGood)
+                self?.auth()
             case .failure(let error):
                 self?.analytics.sendEvent(.LCBankAppAuthFail)
                 self?.bankManager.selectedBank = nil

@@ -25,6 +25,8 @@ enum AnlyticsScreenEvent: String {
 }
 
 enum AnalyticsEvent: String {
+    /// Кнопка оплаты
+    case LCPayButtonInited
     /// Версия SDK
     case SDKVersion
     /// Не найдено приложение Банка на устройстве
@@ -93,6 +95,7 @@ enum AnalyticsEvent: String {
     case STGetGoodBankApp
     /// Достали из хранилища Refresh token
     case STGetRemoteConfig
+    case STGetGoodRemoteConfig
     /// Не удалось достать выбранный банк
     case STGetFailBankApp
     /// Сохранили Refresh token
@@ -338,12 +341,14 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         analyticServices.forEach({ $0.sendEvent(event, with: dict) })
     }
     
-    init(authManager: AuthManager) {
+    init(authManager: AuthManager = DefaultAuthManager()) {
         self.authManager = authManager
         super.init()
         self.startSession(orderNumber: authManager.orderNumber ?? "")
         SBLogger.log(.start(obj: self))
     }
+    
+    static let shared = DefaultAnalyticsService()
     
     deinit {
         self.finishSession()

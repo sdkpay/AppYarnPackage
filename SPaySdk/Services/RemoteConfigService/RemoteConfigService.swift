@@ -80,7 +80,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         
         if UserDefaults.bankApps?.isEmpty != true {
             self.analytics.sendEvent(.STGetRemoteConfig,
-                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
+                                     with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
         }
     }
     
