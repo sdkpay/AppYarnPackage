@@ -31,9 +31,8 @@ enum ContentType {
 }
 
 protocol ContentLoadManager {
-    func load(contentTypes: [ContentLoadType],
-              completion: @escaping (SDKError?) -> Void)
-    func load(completion: @escaping (SDKError?) -> Void)
+    func load(contentTypes: [ContentLoadType]) async throws
+    func load() async throws
 }
 
 final class DefaultContentLoadManager: ContentLoadManager {
@@ -51,19 +50,30 @@ final class DefaultContentLoadManager: ContentLoadManager {
         self.userService = userService
     }
     
-    func load(completion: @escaping (SDKError?) -> Void) {
+    func load() async throws {
         var contentTypes: [ContentLoadType] = [
             (.userData, .high)
         ]
         if featureToggleService.isEnabled(.bnpl2) {
             contentTypes.append((.bnplPlan, .low))
         }
-        load(contentTypes: contentTypes, completion: completion)
+       try await load(contentTypes: contentTypes)
     }
     
-    func load(contentTypes: [ContentLoadType],
-              completion: @escaping (SDKError?) -> Void) {
+    func load(contentTypes: [ContentLoadType]) async throws {
+        
         var requestErrors: [(error: SDKError?, priority: Priority)] = []
+        
+        for type in contentTypes {
+            
+            do {
+                try await self.loadContent(type.type)
+            } catch {
+                if let error = error as? SDKError {
+                    requestErrors.append((error, type.priority))
+                }
+            }
+        }
     
         for type in contentTypes {
             self.group.enter()
@@ -84,13 +94,12 @@ final class DefaultContentLoadManager: ContentLoadManager {
         }
     }
     
-    private func loadContent(_ type: ContentType,
-                             completion: @escaping (SDKError?) -> Void) {
+    private func loadContent(_ type: ContentType) async throws {
         switch type {
         case .userData:
-            userService.getUser(completion: completion)
+           try await userService.getUser()
         case .bnplPlan:
-            partPayService.getBnplPlan(completion: completion)
+            try await partPayService.getBnplPlan()
         }
     }
 }

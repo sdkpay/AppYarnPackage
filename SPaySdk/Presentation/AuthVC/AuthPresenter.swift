@@ -221,6 +221,15 @@ final class AuthPresenter: AuthPresenting {
     
     private func loadPaymentData() {
         view?.showLoading(with: Strings.Get.Data.title, animate: true)
+        
+        Task {
+            do {
+               try await userService.getUser()
+            } catch {
+                
+            }
+        }
+        userService.getUser()
         contentLoadManager.load { [weak self] error in
             if let error = error {
                 self?.completionManager.completeWithError(error)
