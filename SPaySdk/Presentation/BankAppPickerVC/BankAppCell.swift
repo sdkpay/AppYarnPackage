@@ -24,7 +24,7 @@ struct BankAppCellModel {
 
 private extension CGFloat {
     static let topMargin = 12.0
-    static let corner = 8.0
+    static let corner = 20.0
     static let checkWidth = 20.0
     static let cardWidth = 36.0
     static let letterSpacing = -0.3
@@ -34,13 +34,13 @@ final class BankAppCell: UITableViewCell {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = .corner
-        view.backgroundColor = .backgroundSecondary
+        view.backgroundColor = .white
         return view
     }()
     
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.font = .medium5
+        view.font = .medium1
         view.textColor = .textPrimory
         view.letterSpacing(.letterSpacing)
         return view
@@ -48,7 +48,7 @@ final class BankAppCell: UITableViewCell {
     
     private lazy var sutitleLabel: UILabel = {
         let view = UILabel()
-        view.font = .medium2
+        view.font = .medium3
         view.textColor = .textSecondary
         return view
     }()
@@ -88,7 +88,7 @@ final class BankAppCell: UITableViewCell {
     }
     
     private func setupUI() {
-        backgroundColor = .backgroundPrimary
+        backgroundColor = .clear
         contentView.addSubview(containerView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(sutitleLabel)

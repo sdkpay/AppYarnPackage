@@ -68,6 +68,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let biometricAuthProvider: BiometricAuthProviderProtocol
     private let otpService: OTPService
     private let featureToggle: FeatureToggleService
+    private var finalCost: String = ""
 
     private var cellData: [PaymentCellType] {
         var cellData: [PaymentCellType] = []
@@ -184,6 +185,7 @@ final class PaymentPresenter: PaymentPresenting {
         case true:
             guard userService.additionalCards else { return }
             router.presentCards(cards: user.paymentToolInfo,
+                                cost: finalCost,
                                 selectedId: selectedCard.paymentId,
                                 selectedCard: { [weak self] card in
                 self?.view?.hideLoading(animate: true)
@@ -255,7 +257,6 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func configViews() {
         guard let user = userService.user else { return }
-        var finalCost: String
         var fullPrice: String?
         if partPayService.bnplplanSelected {
             guard let firstPay = partPayService.bnplplan?.graphBnpl?.payments.first else { return }
@@ -286,6 +287,8 @@ final class PaymentPresenter: PaymentPresenting {
         }
         alertService.showAlert(on: self.view,
                                with: Strings.Alert.Pay.No.Cards.title,
+                               with: Strings.Alert.Pay.No.Cards.subtitle,
+                               with: nil,
                                state: .failure,
                                buttons: [returnButton],
                                completion: {})
@@ -351,6 +354,8 @@ final class PaymentPresenter: PaymentPresenting {
         }
         alertService.showAlert(on: view,
                                with: ConfigGlobal.localization?.payLoading ?? "",
+                               with: ConfigGlobal.localization?.payLoading ?? "",
+                               with: nil,
                                state: .waiting,
                                buttons: [okButton],
                                completion: {

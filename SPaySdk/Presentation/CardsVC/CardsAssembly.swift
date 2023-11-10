@@ -15,10 +15,11 @@ final class CardsAssembly {
     }
 
     func createModule(cards: [PaymentToolInfo],
+                      cost: String,
                       selectedId: Int,
                       selectedCard: @escaping (PaymentToolInfo) -> Void) -> ContentVC {
         let presenter = modulePresenter(cards: cards, selectedId: selectedId, selectedCard: selectedCard)
-        let contentView = moduleView(presenter: presenter)
+        let contentView = moduleView(presenter: presenter, cost: cost)
         presenter.view = contentView
         return contentView
     }
@@ -36,8 +37,8 @@ final class CardsAssembly {
         return presenter
     }
     
-    private func moduleView(presenter: CardsPresenter) -> ContentVC & ICardsVC {
-        let view = CardsVC(presenter)
+    private func moduleView(presenter: CardsPresenter, cost: String) -> ContentVC & ICardsVC {
+        let view = CardsVC(presenter, cost: cost)
         presenter.view = view
         return view
     }

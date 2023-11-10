@@ -75,6 +75,8 @@ final class AuthPresenter: AuthPresenting {
         guard !versionСontrolManager.isVersionDepicated else {
             alertService.showAlert(on: view,
                                    with: Strings.Error.version,
+                                   with: Strings.Error.version,
+                                   with: nil,
                                    state: .failure,
                                    buttons: [
                                     AlertButtonModel(title: Strings.Return.title,

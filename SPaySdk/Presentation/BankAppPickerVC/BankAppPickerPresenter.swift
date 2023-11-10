@@ -45,7 +45,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     
     func viewDidLoad() {
         bankAppModels = bankManager.avaliableBanks.map({ BankAppCellModel(with: $0) })
-        view?.setSubtilte(Strings.BankAppPicker.subtitle(Bundle.main.displayName ?? "None"))
+        view?.setTilte(Strings.BankAppPicker.subtitle(Bundle.main.displayName ?? "None"))
         addObserver()
     }
     
@@ -88,7 +88,9 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
             self?.completionManager.dismissCloseAction(self?.view)
         }
         alertService.showAlert(on: self.view,
-                               with: Strings.Alert.BankAppPicker.Error.title,
+                               with: "Strings.Alert.BankAppPicker.Error.title",
+                               with: "Strings.Alert.BankAppPicker.Error.title",
+                               with: nil,
                                state: .failure,
                                buttons: [returnButton],
                                completion: {})

@@ -9,11 +9,11 @@ import UIKit
 
 protocol IBankAppPickerVC: AnyObject {
     func reloadTableView()
-    func setSubtilte(_ text: String)
+    func setTilte(_ text: String)
 }
 
 final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
-
+    
     private let presenter: BankAppPickerPresenting
     private lazy var viewBuilder = BankAppPickerViewBuilder(backButtonDidTap: { [weak self] in
         self?.presenter.closeButtonDidTapped()
@@ -22,7 +22,7 @@ final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
-        viewBuilder.setupUI(view: view, logoImage: logoImage)
+        viewBuilder.setupUI(view: view)
         viewBuilder.tableView.delegate = self
         viewBuilder.tableView.dataSource = self
         SBLogger.log(.didLoad(view: self))
@@ -59,8 +59,8 @@ final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
                           completion: nil)
     }
     
-    func setSubtilte(_ text: String) {
-        viewBuilder.subtitleLabel.text = text
+    func setTilte(_ text: String) {
+        viewBuilder.titleLabel.text = "Выберите приложение для авторизации в СберБанке"
     }
 }
 

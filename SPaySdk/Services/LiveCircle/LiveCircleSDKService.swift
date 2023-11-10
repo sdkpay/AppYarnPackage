@@ -61,6 +61,8 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         case .success:
             service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
                               with: Strings.Alert.Pay.Success.title,
+                              with: Strings.Alert.Pay.Success.title,
+                              with: nil,
                               state: .success,
                               buttons: [],
                               completion: completion)
@@ -70,18 +72,24 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                                           action: completion)
             service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
                               with: ConfigGlobal.localization?.payLoading ?? "",
+                              with: ConfigGlobal.localization?.payLoading ?? "",
+                              with: nil,
                               state: .waiting,
                               buttons: [button],
                               completion: {})
         case .error:
             service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
                               with: Strings.Alert.Error.Main.title,
+                              with: Strings.Alert.Error.Main.subtitle,
+                              with: nil,
                               state: .failure,
                               buttons: [],
                               completion: completion)
         case .cancel:
             service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
                               with: Strings.Alert.Error.Main.title,
+                              with: Strings.Alert.Error.Main.subtitle,
+                              with: nil,
                               state: .failure,
                               buttons: [],
                               completion: completion)

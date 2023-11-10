@@ -16,6 +16,8 @@ struct AlertButtonModel {
 struct AlertViewModel {
     let image: UIImage?
     let title: String
+    let subtite: String?
+    let cost: String?
     let buttons: [AlertButtonModel]
     let sound: String
     let feedBack: UINotificationFeedbackGenerator.FeedbackType
@@ -90,6 +92,8 @@ final class AlertServiceAssembly: Assembly {
 protocol AlertService {
     func showAlert(on view: ContentVC?,
                    with text: String,
+                   with subtitle: String?,
+                   with cost: String?,
                    state: AlertState,
                    buttons: [AlertButtonModel],
                    completion: @escaping Action)
@@ -136,12 +140,16 @@ final class DefaultAlertService: AlertService {
     
     func showAlert(on view: ContentVC?,
                    with text: String,
+                   with subtitle: String?,
+                   with cost: String? = nil,
                    state: AlertState,
                    buttons: [AlertButtonModel],
                    completion: @escaping Action) {
         DispatchQueue.main.async {
             let model = AlertViewModel(image: state.image,
                                        title: text,
+                                       subtite: subtitle,
+                                       cost: cost,
                                        buttons: buttons,
                                        sound: state.soundPath,
                                        feedBack: state.feedBack,
@@ -169,6 +177,7 @@ final class DefaultAlertService: AlertService {
             analytics.sendEvent(.LCStatusSuccessViewAppeared)
             showAlert(on: view,
                       with: Strings.Alert.Pay.Success.title,
+                      with: nil,
                       state: .success,
                       buttons: [],
                       completion: completion)
@@ -176,6 +185,7 @@ final class DefaultAlertService: AlertService {
             analytics.sendEvent(.LCStatusErrorViewAppeared, with: "error: default")
             showAlert(on: view,
                       with: Strings.Alert.Error.Main.title,
+                      with: Strings.Alert.Error.Main.subtitle,
                       state: .failure,
                       buttons: [],
                       completion: completion)
@@ -189,6 +199,7 @@ final class DefaultAlertService: AlertService {
                                                 action: completion)
             showAlert(on: view,
                       with: Strings.Alert.Pay.No.Internet.title,
+                      with: Strings.Alert.Pay.No.Internet.subtitle,
                       state: .warning,
                       buttons:
                         [
@@ -206,6 +217,7 @@ final class DefaultAlertService: AlertService {
                                                 action: back)
             showAlert(on: view,
                       with: Strings.Alert.Pay.Error.title,
+                      with: nil,
                       state: .failure,
                       buttons: [
                         fullPayButton,
@@ -219,6 +231,7 @@ final class DefaultAlertService: AlertService {
                                                  action: back)
             showAlert(on: view,
                       with: Strings.Error.trying,
+                      with: nil,
                       state: .failure,
                       buttons: [
                         fullPayButton

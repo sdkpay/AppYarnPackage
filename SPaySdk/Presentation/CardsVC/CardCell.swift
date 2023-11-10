@@ -16,7 +16,7 @@ struct CardCellModel {
 
 private extension CGFloat {
     static let topMargin = 12.0
-    static let corner = 8.0
+    static let corner = 20.0
     static let checkWidth = 20.0
     static let cardWidth = 36.0
     static let letterSpacing = -0.3
@@ -26,12 +26,13 @@ final class CardCell: UITableViewCell {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = .corner
+        view.backgroundColor = .white
         return view
     }()
     
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.font = .medium5
+        view.font = .medium7
         view.textColor = .textPrimory
         view.letterSpacing(.letterSpacing)
         return view
@@ -65,15 +66,14 @@ final class CardCell: UITableViewCell {
     }
     
     func config(with model: CardCellModel) {
-        containerView.backgroundColor = model.selected ? .mainSecondary : .backgroundSecondary
-        checkImageView.image = model.selected ? .Common.checkSelected : .Common.checkDeselected
-        titleLabel.text = model.title
-        cardLabel.text = model.number
+//        containerView.backgroundColor = model.selected ? .mainSecondary : .backgroundSecondary
+        titleLabel.text = "21 000 ₽"
+        cardLabel.text = "СберКарта •• 2452 и еще 1"
         cardIconView.downloadImage(from: model.cardURL, placeholder: .Cards.stockCard)
     }
     
     private func setupUI() {
-        backgroundColor = .backgroundPrimary
+        backgroundColor = .clear
         contentView.addSubview(containerView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(cardLabel)

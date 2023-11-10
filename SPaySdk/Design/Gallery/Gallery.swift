@@ -13,13 +13,13 @@ extension UIImage {
         static let logoMain = Asset.logoMain.image
         static let loader = Asset.loader.image
         static let failure = Asset.failure.image
-        static let success = Asset.success.image
+        static let success = Asset.successNew.image
         static let checkSelected = Asset.checkSelected.image
         static let checkDeselected = Asset.checkDeselected.image
         static let stick = Asset.stick.image
         static let warning = Asset.warning.image
-        static let warningAlert = Asset.warningAlert.image
-        static let waiting = Asset.waiting.image
+        static let warningAlert = Asset.warningNew.image
+        static let waiting = Asset.waintingNew.image
         static let checkAgreementSelected = Asset.checkAgreementSelected.image
         static let checkAgreement = Asset.checkAgreement.image
     }

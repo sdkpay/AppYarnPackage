@@ -13,9 +13,10 @@ final class CardsVC: ContentVC, ICardsVC {
     private let presenter: CardsPresenting
     private let viewBuilder = CardsViewBuilder()
     
-    init(_ presenter: CardsPresenting) {
+    init(_ presenter: CardsPresenting, cost: String) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+        viewBuilder.costLabel.text = cost
     }
     
     required init?(coder: NSCoder) {
@@ -25,7 +26,8 @@ final class CardsVC: ContentVC, ICardsVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
-        viewBuilder.setupUI(view: view, logoImage: logoImage)
+        topBarIsHidden = true
+        viewBuilder.setupUI(view: view)
         viewBuilder.tableView.delegate = self
         viewBuilder.tableView.dataSource = self
         SBLogger.log(.didLoad(view: self))

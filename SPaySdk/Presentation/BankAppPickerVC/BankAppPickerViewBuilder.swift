@@ -18,11 +18,11 @@ private extension BankAppPickerViewBuilder {
     enum Consts {
         static let offSet: CGFloat = 16.0
         enum Title {
-            static let font = UIFont.subheadline
+            static let font = UIFont.medium5
             static let textColor = UIColor.textPrimory
             static let text = UserDefaults.localization?.authTitle
             
-            static let topOffSet: CGFloat = 20.0
+            static let topOffSet: CGFloat = 40.0
             static let rightOffSet = Consts.offSet
         }
         
@@ -40,7 +40,7 @@ private extension BankAppPickerViewBuilder {
             
             static let bottomOffSet: CGFloat = 58.0
             static let rightOffSet: CGFloat = Consts.offSet
-            static let topOffSet: CGFloat = 12.0
+            static let topOffSet: CGFloat = 24.0
         }
         
         enum BackButton {
@@ -58,20 +58,19 @@ final class BankAppPickerViewBuilder {
 
     private var backButtonDidTap: Action
 
-    private lazy var titleLabel: UILabel = {
+    private(set) lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.numberOfLines = 0
         view.font = Consts.Title.font
         view.textColor = Consts.Title.textColor
         view.text = Consts.Title.text
+        view.textAlignment = .center
         return view
     }()
     
-    lazy var subtitleLabel: UILabel = {
-        let view = UILabel()
-        view.numberOfLines = 0
-        view.font = Consts.Subtitle.font
-        view.textColor = Consts.Subtitle.textColor
+    private lazy var imageView: UIImageView = {
+       let view = UIImageView()
+        view.image = Asset.background.image
         return view
     }()
     
@@ -99,22 +98,20 @@ final class BankAppPickerViewBuilder {
         return view
     }()
     
-    func setupUI(view: UIView, logoImage: UIImageView) {
+    func setupUI(view: UIView) {
+        imageView
+            .add(toSuperview: view)
+            .touchEdgesToSuperview([.bottom, .left, .right, .top])
+        
         titleLabel
             .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: Consts.Title.topOffSet)
-            .touchEdge(.left, toEdge: .left, ofView: logoImage)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-        
-        subtitleLabel
-            .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Consts.Subtitle.topOffSet)
-            .touchEdge(.left, toEdge: .left, ofView: logoImage)
+            .touchEdge(.top, toSameEdgeOfView: view, withInset: Consts.Title.topOffSet)
+            .touchEdge(.left, toSameEdgeOfView: view, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
         
         tableView
             .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: subtitleLabel, withInset: Consts.TableView.topOffSet)
+            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Consts.TableView.topOffSet)
             .touchEdge(.left, toEdge: .left, ofView: titleLabel)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.rightOffSet)
         

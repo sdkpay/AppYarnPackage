@@ -9,6 +9,7 @@ import UIKit
 
 protocol PaymentRouting {
     func presentCards(cards: [PaymentToolInfo],
+                      cost: String,
                       selectedId: Int,
                       selectedCard: @escaping (PaymentToolInfo) -> Void)
     func presentPartPay(partPaySelected: @escaping Action)
@@ -26,9 +27,11 @@ final class PaymentRouter: PaymentRouting {
     }
     
     func presentCards(cards: [PaymentToolInfo],
+                      cost: String,
                       selectedId: Int,
                       selectedCard: @escaping (PaymentToolInfo) -> Void) {
         let vc = CardsAssembly(locator: locator).createModule(cards: cards,
+                                                              cost: cost,
                                                               selectedId: selectedId,
                                                               selectedCard: selectedCard)
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)

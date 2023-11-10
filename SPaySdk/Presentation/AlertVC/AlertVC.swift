@@ -13,6 +13,7 @@ private extension CGFloat {
     static let buttonsMargin = 32.0
     static let buttonSpacing = 2.0
     static let bottomMargin = 66.0
+    static let sideMargin = 8.0
 }
 
 protocol IAlertVC {
@@ -20,24 +21,57 @@ protocol IAlertVC {
 }
 
 final class AlertVC: ContentVC, IAlertVC {
-   private lazy var imageView = UIImageView()
+    private lazy var imageView: UIImageView = {
+       let view = UIImageView()
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
 
     private lazy var alertTitle: UILabel = {
         let view = UILabel()
-        view.font = .bodi3
-        view.numberOfLines = 0
+        view.font = .header2
+        view.numberOfLines = 1
         view.textColor = .textPrimory
         view.textAlignment = .center
         return view
     }()
     
-    private lazy var infoStack: UIStackView = {
+    private lazy var alertSubtitle: UILabel = {
+       let view = UILabel()
+        view.font = .medium5
+        view.numberOfLines = 0
+        view.textColor = .textSecondary
+        view.textAlignment = .center
+        return view
+    }()
+    
+    private lazy var alertCostLabel: UILabel = {
+       let view = UILabel()
+        view.font = .header3
+        view.textColor = .textPrimory
+        view.textAlignment = .center
+        view.numberOfLines = 1
+        return view
+    }()
+    
+    private lazy var textStack: UIStackView = {
         let view = UIStackView()
-        view.spacing = .margin
+        view.spacing = 8
         view.axis = .vertical
         view.alignment = .center
-        view.addArrangedSubview(imageView)
+        view.addArrangedSubview(alertSubtitle)
+        view.addArrangedSubview(alertCostLabel)
         view.addArrangedSubview(alertTitle)
+        return view
+    }()
+    
+    private lazy var contentStack: UIStackView = {
+        let view = UIStackView()
+        view.spacing = 32
+        view.axis = .vertical
+        view.alignment = .center
+        view.addArrangedSubview(textStack)
+        view.addArrangedSubview(imageView)
         return view
     }()
     
@@ -46,16 +80,6 @@ final class AlertVC: ContentVC, IAlertVC {
         view.spacing = .buttonSpacing
         view.axis = .vertical
         view.alignment = .fill
-        return view
-    }()
-    
-    private lazy var contentStack: UIStackView = {
-        let view = UIStackView()
-        view.spacing = .margin
-        view.axis = .vertical
-        view.alignment = .center
-        view.addArrangedSubview(infoStack)
-        view.addArrangedSubview(buttonsStack)
         return view
     }()
     
@@ -73,6 +97,7 @@ final class AlertVC: ContentVC, IAlertVC {
     func configView(with model: AlertViewModel) {
         imageView.image = model.image
         alertTitle.text = model.title
+        alertSubtitle.text = model.subtite
         
         for item in model.buttons {
             let button = DefaultButton(buttonAppearance: item.type)
@@ -109,7 +134,7 @@ final class AlertVC: ContentVC, IAlertVC {
     }
     
     func setupUI() {
-        view.height(.minScreenSize, priority: .defaultLow)
+        view.height(.vcMaxHeight, priority: .defaultLow)
 
         imageView
             .height(.imageWidth)
@@ -117,8 +142,14 @@ final class AlertVC: ContentVC, IAlertVC {
         
         contentStack
             .add(toSuperview: view)
-            .centerInSuperview(.y)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+            .centerInSuperview(.y, withOffset: -buttonsStack.bounds.height)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
+        
+        buttonsStack
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .buttonsMargin)
     }
 }
