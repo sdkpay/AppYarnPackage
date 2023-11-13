@@ -32,6 +32,8 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     private let completionManager: CompletionManager
     private let alertService: AlertService
     
+    private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.BankAppView.rawValue]
+    
     private var completion: Action?
     
     init(bankManager: BankAppManager,
@@ -55,11 +57,11 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     }
     
     func viewDidAppear() {
-        analytics.sendEvent(.LCBankAppsViewAppeared)
+        analytics.sendEvent(.LCBankAppsViewAppeared, with: screenEvent)
     }
     
     func viewDidDisappear() {
-        analytics.sendEvent(.LCBankAppsViewDisappeared)
+        analytics.sendEvent(.LCBankAppsViewDisappeared, with: screenEvent)
     }
     
     func model(for indexPath: IndexPath) -> BankAppCellModel {
@@ -88,7 +90,14 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
                 self?.removeObserver()
                 self?.completion?()
                 self?.view?.contentNavigationController?.popViewController(animated: true)
-            case .failure:
+            case .failure(let error):
+                if error.represents(.bankAppNotFound) {
+                    guard let self else { return }
+                    self.analytics.sendEvent(.LCBankAppsViewDisappeared, with: [
+                        .view: AnlyticsScreenEvent.BankAppView.rawValue,
+                        .error: "OpenStatusFail"
+                    ])
+                }
                 self?.bankManager.selectedBank = nil
                 self?.checkTappedAppsCount()
                 self?.view?.reloadTableView()
@@ -112,6 +121,11 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     @objc
     private func applicationDidBecomeActive() {
         SBLogger.log("📲 Become active without redirect")
+        
+        self.analytics.sendEvent(.LCBankAppsViewDisappeared, with: [
+            .view: AnlyticsScreenEvent.BankAppView.rawValue,
+            .error: "ReturnedByHimself"
+        ])
         view?.reloadTableView()
         checkTappedAppsCount()
     }

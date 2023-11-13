@@ -12,7 +12,9 @@ protocol LogoutPresenting {
     func back()
     func logout()
     func getNumber() -> String?
-    func getName() -> String 
+    func getName() -> String
+    func viewDidAppear()
+    func viewDidDisappear()
 }
 
 final class LogoutPresenter: LogoutPresenting {
@@ -23,14 +25,19 @@ final class LogoutPresenter: LogoutPresenting {
     private var authManager: AuthManager
     private let userService: UserService
     private let completionManager: CompletionManager
+    private let analytics: AnalyticsService
+    
+    private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.ProfileView.rawValue]
     
     init(sdkManager: SDKManager,
          storage: CookieStorage,
          userService: UserService,
          authManager: AuthManager,
+         analytics: AnalyticsService,
          completionManager: CompletionManager) {
         self.sdkManager = sdkManager
         self.storage = storage
+        self.analytics = analytics
         self.authManager = authManager
         self.userService = userService
         self.completionManager = completionManager
@@ -44,13 +51,24 @@ final class LogoutPresenter: LogoutPresenting {
         (authManager.userInfo?.firstName ?? "") + " " + (authManager.userInfo?.lastName ?? "")
     }
     
+    func viewDidAppear() {
+        analytics.sendEvent(.LCProfileViewAppeared, with: screenEvent)
+    }
+    
+    func viewDidDisappear() {
+        analytics.sendEvent(.LCProfileViewDisappeared, with: screenEvent)
+    }
+    
     func back() {
         view?.contentNavigationController?.popViewController(animated: true, completion: nil)
+        analytics.sendEvent(.TouchBack, with: screenEvent)
     }
     
     func logout() {
         userService.clearData()
         storage.cleanCookie()
+        analytics.sendEvent(.STRemoveRefresh, with: screenEvent)
         completionManager.dismissCloseAction(view)
+        analytics.sendEvent(.TouchLogOut, with: screenEvent)
     }
 }

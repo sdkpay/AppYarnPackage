@@ -21,6 +21,8 @@ enum AnlyticsScreenEvent: String {
     case PartPayVC
     case PaymentVC
     case WebViewVC
+    case ProfileView
+    case BankAppView
     case None
 }
 
@@ -260,6 +262,14 @@ enum AnalyticsEvent: String {
     case RSGoodIp
     /// Парсинг ответа от сервера на запрос ip произведен с ошибкой
     case RSFailIp
+    /// Отобразился экран профиля
+    case LCProfileViewAppeared
+    /// Перестал отображаться экран профиля
+    case LCProfileViewDisappeared
+    /// Пользователь нажал на "Выйти"
+    case TouchLogOut
+    /// Удален токен
+    case STRemoveRefresh
 }
 
 enum AnalyticsValue: String {
@@ -275,6 +285,7 @@ enum AnalyticsKey: String {
     case permisson
     case biZoneCode
     case selectedBank
+    case error
 }
 
 protocol AnalyticsService {

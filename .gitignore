@@ -99,4 +99,5 @@ RSwift/
 *.cer
 *.mobileprovision
 *.entitlements
+*.plist
 
