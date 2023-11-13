@@ -13,6 +13,11 @@ private enum PaymentCellType {
     case partPay
 }
 
+enum PaymentSection: Int, CaseIterable {
+    case features
+    case card
+}
+
 struct PaymentCellModel {
     var title: String
     var subtitle: String
@@ -183,6 +188,7 @@ final class PaymentPresenter: PaymentPresenting {
             guard userService.additionalCards else { return }
             Task { @MainActor in
                 self.router.presentCards(cards: user.paymentToolInfo,
+                                         cost: finalCost,
                                          selectedId: selectedCard.paymentId,
                                          selectedCard: { [weak self] card in
                     self?.view?.hideLoading(animate: true)
