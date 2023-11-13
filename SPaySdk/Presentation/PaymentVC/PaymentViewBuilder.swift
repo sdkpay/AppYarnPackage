@@ -10,6 +10,7 @@ import UIKit
 final class PaymentViewBuilder {
     private var payButtonDidTap: Action
     private var cancelButtonDidTap: Action
+    private var featureCount: Int
     
     private(set) lazy var payButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
@@ -58,7 +59,7 @@ final class PaymentViewBuilder {
     
     private lazy var sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
         guard let sectionKind = PaymentSection(rawValue: sectionIndex) else { return nil }
-        let section = PaymentSectionLayoutManager.getSectionLayout(sectionKind, layoutEnvironment: layoutEnvironment)
+        let section = PaymentSectionLayoutManager.getSectionLayout(sectionKind, featureCount: self.featureCount, layoutEnvironment: layoutEnvironment)
         return section
     }
     
@@ -68,10 +69,15 @@ final class PaymentViewBuilder {
                                                    collectionViewLayout: PaymentCollectionViewLayoutManager.create(with: sectionProvider))
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
+        collectionView.register(PaymentCardCell.self, forCellWithReuseIdentifier: PaymentCardCell.reuseId)
+        collectionView.register(BlockPaymentFeatureCell.self, forCellWithReuseIdentifier: BlockPaymentFeatureCell.reuseId)
         return collectionView
     }()
     
-    init(payButtonDidTap: @escaping Action, cancelButtonDidTap: @escaping Action) {
+    init(featureCount: Int,
+         payButtonDidTap: @escaping Action,
+         cancelButtonDidTap: @escaping Action) {
+        self.featureCount = featureCount
         self.payButtonDidTap = payButtonDidTap
         self.cancelButtonDidTap = cancelButtonDidTap
     }
@@ -94,6 +100,7 @@ final class PaymentViewBuilder {
             .touchEdge(.bottom, toEdge: .top, ofView: cancelButton, withInset: Cost.Button.Pay.bottom)
         
         collectionView
+         //   .height(100)
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.CollectionView.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.CollectionView.right)

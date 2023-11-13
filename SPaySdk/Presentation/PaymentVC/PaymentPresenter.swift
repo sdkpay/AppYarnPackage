@@ -18,32 +18,11 @@ enum PaymentSection: Int, CaseIterable {
     case card
 }
 
-struct PaymentCellModel {
-    var title: String
-    var subtitle: String
-    var iconURL: String?
-    var needArrow: Bool
-    
-    init(title: String,
-         subtitle: String,
-         iconURL: String? = nil, needArrow: Bool) {
-        self.title = title
-        self.subtitle = subtitle
-        self.iconURL = iconURL
-        self.needArrow = needArrow
-    }
-    
-    init() {
-        self.title = ""
-        self.subtitle = ""
-        self.iconURL = ""
-        self.needArrow = true
-    }
-}
-
 protocol PaymentPresenting {
-    var cellDataCount: Int { get }
-    func model(for indexPath: IndexPath) -> PaymentCellModel
+    var featureCount: Int { get }
+    var activeMainSections: [PaymentSection] { get }
+    func identifiresForSection(_ section: PaymentSection) -> [Int]
+    func model(for indexPath: IndexPath) -> AbstractCellModel?
     func didSelectItem(at indexPath: IndexPath)
     func viewDidLoad()
     func payButtonTapped()
@@ -54,8 +33,17 @@ protocol PaymentPresenting {
 }
 
 final class PaymentPresenter: PaymentPresenting {
-    var cellDataCount: Int {
-        cellData.count
+    
+    var activeMainSections: [PaymentSection] {
+        var activeSections: [PaymentSection] = [.card]
+        if partPayService.bnplplanEnabled {
+            activeSections.append(.features)
+        }
+        return activeSections
+    }
+    
+    var featureCount: Int {
+        partPayService.bnplplanEnabled ? 1 : 0
     }
 
     weak var view: (IPaymentVC & ContentVC)?
@@ -76,15 +64,6 @@ final class PaymentPresenter: PaymentPresenting {
     private let otpService: OTPService
     private let featureToggle: FeatureToggleService
     private var finalCost: String = ""
-
-    private var cellData: [PaymentCellType] {
-        var cellData: [PaymentCellType] = []
-        cellData.append(.card)
-        if partPayService.bnplplanEnabled {
-            cellData.append(.partPay)
-        }
-        return cellData
-    }
     
     private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
     
@@ -149,38 +128,53 @@ final class PaymentPresenter: PaymentPresenting {
         self.completionManager.dismissCloseAction(view)
     }
     
-    func model(_ indexPath: IndexPath) -> AbstractCellModel? {
-
+    func identifiresForSection(_ section: PaymentSection) -> [Int] {
+        
+        switch section {
+        case .features:
+            return [2]
+        case .card:
+            return [1]
+        }
+    }
+    
+    func model(for indexPath: IndexPath) -> AbstractCellModel? {
+        
         guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
         
         switch section {
         case .features:
+            
+            guard let buttonBnpl = partPayService.bnplplan?.buttonBnpl else { return nil }
+            
+            return PartPayModelFactory.build(indexPath,
+                                             buttonBnpl: buttonBnpl,
+                                             bnplplanSelected: partPayService.bnplplanSelected)
+            
         case .card:
-        }
-    }
-    
-    func model(for indexPath: IndexPath) -> PaymentCellModel {
-        let cellType = cellData[indexPath.row]
-        switch cellType {
-        case .card:
-            return PaymentFeaturesConfig.configCardModel(userService: userService,
-                                                         featureToggle: featureToggle)
-        case .partPay:
-            return PaymentFeaturesConfig.configPartModel(partPayService: partPayService)
+            
+            guard let selectedCard = userService.selectedCard else { return nil }
+            return CardModelFactory.build(indexPath,
+                                          selectedCard: selectedCard,
+                                          additionalCards: userService.additionalCards,
+                                          compoundWalletNeed: featureToggle.isEnabled(.compoundWallet))
         }
     }
     
     func didSelectItem(at indexPath: IndexPath) {
-        let cellType = cellData[indexPath.row]
-        switch cellType {
+        
+        guard let section = PaymentSection(rawValue: indexPath.section) else { return }
+        
+        switch section {
         case .card:
             analytics.sendEvent(.TouchCard, with: screenEvent)
             cardTapped()
-        case .partPay:
+        case .features:
             analytics.sendEvent(.TouchBNPL, with: screenEvent)
             router.presentPartPay { [weak self] in
                 self?.configViews()
                 self?.updatePayButtonTitle()
+                self?.view?.reloadData(in: [.features])
             }
         }
     }
@@ -205,7 +199,7 @@ final class PaymentPresenter: PaymentPresenting {
                                          selectedCard: { [weak self] card in
                     self?.view?.hideLoading(animate: true)
                     self?.userService.selectedCard = card
-                    self?.view?.reloadCollectionView()
+                    self?.view?.reloadData(in: [.card])
                 })
             }
         case false:
@@ -295,7 +289,7 @@ final class PaymentPresenter: PaymentPresenting {
         view?.configProfileView(with: user.userInfo)
         
         if userService.selectedCard != nil {
-            view?.reloadCollectionView()
+        view?.addSnapShot()
         } else {
             configWithNoCards()
         }
@@ -358,7 +352,7 @@ final class PaymentPresenter: PaymentPresenting {
                 try await paymentService.getPaymentToken(paymentId: paymentId,
                                                          isBnplEnabled: false)
                 
-                self.view?.reloadCollectionView()
+                self.view?.reloadData(in: PaymentSection.allCases)
                 self.alertService.show(on: self.view,
                                        type: .partPayError(fullPay: {
                     self.goToPay()

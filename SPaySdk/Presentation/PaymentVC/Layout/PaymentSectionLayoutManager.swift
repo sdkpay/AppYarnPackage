@@ -16,11 +16,6 @@ private extension CGFloat {
         static let height: CGFloat = 56
     }
     
-    enum BalanceConstants {
-    
-        static let height: CGFloat = 106
-    }
-    
     enum ActionConstants {
         
         static let width: CGFloat = 80
@@ -34,32 +29,30 @@ private extension CGFloat {
         static let height: CGFloat = 160
         static let margin: CGFloat = 4
     }
-    
-    enum HistoryConstants {
-
-        static let height: CGFloat = 72
-    }
 }
 
 enum PaymentSectionLayoutManager {
     
     static func getSectionLayout(_ section: PaymentSection,
+                                 featureCount: Int,
                                  layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
         
         switch section {
-        case .card: return blockSection
-        case .features: return squareSection
+        case .features:
+            return featureCount > 1 ? squareSection : blockSection
+        case .card:
+            return blockSection
         }
     }
 
     private static var blockSection: NSCollectionLayoutSection {
         
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
+                                              heightDimension: .estimated(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .absolute(.BalanceConstants.height))
+                                               heightDimension: .estimated(1))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
         group.contentInsets = .init(top: 8.0, leading: 0, bottom: 8.0, trailing: 0)
         

@@ -33,17 +33,17 @@ class CompactCollectionView: UICollectionView {
 
     private lazy var collectionHeightConstraint: NSLayoutConstraint = {
         let constraint = heightAnchor.constraint(equalToConstant: 0)
-        constraint.priority = .defaultLow
+        constraint.priority = .defaultHigh
         constraint.isActive = true
         return constraint
     }()
 
     private func fixHeight() {
-        var height = collectionViewLayout.collectionViewContentSize.height
+        var height = contentSize.height
         + contentInset.top
         + contentInset.bottom
         + safeAreaInsets.bottom
-        (collectionViewLayout as? UICollectionViewFlowLayout).map { height += $0.sectionInset.top }
+        (collectionViewLayout as? UICollectionViewCompositionalLayout).map { height += $0.configuration.interSectionSpacing }
         (collectionViewLayout as? UICollectionViewFlowLayout).map { height += $0.sectionInset.bottom }
 
         if height != 0 && height != CGFloat.infinity {
