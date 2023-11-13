@@ -12,6 +12,11 @@ extension CGFloat {
     static let interSectionSpacing = 16.0
 }
 
+enum PaymentCellForm {
+    case block
+    case square
+}
+
 enum PaymentCollectionViewLayoutManager {
     
     static func create(with sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider) -> UICollectionViewLayout {
