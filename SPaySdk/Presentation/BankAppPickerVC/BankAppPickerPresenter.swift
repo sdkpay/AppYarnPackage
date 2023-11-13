@@ -68,18 +68,18 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     }
     
     private func appAuthMethod() {
-        authService.appAuth(completion: { [weak self] result in
-            switch result {
-            case .success:
-                self?.removeObserver()
-                self?.completion?()
-                self?.view?.contentNavigationController?.popViewController(animated: true)
-            case .failure:
-                self?.bankManager.selectedBank = nil
-                self?.checkTappedAppsCount()
-                self?.view?.reloadTableView()
+        Task {
+            do {
+                try await authService.appAuth()
+                removeObserver()
+                completion?()
+                await view?.contentNavigationController?.popViewController(animated: true)
+            } catch {
+                bankManager.selectedBank = nil
+                checkTappedAppsCount()
+                view?.reloadTableView()
             }
-        })
+        }
     }
     
     private func showErrorAlert() {

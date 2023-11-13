@@ -19,7 +19,8 @@ final class RemoteConfigServiceAssembly: Assembly {
 }
 
 protocol RemoteConfigService {
-    func getConfig(with apiKey: String?, completion: @escaping (SDKError?) -> Void)
+    
+    func getConfig(with apiKey: String?) async throws
 }
 
 final class DefaultRemoteConfigService: RemoteConfigService {
@@ -44,29 +45,20 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
     }
     
-    func getConfig(with apiKey: String?,
-                   completion: @escaping (SDKError?) -> Void) {
+    func getConfig(with apiKey: String?) async throws {
+        
         self.apiKey = apiKey
-        network.request(ConfigTarget.getConfig,
-                        to: ConfigModel.self,
-                        retrySettings: (2, [])) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let config):
-                self.versionСontrolManager.setVersionsInfo(config.versionInfo)
-                self.saveConfig(config)
-                self.checkWhiteLogList(apikeys: config.apikey)
-                self.checkVersion(version: config.version)
-                self.setFeatures(config.featuresToggle)
-                self.analytics.sendEvent(.RQGoodRemoteConfig,
-                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
-                completion(nil)
-            case .failure(let error):
-                self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                    type: .remote)
-                completion(error)
-            }
-        }
+        
+        let result = try await network.request(ConfigTarget.getConfig,
+                                               to: ConfigModel.self,
+                                               retrySettings: (2, []))
+        
+        self.versionСontrolManager.setVersionsInfo(result.versionInfo)
+        self.saveConfig(result)
+        self.checkVersion(version: result.version)
+        self.setFeatures(result.featuresToggle)
+        self.analytics.sendEvent(.RQGoodRemoteConfig,
+                                 with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
     }
     
     private func saveConfig(_ value: ConfigModel) {
@@ -79,10 +71,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private func setFeatures(_ values: [FeaturesToggle]) {
         featureToggle.setFeatures(values)
     }
-    
-    private func checkWhiteLogList(apikeys: [String]) {
-    }
-    
+
     private func checkVersion(version: String) {
         let currentVesion = Bundle.sdkVersion
         if version != currentVesion {

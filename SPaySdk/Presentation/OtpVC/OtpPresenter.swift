@@ -76,28 +76,31 @@ final class OtpPresenter: OtpPresenting {
     func createOTP() {
         analytics.sendEvent(.RQCreteOTP,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-        view?.showLoading()
-        otpService.creteOTP { [weak self] result in
-            switch result {
-            case .success:
-                self?.view?.hideLoading(animate: true)
-                self?.updateTimerView()
-                self?.createTimer()
-                self?.analytics.sendEvent(.RQGoodCreteOTP,
-                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-                self?.analytics.sendEvent(.RSGoodCreteOTP,
-                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-            case .failure(let error):
-                self?.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                     type: .otp(type: .creteOTP))
-                self?.view?.hideLoading(animate: true)
-                if error.represents(.noInternetConnection) {
-                    self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.createOTP() },
-                                                              completion: { self?.dismissWithError(error) }))
-                } else {
-                    self?.alertService.show(on: self?.view,
-                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
+        
+        Task {
+            do {
+                await view?.showLoading()
+                try await otpService.creteOTP()
+                await view?.hideLoading(animate: true)
+                self.updateTimerView()
+                self.createTimer()
+                self.analytics.sendEvent(.RQGoodCreteOTP,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
+                self.analytics.sendEvent(.RSGoodCreteOTP,
+                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
+            } catch {
+                if let error = error as? SDKError {
+                    parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                                   type: .otp(type: .creteOTP))
+                    await view?.hideLoading(animate: true)
+                    if error.represents(.noInternetConnection) {
+                        alertService.show(on: view,
+                                          type: .noInternet(retry: { self.createOTP() },
+                                                            completion: { self.dismissWithError(error) }))
+                    } else {
+                        alertService.show(on: view,
+                                          type: .defaultError(completion: { self.dismissWithError(error) }))
+                    }
                 }
             }
         }
@@ -107,44 +110,46 @@ final class OtpPresenter: OtpPresenting {
         analytics.sendEvent(.TouchNext,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         let otpHash = getHashCode(code: otpCode)
-        view?.showLoading()
         analytics.sendEvent(.RQConfirmOTP,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
         analytics.sendEvent(.RSConfirmOTP,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-        otpService.confirmOTP(otpHash: otpHash) { [weak self]  result in
-            guard let self = self else { return }
-            switch result {
-            case .success:
+        
+        Task {
+            do {
+                await view?.showLoading()
+                try await otpService.confirmOTP(otpHash: otpHash)
                 self.analytics.sendEvent(.RSGoodConfirmOTP,
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
                 self.analytics.sendEvent(.RQGoodConfirmOTP,
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
-                self.view?.hideKeyboard()
+                await self.view?.hideKeyboard()
                 self.closeWithSuccess()
-            case .failure(let error):
-                self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                    type: .otp(type: .confirmOTP))
-                if error.represents(.incorrectCode) {
-                    self.analytics.sendEvent(.RQFailConfirmOTP)
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
-                        self.view?.hideLoading(animate: true)
-                        self.view?.showError(with: error.description)
+            } catch {
+                if let error = error as? SDKError {
+                    self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                                        type: .otp(type: .confirmOTP))
+                    if error.represents(.incorrectCode) {
+                        self.analytics.sendEvent(.RQFailConfirmOTP)
+                        DispatchQueue.main.async { [weak self] in
+                            guard let self = self else { return }
+                            self.view?.hideLoading(animate: true)
+                            self.view?.showError(with: error.description)
+                        }
+                    } else if error.represents(.tryingError) {
+                        self.alertService.show(on: self.view, type: .tryingError(back: {
+                            self.dismissWithError(nil)
+                        }))
+                    } else if error.represents(.timeOut) {
+                        DispatchQueue.main.async { [weak self] in
+                            guard let self = self else { return }
+                            self.view?.hideLoading(animate: true)
+                            self.view?.showError(with: error.description)
+                        }
+                    } else {
+                        self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
+                        await self.view?.hideLoading()
                     }
-                } else if error.represents(.tryingError) {
-                    self.alertService.show(on: self.view, type: .tryingError(back: {
-                        self.dismissWithError(nil)
-                    }))
-                } else if error.represents(.timeOut) {
-                    DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
-                        self.view?.hideLoading(animate: true)
-                        self.view?.showError(with: error.description)
-                    }
-                } else {
-                    self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
-                    self.view?.hideLoading()
                 }
             }
         }
@@ -164,9 +169,11 @@ final class OtpPresenter: OtpPresenting {
     }
     
     private func closeWithSuccess() {
-        view?.contentNavigationController?.popViewController(animated: false, completion: {
-            self.completion?()
-        })
+        DispatchQueue.main.async {
+            self.view?.contentNavigationController?.popViewController(animated: false, completion: {
+                self.completion?()
+            })
+        }
     }
     
     private func dismissWithError(_ error: SDKError?) {

@@ -55,8 +55,7 @@ enum HTTPTask {
 protocol NetworkProvider {
     func request(_ target: TargetType,
                  retrySettings: RetrySettings,
-                 host: HostSettings,
-                 completion: @escaping NetworkProviderCompletion)
+                 host: HostSettings) async throws -> (data: Data, response: URLResponse)
     func cancel()
 }
 
@@ -82,50 +81,48 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     
     func request(_ target: TargetType,
                  retrySettings: RetrySettings = (1, []),
-                 host: HostSettings = .main,
-                 completion: @escaping NetworkProviderCompletion) {
-        _request(target: target, retrySettings: retrySettings, host: host, completion: completion)
+                 host: HostSettings = .main) async throws -> (data: Data, response: URLResponse) {
+        try await _request(target: target, retrySettings: retrySettings, host: host)
     }
-
+    
     private func _request(retry: Int = 1,
                           target: TargetType,
-                          retrySettings: RetrySettings,
-                          host: HostSettings,
-                          completion: @escaping NetworkProviderCompletion) {
+                          retrySettings: RetrySettings = (1, []),
+                          host: HostSettings = .main) async throws -> (data: Data, response: URLResponse) {
+        
         do {
+            
             let request = try self.buildRequest(from: target, hostSettings: host)
             SBLogger.logRequestStarted(request)
-            task = session?.dataTask(with: request, completionHandler: { data, response, error in
-                self.timeManager.checkNetworkDataSize(object: data)
-                DispatchQueue.main.async {
-                    if let response = response {
-                        self.saveGeobalancingData(from: response)
-                    }
-                    if retrySettings.count != 1,
-                       let error = error,
-                       (error._code == URLError.Code.timedOut.rawValue || !retrySettings.retryCode.contains(error._code)),
-                       retry < retrySettings.count {
-                        self._request(retry: retry + 1,
-                                      target: target,
-                                      retrySettings: retrySettings,
-                                      host: host,
-                                      completion: completion)
-                    } else {
-                        SBLogger.logRequestCompleted(host: self.hostManager.host(for: host),
-                                                     target,
-                                                     response: response,
-                                                     data: data,
-                                                     error: error)
-                        completion(data, response, error)
-                    }
-                }
-            })
+            
+            guard let session else {
+                throw SDKError(.system)
+            }
+            
+            let (data, response) = try await session.data(for: request)
+            
+            self.saveGeobalancingData(from: response)
+            
+            SBLogger.logRequestCompleted(host: self.hostManager.host(for: host),
+                                         target,
+                                         response: response,
+                                         data: data,
+                                         error: nil)
+            
+            return (data, response)
         } catch {
-            DispatchQueue.main.async {
-                completion(nil, nil, error)
+            if  retrySettings.count != 1,
+                retry < retrySettings.count,
+                (error._code == URLError.Code.timedOut.rawValue || !retrySettings.retryCode.contains(error._code)) {
+                let (data, response) = try await self._request(retry: retry + 1,
+                                                               target: target,
+                                                               retrySettings: retrySettings,
+                                                               host: host)
+                return (data, response)
+            } else {
+                throw error
             }
         }
-        self.task?.resume()
     }
 
     func cancel() {

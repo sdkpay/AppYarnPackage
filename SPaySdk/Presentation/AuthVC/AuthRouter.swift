@@ -21,16 +21,19 @@ final class AuthRouter: AuthRouting {
         self.locator = locator
     }
     
+    @MainActor
     func presentPayment() {
         let vc = PaymentAssembly(locator: locator).createModule()
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
     
+    @MainActor
     func presentBankAppPicker(completion: @escaping Action) {
         let vc = BankAppPickerAssembly(locator: locator).createModule(completion: completion)
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
     
+    @MainActor
     func presentFakeScreen(completion: @escaping () -> Void) {
         let fakeViewController = FakeViewController()
         viewController?.present(fakeViewController, animated: true)

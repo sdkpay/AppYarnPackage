@@ -10,90 +10,80 @@ import Foundation
 protocol ResponseDecoder {
     func decodeResponse<T: Codable>(data: Data?,
                                     response: URLResponse?,
-                                    error: Error?,
-                                    type: T.Type) -> Result<T, SDKError>
+                                    type: T.Type) throws -> T
     func decodeResponse(data: Data?,
-                        response: URLResponse?,
-                        error: Error?) -> Result<Void, SDKError>
+                        response: URLResponse?) throws
+    func decodeResponseFull<T: Codable>(data: Data?,
+                                        response: URLResponse?,
+                                        type: T.Type) throws -> (result: T,
+                                                                 headers: HTTPHeaders,
+                                                                 cookies: [HTTPCookie])
     func decodeParametersFrom(url: URL) -> Result<BankModel, SDKError>
+    func systemError(_ error: Error) -> SDKError
 }
 
 extension ResponseDecoder {
     
     func decodeResponse<T: Codable>(data: Data?,
                                     response: URLResponse?,
-                                    error: Error?,
-                                    type: T.Type) -> Result<T, SDKError> {
+                                    type: T.Type) throws -> T {
         
         guard let response = response as? HTTPURLResponse else {
-            return .failure(SDKError(.noInternetConnection))
+            throw SDKError(.noData)
         }
         
-        if let error = systemError(error, httpCode: response.statusCode) {
-            return .failure(error)
-        }
+        guard let data = data else { throw SDKError(.noData) }
         
-        guard let data = data else { return .failure(.init(.noData)) }
-        
-        if let error = SDKError(with: data, httpCode: response.statusCode) {
-            return .failure(error)
+        if let error = SDKError(with: data,
+                                httpCode: response.statusCode) {
+            throw error
         }
         
         do {
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(type, from: data)
             SBLogger.responseDecodedWithSuccess(for: type)
-            return .success(decodedData)
+            return decodedData
         } catch let error as DecodingError {
             SBLogger.responseDecodedWithError(for: type, decodingError: error)
             let error = ErrorConvertDecoder.getError(decodingError: error)
-            return .failure(error)
+            throw error
         } catch {
             let error = SDKError(.failDecode, httpCode: response.statusCode, description: error.localizedDescription)
-            return .failure(error)
+            throw error
         }
     }
     
     func decodeResponse(data: Data?,
-                        response: URLResponse?,
-                        error: Error?) -> Result<Void, SDKError> {
+                        response: URLResponse?) throws {
         
         guard let response = response as? HTTPURLResponse else {
-            return .failure(SDKError(.noInternetConnection))
+            throw SDKError(.noData)
         }
         
-        if let error = systemError(error, httpCode: response.statusCode) {
-            return .failure(error)
+        guard let data = data else { throw SDKError(.noData) }
+        
+        if let error = SDKError(with: data,
+                                httpCode: response.statusCode) {
+            throw error
         }
-        
-        guard let data = data else { return .failure(.init(.noData)) }
-        
-        if let error = SDKError(with: data, httpCode: response.statusCode) {
-            return .failure(error)
-        }
-        
-        return .success(())
     }
     
     func decodeResponseFull<T: Codable>(data: Data?,
                                         response: URLResponse?,
-                                        error: Error?,
-                                        type: T.Type) -> Result<(result: T,
+                                        type: T.Type) throws -> (result: T,
                                                                  headers: HTTPHeaders,
-                                                                 cookies: [HTTPCookie]), SDKError> {
+                                                                 cookies: [HTTPCookie]) {
         
         guard let response = response as? HTTPURLResponse else {
-            return .failure(SDKError(.noInternetConnection))
+            throw SDKError(.noData)
         }
         
-        guard let data = data else { return .failure(.init(.noData)) }
+        guard let data = data else { throw SDKError(.noData) }
         
-        if let error = systemError(error, httpCode: response.statusCode) {
-            return .failure(error)
-        }
-        
-        if let error = SDKError(with: data, httpCode: response.statusCode) {
-            return .failure(error)
+        if let error = SDKError(with: data,
+                                httpCode: response.statusCode) {
+            throw error
         }
 
         let headers = response.allHeaderFields as? HTTPHeaders ?? [:]
@@ -108,14 +98,14 @@ extension ResponseDecoder {
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(type, from: data)
             SBLogger.responseDecodedWithSuccess(for: type)
-            return .success((decodedData, headers, cookies))
+            return (decodedData, headers, cookies)
         } catch let error as DecodingError {
             SBLogger.responseDecodedWithError(for: type, decodingError: error)
             let error = ErrorConvertDecoder.getError(decodingError: error)
-            return .failure(error)
+            throw error
         } catch {
             let error = SDKError(.failDecode, httpCode: response.statusCode, description: error.localizedDescription)
-            return .failure(error)
+            throw error
         }
     }
     
@@ -149,9 +139,7 @@ extension ResponseDecoder {
         return .success(BankModel(dictionary: parameters))
     }
     
-    private func systemError(_ error: Error?, httpCode: Int) -> SDKError? {
-        
-        guard let error = error as? NSError else { return nil }
+    func systemError(_ error: Error) -> SDKError {
         
         var sslErrors: [URLError.Code] {
             return [
@@ -173,11 +161,11 @@ extension ResponseDecoder {
         }
         
         if sslErrors.contains(where: { $0.rawValue == error._code }) {
-            return SDKError(.ssl)
+            return SDKError(.ssl, httpCode: error._code)
         } else if timeOutErrors.contains(where: { $0.rawValue == error._code }) {
-            return SDKError(.timeOut)
+            return SDKError(.timeOut, httpCode: error._code)
         } else {
-            return nil
+            return SDKError(with: error)
         }
     }
 }

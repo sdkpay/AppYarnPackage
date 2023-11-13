@@ -30,9 +30,9 @@ final class AuthServiceAssembly: Assembly {
 }
 
 protocol AuthService {
-    func auth(completion: @escaping (Result<Void, SDKError>) -> Void)
-    func tryToGetSessionId(completion: @escaping (Result<AuthMethod, SDKError>) -> Void)
-    func appAuth(completion: @escaping (Result<Void, SDKError>) -> Void)
+    func auth() async throws
+    func tryToGetSessionId() async throws -> AuthMethod
+    func appAuth() async throws
     func completeAuth(with url: URL)
     var tokenInStorage: Bool { get }
     var bankCheck: Bool { get set }
@@ -45,7 +45,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         case sessionId
     }
     
-    private var authСompletion: ((SDKError?, Bool) -> Void)?
     private var analytics: AnalyticsService
     private let network: NetworkService
     private let sdkManager: SDKManager
@@ -60,7 +59,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var baseRequestManager: BaseRequestManager
     private var cookieStorage: CookieStorage
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
-    private var appCompletion: ((Result<Void, SDKError>) -> Void)?
+    private var appAuthCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
     
     var bankCheck = false
@@ -108,23 +107,16 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         SBLogger.log(.stop(obj: self))
     }
     
-    func tryToGetSessionId(completion: @escaping (Result<AuthMethod, SDKError>) -> Void) {
-        personalMetricsService.getIp { [weak self] ip in
-            self?.authManager.ipAddress = ip
-            // Проверка на целостность
-            if self?.enviromentManager.environment != .prod {
-                self?.getSessionId(completion: completion)
-            } else {
-                self?.personalMetricsService.integrityCheck { [weak self] result in
-                    switch result {
-                    case true:
-                        self?.getSessionId(completion: completion)
-                    case false:
-                        completion(.failure(SDKError(.personalInfo)))
-                    }
-                }
-            }
+    func tryToGetSessionId() async throws -> AuthMethod {
+        
+        let ipAddress = await personalMetricsService.getIp()
+        self.authManager.ipAddress = ipAddress
+        
+        if enviromentManager.environment == .prod {
+            try await personalMetricsService.integrityCheck()
         }
+        
+        return try await getSessionId()
     }
     
     func completeAuth(with url: URL) {
@@ -136,76 +128,81 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         case .success(let result):
             authManager.authCode = result.code
             authManager.state = result.state
-            authСompletion?(nil, false)
-            appCompletion?(.success)
+            appAuthCompletion?(.success)
         case .failure(let error):
-            authСompletion?(error, false)
-            appCompletion?(.failure(error))
+            appAuthCompletion?(.failure(error))
         }
-        authСompletion = nil
-        appCompletion = nil
+        appAuthCompletion = nil
     }
     
     private func fillFakeData() {
         authManager.authCode = "3401216B-8B70-21FA-2592-58010E53EE5B"
-        authСompletion?(nil, true)
+        appAuthCompletion?(.success)
     }
     
     private func addFrontHeaders() {
         baseRequestManager.generateB3Cookie()
     }
     
-    private func getSessionId(completion: @escaping (Result<AuthMethod, SDKError>) -> Void) {
-        guard let request = sdkManager.authInfo else { return }
+    private func getSessionId() async throws -> AuthMethod {
+        
+        guard let request = sdkManager.authInfo else {
+            throw SDKError(.noData)
+        }
+    
         addFrontHeaders()
         analytics.sendEvent(.RQSessionId,
                             with: [.view: AnlyticsScreenEvent.AuthVC.rawValue])
-        network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
-                                                merchantLogin: request.merchantLogin,
-                                                orderId: request.orderId,
-                                                amount: request.amount,
-                                                currency: request.currency,
-                                                orderNumber: request.orderNumber,
-                                                expiry: request.expiry,
-                                                frequency: request.frequency,
-                                                authCookie: getRefreshCookies()),
-                        to: AuthModel.self) { [weak self] result in
-            switch result {
-            case .success(let result):
-                guard let self = self else { return }
-                self.analytics.sendEvent(.RQGoodSessionId,
-                                         with: [AnalyticsKey.view: AnlyticsScreenEvent.AuthVC.rawValue])
-                self.authManager.sessionId = result.sessionId
-                self.appLink = result.deeplink
-                self.partPayService.setEnabledBnpl(result.isBnplEnabled ?? false, enabledLevel: .session)
-                
-                let refreshIsActive = result.refreshTokenIsActive ?? false
+        
+        do {
+            let sessionIdResult = try await network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
+                                                                                    merchantLogin: request.merchantLogin,
+                                                                                    orderId: request.orderId,
+                                                                                    amount: request.amount,
+                                                                                    currency: request.currency,
+                                                                                    orderNumber: request.orderNumber,
+                                                                                    expiry: request.expiry,
+                                                                                    frequency: request.frequency,
+                                                                                    authCookie: getRefreshCookies()),
+                                                            to: AuthModel.self)
+            
+            self.analytics.sendEvent(.RQGoodSessionId,
+                                     with: [AnalyticsKey.view: AnlyticsScreenEvent.AuthVC.rawValue])
+            self.authManager.sessionId = sessionIdResult.sessionId
+            self.appLink = sessionIdResult.deeplink
+            self.partPayService.setEnabledBnpl(sessionIdResult.isBnplEnabled ?? false, enabledLevel: .session)
+            
+            let refreshIsActive = sessionIdResult.refreshTokenIsActive ?? false
 
-                let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
-                self.analytics.sendEvent(event)
-                
-                if refreshIsActive && self.featureToggleService.isEnabled(.refresh) && self.cookieStorage.exists(.refreshData) {
-                    self.authManager.authMethod = .refresh
-                } else {
-                    self.authManager.authMethod = .bank
-                }
-                completion(.success(self.authManager.authMethod ?? .bank))
-            case .failure(let error):
-                self?.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                     type: .auth(type: .sessionId))
-                completion(.failure(error))
+            let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
+            self.analytics.sendEvent(event)
+            
+            if refreshIsActive && self.featureToggleService.isEnabled(.refresh) {
+                self.authManager.authMethod = .refresh
+            } else {
+                self.authManager.authMethod = .bank
             }
+            
+            return self.authManager.authMethod ?? .bank
+        } catch {
+            if let error = error as? SDKError {
+                parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                               type: .auth(type: .sessionId))
+            }
+            throw error
         }
     }
     
-    func appAuth(completion: @escaping (Result<Void, SDKError>) -> Void) {
+    @MainActor
+    func appAuth() async throws {
+        SBLogger.logThread(obj: self)
         self.authManager.authMethod = .bank
-        self.appCompletion = completion
-        sIdAuth()
+        try await sIdAuth()
     }
-    
-    // MARK: - Методы авторизации через sId
-    private func sIdAuth() {
+
+    @MainActor
+    private func sIdAuth() async throws {
+        SBLogger.logThread(obj: self)
         let target = enviromentManager.environment == .sandboxWithoutBankApp
         guard !target else {
             fillFakeData()
@@ -214,20 +211,29 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         
         guard let appLink,
               let link = authURL(link: appLink) else {
-            appCompletion?(.failure(SDKError(.noData)))
-            appCompletion = nil
-            return
+            throw SDKError(.noData)
         }
         
-        UIApplication.shared.open(link) { [weak self] success in
-            if !success {
-                SBLogger.log("🏦 Bank app not found")
-                self?.appCompletion?(.failure(SDKError(.bankAppNotFound)))
-                self?.appCompletion = nil
-                return
-            }
+       SBLogger.logRequestToSbolStarted(link)
+        
+       let result = await UIApplication.shared.open(link)
+        
+        switch result {
+        case true:
+            
+            try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<Void, Error>) -> Void in
+                self.appAuthCompletion = { result in
+                    switch result {
+                    case .success:
+                        inCont.resume()
+                    case .failure(let error):
+                        inCont.resume(throwing: error)
+                    }
+                }
+            })
+        case false:
+            throw SDKError(.bankAppNotFound)
         }
-        SBLogger.logRequestToSbolStarted(link)
     }
     
     private func authURL(link: String) -> URL? {
@@ -235,68 +241,57 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         return URL(string: url + link)
     }
     
-    func auth(completion: @escaping (Result<Void, SDKError>) -> Void) {
-        personalMetricsService.getUserData { [weak self] data in
-            guard let data else {
-                DispatchQueue.main.async {
-                    completion(.failure(SDKError(.personalInfo)))
-                }
-                return
-            }
-            
-            self?.authMethod(deviceInfo: data, completion: completion)
-        }
+    func auth() async throws {
+        
+        let userData = try await personalMetricsService.getUserData()
+        try await authMethod(deviceInfo: userData)
     }
-    
-    private func authMethod(deviceInfo: String, completion: @escaping (Result<Void, SDKError>) -> Void) {
-        guard let request = sdkManager.authInfo else { return }
+
+    private func authMethod(deviceInfo: String) async throws {
+        SBLogger.logThread(obj: self)
+        guard let request = sdkManager.authInfo else {
+            throw SDKError(.noData)
+        }
+        
         analytics.sendEvent(.RQAuth,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
-        network.requestFull(AuthTarget.auth(redirectUri: authManager.authMethod == .bank ? request.redirectUri : nil,
-                                            authCode: authManager.authCode,
-                                            sessionId: authManager.sessionId ?? "",
-                                            state: authManager.state,
-                                            deviceInfo: deviceInfo,
-                                            orderId: request.orderId,
-                                            amount: request.amount,
-                                            currency: request.currency,
-                                            mobilePhone: nil,
-                                            orderNumber: request.orderNumber,
-                                            description: nil,
-                                            expiry: request.expiry,
-                                            frequency: request.frequency,
-                                            userName: nil,
-                                            merchantLogin: request.merchantLogin,
-                                            resourceName: Bundle.main.displayName ?? "None",
-                                            authCookie: getRefreshCookies()),
-                            to: AuthRefreshModel.self) { [weak self] result in
-            switch result {
-            case .success(let authModel):
-                self?.saveRefreshIfNeeded(from: authModel.cookies)
-                self?.authManager.userInfo = authModel.result.userInfo
-                self?.authManager.isOtpNeed = authModel.result.isOtpNeed
-                self?.analytics.sendEvent(.RSGoodAuth,
-                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
-                completion(.success)
-            case .failure(let error):
-                guard let self else { return }
-                self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                    type: .auth(type: .auth))
-                
-                if self.authManager.authMethod == .bank {
-                    completion(.failure(error))
-                    return
-                }
-
-                self.appAuth { result in
-                    switch result {
-                    case .success:
-                        self.auth(completion: completion)
-                    case .failure(let failure):
-                        completion(.failure(failure))
-                    }
-                }
+        
+        do {
+            
+            let authResult = try await network.requestFull(AuthTarget.auth(redirectUri: authManager.authMethod == .bank ? request.redirectUri : nil,
+                                                                           authCode: authManager.authCode,
+                                                                           sessionId: authManager.sessionId ?? "",
+                                                                           state: authManager.state,
+                                                                           deviceInfo: deviceInfo,
+                                                                           orderId: request.orderId,
+                                                                           amount: request.amount,
+                                                                           currency: request.currency,
+                                                                           mobilePhone: nil,
+                                                                           orderNumber: request.orderNumber,
+                                                                           description: nil,
+                                                                           expiry: request.expiry,
+                                                                           frequency: request.frequency,
+                                                                           userName: nil,
+                                                                           merchantLogin: request.merchantLogin,
+                                                                           resourceName: Bundle.main.displayName ?? "None",
+                                                                           authCookie: getRefreshCookies()),
+                                                           to: AuthRefreshModel.self)
+            
+            saveRefreshIfNeeded(from: authResult.cookies)
+            authManager.userInfo = authResult.result.userInfo
+            authManager.isOtpNeed = authResult.result.isOtpNeed
+            analytics.sendEvent(.RSGoodAuth,
+                                with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
+        } catch {
+            if let error = error as? SDKError {
+                parsingErrorAnaliticManager.sendAnaliticsError(error: error,
+                                                               type: .auth(type: .sessionId))
             }
+            
+            if self.authManager.authMethod == .bank {
+                throw error
+            }
+            throw error
         }
     }
     

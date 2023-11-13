@@ -19,9 +19,9 @@ final class PersonalMetricsServiceAssembly: Assembly {
 }
 
 protocol PersonalMetricsService {
-    func getUserData(completion: @escaping (String?) -> Void)
-    func integrityCheck(completion: @escaping (Bool) -> Void)
-    func getIp(completion: @escaping StringAction)
+    func getUserData() async throws -> String 
+    func integrityCheck() async throws
+    func getIp() async -> String
 }
 
 final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
@@ -42,61 +42,70 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
         SBLogger.log(.stop(obj: self))
     }
     
-    func integrityCheck(completion: @escaping (Bool) -> Void) {
+    func integrityCheck() async throws {
         analyticsService.sendEvent(.SCPermissions)
-        DispatchQueue.global().async { [weak self] in
-            guard let data = self?.provider?.report(.mixedWithCoord) else {
-                completion(false)
+        
+        guard let data = self.provider?.report(.mixedWithCoord) else {
+            throw SDKError(.personalInfo)
+        }
+        SBLogger.log(.biZone + data)
+        // Строку с данными конвертируем в словать
+        let dataDictionary = self.convertToDictionary(text: data)
+        // Значение присутствия эмулятора
+        let emulator = dataDictionary?["Emulator"] as? Int
+        // Значениие Root detector
+        let сompromised = dataDictionary?["Compromised"] as? Int
+        // Проверяем значение
+        if let emulator = emulator,
+           let сompromised = сompromised {
+            
+            if сompromised == 0,
+               emulator == 0 {
+                self.analyticsService.sendEvent(.SCGoodPermissions)
                 return
             }
-            SBLogger.log(.biZone + data)
-            // Строку с данными конвертируем в словать
-            let dataDictionary = self?.convertToDictionary(text: data)
-            // Значение присутствия эмулятора
-            let emulator = dataDictionary?["Emulator"] as? Int
-            // Значениие Root detector
-            let сompromised = dataDictionary?["Compromised"] as? Int
-            // Проверяем значение
-            if let emulator = emulator,
-               let сompromised = сompromised {
-                
-                if сompromised == 0,
-                   emulator == 0 {
-                    self?.analyticsService.sendEvent(.SCGoodPermissions)
-                    completion(true)
-                }
-            } else {
-                self?.analyticsService.sendEvent(.SCFailPermissions, with: [AnalyticsKey.permisson: emulator ?? сompromised ?? 0])
-                completion(false)
-            }
+        } else {
+            self.analyticsService.sendEvent(.SCFailPermissions, with: [AnalyticsKey.permisson: emulator ?? сompromised ?? 0])
+            throw SDKError(.personalInfo)
         }
+        
+        throw SDKError(.personalInfo)
     }
     
-    func getIp(completion: @escaping StringAction) {
-        network.requestString(IpTarget.getIp,
-                              host: .safepayonline) { result in
-            switch result {
-            case .success(let ip):
-                completion(ip)
-            case .failure:
-                completion("")
-            }
-        }
+    func getIp() async -> String {
+        
+        let ip = try? await network.requestString(IpTarget.getIp,
+                                                  host: .safepayonline)
+        
+        return ip ?? "None"
     }
     
-    func getUserData(completion: @escaping (String?) -> Void) {
+    func getUserData() async throws -> String {
         analyticsService.sendEvent(.SCBiZone)
-        DispatchQueue.global().async { [weak self] in
-            guard let data = self?.provider?.report(.mixedWithCoord) else {
-                self?.analyticsService.sendEvent(.SCFailBiZone)
-                completion(nil)
-                return
+        
+        return try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<String, Error>) -> Void in
+            
+            getUserPrivateData { string in
+                if let string = string {
+                    inCont.resume(returning: string)
+                } else {
+                    self.analyticsService.sendEvent(.SCFailBiZone)
+                    inCont.resume(throwing: SDKError(.personalInfo))
+                }
             }
-            self?.analyticsService.sendEvent(.SCGoodBiZone)
-            SBLogger.log(.biZone + data)
-            completion(self?.formatString(data))
-        }
+        })
     }
+
+   private func getUserPrivateData(completion: @escaping (String?) -> Void) {
+            DispatchQueue.global().async { [weak self] in
+                guard let data = self?.provider?.report(.mixedWithCoord) else {
+                    completion(nil)
+                    return
+                }
+                SBLogger.log(.biZone + data)
+                completion(self?.formatString(data))
+            }
+        }
     
     private func formatString(_ metrics: String) -> String {
         metrics.replacingOccurrences(of: "\n", with: "")

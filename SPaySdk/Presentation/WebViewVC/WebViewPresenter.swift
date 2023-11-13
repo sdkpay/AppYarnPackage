@@ -39,6 +39,7 @@ final class WebViewPresenter: WebViewPresenting {
         setupWebView()
     }
     
+    @MainActor
     func backButtonTapped() {
         analitics.sendEvent(.TouchBack,
                             with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])

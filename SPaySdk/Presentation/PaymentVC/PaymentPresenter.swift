@@ -118,9 +118,6 @@ final class PaymentPresenter: PaymentPresenting {
     
     func viewDidLoad() {
         configViews()
-        timeManager.endTraking(PaymentVC.self.description()) {_ in 
-//            self.analytics.sendEvent(.PayViewAppeared, with: [$0])
-        }
     }
     
     private func updatePayButtonTitle() {
@@ -184,14 +181,15 @@ final class PaymentPresenter: PaymentPresenting {
         switch userService.getListCards {
         case true:
             guard userService.additionalCards else { return }
-            router.presentCards(cards: user.paymentToolInfo,
-                                cost: finalCost,
-                                selectedId: selectedCard.paymentId,
-                                selectedCard: { [weak self] card in
-                self?.view?.hideLoading(animate: true)
-                self?.userService.selectedCard = card
-                self?.view?.reloadCollectionView()
-            })
+            Task { @MainActor in
+                self.router.presentCards(cards: user.paymentToolInfo,
+                                         selectedId: selectedCard.paymentId,
+                                         selectedCard: { [weak self] card in
+                    self?.view?.hideLoading(animate: true)
+                    self?.userService.selectedCard = card
+                    self?.view?.reloadCollectionView()
+                })
+            }
         case false:
             guard userService.additionalCards else { return }
             switch authMethod {
@@ -214,42 +212,49 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     private func getListCards() {
-        view?.showLoading()
-        userService.getListCards { [weak self] result in
-            switch result {
-            case .success:
-                self?.cardTapped()
-            case .failure(let error):
-                self?.view?.hideLoading(animate: true)
-                if error.represents(.noInternetConnection) {
-                    self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.getListCards() },
-                                                              completion: { self?.dismissWithError(error) }))
-                } else {
-                    self?.alertService.show(on: self?.view,
-                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
+        
+        Task {
+            do {
+                await view?.showLoading()
+                try await userService.getListCards()
+                self.cardTapped()
+            } catch {
+                await self.view?.hideLoading(animate: true)
+                if let error = error as? SDKError {
+                    if error.represents(.noInternetConnection) {
+                        self.alertService.show(on: self.view,
+                                               type: .noInternet(retry: { self.getListCards() },
+                                                                 completion: { self.dismissWithError(error) }))
+                    } else {
+                        self.alertService.show(on: self.view,
+                                               type: .defaultError(completion: { self.dismissWithError(error) }))
+                    }
                 }
             }
         }
     }
     
     private func createOTP() {
-        view?.showLoading()
-        otpService.creteOTP { [weak self] result in
-            switch result {
-            case .success:
-                self?.router.presentOTPScreen(completion: { [weak self] in
+        
+        Task {
+            do {
+                await view?.showLoading()
+                try await otpService.creteOTP()
+                self.router.presentOTPScreen(completion: { [weak self] in
                     self?.pay()
                 })
-            case .failure(let error):
-                self?.view?.hideLoading(animate: true)
-                if error.represents(.noInternetConnection) {
-                    self?.alertService.show(on: self?.view,
-                                            type: .noInternet(retry: { self?.createOTP() },
-                                                              completion: { self?.dismissWithError(error) }))
-                } else {
-                    self?.alertService.show(on: self?.view,
-                                            type: .defaultError(completion: { self?.dismissWithError(error) }))
+            } catch {
+                await view?.hideLoading(animate: true)
+                
+                if let error = error as? SDKError {
+                    if error.represents(.noInternetConnection) {
+                        self.alertService.show(on: self.view,
+                                               type: .noInternet(retry: { self.createOTP() },
+                                                                 completion: { self.dismissWithError(error) }))
+                    } else {
+                        self.alertService.show(on: self.view,
+                                               type: .defaultError(completion: { self.dismissWithError(error) }))
+                    }
                 }
             }
         }
@@ -329,19 +334,27 @@ final class PaymentPresenter: PaymentPresenting {
             }))
             return
         }
-        paymentService.tryToGetPaymenyToken(paymentId: paymentId,
-                                            isBnplEnabled: false) { result in
-            switch result {
-            case .success:
+        
+        Task {
+            do {
+                try await paymentService.getPaymentToken(paymentId: paymentId,
+                                                         isBnplEnabled: false)
+                
                 self.view?.reloadCollectionView()
                 self.alertService.show(on: self.view,
                                        type: .partPayError(fullPay: {
                     self.goToPay()
                 }, back: {
-                    self.view?.hideLoading(animate: true)
+                    Task {
+                        await self.view?.hideLoading(animate: true)
+                    }
                 }))
-            case .failure(let failure):
-                self.validatePayError(failure)
+            } catch {
+                if let error = error as? PayError {
+                    self.validatePayError(error)
+                } else if let error = error as? SDKError {
+                    self.dismissWithError(error)
+                }
             }
         }
     }
@@ -359,7 +372,9 @@ final class PaymentPresenter: PaymentPresenting {
                                state: .waiting,
                                buttons: [okButton],
                                completion: {
-            self.view?.hideLoading(animate: true)
+            Task {
+                await self.view?.hideLoading(animate: true)
+            }
         })
     }
     
@@ -370,46 +385,29 @@ final class PaymentPresenter: PaymentPresenting {
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
         
-        authService.appAuth { [weak self] result in
-            guard let self else { return }
-            self.view?.showLoading()
-            NotificationCenter.default.removeObserver(self,
-                                                      name: UIApplication.didBecomeActiveNotification,
-                                                      object: nil)
-            switch result {
-            case .success:
+        Task {
+            do {
+                try await authService.appAuth()
+                
+                await self.view?.showLoading()
+                await NotificationCenter.default.removeObserver(self,
+                                                                name: UIApplication.didBecomeActiveNotification,
+                                                                object: nil)
+                
                 self.analytics.sendEvent(.LCBankAppAuthGood, with: self.screenEvent)
-                self.authService.auth {  [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success:
-                        self.authService.bankCheck = true
-                        self.getListCards()
-                    case .failure(let error):
-                        self.analytics.sendEvent(.LCBankAppAuthFail, with: self.screenEvent)
-                        self.alertService.show(on: self.view,
-                                               type: .defaultError(completion: {
-                            self.dismissWithError(error)
-                        }))
-                    }
-                }
-            case .failure(_):
-                self.router.presentBankAppPicker {
-                    self.authService.auth {  [weak self] result in
-                        guard let self else { return }
-                        switch result {
-                        case .success:
-                            self.authService.bankCheck = true
-                            self.getListCards()
-                        case .failure(let error):
-                            self.analytics.sendEvent(.LCBankAppAuthFail, with: self.screenEvent)
-                            self.alertService.show(on: self.view,
-                                                   type: .defaultError(completion: {
-                                self.dismissWithError(error)
-                            }))
-                        }
-                    }
-                }
+                
+                try await self.authService.auth()
+                
+                self.authService.bankCheck = true
+                self.getListCards()
+            } catch {
+                if let error = error as? SDKError {
+                    self.analytics.sendEvent(.LCBankAppAuthFail, with: self.screenEvent)
+                    self.alertService.show(on: self.view,
+                                           type: .defaultError(completion: {
+                        self.dismissWithError(error)
+                    }))
+               }
             }
         }
     }
@@ -445,21 +443,29 @@ final class PaymentPresenter: PaymentPresenting {
         DispatchQueue.main.async {
             self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
         }
+        
         guard let paymentId = userService.selectedCard?.paymentId else { return }
-        paymentService.tryToPay(paymentId: paymentId,
-                                isBnplEnabled: partPayService.bnplplanSelected) { [weak self] result in
-            guard let self = self else { return }
-            self.userService.clearData()
-            self.view?.userInteractionsEnabled = true
-            self.partPayService.bnplplanSelected = false
-            switch result {
-            case .success:
+        self.view?.userInteractionsEnabled = true
+        Task {
+            
+            do {
+                try await paymentService.tryToPay(paymentId: paymentId,
+                                                  isBnplEnabled: partPayService.bnplplanSelected)
+                self.userService.clearData()
+                self.partPayService.bnplplanSelected = false
                 self.completionManager.completePay(with: .success)
                 self.alertService.show(on: self.view, type: .paySuccess(completion: {
                     self.alertService.close()
                 }))
-            case .failure(let error):
-                self.validatePayError(error)
+            } catch {
+                self.userService.clearData()
+                self.partPayService.bnplplanSelected = false
+                
+                if let error = error as? PayError {
+                    self.validatePayError(error)
+                } else if let error = error as? SDKError {
+                    self.dismissWithError(error)
+                }
             }
         }
     }

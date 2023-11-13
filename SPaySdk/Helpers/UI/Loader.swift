@@ -12,6 +12,8 @@ private extension TimeInterval {
 }
 
 struct Loader {
+    
+    @MainActor
     private var window: UIWindow? {
         return UIApplication.shared.keyWindow ?? UIApplication.shared.windows.last
     }
@@ -45,9 +47,10 @@ struct Loader {
     }
     
     @discardableResult
+    @MainActor
     func show(on vc: UIViewController) -> Loader {
         guard window != nil else { return self }
-        if let oldLaoding = vc.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView {
+        if vc.view?.subviews.first(where: { $0 is LoadingView }) is LoadingView {
             hide(from: vc)
         }
         let subview = LoadingView(with: text)
@@ -68,6 +71,7 @@ struct Loader {
     }
     
     @discardableResult
+    @MainActor
     func hide(from vc: UIViewController) -> Loader {
         guard let subview = vc.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView else {
             return self

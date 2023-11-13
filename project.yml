@@ -26,14 +26,14 @@ targetTemplates:
   Framework:
     type: framework
     platform: iOS
-    deploymentTarget: 12.0
+    deploymentTarget: 13.0
     settings:
       base:
         MARKETING_VERSION: 1.2
   SPaySdk: 
     type: framework
     platform: iOS
-    deploymentTarget: 12.0
+    deploymentTarget: 13.0
     scheme: {}
     settings:
       base:
@@ -69,14 +69,14 @@ targets:
   SPaySdkExample:
     type: application
     platform: iOS
-    deploymentTarget: "12.0"
+    deploymentTarget: "13.0"
     scheme: {}
     sources:
        - path: ./SberPayExample
     settings:
       TARGETED_DEVICE_FAMILY: 1
       MARKETING_VERSION: 2.0
-      CURRENT_PROJECT_VERSION: 24
+      CURRENT_PROJECT_VERSION: 25
       PRODUCT_BUNDLE_IDENTIFIER: com.team11.spay.sdk
       DEVELOPMENT_TEAM: 9CYS9A2HF7
       INFOPLIST_KEY_CFBundleDisplayName: SPayTest

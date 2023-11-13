@@ -8,6 +8,7 @@
 import UIKit
 
 final class StubNetworkProvider: NSObject, NetworkProvider {
+ 
     private let delayedSeconds: Double
     private var dispatchWorkItem: DispatchWorkItem?
     private var hostManager: HostManager
@@ -16,6 +17,30 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
         self.delayedSeconds = delayedSeconds
         self.hostManager = hostManager
         super.init()
+    }
+
+    func request(_ target: TargetType,
+                 retrySettings: RetrySettings,
+                 host: HostSettings) async throws -> (data: Data, response: URLResponse) {
+        
+        if #available(iOS 16.0, *) {
+            try await Task.sleep(until: .now + .seconds(delayedSeconds), clock: .continuous)
+        } else {
+            try await Task.sleep(nanoseconds: UInt64(delayedSeconds) * 1000000000)
+        }
+        
+        guard let response = HTTPURLResponse(url: hostManager.host(for: host),
+                                             statusCode: 200,
+                                             httpVersion: nil,
+                                             headerFields: nil) else {
+            fatalError("Неправильно составлен стабовый запрос")
+        }
+        
+        guard let sampleData = target.sampleData else {
+            fatalError("Отсутсвует стабовый ответ на запрос")
+        }
+        
+        return (sampleData, response)
     }
     
     func request(_ target: TargetType,

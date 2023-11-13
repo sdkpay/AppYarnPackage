@@ -57,7 +57,7 @@ protocol PartPayService {
     var bnplplanEnabled: Bool { get }
     func setEnabledBnpl(_ value: Bool, enabledLevel: EnabledLevel)
     var bnplplan: BnplModel? { get }
-    func getBnplPlan(completion: @escaping (SDKError?) -> Void)
+    func getBnplPlan() async throws
 }
 
 final class DefaultPartPayService: PartPayService {
@@ -107,28 +107,29 @@ final class DefaultPartPayService: PartPayService {
         bnplEnabledLevels[enabledLevel] = value
     }
     
-    func getBnplPlan(completion: @escaping (SDKError?) -> Void) {
+    func getBnplPlan() async throws {
         guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId,
               let merchantLogin = authInfo.merchantLogin,
               let orderId = authInfo.orderId
-        else { return completion(nil) }
+        else { throw SDKError(.noData) }
         analytics.sendEvent(.RQBnpl,
                             with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
-        network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
-                                               merchantLogin: merchantLogin,
-                                               orderId: orderId),
-                        to: BnplModel.self) { [weak self] result in
-            switch result {
-            case .success(let bnplplan):
-                self?.bnplplan = bnplplan
-                self?.analytics.sendEvent(.RQGoodBnpl)
-                self?.setEnabledBnpl(bnplplan.isBnplEnabled, enabledLevel: .bnplPlan)
-                completion(nil)
-            case .failure(let error):
-                self?.parsingErrorAnaliticManager.sendAnaliticsError(error: error, type: .bnpl)
-                completion(error)
+        
+        do {
+            let bnplResult = try await network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
+                                                                              merchantLogin: merchantLogin,
+                                                                              orderId: orderId),
+                                                       to: BnplModel.self)
+            
+            self.bnplplan = bnplResult
+            self.analytics.sendEvent(.RQGoodBnpl)
+            self.setEnabledBnpl(bnplResult.isBnplEnabled, enabledLevel: .bnplPlan)
+        } catch {
+            if let error = error as? SDKError {
+                parsingErrorAnaliticManager.sendAnaliticsError(error: error, type: .bnpl)
             }
+            throw error
         }
     }
     

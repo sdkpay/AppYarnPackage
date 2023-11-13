@@ -50,9 +50,6 @@ final class CardsPresenter: CardsPresenting {
     
     func viewDidLoad() {
         configViews()
-        timeManager.endTraking(CardsVC.self.description()) { _  in
-//            analytics.sendEvent(.CardsViewAppeared, with: [$0])
-        }
     }
 
     func model(for indexPath: IndexPath) -> CardCellModel {
@@ -77,7 +74,9 @@ final class CardsPresenter: CardsPresenting {
     func didSelectRow(at indexPath: IndexPath) {
         analytics.sendEvent(.TouchCard, with: screenEvent)
         selectedCard(cards[indexPath.row])
-        view?.contentNavigationController?.popViewController(animated: true)
+        DispatchQueue.main.async {
+            self.view?.contentNavigationController?.popViewController(animated: true)
+        }
     }
     
     func viewDidAppear() {
@@ -90,6 +89,9 @@ final class CardsPresenter: CardsPresenting {
 
     private func configViews() {
         guard let user = userService.user else { return }
-        view?.configProfileView(with: user.userInfo)
+        
+        Task {
+            await view?.configProfileView(with: user.userInfo)
+        }
     }
 }

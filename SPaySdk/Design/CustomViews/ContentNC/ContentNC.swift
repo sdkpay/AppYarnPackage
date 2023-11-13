@@ -38,6 +38,7 @@ final class ContentNC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @MainActor
     func setViewControllers(_ viewControllers: [UIViewController], animated: Bool) {
         guard let to = viewControllers.last else {
             return
@@ -51,6 +52,7 @@ final class ContentNC: UIViewController {
         self.viewControllers = viewControllers
     }
 
+    @MainActor
     func pushViewController(_ viewController: ContentVC, animated: Bool) {
         guard let from = topViewController else {
             setRootViewController(viewController)
@@ -60,6 +62,7 @@ final class ContentNC: UIViewController {
         self.viewControllers.append(viewController)
     }
 
+    @MainActor
     @discardableResult
     func popViewController(animated: Bool, completion: Action? = nil) -> UIViewController? {
         guard let from = topViewController, from != viewControllers.first else { return nil }
