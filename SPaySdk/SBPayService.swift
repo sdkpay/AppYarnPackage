@@ -88,9 +88,6 @@ final class DefaultSBPayService: SBPayService {
     
     var isReadyForSPay: Bool {
         SBLogger.log(.version)
-        locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MAIsReadyForSPay, with: ["value: \(self.isReadyForSPay)"])
         let apps = locator.resolve(BankAppManager.self).avaliableBanks
         locator
             .resolve(AnalyticsService.self)
@@ -99,6 +96,9 @@ final class DefaultSBPayService: SBPayService {
         let isDeprecated = locator
             .resolve(VersionСontrolManager.self)
             .isVersionDepicated
+        locator
+            .resolve(AnalyticsService.self)
+            .sendEvent(.MAIsReadyForSPay, with: ["value: \(!apps.isEmpty && !isDeprecated)"])
         return !apps.isEmpty && !isDeprecated
     }
     
