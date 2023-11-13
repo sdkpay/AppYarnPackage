@@ -90,7 +90,7 @@ final class DefaultSBPayService: SBPayService {
         SBLogger.log(.version)
         locator
             .resolve(AnalyticsService.self)
-            .sendEvent(.MAIsReadyForSPay)
+            .sendEvent(.MAIsReadyForSPay, with: ["value: \(self.isReadyForSPay)"])
         let apps = locator.resolve(BankAppManager.self).avaliableBanks
         locator
             .resolve(AnalyticsService.self)

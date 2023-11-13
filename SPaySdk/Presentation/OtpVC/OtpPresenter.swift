@@ -152,7 +152,6 @@ final class OtpPresenter: OtpPresenting {
                 self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                     type: .otp(type: .confirmOTP))
                 if error.represents(.incorrectCode) {
-                    self.analytics.sendEvent(.RQFailConfirmOTP)
                     DispatchQueue.main.async { [weak self] in
                         guard let self = self else { return }
                         self.view?.hideLoading(animate: true)

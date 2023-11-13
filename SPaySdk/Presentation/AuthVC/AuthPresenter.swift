@@ -81,7 +81,8 @@ final class AuthPresenter: AuthPresenting {
     
     private func checkNewStart() {
         view?.showLoading()
-        analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
+        analytics.sendEvent(.MAInit,
+                            with: "environment: \(enviromentManager.environment.description)")
         
         guard !versionСontrolManager.isVersionDepicated else {
             alertService.showAlert(on: view,

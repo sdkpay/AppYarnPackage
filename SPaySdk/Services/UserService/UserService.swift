@@ -95,6 +95,7 @@ final class DefaultUserService: UserService {
               let sessionId = authManager.sessionId
         else { return }
         analytics.sendEvent(.RQListCards, with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+        analytics.sendEvent(.RQPaymentOrder, with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
         network.request(UserTarget.getListCards(sessionId: sessionId,
                                                 merchantLogin: authInfo.merchantLogin,
                                                 orderId: authInfo.orderId,

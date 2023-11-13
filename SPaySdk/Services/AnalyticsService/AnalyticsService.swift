@@ -274,6 +274,7 @@ enum AnalyticsKey: String {
     case httpCode
     case permisson
     case biZoneCode
+    case selectedBank
 }
 
 protocol AnalyticsService {

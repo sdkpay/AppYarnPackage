@@ -12,6 +12,17 @@ public enum SEnvironment: Int {
     case prod = 0
     case sandboxWithoutBankApp
     case sandboxRealBankApp
+    
+    var description: String {
+        switch self {
+        case .prod:
+            return "Prod"
+        case .sandboxWithoutBankApp:
+            return "SandboxWithoutBankApp"
+        case .sandboxRealBankApp:
+            return "SandboxRealBankApp"
+        }
+    }
 }
 
 @objc

@@ -55,7 +55,8 @@ final class DefaultBankAppManager: BankAppManager {
     
     func saveSelectedBank() {
         analytics.sendEvent(.STSaveBankApp,
-                            with: [.view: AnlyticsScreenEvent.AuthVC.rawValue])
+                            with: [.view: AnlyticsScreenEvent.AuthVC.rawValue,
+                                   .selectedBank: _selectedBank?.name ])
         UserDefaults.bankApp = _selectedBank?.name
     }
     
@@ -68,7 +69,9 @@ final class DefaultBankAppManager: BankAppManager {
             // Если больше 1 то смотрим на сохраненный банк
             if let savedBank = UserDefaults.bankApp {
                 _selectedBank = UserDefaults.bankApps?.first(where: { $0.name == savedBank })
-                analytics.sendEvent(.STGetGoodBankApp)
+                analytics.sendEvent(.STGetGoodBankApp,
+                                    with: [.view: AnlyticsScreenEvent.AuthVC.rawValue,
+                                           AnalyticsKey.selectedBank: _selectedBank?.name])
                 return _selectedBank
             } else {
                 analytics.sendEvent(.STGetFailBankApp,
