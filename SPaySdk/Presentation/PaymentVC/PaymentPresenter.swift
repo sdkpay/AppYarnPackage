@@ -185,6 +185,7 @@ final class PaymentPresenter: PaymentPresenting {
                                 selectedCard: { [weak self] card in
                 self?.view?.hideLoading(animate: true)
                 self?.userService.selectedCard = card
+                self?.view?.configProfileView(with: user.userInfo)
                 self?.view?.reloadCollectionView()
             })
         case false:

@@ -144,7 +144,7 @@ platform :ios do
   end
 
   desc "Framework version from plist"
-  private_lane :framework_plist_version do 
+  lane :framework_plist_version do 
     version = get_info_plist_value(
       path: "./SPaySdk/SupportingFiles/Info.plist",
       key: "SDKVersion"
