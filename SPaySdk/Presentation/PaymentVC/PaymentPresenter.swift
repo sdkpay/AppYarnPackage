@@ -24,7 +24,9 @@ struct PaymentCellModel {
     var iconURL: String?
     var needArrow: Bool
     
-    init(title: String, subtitle: String, iconURL: String? = nil, needArrow: Bool) {
+    init(title: String,
+         subtitle: String,
+         iconURL: String? = nil, needArrow: Bool) {
         self.title = title
         self.subtitle = subtitle
         self.iconURL = iconURL
@@ -145,6 +147,16 @@ final class PaymentPresenter: PaymentPresenting {
     
     func cancelTapped() {
         self.completionManager.dismissCloseAction(view)
+    }
+    
+    func model(_ indexPath: IndexPath) -> AbstractCellModel? {
+
+        guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
+        
+        switch section {
+        case .features:
+        case .card:
+        }
     }
     
     func model(for indexPath: IndexPath) -> PaymentCellModel {

@@ -56,18 +56,18 @@ final class PaymentViewBuilder {
         return view
     }()
     
+    private lazy var sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
+        guard let sectionKind = PaymentSection(rawValue: sectionIndex) else { return nil }
+        let section = PaymentSectionLayoutManager.getSectionLayout(sectionKind, layoutEnvironment: layoutEnvironment)
+        return section
+    }
+    
     private(set) lazy var collectionView: CompactCollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(
-            width: Cost.CollectionView.width,
-            height: Cost.CollectionView.itemHeight
-        )
-        layout.minimumLineSpacing = Cost.CollectionView.minimumLineSpacing
-        let collectionView = CompactCollectionView(frame: .zero, collectionViewLayout: layout)
+        let collectionView = CompactCollectionView(frame: .zero,
+                                                   collectionViewLayout: PaymentCollectionViewLayoutManager.create(with: sectionProvider))
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
-        collectionView.register(CardInfoView.self, forCellWithReuseIdentifier: CardInfoView.reuseID)
         return collectionView
     }()
     

@@ -1,5 +1,5 @@
 //
-//  CardInfoView.swift
+//  PaymentCardCell.swift
 //  SPaySdk
 //
 //  Created by Alexander Ipatov on 22.11.2022.
@@ -13,7 +13,7 @@ private extension CGFloat {
     static let letterSpacing = -0.4
 }
 
-final class CardInfoView: UICollectionViewCell {
+final class PaymentCardCell: UICollectionViewCell {
     static var reuseID: String { "CardInfoView" }
     private var needArrow = false
     
