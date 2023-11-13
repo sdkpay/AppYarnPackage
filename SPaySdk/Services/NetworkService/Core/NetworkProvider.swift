@@ -93,6 +93,8 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         do {
             
             let request = try self.buildRequest(from: target, hostSettings: host)
+            SBLogger.logRequestStarted(request)
+            
             guard let session else {
                 throw SDKError(.system)
             }
@@ -121,55 +123,6 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                 throw error
             }
         }
-    }
-    
-    func request(_ target: TargetType,
-                 retrySettings: RetrySettings = (1, []),
-                 host: HostSettings = .main,
-                 completion: @escaping NetworkProviderCompletion) {
-        _request(target: target, retrySettings: retrySettings, host: host, completion: completion)
-    }
-
-    private func _request(retry: Int = 1,
-                          target: TargetType,
-                          retrySettings: RetrySettings,
-                          host: HostSettings,
-                          completion: @escaping NetworkProviderCompletion) {
-        do {
-            let request = try self.buildRequest(from: target, hostSettings: host)
-            SBLogger.logRequestStarted(request)
-            
-            task = session?.dataTask(with: request, completionHandler: { data, response, error in
-                self.timeManager.checkNetworkDataSize(object: data)
-                DispatchQueue.main.async {
-                    if let response = response {
-                        self.saveGeobalancingData(from: response)
-                    }
-                    if retrySettings.count != 1,
-                       let error = error,
-                       (error._code == URLError.Code.timedOut.rawValue || !retrySettings.retryCode.contains(error._code)),
-                       retry < retrySettings.count {
-                        self._request(retry: retry + 1,
-                                      target: target,
-                                      retrySettings: retrySettings,
-                                      host: host,
-                                      completion: completion)
-                    } else {
-                        SBLogger.logRequestCompleted(host: self.hostManager.host(for: host),
-                                                     target,
-                                                     response: response,
-                                                     data: data,
-                                                     error: error)
-                        completion(data, response, error)
-                    }
-                }
-            })
-        } catch {
-            DispatchQueue.main.async {
-                completion(nil, nil, error)
-            }
-        }
-        self.task?.resume()
     }
 
     func cancel() {

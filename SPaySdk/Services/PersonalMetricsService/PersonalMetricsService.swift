@@ -82,14 +82,30 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     
     func getUserData() async throws -> String {
         analyticsService.sendEvent(.SCBiZone)
-            guard let data = self.provider?.report(.mixedWithCoord) else {
-                self.analyticsService.sendEvent(.SCFailBiZone)
-                throw SDKError(.personalInfo)
+        
+        return try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<String, Error>) -> Void in
+            
+            getUserPrivateData { string in
+                if let string = string {
+                    inCont.resume(returning: string)
+                } else {
+                    self.analyticsService.sendEvent(.SCFailBiZone)
+                    inCont.resume(throwing: SDKError(.personalInfo))
+                }
             }
-            self.analyticsService.sendEvent(.SCGoodBiZone)
-            SBLogger.log(.biZone + data)
-            return self.formatString(data)
+        })
     }
+
+   private func getUserPrivateData(completion: @escaping (String?) -> Void) {
+            DispatchQueue.global().async { [weak self] in
+                guard let data = self?.provider?.report(.mixedWithCoord) else {
+                    completion(nil)
+                    return
+                }
+                SBLogger.log(.biZone + data)
+                completion(self?.formatString(data))
+            }
+        }
     
     private func formatString(_ metrics: String) -> String {
         metrics.replacingOccurrences(of: "\n", with: "")

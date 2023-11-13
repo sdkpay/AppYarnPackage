@@ -45,7 +45,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         case sessionId
     }
     
-    private var authСompletion: ((SDKError?, Bool) -> Void)?
     private var analytics: AnalyticsService
     private let network: NetworkService
     private let sdkManager: SDKManager
@@ -60,7 +59,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var baseRequestManager: BaseRequestManager
     private var cookieStorage: CookieStorage
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
-    private var appCompletion: ((Result<Void, SDKError>) -> Void)?
+    private var appAuthCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
     
     var bankCheck = false
@@ -129,19 +128,16 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         case .success(let result):
             authManager.authCode = result.code
             authManager.state = result.state
-            authСompletion?(nil, false)
-            appCompletion?(.success)
+            appAuthCompletion?(.success)
         case .failure(let error):
-            authСompletion?(error, false)
-            appCompletion?(.failure(error))
+            appAuthCompletion?(.failure(error))
         }
-        authСompletion = nil
-        appCompletion = nil
+        appAuthCompletion = nil
     }
     
     private func fillFakeData() {
         authManager.authCode = "3401216B-8B70-21FA-2592-58010E53EE5B"
-        authСompletion?(nil, true)
+        appAuthCompletion?(.success)
     }
     
     private func addFrontHeaders() {
@@ -197,14 +193,16 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
     }
     
+    @MainActor
     func appAuth() async throws {
-        
+        SBLogger.logThread(obj: self)
         self.authManager.authMethod = .bank
-        return try await sIdAuth()
+        try await sIdAuth()
     }
 
+    @MainActor
     private func sIdAuth() async throws {
-        
+        SBLogger.logThread(obj: self)
         let target = enviromentManager.environment == .sandboxWithoutBankApp
         guard !target else {
             fillFakeData()
@@ -222,7 +220,17 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         
         switch result {
         case true:
-            return
+            
+            try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<Void, Error>) -> Void in
+                self.appAuthCompletion = { result in
+                    switch result {
+                    case .success:
+                        inCont.resume()
+                    case .failure(let error):
+                        inCont.resume(throwing: error)
+                    }
+                }
+            })
         case false:
             throw SDKError(.bankAppNotFound)
         }
@@ -238,9 +246,9 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         let userData = try await personalMetricsService.getUserData()
         try await authMethod(deviceInfo: userData)
     }
-    
+
     private func authMethod(deviceInfo: String) async throws {
-        
+        SBLogger.logThread(obj: self)
         guard let request = sdkManager.authInfo else {
             throw SDKError(.noData)
         }
@@ -283,8 +291,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             if self.authManager.authMethod == .bank {
                 throw error
             }
-            
-            try await appAuth()
             throw error
         }
     }

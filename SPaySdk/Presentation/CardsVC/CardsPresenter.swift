@@ -50,9 +50,6 @@ final class CardsPresenter: CardsPresenting {
     
     func viewDidLoad() {
         configViews()
-        timeManager.endTraking(CardsVC.self.description()) { _  in
-//            analytics.sendEvent(.CardsViewAppeared, with: [$0])
-        }
     }
 
     func model(for indexPath: IndexPath) -> CardCellModel {

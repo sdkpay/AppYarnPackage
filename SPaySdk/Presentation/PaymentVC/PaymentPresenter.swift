@@ -117,9 +117,6 @@ final class PaymentPresenter: PaymentPresenting {
     
     func viewDidLoad() {
         configViews()
-        timeManager.endTraking(PaymentVC.self.description()) {_ in 
-//            self.analytics.sendEvent(.PayViewAppeared, with: [$0])
-        }
     }
     
     private func updatePayButtonTitle() {
@@ -183,13 +180,11 @@ final class PaymentPresenter: PaymentPresenting {
         switch userService.getListCards {
         case true:
             guard userService.additionalCards else { return }
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self.router.presentCards(cards: user.paymentToolInfo,
                                          selectedId: selectedCard.paymentId,
                                          selectedCard: { [weak self] card in
-                    DispatchQueue.main.async {
-                        self?.view?.hideLoading(animate: true)
-                    }
+                    self?.view?.hideLoading(animate: true)
                     self?.userService.selectedCard = card
                     self?.view?.reloadCollectionView()
                 })

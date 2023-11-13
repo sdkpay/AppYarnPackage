@@ -71,7 +71,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         Task {
             do {
                 try await authService.appAuth()
-               removeObserver()
+                removeObserver()
                 completion?()
                 await view?.contentNavigationController?.popViewController(animated: true)
             } catch {

@@ -155,7 +155,6 @@ final class DefaultAlertService: AlertService {
         }
     }
     
-    
     @MainActor
     func showLoading(with text: String? = nil,
                      animate: Bool = true) {

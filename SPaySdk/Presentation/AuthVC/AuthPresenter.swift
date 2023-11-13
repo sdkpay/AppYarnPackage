@@ -16,7 +16,7 @@ final class AuthPresenter: AuthPresenting {
 
     private let analytics: AnalyticsService
     private let router: AuthRouter
-    private let authService: AuthService
+    private var authService: AuthService
     private let completionManager: CompletionManager
     private let sdkManager: SDKManager
     private let userService: UserService
@@ -120,32 +120,31 @@ final class AuthPresenter: AuthPresenting {
                                           type: .noInternet(retry: { self.checkSession() },
                                                             completion: { self.dismissWithError(error) }))
                     } else {
-                        configAuthSettings()
+                        await configAuthSettings()
                     }
                 }
             }
         }
     }
     
-    private func configAuthSettings() {
+    private func configAuthSettings() async {
         if enviromentManager.environment == .sandboxWithoutBankApp {
             getAccessSPay()
         } else if bankManager.selectedBank == nil {
-            Task {
-                await showBanksStack()
-            }
+            await MainActor.run { showBanksStack() }
         } else {
             getAccessSPay()
         }
     }
-    
+
     @MainActor
     private func showBanksStack() {
         removeObserver()
-        router.presentBankAppPicker {
-            Task {
-                await self.auth()
-            }
+
+         router.presentBankAppPicker {
+             Task {
+                 await self.auth()
+             }
         }
     }
     
@@ -176,11 +175,10 @@ final class AuthPresenter: AuthPresenting {
             }
         }
     }
-    
-    @MainActor
-    private func appAuth() {
+
+    private func appAuth() async {
         if enviromentManager.environment == .sandboxWithoutBankApp {
-            router.presentFakeScreen(completion: {
+            await router.presentFakeScreen(completion: {
                 Task {
                     await self.auth()
                     return
@@ -189,7 +187,7 @@ final class AuthPresenter: AuthPresenting {
         }
         
         if bankManager.selectedBank == nil {
-            showBanksStack()
+            await showBanksStack()
         } else {
             appAuthMethod()
         }
@@ -198,7 +196,10 @@ final class AuthPresenter: AuthPresenting {
     private func appAuthMethod() {
         Task {
             do {
+                SBLogger.logThread(obj: self)
                 try await authService.appAuth()
+                removeObserver()
+                SBLogger.logThread(obj: self)
                 await auth()
             } catch {
                 if let error = error as? SDKError {
@@ -209,6 +210,7 @@ final class AuthPresenter: AuthPresenting {
                     } else {
                         validateAuthError(error: error)
                     }
+                    await self.auth()
                 }
             }
         }
@@ -272,23 +274,21 @@ final class AuthPresenter: AuthPresenting {
         self.alertService.close()
     }
     
-    @MainActor
-    @objc
+     @objc
     private func applicationDidBecomeActive() {
         // Если пользователь не смог получить обратный редирект
         // от банковского приложения и перешел самостоятельно
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.view?.hideLoading()
-        }
-        SBLogger.log(.userReturned)
-        if bankManager.avaliableBanks.count > 1 {
-            showBanksStack()
-        } else {
-            self.completionManager.dismissCloseAction(view)
+        Task {
+            await self.view?.hideLoading()
+            SBLogger.log(.userReturned)
+            if bankManager.avaliableBanks.count > 1 {
+                await showBanksStack()
+            } else {
+                self.completionManager.dismissCloseAction(view)
+            }
         }
     }
-    
+
     private func removeObserver() {
         NotificationCenter.default.removeObserver(self,
                                                   name: UIApplication.didBecomeActiveNotification,
