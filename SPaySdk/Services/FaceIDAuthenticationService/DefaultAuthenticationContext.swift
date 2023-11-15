@@ -84,8 +84,6 @@ final class DefaultAuthenticationContext: AuthenticationContextProtocol {
             return .touchID
         case .faceID:
             return .faceID
-        case .opticID:
-            return .unknown
         @unknown default:
             return .unknown
         }

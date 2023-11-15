@@ -26,7 +26,7 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
     private var presenter: ConfigPresenterProtocol
     
     private lazy var loader: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: .whiteLarge)
+        let view = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
         view.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
         view.backgroundColor = .gray
         view.layer.cornerRadius = 10

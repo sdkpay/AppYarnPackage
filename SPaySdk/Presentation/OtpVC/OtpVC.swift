@@ -160,7 +160,7 @@ final class OtpVC: ContentVC, IOtpVC {
             .add(toSuperview: backView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Stack.right)
-            .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: Cost.Stack.top)
+            .touchEdge(.top, toEdge: .bottom, ofView: view, withInset: Cost.Stack.top)
         
         otpTextField
             .add(toSuperview: backView)

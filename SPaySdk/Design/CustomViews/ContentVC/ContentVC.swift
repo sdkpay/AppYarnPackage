@@ -22,6 +22,7 @@ private extension TimeInterval {
 }
 
 class ContentVC: LoggableVC {
+    
     var contentNavigationController: ContentNC? {
         parent as? ContentNC
     }
@@ -32,38 +33,25 @@ class ContentVC: LoggableVC {
             contentNavigationController?.view.isUserInteractionEnabled = userInteractionsEnabled
         }
     }
-
-    lazy var logoImage: UIImageView = {
-        let view = UIImageView()
-        view.image = UIImage(base64: UserDefaults.images?.logoIcon ?? "")
-        return view
-    }()
     
     private lazy var stickImageView: UIImageView = {
-       let view = UIImageView()
+        let view = UIImageView()
         view.image = .Common.stick
         view.contentMode = .scaleAspectFill
         return view
     }()
     
-    var topBarIsHidden = false {
-        didSet {
-            logoImage.isHidden = topBarIsHidden
-            profileView.isHidden = topBarIsHidden
-        }
-    }
-    
-    lazy var profileView = ProfileView()
+    private lazy var backgroundImageView: UIImageView = {
+        let view = UIImageView()
+        view.image = Asset.background.image
+        view.contentMode = .scaleAspectFill
+        return view
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupForContainer()
         configUI()
-    }
-    
-    func configProfileView(with userInfo: UserInfo) {
-        profileView.isHidden = false
-        profileView.config(with: userInfo)
     }
     
     @MainActor
@@ -82,31 +70,18 @@ class ContentVC: LoggableVC {
     }
 
     func configUI() {
-        profileView.isHidden = true
-
-        view.addSubview(logoImage)
-        logoImage.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            logoImage.widthAnchor.constraint(equalToConstant: .logoWidth),
-            logoImage.heightAnchor.constraint(equalToConstant: .logoHeight),
-            logoImage.topAnchor.constraint(equalTo: view.topAnchor, constant: .topMargin),
-            logoImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin)
-        ])
         
-        view.addSubview(stickImageView)
-        stickImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stickImageView.widthAnchor.constraint(equalToConstant: .stickWidth),
-            stickImageView.heightAnchor.constraint(equalToConstant: .stickHeight),
-            stickImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: .stickTopMargin),
-            stickImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
+        backgroundImageView
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left)
+            .touchEdge(.right, toSuperviewEdge: .right)
+            .touchEdge(.top, toSuperviewEdge: .top)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom)
         
-        view.addSubview(profileView)
-        profileView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            profileView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            profileView.topAnchor.constraint(equalTo: logoImage.topAnchor)
-        ])
+        stickImageView
+            .add(toSuperview: view)
+            .size(.equal, to: .init(width: .stickWidth, height: .stickHeight))
+            .touchEdge(.top, toSuperviewEdge: .top, withInset: .stickTopMargin)
+            .centerInSuperview(.x)
     }
 }

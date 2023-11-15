@@ -283,7 +283,6 @@ final class PaymentPresenter: PaymentPresenting {
                              cost: finalCost,
                              fullPrice: fullPrice,
                              iconURL: user.logoUrl)
-        view?.configProfileView(with: user.userInfo)
         
         if userService.selectedCard != nil {
         view?.addSnapShot()
@@ -430,14 +429,30 @@ final class PaymentPresenter: PaymentPresenting {
             self.dismissWithError(SDKError(.errorSystem)) }))
     }
     
-    private func goToPay() {
-        if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
-            pay()
+    private func goToPay() async {
+        guard let paymentId = userService.selectedCard?.paymentId else { return }
+        
+        if let challangeMethod = try? await paymentService.getChallangeMethod(paymentId: paymentId,
+                                                                              isBnplEnabled: partPayService.bnplplanSelected) {
+            
+            switch challangeMethod.secureChallengeFactor {
+            case .sms:
+                print("challangeMethod")
+            case .hint:
+                print("challangeMethod")
+            case .none:
+                print("challangeMethod")
+            }
+            
         } else {
-            if otpService.otpRequired {
-                createOTP()
-            } else {
+            if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
                 pay()
+            } else {
+                if otpService.otpRequired {
+                    createOTP()
+                } else {
+                    pay()
+                }
             }
         }
     }

@@ -19,8 +19,8 @@ final class PaymentCardCell: UICollectionViewCell, SelfReusable, SelfConfigCell 
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .backgroundSecondary
-        layer.cornerRadius = 8.0
+        backgroundColor = .backgroundPrimary
+        layer.cornerRadius = 20.0
         setupUI()
     }
     

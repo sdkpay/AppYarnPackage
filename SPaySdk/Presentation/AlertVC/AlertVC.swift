@@ -115,7 +115,6 @@ final class AlertVC: ContentVC, IAlertVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
-        topBarIsHidden = true
         SBLogger.log(.didLoad(view: self))
     }
     

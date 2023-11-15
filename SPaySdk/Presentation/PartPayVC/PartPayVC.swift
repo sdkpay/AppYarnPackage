@@ -42,7 +42,6 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        topBarIsHidden = true
         presenter.viewDidLoad()
         viewBuilder.partsTableView.dataSource = self
         SBLogger.log(.didLoad(view: self))

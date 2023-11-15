@@ -10,6 +10,7 @@ import UIKit
 final class PaymentViewBuilder {
     private var payButtonDidTap: Action
     private var cancelButtonDidTap: Action
+    private var profileButtonDidTap: Action
     private var featureCount: Int
     
     private(set) lazy var payButton: DefaultButton = {
@@ -30,6 +31,13 @@ final class PaymentViewBuilder {
         let view = UILabel()
         view.font = Cost.Label.Shop.font
         view.textColor = Cost.Label.Shop.textColor
+        return view
+    }()
+    
+    private(set) lazy var profileButton: ActionButton = {
+        let view = ActionButton()
+        view.addAction(profileButtonDidTap)
+        view.setImage(Asset.user.image, for: .normal)
         return view
     }()
     
@@ -75,14 +83,16 @@ final class PaymentViewBuilder {
     }()
     
     init(featureCount: Int,
+         profileButtonDidTap: @escaping Action,
          payButtonDidTap: @escaping Action,
          cancelButtonDidTap: @escaping Action) {
         self.featureCount = featureCount
         self.payButtonDidTap = payButtonDidTap
+        self.profileButtonDidTap = profileButtonDidTap
         self.cancelButtonDidTap = cancelButtonDidTap
     }
     
-    func setupUI(view: UIView, logoImage: UIView) {
+    func setupUI(view: UIView) {
         logoImageView.add(toSuperview: view)
         
         cancelButton
@@ -100,30 +110,34 @@ final class PaymentViewBuilder {
             .touchEdge(.bottom, toEdge: .top, ofView: cancelButton, withInset: Cost.Button.Pay.bottom)
         
         collectionView
-         //   .height(100)
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.CollectionView.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.CollectionView.right)
             .touchEdge(.bottom, toEdge: .top, ofView: payButton, withInset: Cost.CollectionView.bottom)
         
+        logoImageView
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.ImageView.left)
+            .touchEdge(.top, toSuperviewEdge: .top, withInset: Cost.ImageView.top)
+            .size(Cost.ImageView.size)
+        
+        profileButton
+            .add(toSuperview: view)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.ProfileButton.left)
+            .touchEdge(.top, toSuperviewEdge: .top, withInset: Cost.ProfileButton.top)
+            .size(Cost.ProfileButton.size)
+        
         purchaseInfoStack
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
-            .touchEdge(.right, toEdge: .left, ofView: logoImageView, withInset: Cost.Stack.right)
+            .touchEdge(.right, toSuperviewEdge: .right)
             .touchEdge(.bottom, toEdge: .top, ofView: collectionView, withInset: Cost.Stack.bottom)
-            .touchEdge(.top, toEdge: .bottom, ofView: logoImage, withInset: Cost.Stack.top)
-            .height(Cost.Stack.height)
-        
-        logoImageView
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.ImageView.right)
-            .centerInView(purchaseInfoStack, axis: .y, withOffset: Cost.ImageView.yOffSet)
-            .size(Cost.ImageView.size)
+            .touchEdge(.top, toEdge: .bottom, ofView: logoImageView, withInset: Cost.Stack.top)
     }
 }
 
 private extension PaymentViewBuilder {
     enum Cost {
-        static let sideOffSet: CGFloat = 16.0
+        static let sideOffSet: CGFloat = 32.0
         static let height = 56.0
         
         enum Button {
@@ -159,16 +173,21 @@ private extension PaymentViewBuilder {
         }
         
         enum ImageView {
-            static let size: CGSize = .init(width: 56, height: 56)
-            static let right: CGFloat = Cost.sideOffSet
-            static let yOffSet: CGFloat = -6.0
-            static let radius: CGFloat = 12.0
+            static let size: CGSize = .init(width: 52, height: 52)
+            static let left: CGFloat = Cost.sideOffSet
+            static let top: CGFloat = 36.0
+            static let radius: CGFloat = 16.0
             static let border: CGFloat = 1.0
+        }
+        
+        enum ProfileButton {
+            static let size: CGSize = .init(width: 32, height: 32)
+            static let top: CGFloat = 36.0
+            static let left: CGFloat = Cost.sideOffSet
         }
         
         enum CollectionView {
             static let itemHeight: CGFloat = 72.0
-            static let width: CGFloat = UIScreen.main.bounds.width - (16 * 2)
             static let minimumLineSpacing: CGFloat = 8.0
             static let bottom: CGFloat = 22.0
             static let right: CGFloat = Cost.sideOffSet
@@ -177,10 +196,10 @@ private extension PaymentViewBuilder {
         }
         
         enum Stack {
-            static let bottom: CGFloat = 10.0
+            static let bottom: CGFloat = 104.0
             static let right: CGFloat = Cost.sideOffSet
             static let left: CGFloat = Cost.sideOffSet
-            static let top: CGFloat = 22.0
+            static let top: CGFloat = 16.0
             static let height: CGFloat = Cost.height
         }
     }

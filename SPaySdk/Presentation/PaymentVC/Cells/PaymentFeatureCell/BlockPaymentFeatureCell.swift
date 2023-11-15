@@ -19,8 +19,8 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .backgroundSecondary
-        layer.cornerRadius = 8.0
+        backgroundColor = .backgroundPrimary
+        layer.cornerRadius = 20.0
         setupUI()
     }
     
@@ -52,6 +52,7 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
     
     private lazy var switchControl: UISwitch = {
         let view = UISwitch(frame: .zero)
+        view.isUserInteractionEnabled = false
         return view
     }()
     

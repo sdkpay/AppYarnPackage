@@ -73,7 +73,6 @@ final class WebViewVC: ContentVC, IWebViewVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
-        topBarIsHidden = true
         setupUI()
     }
     

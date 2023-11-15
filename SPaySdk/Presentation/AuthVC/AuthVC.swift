@@ -30,7 +30,6 @@ final class AuthVC: ContentVC, IAuthVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        topBarIsHidden = true
         setupUI()
         presenter.viewDidLoad()
         SBLogger.log(.didLoad(view: self))

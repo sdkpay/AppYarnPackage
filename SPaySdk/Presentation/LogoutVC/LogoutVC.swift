@@ -90,9 +90,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupView()
-        topBarIsHidden = true
     }
     
     private func setupView() {
