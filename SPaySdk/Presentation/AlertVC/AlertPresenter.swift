@@ -50,6 +50,10 @@ final class AlertPresenter: AlertPresenting {
             case .clear:
                 item.action()
                 self.view?.contentNavigationController?.popViewController(animated: true)
+            case .blackBack:
+                item.action()
+            case .orangeBack:
+                item.action()
             }
         }
     }

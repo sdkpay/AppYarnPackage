@@ -25,8 +25,9 @@ final class LogoutVC: ContentVC, ILogoutVC {
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = .bodi3
+        label.font = .header2
         label.text = presenter.getName()
+        label.textColor = .backgroundPrimary
         return label
     }()
     
@@ -34,28 +35,46 @@ final class LogoutVC: ContentVC, ILogoutVC {
         let label = UILabel()
         label.text = presenter.getNumber()
         label.textColor = .textSecondary
-        label.font = .medium2
+        label.font = .medium7
         label.textAlignment = .center
         return label
     }()
     
     private(set) lazy var nextButton: DefaultButton = {
-        let view = DefaultButton(buttonAppearance: .full)
+        let view = DefaultButton(buttonAppearance: .orangeBack)
         let string = Strings.Button.logout
         view.setTitle(string, for: .normal)
+        view.layer.cornerRadius = 12
+        view.addAction {
+            self.presenter.logout()
+        }
+        return view
+    }()
+    
+    private lazy var imageView: UIImageView = {
+       let view = UIImageView()
+        view.image = Asset.background.image
+        return view
+    }()
+    
+    private(set) lazy var backButton: DefaultButton = {
+        let view = DefaultButton(buttonAppearance: .blackBack)
+        let string = Strings.Button.Logout.back
+        view.setTitle(string, for: .normal)
+        view.layer.cornerRadius = 12
         view.addAction {
             self.presenter.back()
         }
         return view
     }()
     
-    private(set) lazy var backButton: DefaultButton = {
-        let view = DefaultButton(buttonAppearance: .cancel)
-        let string = Strings.Button.Logout.back
-        view.setTitle(string, for: .normal)
-        view.addAction {
-            self.presenter.logout()
-        }
+    private(set) lazy var buttonStack: UIStackView = {
+       let view = UIStackView()
+        view.addArrangedSubview(backButton)
+        view.addArrangedSubview(nextButton)
+        view.axis = .horizontal
+        view.distribution = .fillEqually
+        view.spacing = 4
         return view
     }()
     
@@ -79,35 +98,32 @@ final class LogoutVC: ContentVC, ILogoutVC {
     private func setupView() {
         view.height(.minScreenSize, priority: .defaultLow)
         
-        avatarImage
+        imageView
             .add(toSuperview: view)
+            .touchEdgesToSuperview()
+        
+        avatarImage
+            .add(toSuperview: imageView)
+            .size(.equal, to: .init(width: 144, height: 144))
+            .touchEdge(.top, toEdge: .top, ofView: view, withInset: 130)
             .centerInSuperview(.horizontal)
-            .size(.equal, to: .init(width: 72, height: 72))
-            .touchEdge(.top, toEdge: .top, ofView: view, withInset: 40)
             
         nameLabel
-            .add(toSuperview: view)
+            .add(toSuperview: imageView)
             .centerInSuperview(.horizontal)
-            .touchEdge(.top, toEdge: .bottom, ofView: avatarImage, withInset: 12)
+            .centerInSuperview(.vertical)
+            .touchEdge(.top, toEdge: .bottom, ofView: avatarImage, withInset: 24)
         
         phoneLabel
-            .add(toSuperview: view)
+            .add(toSuperview: imageView)
             .centerInSuperview(.horizontal)
             .touchEdge(.top, toEdge: .bottom, ofView: nameLabel, withInset: 8)
         
-        nextButton
+        buttonStack
             .add(toSuperview: view)
-            .height(.defaultButtonHeight)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Next.left)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Next.right)
-            .touchEdge(.top, toEdge: .bottom, ofView: phoneLabel, withInset: 40)
-        
-        backButton
-            .add(toSuperview: view)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.Back.bottom)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Back.left)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Back.right)
-            .touchEdge(.top, toEdge: .bottom, ofView: nextButton, withInset: Cost.Button.Back.top)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.sideOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.sideOffSet)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: 46)
             .height(.defaultButtonHeight)
     }
 }

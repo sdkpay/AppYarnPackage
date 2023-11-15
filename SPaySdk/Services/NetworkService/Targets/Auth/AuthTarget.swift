@@ -35,6 +35,7 @@ enum AuthTarget {
               merchantLogin: String?,
               resourceName: String,
               authCookie: [HTTPCookie])
+    case revokeToken(authCookie: [HTTPCookie])
 }
 
 extension AuthTarget: TargetType {
@@ -46,6 +47,8 @@ extension AuthTarget: TargetType {
             return "sdk-gateway/v1/sessionStatus"
         case .auth:
             return "/sberpay-auth/v2/sdkAuth"
+        case .revokeToken:
+            return "sdk-gateway/v1/revokeTokenSdk"
         }
     }
     
@@ -56,6 +59,8 @@ extension AuthTarget: TargetType {
         case .checkSession:
             return .get
         case .auth:
+            return .post
+        case .revokeToken:
             return .post
         }
     }
@@ -195,6 +200,8 @@ extension AuthTarget: TargetType {
             params["resourceName"] = resourceName
             
             return .requestWithParametersAndCookie(nil, bodyParameters: params, cookies: authCookie)
+        case let .revokeToken(authCookie: authCookie):
+            return .requestWithParametersAndCookie(nil, bodyParameters: nil, cookies: authCookie)
         }
     }
     
@@ -210,6 +217,8 @@ extension AuthTarget: TargetType {
             return nil
         case .auth:
             return try? Data(contentsOf: Files.authJson.url)
+        case .revokeToken:
+            return nil
         }
     }
 }

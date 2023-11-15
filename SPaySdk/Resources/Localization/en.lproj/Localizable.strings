@@ -84,5 +84,5 @@
 "button.otp.back" = "Вернуться в магазин";
 
 // Logout
-"button.logout" = "Вернуться к оплате";
-"button.logout.back" = "Выйти";
+"button.logout" = "Выйти";
+"button.logout.back" = "Назад";
