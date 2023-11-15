@@ -19,7 +19,7 @@ private extension BankAppPickerViewBuilder {
         static let offSet: CGFloat = 16.0
         enum Title {
             static let font = UIFont.medium5
-            static let textColor = UIColor.textPrimory
+            static let textColor = UIColor.backgroundPrimary
             static let text = UserDefaults.localization?.authTitle
             
             static let topOffSet: CGFloat = 40.0
@@ -28,7 +28,7 @@ private extension BankAppPickerViewBuilder {
         
         enum Subtitle {
             static let font = UIFont.bodi2
-            static let textColor = UIColor.textSecondary
+            static let textColor = UIColor.backgroundPrimary
             
             static let topOffSet: CGFloat = 6.0
             static let rightOffSet = Consts.offSet
@@ -45,7 +45,7 @@ private extension BankAppPickerViewBuilder {
         
         enum BackButton {
             static let font = UIFont.subheadline
-            static let textColor = UIColor.textPrimory
+            static let textColor = UIColor.backgroundPrimary
             static let heidgt: CGFloat = .defaultButtonHeight
             
             static let bottomOffSet: CGFloat = 34.0

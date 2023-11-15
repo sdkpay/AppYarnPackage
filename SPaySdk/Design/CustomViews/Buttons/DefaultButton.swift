@@ -29,6 +29,8 @@ enum DefaultButtonAppearance {
     case clear
     case cancel
     case info
+    case blackBack
+    case orangeBack
     
     fileprivate var selected: ButtonColorScheme {
         switch self {
@@ -43,6 +45,12 @@ enum DefaultButtonAppearance {
         case .clear:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .main)
+        case .blackBack:
+            return ButtonColorScheme(backgroundColor: .clear,
+                                     titleColor: .textPrimory)
+        case .orangeBack:
+            return ButtonColorScheme(backgroundColor: .backgroundSecondary,
+                                     titleColor: .notification)
         }
     }
     
@@ -59,6 +67,12 @@ enum DefaultButtonAppearance {
         case .clear:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .main)
+        case .blackBack:
+            return ButtonColorScheme(backgroundColor: .backgroundPrimary,
+                                     titleColor: .textPrimory)
+        case .orangeBack:
+            return ButtonColorScheme(backgroundColor: .backgroundSecondary,
+                                     titleColor: .notification)
         }
     }
     
@@ -78,6 +92,12 @@ enum DefaultButtonAppearance {
         case .clear:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .main)
+        case .blackBack:
+            return ButtonColorScheme(backgroundColor: .clear,
+                                     titleColor: .textPrimory)
+        case .orangeBack:
+            return ButtonColorScheme(backgroundColor: .backgroundSecondary,
+                                     titleColor: .notification)
         }
     }
 }

@@ -183,6 +183,7 @@ final class PaymentPresenter: PaymentPresenting {
             guard userService.additionalCards else { return }
             Task { @MainActor in
                 self.router.presentCards(cards: user.paymentToolInfo,
+                                         cost: finalCost,
                                          selectedId: selectedCard.paymentId,
                                          selectedCard: { [weak self] card in
                     self?.view?.hideLoading(animate: true)

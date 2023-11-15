@@ -26,6 +26,7 @@ final class LogoutAssembly {
                         storage: locator.resolve(),
                         userService: locator.resolve(),
                         authManager: locator.resolve(),
+                        authService: locator.resolve(),
                         completionManager: locator.resolve())
     }
 

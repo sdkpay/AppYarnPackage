@@ -70,6 +70,7 @@ extension NetworkService {
         try await requestString(target, host: host, retrySettings: retrySettings)
     }
     
+    @discardableResult
     func requestFull<T>(_ target: TargetType,
                         to: T.Type,
                         host: HostSettings = .main,

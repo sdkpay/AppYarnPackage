@@ -33,6 +33,7 @@ protocol AuthService {
     func auth() async throws
     func tryToGetSessionId() async throws -> AuthMethod
     func appAuth() async throws
+    func revokeToken() async throws
     func completeAuth(with url: URL)
     var tokenInStorage: Bool { get }
     var bankCheck: Bool { get set }
@@ -246,6 +247,18 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         let userData = try await personalMetricsService.getUserData()
         try await authMethod(deviceInfo: userData)
     }
+    
+    func revokeToken() async throws {
+        do {
+            try await network.requestFull(
+                AuthTarget.revokeToken(authCookie: getRefreshCookies()),
+                                          to: AuthRefreshTokenModel.self
+            )
+            cookieStorage.cleanCookie()
+        } catch {
+            throw error
+        }
+    }
 
     private func authMethod(deviceInfo: String) async throws {
         SBLogger.logThread(obj: self)
@@ -318,4 +331,13 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
         return cookies
     }
+    
+    private func getIdCookies()  -> [HTTPCookie] {
+        if let idCookies = cookieStorage.getCookie(for: .id) {
+            return [idCookies]
+        } else {
+            return []
+        }
+    }
+    
 }

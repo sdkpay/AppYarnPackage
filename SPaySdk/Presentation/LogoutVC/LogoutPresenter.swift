@@ -20,6 +20,7 @@ final class LogoutPresenter: LogoutPresenting {
     weak var view: (ILogoutVC & ContentVC)?
     private let sdkManager: SDKManager
     private var storage: CookieStorage
+    private var authService: AuthService
     private var authManager: AuthManager
     private let userService: UserService
     private let completionManager: CompletionManager
@@ -28,11 +29,13 @@ final class LogoutPresenter: LogoutPresenting {
          storage: CookieStorage,
          userService: UserService,
          authManager: AuthManager,
+         authService: AuthService,
          completionManager: CompletionManager) {
         self.sdkManager = sdkManager
         self.storage = storage
         self.authManager = authManager
         self.userService = userService
+        self.authService = authService
         self.completionManager = completionManager
     }
     
@@ -48,10 +51,17 @@ final class LogoutPresenter: LogoutPresenting {
     func back() {
         view?.contentNavigationController?.popViewController(animated: true, completion: nil)
     }
-    
+   
+    @MainActor
     func logout() {
         userService.clearData()
-        storage.cleanCookie()
+        Task {
+            do {
+                try await authService.revokeToken()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
         completionManager.dismissCloseAction(view)
     }
 }
