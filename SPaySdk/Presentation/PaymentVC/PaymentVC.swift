@@ -10,17 +10,21 @@ import UIKit
 protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?)
     func setPayButtonTitle(title: String)
-    func reloadCollectionView()
+    func addSnapShot()
+    func reloadData(in sections: [PaymentSection])
 }
 
 final class PaymentVC: ContentVC, IPaymentVC {
-    private lazy var viewBuilder = PaymentViewBuilder { [weak self] in
+    
+    private lazy var viewBuilder = PaymentViewBuilder(featureCount: presenter.featureCount) { [weak self] in
         guard let self = self else { return }
         self.presenter.payButtonTapped()
     } cancelButtonDidTap: { [weak self] in
         guard let self = self else { return }
         self.presenter.cancelTapped()
     }
+    
+    private var dataSource: UICollectionViewDiffableDataSource<PaymentSection, Int>?
 
     private var presenter: PaymentPresenting
     
@@ -35,10 +39,10 @@ final class PaymentVC: ContentVC, IPaymentVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewBuilder.setupUI(view: view, logoImage: logoImage)
+        configDataSource()
         viewBuilder.collectionView.delegate = self
-        viewBuilder.collectionView.dataSource = self
         presenter.viewDidLoad()
+        viewBuilder.setupUI(view: view, logoImage: logoImage)
         SBLogger.log(.didLoad(view: self))
         profileView.addAction {
             self.presenter.openProfile()
@@ -85,25 +89,61 @@ final class PaymentVC: ContentVC, IPaymentVC {
         viewBuilder.payButton.setTitle(title, for: .normal)
     }
     
-    func reloadCollectionView() {
-        viewBuilder.collectionView.reloadData()
-    }
-}
-
-extension PaymentVC: UICollectionViewDelegate, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        presenter.cellDataCount
+    func reloadData(in sections: [PaymentSection]) {
+        
+        guard var newSnapshot = dataSource?.snapshot() else { return }
+        for section in sections {
+            newSnapshot.appendItems(presenter.identifiresForSection(section), toSection: section)
+        }
+        dataSource?.apply(newSnapshot)
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView
-            .dequeueReusableCell(withReuseIdentifier: CardInfoView.reuseID, for: indexPath) as? CardInfoView else {
-            return UICollectionViewCell()
+    func addSnapShot() {
+        
+        var snapshot = NSDiffableDataSourceSnapshot<PaymentSection, Int>()
+        snapshot.appendSections(presenter.activeMainSections)
+        presenter.activeMainSections.forEach { section in
+            snapshot.appendItems(presenter.identifiresForSection(section), toSection: section)
         }
-        let model = presenter.model(for: indexPath)
+        dataSource?.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func configDataSource() {
+        
+        dataSource = UICollectionViewDiffableDataSource<PaymentSection, Int>(collectionView: viewBuilder.collectionView) { (
+            collectionView: UICollectionView,
+            indexPath: IndexPath,
+            _: Int
+        ) -> UICollectionViewCell? in
+            guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
+            guard let model = self.presenter.model(for: indexPath) else { return nil }
+            switch section {
+            case .features:
+                return self.config(collectionView: collectionView,
+                                   cellType: BlockPaymentFeatureCell.self,
+                                   with: model,
+                                   fot: indexPath)
+            case .card:
+                return self.config(collectionView: collectionView,
+                                   cellType: PaymentCardCell.self,
+                                   with: model,
+                                   fot: indexPath)
+            }
+        }
+    }
+    
+    private func config<T: SelfReusable & SelfConfigCell, U: AbstractCellModel>(collectionView: UICollectionView,
+                                                                                cellType: T.Type,
+                                                                                with model: U,
+                                                                                fot indexPath: IndexPath) -> T? {
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType.reuseId, for: indexPath) as? T else { return nil }
         cell.config(with: model)
         return cell
     }
+}
+
+extension PaymentVC: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         presenter.didSelectItem(at: indexPath)

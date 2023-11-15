@@ -36,9 +36,7 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
             fatalError("Неправильно составлен стабовый запрос")
         }
         
-        guard let sampleData = target.sampleData else {
-            fatalError("Отсутсвует стабовый ответ на запрос")
-        }
+        let sampleData = target.sampleData ?? Data()
         
         return (sampleData, response)
     }
