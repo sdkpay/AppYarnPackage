@@ -38,5 +38,3 @@ struct FormParameters: Codable {
     let cybercabinetUrlAndroid: String?
     let cybercabinetUrlIOS: String?
 }
-
-

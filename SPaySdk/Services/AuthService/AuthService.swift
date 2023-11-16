@@ -67,7 +67,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     var tokenInStorage: Bool {
         if self.buildSettings.refresh {
-            return (try? storage.exists(.cookieId)) ?? false
+            return cookieStorage.exists(.id) && cookieStorage.exists(.refreshData)
         } else {
             return false
         }
@@ -178,7 +178,10 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
             self.analytics.sendEvent(event)
             
-            if refreshIsActive && self.featureToggleService.isEnabled(.refresh) {
+            if refreshIsActive &&
+                featureToggleService.isEnabled(.refresh) &&
+                cookieStorage.exists(.id) &&
+                cookieStorage.exists(.refreshData) {
                 self.authManager.authMethod = .refresh
             } else {
                 self.authManager.authMethod = .bank

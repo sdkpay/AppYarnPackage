@@ -253,7 +253,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         if status != errSecSuccess {
             view?.showAlert(with: status.description)
         } else {
-            view?.showAlert(with: "Local storage is cleare")
+            view?.showAlert(with: "Keychain storage is cleare")
         }
     }
     

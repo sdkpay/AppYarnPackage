@@ -109,7 +109,10 @@ final class PaymentPresenter: PaymentPresenting {
     
     func payButtonTapped() {
         analytics.sendEvent(.TouchPay, with: screenEvent)
-        goToPay()
+        
+        Task {
+           await goToPay()
+        }
     }
     
     func viewDidAppear() {
@@ -351,7 +354,9 @@ final class PaymentPresenter: PaymentPresenting {
                 self.view?.reloadData()
                 self.alertService.show(on: self.view,
                                        type: .partPayError(fullPay: {
-                    self.goToPay()
+                    Task {
+                        await self.goToPay()
+                    }
                 }, back: {
                     Task {
                         await self.view?.hideLoading(animate: true)
