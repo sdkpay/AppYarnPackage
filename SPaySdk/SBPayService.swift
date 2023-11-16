@@ -108,8 +108,9 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(AnalyticsService.self)
             .sendEvent(.MAGetPaymentToken)
-        if apiKey == nil {
-            apiKey = request.apiKey
+        
+        if let apiKeyInRequest = request.apiKey {
+            apiKey = apiKeyInRequest
         }
         
         guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
@@ -154,8 +155,12 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(AnalyticsService.self)
             .sendEvent(.MAPayWithBankInvoiceId)
-        apiKey = paymentRequest.apiKey
-        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
+        
+        if let apiKeyInRequest = paymentRequest.apiKey {
+            apiKey = apiKeyInRequest
+        }
+        
+        guard let apiKey = apiKey else { fatalError(Strings.Merchant.Alert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
             let response = PaymentResponse(SPayState.error, error)
             completion(response)
