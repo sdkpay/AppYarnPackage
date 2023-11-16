@@ -180,8 +180,8 @@ final class AuthPresenter: AuthPresenting {
         if enviromentManager.environment == .sandboxWithoutBankApp {
             router.presentFakeScreen(completion: {
                 self.auth()
-                return
             })
+            return
         }
         
         if bankManager.selectedBank == nil {
