@@ -58,4 +58,5 @@ struct BankApp: Codable {
 struct Images: Codable {
     let logoIcon: String
     let logoClear: String
+    let logoBlack: String?
 }

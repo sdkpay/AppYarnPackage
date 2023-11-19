@@ -86,7 +86,7 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
             .touchEdge(.left, toEdge: .right, ofView: iconView, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
             .touchEdge(.top, toSuperviewEdge: .top, withInset: .cellMargin)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .cellMargin)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .cellMargin, priority: .defaultHigh)
         
         switchControl
             .add(toSuperview: contentView)

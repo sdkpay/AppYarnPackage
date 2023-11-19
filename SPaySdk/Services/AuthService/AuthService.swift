@@ -66,6 +66,9 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     var bankCheck = false
     
     var tokenInStorage: Bool {
+        if self.buildSettings.refresh, buildSettings.networkState == .Local {
+            return true
+        }
         if self.buildSettings.refresh {
             return cookieStorage.exists(.id) && cookieStorage.exists(.refreshData)
         } else {
@@ -179,9 +182,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             self.analytics.sendEvent(event)
             
             if refreshIsActive &&
-                featureToggleService.isEnabled(.refresh) &&
-                cookieStorage.exists(.id) &&
-                cookieStorage.exists(.refreshData) {
+                featureToggleService.isEnabled(.refresh) && tokenInStorage {
                 self.authManager.authMethod = .refresh
             } else {
                 self.authManager.authMethod = .bank
@@ -335,12 +336,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         return cookies
     }
     
-    private func getIdCookies()  -> [HTTPCookie] {
+    private func getIdCookies() -> [HTTPCookie] {
         if let idCookies = cookieStorage.getCookie(for: .id) {
             return [idCookies]
         } else {
             return []
         }
     }
-    
 }

@@ -13,13 +13,12 @@ final class PaymentViewBuilder {
     private var profileButtonDidTap: Action
     private var featureCount: Int
     
-    private(set) lazy var payButton: DefaultButton = {
-        let view = DefaultButton(buttonAppearance: .full)
-        view.setTitle(String(stringLiteral: Cost.Button.Pay.title), for: .normal)
-        view.addAction(payButtonDidTap)
+    private(set) lazy var payButton: PaymentButton = {
+        let view = PaymentButton()
+        view.tapAction = payButtonDidTap
         return view
     }()
-    
+
     private(set) lazy var cancelButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .cancel)
         view.setTitle(String(stringLiteral: Cost.Button.Cancel.title), for: .normal)
@@ -76,6 +75,7 @@ final class PaymentViewBuilder {
         let collectionView = CompactCollectionView(frame: .zero,
                                                    collectionViewLayout: PaymentCollectionViewLayoutManager.create(with: sectionProvider))
         collectionView.backgroundColor = .clear
+        collectionView.alwaysBounceVertical = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(PaymentCardCell.self, forCellWithReuseIdentifier: PaymentCardCell.reuseId)
         collectionView.register(BlockPaymentFeatureCell.self, forCellWithReuseIdentifier: BlockPaymentFeatureCell.reuseId)

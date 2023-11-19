@@ -85,7 +85,7 @@ final class PaymentCardCell: UICollectionViewCell, SelfReusable, SelfConfigCell 
             .touchEdge(.left, toEdge: .right, ofView: cardIconView, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
             .touchEdge(.top, toSuperviewEdge: .top, withInset: .margin)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .margin)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .margin, priority: .defaultHigh)
         
         if needArrow {
             arrowView

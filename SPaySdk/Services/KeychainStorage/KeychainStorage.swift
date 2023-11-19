@@ -52,6 +52,7 @@ protocol KeychainStorage {
 }
 
 final class DefaultKeychainStorage: KeychainStorage {
+    
     private let service = Bundle.sdkBundle.displayName ?? "Default"
     
     func exists(_ key: StorageKey) throws -> Bool {

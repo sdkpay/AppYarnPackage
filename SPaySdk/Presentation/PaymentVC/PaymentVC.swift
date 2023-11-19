@@ -9,7 +9,6 @@ import UIKit
 
 protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?)
-    func setPayButtonTitle(title: String)
     func addSnapShot()
     func reloadData()
 }
@@ -19,10 +18,10 @@ final class PaymentVC: ContentVC, IPaymentVC {
     private lazy var viewBuilder = PaymentViewBuilder(featureCount: presenter.featureCount,
                                                       profileButtonDidTap: { [weak self] in
         guard let self = self else { return }
-        self.presenter.payButtonTapped()
+        self.presenter.profileTapped()
     }, payButtonDidTap: { [weak self] in
         guard let self = self else { return }
-        self.presenter.openProfile()
+        self.presenter.payButtonTapped()
     }, cancelButtonDidTap: { [weak self] in
         guard let self = self else { return }
         self.presenter.cancelTapped()
@@ -68,6 +67,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
     }
     
     func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?) {
+        
         viewBuilder.shopLabel.text = shop
         viewBuilder.logoImageView.downloadImage(from: iconURL, placeholder: .Payment.cart)
         if let fullPrice {
@@ -86,10 +86,6 @@ final class PaymentVC: ContentVC, IPaymentVC {
         }
     }
     
-    func setPayButtonTitle(title: String) {
-        viewBuilder.payButton.setTitle(title, for: .normal)
-    }
-    
     func reloadData() {
         
         guard var newSnapshot = dataSource?.snapshot() else { return }
@@ -100,8 +96,9 @@ final class PaymentVC: ContentVC, IPaymentVC {
     func addSnapShot() {
         
         var snapshot = NSDiffableDataSourceSnapshot<PaymentSection, Int>()
-        snapshot.appendSections(presenter.activeMainSections)
-        presenter.activeMainSections.forEach { section in
+        snapshot.appendSections(PaymentSection.allCases)
+        print(snapshot.numberOfSections)
+        PaymentSection.allCases.forEach { section in
             snapshot.appendItems(presenter.identifiresForSection(section), toSection: section)
         }
         dataSource?.apply(snapshot, animatingDifferences: true)

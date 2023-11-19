@@ -59,7 +59,8 @@ extension UserDefaults {
     
     @UserDefault(key: .images,
                  defaultValue: Images(logoIcon: "foo",
-                                      logoClear: "foo"))
+                                      logoClear: "foo",
+                                      logoBlack: "foo"))
     static var images: Images?
     
     @UserDefault(key: .bankApps,

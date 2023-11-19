@@ -23,15 +23,16 @@ private extension TimeInterval {
 
 class ContentVC: LoggableVC {
     
+    @MainActor
     var contentNavigationController: ContentNC? {
         parent as? ContentNC
     }
     
-    var userInteractionsEnabled = true {
-        didSet {
-            view.window?.viewWithTag(.dimmViewTag)?.isUserInteractionEnabled = userInteractionsEnabled
-            contentNavigationController?.view.isUserInteractionEnabled = userInteractionsEnabled
-        }
+    @MainActor
+    func setUserInteractionsEnabled(_ value: Bool = true) {
+        
+        view.window?.viewWithTag(.dimmViewTag)?.isUserInteractionEnabled = value
+        contentNavigationController?.view.isUserInteractionEnabled = value
     }
     
     private lazy var stickImageView: UIImageView = {

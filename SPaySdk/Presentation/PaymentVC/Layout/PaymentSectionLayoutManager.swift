@@ -15,20 +15,6 @@ private extension CGFloat {
     
         static let height: CGFloat = 56
     }
-    
-    enum ActionConstants {
-        
-        static let width: CGFloat = 80
-        static let height: CGFloat = 95
-        static let margin: CGFloat = 3
-    }
-    
-    enum AssetConstants {
-        
-        static let width: CGFloat = 160
-        static let height: CGFloat = 160
-        static let margin: CGFloat = 4
-    }
 }
 
 enum PaymentSectionLayoutManager {
@@ -39,7 +25,7 @@ enum PaymentSectionLayoutManager {
         
         switch section {
         case .features:
-            return featureCount > 1 ? squareSection : blockSection
+            return featureCount > 1 ? blockSection : blockSection
         case .card:
             return blockSection
         }
@@ -56,30 +42,6 @@ enum PaymentSectionLayoutManager {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
         
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .groupPaging
-        return section
-    }
-    
-    private static var squareSection: NSCollectionLayoutSection {
-        
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .estimated(1))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(.AssetConstants.width),
-                                               heightDimension: .estimated(1))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
-                                                       subitems: [item])
-        group.contentInsets = .init(top: .zero,
-                                    leading: .AssetConstants.margin,
-                                    bottom: .zero,
-                                    trailing: .AssetConstants.margin)
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = .init(top: .zero,
-                                      leading: .groupMargin,
-                                      bottom: .zero,
-                                      trailing: .groupMargin)
         section.orthogonalScrollingBehavior = .groupPaging
         return section
     }
