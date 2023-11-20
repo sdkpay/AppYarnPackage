@@ -21,6 +21,11 @@ private extension TimeInterval {
     static let animationDuration = 0.25
 }
 
+extension Int {
+    static let backgroundViewTag = 888
+    static let stickViewTag = 555
+}
+
 class ContentVC: LoggableVC {
     
     @MainActor
@@ -38,6 +43,7 @@ class ContentVC: LoggableVC {
     private lazy var stickImageView: UIImageView = {
         let view = UIImageView()
         view.image = .Common.stick
+        view.tag = .stickViewTag
         view.contentMode = .scaleAspectFill
         return view
     }()
@@ -45,6 +51,7 @@ class ContentVC: LoggableVC {
     private lazy var backgroundImageView: UIImageView = {
         let view = UIImageView()
         view.image = Asset.background.image
+        view.tag = .backgroundViewTag
         view.contentMode = .scaleAspectFill
         return view
     }()

@@ -8,9 +8,9 @@
 import UIKit
 
 private extension CGFloat {
-    static let banksSpacing = 12.0
-    static let bottomMargin = 45.0
-    static let topMargin = 20.0
+    static let logoWidth = 96.0
+    static let logoHeight = 48.0
+    static let heightMultiple = 0.65
 }
 
 protocol IAuthVC {}
@@ -18,6 +18,12 @@ protocol IAuthVC {}
 final class AuthVC: ContentVC, IAuthVC {
     
     private let presenter: AuthPresenting
+    
+    private lazy var logoImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(base64: UserDefaults.images?.logoBlack ?? "")
+        return imageView
+    }()
     
     init(_ presenter: AuthPresenting) {
         self.presenter = presenter
@@ -50,6 +56,12 @@ final class AuthVC: ContentVC, IAuthVC {
     }
     
     private func setupUI() {
-        view.height(.minScreenSize, priority: .defaultLow)
+        
+        view.height(.equal, to: UIScreen.main.bounds.height * .heightMultiple)
+        
+        logoImage
+            .add(toSuperview: view)
+            .size(.equal, to: .init(width: .logoWidth, height: .logoHeight))
+            .centerInSuperview()
     }
 }

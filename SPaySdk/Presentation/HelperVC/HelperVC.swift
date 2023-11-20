@@ -53,4 +53,3 @@ final class HelperVC: ContentVC, IHelperVC {
         view.height(.minScreenSize, priority: .defaultLow)
     }
 }
-

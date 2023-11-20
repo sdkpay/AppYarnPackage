@@ -113,7 +113,7 @@ final class AuthPresenter: AuthPresenting {
         Task {
             do {
                 try await userService.checkUserSession()
-                await router.presentPayment()
+               // await router.presentPayment()
             } catch {
                 if let error = error as? SDKError {
                     completionManager.completeWithError(error)
@@ -236,7 +236,7 @@ final class AuthPresenter: AuthPresenting {
             
             do {
                 try await contentLoadManager.load()
-                await self.router.presentPayment()
+             //   await self.router.presentPayment()
             } catch {
                 if let error = error as? SDKError {
                     self.completionManager.completeWithError(error)

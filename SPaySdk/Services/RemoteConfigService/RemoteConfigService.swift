@@ -55,7 +55,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         
         self.versionСontrolManager.setVersionsInfo(result.versionInfo)
         self.saveConfig(result)
-        self.checkVersion(version: result.version)
+        self.checkVersion(version: result.versionInfo?.active)
         self.setFeatures(result.featuresToggle)
         self.analytics.sendEvent(.RQGoodRemoteConfig,
                                  with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
@@ -72,7 +72,8 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         featureToggle.setFeatures(values)
     }
 
-    private func checkVersion(version: String) {
+    private func checkVersion(version: String?) {
+        
         let currentVesion = Bundle.sdkVersion
         if version != currentVesion {
             SBLogger.log(level: .merchant, Strings.Merchant.Alert.version)

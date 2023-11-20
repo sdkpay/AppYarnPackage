@@ -10,7 +10,6 @@ import Foundation
 enum Feature: String, Codable {
     case bnpl
     case refresh
-    case bnpl2
     case compoundWallet
 }
 

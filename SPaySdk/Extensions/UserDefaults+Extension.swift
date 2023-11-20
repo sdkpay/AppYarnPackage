@@ -51,9 +51,7 @@ extension UserDefaults {
     static var localization: Localization?
     
     @UserDefault(key: .schemas,
-                 defaultValue: Schemas(payLinkFirstApp: "foo",
-                                       payLinkSecondApp: "foo",
-                                       dynatraceUrl: "foo",
+                 defaultValue: Schemas(dynatraceUrl: "foo",
                                        dynatraceId: "foo"))
     static var schemas: Schemas?
     
@@ -64,7 +62,7 @@ extension UserDefaults {
     static var images: Images?
     
     @UserDefault(key: .bankApps,
-                 defaultValue: [BankApp(name: "", link: "", iconURL: "")])
+                 defaultValue: [])
     static var bankApps: [BankApp]?
     
     @UserDefault(key: .certKeys, defaultValue: [String]())

@@ -242,7 +242,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
     
     private func authURL(link: String) -> URL? {
-        guard let url = bankAppManager.selectedBank?.link else { return nil }
+        
+        guard let url = bankAppManager.selectedBank?.authLink else { return nil }
         return URL(string: url + link)
     }
     
