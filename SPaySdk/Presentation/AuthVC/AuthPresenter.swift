@@ -113,7 +113,7 @@ final class AuthPresenter: AuthPresenting {
         Task {
             do {
                 try await userService.checkUserSession()
-               // await router.presentPayment()
+                await router.presentPayment()
             } catch {
                 if let error = error as? SDKError {
                     completionManager.completeWithError(error)
@@ -153,8 +153,6 @@ final class AuthPresenter: AuthPresenting {
     private func getAccessSPay() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let title: String = Strings.To.Bank.title(self.bankManager.selectedBank?.name ?? "Банк")
-            self.view?.showLoading(with: self.authService.tokenInStorage ? nil : title)
             self.getSessiond()
         }
     }
@@ -236,7 +234,7 @@ final class AuthPresenter: AuthPresenting {
             
             do {
                 try await contentLoadManager.load()
-             //   await self.router.presentPayment()
+                 await self.router.presentPayment()
             } catch {
                 if let error = error as? SDKError {
                     self.completionManager.completeWithError(error)

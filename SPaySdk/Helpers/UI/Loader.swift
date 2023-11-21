@@ -59,6 +59,9 @@ struct Loader {
         let subview = LoadingView(with: text)
     
         guard let rootView = vc.view else { return self }
+        
+        hideContext(from: vc, aniamated: true)
+        
         subview
             .add(toSuperview: rootView)
             .centerInSuperview()
@@ -69,10 +72,12 @@ struct Loader {
     @discardableResult
     @MainActor
     func hide(from vc: ContentVC) -> Loader {
+        
         guard let subview = vc.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView else {
             return self
         }
         
+        showContext(from: vc, aniamated: true)
         if isNeedToAnimate {
             UIView.animate(withDuration: .animationDuration,
                            delay: 0) {
@@ -86,12 +91,23 @@ struct Loader {
         return self
     }
     
-    private func hideContext(from view: ContentVC) {
-
-        view.view.subviews.forEach {
-            if $0.tag != .backgroundViewTag, $0.tag != .stickViewTag {
-                $0.alpha = 0
+    private func hideContext(from view: ContentVC, aniamated: Bool) {
+        
+        if aniamated {
+            
+            view.view.subviews.forEach {
+                if $0.tag != .backgroundViewTag, $0.tag != .stickViewTag {
+                    $0.alpha = 0
+                }
             }
+        }
+    }
+    
+    private func showContext(from view: ContentVC, aniamated: Bool) {
+        
+        if aniamated {
+            
+            view.view.subviews.forEach { $0.alpha = 1 }
         }
     }
 }
