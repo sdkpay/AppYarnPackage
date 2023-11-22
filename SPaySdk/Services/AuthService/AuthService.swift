@@ -250,10 +250,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     func revokeToken() async throws {
         do {
-            try await network.requestFull(
-                AuthTarget.revokeToken(authCookie: getRefreshCookies()),
-                                          to: AuthRefreshTokenModel.self
-            )
+            try await network.request(AuthTarget.revokeToken, host: .main)
             cookieStorage.cleanCookie()
         } catch {
             throw error

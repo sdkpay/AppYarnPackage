@@ -11,6 +11,7 @@ extension UIFont {
     static let header = FontFamily.SBSansText.semibold.font(size: 32)
     static let header2 = FontFamily.SBSansText.semibold.font(size: 20)
     static let header3 = FontFamily.SBSansText.semibold.font(size: 30)
+    static let header4 = FontFamily.SBSansText.semibold.font(size: 24)
     static let subheadline = FontFamily.SBSansText.semibold.font(size: 16)
     static let bodi1 = FontFamily.SBSansText.regular.font(size: 16)
     static let bodi2 = FontFamily.SBSansText.regular.font(size: 13)

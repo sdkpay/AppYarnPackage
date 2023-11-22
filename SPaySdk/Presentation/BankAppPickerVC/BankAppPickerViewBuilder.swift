@@ -18,17 +18,18 @@ private extension BankAppPickerViewBuilder {
     enum Consts {
         static let offSet: CGFloat = 16.0
         enum Title {
-            static let font = UIFont.medium5
-            static let textColor = UIColor.backgroundPrimary
+            static let font = UIFont.medium1
+            static let textColor = UIColor.mainBlack
             static let text = UserDefaults.localization?.authTitle
             
-            static let topOffSet: CGFloat = 40.0
+            static let topOffSet: CGFloat = 36.0
             static let rightOffSet = Consts.offSet
         }
         
         enum Subtitle {
-            static let font = UIFont.bodi2
-            static let textColor = UIColor.backgroundPrimary
+            static let font = UIFont.medium3
+            static let textColor = UIColor.textSecondary
+            static let text = UserDefaults.localization?.authTitle
             
             static let topOffSet: CGFloat = 6.0
             static let rightOffSet = Consts.offSet
@@ -40,16 +41,16 @@ private extension BankAppPickerViewBuilder {
             
             static let bottomOffSet: CGFloat = 58.0
             static let rightOffSet: CGFloat = Consts.offSet
-            static let topOffSet: CGFloat = 24.0
+            static let topOffSet: CGFloat = 28.0
         }
         
         enum BackButton {
             static let font = UIFont.subheadline
-            static let textColor = UIColor.backgroundPrimary
-            static let heidgt: CGFloat = .defaultButtonHeight
+            static let textColor = UIColor.mainBlack
+            static let heidgt: CGFloat = 48.0
             
             static let bottomOffSet: CGFloat = 34.0
-            static let topOffSet: CGFloat = 8.0
+            static let topOffSet: CGFloat = 4.0
         }
     }
 }
@@ -64,6 +65,16 @@ final class BankAppPickerViewBuilder {
         view.font = Consts.Title.font
         view.textColor = Consts.Title.textColor
         view.text = Consts.Title.text
+        view.textAlignment = .center
+        return view
+    }()
+    
+    private(set) lazy var subtitleLabel: UILabel = {
+        let view = UILabel()
+        view.numberOfLines = 0
+        view.font = Consts.Subtitle.font
+        view.textColor = Consts.Subtitle.textColor
+        view.text = Consts.Subtitle.text
         view.textAlignment = .center
         return view
     }()
@@ -95,10 +106,13 @@ final class BankAppPickerViewBuilder {
         view.backgroundView?.backgroundColor = Consts.TableView.backgroundColor
         view.showsVerticalScrollIndicator = false
         view.rowHeight = Consts.TableView.rowHeight
+        view.isScrollEnabled = false
         return view
     }()
     
     func setupUI(view: UIView) {
+        view.height(.minScreenSize, priority: .defaultLow)
+        
         imageView
             .add(toSuperview: view)
             .touchEdgesToSuperview([.bottom, .left, .right, .top])
@@ -109,9 +123,15 @@ final class BankAppPickerViewBuilder {
             .touchEdge(.left, toSameEdgeOfView: view, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
         
+        subtitleLabel
+            .add(toSuperview: view)
+            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Consts.Subtitle.topOffSet)
+            .touchEdge(.left, toSameEdgeOfView: view, withInset: .margin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+        
         tableView
             .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Consts.TableView.topOffSet)
+            .touchEdge(.top, toEdge: .bottom, ofView: subtitleLabel, withInset: Consts.TableView.topOffSet)
             .touchEdge(.left, toEdge: .left, ofView: titleLabel)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.rightOffSet)
         
@@ -120,6 +140,7 @@ final class BankAppPickerViewBuilder {
             .touchEdge(.top, toEdge: .bottom, ofView: tableView, withInset: Consts.BackButton.topOffSet)
             .touchEdge(.left, toEdge: .left, ofView: titleLabel)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+            .height(Consts.BackButton.heidgt)
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Consts.BackButton.bottomOffSet)
     }
 }

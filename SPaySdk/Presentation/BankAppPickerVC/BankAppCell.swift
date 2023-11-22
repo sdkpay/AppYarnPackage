@@ -41,7 +41,7 @@ final class BankAppCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.font = .medium1
-        view.textColor = .backgroundPrimary
+        view.textColor = .mainBlack
         view.letterSpacing(.letterSpacing)
         return view
     }()

@@ -60,7 +60,7 @@ final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
     }
     
     func setTilte(_ text: String) {
-        viewBuilder.titleLabel.text = "Выберите приложение для авторизации в СберБанке"
+        viewBuilder.subtitleLabel.text = text
     }
 }
 

@@ -15,6 +15,22 @@
       "priorityCard" : true,
       "countAdditionalCards" : 3,
       "paymentSystemType" : "MASTERCARD"
+    },
+    
+    {
+      "paymentSourceType" : "DebitCard",
+      "financialProductId" : "40817810438260165760",
+      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_composite_payment.png",
+      "productName" : "MasterCard Сберкарта",
+      "paymentId" : 4,
+      "cardNumber" : "5091",
+      "amountData" : {
+        "amount" : 956260.31000000006,
+        "currency" : "RUR"
+      },
+      "priorityCard" : true,
+      "countAdditionalCards" : 3,
+      "paymentSystemType" : "VISA"
     }
   ],
   "logoUrl" : "https:\/\/test.stat.online.sberbank.ru\/SBERBANKID\/icons\/781000012764.png",

@@ -82,7 +82,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                               with: Strings.Alert.Error.Main.title,
                               with: Strings.Alert.Error.Main.subtitle,
                               with: nil,
-                              state: .failure,
+                              state: .warning,
                               buttons: [],
                               completion: completion)
         case .cancel:
@@ -90,7 +90,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                               with: Strings.Alert.Error.Main.title,
                               with: Strings.Alert.Error.Main.subtitle,
                               with: nil,
-                              state: .failure,
+                              state: .warning,
                               buttons: [],
                               completion: completion)
         }

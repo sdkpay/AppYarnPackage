@@ -68,8 +68,8 @@ enum DefaultButtonAppearance {
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .main)
         case .blackBack:
-            return ButtonColorScheme(backgroundColor: .backgroundPrimary,
-                                     titleColor: .textPrimory)
+            return ButtonColorScheme(backgroundColor: .mainBlack,
+                                     titleColor: .white)
         case .orangeBack:
             return ButtonColorScheme(backgroundColor: .backgroundSecondary,
                                      titleColor: .notification)

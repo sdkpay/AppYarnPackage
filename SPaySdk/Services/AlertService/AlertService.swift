@@ -190,7 +190,7 @@ final class DefaultAlertService: AlertService {
             showAlert(on: view,
                       with: Strings.Alert.Error.Main.title,
                       with: Strings.Alert.Error.Main.subtitle,
-                      state: .failure,
+                      state: .warning,
                       buttons: [],
                       completion: completion)
         case let .noInternet(retry, completion):
