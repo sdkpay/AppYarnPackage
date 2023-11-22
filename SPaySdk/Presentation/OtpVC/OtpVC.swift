@@ -27,21 +27,20 @@ final class OtpVC: ContentVC, IOtpVC {
         
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 2
-        label.textAlignment = .left
-        label.font = .bodi3
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.font = .medium5
         return label
     }()
     
-    private lazy var otpTextField: DefaultTextField = {
-        let textField = DefaultTextField()
-        textField.config(keyboardType: .numberPad,
-                         maxLength: maxLength,
-                         textEndEdited: {
+    private lazy var otpTextField: SmsCodeView = {
+        let textField = SmsCodeView()
+        textField.fullCodeDidEnter = {
             self.nextButton.isEnabled = $0.count == self.maxLength
             guard $0.count == self.maxLength else { return }
             self.otpCode = $0
-        })
+        }
+        
         return textField
     }()
     
@@ -49,11 +48,10 @@ final class OtpVC: ContentVC, IOtpVC {
         let timeButton = ActionButton()
         timeButton.setTitleColor(.textSecondary, for: .normal)
         timeButton.isEnabled = true
-        timeButton.titleLabel?.font = .medium2
-        timeButton.titleLabel?.textAlignment = .left
+        timeButton.titleLabel?.font = .medium4
+        timeButton.titleLabel?.textAlignment = .center
         timeButton.addAction({
             self.nextButton.isEnabled = false
-            self.otpTextField.addDefaultLabel()
             self.presenter.createOTP()
         })
         return timeButton
@@ -64,7 +62,6 @@ final class OtpVC: ContentVC, IOtpVC {
         view.isEnabled = false
         view.setTitle(Strings.Next.Button.title, for: .normal)
         view.addAction {
-            self.otpTextField.addDefaultLabel()
             self.presenter.sendOTP(otpCode: self.otpCode)
         }
         return view
@@ -107,17 +104,19 @@ final class OtpVC: ContentVC, IOtpVC {
     }
     
     func showError(with text: String) {
-        otpTextField.addDescriptionLabel(with: text)
+        timeButton.setTitle(text, for: .normal)
+        timeButton.isEnabled = true
+        timeButton.setTitleColor(.red, for: .normal)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
         setupUI()
+        topBarIsHidden = true
+        backView.isUserInteractionEnabled = true
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.otpTextField.becomeFirst()
-        }
+        self.otpTextField.becomeFirstResponder()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -155,22 +154,25 @@ final class OtpVC: ContentVC, IOtpVC {
             .touchEdge(.left, toSuperviewEdge: .left)
             .touchEdge(.right, toSuperviewEdge: .right)
             .touchEdge(.top, toSuperviewEdge: .top)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom)
 
         titleLabel
             .add(toSuperview: backView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Stack.right)
-            .touchEdge(.top, toEdge: .bottom, ofView: view, withInset: Cost.Stack.top)
+            .touchEdge(.top, toEdge: .top, ofView: backView, withInset: Cost.Stack.top)
         
         otpTextField
             .add(toSuperview: backView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.TextField.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.TextField.right)
             .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Cost.TextField.top)
+            .height(Cost.TextField.height)
         
         timeButton
             .add(toSuperview: backView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Time.left)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Time.left)
             .touchEdge(.top, toEdge: .bottom, ofView: otpTextField, withInset: Cost.Button.Time.top)
                
         nextButton
@@ -182,7 +184,6 @@ final class OtpVC: ContentVC, IOtpVC {
         
         backButton
             .add(toSuperview: backView)
-            .touchEdge(.bottom, toEdge: .bottom, ofView: backView, withInset: Cost.Button.Back.bottom)
             .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: CGFloat(keyboardHeight))
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Back.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Back.right)
@@ -200,13 +201,14 @@ extension OtpVC {
             static let bottom: CGFloat = 10.0
             static let right: CGFloat = Cost.sideOffSet
             static let left: CGFloat = Cost.sideOffSet
-            static let top: CGFloat = 22.0
+            static let top: CGFloat = 30.0
         }
         
         enum TextField {
             static let right: CGFloat = Cost.sideOffSet
             static let left: CGFloat = Cost.sideOffSet
             static let top: CGFloat = 20
+            static let height: CGFloat = 76
         }
         
         enum Button {
@@ -214,7 +216,7 @@ extension OtpVC {
 
             enum Next {
                 static let title = Strings.Pay.title
-                static let bottom: CGFloat = 10.0
+                static let bottom: CGFloat = 40.0
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
                 static let top: CGFloat = 22
@@ -231,7 +233,7 @@ extension OtpVC {
             enum Time {
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
-                static let top: CGFloat = 12
+                static let top: CGFloat = 38
             }
         }
     }

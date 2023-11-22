@@ -18,7 +18,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         let imageView = UIImageView()
         imageView.image = UIImage(base64: UserDefaults.images?.logoIcon ?? "")
         imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = 36
+        imageView.layer.cornerRadius = Cost.ImageView.cornerRadius
         return imageView
     }()
     
@@ -27,7 +27,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         label.textAlignment = .center
         label.font = .header2
         label.text = presenter.getName()
-        label.textColor = .backgroundPrimary
+        label.textColor = .mainBlack
         return label
     }()
     
@@ -44,7 +44,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         let view = DefaultButton(buttonAppearance: .orangeBack)
         let string = Strings.Button.logout
         view.setTitle(string, for: .normal)
-        view.layer.cornerRadius = 12
+        view.layer.cornerRadius = Cost.Button.cornerRadius
         view.addAction {
             self.presenter.logout()
         }
@@ -61,7 +61,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         let view = DefaultButton(buttonAppearance: .blackBack)
         let string = Strings.Button.Logout.back
         view.setTitle(string, for: .normal)
-        view.layer.cornerRadius = 12
+        view.layer.cornerRadius = Cost.Button.cornerRadius
         view.addAction {
             self.presenter.back()
         }
@@ -74,7 +74,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         view.addArrangedSubview(nextButton)
         view.axis = .horizontal
         view.distribution = .fillEqually
-        view.spacing = 4
+        view.spacing = Cost.Button.spacing
         return view
     }()
     
@@ -102,26 +102,26 @@ final class LogoutVC: ContentVC, ILogoutVC {
         
         avatarImage
             .add(toSuperview: imageView)
-            .size(.equal, to: .init(width: 144, height: 144))
-            .touchEdge(.top, toEdge: .top, ofView: view, withInset: 130)
+            .size(.equal, to: Cost.ImageView.size)
+            .touchEdge(.top, toEdge: .top, ofView: view, withInset: Cost.ImageView.top)
             .centerInSuperview(.horizontal)
             
         nameLabel
             .add(toSuperview: imageView)
             .centerInSuperview(.horizontal)
             .centerInSuperview(.vertical)
-            .touchEdge(.top, toEdge: .bottom, ofView: avatarImage, withInset: 24)
+            .touchEdge(.top, toEdge: .bottom, ofView: avatarImage, withInset: Cost.Label.Name.top)
         
         phoneLabel
             .add(toSuperview: imageView)
             .centerInSuperview(.horizontal)
-            .touchEdge(.top, toEdge: .bottom, ofView: nameLabel, withInset: 8)
+            .touchEdge(.top, toEdge: .bottom, ofView: nameLabel, withInset: Cost.Label.Phone.top)
         
         buttonStack
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.sideOffSet)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.sideOffSet)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: 46)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.bottom)
             .height(.defaultButtonHeight)
     }
 }
@@ -133,6 +133,9 @@ extension LogoutVC {
         
         enum Button {
             static let height = Cost.height
+            static let bottom: CGFloat = 46.0
+            static let cornerRadius: CGFloat = 12.0
+            static let spacing = 4.0
 
             enum Next {
                 static let bottom: CGFloat = 10.0
@@ -146,6 +149,22 @@ extension LogoutVC {
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
                 static let top: CGFloat = Cost.sideOffSet
+            }
+        }
+        
+        enum ImageView {
+            static let size: CGSize = .init(width: 144, height: 144)
+            static let top: CGFloat = 130
+            static let cornerRadius: CGFloat = 36.0
+        }
+        
+        enum Label {
+            enum Name {
+                static let top: CGFloat = 24.0
+            }
+            
+            enum Phone {
+                static let top: CGFloat = 8
             }
         }
     }

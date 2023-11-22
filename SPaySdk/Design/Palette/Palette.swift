@@ -16,4 +16,5 @@ extension UIColor {
     static let textSecondary = Asset.grayPrimary.color
     static let notification = Asset.orange.color
     static let inactive = Asset.grayInactive
+    static let mainBlack = Asset.mainBlack.color
 }

@@ -31,7 +31,7 @@ final class AlertVC: ContentVC, IAlertVC {
         let view = UILabel()
         view.font = .header2
         view.numberOfLines = 1
-        view.textColor = .textPrimory
+        view.textColor = .mainBlack
         view.textAlignment = .center
         return view
     }()
@@ -48,7 +48,7 @@ final class AlertVC: ContentVC, IAlertVC {
     private lazy var alertCostLabel: UILabel = {
        let view = UILabel()
         view.font = .header3
-        view.textColor = .textPrimory
+        view.textColor = .mainBlack
         view.textAlignment = .center
         view.numberOfLines = 1
         return view
@@ -59,9 +59,15 @@ final class AlertVC: ContentVC, IAlertVC {
         view.spacing = 8
         view.axis = .vertical
         view.alignment = .center
-        view.addArrangedSubview(alertSubtitle)
-        view.addArrangedSubview(alertCostLabel)
         view.addArrangedSubview(alertTitle)
+        view.addArrangedSubview(alertCostLabel)
+        view.addArrangedSubview(alertSubtitle)
+        return view
+    }()
+    
+    private lazy var backgroundImageView: UIImageView = {
+       let view = UIImageView()
+        view.image = Asset.background.image
         return view
     }()
     
@@ -70,8 +76,8 @@ final class AlertVC: ContentVC, IAlertVC {
         view.spacing = 32
         view.axis = .vertical
         view.alignment = .center
-        view.addArrangedSubview(textStack)
         view.addArrangedSubview(imageView)
+        view.addArrangedSubview(textStack)
         return view
     }()
     
@@ -133,20 +139,24 @@ final class AlertVC: ContentVC, IAlertVC {
     }
     
     func setupUI() {
-        view.height(.vcMaxHeight, priority: .defaultLow)
+        view.height(.vcMaxHeight)
+        
+        backgroundImageView
+            .add(toSuperview: view)
+            .touchEdgesToSuperview([.bottom, .left, .right, .top])
 
         imageView
             .height(.imageWidth)
             .width(.imageWidth)
         
         contentStack
-            .add(toSuperview: view)
+            .add(toSuperview: backgroundImageView)
             .centerInSuperview(.y, withOffset: -buttonsStack.bounds.height)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
         
         buttonsStack
-            .add(toSuperview: view)
+            .add(toSuperview: backgroundImageView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .buttonsMargin)

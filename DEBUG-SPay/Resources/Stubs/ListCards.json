@@ -17,19 +17,19 @@
       "paymentSystemType" : "MASTERCARD"
     },
     {
-          "paymentSourceType" : "DebitCard",
-          "financialProductId" : "40817810838980033426",
-          "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
-          "productName" : "МИР Сберкарта",
-          "paymentId" : 1,
-          "cardNumber" : "5569",
-          "amountData" : {
+        "paymentSourceType" : "DebitCard",
+        "financialProductId" : "40817810838980033426",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
+        "productName" : "МИР Сберкарта",
+        "paymentId" : 1,
+        "cardNumber" : "5569",
+        "amountData" : {
             "amount" : 7985069.0199999996,
             "currency" : "RUR"
-          },
-          "priorityCard" : true,
-          "paymentSystemType" : "MIR"
-        }
+        },
+        "priorityCard" : true,
+        "paymentSystemType" : "MIR"
+    }
   ],
   "logoUrl" : "https:\/\/test.stat.online.sberbank.ru\/SBERBANKID\/icons\/781000012764.png",
   "sessionId" : "769122086715932672",

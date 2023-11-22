@@ -91,7 +91,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
                                with: "Strings.Alert.BankAppPicker.Error.title",
                                with: "Strings.Alert.BankAppPicker.Error.title",
                                with: nil,
-                               state: .failure,
+                               state: .warning,
                                buttons: [returnButton],
                                completion: {})
     }

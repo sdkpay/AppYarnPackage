@@ -41,7 +41,7 @@ private extension CardsViewBuilder {
             
             static let bottomOffSet: CGFloat = 58.0
             static let rightOffSet: CGFloat = Consts.offSet
-            static let topOffSet: CGFloat = 24.0
+            static let topOffSet: CGFloat = 20.0
         }
     }
 }
@@ -88,10 +88,13 @@ final class CardsViewBuilder {
         view.backgroundView?.backgroundColor = Consts.TableView.backgroundColor
         view.showsVerticalScrollIndicator = false
         view.rowHeight = Consts.TableView.rowHeight
+        view.isScrollEnabled = false
         return view
     }()
     
     func setupUI(view: UIView) {
+        view.height(.minScreenSize, priority: .defaultLow)
+        
         imageView
             .add(toSuperview: view)
             .touchEdgesToSuperview([.bottom, .left, .right])
