@@ -49,6 +49,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let biometricAuthProvider: BiometricAuthProviderProtocol
     private let otpService: OTPService
     private let featureToggle: FeatureToggleService
+    private var secureChallengeService: SecureChallengeService
     private var finalCost: String = ""
     
     private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
@@ -64,6 +65,7 @@ final class PaymentPresenter: PaymentPresenting {
          alertService: AlertService,
          authService: AuthService,
          partPayService: PartPayService,
+         secureChallengeService: SecureChallengeService,
          authManager: AuthManager,
          biometricAuthProvider: BiometricAuthProviderProtocol,
          featureToggle: FeatureToggleService,
@@ -78,6 +80,7 @@ final class PaymentPresenter: PaymentPresenting {
         self.paymentService = paymentService
         self.locationManager = locationManager
         self.alertService = alertService
+        self.secureChallengeService = secureChallengeService
         self.partPayService = partPayService
         self.biometricAuthProvider = biometricAuthProvider
         self.bankManager = bankManager
@@ -423,18 +426,14 @@ final class PaymentPresenter: PaymentPresenting {
         do {
             await self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
             
-            if let challangeMethod = try await paymentService.getChallangeMethod(paymentId: paymentId,
-                                                                                 isBnplEnabled: partPayService.bnplplanSelected) {
-                
-                switch challangeMethod.secureChallengeFactor {
-                case .sms:
-                    print("challangeMethod")
-                case .hint:
-                    print("challangeMethod")
-                case .none:
-                    print("challangeMethod")
-                }
-            } else {
+            let challengeState = try await secureChallengeService.challenge(paymentId: paymentId, isBnplEnabled: partPayService.bnplplanSelected)
+            
+            switch challengeState {
+            case .review:
+                router.presentChallenge()
+            case .deny:
+                showSecureError()
+            case .none:
                 if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
                     pay()
                 } else {
@@ -457,6 +456,25 @@ final class PaymentPresenter: PaymentPresenting {
     private func dismissWithError(_ error: SDKError) {
         self.completionManager.completeWithError(error)
         alertService.close()
+    }
+    
+    private func showSecureError() {
+        
+        let formParameters = secureChallengeService.fraudMonСheckResult?.formParameters
+        
+        let returnButton = AlertButtonModel(title: formParameters?.buttonDeclineText ?? "",
+                                            type: .full) { [weak self] in
+            self?.completionManager.completeWithError(SDKError(.errorSystem))
+            self?.alertService.close()
+        }
+
+        alertService.showAlert(on: self.view,
+                               with: formParameters?.header ?? "",
+                               with: formParameters?.textDecline ?? "",
+                               with: nil,
+                               state: .failure,
+                               buttons: [returnButton],
+                               completion: {})
     }
     
     private func pay() {

@@ -12,8 +12,13 @@ enum SecureChallengeFactor: String {
     case hint = "HINT"
 }
 
+enum SecureChallengeState: String {
+    case review = "REVIEW"
+    case deny = "DENY"
+}
+
 struct PaymentTokenModel: Codable {
-    let paymentToken: String
+    let paymentToken: String?
     let initiateBankInvoiceId: String?
     let fraudMonСheckResult: FraudMonСheckResult?
 }
@@ -27,6 +32,10 @@ struct FraudMonСheckResult: Codable {
     var secureChallengeFactor: SecureChallengeFactor? {
         SecureChallengeFactor(rawValue: confirmMethodFactor)
     }
+    
+    var secureChallengeState: SecureChallengeState? {
+        SecureChallengeState(rawValue: actionCode)
+    }
 }
 
 struct FormParameters: Codable {
@@ -34,6 +43,7 @@ struct FormParameters: Codable {
     let text: String?
     let textDecline: String?
     let buttonСonfirmText: String?
+    let buttonDeclineText: String?
     let buttonInformText: String?
     let cybercabinetUrlAndroid: String?
     let cybercabinetUrlIOS: String?

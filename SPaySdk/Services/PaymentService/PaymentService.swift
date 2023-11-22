@@ -33,8 +33,7 @@ final class PaymentServiceAssembly: Assembly {
 }
 
 protocol PaymentService {
-    func getChallangeMethod(paymentId: Int,
-                            isBnplEnabled: Bool) async throws -> FraudMonСheckResult?
+ 
     func tryToPay(paymentId: Int,
                   isBnplEnabled: Bool) async throws
     @discardableResult
@@ -79,11 +78,6 @@ final class DefaultPaymentService: PaymentService {
         SBLogger.log(.stop(obj: self))
     }
     
-    func getChallangeMethod(paymentId: Int,
-                            isBnplEnabled: Bool) async throws -> FraudMonСheckResult? {
-        try await getPaymentToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled).fraudMonСheckResult
-    }
-    
     func tryToPay(paymentId: Int,
                   isBnplEnabled: Bool) async throws {
         
@@ -94,11 +88,11 @@ final class DefaultPaymentService: PaymentService {
             
             switch self.sdkManager.payStrategy {
             case .auto:
-                try await pay(with: paymentToken.paymentToken, orderId: orderid, merchantLogin: merchantLogin)
+                try await pay(with: paymentToken.paymentToken ?? "", orderId: orderid, merchantLogin: merchantLogin)
             case .manual:
                 self.sdkManager.payHandler = { payInfo in
                     Task {
-                        try await self.pay(with: payInfo.paymentToken ?? paymentToken.paymentToken,
+                        try await self.pay(with: payInfo.paymentToken ?? "",
                                            orderId: orderid,
                                            merchantLogin: merchantLogin)
                     }

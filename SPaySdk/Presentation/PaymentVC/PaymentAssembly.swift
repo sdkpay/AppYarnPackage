@@ -35,6 +35,7 @@ final class PaymentAssembly {
                          alertService: locator.resolve(),
                          authService: locator.resolve(),
                          partPayService: locator.resolve(),
+                         secureChallengeService: locator.resolve(),
                          authManager: locator.resolve(),
                          biometricAuthProvider: locator.resolve(),
                          featureToggle: locator.resolve(),
