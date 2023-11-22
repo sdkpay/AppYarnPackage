@@ -55,17 +55,18 @@ final class CoverTransitionDriver: UIPercentDrivenInteractiveTransition, UIGestu
             let increment = sender.incrementToBottom(maxTranslation: maxTranslation)
             update(percentComplete + increment)
         case .ended, .cancelled:
-            if sender.isProjectedToDownHalf(
-                maxTranslation: maxTranslation,
-                percentComplete: percentComplete
-            ) {
-                finish()
-                NotificationCenter.default.post(name: .closeSDKNotification,
-                                                object: nil,
-                                                userInfo: nil)
-            } else {
-                cancel()
-            }
+            cancel()
+//            if sender.isProjectedToDownHalf(
+//                maxTranslation: maxTranslation,
+//                percentComplete: percentComplete
+//            ) {
+//                finish()
+//                NotificationCenter.default.post(name: .closeSDKNotification,
+//                                                object: nil,
+//                                                userInfo: nil)
+//            } else {
+//                cancel()
+//            }
 
         case .failed:
             cancel()
