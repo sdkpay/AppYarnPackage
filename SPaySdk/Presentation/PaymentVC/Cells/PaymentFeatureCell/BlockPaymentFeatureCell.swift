@@ -19,8 +19,8 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .backgroundSecondary
-        layer.cornerRadius = 8.0
+        backgroundColor = .backgroundPrimary
+        layer.cornerRadius = 20.0
         setupUI()
     }
     
@@ -52,6 +52,7 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
     
     private lazy var switchControl: UISwitch = {
         let view = UISwitch(frame: .zero)
+        view.isUserInteractionEnabled = false
         return view
     }()
     
@@ -85,7 +86,7 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
             .touchEdge(.left, toEdge: .right, ofView: iconView, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
             .touchEdge(.top, toSuperviewEdge: .top, withInset: .cellMargin)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .cellMargin)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .cellMargin, priority: .defaultHigh)
         
         switchControl
             .add(toSuperview: contentView)

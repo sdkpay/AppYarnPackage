@@ -40,7 +40,7 @@ extension ConfigTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getConfig:
-            return try? Data(contentsOf: Files.remoteConfigJson.url)
+            return try? Data(contentsOf: Files.remoteConfigv2Json.url)
         }
     }
 }

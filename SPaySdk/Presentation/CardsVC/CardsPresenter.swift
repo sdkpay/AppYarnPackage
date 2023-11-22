@@ -49,7 +49,6 @@ final class CardsPresenter: CardsPresenting {
     }
     
     func viewDidLoad() {
-        configViews()
     }
 
     func model(for indexPath: IndexPath) -> CardCellModel {
@@ -85,13 +84,5 @@ final class CardsPresenter: CardsPresenting {
     
     func viewDidDisappear() {
         analytics.sendEvent(.LCPayViewDisappeared, with: screenEvent)
-    }
-
-    private func configViews() {
-        guard let user = userService.user else { return }
-        
-        Task {
-            await view?.configProfileView(with: user.userInfo)
-        }
     }
 }

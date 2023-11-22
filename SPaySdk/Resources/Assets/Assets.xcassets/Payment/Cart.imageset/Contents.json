@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "merchant_logo.png",
+      "filename" : "merchant-logo.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "merchant_logo@2x.png",
+      "filename" : "merchant-logo@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "merchant_logo@3x.png",
+      "filename" : "merchant-logo@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

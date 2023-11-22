@@ -26,7 +26,6 @@ final class CardsVC: ContentVC, ICardsVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
-        topBarIsHidden = true
         viewBuilder.setupUI(view: view)
         viewBuilder.tableView.delegate = self
         viewBuilder.tableView.dataSource = self

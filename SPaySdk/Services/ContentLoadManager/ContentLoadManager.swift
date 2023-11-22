@@ -54,7 +54,7 @@ final class DefaultContentLoadManager: ContentLoadManager {
         var contentTypes: [ContentLoadType] = [
             (.userData, .high)
         ]
-        if featureToggleService.isEnabled(.bnpl2) {
+        if featureToggleService.isEnabled(.bnpl) {
             contentTypes.append((.bnplPlan, .low))
         }
        try await load(contentTypes: contentTypes)

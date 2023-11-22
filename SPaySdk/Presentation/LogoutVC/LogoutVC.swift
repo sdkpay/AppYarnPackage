@@ -46,7 +46,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         view.setTitle(string, for: .normal)
         view.layer.cornerRadius = Cost.Button.cornerRadius
         view.addAction {
-            self.presenter.back()
+            self.presenter.logout()
         }
         return view
     }()
@@ -63,7 +63,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         view.setTitle(string, for: .normal)
         view.layer.cornerRadius = Cost.Button.cornerRadius
         view.addAction {
-            self.presenter.logout()
+            self.presenter.back()
         }
         return view
     }()
@@ -90,9 +90,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupView()
-        topBarIsHidden = true
     }
     
     private func setupView() {

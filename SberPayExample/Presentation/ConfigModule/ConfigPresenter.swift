@@ -246,15 +246,24 @@ final class ConfigPresenter: ConfigPresenterProtocol {
     }
     
     func removeKeychainTapped() {
-        let status = SecItemDelete([
-            kSecClass: kSecClassGenericPassword
-        ] as NSDictionary)
         
-        if status != errSecSuccess {
-            view?.showAlert(with: status.description)
-        } else {
-            view?.showAlert(with: "Local storage is cleare")
+        let keys = ["cookieData", "cookieId"]
+        
+        let service = "SPaySdkDEBUG"
+        
+        var statuses = [OSStatus]()
+        
+        for key in keys {
+            let status = SecItemDelete([
+                kSecClass: kSecClassGenericPassword,
+                kSecAttrAccount: key,
+                kSecAttrService: service
+            ] as NSDictionary)
+            
+            statuses.append(status)
         }
+        
+        view?.showAlert(with: "Keychain storage statuses \(statuses.compactMap({ $0.description }))")
     }
     
     func removeSavedBank() {

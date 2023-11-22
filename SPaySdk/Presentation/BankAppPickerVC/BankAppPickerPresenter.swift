@@ -105,7 +105,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     }
     
     private func findIndexPath(_ bankApp: BankApp) -> IndexPath? {
-        guard let index = bankManager.avaliableBanks.firstIndex(where: { $0.link == bankApp.link }) else { return nil }
+        guard let index = bankManager.avaliableBanks.firstIndex(where: { $0.authLink == bankApp.authLink }) else { return nil }
         return IndexPath(index: index)
     }
     

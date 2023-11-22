@@ -8,11 +8,6 @@
 import Foundation
 import UIKit
 
-private enum PaymentCellType {
-    case card
-    case partPay
-}
-
 enum PaymentSection: Int, CaseIterable {
     case features
     case card
@@ -20,27 +15,18 @@ enum PaymentSection: Int, CaseIterable {
 
 protocol PaymentPresenting {
     var featureCount: Int { get }
-    var activeMainSections: [PaymentSection] { get }
     func identifiresForSection(_ section: PaymentSection) -> [Int]
     func model(for indexPath: IndexPath) -> AbstractCellModel?
     func didSelectItem(at indexPath: IndexPath)
     func viewDidLoad()
     func payButtonTapped()
     func cancelTapped()
-    func openProfile()
+    func profileTapped()
     func viewDidAppear()
     func viewDidDisappear()
 }
 
 final class PaymentPresenter: PaymentPresenting {
-    
-    var activeMainSections: [PaymentSection] {
-        var activeSections: [PaymentSection] = [.card]
-        if partPayService.bnplplanEnabled {
-            activeSections.append(.features)
-        }
-        return activeSections
-    }
     
     var featureCount: Int {
         partPayService.bnplplanEnabled ? 1 : 0
@@ -63,6 +49,7 @@ final class PaymentPresenter: PaymentPresenting {
     private let biometricAuthProvider: BiometricAuthProviderProtocol
     private let otpService: OTPService
     private let featureToggle: FeatureToggleService
+    private var secureChallengeService: SecureChallengeService
     private var finalCost: String = ""
     
     private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
@@ -78,6 +65,7 @@ final class PaymentPresenter: PaymentPresenting {
          alertService: AlertService,
          authService: AuthService,
          partPayService: PartPayService,
+         secureChallengeService: SecureChallengeService,
          authManager: AuthManager,
          biometricAuthProvider: BiometricAuthProviderProtocol,
          featureToggle: FeatureToggleService,
@@ -92,6 +80,7 @@ final class PaymentPresenter: PaymentPresenting {
         self.paymentService = paymentService
         self.locationManager = locationManager
         self.alertService = alertService
+        self.secureChallengeService = secureChallengeService
         self.partPayService = partPayService
         self.biometricAuthProvider = biometricAuthProvider
         self.bankManager = bankManager
@@ -106,14 +95,12 @@ final class PaymentPresenter: PaymentPresenting {
         configViews()
     }
     
-    private func updatePayButtonTitle() {
-        let buttonTitle = partPayService.bnplplanSelected ? Strings.Part.Active.Button.title : Strings.Pay.title
-        view?.setPayButtonTitle(title: buttonTitle)
-    }
-    
     func payButtonTapped() {
         analytics.sendEvent(.TouchPay, with: screenEvent)
-        goToPay()
+        
+        Task {
+           await goToPay()
+        }
     }
     
     func viewDidAppear() {
@@ -132,9 +119,9 @@ final class PaymentPresenter: PaymentPresenting {
         
         switch section {
         case .features:
-            return [2]
+            return partPayService.bnplplanEnabled ? [899879798797789] : []
         case .card:
-            return [1]
+            return userService.user?.paymentToolInfo.map({ $0.paymentId }) ?? []
         }
     }
     
@@ -173,13 +160,12 @@ final class PaymentPresenter: PaymentPresenting {
             analytics.sendEvent(.TouchBNPL, with: screenEvent)
             router.presentPartPay { [weak self] in
                 self?.configViews()
-                self?.updatePayButtonTitle()
-                self?.view?.reloadData(in: [.features])
+                self?.view?.reloadData()
             }
         }
     }
     
-    func openProfile() {
+    func profileTapped() {
         guard let user = userService.user else { return }
         router.openProfile(with: user.userInfo)
     }
@@ -199,7 +185,7 @@ final class PaymentPresenter: PaymentPresenting {
                                          selectedCard: { [weak self] card in
                     self?.view?.hideLoading(animate: true)
                     self?.userService.selectedCard = card
-                    self?.view?.reloadData(in: [.card])
+                    self?.view?.reloadData()
                 })
             }
         case false:
@@ -286,14 +272,12 @@ final class PaymentPresenter: PaymentPresenting {
                              cost: finalCost,
                              fullPrice: fullPrice,
                              iconURL: user.logoUrl)
-        view?.configProfileView(with: user.userInfo)
         
         if userService.selectedCard != nil {
         view?.addSnapShot()
         } else {
             configWithNoCards()
         }
-        updatePayButtonTitle()
     }
     
     private func configWithNoCards() {
@@ -352,10 +336,12 @@ final class PaymentPresenter: PaymentPresenting {
                 try await paymentService.getPaymentToken(paymentId: paymentId,
                                                          isBnplEnabled: false)
                 
-                self.view?.reloadData(in: PaymentSection.allCases)
+                self.view?.reloadData()
                 self.alertService.show(on: self.view,
                                        type: .partPayError(fullPay: {
-                    self.goToPay()
+                    Task {
+                        await self.goToPay()
+                    }
                 }, back: {
                     Task {
                         await self.view?.hideLoading(animate: true)
@@ -433,14 +419,36 @@ final class PaymentPresenter: PaymentPresenting {
             self.dismissWithError(SDKError(.errorSystem)) }))
     }
     
-    private func goToPay() {
-        if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
-            pay()
-        } else {
-            if otpService.otpRequired {
-                createOTP()
-            } else {
-                pay()
+    private func goToPay() async {
+        
+        guard let paymentId = userService.selectedCard?.paymentId else { return }
+        
+        do {
+            await self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+            
+            let challengeState = try await secureChallengeService.challenge(paymentId: paymentId, isBnplEnabled: partPayService.bnplplanSelected)
+            
+            switch challengeState {
+            case .review:
+                router.presentChallenge()
+            case .deny:
+                showSecureError()
+            case .none:
+                if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
+                    pay()
+                } else {
+                    if otpService.otpRequired {
+                        createOTP()
+                    } else {
+                        pay()
+                    }
+                }
+            }
+        } catch {
+            if let error = error as? PayError {
+                self.validatePayError(error)
+            } else if let error = error as? SDKError {
+                self.dismissWithError(error)
             }
         }
     }
@@ -450,28 +458,46 @@ final class PaymentPresenter: PaymentPresenting {
         alertService.close()
     }
     
-    private func pay() {
-        view?.userInteractionsEnabled = false
-        DispatchQueue.main.async {
-            self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+    private func showSecureError() {
+        
+        let formParameters = secureChallengeService.fraudMonСheckResult?.formParameters
+        
+        let returnButton = AlertButtonModel(title: formParameters?.buttonDeclineText ?? "",
+                                            type: .full) { [weak self] in
+            self?.completionManager.completeWithError(SDKError(.errorSystem))
+            self?.alertService.close()
         }
+
+        alertService.showAlert(on: self.view,
+                               with: formParameters?.header ?? "",
+                               with: formParameters?.textDecline ?? "",
+                               with: nil,
+                               state: .failure,
+                               buttons: [returnButton],
+                               completion: {})
+    }
+    
+    private func pay() {
         
         guard let paymentId = userService.selectedCard?.paymentId else { return }
-        self.view?.userInteractionsEnabled = true
+        
         Task {
             
+            await view?.setUserInteractionsEnabled(false)
             do {
                 try await paymentService.tryToPay(paymentId: paymentId,
                                                   isBnplEnabled: partPayService.bnplplanSelected)
                 self.userService.clearData()
                 self.partPayService.bnplplanSelected = false
                 self.completionManager.completePay(with: .success)
+                await view?.setUserInteractionsEnabled()
                 self.alertService.show(on: self.view, type: .paySuccess(completion: {
                     self.alertService.close()
                 }))
             } catch {
                 self.userService.clearData()
                 self.partPayService.bnplplanSelected = false
+                await view?.setUserInteractionsEnabled()
                 
                 if let error = error as? PayError {
                     self.validatePayError(error)

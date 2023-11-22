@@ -8,7 +8,7 @@
 import UIKit
 
 private extension CGFloat {
-    static let loaderWidth = 80.0
+    static let loaderWidth = 40.0
     static let stickTopMargin = 8.0
     static let stickWidth = 38.0
     static let stickHeight = 4.0
@@ -20,25 +20,15 @@ private extension TimeInterval {
 }
 
 final class LoadingView: UIView {
-    private lazy var loadingImageView: UIImageView = {
-        let view = UIImageView()
-        view.image = .Common.loader
-        return view
-    }()
+    
+    private lazy var dotsAnimatedView = DotsAnimatedView()
 
     private lazy var loadingTitle: UILabel = {
         let view = UILabel()
-        view.font = .bodi3
+        view.font = .header2
         view.numberOfLines = 0
         view.textColor = .textPrimory
         view.textAlignment = .center
-        return view
-    }()
-    
-    private lazy var stickImageView: UIImageView = {
-       let view = UIImageView()
-        view.image = .Common.stick
-        view.contentMode = .scaleAspectFill
         return view
     }()
     
@@ -49,17 +39,7 @@ final class LoadingView: UIView {
         view.alignment = .center
         return view
     }()
-    
-    private lazy var animation: CABasicAnimation = {
-        let animation = CABasicAnimation(keyPath: "transform.rotation")
-        animation.fromValue = 0
-        animation.toValue = 2 * Double.pi
-        animation.duration = 1
-        animation.repeatCount = .infinity
-        animation.isRemovedOnCompletion = false
-        return animation
-    }()
-    
+
     init(with text: String?) {
         super.init(frame: .zero)
         setupUI()
@@ -77,11 +57,9 @@ final class LoadingView: UIView {
         backgroundColor = .backgroundPrimary
         isUserInteractionEnabled = true
         alpha = 0
+
         loadingStack.isHidden = true
-        NSLayoutConstraint.activate([
-            loadingImageView.widthAnchor.constraint(equalToConstant: .loaderWidth),
-            loadingImageView.heightAnchor.constraint(equalToConstant: .loaderWidth)
-        ])
+        
         addSubview(loadingStack)
         loadingStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -90,16 +68,8 @@ final class LoadingView: UIView {
             loadingStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
             loadingStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin)
         ])
-        loadingStack.addArrangedSubview(loadingImageView)
-        
-        addSubview(stickImageView)
-        stickImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stickImageView.widthAnchor.constraint(equalToConstant: .stickWidth),
-            stickImageView.heightAnchor.constraint(equalToConstant: .stickHeight),
-            stickImageView.topAnchor.constraint(equalTo: topAnchor, constant: .stickTopMargin),
-            stickImageView.centerXAnchor.constraint(equalTo: centerXAnchor)
-        ])
+          
+        loadingStack.addArrangedSubview(dotsAnimatedView)
     }
     
     func show(animate: Bool = true) {
@@ -112,11 +82,11 @@ final class LoadingView: UIView {
                 guard let self = self else { return }
                 self.alpha = 1
             } completion: { _ in
-                self.loadingImageView.layer.add(self.animation, forKey: "Spin")
+                self.dotsAnimatedView.startAnimation()
             }
         } else {
             self.alpha = 1
-            self.loadingImageView.layer.add(self.animation, forKey: "Spin")
+            self.dotsAnimatedView.startAnimation()
         }
     }
 }

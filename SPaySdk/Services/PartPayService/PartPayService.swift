@@ -134,7 +134,7 @@ final class DefaultPartPayService: PartPayService {
     }
     
     private func checkFeatureToggle() {
-        setEnabledBnpl(featureToggle.isEnabled(.bnpl2), enabledLevel: .featureToggle)
+        setEnabledBnpl(featureToggle.isEnabled(.bnpl), enabledLevel: .featureToggle)
     }
     
     private var bnplAvaliable: Bool {

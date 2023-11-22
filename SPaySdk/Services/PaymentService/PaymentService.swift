@@ -33,6 +33,7 @@ final class PaymentServiceAssembly: Assembly {
 }
 
 protocol PaymentService {
+ 
     func tryToPay(paymentId: Int,
                   isBnplEnabled: Bool) async throws
     @discardableResult
@@ -87,11 +88,11 @@ final class DefaultPaymentService: PaymentService {
             
             switch self.sdkManager.payStrategy {
             case .auto:
-                try await pay(with: paymentToken.paymentToken, orderId: orderid, merchantLogin: merchantLogin)
+                try await pay(with: paymentToken.paymentToken ?? "", orderId: orderid, merchantLogin: merchantLogin)
             case .manual:
                 self.sdkManager.payHandler = { payInfo in
                     Task {
-                        try await self.pay(with: payInfo.paymentToken ?? paymentToken.paymentToken,
+                        try await self.pay(with: payInfo.paymentToken ?? "",
                                            orderId: orderid,
                                            merchantLogin: merchantLogin)
                     }
@@ -156,17 +157,16 @@ final class DefaultPaymentService: PaymentService {
                      merchantLogin: String) async throws {
         
         do {
-            let paymentResult = try await network.request(PaymentTarget.getPaymentOrder(operationId: .generateRandom(with: 36),
-                                                                                        orderId: orderId,
-                                                                                        merchantLogin: merchantLogin,
-                                                                                        ipAddress: authManager.ipAddress,
-                                                                                        paymentToken: token),
-                                                          to: PaymentOrderModel.self,
-                                                          retrySettings: (4, [
-                                                            Int(StatusCode.errorSystem.rawValue),
-                                                            Int(StatusCode.unknownPayState.rawValue),
-                                                            Int(StatusCode.unknownState.rawValue)
-                                                          ]))
+            try await network.request(PaymentTarget.getPaymentOrder(operationId: .generateRandom(with: 36),
+                                                                    orderId: orderId,
+                                                                    merchantLogin: merchantLogin,
+                                                                    ipAddress: authManager.ipAddress,
+                                                                    paymentToken: token),
+                                      retrySettings: (4, [
+                                        Int(StatusCode.errorSystem.rawValue),
+                                        Int(StatusCode.unknownPayState.rawValue),
+                                        Int(StatusCode.unknownState.rawValue)
+                                      ]))
             
             self.analytics.sendEvent(.RQGoodPaymentOrder,
                                      with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])

@@ -17,7 +17,7 @@ struct BankAppCellModel {
     
     init(with bankApp: BankApp) {
         title = bankApp.name
-        link = bankApp.link
+        link = bankApp.authLink
         iconURL = bankApp.iconURL
     }
 }

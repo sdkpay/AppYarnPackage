@@ -9,20 +9,23 @@ import UIKit
 
 protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?)
-    func setPayButtonTitle(title: String)
     func addSnapShot()
-    func reloadData(in sections: [PaymentSection])
+    func reloadData()
 }
 
 final class PaymentVC: ContentVC, IPaymentVC {
     
-    private lazy var viewBuilder = PaymentViewBuilder(featureCount: presenter.featureCount) { [weak self] in
+    private lazy var viewBuilder = PaymentViewBuilder(featureCount: presenter.featureCount,
+                                                      profileButtonDidTap: { [weak self] in
+        guard let self = self else { return }
+        self.presenter.profileTapped()
+    }, payButtonDidTap: { [weak self] in
         guard let self = self else { return }
         self.presenter.payButtonTapped()
-    } cancelButtonDidTap: { [weak self] in
+    }, cancelButtonDidTap: { [weak self] in
         guard let self = self else { return }
         self.presenter.cancelTapped()
-    }
+    })
     
     private var dataSource: UICollectionViewDiffableDataSource<PaymentSection, Int>?
 
@@ -42,11 +45,8 @@ final class PaymentVC: ContentVC, IPaymentVC {
         configDataSource()
         viewBuilder.collectionView.delegate = self
         presenter.viewDidLoad()
-        viewBuilder.setupUI(view: view, logoImage: logoImage)
+        viewBuilder.setupUI(view: view)
         SBLogger.log(.didLoad(view: self))
-        profileView.addAction {
-            self.presenter.openProfile()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,6 +67,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
     }
     
     func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?) {
+        
         viewBuilder.shopLabel.text = shop
         viewBuilder.logoImageView.downloadImage(from: iconURL, placeholder: .Payment.cart)
         if let fullPrice {
@@ -85,24 +86,19 @@ final class PaymentVC: ContentVC, IPaymentVC {
         }
     }
     
-    func setPayButtonTitle(title: String) {
-        viewBuilder.payButton.setTitle(title, for: .normal)
-    }
-    
-    func reloadData(in sections: [PaymentSection]) {
+    func reloadData() {
         
         guard var newSnapshot = dataSource?.snapshot() else { return }
-        for section in sections {
-            newSnapshot.appendItems(presenter.identifiresForSection(section), toSection: section)
-        }
+        newSnapshot.reloadSections(PaymentSection.allCases)
         dataSource?.apply(newSnapshot)
     }
     
     func addSnapShot() {
         
         var snapshot = NSDiffableDataSourceSnapshot<PaymentSection, Int>()
-        snapshot.appendSections(presenter.activeMainSections)
-        presenter.activeMainSections.forEach { section in
+        snapshot.appendSections(PaymentSection.allCases)
+        print(snapshot.numberOfSections)
+        PaymentSection.allCases.forEach { section in
             snapshot.appendItems(presenter.identifiresForSection(section), toSection: section)
         }
         dataSource?.apply(snapshot, animatingDifferences: true)

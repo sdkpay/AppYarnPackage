@@ -14,7 +14,6 @@ enum BankSchemeAuthType: String {
 
 // MARK: - ConfigModel
 struct ConfigModel: Codable {
-    let version: String
     let localization: Localization
     let bankApps: [BankApp]
     let schemas: Schemas
@@ -42,15 +41,14 @@ struct FeaturesToggle: Codable {
 
 // MARK: - Schemas
 struct Schemas: Codable {
-    let payLinkFirstApp: String
-    let payLinkSecondApp: String
     let dynatraceUrl: String
     let dynatraceId: String
 }
 
 struct BankApp: Codable {
     let name: String
-    let link: String
+    let utilLink: String
+    let authLink: String
     let iconURL: String?
 }
 
@@ -58,4 +56,5 @@ struct BankApp: Codable {
 struct Images: Codable {
     let logoIcon: String
     let logoClear: String
+    let logoBlack: String?
 }

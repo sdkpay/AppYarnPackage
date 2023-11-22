@@ -61,9 +61,9 @@ targetTemplates:
         CFBundleInfoDictionaryVersion: 6.0
         CFBundleName: $(PRODUCT_NAME)
         CFBundlePackageType: FMWK
-        CFBundleShortVersionString: 2.0.2
-        CFBundleVersion: 2.0.2
-        SDKVersion: "2.0.2"
+        CFBundleShortVersionString: 2.1.1
+        CFBundleVersion: 2.1.1
+        SDKVersion: "2.1.1"
   
 targets:
   SPaySdkExample:
@@ -75,8 +75,8 @@ targets:
        - path: ./SberPayExample
     settings:
       TARGETED_DEVICE_FAMILY: 1
-      MARKETING_VERSION: 2.0
-      CURRENT_PROJECT_VERSION: 25
+      MARKETING_VERSION: 2.1
+      CURRENT_PROJECT_VERSION: 2
       PRODUCT_BUNDLE_IDENTIFIER: com.team11.spay.sdk
       DEVELOPMENT_TEAM: 9CYS9A2HF7
       INFOPLIST_KEY_CFBundleDisplayName: SPayTest

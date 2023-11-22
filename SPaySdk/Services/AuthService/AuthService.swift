@@ -66,8 +66,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     var bankCheck = false
     
     var tokenInStorage: Bool {
+        if self.buildSettings.refresh, buildSettings.networkState == .Local {
+            return true
+        }
         if self.buildSettings.refresh {
-            return (try? storage.exists(.cookieId)) ?? false
+            return cookieStorage.exists(.id) && cookieStorage.exists(.refreshData)
         } else {
             return false
         }
@@ -178,7 +181,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
             self.analytics.sendEvent(event)
             
-            if refreshIsActive && self.featureToggleService.isEnabled(.refresh) {
+            if refreshIsActive &&
+                featureToggleService.isEnabled(.refresh) && tokenInStorage {
                 self.authManager.authMethod = .refresh
             } else {
                 self.authManager.authMethod = .bank
@@ -238,7 +242,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
     
     private func authURL(link: String) -> URL? {
-        guard let url = bankAppManager.selectedBank?.link else { return nil }
+        
+        guard let url = bankAppManager.selectedBank?.authLink else { return nil }
         return URL(string: url + link)
     }
     
@@ -250,7 +255,10 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     func revokeToken() async throws {
         do {
-            try await network.request(AuthTarget.revokeToken, host: .main)
+            try await network.requestFull(
+                AuthTarget.revokeToken(authCookie: getRefreshCookies()),
+                to: AuthRefreshTokenModel.self
+            )
             cookieStorage.cleanCookie()
         } catch {
             throw error
@@ -329,12 +337,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         return cookies
     }
     
-    private func getIdCookies()  -> [HTTPCookie] {
+    private func getIdCookies() -> [HTTPCookie] {
         if let idCookies = cookieStorage.getCookie(for: .id) {
             return [idCookies]
         } else {
             return []
         }
     }
-    
 }

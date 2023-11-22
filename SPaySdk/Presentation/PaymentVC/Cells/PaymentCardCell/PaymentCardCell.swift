@@ -19,8 +19,8 @@ final class PaymentCardCell: UICollectionViewCell, SelfReusable, SelfConfigCell 
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .backgroundSecondary
-        layer.cornerRadius = 8.0
+        backgroundColor = .backgroundPrimary
+        layer.cornerRadius = 20.0
         setupUI()
     }
     
@@ -85,7 +85,7 @@ final class PaymentCardCell: UICollectionViewCell, SelfReusable, SelfConfigCell 
             .touchEdge(.left, toEdge: .right, ofView: cardIconView, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
             .touchEdge(.top, toSuperviewEdge: .top, withInset: .margin)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .margin)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .margin, priority: .defaultHigh)
         
         if needArrow {
             arrowView
