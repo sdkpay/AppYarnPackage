@@ -14,9 +14,9 @@ final class ChallengeAssembly {
         self.locator = locator
     }
     
-    func createModule() -> ContentVC {
+    func createModule(completion: @escaping Action) -> ContentVC {
         let router = moduleRouter()
-        let presenter = modulePresenter(router)
+        let presenter = modulePresenter(router, completion: completion)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         router.viewController = contentView
@@ -27,11 +27,13 @@ final class ChallengeAssembly {
         ChallengeRouter(with: locator)
     }
 
-    private func modulePresenter(_ router: ChallengeRouter) -> ChallengePresenter {
+    private func modulePresenter(_ router: ChallengeRouter, completion: @escaping Action) -> ChallengePresenter {
         ChallengePresenter(router,
                            completionManager: locator.resolve(),
                            secureChallengeService: locator.resolve(),
-                           analytics: locator.resolve())
+                           bankAppManager: locator.resolve(),
+                           analytics: locator.resolve(), 
+                           completion: completion)
     }
 
     private func moduleView(presenter: ChallengePresenter) -> ContentVC & IChallengeVC {

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+@_implementationOnly import Lottie
 
 private extension CGFloat {
     static let logoWidth = 72.0
@@ -48,11 +49,11 @@ class ContentVC: LoggableVC {
         return view
     }()
     
-    private lazy var backgroundImageView: UIImageView = {
-        let view = UIImageView()
-        view.image = Asset.background.image
-        view.tag = .backgroundViewTag
-        view.contentMode = .scaleAspectFill
+    private lazy var backgroundView: LottieAnimationView = {
+        let view = LottieAnimationView(name: "Background", bundle: Bundle.sdkBundle)
+        view.contentMode = .scaleToFill
+        view.loopMode = .loop
+        view.animationSpeed = 5
         return view
     }()
 
@@ -60,6 +61,11 @@ class ContentVC: LoggableVC {
         super.viewDidLoad()
         setupForContainer()
         configUI()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        backgroundView.play()
     }
     
     @MainActor
@@ -79,7 +85,7 @@ class ContentVC: LoggableVC {
 
     func configUI() {
         
-        backgroundImageView
+        backgroundView
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left)
             .touchEdge(.right, toSuperviewEdge: .right)

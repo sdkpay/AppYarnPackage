@@ -448,7 +448,16 @@ final class PaymentPresenter: PaymentPresenting {
             
             switch challengeState {
             case .review:
-                router.presentChallenge()
+                await MainActor.run { router.presentChallenge(completion: { [weak self] in
+                    switch self?.secureChallengeService.fraudMonСheckResult?.secureChallengeFactor {
+                    case .hint:
+                        self?.pay()
+                    case .sms:
+                        self?.createOTP()
+                    case .none:
+                        break
+                    }
+                }) }
             case .deny:
                 showSecureError()
             case .none:
@@ -500,7 +509,7 @@ final class PaymentPresenter: PaymentPresenting {
         guard let paymentId = userService.selectedCard?.paymentId else { return }
         
         Task {
-            
+            await self.view?.showLoading()
             await view?.setUserInteractionsEnabled(false)
             do {
                 try await paymentService.tryToPay(paymentId: paymentId,

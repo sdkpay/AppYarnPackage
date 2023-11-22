@@ -52,6 +52,7 @@ targetTemplates:
       - package: Dynatrace-Static
       - package: FingerprintPackage
       - sdk: libresolv.9.tbd
+      - framework: ./Lottie.xcframework
     info:
       path: ./SPaySdk/SupportingFiles/Info.plist
       properties:

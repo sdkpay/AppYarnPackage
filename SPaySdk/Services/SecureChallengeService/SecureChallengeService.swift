@@ -18,7 +18,7 @@ final class SecureChallengeServiceAssembly: Assembly {
 protocol SecureChallengeService {
     
     func challenge(paymentId: Int, isBnplEnabled: Bool) async throws -> SecureChallengeState?
-    var fraudMonСheckResult: FraudMonСheckResult? { get }
+    var fraudMonСheckResult: FroudMonСheckResult? { get }
 }
 
 final class DefaultSecureChallengeService: SecureChallengeService {
@@ -26,7 +26,7 @@ final class DefaultSecureChallengeService: SecureChallengeService {
     private var network: NetworkService
     private var paymentService: PaymentService
     
-    var fraudMonСheckResult: FraudMonСheckResult?
+    var fraudMonСheckResult: FroudMonСheckResult?
     
     init(_ network: NetworkService,
          paymentService: PaymentService) {
@@ -38,7 +38,7 @@ final class DefaultSecureChallengeService: SecureChallengeService {
         
         do {
             let fraudMonСheckResult = try await paymentService.getPaymentToken(paymentId: paymentId,
-                                                                               isBnplEnabled: isBnplEnabled).fraudMonСheckResult
+                                                                               isBnplEnabled: isBnplEnabled).froudMonСheckResult
             self.fraudMonСheckResult = fraudMonСheckResult
             
             return fraudMonСheckResult?.secureChallengeState

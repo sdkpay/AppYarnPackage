@@ -223,8 +223,9 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                    bnplPlan: configValues.bnpl,
                    environment: environment) {
             self.view?.stopLoader()
-            self.view?.navigationController?.pushViewController(vc, animated: true)
+        //    self.view?.navigationController?.pushViewController(vc, animated: true)
         }
+        self.view?.navigationController?.pushViewController(vc, animated: true)
     }
     
     func generateOrderIdTapped() {
