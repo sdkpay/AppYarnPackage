@@ -13,6 +13,10 @@ enum PaymentSection: Int, CaseIterable {
     case card
 }
 
+enum PaymentFeature: Int, CaseIterable {
+    case bnpl
+}
+
 protocol PaymentPresenting {
     var featureCount: Int { get }
     func identifiresForSection(_ section: PaymentSection) -> [Int]
@@ -51,6 +55,16 @@ final class PaymentPresenter: PaymentPresenting {
     private let featureToggle: FeatureToggleService
     private var secureChallengeService: SecureChallengeService
     private var finalCost: String = ""
+    
+    private var activeFeatures: [PaymentFeature] {
+        
+        var features = [PaymentFeature]()
+        
+        if partPayService.bnplplanEnabled {
+            features.append(.bnpl)
+        }
+        return features
+    }
     
     private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
     
@@ -119,9 +133,13 @@ final class PaymentPresenter: PaymentPresenting {
         
         switch section {
         case .features:
-            return partPayService.bnplplanEnabled ? [899879798797789] : []
+            return activeFeatures.map { $0.rawValue }
         case .card:
-            return userService.user?.paymentToolInfo.map({ $0.paymentId }) ?? []
+            if let paymentId = userService.selectedCard?.paymentId {
+                return [paymentId]
+            } else {
+                return []
+            }
         }
     }
     

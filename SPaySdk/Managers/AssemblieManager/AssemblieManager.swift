@@ -34,8 +34,8 @@ final class AssemblyManager {
         OTPServiceAssembly(),
         UserServiceAssembly(),
         LocationManagerAssembly(),
-        SecureChallengeServiceAssembly(),
         PaymentServiceAssembly(),
+        SecureChallengeServiceAssembly(),
         PartPayServiceAssembly(),
         ContentLoadManagerAssembly()
     ]

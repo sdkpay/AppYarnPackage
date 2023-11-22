@@ -113,7 +113,6 @@ final class OtpVC: ContentVC, IOtpVC {
         super.viewDidLoad()
         presenter.viewDidLoad()
         setupUI()
-        topBarIsHidden = true
         backView.isUserInteractionEnabled = true
         
         self.otpTextField.becomeFirstResponder()
