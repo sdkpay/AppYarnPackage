@@ -147,8 +147,7 @@ final class DefaultSBPayService: SBPayService {
             .isVersionDepicated
         return !apps.isEmpty && !isDeprecated
     }
-    
-    
+
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {

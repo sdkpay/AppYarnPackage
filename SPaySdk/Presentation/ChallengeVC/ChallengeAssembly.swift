@@ -14,7 +14,7 @@ final class ChallengeAssembly {
         self.locator = locator
     }
     
-    func createModule(completion: @escaping Action) -> ContentVC {
+    func createModule(completion: @escaping (SecureChallengeResolution) -> Void) -> ContentVC {
         let router = moduleRouter()
         let presenter = modulePresenter(router, completion: completion)
         let contentView = moduleView(presenter: presenter)
@@ -27,7 +27,7 @@ final class ChallengeAssembly {
         ChallengeRouter(with: locator)
     }
 
-    private func modulePresenter(_ router: ChallengeRouter, completion: @escaping Action) -> ChallengePresenter {
+    private func modulePresenter(_ router: ChallengeRouter, completion: @escaping (SecureChallengeResolution) -> Void) -> ChallengePresenter {
         ChallengePresenter(router,
                            completionManager: locator.resolve(),
                            secureChallengeService: locator.resolve(),

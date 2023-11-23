@@ -7,6 +7,12 @@
 
 import Foundation
 
+enum SecureChallengeResolution: String {
+    case confirmedGenuine = "CONFIRMED_GENUINE"
+    case confirmedFraud = "CONFIRMED_FRAUD"
+    case unknown = "UNKNOWN"
+}
+
 final class SecureChallengeServiceAssembly: Assembly {
     func register(in locator: LocatorService) {
         let service: SecureChallengeService = DefaultSecureChallengeService(locator.resolve(),
@@ -38,7 +44,8 @@ final class DefaultSecureChallengeService: SecureChallengeService {
         
         do {
             let fraudMonСheckResult = try await paymentService.getPaymentToken(paymentId: paymentId,
-                                                                               isBnplEnabled: isBnplEnabled).froudMonСheckResult
+                                                                               isBnplEnabled: isBnplEnabled, 
+                                                                               resolution: nil).froudMonСheckResult
             self.fraudMonСheckResult = fraudMonСheckResult
             
             return fraudMonСheckResult?.secureChallengeState

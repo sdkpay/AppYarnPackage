@@ -19,7 +19,7 @@ final class ChallengePresenter: ChallengePresenting {
     weak var view: (IChallengeVC & ContentVC)?
 
     private let analytics: AnalyticsService
-    private let completion: Action
+    private let completion: (SecureChallengeResolution) -> Void
     private let router: ChallengeRouter
     private let completionManager: CompletionManager
     private let secureChallengeService: SecureChallengeService
@@ -30,7 +30,7 @@ final class ChallengePresenter: ChallengePresenting {
          secureChallengeService: SecureChallengeService,
          bankAppManager: BankAppManager,
          analytics: AnalyticsService,
-         completion: @escaping Action) {
+         completion: @escaping (SecureChallengeResolution) -> Void) {
         self.analytics = analytics
         self.router = router
         self.completion = completion
@@ -69,7 +69,7 @@ final class ChallengePresenter: ChallengePresenting {
     @MainActor 
     func confirmTapped() {
         self.view?.contentNavigationController?.popViewController(animated: false, completion: {
-            self.completion()
+            self.completion(.confirmedGenuine)
         })
     }
     

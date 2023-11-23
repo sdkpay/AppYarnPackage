@@ -15,7 +15,7 @@ protocol PaymentRouting {
     func presentPartPay(partPaySelected: @escaping Action)
     func presentOTPScreen(completion: @escaping Action)
     func presentBankAppPicker(completion: @escaping Action)
-    func presentChallenge(completion: @escaping Action)
+    func presentChallenge(completion: @escaping (SecureChallengeResolution) -> Void)
     func openProfile(with userInfo: UserInfo)
 }
 
@@ -60,7 +60,7 @@ final class PaymentRouter: PaymentRouting {
     }
     
     @MainActor
-    func presentChallenge(completion: @escaping Action) {
+    func presentChallenge(completion: @escaping (SecureChallengeResolution) -> Void) {
         let vc = ChallengeAssembly(locator: locator).createModule(completion: completion)
         self.viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
