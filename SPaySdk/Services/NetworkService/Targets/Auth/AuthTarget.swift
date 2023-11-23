@@ -35,7 +35,7 @@ enum AuthTarget {
               merchantLogin: String?,
               resourceName: String,
               authCookie: [HTTPCookie])
-    case revokeToken
+    case revokeToken(authCookie: [HTTPCookie])
 }
 
 extension AuthTarget: TargetType {
@@ -200,8 +200,8 @@ extension AuthTarget: TargetType {
             params["resourceName"] = resourceName
             
             return .requestWithParametersAndCookie(nil, bodyParameters: params, cookies: authCookie)
-        case .revokeToken:
-            return .requestWithParameters(nil, bodyParameters: nil)
+        case let .revokeToken(authCookie):
+            return .requestWithParametersAndCookie(nil, bodyParameters: nil, cookies: authCookie)
         }
     }
     

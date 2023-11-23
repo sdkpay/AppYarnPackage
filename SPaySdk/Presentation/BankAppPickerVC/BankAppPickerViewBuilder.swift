@@ -79,12 +79,6 @@ final class BankAppPickerViewBuilder {
         return view
     }()
     
-    private lazy var imageView: UIImageView = {
-       let view = UIImageView()
-        view.image = Asset.background.image
-        return view
-    }()
-    
     private lazy var closeButton: ActionButton = {
         let view = ActionButton()
         view.setTitle(Strings.BankAppPicker.close, for: .normal)
@@ -112,10 +106,6 @@ final class BankAppPickerViewBuilder {
     
     func setupUI(view: UIView) {
         view.height(.minScreenSize, priority: .defaultLow)
-        
-        imageView
-            .add(toSuperview: view)
-            .touchEdgesToSuperview([.bottom, .left, .right, .top])
         
         titleLabel
             .add(toSuperview: view)

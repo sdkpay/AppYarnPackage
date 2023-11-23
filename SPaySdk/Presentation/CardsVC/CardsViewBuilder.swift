@@ -65,12 +65,6 @@ final class CardsViewBuilder {
         return view
     }()
     
-    private lazy var imageView: UIImageView = {
-       let view = UIImageView()
-        view.image = Asset.background.image
-        return view
-    }()
-    
     private lazy var stackLabel: UIStackView = {
        let view = UIStackView()
         view.axis = .vertical
@@ -88,16 +82,11 @@ final class CardsViewBuilder {
         view.backgroundView?.backgroundColor = Consts.TableView.backgroundColor
         view.showsVerticalScrollIndicator = false
         view.rowHeight = Consts.TableView.rowHeight
-        view.isScrollEnabled = false
         return view
     }()
     
     func setupUI(view: UIView) {
         view.height(.minScreenSize, priority: .defaultLow)
-        
-        imageView
-            .add(toSuperview: view)
-            .touchEdgesToSuperview([.bottom, .left, .right])
         
         stackLabel
             .add(toSuperview: view)

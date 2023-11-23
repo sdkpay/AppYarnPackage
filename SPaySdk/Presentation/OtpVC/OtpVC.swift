@@ -27,9 +27,10 @@ final class OtpVC: ContentVC, IOtpVC {
         
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.textAlignment = .center
         label.font = .medium5
+        label.textColor = .mainBlack
         return label
     }()
     
@@ -113,7 +114,6 @@ final class OtpVC: ContentVC, IOtpVC {
         super.viewDidLoad()
         presenter.viewDidLoad()
         setupUI()
-        topBarIsHidden = true
         backView.isUserInteractionEnabled = true
         
         self.otpTextField.becomeFirstResponder()
@@ -161,6 +161,7 @@ final class OtpVC: ContentVC, IOtpVC {
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Stack.right)
             .touchEdge(.top, toEdge: .top, ofView: backView, withInset: Cost.Stack.top)
+            .height(Cost.Stack.height)
         
         otpTextField
             .add(toSuperview: backView)
@@ -202,6 +203,7 @@ extension OtpVC {
             static let right: CGFloat = Cost.sideOffSet
             static let left: CGFloat = Cost.sideOffSet
             static let top: CGFloat = 30.0
+            static let height: CGFloat = 40
         }
         
         enum TextField {

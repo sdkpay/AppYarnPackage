@@ -51,12 +51,6 @@ final class LogoutVC: ContentVC, ILogoutVC {
         return view
     }()
     
-    private lazy var imageView: UIImageView = {
-       let view = UIImageView()
-        view.image = Asset.background.image
-        return view
-    }()
-    
     private(set) lazy var backButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .blackBack)
         let string = Strings.Button.Logout.back
@@ -96,24 +90,20 @@ final class LogoutVC: ContentVC, ILogoutVC {
     private func setupView() {
         view.height(.minScreenSize, priority: .defaultLow)
         
-        imageView
-            .add(toSuperview: view)
-            .touchEdgesToSuperview()
-        
         avatarImage
-            .add(toSuperview: imageView)
+            .add(toSuperview: view)
             .size(.equal, to: Cost.ImageView.size)
             .touchEdge(.top, toEdge: .top, ofView: view, withInset: Cost.ImageView.top)
             .centerInSuperview(.horizontal)
             
         nameLabel
-            .add(toSuperview: imageView)
+            .add(toSuperview: view)
             .centerInSuperview(.horizontal)
             .centerInSuperview(.vertical)
             .touchEdge(.top, toEdge: .bottom, ofView: avatarImage, withInset: Cost.Label.Name.top)
         
         phoneLabel
-            .add(toSuperview: imageView)
+            .add(toSuperview: view)
             .centerInSuperview(.horizontal)
             .touchEdge(.top, toEdge: .bottom, ofView: nameLabel, withInset: Cost.Label.Phone.top)
         

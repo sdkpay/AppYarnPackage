@@ -47,14 +47,6 @@ class ContentVC: LoggableVC {
         view.contentMode = .scaleAspectFill
         return view
     }()
-    
-    private lazy var backgroundImageView: UIImageView = {
-        let view = UIImageView()
-        view.image = Asset.background.image
-        view.tag = .backgroundViewTag
-        view.contentMode = .scaleAspectFill
-        return view
-    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,14 +70,6 @@ class ContentVC: LoggableVC {
     }
 
     func configUI() {
-        
-        backgroundImageView
-            .add(toSuperview: view)
-            .touchEdge(.left, toSuperviewEdge: .left)
-            .touchEdge(.right, toSuperviewEdge: .right)
-            .touchEdge(.top, toSuperviewEdge: .top)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom)
-        
         stickImageView
             .add(toSuperview: view)
             .size(.equal, to: .init(width: .stickWidth, height: .stickHeight))

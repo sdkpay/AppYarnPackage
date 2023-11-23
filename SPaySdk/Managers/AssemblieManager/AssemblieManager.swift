@@ -12,6 +12,7 @@ final class AssemblyManager {
         VersionСontrolManagerAssembly(),
         KeychainStorageAssembly(),
         AuthManagerAssembly(),
+        PaymentServiceAssembly(),
         CompletionManagerAssembly(),
         SDKManagerAssembly(),
         CookieStorageAssembly(),
@@ -35,7 +36,6 @@ final class AssemblyManager {
         UserServiceAssembly(),
         LocationManagerAssembly(),
         SecureChallengeServiceAssembly(),
-        PaymentServiceAssembly(),
         PartPayServiceAssembly(),
         ContentLoadManagerAssembly()
     ]
