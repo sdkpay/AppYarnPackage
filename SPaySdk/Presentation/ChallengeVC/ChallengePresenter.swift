@@ -45,12 +45,15 @@ final class ChallengePresenter: ChallengePresenting {
     
     func infoAlertTapped() {
         
-        guard let bankUrl = bankAppManager.selectedBank?.utilLink else { return }
-        guard let cybercabinetURLIOS = secureChallengeService.fraudMonСheckResult?.formParameters?.cybercabinetURLIOS else { return }
-        
-        guard let link = URL(string: bankUrl + cybercabinetURLIOS) else { return }
-        
         Task {
+            await view?.showLoading()
+            try? await secureChallengeService.sendChallengeResult(resolution: .confirmedFraud)
+
+            guard let bankUrl = bankAppManager.selectedBank?.utilLink else { return }
+            guard let cybercabinetURLIOS = secureChallengeService.fraudMonСheckResult?.formParameters?.cybercabinetURLIOS else { return }
+            
+            guard let link = URL(string: bankUrl + cybercabinetURLIOS) else { return }
+            
             await MainActor.run { completionManager.dismissCloseAction(view) }
             await router.openUrl(url: link)
         }

@@ -27,6 +27,13 @@ extension Int {
     static let stickViewTag = 555
 }
 
+final class ViewCache {
+    
+    var view: LottieAnimationView?
+    
+    static let shared = ViewCache()
+}
+
 class ContentVC: LoggableVC {
     
     @MainActor
@@ -49,12 +56,40 @@ class ContentVC: LoggableVC {
         return view
     }()
     
-    private lazy var backgroundView: LottieAnimationView = {
-        let view = LottieAnimationView(name: "Background", bundle: Bundle.sdkBundle)
+    private lazy var backgroundView: UIImageView = {
+        let view = UIImageView()
+        view.image = Asset.background.image
+        view.tag = .stickViewTag
         view.contentMode = .scaleAspectFill
-        view.tag = .backgroundViewTag
-        view.loopMode = .loop
         return view
+//        let view = LottieAnimationView(name: "Background",
+//                                       bundle: Bundle.sdkBundle,
+//                                       animationCache: DefaultAnimationCache.sharedCache)
+//        view.contentMode = .scaleAspectFill
+//        view.tag = .backgroundViewTag
+//        view.loopMode = .loop
+//        ViewCache.shared.view = view
+//        return view
+//        if let view = ViewCache.shared.view {
+//            return view
+//        } else {
+//            let view = LottieAnimationView(name: "Background",
+//                                           bundle: Bundle.sdkBundle,
+//                                           animationCache: DefaultAnimationCache.sharedCache)
+//            view.contentMode = .scaleAspectFill
+//            view.tag = .backgroundViewTag
+//            view.loopMode = .loop
+//            ViewCache.shared.view = view
+//            return view
+//        }
+//        let view = LottieAnimationView(name: "Background",
+//                                       bundle: Bundle.sdkBundle,
+//                                       animationCache: DefaultAnimationCache.sharedCache)
+//        view.contentMode = .scaleAspectFill
+//        view.tag = .backgroundViewTag
+//        view.loopMode = .loop
+//        ViewCache.shared.view = view
+//        return view
     }()
 
     override func viewDidLoad() {
@@ -65,7 +100,7 @@ class ContentVC: LoggableVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        backgroundView.play()
+      //  backgroundView.play()
     }
     
     @MainActor

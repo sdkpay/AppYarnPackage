@@ -25,12 +25,15 @@ protocol SecureChallengeService {
     
     func challenge(paymentId: Int, isBnplEnabled: Bool) async throws -> SecureChallengeState?
     var fraudMonСheckResult: FroudMonСheckResult? { get }
+    func sendChallengeResult(resolution: SecureChallengeResolution?) async throws
 }
 
 final class DefaultSecureChallengeService: SecureChallengeService {
     
     private var network: NetworkService
     private var paymentService: PaymentService
+    private var paymentId: Int?
+    private var isBnplEnabled = false
     
     var fraudMonСheckResult: FroudMonСheckResult?
     
@@ -42,9 +45,12 @@ final class DefaultSecureChallengeService: SecureChallengeService {
     
     func challenge(paymentId: Int, isBnplEnabled: Bool) async throws -> SecureChallengeState? {
         
+        self.paymentId = paymentId
+        self.isBnplEnabled = isBnplEnabled
+        
         do {
             let fraudMonСheckResult = try await paymentService.getPaymentToken(paymentId: paymentId,
-                                                                               isBnplEnabled: isBnplEnabled, 
+                                                                               isBnplEnabled: isBnplEnabled,
                                                                                resolution: nil).froudMonСheckResult
             self.fraudMonСheckResult = fraudMonСheckResult
             
@@ -52,5 +58,11 @@ final class DefaultSecureChallengeService: SecureChallengeService {
         } catch {
             throw error
         }
+    }
+    
+    func sendChallengeResult(resolution: SecureChallengeResolution?) async throws {
+        try await paymentService.getPaymentToken(paymentId: paymentId ?? 0,
+                                                 isBnplEnabled: isBnplEnabled,
+                                                 resolution: resolution)
     }
 }

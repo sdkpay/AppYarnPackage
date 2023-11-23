@@ -76,16 +76,11 @@ final class LoadingView: UIView {
         DispatchQueue.main.asyncAfter(deadline: .now() + .delay, execute: {
             self.loadingStack.isHidden = false
         })
-        if animate {
-            UIView.animate(withDuration: 0.25,
-                           delay: .delay) { [weak self] in
-                guard let self = self else { return }
-                self.alpha = 1
-            } completion: { _ in
-                self.dotsAnimatedView.startAnimation()
-            }
-        } else {
+        UIView.animate(withDuration: 0.25,
+                       delay: .delay) { [weak self] in
+            guard let self = self else { return }
             self.alpha = 1
+        } completion: { _ in
             self.dotsAnimatedView.startAnimation()
         }
     }

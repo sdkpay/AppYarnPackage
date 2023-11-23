@@ -69,10 +69,6 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkNewStart() {
-        
-        Task {
-            await view?.showLoading()
-        }
         analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
         
         guard !versionСontrolManager.isVersionDepicated else {
