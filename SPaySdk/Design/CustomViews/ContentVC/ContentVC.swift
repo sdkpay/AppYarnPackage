@@ -51,9 +51,9 @@ class ContentVC: LoggableVC {
     
     private lazy var backgroundView: LottieAnimationView = {
         let view = LottieAnimationView(name: "Background", bundle: Bundle.sdkBundle)
-        view.contentMode = .scaleToFill
+        view.contentMode = .scaleAspectFill
+        view.tag = .backgroundViewTag
         view.loopMode = .loop
-        view.animationSpeed = 5
         return view
     }()
 
