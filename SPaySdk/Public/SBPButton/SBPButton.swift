@@ -1,5 +1,5 @@
 //
-//  SPButton.swift
+//  SBPButton.swift
 //  SPaySdk
 //
 //  Created by Alexander Ipatov on 09.11.2022.
