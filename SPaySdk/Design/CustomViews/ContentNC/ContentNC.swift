@@ -12,6 +12,7 @@ private extension TimeInterval {
 }
 
 final class ContentNC: UIViewController {
+    
     var topViewController: UIViewController? {
         viewControllers.last
     }
@@ -21,6 +22,11 @@ final class ContentNC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        parent?.dismiss(animated: false)
     }
 
     convenience init(rootViewController: UIViewController) {

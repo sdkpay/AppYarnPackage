@@ -63,11 +63,6 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(applicationDidBecomeActive),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
         checkNewStart()
     }
     
@@ -80,7 +75,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkNewStart() {
-        view?.showLoading()
+        self.view?.showLoading(with: Strings.Get.Data.title, animate: true)
         analytics.sendEvent(.MAInit,
                             with: "environment: \(enviromentManager.environment.description)")
         
@@ -112,10 +107,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func checkSession() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.view?.showLoading()
-        }
+
         userService.checkUserSession { [weak self] result in
             switch result {
             case .success:
@@ -153,8 +145,7 @@ final class AuthPresenter: AuthPresenting {
     private func getAccessSPay() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let title: String = Strings.To.Bank.title(self.bankManager.selectedBank?.name ?? "Банк")
-            self.view?.showLoading(with: self.authService.tokenInStorage ? nil : title)
+            self.view?.showLoading(with: Strings.Get.Data.title, animate: true)
             self.getSessiond()
         }
     }
@@ -193,6 +184,10 @@ final class AuthPresenter: AuthPresenting {
     
     private func appAuthMethod() {
         analytics.sendEvent(.LCBankAppAuth)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationDidBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
         authService.appAuth(completion: { [weak self] result in
             self?.removeObserver()
             switch result {
@@ -229,7 +224,6 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func loadPaymentData() {
-        view?.showLoading(with: Strings.Get.Data.title, animate: true)
         contentLoadManager.load { [weak self] error in
             if let error = error {
                 self?.completionManager.completeWithError(error)

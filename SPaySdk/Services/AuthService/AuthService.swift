@@ -287,19 +287,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                     type: .auth(type: .auth))
                 
-                if self.authManager.authMethod == .bank {
-                    completion(.failure(error))
-                    return
-                }
-
-                self.appAuth { result in
-                    switch result {
-                    case .success:
-                        self.auth(completion: completion)
-                    case .failure(let failure):
-                        completion(.failure(failure))
-                    }
-                }
+                completion(.failure(error))
             }
         }
     }
