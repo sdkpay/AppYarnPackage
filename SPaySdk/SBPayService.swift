@@ -57,33 +57,35 @@ final class DefaultSBPayService: SBPayService {
                environment: SEnvironment,
                completion: Action? = nil) {
         self.apiKey = apiKey
-        FontFamily.registerAllCustomFonts()
-        locator.register(service: keychainStorage)
-        locator.register(service: liveCircleManager)
-        locator.register(service: logService)
-        locator.register(service: buildSettings)
-        assemblyManager.registerServices(to: locator)
-        locator
-            .resolve(LogService.self)
-            .setLogsWritable(environment: environment)
-        locator
-            .resolve(EnvironmentManager.self)
-            .setEnvironment(environment)
-        locator
-            .resolve(PartPayService.self)
-            .setEnabledBnpl(bnplPlan, enabledLevel: .merch)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
-        SBLogger.dateString = dateFormatter.string(from: Date())
-        locator
-            .resolve(RemoteConfigService.self)
-            .getConfig(with: apiKey) { error in
-                completion?()
-                guard error == nil else { return }
-                self.locator
-                    .resolve(AnalyticsService.self)
-                    .config()
-            }
+        DispatchQueue.global(qos: .utility).async {
+            FontFamily.registerAllCustomFonts()
+            self.locator.register(service: self.keychainStorage)
+            self.locator.register(service: self.liveCircleManager)
+            self.locator.register(service: self.logService)
+            self.locator.register(service: self.buildSettings)
+            self.assemblyManager.registerServices(to: self.locator)
+            self.locator
+                .resolve(LogService.self)
+                .setLogsWritable(environment: environment)
+            self.locator
+                .resolve(EnvironmentManager.self)
+                .setEnvironment(environment)
+            self.locator
+                .resolve(PartPayService.self)
+                .setEnabledBnpl(bnplPlan, enabledLevel: .merch)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+            SBLogger.dateString = dateFormatter.string(from: Date())
+            self.locator
+                .resolve(RemoteConfigService.self)
+                .getConfig(with: apiKey) { error in
+                    completion?()
+                    guard error == nil else { return }
+                    self.locator
+                        .resolve(AnalyticsService.self)
+                        .config()
+                }
+        }
     }
     
     var isReadyForSPay: Bool {
@@ -148,35 +150,40 @@ final class DefaultSBPayService: SBPayService {
     func payWithBankInvoiceId(with viewController: UIViewController,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
-        guard !inProgress else { return }
-        inProgress = true
-        timeManager.startCheckingCPULoad()
-        timeManager.startContectionTypeChecking()
-        locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MAPayWithBankInvoiceId)
-        
-        if let apiKeyInRequest = paymentRequest.apiKey {
-            apiKey = apiKeyInRequest
-        }
-        
-        guard let apiKey = apiKey else { fatalError(Strings.Merchant.Alert.apikey) }
-        if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
-            let response = PaymentResponse(SPayState.error, error)
-            completion(response)
-        }
-        locator
-            .resolve(SDKManager.self)
-            .configWithBankInvoiceId(apiKey: apiKey,
-                                     paymentRequest: paymentRequest) { response in
-                self.inProgress = false
+        DispatchQueue.global(qos: .userInitiated).async {
+            guard !self.inProgress else { return }
+            self.inProgress = true
+            self.timeManager.startCheckingCPULoad()
+            self.timeManager.startContectionTypeChecking()
+            self.locator
+                .resolve(AnalyticsService.self)
+                .sendEvent(.MAPayWithBankInvoiceId)
+            
+            if let apiKeyInRequest = paymentRequest.apiKey {
+                self.apiKey = apiKeyInRequest
+            }
+            
+            guard let apiKey = self.apiKey else { fatalError(Strings.Merchant.Alert.apikey) }
+            if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
+                let response = PaymentResponse(SPayState.error, error)
                 completion(response)
             }
-        liveCircleManager.openInitialScreen(with: viewController,
-                                            with: locator)
-        locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MACPayWithBankInvoiceId)
+            self.locator
+                .resolve(SDKManager.self)
+                .configWithBankInvoiceId(apiKey: apiKey,
+                                         paymentRequest: paymentRequest) { response in
+                    self.inProgress = false
+                    completion(response)
+                }
+            DispatchQueue.main.async {
+                self.liveCircleManager.openInitialScreen(with: viewController,
+                                                         with: self.locator)
+            }
+            self.locator
+                .resolve(AnalyticsService.self)
+                .sendEvent(.MACPayWithBankInvoiceId)
+        }
+
     }
     
     func getResponseFrom(_ url: URL) {
