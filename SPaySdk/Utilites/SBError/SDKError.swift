@@ -22,6 +22,7 @@ struct SDKError: Error, LocalizedError {
     var httpCode: Int?
     var description: String
     var publicDescription: String
+    var data: Data?
 
     init(_ code: ErrorCode,
          httpCode: Int? = nil,
@@ -63,6 +64,7 @@ struct SDKError: Error, LocalizedError {
         self.code = errorCodeInt
         self.httpCode = httpCode
         self.description = description
+        self.data = data
         self.publicDescription = ErrorCode(rawValue: code)?.publicDescription ?? "None"
     }
 

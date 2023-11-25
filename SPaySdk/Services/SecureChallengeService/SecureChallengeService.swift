@@ -49,15 +49,19 @@ final class DefaultSecureChallengeService: SecureChallengeService {
         self.isBnplEnabled = isBnplEnabled
         
         do {
-            let fraudMonСheckResult = try await paymentService.getPaymentToken(paymentId: paymentId,
-                                                                               isBnplEnabled: isBnplEnabled,
-                                                                               resolution: nil).froudMonСheckResult
-            self.fraudMonСheckResult = fraudMonСheckResult
-            
-            return fraudMonСheckResult?.secureChallengeState
+            try await paymentService.getPaymentToken(paymentId: paymentId,
+                                                     isBnplEnabled: isBnplEnabled,
+                                                     resolution: nil)
+            fraudMonСheckResult = nil
         } catch {
-            throw error
+            if let sdkError = error as? SDKError,
+               let secureError = SecureChallengeError(from: sdkError) {
+                fraudMonСheckResult = secureError.froudMonСheckResult
+            } else {
+                throw error
+            }
         }
+        return fraudMonСheckResult?.secureChallengeState
     }
     
     func sendChallengeResult(resolution: SecureChallengeResolution?) async throws {
