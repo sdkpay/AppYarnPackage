@@ -8,7 +8,7 @@
 import UIKit
 
 private extension CGFloat {
-    static let maxTableViewHeight = UIScreen.main.bounds.height * 0.6
+    static let maxTableViewHeight = UIScreen.main.bounds.height * 0.73
 }
 
 class ContentTableView: UITableView {

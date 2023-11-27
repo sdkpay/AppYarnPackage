@@ -27,9 +27,10 @@ final class OtpVC: ContentVC, IOtpVC {
         
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         label.textAlignment = .center
         label.font = .medium5
+        label.textColor = .mainBlack
         return label
     }()
     
@@ -140,14 +141,21 @@ final class OtpVC: ContentVC, IOtpVC {
     @MainActor
     override func showLoading(with text: String? = nil, animate: Bool = true) {
         backView.startLoading(with: text)
+        nextButton.isHidden = true
+        backButton.isHidden = true
+        view.endEditing(true)
     }
     
     @MainActor
     override func hideLoading(animate: Bool = true) {
         backView.stopLoading()
+        nextButton.isHidden = false
+        backButton.isHidden = false
     }
     
     private func setupUI() {
+        view.height(.vcMaxHeight, priority: .defaultLow)
+        
         backView
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left)
@@ -175,19 +183,19 @@ final class OtpVC: ContentVC, IOtpVC {
             .touchEdge(.top, toEdge: .bottom, ofView: otpTextField, withInset: Cost.Button.Time.top)
                
         nextButton
-            .add(toSuperview: backView)
+            .add(toSuperview: view)
             .height(.defaultButtonHeight)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Next.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Next.right)
             .touchEdge(.top, toEdge: .bottom, ofView: timeButton, withInset: Cost.Button.Next.bottom)
         
         backButton
-            .add(toSuperview: backView)
+            .add(toSuperview: view)
+            .height(.defaultButtonHeight)
             .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: CGFloat(keyboardHeight))
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Back.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Back.right)
             .touchEdge(.top, toEdge: .bottom, ofView: nextButton, withInset: Cost.Button.Back.top)
-            .height(.defaultButtonHeight)
     }
 }
 
@@ -200,14 +208,15 @@ extension OtpVC {
             static let bottom: CGFloat = 10.0
             static let right: CGFloat = Cost.sideOffSet
             static let left: CGFloat = Cost.sideOffSet
-            static let top: CGFloat = 30.0
+            static let top: CGFloat = 60.0
+            static let height: CGFloat = 40
         }
         
         enum TextField {
             static let right: CGFloat = Cost.sideOffSet
             static let left: CGFloat = Cost.sideOffSet
-            static let top: CGFloat = 20
-            static let height: CGFloat = 76
+            static let top: CGFloat = 16
+            static let height: CGFloat = 72
         }
         
         enum Button {
@@ -223,16 +232,16 @@ extension OtpVC {
             
             enum Back {
                 static let title = Strings.Cancel.title
-                static let bottom: CGFloat = 44.0
+                static let bottom: CGFloat = 0
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
-                static let top: CGFloat = Cost.sideOffSet
+                static let top: CGFloat = 8
             }
             
             enum Time {
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
-                static let top: CGFloat = 38
+                static let top: CGFloat = 16
             }
         }
     }

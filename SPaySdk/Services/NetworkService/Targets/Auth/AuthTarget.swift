@@ -200,7 +200,7 @@ extension AuthTarget: TargetType {
             params["resourceName"] = resourceName
             
             return .requestWithParametersAndCookie(nil, bodyParameters: params, cookies: authCookie)
-        case let .revokeToken(authCookie: authCookie):
+        case let .revokeToken(authCookie):
             return .requestWithParametersAndCookie(nil, bodyParameters: nil, cookies: authCookie)
         }
     }

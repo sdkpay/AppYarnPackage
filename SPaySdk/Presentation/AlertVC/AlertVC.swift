@@ -29,8 +29,8 @@ final class AlertVC: ContentVC, IAlertVC {
 
     private lazy var alertTitle: UILabel = {
         let view = UILabel()
-        view.font = .header2
-        view.numberOfLines = 1
+        view.font = .header4
+        view.numberOfLines = 0
         view.textColor = .mainBlack
         view.textAlignment = .center
         return view
@@ -38,7 +38,7 @@ final class AlertVC: ContentVC, IAlertVC {
     
     private lazy var alertSubtitle: UILabel = {
        let view = UILabel()
-        view.font = .medium5
+        view.font = .medium2
         view.numberOfLines = 0
         view.textColor = .textSecondary
         view.textAlignment = .center
@@ -65,19 +65,11 @@ final class AlertVC: ContentVC, IAlertVC {
         return view
     }()
     
-    private lazy var backgroundImageView: UIImageView = {
-       let view = UIImageView()
-        view.image = Asset.background.image
-        return view
-    }()
-    
     private lazy var contentStack: UIStackView = {
         let view = UIStackView()
         view.spacing = 32
         view.axis = .vertical
         view.alignment = .center
-        view.addArrangedSubview(imageView)
-        view.addArrangedSubview(textStack)
         return view
     }()
     
@@ -105,6 +97,25 @@ final class AlertVC: ContentVC, IAlertVC {
         alertTitle.text = model.title
         alertSubtitle.text = model.subtite
         
+        var imageWidth: CGFloat = 0
+        var imageHeight: CGFloat = 0
+        
+        if model.isFailure {
+            contentStack.addArrangedSubview(textStack)
+            contentStack.addArrangedSubview(imageView)
+            imageWidth = 200
+            imageHeight = 100
+        } else {
+            contentStack.addArrangedSubview(imageView)
+            contentStack.addArrangedSubview(textStack)
+            imageWidth = 120
+            imageHeight = 120
+        }
+        
+        imageView
+            .height(imageHeight)
+            .width(imageWidth)
+        
         for item in model.buttons {
             let button = DefaultButton(buttonAppearance: item.type)
             button.setTitle(item.title, for: .normal)
@@ -112,7 +123,6 @@ final class AlertVC: ContentVC, IAlertVC {
                 self?.presenter.buttonTapped(item: item)
             }
             button.height(.defaultButtonHeight)
-            button.width(.defaultButtonWidth)
             buttonsStack.addArrangedSubview(button)
         }
         setupUI()
@@ -139,26 +149,18 @@ final class AlertVC: ContentVC, IAlertVC {
     }
     
     func setupUI() {
-        view.height(.vcMaxHeight)
-        
-        backgroundImageView
-            .add(toSuperview: view)
-            .touchEdgesToSuperview([.bottom, .left, .right, .top])
-
-        imageView
-            .height(.imageWidth)
-            .width(.imageWidth)
-        
-        contentStack
-            .add(toSuperview: backgroundImageView)
-            .centerInSuperview(.y, withOffset: -buttonsStack.bounds.height)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
+        view.height(.vcMaxHeight, priority: .defaultLow)
         
         buttonsStack
-            .add(toSuperview: backgroundImageView)
+            .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .buttonsMargin)
+        
+        contentStack
+            .add(toSuperview: view)
+            .centerInSuperview(.y, withOffset: -buttonsStack.bounds.height)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
     }
 }

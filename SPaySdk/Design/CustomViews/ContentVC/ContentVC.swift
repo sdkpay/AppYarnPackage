@@ -6,7 +6,7 @@
 //
 
 import UIKit
-@_implementationOnly import Lottie
+//@_implementationOnly import Lottie
 
 private extension CGFloat {
     static let logoWidth = 72.0
@@ -29,7 +29,7 @@ extension Int {
 
 final class ViewCache {
     
-    var view: LottieAnimationView?
+//    var view: LottieAnimationView?
     
     static let shared = ViewCache()
 }
@@ -58,7 +58,7 @@ class ContentVC: LoggableVC {
     
     private lazy var backgroundView: UIImageView = {
         let view = UIImageView()
-        view.image = Asset.background.image
+//        view.image = Asset.background.image
         view.tag = .stickViewTag
         view.contentMode = .scaleAspectFill
         return view

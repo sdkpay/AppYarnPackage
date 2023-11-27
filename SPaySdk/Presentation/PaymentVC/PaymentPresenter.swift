@@ -378,15 +378,15 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func configForWaiting() {
         self.completionManager.completePay(with: .waiting)
-        let okButton = AlertButtonModel(title: Strings.Ok.title,
+        let okButton = AlertButtonModel(title: Strings.Cancel.title,
                                         type: .full) { [weak self] in
             self?.alertService.close()
         }
         alertService.showAlert(on: view,
-                               with: ConfigGlobal.localization?.payLoading ?? "",
+                               with: Strings.Alert.Pay.No.Waiting.title,
                                with: ConfigGlobal.localization?.payLoading ?? "",
                                with: nil,
-                               state: .waiting,
+                               state: .success,
                                buttons: [okButton],
                                completion: {
             Task {
@@ -441,12 +441,12 @@ final class PaymentPresenter: PaymentPresenting {
     private func goToPay() async {
         
         guard let paymentId = userService.selectedCard?.paymentId else { return }
-        
+
         do {
             await self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
-            
+
             let challengeState = try await secureChallengeService.challenge(paymentId: paymentId, isBnplEnabled: partPayService.bnplplanSelected)
-            
+
             switch challengeState {
             case .review:
                 await MainActor.run { router.presentChallenge(completion: { resolution in
