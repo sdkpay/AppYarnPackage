@@ -223,8 +223,8 @@ final class DefaultAlertService: AlertService {
                                                 type: .info,
                                                 action: back)
             showAlert(on: view,
+                      with: Strings.Alert.Error.Main.title,
                       with: Strings.Alert.Pay.Error.title,
-                      with: nil,
                       state: .failure,
                       buttons: [
                         fullPayButton,

@@ -20,7 +20,6 @@ protocol IAlertVC {
     func configView(with model: AlertViewModel)
 }
 
-
 final class AlertVC: ContentVC, IAlertVC {
     private lazy var imageView: UIImageView = {
        let view = UIImageView()
@@ -96,7 +95,7 @@ final class AlertVC: ContentVC, IAlertVC {
     func configView(with model: AlertViewModel) {
         imageView.image = model.image
         alertTitle.text = model.title
-        alertSubtitle.text = "Попробуйте ещё раз или выберите"
+        alertSubtitle.text = model.subtite
         
         var imageWidth: CGFloat = 0
         var imageHeight: CGFloat = 0

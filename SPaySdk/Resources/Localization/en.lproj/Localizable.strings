@@ -55,7 +55,7 @@
 "alert.pay.success.title" = "Успешно оплатили";
 "alert.pay.error.title" = "Сервис оплаты частями недоступен. \nОплатите заказ полностью или выберите другой способ оплаты.";
 "alert.otp.error.title" = "Вы исчерпали попытки ввода кода.\nВыберете другой метод оплаты.";
-"alert.pay.no.waiting.title" = "Обрабатываем заявку";
+"alert.pay.no.waiting.title" = "Платеж в обработке";
 "alert.pay.no.waiting.subtitle" = "Следите за статусом в Истории приложения %@";
 "alert.error.main.title" = "Не получилось оплатить";
 "alert.error.main.subtitle" = "Попробуйте ещё раз или выберите другой способ оплаты";
