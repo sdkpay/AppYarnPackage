@@ -85,17 +85,14 @@ final class SmsCodeView: UITextField {
                   action: #selector(textDidChange),
                   for: .editingChanged)
         delegate = self
-        .height(Consts.heightOfView)
     }
 
     private func setupUI() {
-
         stackForLabels
             .add(toSuperview: self)
-            .touchEdge(.top, toEdge: .top, ofView: self, withInset: Consts.topOfStack)
+            .touchEdge(.top, toEdge: .top, ofView: self)
             .touchEdgesToSuperview(ofGroup: .horizontal)
-            .touchEdge(.bottom, toEdge: .top, ofView: self, withInset: Consts.bottomOfStack)
-            .height(Consts.heightOfStack)
+            .touchEdge(.bottom, toEdge: .bottom, ofView: self)
     }
 }
 extension SmsCodeView: UITextFieldDelegate {
@@ -150,8 +147,5 @@ private extension SmsCodeView {
     enum Consts {
         static let stackSpasing: CGFloat = 8
         static let heightOfView: CGFloat = 30
-        static let topOfStack: CGFloat = 8
-        static let bottomOfStack: CGFloat = 2
-        static let heightOfStack: CGFloat = 28
     }
 }

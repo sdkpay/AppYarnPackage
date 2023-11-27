@@ -73,13 +73,13 @@ final class AuthPresenter: AuthPresenting {
         
         guard !versionСontrolManager.isVersionDepicated else {
             alertService.showAlert(on: view,
-                                   with: Strings.Error.version,
-                                   with: Strings.Error.version,
+                                   with: Strings.Error.Version.title,
+                                   with: Strings.Error.Version.subtitle,
                                    with: nil,
                                    state: .failure,
                                    buttons: [
                                     AlertButtonModel(title: Strings.Return.title,
-                                                     type: .full,
+                                                     type: .info,
                                                      action: { [weak self] in
                                                          self?.completionManager.dismissCloseAction(self?.view)
                                                      })

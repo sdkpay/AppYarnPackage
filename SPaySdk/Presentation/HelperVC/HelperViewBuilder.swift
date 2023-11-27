@@ -68,12 +68,6 @@ final class HelperViewBuilder {
 
     private var backButtonDidTap: Action
     private var actionButtonDidTap: Action
-    
-    private lazy var imageView: UIImageView = {
-       let view = UIImageView()
-        view.image = Asset.background.image
-        return view
-    }()
 
     private(set) lazy var titleLabel: UILabel = {
         let view = UILabel()
@@ -120,10 +114,6 @@ final class HelperViewBuilder {
     }
     
     func setupUI(view: UIView) {
-        
-        imageView
-            .add(toSuperview: view)
-            .touchEdgesToSuperview([.bottom, .left, .right, .top])
         
         titleLabel
             .add(toSuperview: view)

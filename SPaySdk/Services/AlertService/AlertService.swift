@@ -21,6 +21,7 @@ struct AlertViewModel {
     let buttons: [AlertButtonModel]
     let sound: String
     let feedBack: UINotificationFeedbackGenerator.FeedbackType
+    let isFailure: Bool
     let completion: Action
 }
 
@@ -154,6 +155,8 @@ final class DefaultAlertService: AlertService {
                                        buttons: buttons,
                                        sound: state.soundPath,
                                        feedBack: state.feedBack,
+                                       isFailure: !(state == .success),
+                                       
                                        completion: completion)
             let alertVC = AlertAssembly().createModule(alertModel: model,
                                                        liveCircleManager: self.liveCircleManager)
@@ -196,10 +199,10 @@ final class DefaultAlertService: AlertService {
         case let .noInternet(retry, completion):
             analytics.sendEvent(.LCStatusErrorViewAppeared, with: "errror: noInternet")
             let tryButton = AlertButtonModel(title: Strings.Try.title,
-                                             type: .full,
+                                             type: .blackBack,
                                              action: retry)
             let cancelButton = AlertButtonModel(title: Strings.Cancel.title,
-                                                type: .cancel,
+                                                type: .info,
                                                 action: completion)
             showAlert(on: view,
                       with: Strings.Alert.Pay.No.Internet.title,
@@ -214,14 +217,14 @@ final class DefaultAlertService: AlertService {
         case let .partPayError(fullPay: fullPay, back: back):
             analytics.sendEvent(.LCStatusErrorViewAppeared, with: "error: partPayError")
             let fullPayButton = AlertButtonModel(title: Strings.Pay.Full.title,
-                                                 type: .full,
+                                                 type: .blackBack,
                                                  action: fullPay)
             let returnButton = AlertButtonModel(title: Strings.Return.title,
-                                                type: .clear,
+                                                type: .info,
                                                 action: back)
             showAlert(on: view,
+                      with: Strings.Alert.Error.Main.title,
                       with: Strings.Alert.Pay.Error.title,
-                      with: nil,
                       state: .failure,
                       buttons: [
                         fullPayButton,
@@ -231,7 +234,7 @@ final class DefaultAlertService: AlertService {
         case .tryingError(back: let back):
             analytics.sendEvent(.LCStatusErrorViewAppeared)
             let fullPayButton = AlertButtonModel(title: Strings.Button.Otp.back,
-                                                 type: .full,
+                                                 type: .blackBack,
                                                  action: back)
             showAlert(on: view,
                       with: Strings.Error.trying,

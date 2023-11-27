@@ -53,10 +53,10 @@ final class OtpPresenter: OtpPresenting {
         self.completionManager = completionManager
         self.keyboardManager = keyboardManager
         self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
-        self.setKeyboardHeight()
     }
     
     func viewDidLoad() {
+        setKeyboardHeight()
         createTimer()
         configViews()
         userService.clearData()
