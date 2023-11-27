@@ -31,7 +31,7 @@ final class AlertVC: ContentVC, IAlertVC {
     private lazy var alertTitle: UILabel = {
         let view = UILabel()
         view.font = .header4
-        view.numberOfLines = 1
+        view.numberOfLines = 0
         view.textColor = .mainBlack
         view.textAlignment = .center
         return view
@@ -124,7 +124,6 @@ final class AlertVC: ContentVC, IAlertVC {
                 self?.presenter.buttonTapped(item: item)
             }
             button.height(.defaultButtonHeight)
-            button.width(.defaultButtonWidth)
             buttonsStack.addArrangedSubview(button)
         }
         setupUI()
@@ -151,18 +150,18 @@ final class AlertVC: ContentVC, IAlertVC {
     }
     
     func setupUI() {
-        view.height(.vcMaxHeight)
-        
-        contentStack
-            .add(toSuperview: view)
-            .centerInSuperview(.y, withOffset: -buttonsStack.bounds.height)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
+        view.height(.vcMaxHeight, priority: .defaultLow)
         
         buttonsStack
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .buttonsMargin)
+        
+        contentStack
+            .add(toSuperview: view)
+            .centerInSuperview(.y, withOffset: -buttonsStack.bounds.height)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
     }
 }

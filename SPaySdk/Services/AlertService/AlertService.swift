@@ -202,7 +202,7 @@ final class DefaultAlertService: AlertService {
                                              type: .blackBack,
                                              action: retry)
             let cancelButton = AlertButtonModel(title: Strings.Cancel.title,
-                                                type: .cancel,
+                                                type: .info,
                                                 action: completion)
             showAlert(on: view,
                       with: Strings.Alert.Pay.No.Internet.title,
@@ -220,7 +220,7 @@ final class DefaultAlertService: AlertService {
                                                  type: .blackBack,
                                                  action: fullPay)
             let returnButton = AlertButtonModel(title: Strings.Return.title,
-                                                type: .clear,
+                                                type: .info,
                                                 action: back)
             showAlert(on: view,
                       with: Strings.Alert.Pay.Error.title,

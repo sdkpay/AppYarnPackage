@@ -20,10 +20,10 @@ enum SecureChallengeState: String {
 struct PaymentTokenModel: Codable {
     let paymentToken: String?
     let initiateBankInvoiceId: String?
-    let fraudMonСheckResult: FraudMonСheckResult?
+    let froudMonСheckResult: FroudMonСheckResult?
 }
 
-struct FraudMonСheckResult: Codable {
+struct FroudMonСheckResult: Codable {
     let actionCode: String
     let isClientBlock: Bool?
     let confirmMethodFactor: String
@@ -39,12 +39,12 @@ struct FraudMonСheckResult: Codable {
 }
 
 struct FormParameters: Codable {
-    let header: String?
-    let text: String?
-    let textDecline: String?
-    let buttonСonfirmText: String?
-    let buttonDeclineText: String?
-    let buttonInformText: String?
-    let cybercabinetUrlAndroid: String?
-    let cybercabinetUrlIOS: String?
+    let header, text, textDecline, buttonСonfirmText: String?
+    let buttonDeclineText, buttonInformText, cybercabinetURLAndroid, cybercabinetURLIOS: String?
+
+    enum CodingKeys: String, CodingKey {
+        case header, text, textDecline, buttonСonfirmText, buttonDeclineText, buttonInformText
+        case cybercabinetURLAndroid = "cybercabinetUrlAndroid"
+        case cybercabinetURLIOS = "cybercabinetUrlIOS"
+    }
 }

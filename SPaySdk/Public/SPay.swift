@@ -27,6 +27,14 @@ public final class SPay: NSObject {
         payService?.setup(apiKey: apiKey, bnplPlan: bnplPlan, environment: environment, completion: completion)
     }
     
+    /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
+    @objc
+    public static func setup(config: SConfig,
+                             environment: SEnvironment = .prod,
+                             completion: Action? = nil) {
+        payService?.setup(config: config, environment: environment, completion: completion)
+    }
+    
     /**
      Требуется задать LSApplicationQueriesSchemes в Info.plist
      */

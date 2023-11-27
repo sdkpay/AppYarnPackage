@@ -22,7 +22,7 @@ private extension CardsViewBuilder {
             static let textColor = UIColor.textPrimory
             static let text = String(stringLiteral: Strings.Cards.title)
             
-            static let topOffSet: CGFloat = 28.0
+            static let topOffSet: CGFloat = 40.0
             static let rightOffSet = Consts.offSet
         }
         
@@ -39,7 +39,7 @@ private extension CardsViewBuilder {
             static let backgroundColor = UIColor.backgroundPrimary
             static let rowHeight: CGFloat = 74.0
             
-            static let bottomOffSet: CGFloat = 58.0
+            static let bottomOffSet: CGFloat = 54.0
             static let rightOffSet: CGFloat = Consts.offSet
             static let topOffSet: CGFloat = 20.0
         }
@@ -86,8 +86,6 @@ final class CardsViewBuilder {
     }()
     
     func setupUI(view: UIView) {
-        view.height(.minScreenSize, priority: .defaultLow)
-        
         stackLabel
             .add(toSuperview: view)
             .touchEdge(.top,

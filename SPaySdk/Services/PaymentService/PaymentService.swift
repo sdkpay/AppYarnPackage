@@ -35,10 +35,12 @@ final class PaymentServiceAssembly: Assembly {
 protocol PaymentService {
  
     func tryToPay(paymentId: Int,
-                  isBnplEnabled: Bool) async throws
+                  isBnplEnabled: Bool,
+                  resolution: SecureChallengeResolution?) async throws
     @discardableResult
     func getPaymentToken(paymentId: Int,
-                         isBnplEnabled: Bool) async throws -> PaymentTokenModel
+                         isBnplEnabled: Bool,
+                         resolution: SecureChallengeResolution?) async throws -> PaymentTokenModel
 }
 
 final class DefaultPaymentService: PaymentService {
@@ -79,10 +81,11 @@ final class DefaultPaymentService: PaymentService {
     }
     
     func tryToPay(paymentId: Int,
-                  isBnplEnabled: Bool) async throws {
+                  isBnplEnabled: Bool,
+                  resolution: SecureChallengeResolution?) async throws {
         
         do {
-            let paymentToken = try await getPaymentToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled)
+            let paymentToken = try await getPaymentToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
             
             let (orderid, merchantLogin, _) = try getCredPair(isBnplEnabled)
             
@@ -109,7 +112,8 @@ final class DefaultPaymentService: PaymentService {
     
     @discardableResult
     func getPaymentToken(paymentId: Int,
-                         isBnplEnabled: Bool) async throws -> PaymentTokenModel {
+                         isBnplEnabled: Bool,
+                         resolution: SecureChallengeResolution?) async throws -> PaymentTokenModel {
         
         guard let sessionId = authManager.sessionId,
               let authInfo = sdkManager.authInfo,
@@ -129,6 +133,7 @@ final class DefaultPaymentService: PaymentService {
                                                                                 orderNumber: authInfo.orderNumber,
                                                                                 expiry: authInfo.expiry,
                                                                                 frequency: authInfo.frequency,
+                                                                                resolution: resolution?.rawValue,
                                                                                 isBnplEnabled: isBnplEnabled),
                                                   to: PaymentTokenModel.self)
             

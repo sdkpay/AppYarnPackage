@@ -13,6 +13,10 @@ enum PaymentSection: Int, CaseIterable {
     case card
 }
 
+enum PaymentFeature: Int, CaseIterable {
+    case bnpl
+}
+
 protocol PaymentPresenting {
     var featureCount: Int { get }
     func identifiresForSection(_ section: PaymentSection) -> [Int]
@@ -51,6 +55,16 @@ final class PaymentPresenter: PaymentPresenting {
     private let featureToggle: FeatureToggleService
     private var secureChallengeService: SecureChallengeService
     private var finalCost: String = ""
+    
+    private var activeFeatures: [PaymentFeature] {
+        
+        var features = [PaymentFeature]()
+        
+        if partPayService.bnplplanEnabled {
+            features.append(.bnpl)
+        }
+        return features
+    }
     
     private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
     
@@ -119,9 +133,13 @@ final class PaymentPresenter: PaymentPresenting {
         
         switch section {
         case .features:
-            return partPayService.bnplplanEnabled ? [899879798797789] : []
+            return activeFeatures.map { $0.rawValue }
         case .card:
-            return userService.user?.paymentToolInfo.map({ $0.paymentId }) ?? []
+            if let paymentId = userService.selectedCard?.paymentId {
+                return [paymentId]
+            } else {
+                return []
+            }
         }
     }
     
@@ -239,7 +257,7 @@ final class PaymentPresenter: PaymentPresenting {
                 await view?.showLoading()
                 try await otpService.creteOTP()
                 self.router.presentOTPScreen(completion: { [weak self] in
-                    self?.pay()
+                    self?.pay(resolution: .confirmedGenuine)
                 })
             } catch {
                 await view?.hideLoading(animate: true)
@@ -301,7 +319,7 @@ final class PaymentPresenter: PaymentPresenting {
             self.completionManager.completeWithError(SDKError(.errorSystem))
             alertService.show(on: view,
                               type: .noInternet(retry: {
-                self.pay()
+                self.pay(resolution: nil)
             },
                                                 completion: {
                 self.alertService.close()
@@ -334,7 +352,8 @@ final class PaymentPresenter: PaymentPresenting {
         Task {
             do {
                 try await paymentService.getPaymentToken(paymentId: paymentId,
-                                                         isBnplEnabled: false)
+                                                         isBnplEnabled: false, 
+                                                         resolution: nil)
                 
                 self.view?.reloadData()
                 self.alertService.show(on: self.view,
@@ -359,7 +378,7 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func configForWaiting() {
         self.completionManager.completePay(with: .waiting)
-        let okButton = AlertButtonModel(title: Strings.Ok.title,
+        let okButton = AlertButtonModel(title: Strings.Cancel.title,
                                         type: .full) { [weak self] in
             self?.alertService.close()
         }
@@ -367,7 +386,7 @@ final class PaymentPresenter: PaymentPresenting {
                                with: ConfigGlobal.localization?.payLoading ?? "",
                                with: ConfigGlobal.localization?.payLoading ?? "",
                                with: nil,
-                               state: .waiting,
+                               state: .success,
                                buttons: [okButton],
                                completion: {
             Task {
@@ -421,36 +440,46 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func goToPay() async {
         
-        guard let paymentId = userService.selectedCard?.paymentId else { return }
-        
-        do {
-            await self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
-            
-            let challengeState = try await secureChallengeService.challenge(paymentId: paymentId, isBnplEnabled: partPayService.bnplplanSelected)
-            
-            switch challengeState {
-            case .review:
-                router.presentChallenge()
-            case .deny:
-                showSecureError()
-            case .none:
-                if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
-                    pay()
-                } else {
-                    if otpService.otpRequired {
-                        createOTP()
-                    } else {
-                        pay()
-                    }
-                }
-            }
-        } catch {
-            if let error = error as? PayError {
-                self.validatePayError(error)
-            } else if let error = error as? SDKError {
-                self.dismissWithError(error)
-            }
-        }
+//        guard let paymentId = userService.selectedCard?.paymentId else { return }
+//        
+//        do {
+//            await self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+//            
+//            let challengeState = try await secureChallengeService.challenge(paymentId: paymentId, isBnplEnabled: partPayService.bnplplanSelected)
+//            
+//            switch challengeState {
+//            case .review:
+//                await MainActor.run { router.presentChallenge(completion: { resolution in
+//                    switch self.secureChallengeService.fraudMonСheckResult?.secureChallengeFactor {
+//                    case .hint:
+//                        self.pay(resolution: resolution)
+//                    case .sms:
+//                        self.createOTP()
+//                    case .none:
+//                        break
+//                    }
+//                }) }
+//            case .deny:
+//                showSecureError()
+//            case .none:
+//                if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
+//                    pay(resolution: nil)
+//                } else {
+//                    if otpService.otpRequired {
+//                        createOTP()
+//                    } else {
+//                        pay(resolution: nil)
+//                    }
+//                }
+//            }
+//        } catch {
+//            if let error = error as? PayError {
+//                self.validatePayError(error)
+//            } else if let error = error as? SDKError {
+//                self.dismissWithError(error)
+//            }
+//        }
+        createOTP()
     }
     
     private func dismissWithError(_ error: SDKError) {
@@ -477,16 +506,17 @@ final class PaymentPresenter: PaymentPresenting {
                                completion: {})
     }
     
-    private func pay() {
+    private func pay(resolution: SecureChallengeResolution?) {
         
         guard let paymentId = userService.selectedCard?.paymentId else { return }
         
         Task {
-            
+            await self.view?.showLoading()
             await view?.setUserInteractionsEnabled(false)
             do {
                 try await paymentService.tryToPay(paymentId: paymentId,
-                                                  isBnplEnabled: partPayService.bnplplanSelected)
+                                                  isBnplEnabled: partPayService.bnplplanSelected,
+                                                  resolution: resolution)
                 self.userService.clearData()
                 self.partPayService.bnplplanSelected = false
                 self.completionManager.completePay(with: .success)

@@ -10,6 +10,7 @@ import UIKit
 protocol ChallengeRouting {
 
     func presentOTPScreen(completion: @escaping Action)
+    func openUrl(url: URL) 
 }
 
 final class ChallengeRouter: ChallengeRouting {
@@ -27,5 +28,10 @@ final class ChallengeRouter: ChallengeRouting {
             let vc = OtpAssembly(locator: self.locator).createModule(completion: completion)
             self.viewController?.contentNavigationController?.pushViewController(vc, animated: true)
         }
+    }
+    
+    @MainActor
+    func openUrl(url: URL) {
+        UIApplication.shared.open(url)
     }
 }
