@@ -49,8 +49,14 @@ final class ChallengePresenter: ChallengePresenting {
             await view?.showLoading()
             try? await secureChallengeService.sendChallengeResult(resolution: .confirmedFraud)
 
-            guard let bankUrl = bankAppManager.selectedBank?.utilLink else { return }
-            guard let cybercabinetURLIOS = secureChallengeService.fraudMonСheckResult?.formParameters?.cybercabinetURLIOS else { return }
+            guard let bankUrl = bankAppManager.selectedBank?.utilLink else {
+                await MainActor.run { completionManager.dismissCloseAction(view) }
+                return
+            }
+            guard let cybercabinetURLIOS = secureChallengeService.fraudMonСheckResult?.formParameters?.cybercabinetUrlIOS else {
+                await MainActor.run { completionManager.dismissCloseAction(view) }
+                return
+            }
             
             guard let link = URL(string: bankUrl + cybercabinetURLIOS) else { return }
             
@@ -65,8 +71,8 @@ final class ChallengePresenter: ChallengePresenting {
         view?.configView(header: params?.header,
                          subtitle: params?.text,
                          info: params?.buttonInformText,
-                         mainButton: params?.buttonСonfirmText,
-                         cancelButton: Strings.Cancel.title)
+                         mainButton: params?.buttonConfirmText,
+                         cancelButton: params?.buttonDeclineText)
     }
     
     @MainActor 

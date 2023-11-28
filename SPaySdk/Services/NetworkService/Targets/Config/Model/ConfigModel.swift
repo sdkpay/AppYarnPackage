@@ -19,7 +19,6 @@ struct ConfigModel: Codable {
     let schemas: Schemas
     let versionInfo: VersionInfo?
     let featuresToggle: [FeaturesToggle]
-    let apikey: [String]
     let images: Images
 }
 

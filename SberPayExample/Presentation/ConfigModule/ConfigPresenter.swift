@@ -7,6 +7,7 @@
 
 import UIKit
 import SPaySdkDEBUG
+import SberIdSDK
 
 enum SectionData: Int, CaseIterable {
     case config
@@ -16,7 +17,7 @@ enum SectionData: Int, CaseIterable {
 }
 
 enum CellType: String, CaseIterable {
-    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, refresh, environment, bnpl, next
+    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, refresh, environment, bnpl, next, sid
 }
 
 private struct ConfigCellTextModel {
@@ -96,7 +97,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             ]
         case .next:
             return [
-                .next
+                .next,
+                .sid
             ]
         }
     }
@@ -135,6 +137,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             return nextButtonCell(type: type)
         case .refresh:
             return refreshCell(type: type)
+        case .sid:
+            return sidButtonCell(type: type)
         }
     }
     
@@ -226,6 +230,23 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         //    self.view?.navigationController?.pushViewController(vc, animated: true)
         }
         self.view?.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func sidAuth() {
+        // Параметры для поддержки PKCE
+         
+        let request = SIDAuthRequest()
+        request.nonce = "2Y25sDS8494W7xJva2z01nL6hajMhAUXF3Xk7hXk49M484t708GD8tjPus71NViJ"
+        // Перечисление scope через пробел
+        request.scope = "openid+mapp_sso"
+        request.state = "ZwyFM6WS8yV"
+        request.redirectUri = "testapp://spay"
+        // Необязательный параметр
+        request.codeChallenge = "Ddt8Pl8ohzMFAVPlsZ04lEDKIGQdcDD_FcuxBQxAV1I"
+        // Необязательный параметр
+        request.codeChallengeMethod = "S256"
+
+        SIDManager.auth(withSberId: request, viewController: view)
     }
     
     func generateOrderIdTapped() {
@@ -477,6 +498,14 @@ extension ConfigPresenter {
         let cell = ButtonCell()
         cell.config(title: "Далее") {
             self.goForward()
+        }
+        return cell
+    }
+    
+    private func sidButtonCell(type: CellType) -> UITableViewCell {
+        let cell = ButtonCell()
+        cell.config(title: "Авторизация SID") {
+            self.sidAuth()
         }
         return cell
     }

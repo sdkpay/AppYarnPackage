@@ -7,6 +7,7 @@
 
 import UIKit
 import SPaySdkDEBUG
+import SberIdSDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
+        SIDManager.initSberID(clientId: "9f80261c-3455-4942-be48-cd1b2a2d7ba5")
         startupService.setupInitialState(with: window)
         return true
     }
@@ -26,6 +28,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if url.scheme == "testapp" && url.host == "test" {
             SPay.getAuthURL(url)
         }
+        if url.scheme == "testapp" && url.host == "spay" {
+            SIDManager.getResponseFrom(url) { response in
+                
+                let status = response.isSuccess ? "✅" : "❌"
+                
+                let text: [String: String] = [
+                    "appToken": response.appToken ?? "none",
+                    "state": response.state ?? "none",
+                    "nonce": response.nonce,
+                    "authCode": response.authCode ?? "none",
+                    "error": response.error ?? "none"
+                ]
+
+                 showAlert(title: "SID auth \(status):",
+                           text: text.json)
+            }
+        }
         return true
+    }
+    
+    private func showAlert(title: String, text: String) {
+        var topWindow: UIWindow? = UIWindow(frame: UIScreen.main.bounds)
+        
+        topWindow?.rootViewController = UIViewController()
+        topWindow?.windowLevel = UIWindow.Level.alert + 1
+        
+        let alert = UIAlertController(title: title, message: text, preferredStyle: UIAlertController.Style.alert)
+                
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: {_ in 
+            topWindow?.isHidden = true
+            topWindow = nil
+        }))
+        
+        topWindow?.makeKeyAndVisible()
+        topWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+    }
+}
+
+extension Collection {
+    var json: String {
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: self, options: [.prettyPrinted])
+            return String(data: jsonData, encoding: .utf8) ?? ""
+        } catch {
+            return "json serialization error: \(error)"
+        }
     }
 }

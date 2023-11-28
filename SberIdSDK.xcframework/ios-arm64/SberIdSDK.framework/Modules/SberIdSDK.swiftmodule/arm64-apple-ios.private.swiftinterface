@@ -1,0 +1,365 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.9 (swiftlang-5.9.0.128.108 clang-1500.0.40.1)
+// swift-module-flags: -target arm64-apple-ios13.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name SberIdSDK
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import CommonCrypto
+import DeveloperToolsSupport
+import Foundation
+import SafariServices
+import Swift
+import SwiftUI
+import UIKit.UIFont
+import UIKit
+import WebKit
+import YandexMobileMetrica
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+import os.log
+import os
+@available(iOS, unavailable, renamed: "SIDLoginButtonStyle")
+@objc public enum LoginButtonStyle : Swift.Int {
+  case green
+  case white
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum SIDLoginButtonStyle : Swift.Int {
+  case green
+  case white
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers final public class SIDAppTokenResponse : ObjectiveC.NSObject {
+  @objc final public let state: Swift.String?
+  @objc final public let authCode: Swift.String?
+  @objc deinit
+}
+public enum SIDStandType : Swift.Equatable {
+  case prom
+  case ift
+  case psi
+  case iftCloud
+  case psiCloud
+  case custom(Swift.String)
+  public static func == (a: SberIdSDK.SIDStandType, b: SberIdSDK.SIDStandType) -> Swift.Bool
+}
+@_inheritsConvenienceInitializers @available(iOS, unavailable, renamed: "SIDManager")
+@objc final public class SIDAuthManager : ObjectiveC.NSObject {
+  @objc public static func initSberID(clientId: Swift.String)
+  @objc public static func auth(withSberId request: SberIdSDK.SIDAuthRequest, viewController: UIKit.UIViewController?)
+  @objc public static func soleLoginWebPageAuth(sberIdRequest request: SberIdSDK.SIDAuthRequest, svcRedirectUrlString: Swift.String, viewController: UIKit.UIViewController) -> Swift.Bool
+  @objc public static func setClientID(_ clientId: Swift.String)
+  @objc public static func getResponseFrom(_ url: Foundation.URL, completion: (SberIdSDK.SIDAuthResponse) -> Swift.Void)
+  @objc public static func startSession(_ sessionID: Swift.String)
+  @objc public static func logoutSession()
+  public static func checkAppTokenIsValid() -> Swift.Result<Swift.Bool, SberIdSDK.SIDError>
+  public static func refreshAppToken(request: SberIdSDK.SIDAppTokenRequest, completion: @escaping (Swift.Result<SberIdSDK.SIDAppTokenResponse, SberIdSDK.SIDError>) -> Swift.Void)
+  public static func deleteAppToken()
+  @objc public static func sendOtherAuth(serviceName: Swift.String, isSuccess: SberIdSDK.SIDTrinity, userStatus: SberIdSDK.SIDTrinity)
+  @objc public static func sendOtherAuth(service: SberIdSDK.SIDAuthServiceType, isSuccess: SberIdSDK.SIDTrinity, isUserNew: SberIdSDK.SIDTrinity)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc final public class SIDManager : ObjectiveC.NSObject {
+  public static func initSberID(clientId: Swift.String, standType: SberIdSDK.SIDStandType = .prom)
+  @objc public static func auth(withSberId request: SberIdSDK.SIDAuthRequest, viewController: UIKit.UIViewController?)
+  @objc public static func soleLoginWebPageAuth(sberIdRequest request: SberIdSDK.SIDAuthRequest, svcRedirectUrlString: Swift.String, viewController: UIKit.UIViewController) -> Swift.Bool
+  @objc public static func setClientID(_ clientId: Swift.String)
+  @objc public static func getResponseFrom(_ url: Foundation.URL, completion: (SberIdSDK.SIDAuthResponse) -> Swift.Void)
+  @objc public static func startSession(_ sessionID: Swift.String)
+  @objc public static func logoutSession()
+  public static func checkAppTokenIsValid() -> Swift.Result<Swift.Bool, SberIdSDK.SIDError>
+  public static func refreshAppToken(request: SberIdSDK.SIDAppTokenRequest, completion: @escaping (Swift.Result<SberIdSDK.SIDAppTokenResponse, SberIdSDK.SIDError>) -> Swift.Void)
+  public static func deleteAppToken()
+  public static func goToPartnerSSO(partnerWebLink: Swift.String, partnerClientId: Swift.String?, partnerColor: UIKit.UIColor?, openIn: SberIdSDK.SIDOpenInType?) -> SberIdSDK.SIDError?
+  @objc public static func sendOtherAuth(serviceName: Swift.String, isSuccess: SberIdSDK.SIDTrinity, userStatus: SberIdSDK.SIDTrinity)
+  @objc public static func sendOtherAuth(service: SberIdSDK.SIDAuthServiceType, isSuccess: SberIdSDK.SIDTrinity, isUserNew: SberIdSDK.SIDTrinity)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@available(iOS, unavailable, renamed: "SIDLoginButtonTextType")
+@objc public enum LoginButtonTextType : Swift.Int {
+  case short
+  case general
+  case filling
+  case pursue
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum SIDLoginButtonTextType : Swift.Int {
+  case short
+  case general
+  case filling
+  case pursue
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum HTTPMethod : Swift.String {
+  case delete
+  case get
+  case patch
+  case post
+  case put
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public let SIDUtilsCodeChallengeMethod: Swift.String
+@_hasMissingDesignatedInitializers @objc final public class SIDUtils : ObjectiveC.NSObject {
+  @objc public static func createVerifier() -> Swift.String
+  @objc public static func createChallenge(_ verifier: Swift.String) -> Swift.String
+  @objc public static func getSSOUrlStringFrom(_ url: Foundation.URL?) -> Swift.String?
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc @_Concurrency.MainActor(unsafe) final public class SIDLoginButton : UIKit.UIButton {
+  @objc @_Concurrency.MainActor(unsafe) final public var isLoaderHidden: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) convenience public init(type: SberIdSDK.SIDLoginButtonStyle, observer: (any SberIdSDK.SIDLoginButtonObserverProtocol)? = nil)
+  @objc @_Concurrency.MainActor(unsafe) convenience public init(type: SberIdSDK.SIDLoginButtonStyle, textType: SberIdSDK.SIDLoginButtonTextType, desiredSize: CoreFoundation.CGSize, observer: (any SberIdSDK.SIDLoginButtonObserverProtocol)? = nil)
+  @objc @_Concurrency.MainActor(unsafe) final public func setBorderColor(_ color: UIKit.UIColor)
+  @objc @_Concurrency.MainActor(unsafe) final public func setCornerRadius(_ radiusStyle: SberIdSDK.SIDCornerRadiusStyle)
+  @discardableResult
+  @_Concurrency.MainActor(unsafe) final public func attemptToPersonalize() -> Swift.Bool
+  @_Concurrency.MainActor(unsafe) @objc override final public func sendAction(_ action: ObjectiveC.Selector, to target: Any?, for event: UIKit.UIEvent?)
+  @objc deinit
+}
+@available(iOS, unavailable, renamed: "SIDAuthServiceType")
+@objc public enum AuthServiceType : Swift.Int {
+  case yandex
+  case google
+  case apple
+  case facebook
+  case vk
+  case ok
+  case avito
+  case instagram
+  case gosUslugi
+  case mailRu
+  case myMoscow
+  case local
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum SIDAuthServiceType : Swift.Int {
+  case yandex
+  case google
+  case apple
+  case facebook
+  case vk
+  case ok
+  case avito
+  case instagram
+  case gosUslugi
+  case mailRu
+  case myMoscow
+  case local
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum SIDTrinity : Swift.Int {
+  case `true`
+  case `false`
+  case unknown
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct UIUtils {
+  public static var getStatusBarHeight: CoreFoundation.CGFloat {
+    get
+  }
+  public static var currentKeyWindow: UIKit.UIWindow? {
+    get
+  }
+  public static var currentActiveKeyWindow: UIKit.UIWindow? {
+    get
+  }
+  public static var keyWindowSize: CoreFoundation.CGSize {
+    get
+  }
+}
+@available(iOS, unavailable, renamed: "SIDLoginButtonObserverProtocol")
+@objc public protocol LoginButtonObserverProtocol {
+}
+@objc public protocol SIDLoginButtonObserverProtocol {
+  @objc func loginButtonWasHidden()
+}
+@objc @_inheritsConvenienceInitializers @objcMembers final public class SIDAppTokenRequest : ObjectiveC.NSObject {
+  @objc final public var scope: Swift.String
+  @objc final public var state: Swift.String
+  @objc final public var nonce: Swift.String
+  @objc final public var redirectUri: Swift.String
+  @objc final public var codeChallenge: Swift.String?
+  @objc final public var codeChallengeMethod: Swift.String?
+  @objc public init(scope: Swift.String, state: Swift.String, nonce: Swift.String, redirectUri: Swift.String, codeChallenge: Swift.String?, codeChallengeMethod: Swift.String?)
+  @objc override dynamic public init()
+  @objc deinit
+}
+public enum SIDOpenInType : Swift.String, Swift.Codable {
+  case webView
+  case browser
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers public class SIDError : Swift.Error {
+  final public let message: Swift.String?
+  final public let type: SberIdSDK.SIDErrorType
+  @objc deinit
+}
+public enum SIDErrorType {
+  case serviceError
+  case serviceNotAvailable
+  case requiredRelogin
+  case unknown
+  case linkIsNotValid
+  public static func == (a: SberIdSDK.SIDErrorType, b: SberIdSDK.SIDErrorType) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @objcMembers final public class SIDAuthRequest : ObjectiveC.NSObject {
+  @objc public static let challengeMethod: Swift.String
+  @objc final public var scope: Swift.String
+  @objc final public var state: Swift.String
+  @objc final public var nonce: Swift.String
+  @objc final public var redirectUri: Swift.String
+  @objc final public var ssoBaseUrl: Swift.String?
+  @objc final public var codeChallenge: Swift.String?
+  @objc final public var codeChallengeMethod: Swift.String?
+  @objc final public var loginHint: Swift.String?
+  @objc public init(scope: Swift.String, state: Swift.String, nonce: Swift.String, redirectUri: Swift.String, ssoBaseUrl: Swift.String? = nil, codeChallenge: Swift.String?, codeChallengeMethod: Swift.String?, loginHint: Swift.String? = nil)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@available(iOS, unavailable, renamed: "SIDCornerRadiusStyle")
+@objc public enum CornerRadiusStyle : Swift.Int {
+  case no
+  case normal
+  case max
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum SIDCornerRadiusStyle : Swift.Int {
+  case no
+  case normal
+  case max
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers final public class SIDAuthResponse : ObjectiveC.NSObject {
+  @objc final public var isSuccess: Swift.Bool {
+    get
+  }
+  @objc final public var nonce: Swift.String {
+    get
+  }
+  @objc final public var state: Swift.String? {
+    get
+  }
+  @objc final public var authCode: Swift.String? {
+    get
+  }
+  @objc final public var appToken: Swift.String? {
+    get
+  }
+  @objc final public var error: Swift.String? {
+    get
+  }
+  @objc deinit
+}
+@objc public protocol SIDSafariViewControllerDelegate : SafariServices.SFSafariViewControllerDelegate {
+  @objc var safariViewController: SafariServices.SFSafariViewController? { get set }
+}
+@_hasMissingDesignatedInitializers final public class DebugMethods {
+  public static var savedConfigJson: Swift.String {
+    get
+  }
+  public static func saveConfigJson(_ data: Foundation.Data?)
+  public static func setCustomOidcLink(_ link: Swift.String)
+  public static func removeCustomOidcLink()
+  public static func setStandType(standType: SberIdSDK.SIDStandType)
+  public static func clearFlagSberIdAppTokenHasCalled()
+  @objc deinit
+}
+@available(iOS, unavailable, renamed: "SIDLoginButtonStyle")
+extension SberIdSDK.LoginButtonStyle : Swift.Equatable {}
+@available(iOS, unavailable, renamed: "SIDLoginButtonStyle")
+extension SberIdSDK.LoginButtonStyle : Swift.Hashable {}
+@available(iOS, unavailable, renamed: "SIDLoginButtonStyle")
+extension SberIdSDK.LoginButtonStyle : Swift.RawRepresentable {}
+extension SberIdSDK.SIDLoginButtonStyle : Swift.Equatable {}
+extension SberIdSDK.SIDLoginButtonStyle : Swift.Hashable {}
+extension SberIdSDK.SIDLoginButtonStyle : Swift.RawRepresentable {}
+@available(iOS, unavailable, renamed: "SIDLoginButtonTextType")
+extension SberIdSDK.LoginButtonTextType : Swift.Equatable {}
+@available(iOS, unavailable, renamed: "SIDLoginButtonTextType")
+extension SberIdSDK.LoginButtonTextType : Swift.Hashable {}
+@available(iOS, unavailable, renamed: "SIDLoginButtonTextType")
+extension SberIdSDK.LoginButtonTextType : Swift.RawRepresentable {}
+extension SberIdSDK.SIDLoginButtonTextType : Swift.Equatable {}
+extension SberIdSDK.SIDLoginButtonTextType : Swift.Hashable {}
+extension SberIdSDK.SIDLoginButtonTextType : Swift.RawRepresentable {}
+extension SberIdSDK.HTTPMethod : Swift.Equatable {}
+extension SberIdSDK.HTTPMethod : Swift.Hashable {}
+extension SberIdSDK.HTTPMethod : Swift.RawRepresentable {}
+@available(iOS, unavailable, renamed: "SIDAuthServiceType")
+extension SberIdSDK.AuthServiceType : Swift.Equatable {}
+@available(iOS, unavailable, renamed: "SIDAuthServiceType")
+extension SberIdSDK.AuthServiceType : Swift.Hashable {}
+@available(iOS, unavailable, renamed: "SIDAuthServiceType")
+extension SberIdSDK.AuthServiceType : Swift.RawRepresentable {}
+extension SberIdSDK.SIDAuthServiceType : Swift.Equatable {}
+extension SberIdSDK.SIDAuthServiceType : Swift.Hashable {}
+extension SberIdSDK.SIDAuthServiceType : Swift.RawRepresentable {}
+extension SberIdSDK.SIDTrinity : Swift.Equatable {}
+extension SberIdSDK.SIDTrinity : Swift.Hashable {}
+extension SberIdSDK.SIDTrinity : Swift.RawRepresentable {}
+extension SberIdSDK.SIDOpenInType : Swift.Equatable {}
+extension SberIdSDK.SIDOpenInType : Swift.Hashable {}
+extension SberIdSDK.SIDOpenInType : Swift.RawRepresentable {}
+extension SberIdSDK.SIDErrorType : Swift.Equatable {}
+extension SberIdSDK.SIDErrorType : Swift.Hashable {}
+@available(iOS, unavailable, renamed: "SIDCornerRadiusStyle")
+extension SberIdSDK.CornerRadiusStyle : Swift.Equatable {}
+@available(iOS, unavailable, renamed: "SIDCornerRadiusStyle")
+extension SberIdSDK.CornerRadiusStyle : Swift.Hashable {}
+@available(iOS, unavailable, renamed: "SIDCornerRadiusStyle")
+extension SberIdSDK.CornerRadiusStyle : Swift.RawRepresentable {}
+extension SberIdSDK.SIDCornerRadiusStyle : Swift.Equatable {}
+extension SberIdSDK.SIDCornerRadiusStyle : Swift.Hashable {}
+extension SberIdSDK.SIDCornerRadiusStyle : Swift.RawRepresentable {}

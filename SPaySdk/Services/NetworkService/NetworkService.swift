@@ -97,7 +97,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
             return try self.decodeResponse(data: result.data, response: result.response)
         } catch {
-            throw self.systemError(error)
+            throw error
         }
     }
     
@@ -110,7 +110,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
             return try self.decodeResponse(data: result.data, response: result.response, type: to)
         } catch {
-            throw self.systemError(error)
+            throw error
         }
     }
     
@@ -121,7 +121,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
             return try self.decodeResponse(data: result.data, response: result.response, type: String.self)
         } catch {
-            throw self.systemError(error)
+            throw error
         }
     }
     
@@ -136,7 +136,7 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
             return try self.decodeResponseFull(data: result.data, response: result.response, type: to)
         } catch {
-            throw self.systemError(error)
+            throw error
         }
     }
     

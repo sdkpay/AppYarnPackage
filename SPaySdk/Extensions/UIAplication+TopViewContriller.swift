@@ -9,11 +9,11 @@ import UIKit
 
 extension UIApplication {
     var topViewController: UIViewController? {
-        if keyWindow?.rootViewController == nil {
-            return keyWindow?.rootViewController
+        if self.windows.first(where: { $0.isKeyWindow })?.rootViewController == nil {
+            return self.windows.first(where: { $0.isKeyWindow })?.rootViewController
         }
         
-        var pointedViewController = keyWindow?.rootViewController
+        var pointedViewController = self.windows.first(where: { $0.isKeyWindow })?.rootViewController
         
         while pointedViewController?.presentedViewController != nil {
             switch pointedViewController?.presentedViewController {

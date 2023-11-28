@@ -149,7 +149,7 @@ final class DefaultButton: ActionButton {
     }
 
     private func applyScheme() {
-        titleLabel?.font = .bodi1
+        titleLabel?.font = .medium5
         let selected = scheme.selected
         let normal = scheme.normal
         let disabled = scheme.disabled

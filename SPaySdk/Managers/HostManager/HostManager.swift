@@ -10,6 +10,7 @@ import Foundation
 enum HostSettings {
     case main
     case safepayonline
+    case sid
 }
 
 private enum Host: String {
@@ -19,6 +20,7 @@ private enum Host: String {
     case ift = "https://ift.gate1.spaymentsplus.ru"
     case psi = "https://psi.gate1.spaymentsplus.ru"
     case prom = "https://gate1.spaymentsplus.ru"
+    case sid = "https://id-ift.sber.ru"
     
     var url: URL {
         URL(string: rawValue) ?? URL(string: "https://www.google.com/")!
@@ -68,6 +70,8 @@ final class DefaultHostManager: HostManager {
             default:
                 return Host.safepayonlineIft.url
             }
+        case .sid:
+            return Host.sid.url
         }
     }
 

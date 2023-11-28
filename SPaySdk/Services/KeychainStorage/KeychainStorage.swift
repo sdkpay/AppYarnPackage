@@ -9,8 +9,35 @@ import Foundation
 import Security
 
 enum StorageKey: String {
+    
     case cookieData
     case cookieId
+    case appToken
+}
+
+enum StorageMode {
+    
+    case local
+    case sid
+    
+    var service: String {
+        switch self {
+        case .local:
+            return Bundle.sdkBundle.displayName ?? "Default"
+        case .sid:
+            return "sber_id_app_token"
+        }
+    }
+    
+    var group: String? {
+        switch self {
+        case .local:
+            return nil
+        case .sid:
+            let appIdPrefix = Bundle.main.object(forInfoDictionaryKey: "AppIdentifierPrefix") as? String ?? ""
+            return appIdPrefix + "ru.sberbank.onlineiphone.shared"
+        }
+    }
 }
 
 enum KeychainError: Error {
@@ -42,26 +69,47 @@ final class KeychainStorageAssembly: Assembly {
 }
 
 protocol KeychainStorage {
-    func exists(_ key: StorageKey) throws -> Bool
+    func exists(_ key: StorageKey, mode: StorageMode) throws -> Bool
     func set(_ value: String, _ key: StorageKey) throws
     func setData(_ value: Data, for key: StorageKey) throws
-    func getData(for key: StorageKey) throws -> Data?
-    func get(_ key: StorageKey) throws -> String?
+    func getData(for key: StorageKey, mode: StorageMode) throws -> Data?
+    func get(_ key: StorageKey, mode: StorageMode) throws -> String?
     func delete(_ key: String) throws
     func deleteAll() throws
+}
+
+extension KeychainStorage {
+    func exists(_ key: StorageKey, mode: StorageMode = .local) throws -> Bool {
+        try exists(key, mode: mode)
+    }
+    
+    func getData(for key: StorageKey, mode: StorageMode = .local) throws -> Data? {
+        try getData(for: key, mode: mode)
+    }
+    
+    func get(_ key: StorageKey, mode: StorageMode = .local) throws -> String? {
+        try get(key, mode: mode)
+    }
 }
 
 final class DefaultKeychainStorage: KeychainStorage {
     
     private let service = Bundle.sdkBundle.displayName ?? "Default"
     
-    func exists(_ key: StorageKey) throws -> Bool {
-        let status = SecItemCopyMatching([
+    func exists(_ key: StorageKey, mode: StorageMode) throws -> Bool {
+        
+        var cfDictionaty: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: key.rawValue,
-            kSecAttrService: service,
+            kSecAttrService: mode.service,
             kSecReturnData: false
-        ] as NSDictionary, nil)
+        ]
+        
+        if let group = mode.group {
+            cfDictionaty[kSecAttrAccessGroup] = group
+        }
+        
+        let status = SecItemCopyMatching(cfDictionaty as CFDictionary, nil)
         
         if status == errSecSuccess {
             return true
@@ -88,14 +136,23 @@ final class DefaultKeychainStorage: KeychainStorage {
         }
     }
     
-    func getData(for key: StorageKey) throws -> Data? {
+    func getData(for key: StorageKey, mode: StorageMode) throws -> Data? {
+        
         var result: AnyObject?
-        let status = SecItemCopyMatching([
+        
+        var cfDictionaty: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: key.rawValue,
-            kSecAttrService: service,
+            kSecAttrService: mode.service,
             kSecReturnData: true
-        ] as NSDictionary, &result)
+        ]
+        
+        if let group = mode.group {
+            cfDictionaty[kSecAttrAccessGroup] = group
+        }
+        
+        let status = SecItemCopyMatching(cfDictionaty as CFDictionary, &result)
+ 
         if status == errSecSuccess {
             return result as? Data
         } else if status == errSecItemNotFound {
@@ -105,9 +162,9 @@ final class DefaultKeychainStorage: KeychainStorage {
         }
     }
     
-    func get(_ key: StorageKey) throws -> String? {
+    func get(_ key: StorageKey, mode: StorageMode) throws -> String? {
         do {
-            guard let data = try getData(for: key) else { return nil }
+            guard let data = try getData(for: key, mode: mode) else { return nil }
             return String(data: data, encoding: .utf8)
         } catch {
             throw error

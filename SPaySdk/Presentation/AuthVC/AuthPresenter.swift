@@ -9,9 +9,11 @@ import UIKit
 
 protocol AuthPresenting {
     func viewDidLoad()
+    func webViewGoTo(url: URL)
 }
 
 final class AuthPresenter: AuthPresenting {
+    
     weak var view: (IAuthVC & ContentVC)?
 
     private let analytics: AnalyticsService
@@ -26,9 +28,11 @@ final class AuthPresenter: AuthPresenting {
     private let contentLoadManager: ContentLoadManager
     private let enviromentManager: EnvironmentManager
     private let versionСontrolManager: VersionСontrolManager
+    private let seamlessAuthService: SeamlessAuthService
     
     init(_ router: AuthRouter,
          authService: AuthService,
+         seamlessAuthService: SeamlessAuthService,
          sdkManager: SDKManager,
          completionManager: CompletionManager,
          analytics: AnalyticsService,
@@ -51,6 +55,7 @@ final class AuthPresenter: AuthPresenting {
         self.bankManager = bankManager
         self.timeManager = timeManager
         self.enviromentManager = enviromentManager
+        self.seamlessAuthService = seamlessAuthService
         self.timeManager.startTraking()
     }
     
@@ -163,6 +168,8 @@ final class AuthPresenter: AuthPresenting {
                     await appAuth()
                 case .refresh:
                     await auth()
+                case .sid:
+                    await seamlessAuth()
                 }
             } catch {
                 if let error = error as? SDKError {
@@ -220,6 +227,29 @@ final class AuthPresenter: AuthPresenting {
         } catch {
             if let error = error as? SDKError {
                 validateAuthError(error: error)
+            }
+        }
+    }
+    
+    private func seamlessAuth() async {
+        do {
+            let url = try await seamlessAuthService.getTransitTokenUrl()
+            view?.goTo(url: url)
+        } catch {
+            await appAuth()
+        }
+    }
+    
+    func webViewGoTo(url: URL) {
+        do {
+            if try seamlessAuthService.isValideAuth(from: url) {
+                Task {
+                    await auth()
+                }
+            }
+        } catch {
+            Task {
+                await appAuth()
             }
         }
     }

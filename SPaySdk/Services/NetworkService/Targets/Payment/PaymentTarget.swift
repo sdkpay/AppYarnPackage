@@ -65,7 +65,7 @@ extension PaymentTarget: TargetType {
             ]
             
             if let resolution {
-                var fraudMonInfo: [String: Any] = [
+                let fraudMonInfo: [String: Any] = [
                     "resolution": resolution
                 ]
                 

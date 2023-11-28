@@ -35,6 +35,9 @@ enum AuthTarget {
               merchantLogin: String?,
               resourceName: String,
               authCookie: [HTTPCookie])
+    case tokenExchange(token: String,
+                       resource: String,
+                       clientId: String)
     case revokeToken(authCookie: [HTTPCookie])
 }
 
@@ -49,6 +52,8 @@ extension AuthTarget: TargetType {
             return "/sberpay-auth/v2/sdkAuth"
         case .revokeToken:
             return "sdk-gateway/v1/revokeTokenSdk"
+        case .tokenExchange:
+            return "/token-exchange"
         }
     }
     
@@ -61,6 +66,8 @@ extension AuthTarget: TargetType {
         case .auth:
             return .post
         case .revokeToken:
+            return .post
+        case .tokenExchange:
             return .post
         }
     }
@@ -202,6 +209,24 @@ extension AuthTarget: TargetType {
             return .requestWithParametersAndCookie(nil, bodyParameters: params, cookies: authCookie)
         case let .revokeToken(authCookie):
             return .requestWithParametersAndCookie(nil, bodyParameters: nil, cookies: authCookie)
+        case let .tokenExchange(token, resource, clientId):
+
+            let type: [String: Any] = [
+                "type": "openid"
+            ]
+            
+            let params: [String: Any] = [
+                "resource": resource,
+                "scope": [
+                    type
+                ],
+                "subject_token": token,
+                "resource_client_id": clientId,
+                "subject_token_type": "SBERID_APP_TOKEN",
+                "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange"
+            ]
+            
+            return .requestWithParameters(nil, bodyParameters: params)
         }
     }
     
@@ -218,6 +243,8 @@ extension AuthTarget: TargetType {
         case .auth:
             return try? Data(contentsOf: Files.authJson.url)
         case .revokeToken:
+            return nil
+        case .tokenExchange:
             return nil
         }
     }

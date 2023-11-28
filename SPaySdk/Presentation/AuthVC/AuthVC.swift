@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import WebKit
 
 private extension CGFloat {
     static let logoWidth = 96.0
@@ -13,11 +14,21 @@ private extension CGFloat {
     static let heightMultiple = 0.65
 }
 
-protocol IAuthVC {}
+protocol IAuthVC {
+    func goTo(url: URL)
+}
 
 final class AuthVC: ContentVC, IAuthVC {
     
     private let presenter: AuthPresenting
+    
+    private lazy var webView: WKWebView = {
+        let configuration = WKWebViewConfiguration()
+        configuration.websiteDataStore = .default()
+        let view = WKWebView(frame: .zero, configuration: configuration)
+        view.navigationDelegate = self
+        return view
+    }()
     
     private lazy var logoImage: UIImageView = {
         let imageView = UIImageView()
@@ -55,6 +66,11 @@ final class AuthVC: ContentVC, IAuthVC {
         SBLogger.log(.stop(obj: self))
     }
     
+    func goTo(url: URL) {
+        let request = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy)
+        webView.load(request)
+    }
+    
     private func setupUI() {
         
         view.height(.equal, to: UIScreen.main.bounds.height * .heightMultiple)
@@ -64,4 +80,31 @@ final class AuthVC: ContentVC, IAuthVC {
             .size(.equal, to: .init(width: .logoWidth, height: .logoHeight))
             .centerInSuperview()
     }
+}
+
+extension AuthVC: WKNavigationDelegate {
+    
+    func webView(_ webView: WKWebView,
+                 didReceive challenge: URLAuthenticationChallenge,
+                 completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        DispatchQueue.global(qos: .userInteractive).async {
+            CertificateValidator.validate(defaultHandling: false,
+                                          challenge: challenge,
+                                          completionHandler: completionHandler)
+        }
+    }
+        
+        func webView(_ webView: WKWebView,
+                     decidePolicyFor navigationAction: WKNavigationAction,
+                     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            
+            guard let url = navigationAction.request.url else {
+                decisionHandler(.cancel)
+                return }
+            
+            SBLogger.log("🔗 Sid go to: \(url.absoluteString)")
+            presenter.webViewGoTo(url: url)
+            decisionHandler(.allow)
+        }
 }

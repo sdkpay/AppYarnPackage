@@ -21,6 +21,9 @@ packages:
    from: 8.0.0
   FingerprintPackage:
     path: ./FingerprintPack
+  YandexMobileMetrica:
+   url: https://github.com/yandexmobile/metrica-sdk-ios
+   from: 4.5.2
 
 targetTemplates:
   Framework:
@@ -52,6 +55,7 @@ targetTemplates:
       - package: Dynatrace-Static
       - package: FingerprintPackage
       - sdk: libresolv.9.tbd
+      - framework: ./Lottie.xcframework
     info:
       path: ./SPaySdk/SupportingFiles/Info.plist
       properties:
@@ -83,9 +87,11 @@ targets:
       SWIFT_OBJC_BRIDGING_HEADER: SberPayExample/Presentation/ObjcCartVC/SberPayExample-Bridging-Header.h
     dependencies:
       - package: IQKeyboardManagerSwift
+      - package: YandexMobileMetrica
       - target: SPaySdkDEBUG
         link: true
-    preBuildScripts: 
+      - framework: ./SberIdSDK.xcframework
+    preBuildScripts:
       - name: Swiftlint
         script: |
                 export PATH="$PATH:/opt/homebrew/bin"
@@ -136,6 +142,10 @@ targets:
             cms-res.online.sberbank.ru:
               NSExceptionAllowsInsecureHTTPLoads: true
         UIFileSharingEnabled: true
+        LSApplicationQueriesSchemes:
+            - sberbankidexternallogin
+            - sbolidexternallogin
+        
   SPaySdk:
     templates:
       - SPaySdk

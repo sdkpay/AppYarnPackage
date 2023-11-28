@@ -25,7 +25,7 @@ final class InfoAlertView: UIView {
     
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.font = .bodi4
+        view.font = .medium4
         view.numberOfLines = 3
         view.textColor = .main
         view.textAlignment = .center

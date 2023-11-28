@@ -146,11 +146,10 @@ final class DefaultPaymentService: PaymentService {
             
             return token
         } catch {
-            
             if let error = error as? SDKError {
                 self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                     type: .payment(type: .paymentToken))
-                throw self.parseError(error)
+                throw error
             }
             
             throw error

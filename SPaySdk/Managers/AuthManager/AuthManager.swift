@@ -10,6 +10,7 @@ import Foundation
 enum AuthMethod {
     case refresh
     case bank
+    case sid
 }
 
 final class AuthManagerAssembly: Assembly {
@@ -22,6 +23,7 @@ final class AuthManagerAssembly: Assembly {
 }
 
 protocol AuthManager {
+    
     var orderNumber: String? { get set }
     var apiKey: String? { get set }
     var sessionId: String? { get set }
@@ -32,9 +34,11 @@ protocol AuthManager {
     var userInfo: UserInfoModel? { get set }
     var authMethod: AuthMethod? { get set }
     var ipAddress: String? { get set }
+    var authModel: AuthModel? { get set }
 }
 
 final class DefaultAuthManager: AuthManager {
+    
     var orderNumber: String?
     var apiKey: String?
     var sessionId: String?
@@ -49,4 +53,5 @@ final class DefaultAuthManager: AuthManager {
         }
     }
     var isOtpNeed: Bool?
+    var authModel: AuthModel?
 }

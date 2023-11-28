@@ -23,7 +23,8 @@ final class AuthServiceAssembly: Assembly {
                                                           cookieStorage: container.resolve(),
                                                           parsingErrorAnaliticManager: container.resolve(),
                                                           featureToggleService: container.resolve(),
-                                                          buildSettings: container.resolve())
+                                                          buildSettings: container.resolve(),
+                                                          seamlessAuthService: container.resolve())
             return service
         }
     }
@@ -60,6 +61,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var baseRequestManager: BaseRequestManager
     private var cookieStorage: CookieStorage
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
+    private let seamlessAuthService: SeamlessAuthService
     private var appAuthCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
     
@@ -89,7 +91,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
          cookieStorage: CookieStorage,
          parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          featureToggleService: FeatureToggleService,
-         buildSettings: BuildSettings) {
+         buildSettings: BuildSettings,
+         seamlessAuthService: SeamlessAuthService) {
         self.analytics = analytics
         self.network = network
         self.sdkManager = sdkManager
@@ -102,6 +105,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.buildSettings = buildSettings
         self.storage = storage
         self.cookieStorage = cookieStorage
+        self.seamlessAuthService = seamlessAuthService
         self.featureToggleService = featureToggleService
         self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         SBLogger.log(.start(obj: self))
@@ -184,6 +188,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             if refreshIsActive &&
                 featureToggleService.isEnabled(.refresh) && tokenInStorage {
                 self.authManager.authMethod = .refresh
+            } else if seamlessAuthService.isReadyForSeamless() {
+                self.authManager.authMethod = .sid
             } else {
                 self.authManager.authMethod = .bank
             }

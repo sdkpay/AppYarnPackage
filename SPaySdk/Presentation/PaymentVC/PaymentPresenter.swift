@@ -223,6 +223,8 @@ final class PaymentPresenter: PaymentPresenting {
                 }
             case .bank:
                 getListCards()
+            case .sid:
+                getListCards()
             }
         }
     }

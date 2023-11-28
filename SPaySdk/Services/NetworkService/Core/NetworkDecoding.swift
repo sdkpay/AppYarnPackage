@@ -19,7 +19,7 @@ protocol ResponseDecoder {
                                                                  headers: HTTPHeaders,
                                                                  cookies: [HTTPCookie])
     func decodeParametersFrom(url: URL) -> Result<BankModel, SDKError>
-    func systemError(_ error: Error) -> SDKError
+    func systemError(_ error: Error) -> Error
 }
 
 extension ResponseDecoder {
@@ -139,7 +139,7 @@ extension ResponseDecoder {
         return .success(BankModel(dictionary: parameters))
     }
     
-    func systemError(_ error: Error) -> SDKError {
+    func systemError(_ error: Error) -> Error {
         
         var sslErrors: [URLError.Code] {
             return [
@@ -165,7 +165,7 @@ extension ResponseDecoder {
         } else if timeOutErrors.contains(where: { $0.rawValue == error._code }) {
             return SDKError(.timeOut, httpCode: error._code)
         } else {
-            return SDKError(with: error)
+            return error
         }
     }
 }

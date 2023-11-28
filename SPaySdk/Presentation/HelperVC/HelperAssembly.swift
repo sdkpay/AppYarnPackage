@@ -30,6 +30,7 @@ final class HelperAssembly {
     private func modulePresenter(_ router: AuthRouter) -> AuthPresenter {
         AuthPresenter(router,
                       authService: locator.resolve(),
+                      seamlessAuthService: locator.resolve(),
                       sdkManager: locator.resolve(),
                       completionManager: locator.resolve(),
                       analytics: locator.resolve(),

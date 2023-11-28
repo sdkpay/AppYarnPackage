@@ -29,6 +29,7 @@ final class AssemblyManager {
         RemoteConfigServiceAssembly(),
         SDKManagerAssembly(),
         AlertServiceAssembly(),
+        SeamlessAuthServiceAssembly(),
         AuthServiceAssembly(),
         OTPManagerAssembly(),
         KeyboardManagerAssembly(),

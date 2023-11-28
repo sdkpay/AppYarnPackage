@@ -98,7 +98,6 @@ final class HelperViewBuilder {
         return view
     }()
 
-    
     private lazy var closeButton: ActionButton = {
         let view = ActionButton()
         view.setTitle(Strings.BankAppPicker.close, for: .normal)
@@ -142,4 +141,3 @@ final class HelperViewBuilder {
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Consts.BackButton.bottomOffSet)
     }
 }
-

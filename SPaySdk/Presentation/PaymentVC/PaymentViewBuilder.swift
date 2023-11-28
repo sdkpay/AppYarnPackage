@@ -130,7 +130,6 @@ final class PaymentViewBuilder {
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.right, toSuperviewEdge: .right)
-            .touchEdge(.bottom, toEdge: .top, ofView: collectionView, withInset: Cost.Stack.bottom)
             .touchEdge(.top, toEdge: .bottom, ofView: logoImageView, withInset: Cost.Stack.top)
     }
 }

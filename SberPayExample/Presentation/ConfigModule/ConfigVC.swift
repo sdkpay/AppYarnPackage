@@ -90,7 +90,6 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
         loader.center = view.center
         view.addSubview(loader)
         view.bringSubviewToFront(loader)
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         loader.startAnimating()
     }
     

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-//@_implementationOnly import Lottie
 
 private extension CGFloat {
     static let logoWidth = 72.0
@@ -25,13 +24,6 @@ private extension TimeInterval {
 extension Int {
     static let backgroundViewTag = 888
     static let stickViewTag = 555
-}
-
-final class ViewCache {
-    
-//    var view: LottieAnimationView?
-    
-    static let shared = ViewCache()
 }
 
 class ContentVC: LoggableVC {
@@ -58,7 +50,7 @@ class ContentVC: LoggableVC {
     
     private lazy var backgroundView: UIImageView = {
         let view = UIImageView()
-//        view.image = Asset.background.image
+        view.image = Asset.background.image
         view.tag = .stickViewTag
         view.contentMode = .scaleAspectFill
         return view
