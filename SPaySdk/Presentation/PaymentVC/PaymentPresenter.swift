@@ -348,21 +348,20 @@ final class PaymentPresenter: PaymentPresenting {
             return
         }
         
-        Task {
+        Task { @MainActor [alertService] in
             do {
                 try await paymentService.getPaymentToken(paymentId: paymentId,
                                                          isBnplEnabled: false, 
                                                          resolution: nil)
                 
                 self.view?.reloadData()
-                self.alertService.show(on: self.view,
-                                       type: .partPayError(fullPay: {
+                alertService.show(on: self.view, type: .partPayError(fullPay: {
                     Task {
                         await self.goToPay()
                     }
                 }, back: {
                     Task {
-                        await self.view?.hideLoading(animate: true)
+                        self.view?.hideLoading(animate: true)
                     }
                 }))
             } catch {

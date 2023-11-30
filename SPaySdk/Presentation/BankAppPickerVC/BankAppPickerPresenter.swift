@@ -68,12 +68,12 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     }
     
     private func appAuthMethod() {
-        Task {
+        Task { @MainActor [view] in
             do {
                 try await authService.appAuth()
                 removeObserver()
                 completion?()
-                await view?.contentNavigationController?.popViewController(animated: true)
+                view?.contentNavigationController?.popViewController(animated: true)
             } catch {
                 bankManager.selectedBank = nil
                 checkTappedAppsCount()
