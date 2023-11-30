@@ -252,28 +252,24 @@ final class PaymentPresenter: PaymentPresenting {
         }
     }
     
-    private func createOTP() {
-        
-        Task {
-            do {
-                await view?.showLoading()
-                try await otpService.creteOTP()
-                self.router.presentOTPScreen(completion: { [weak self] in
-                    self?.pay(resolution: .confirmedGenuine)
-                })
-            } catch {
-                await view?.hideLoading(animate: true)
+    private func createOTP() async {
+        do {
+            await view?.showLoading()
+            try await otpService.creteOTP()
+            
+            try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<Void, Error>) -> Void in
                 
-                if let error = error as? SDKError {
-                    if error.represents(.noInternetConnection) {
-                        self.alertService.show(on: self.view,
-                                               type: .noInternet(retry: { self.createOTP() },
-                                                                 completion: { self.dismissWithError(error) }))
-                    } else {
-                        self.alertService.show(on: self.view,
-                                               type: .defaultError(completion: { self.dismissWithError(error) }))
-                    }
-                }
+                self.router.presentOTPScreen(completion: {
+                    inCont.resume()
+                })
+            })
+        } catch {
+            
+            await view?.hideLoading(animate: true)
+            
+            if let error = error as? SDKError {
+                self.alertService.show(on: self.view,
+                                       type: .defaultError(completion: { self.dismissWithError(error) }))
             }
         }
     }
@@ -443,36 +439,34 @@ final class PaymentPresenter: PaymentPresenting {
     private func goToPay() async {
         
         guard let paymentId = userService.selectedCard?.paymentId else { return }
+        
+        if otpService.otpRequired {
+            await createOTP()
+        }
 
         do {
             await self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
 
-            let challengeState = try await secureChallengeService.challenge(paymentId: paymentId, isBnplEnabled: partPayService.bnplplanSelected)
-
+            let challengeState = try await secureChallengeService.challenge(paymentId: paymentId, 
+                                                                            isBnplEnabled: partPayService.bnplplanSelected)
+            
             switch challengeState {
             case .review:
-                await MainActor.run { router.presentChallenge(completion: { resolution in
-                    switch self.secureChallengeService.fraudMonСheckResult?.secureChallengeFactor {
-                    case .hint:
-                        self.pay(resolution: resolution)
-                    case .sms:
-                        self.createOTP()
-                    case .none:
-                        break
-                    }
-                }) }
+               let resolution = await getChallengeResolution()
+                
+                switch secureChallengeService.fraudMonСheckResult?.secureChallengeFactor {
+                case .hint:
+                    self.pay(resolution: resolution)
+                case .sms:
+                    await self.createOTP()
+                    self.pay(resolution: resolution)
+                case .none:
+                    showSecureError()
+                }
             case .deny:
                 showSecureError()
-            case .none:
-                if sdkManager.authInfo?.orderNumber != nil || authManager.authMethod == .bank || authService.bankCheck {
-                    pay(resolution: nil)
-                } else {
-                    if otpService.otpRequired {
-                        createOTP()
-                    } else {
-                        pay(resolution: nil)
-                    }
-                }
+            case nil:
+                pay(resolution: nil)
             }
         } catch {
             if let error = error as? PayError {
@@ -480,6 +474,22 @@ final class PaymentPresenter: PaymentPresenting {
             } else if let error = error as? SDKError {
                 self.dismissWithError(error)
             }
+        }
+    }
+    
+    private func getChallengeResolution() async -> SecureChallengeResolution? {
+        
+        do {
+            let result = try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<SecureChallengeResolution?, Error>) -> Void in
+                
+                router.presentChallenge(completion: { resolution in
+                    inCont.resume(with: .success(resolution))
+                })
+            })
+            
+            return result
+        } catch {
+            return nil
         }
     }
     
