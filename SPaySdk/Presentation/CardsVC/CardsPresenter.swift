@@ -17,7 +17,9 @@ protocol CardsPresenting {
 }
 
 final class CardsPresenter: CardsPresenting {
+    
     weak var view: (ICardsVC & ContentVC)?
+    
     var cardsCount: Int {
         cards.count
     }
@@ -54,7 +56,7 @@ final class CardsPresenter: CardsPresenting {
     func model(for indexPath: IndexPath) -> CardCellModel {
         let card = cards[indexPath.row]
         
-        var number = card.cardNumber.card
+        var number = "\(card.productName ?? "none") \(card.cardNumber.card)"
         
         if let count = card.countAdditionalCards, featureToggle.isEnabled(.compoundWallet) {
             number += Strings.Payment.Cards.CompoundWallet.title(String(count).addEnding(ends: [
@@ -64,8 +66,8 @@ final class CardsPresenter: CardsPresenting {
             ]))
         }
         
-        return CardCellModel(title: card.productName ?? "",
-                             number: number,
+        return CardCellModel(title: card.amountData.amountInt.price(.RUB),
+                             subtitle: number,
                              selected: card.paymentId == selectedId,
                              cardURL: card.cardLogoUrl)
     }

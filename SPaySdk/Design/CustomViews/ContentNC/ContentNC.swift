@@ -8,7 +8,7 @@
 import UIKit
 
 private extension TimeInterval {
-    static let animationDuration: TimeInterval = 0.45
+    static let animationDuration: TimeInterval = 0.35
 }
 
 final class ContentNC: UIViewController {
@@ -110,11 +110,11 @@ final class ContentNC: UIViewController {
             return
         }
         var fomShimView = UIView()
-        fomShimView.backgroundColor = .backgroundPrimary
+        fomShimView.backgroundColor = .backgroundSecondary
         fomShimView.alpha = 0
         
         var toShimView = UIView()
-        toShimView.backgroundColor = .backgroundPrimary
+        toShimView.backgroundColor = .backgroundSecondary
         toShimView.alpha = 1
         
         addedConstraint(fomShimView: &fomShimView, toShimView: &toShimView, from: from, to: to)

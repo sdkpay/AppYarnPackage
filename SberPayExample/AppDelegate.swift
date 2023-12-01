@@ -11,10 +11,13 @@ import SberIdSDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
     var window: UIWindow?
+    
     private lazy var startupService = StartupService()
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
         SIDManager.initSberID(clientId: "9f80261c-3455-4942-be48-cd1b2a2d7ba5")
@@ -25,9 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication,
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        
         if url.scheme == "testapp" && url.host == "test" {
             SPay.getAuthURL(url)
         }
+        
         if url.scheme == "testapp" && url.host == "spay" {
             SIDManager.getResponseFrom(url) { response in
                 
@@ -41,10 +46,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     "error": response.error ?? "none"
                 ]
 
-                 showAlert(title: "SID auth \(status):",
+                 showAlert(title: "SID auth \(status)",
                            text: text.json)
             }
         }
+        
         return true
     }
     

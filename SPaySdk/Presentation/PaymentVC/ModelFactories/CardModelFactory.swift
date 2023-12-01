@@ -14,7 +14,7 @@ enum CardModelFactory {
                       additionalCards: Bool,
                       compoundWalletNeed: Bool) -> CardModel {
         
-        var subtitle = selectedCard.cardNumber.card
+        var subtitle = "\(selectedCard.productName ?? "none") \(selectedCard.cardNumber.card)"
         
         if let count = selectedCard.countAdditionalCards, compoundWalletNeed {
             subtitle += Strings.Payment.Cards.CompoundWallet.title(String(count).addEnding(ends: [
@@ -25,7 +25,7 @@ enum CardModelFactory {
         }
 
         return CardModel(iconViewURL: selectedCard.cardLogoUrl,
-                         title: selectedCard.productName,
+                         title: selectedCard.amountData.amountInt.price(.RUB),
                          subTitle: subtitle,
                          needArrow: additionalCards)
     }

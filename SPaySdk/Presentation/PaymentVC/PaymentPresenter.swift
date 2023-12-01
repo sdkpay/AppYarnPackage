@@ -477,6 +477,7 @@ final class PaymentPresenter: PaymentPresenting {
         }
     }
     
+    @MainActor
     private func getChallengeResolution() async -> SecureChallengeResolution? {
         
         do {

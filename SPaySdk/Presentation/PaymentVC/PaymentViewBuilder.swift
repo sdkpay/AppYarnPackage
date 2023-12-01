@@ -64,7 +64,8 @@ final class PaymentViewBuilder {
         return view
     }()
     
-    private lazy var sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
+    private lazy var sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = { 
+        (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection? in
         guard let sectionKind = PaymentSection(rawValue: sectionIndex) else { return nil }
         let section = PaymentSectionLayoutManager.getSectionLayout(sectionKind, featureCount: self.featureCount, layoutEnvironment: layoutEnvironment)
         return section

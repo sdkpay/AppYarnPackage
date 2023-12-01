@@ -9,13 +9,13 @@ import UIKit
 
 struct CardCellModel {
     let title: String
-    let number: String
+    let subtitle: String
     let selected: Bool
     let cardURL: String?
 }
 
 private extension CGFloat {
-    static let topMargin = 12.0
+    static let topMargin = 8.0
     static let corner = 20.0
     static let checkWidth = 20.0
     static let cardWidth = 36.0
@@ -23,10 +23,21 @@ private extension CGFloat {
 }
 
 final class CardCell: UITableViewCell {    
+    
     private lazy var containerView: UIView = {
         let view = UIView()
+        
+        switch traitCollection.userInterfaceStyle {
+        case .unspecified, .light:
+            view.backgroundColor = .backgroundPrimary
+        case .dark:
+            view.applyBlurEffect(style: .systemUltraThinMaterial)
+        @unknown default:
+            view.backgroundColor = .backgroundPrimary
+        }
+        
+        view.clipsToBounds = true
         view.layer.cornerRadius = .corner
-        view.backgroundColor = .white
         return view
     }()
     
@@ -66,9 +77,8 @@ final class CardCell: UITableViewCell {
     }
     
     func config(with model: CardCellModel) {
-//        containerView.backgroundColor = model.selected ? .mainSecondary : .backgroundSecondary
-        titleLabel.text = "21 000 ₽"
-        cardLabel.text = "СберКарта •• 2452 и еще 1"
+        titleLabel.text = model.title
+        cardLabel.text = model.subtitle
         cardIconView.downloadImage(from: model.cardURL, placeholder: .Cards.stockCard)
     }
     

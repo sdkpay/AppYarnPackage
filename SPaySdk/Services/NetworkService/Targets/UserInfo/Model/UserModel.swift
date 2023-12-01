@@ -22,6 +22,15 @@ struct OrderAmount: Codable {
     let currency: String
 }
 
+struct AmountData: Codable {
+    let amount: Double
+    let currency: String
+    
+    var amountInt: Int {
+        Int(amount * 100.0)
+    }
+}
+
 struct PaymentToolInfo: Codable {
     let productName: String?
     let paymentId: Int
@@ -32,6 +41,7 @@ struct PaymentToolInfo: Codable {
     let paymentSystemType: String
     let cardLogoUrl: String
     let countAdditionalCards: Int?
+    let amountData: AmountData
 }
 
 struct UserInfo: Codable {

@@ -11,7 +11,7 @@ private extension CGFloat {
     static let topMargin = 20.0
     static let tableMargin = 12.0
     static let bottomMargin = 58.0
-    static let rowHeight = 84.0
+    static let rowHeight = 88.0
 }
 
 private extension CardsViewBuilder {
@@ -19,7 +19,7 @@ private extension CardsViewBuilder {
         static let offSet: CGFloat = 16.0
         enum Title {
             static let font = UIFont.medium5
-            static let textColor = UIColor.textPrimory
+            static let textColor = UIColor.textSecondary
             static let text = String(stringLiteral: Strings.Cards.title)
             
             static let topOffSet: CGFloat = 40.0
