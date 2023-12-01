@@ -34,13 +34,13 @@
                 "name": "СберБанк Онлайн",
                 "utilLink": "sberonline://",
                 "authLink": "sberbankidexternallogin://",
-                "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-1.png",
+                "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-1.png"
             },
             {
                 "name": "СБОЛ",
                 "utilLink": "sbolonline://",
                 "authLink": "sbolidexternallogin://",
-                "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-2.png",
+                "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-2.png"
             }
     ],
     "images":{
