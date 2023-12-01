@@ -54,7 +54,6 @@ final class AlertVC: ContentVC, IAlertVC {
         view.spacing = 77
         view.axis = .vertical
         view.addArrangedSubview(infoStack)
-        view.addArrangedSubview(buttonsStack)
         return view
     }()
     
@@ -72,6 +71,10 @@ final class AlertVC: ContentVC, IAlertVC {
     func configView(with model: AlertViewModel) {
         imageView.image = model.image
         alertTitle.text = model.title
+        
+        if !model.buttons.isEmpty {
+            contentStack.addArrangedSubview(buttonsStack)
+        }
         
         for item in model.buttons {
             let button = DefaultButton(buttonAppearance: item.type)
