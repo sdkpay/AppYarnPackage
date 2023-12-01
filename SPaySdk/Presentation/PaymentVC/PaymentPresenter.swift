@@ -162,6 +162,7 @@ final class PaymentPresenter: PaymentPresenting {
             return CardModelFactory.build(indexPath,
                                           selectedCard: selectedCard,
                                           additionalCards: userService.additionalCards,
+                                          cardBalanceNeed: featureToggle.isEnabled(.cardBalance),
                                           compoundWalletNeed: featureToggle.isEnabled(.compoundWallet))
         }
     }

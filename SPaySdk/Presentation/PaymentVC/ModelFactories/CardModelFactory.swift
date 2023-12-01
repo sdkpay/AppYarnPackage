@@ -12,9 +12,21 @@ enum CardModelFactory {
     static func build(_ indexPath: IndexPath,
                       selectedCard: PaymentToolInfo,
                       additionalCards: Bool,
+                      cardBalanceNeed: Bool,
                       compoundWalletNeed: Bool) -> CardModel {
         
-        var subtitle = "\(selectedCard.productName ?? "none") \(selectedCard.cardNumber.card)"
+        var title: String
+        var subtitle: String
+        
+        if cardBalanceNeed {
+            
+            title = selectedCard.amountData.amountInt.price(.RUB)
+            subtitle = "\(selectedCard.productName ?? "none") \(selectedCard.cardNumber.card)"
+        } else {
+            
+            title = selectedCard.productName ?? "none"
+            subtitle = selectedCard.cardNumber.card
+        }
         
         if let count = selectedCard.countAdditionalCards, compoundWalletNeed {
             subtitle += Strings.Payment.Cards.CompoundWallet.title(String(count).addEnding(ends: [
@@ -25,7 +37,7 @@ enum CardModelFactory {
         }
 
         return CardModel(iconViewURL: selectedCard.cardLogoUrl,
-                         title: selectedCard.amountData.amountInt.price(.RUB),
+                         title: title,
                          subTitle: subtitle,
                          needArrow: additionalCards)
     }

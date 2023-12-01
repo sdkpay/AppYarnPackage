@@ -13,17 +13,9 @@ enum PartPayModelFactory {
                       buttonBnpl: ButtonBnpl,
                       bnplplanSelected: Bool) -> PaymentFeatureModel {
         
-        switch bnplplanSelected {
-        case true:
-            return PaymentFeatureModel(iconViewURL: buttonBnpl.activeButtonLogo,
-                                       title: buttonBnpl.header,
-                                       subTitle: buttonBnpl.content,
-                                       switchOn: bnplplanSelected)
-        case false:
-            return  PaymentFeatureModel(iconViewURL: buttonBnpl.inactiveButtonLogo,
-                                        title: buttonBnpl.header,
-                                        subTitle: buttonBnpl.content,
-                                        switchOn: bnplplanSelected)
-        }
+        return PaymentFeatureModel(iconViewURL: bnplplanSelected ? buttonBnpl.activeButtonLogo : buttonBnpl.inactiveButtonLogo,
+                                   title: buttonBnpl.header,
+                                   subTitle: buttonBnpl.content,
+                                   switchOn: bnplplanSelected)
     }
 }

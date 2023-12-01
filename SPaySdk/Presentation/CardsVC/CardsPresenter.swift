@@ -56,18 +56,29 @@ final class CardsPresenter: CardsPresenting {
     func model(for indexPath: IndexPath) -> CardCellModel {
         let card = cards[indexPath.row]
         
-        var number = "\(card.productName ?? "none") \(card.cardNumber.card)"
+        var title: String
+        var subtitle: String
+        
+        if featureToggle.isEnabled(.cardBalance) {
+            
+            title = card.amountData.amountInt.price(.RUB)
+            subtitle = "\(card.productName ?? "none") \(card.cardNumber.card)"
+        } else {
+            
+            title = card.productName ?? "none"
+            subtitle = card.cardNumber.card
+        }
         
         if let count = card.countAdditionalCards, featureToggle.isEnabled(.compoundWallet) {
-            number += Strings.Payment.Cards.CompoundWallet.title(String(count).addEnding(ends: [
+            subtitle += Strings.Payment.Cards.CompoundWallet.title(String(count).addEnding(ends: [
                 "1": Strings.Payment.Cards.CompoundWallet.one,
                 "234": Strings.Payment.Cards.CompoundWallet.two,
                 "567890": Strings.Payment.Cards.CompoundWallet.two
             ]))
         }
         
-        return CardCellModel(title: card.amountData.amountInt.price(.RUB),
-                             subtitle: number,
+        return CardCellModel(title: title,
+                             subtitle: subtitle,
                              selected: card.paymentId == selectedId,
                              cardURL: card.cardLogoUrl)
     }

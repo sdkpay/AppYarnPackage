@@ -23,6 +23,10 @@
         {
             "name": "refresh",
             "value": true
+        },
+        {
+            "name": "cardBalance",
+            "value": true
         }
     ],
     "bankApps": [
