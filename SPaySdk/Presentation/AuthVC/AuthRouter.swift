@@ -37,7 +37,7 @@ final class AuthRouter: AuthRouting {
     func presentFakeScreen(completion: @escaping () -> Void) {
         let fakeViewController = FakeViewController()
         viewController?.present(fakeViewController, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             fakeViewController.dismiss(animated: true, completion: completion)
         }
     }

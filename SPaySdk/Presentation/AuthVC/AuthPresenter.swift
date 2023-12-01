@@ -181,12 +181,12 @@ final class AuthPresenter: AuthPresenting {
 
     private func appAuth() async {
         if enviromentManager.environment == .sandboxWithoutBankApp {
-            await router.presentFakeScreen(completion: {
+            await MainActor.run {  router.presentFakeScreen(completion: {
                 Task {
                     await self.auth()
                     return
                 }
-            })
+            })}
         }
         
         if bankManager.selectedBank == nil {
@@ -225,6 +225,7 @@ final class AuthPresenter: AuthPresenting {
             try await authService.auth()
             loadPaymentData()
         } catch {
+            bankManager.selectedBank = nil
             if let error = error as? SDKError {
                 validateAuthError(error: error)
             }
