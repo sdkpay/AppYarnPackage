@@ -100,6 +100,8 @@ final class DefaultCompletionManager: CompletionManager {
             giveTokenCompletion()
         } else if paymentCompletion != nil {
             givePayCompletion()
+        } else {
+            givePayCompletion()
         }
     }
     

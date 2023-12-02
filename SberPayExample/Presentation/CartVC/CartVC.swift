@@ -275,13 +275,17 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info in
             switch state {
             case .success:
-                self.showResult(title: "Отдали мерчу success", message: info)
+                self.navigationController?.pushViewController(StatusVC(values: self.values), animated: true)
+               // self.showResult(title: "Отдали мерчу success", message: info)
             case .waiting:
-                self.showResult(title: "Отдали мерчу waiting", message: info)
+                self.navigationController?.pushViewController(StatusVC(values: self.values), animated: true)
+               // self.showResult(title: "Отдали мерчу waiting", message: info)
             case .error:
-                self.showResult(title: "Отдали мерчу error", message: info)
+                self.navigationController?.pushViewController(StatusVC(values: self.values), animated: true)
+                // self.showResult(title: "Отдали мерчу error", message: info)
             case .cancel:
-                self.showResult(title: "Отдали мерчу cancel", message: info)
+                self.navigationController?.pushViewController(StatusVC(values: self.values), animated: true)
+               //  self.showResult(title: "Отдали мерчу cancel", message: info)
             @unknown default:
                 self.showResult(title: "Отдали мерчу @unknown default", message: info)
             }

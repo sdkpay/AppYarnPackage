@@ -183,7 +183,6 @@ final class DefaultSBPayService: SBPayService {
                 .resolve(AnalyticsService.self)
                 .sendEvent(.MACPayWithBankInvoiceId)
         }
-
     }
     
     func getResponseFrom(_ url: URL) {

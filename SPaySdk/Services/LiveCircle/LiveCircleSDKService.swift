@@ -20,6 +20,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     private var locator: LocatorService?
     private var rootController: RootVC?
     private weak var metchVC: UIViewController?
+    private var sdkWindow: UIWindow?
     private let timeManager: OptimizationCheсkerManager?
     var closeWithGesture: Action?
     
@@ -45,6 +46,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         DispatchQueue.main.async {
             self.rootController?.dismiss(animated: false)
             self.rootController = nil
+            self.sdkWindow = nil
         }
     }
     
@@ -88,8 +90,12 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     private func setupWindows(viewController: UIViewController,
                               locator: LocatorService,
                               rootVC: UIViewController) {
+        sdkWindow = UIWindow(frame: UIScreen.main.bounds)
+        sdkWindow?.windowLevel = .alert + 1
         rootVC.modalPresentationStyle = .custom
-        viewController.present(rootVC, animated: true)
+        sdkWindow?.rootViewController = rootVC
+        sdkWindow?.makeKeyAndVisible()
+//        viewController.present(rootVC, animated: true)
     }
     
     private func topVC(for window: UIWindow?) -> UIViewController? {
