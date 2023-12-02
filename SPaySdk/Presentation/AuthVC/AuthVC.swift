@@ -11,7 +11,6 @@ import WebKit
 private extension CGFloat {
     static let logoWidth = 96.0
     static let logoHeight = 48.0
-    static let heightMultiple = 0.65
 }
 
 protocol IAuthVC {
@@ -73,7 +72,7 @@ final class AuthVC: ContentVC, IAuthVC {
     
     private func setupUI() {
         
-        view.height(.equal, to: UIScreen.main.bounds.height * .heightMultiple)
+        view.height(ScreenHeightState.normal.height)
         
         logoImage
             .add(toSuperview: view)

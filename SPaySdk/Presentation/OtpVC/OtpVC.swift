@@ -12,7 +12,6 @@ protocol IOtpVC: AnyObject {
     func updateMobilePhone(phoneNumber: String)
     func showError(with text: String)
     func hideKeyboard() async
-    func setKeyboardHeight(height: CGFloat)
 }
 
 final class LoadableUIView: UIView, Loadable {}
@@ -21,10 +20,13 @@ final class OtpVC: ContentVC, IOtpVC {
     private let presenter: OtpPresenting
     private var otpCode = ""
     private var maxLength = 5
-    private var keyboardHeight: CGFloat = 330
+    private var kbSize = CGSize(width: UIScreen.main.bounds.width,
+                                height: 300)
     
-    private lazy var backView = LoadableUIView()
-        
+    private lazy var contentView = LoadableUIView()
+    
+    private lazy var keyboardView = UIView()
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
@@ -69,17 +71,13 @@ final class OtpVC: ContentVC, IOtpVC {
     }()
     
     private(set) lazy var backButton: DefaultButton = {
-        let view = DefaultButton(buttonAppearance: .cancel)
+        let view = DefaultButton(buttonAppearance: .clear)
         view.setTitle(Strings.Cancel.title, for: .normal)
         view.addAction {
             self.presenter.back()
         }
         return view
     }()
-    
-    func setKeyboardHeight(height: CGFloat) {
-        self.keyboardHeight = height
-    }
     
     func updateTimer(sec: Int) {
         if sec > 0 {
@@ -112,11 +110,10 @@ final class OtpVC: ContentVC, IOtpVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        addKeyboardObserver()
+        otpTextField.becomeFirstResponder()
         presenter.viewDidLoad()
         setupUI()
-        backView.isUserInteractionEnabled = true
-        
-        self.otpTextField.becomeFirstResponder()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -138,9 +135,13 @@ final class OtpVC: ContentVC, IOtpVC {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        removeKeyboardObserver()
+    }
+    
     @MainActor
     override func showLoading(with text: String? = nil, animate: Bool = true) {
-        backView.startLoading(with: text)
+        contentView.startLoading(with: text)
         nextButton.isHidden = true
         backButton.isHidden = true
         view.endEditing(true)
@@ -148,54 +149,106 @@ final class OtpVC: ContentVC, IOtpVC {
     
     @MainActor
     override func hideLoading(animate: Bool = true) {
-        backView.stopLoading()
+        contentView.stopLoading()
         nextButton.isHidden = false
         backButton.isHidden = false
     }
     
-    private func setupUI() {
-        view.height(.vcMaxHeight, priority: .defaultLow)
+    private func addKeyboardObserver() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.keyboardWillShow(_:)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+    }
+    
+    private func removeKeyboardObserver() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: UIResponder.keyboardWillShowNotification,
+                                                  object: nil)
+    }
+    
+    @objc 
+    private
+    func keyboardWillShow(_ notification: Notification?) {
         
-        backView
+        if let info = notification?.userInfo {
+            
+            let frameEndUserInfoKey = UIResponder.keyboardFrameEndUserInfoKey
+            
+            if let kbFrame = info[frameEndUserInfoKey] as? CGRect {
+                
+                let screenSize = UIScreen.main.bounds
+                let intersectRect = kbFrame.intersection(screenSize)
+                
+                if intersectRect.isNull {
+                    kbSize = CGSize(width: screenSize.size.width, height: 0)
+                } else {
+                    kbSize = intersectRect.size
+                }
+            }
+        }
+        
+        updateKeyboardViewSize()
+    }
+    
+    private func updateKeyboardViewSize() {
+
+        UIView.animate(withDuration: 0.25) {
+            self.keyboardView.layoutIfNeeded()
+        }
+    }
+    
+    private func setupUI() {
+
+        contentView
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left)
             .touchEdge(.right, toSuperviewEdge: .right)
             .touchEdge(.top, toSuperviewEdge: .top)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom)
 
         titleLabel
-            .add(toSuperview: backView)
+            .add(toSuperview: contentView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Stack.right)
-            .touchEdge(.top, toEdge: .top, ofView: backView, withInset: Cost.Stack.top)
+            .touchEdge(.top, toEdge: .top, ofView: contentView, withInset: Cost.Stack.top)
+            .height(titleLabel.requiredHeight)
         
         otpTextField
-            .add(toSuperview: backView)
+            .add(toSuperview: contentView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.TextField.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.TextField.right)
             .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Cost.TextField.top)
             .height(Cost.TextField.height)
         
         timeButton
-            .add(toSuperview: backView)
+            .add(toSuperview: contentView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Time.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Time.left)
             .touchEdge(.top, toEdge: .bottom, ofView: otpTextField, withInset: Cost.Button.Time.top)
+            .height(.defaultButtonHeight)
                
         nextButton
-            .add(toSuperview: view)
+            .add(toSuperview: contentView)
             .height(.defaultButtonHeight)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Next.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Next.right)
             .touchEdge(.top, toEdge: .bottom, ofView: timeButton, withInset: Cost.Button.Next.bottom)
         
         backButton
-            .add(toSuperview: view)
+            .add(toSuperview: contentView)
             .height(.defaultButtonHeight)
-            .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: CGFloat(keyboardHeight))
+            .touchEdge(.bottom, toEdge: .bottom, ofView: contentView, withInset: Cost.Button.Back.bottom)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Back.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Back.right)
             .touchEdge(.top, toEdge: .bottom, ofView: nextButton, withInset: Cost.Button.Back.top)
+        
+        keyboardView
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left)
+            .touchEdge(.right, toSuperviewEdge: .right)
+            .touchEdge(.top, toEdge: .bottom, ofView: contentView)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom)
+            .size(kbSize)
     }
 }
 

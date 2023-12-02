@@ -38,7 +38,7 @@ enum DefaultButtonAppearance {
             return ButtonColorScheme()
         case .cancel:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .notification)
+                                     titleColor: .textPrimory)
         case .info:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .notification)

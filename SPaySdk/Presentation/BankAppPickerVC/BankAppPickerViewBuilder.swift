@@ -105,7 +105,6 @@ final class BankAppPickerViewBuilder {
     }()
     
     func setupUI(view: UIView) {
-        view.height(.minScreenSize, priority: .defaultLow)
         
         titleLabel
             .add(toSuperview: view)

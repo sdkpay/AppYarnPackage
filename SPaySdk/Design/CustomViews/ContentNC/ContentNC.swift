@@ -138,11 +138,9 @@ final class ContentNC: UIViewController {
             fromTop,
             from.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             from.view.widthAnchor.constraint(equalTo: view.widthAnchor),
-            from.view.heightAnchor.constraint(lessThanOrEqualToConstant: .vcMaxHeight),
             
             to.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            to.view.widthAnchor.constraint(equalTo: view.widthAnchor),
-            to.view.heightAnchor.constraint(lessThanOrEqualToConstant: .vcMaxHeight)
+            to.view.widthAnchor.constraint(equalTo: view.widthAnchor)
         ])
         
         view.layoutIfNeeded()
@@ -235,5 +233,13 @@ final class ContentNC: UIViewController {
                 toShimView.removeFromSuperview()
             }
         )
+    }
+}
+
+extension NSLayoutConstraint {
+    
+    func withPriority(_ priority: Float) -> NSLayoutConstraint {
+        self.priority = UILayoutPriority(priority)
+        return self
     }
 }

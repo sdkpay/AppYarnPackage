@@ -26,7 +26,6 @@ final class OtpPresenter: OtpPresenting {
     private let alertService: AlertService
     private let authManager: AuthManager
     private let analytics: AnalyticsService
-    private let keyboardManager: KeyboardManager
     private let completionManager: CompletionManager
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private var sec = 45
@@ -40,7 +39,6 @@ final class OtpPresenter: OtpPresenting {
          alertService: AlertService,
          analytics: AnalyticsService,
          completionManager: CompletionManager,
-         keyboardManager: KeyboardManager,
          parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          completion: @escaping Action) {
         self.otpService = otpService
@@ -51,20 +49,13 @@ final class OtpPresenter: OtpPresenting {
         self.completion = completion
         self.analytics = analytics
         self.completionManager = completionManager
-        self.keyboardManager = keyboardManager
         self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
     }
     
     func viewDidLoad() {
-        setKeyboardHeight()
         createTimer()
         configViews()
         userService.clearData()
-    }
-    
-    func setKeyboardHeight() {
-        let height = keyboardManager.getKeyboardHeight()
-        view?.setKeyboardHeight(height: height)
     }
     
     private func configViews() {

@@ -8,7 +8,7 @@
 import UIKit
 
 private extension CGFloat {
-    static let maxTableViewHeight = UIScreen.main.bounds.height * 0.73
+    static let maxTableViewHeight = ScreenHeightState.max.height
 }
 
 class ContentTableView: UITableView {
@@ -20,7 +20,6 @@ class ContentTableView: UITableView {
 
     private lazy var tableHeightConstraint: NSLayoutConstraint = {
         let constraint = heightAnchor.constraint(equalToConstant: 0)
-        constraint.priority = .defaultLow
         constraint.isActive = true
         return constraint
     }()

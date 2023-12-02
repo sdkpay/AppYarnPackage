@@ -25,7 +25,6 @@ final class SDKManagerAssembly: Assembly {
 }
 
 protocol SDKManager {
-    var newStart: Bool { get }
     var payStrategy: PayStrategy { get }
     var authInfo: AuthInfo? { get }
     var payHandler: ((PayInfo) -> Void)? { get set }
@@ -48,8 +47,7 @@ final class DefaultSDKManager: SDKManager {
     
     var payHandler: ((PayInfo) -> Void)?
 
-    private(set) var payStrategy: PayStrategy = .manual
-    private(set) var newStart = true
+    private(set) var payStrategy: PayStrategy = .auto
     
     init(authManager: AuthManager,
          completionManager: CompletionManager) {
@@ -71,8 +69,7 @@ final class DefaultSDKManager: SDKManager {
                 paymentTokenRequest: SPaymentTokenRequest,
                 completion: @escaping PaymentTokenCompletion) {
         let authInfo = AuthInfo(paymentTokenRequest: paymentTokenRequest)
-        newStart = isNewStart(check: authInfo)
-        if newStart { self.authInfo = authInfo }
+        self.authInfo = authInfo
         payStrategy = .manual
         authManager.apiKey = apiKey
         authManager.lang = paymentTokenRequest.language
@@ -84,8 +81,7 @@ final class DefaultSDKManager: SDKManager {
                                  paymentRequest: SBankInvoicePaymentRequest,
                                  completion: @escaping PaymentCompletion) {
         let authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
-        newStart = isNewStart(check: authInfo)
-        if newStart { self.authInfo = authInfo }
+        self.authInfo = authInfo
         payStrategy = .auto
         authManager.apiKey = apiKey
         authManager.lang = paymentRequest.language
@@ -99,13 +95,6 @@ final class DefaultSDKManager: SDKManager {
         authInfo?.orderId = paymentRequest.orderId
         completionManager.setPaymentCompletion(completion)
         payHandler?(PayInfo(paymentRequest: paymentRequest))
-    }
-
-    private func isNewStart(check authInfo: AuthInfo) -> Bool {
-        // Проверяем наличие сохраненной информации о запросе
-        guard let savedInfo = self.authInfo else { return true }
-        // Сравниваем новый запрос с сохраненным
-        return authInfo != savedInfo
     }
     
     @objc private func closeSdk() {

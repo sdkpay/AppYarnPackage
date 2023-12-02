@@ -56,10 +56,15 @@ struct SDKError: Error, LocalizedError {
         
         guard let errorCode = json["errorCode"] as? String else { return nil }
         guard errorCode != "0" else { return nil }
-        
-        guard let description = json["description"] as? String else { return nil }
-        
         guard let errorCodeInt = Int(errorCode) else { return nil }
+        
+        var description = ""
+        
+        if let descriptionFromError = json["description"] as? String {
+            description = descriptionFromError
+        } else if let errorMessage = json["errorMessage"] as? String {
+            description = errorMessage
+        }
         
         self.code = errorCodeInt
         self.httpCode = httpCode

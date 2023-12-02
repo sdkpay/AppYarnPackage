@@ -58,44 +58,6 @@ enum Device: String {
         return identifier
     }()
     
-    var diagonal: Double {
-        switch self {
-        case .iPhone5: return 4
-        case .iPhone5c: return 4
-        case .iPhone5s: return 4
-        case .iPhone6: return 4.7
-        case .iPhone6Plus: return 5.5
-        case .iPhone6s: return 4.7
-        case .iPhone6sPlus: return 5.5
-        case .iPhone7: return 4.7
-        case .iPhone7Plus: return 5.5
-        case .iPhoneSE: return 4
-        case .iPhone8: return 4.7
-        case .iPhone8Plus: return 5.5
-        case .iPhoneX: return 5.8
-        case .iPhoneXS: return 5.8
-        case .iPhoneXSMax: return 6.5
-        case .iPhoneXR: return 6.1
-        case .iPhone11: return 6.1
-        case .iPhone11Pro: return 5.8
-        case .iPhone11ProMax: return 6.5
-        case .iPhoneSE2: return 4.7
-        case .iPhone12: return 6.1
-        case .iPhone12Mini: return 5.4
-        case .iPhone12Pro: return 6.1
-        case .iPhone12ProMax: return 6.7
-        case .iPhone13: return 6.1
-        case .iPhone13Mini: return 5.4
-        case .iPhone13Pro: return 6.1
-        case .iPhone13ProMax: return 6.7
-        case .iPhoneSE3: return 4.7
-        case .iPhone14: return 6.1
-        case .iPhone14Plus: return 6.7
-        case .iPhone14Pro: return 6.1
-        case .iPhone14ProMax: return 6.7
-        }
-    }
-    
     static func mapToDevice(identifier: String) -> Device {
         switch identifier {
         case "iPhone5,1", "iPhone5,2": return .iPhone5

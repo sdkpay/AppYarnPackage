@@ -32,7 +32,6 @@ final class AssemblyManager {
         SeamlessAuthServiceAssembly(),
         AuthServiceAssembly(),
         OTPManagerAssembly(),
-        KeyboardManagerAssembly(),
         OTPServiceAssembly(),
         UserServiceAssembly(),
         LocationManagerAssembly(),

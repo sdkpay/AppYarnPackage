@@ -70,10 +70,10 @@ final class AuthPresenter: AuthPresenting {
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
-        checkNewStart()
+        startAuth()
     }
     
-    private func checkNewStart() {
+    private func startAuth() {
         analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
         
         guard !versionСontrolManager.isVersionDepicated else {
@@ -94,40 +94,7 @@ final class AuthPresenter: AuthPresenting {
             return
         }
         
-        if enviromentManager.environment == .sandboxWithoutBankApp {
-            checkSession()
-        } else {
-            if sdkManager.newStart || userService.user == nil {
-                getSessiond()
-            } else {
-                checkSession()
-            }
-        }
-    }
-    
-    private func checkSession() {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.view?.showLoading()
-        }
-        
-        Task {
-            do {
-                try await userService.checkUserSession()
-                await router.presentPayment()
-            } catch {
-                if let error = error as? SDKError {
-                    completionManager.completeWithError(error)
-                    if error.represents(.noInternetConnection) {
-                        alertService.show(on: view,
-                                          type: .noInternet(retry: { self.checkSession() },
-                                                            completion: { self.dismissWithError(error) }))
-                    } else {
-                        await configAuthSettings()
-                    }
-                }
-            }
-        }
+        getSessiond()
     }
     
     private func configAuthSettings() async {

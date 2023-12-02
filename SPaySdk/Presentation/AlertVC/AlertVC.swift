@@ -149,7 +149,7 @@ final class AlertVC: ContentVC, IAlertVC {
     }
     
     func setupUI() {
-        view.height(.vcMaxHeight, priority: .defaultLow)
+        view.height(ScreenHeightState.normal.height, priority: .defaultLow)
         
         buttonsStack
             .add(toSuperview: view)

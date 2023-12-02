@@ -88,7 +88,8 @@ final class LogoutVC: ContentVC, ILogoutVC {
     }
     
     private func setupView() {
-        view.height(.minScreenSize, priority: .defaultLow)
+        
+        view.height(ScreenHeightState.normal.height)
         
         avatarImage
             .add(toSuperview: view)

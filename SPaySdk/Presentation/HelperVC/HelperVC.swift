@@ -50,6 +50,5 @@ final class HelperVC: ContentVC, IHelperVC {
     }
     
     private func setupUI() {
-        view.height(.minScreenSize, priority: .defaultLow)
     }
 }

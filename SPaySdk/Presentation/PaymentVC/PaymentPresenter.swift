@@ -496,7 +496,10 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func dismissWithError(_ error: SDKError) {
         self.completionManager.completeWithError(error)
-        alertService.close()
+        
+        Task { @MainActor [alertService] in
+            alertService.close()
+        }
     }
     
     private func showSecureError() {

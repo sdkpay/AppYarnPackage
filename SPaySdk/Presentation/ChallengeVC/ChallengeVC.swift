@@ -12,7 +12,6 @@ private extension CGFloat {
     static let bottom: CGFloat = 44.0
     static let buttonMargin: CGFloat = 4.0
     static let sideMargin: CGFloat = 16.0
-    static let heightMultiple = 0.65
 }
 
 protocol IChallengeVC {
@@ -184,8 +183,7 @@ final class ChallengeVC: ContentVC, IChallengeVC {
     private func setupUI() {
         
         view
-            .height(.equal,
-                    to: UIScreen.main.bounds.height * .heightMultiple, priority: .defaultHigh)
+            .height(ScreenHeightState.normal.height, priority: .defaultHigh)
         
         let backView = UIView()
         
