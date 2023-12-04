@@ -42,6 +42,16 @@ struct PaymentToolInfo: Codable {
     let cardLogoUrl: String
     let countAdditionalCards: Int?
     let amountData: AmountData
+    let promoInfo: PromoInfo
+}
+
+struct PromoInfo: Codable {
+    let bannerList: [BannerList]
+}
+
+struct BannerList: Codable {
+    let deeplinkIos, deeplinkAndroid, type, iconUrl: String
+    let text: String
 }
 
 struct UserInfo: Codable {
