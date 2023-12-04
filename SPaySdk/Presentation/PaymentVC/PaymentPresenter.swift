@@ -35,7 +35,7 @@ final class PaymentPresenter: PaymentPresenting {
     
     var needHint: Bool {
         // DEBUG
-        true
+        false
     }
 
     var featureCount: Int {
@@ -118,7 +118,6 @@ final class PaymentPresenter: PaymentPresenting {
     
     func setHintText() {
         // DEBUG
-        view?.configHint(with: "Кажется, не хватает денег на карте")
     }
     
     func payButtonTapped() {
