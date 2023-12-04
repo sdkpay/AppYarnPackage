@@ -8,18 +8,24 @@
 import UIKit
 
 protocol IOtpVC: AnyObject {
-    func updateTimer(sec: Int)
     func updateMobilePhone(phoneNumber: String)
-    func showError(with text: String)
+    func setOtpDescription(_ text: String)
+    func setViewState(_ state: OtpViewState)
     func hideKeyboard() async
 }
 
 final class LoadableUIView: UIView, Loadable {}
 
+enum OtpViewState {
+    case ready
+    case waiting
+    case error
+}
+
 final class OtpVC: ContentVC, IOtpVC {
+    
     private let presenter: OtpPresenting
     private var otpCode = ""
-    private var maxLength = 5
     private var kbSize = CGSize(width: UIScreen.main.bounds.width,
                                 height: 300)
     
@@ -29,7 +35,7 @@ final class OtpVC: ContentVC, IOtpVC {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 2
+        label.numberOfLines = 0
         label.textAlignment = .center
         label.font = .medium5
         label.textColor = .mainBlack
@@ -39,22 +45,22 @@ final class OtpVC: ContentVC, IOtpVC {
     private lazy var otpTextField: SmsCodeView = {
         let textField = SmsCodeView()
         textField.fullCodeDidEnter = {
-            self.nextButton.isEnabled = $0.count == self.maxLength
-            guard $0.count == self.maxLength else { return }
             self.otpCode = $0
         }
-        
+        textField.textFieldDidChangeAction = {
+            self.presenter.otpFieldChanged()
+        }
         return textField
     }()
     
-    private lazy var timeButton: ActionButton = {
+    private lazy var otpDescriptionButton: ActionButton = {
         let timeButton = ActionButton()
         timeButton.setTitleColor(.textSecondary, for: .normal)
         timeButton.isEnabled = true
         timeButton.titleLabel?.font = .medium4
         timeButton.titleLabel?.textAlignment = .center
+        timeButton.sizeToFit()
         timeButton.addAction({
-            self.nextButton.isEnabled = false
             self.presenter.createOTP()
         })
         return timeButton
@@ -62,7 +68,6 @@ final class OtpVC: ContentVC, IOtpVC {
     
     private(set) lazy var nextButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
-        view.isEnabled = false
         view.setTitle(Strings.Next.Button.title, for: .normal)
         view.addAction {
             self.presenter.sendOTP(otpCode: self.otpCode)
@@ -79,18 +84,29 @@ final class OtpVC: ContentVC, IOtpVC {
         return view
     }()
     
-    func updateTimer(sec: Int) {
-        if sec > 0 {
-            timeButton.isEnabled = false
-            let string = Strings.Time.Button.Repeat.isNotActive(sec)
-            timeButton.setTitle(string, for: .normal)
-            timeButton.setTitleColor(.textSecondary, for: .normal)
-        } else {
-            timeButton.isEnabled = true
-            let string = Strings.Time.Button.Repeat.isActive
-            timeButton.setTitle(string, for: .normal)
-            timeButton.setTitleColor(.main, for: .normal)
+    func setViewState(_ state: OtpViewState) {
+        
+        switch state {
+        case .ready:
+            
+            otpTextField.setState(.full)
+            otpDescriptionButton.isEnabled = true
+            otpDescriptionButton.setTitleColor(.main, for: .normal)
+        case .waiting:
+            
+            otpTextField.setState(.empty)
+            otpDescriptionButton.isEnabled = false
+            otpDescriptionButton.setTitleColor(.textSecondary, for: .normal)
+        case .error:
+            
+            otpTextField.setState(.error)
+            otpDescriptionButton.isEnabled = false
+            otpDescriptionButton.setTitleColor(.notification, for: .normal)
         }
+    }
+    
+    func setOtpDescription(_ text: String) {
+        otpDescriptionButton.setTitle(text, for: .normal)
     }
 
     @MainActor
@@ -100,12 +116,6 @@ final class OtpVC: ContentVC, IOtpVC {
     
     func updateMobilePhone(phoneNumber: String) {
         titleLabel.text = Strings.TitleLabel.Message.title(phoneNumber)
-    }
-    
-    func showError(with text: String) {
-        timeButton.setTitle(text, for: .normal)
-        timeButton.isEnabled = true
-        timeButton.setTitleColor(.red, for: .normal)
     }
 
     override func viewDidLoad() {
@@ -142,28 +152,43 @@ final class OtpVC: ContentVC, IOtpVC {
     @MainActor
     override func showLoading(with text: String? = nil, animate: Bool = true) {
         contentView.startLoading(with: text)
-        nextButton.isHidden = true
-        backButton.isHidden = true
-        view.endEditing(true)
     }
     
     @MainActor
     override func hideLoading(animate: Bool = true) {
         contentView.stopLoading()
-        nextButton.isHidden = false
-        backButton.isHidden = false
     }
     
     private func addKeyboardObserver() {
+        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.keyboardWillShow(_:)),
                                                name: UIResponder.keyboardWillShowNotification,
                                                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.keyboardWillShow(_:)),
+                                               name: UIResponder.keyboardWillChangeFrameNotification,
+                                               object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.keyboardWillHide(_:)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
     
     private func removeKeyboardObserver() {
+        
         NotificationCenter.default.removeObserver(self,
                                                   name: UIResponder.keyboardWillShowNotification,
+                                                  object: nil)
+        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: UIResponder.keyboardWillChangeFrameNotification,
+                                                  object: nil)
+        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: UIResponder.keyboardWillHideNotification,
                                                   object: nil)
     }
     
@@ -187,7 +212,15 @@ final class OtpVC: ContentVC, IOtpVC {
                 }
             }
         }
+        updateKeyboardViewSize()
+    }
+    
+    @objc
+    private
+    func keyboardWillHide(_ notification: Notification?) {
         
+        let screenSize = UIScreen.main.bounds
+        kbSize = CGSize(width: screenSize.size.width, height: 0)
         updateKeyboardViewSize()
     }
     
@@ -199,7 +232,7 @@ final class OtpVC: ContentVC, IOtpVC {
     }
     
     private func setupUI() {
-
+        
         contentView
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left)
@@ -211,7 +244,6 @@ final class OtpVC: ContentVC, IOtpVC {
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Stack.right)
             .touchEdge(.top, toEdge: .top, ofView: contentView, withInset: Cost.Stack.top)
-            .height(titleLabel.requiredHeight)
         
         otpTextField
             .add(toSuperview: contentView)
@@ -220,19 +252,18 @@ final class OtpVC: ContentVC, IOtpVC {
             .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Cost.TextField.top)
             .height(Cost.TextField.height)
         
-        timeButton
+        otpDescriptionButton
             .add(toSuperview: contentView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Time.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Time.left)
             .touchEdge(.top, toEdge: .bottom, ofView: otpTextField, withInset: Cost.Button.Time.top)
-            .height(.defaultButtonHeight)
                
         nextButton
             .add(toSuperview: contentView)
             .height(.defaultButtonHeight)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Next.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Next.right)
-            .touchEdge(.top, toEdge: .bottom, ofView: timeButton, withInset: Cost.Button.Next.bottom)
+            .touchEdge(.top, toEdge: .bottom, ofView: otpDescriptionButton, withInset: Cost.Button.Next.bottom)
         
         backButton
             .add(toSuperview: contentView)

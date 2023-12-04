@@ -44,7 +44,7 @@ enum DefaultButtonAppearance {
                                      titleColor: .notification)
         case .clear:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .main)
+                                     titleColor: .textPrimory)
         case .blackBack:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .textPrimory)
@@ -60,13 +60,13 @@ enum DefaultButtonAppearance {
             return ButtonColorScheme()
         case .cancel:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .notification)
+                                     titleColor: .textPrimory)
         case .info:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .textPrimory)
         case .clear:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .main)
+                                     titleColor: .textPrimory)
         case .blackBack:
             return ButtonColorScheme(backgroundColor: .mainBlack,
                                      titleColor: .white)
@@ -85,7 +85,7 @@ enum DefaultButtonAppearance {
                                      borderWidth: .zero)
         case .cancel:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .notification)
+                                     titleColor: .textPrimory)
         case .info:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .notification)

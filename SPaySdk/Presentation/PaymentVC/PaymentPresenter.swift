@@ -28,10 +28,16 @@ protocol PaymentPresenting {
     func profileTapped()
     func viewDidAppear()
     func viewDidDisappear()
+    var needHint: Bool { get }
 }
 
 final class PaymentPresenter: PaymentPresenting {
     
+    var needHint: Bool {
+        // DEBUG
+        true
+    }
+
     var featureCount: Int {
         partPayService.bnplplanEnabled ? 1 : 0
     }
@@ -107,6 +113,12 @@ final class PaymentPresenter: PaymentPresenting {
     
     func viewDidLoad() {
         configViews()
+        setHintText()
+    }
+    
+    func setHintText() {
+        // DEBUG
+        view?.configHint(with: "Кажется, не хватает денег на карте")
     }
     
     func payButtonTapped() {

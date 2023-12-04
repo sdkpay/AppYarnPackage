@@ -7,7 +7,7 @@
 
 import UIKit
 
-private enum FieldStatus {
+enum FieldStatus {
     case empty, full, error
 }
 
@@ -15,7 +15,9 @@ final class SmsCodeView: UITextField {
     // MARK: - Properties
     private let numberOfCharacters: Int = 5
 
-    var fullCodeDidEnter: ((String) -> Void)?
+    var fullCodeDidEnter: StringAction?
+    
+    var textFieldDidChangeAction: Action?
 
     private var labels = [UILabel]()
 
@@ -36,6 +38,9 @@ final class SmsCodeView: UITextField {
 
     @objc
     private func textDidChange() {
+        
+        textFieldDidChangeAction?()
+        
         guard let text = self.text, text.count <= numberOfCharacters else { return }
         for i in 0 ..< numberOfCharacters {
             let currentLabel = labels[i]
@@ -55,10 +60,14 @@ final class SmsCodeView: UITextField {
         }
     }
     
-    func errorState() {
-        cleanAllFields()
+    func setState(_ status: FieldStatus) {
+        
+        if status != .full {
+            cleanAllFields()
+        }
+        
         for label in labels {
-            setLabelStatus(label: label, fieldStatus: .error, text: "•")
+            setLabelStatus(label: label, fieldStatus: status, text: "•")
         }
     }
 
@@ -103,6 +112,7 @@ extension SmsCodeView: UITextFieldDelegate {
 }
 // MARK: - Labels methods
 extension SmsCodeView {
+    
     private func addLabelsToStack() {
         for _ in 1 ... numberOfCharacters {
             let label: UILabel = {
@@ -129,7 +139,7 @@ extension SmsCodeView {
         case .full:
             label.textColor = .mainBlack
         case .error:
-            label.textColor = .red
+            label.textColor = .notification
         }
     }
 

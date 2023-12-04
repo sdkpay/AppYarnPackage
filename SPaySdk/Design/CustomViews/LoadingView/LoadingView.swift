@@ -54,7 +54,7 @@ final class LoadingView: UIView {
     }
     
     func setupUI() {
-        backgroundColor = .backgroundPrimary
+        backgroundColor = .backgroundSecondary
         isUserInteractionEnabled = true
         alpha = 0
 

@@ -10,11 +10,12 @@ import UIKit
 protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?)
     func addSnapShot()
+    func configHint(with text: String)
     func reloadData()
 }
 
 final class PaymentVC: ContentVC, IPaymentVC {
-    
+
     private lazy var viewBuilder = PaymentViewBuilder(featureCount: presenter.featureCount,
                                                       profileButtonDidTap: { [weak self] in
         guard let self = self else { return }
@@ -45,7 +46,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
         configDataSource()
         viewBuilder.collectionView.delegate = self
         presenter.viewDidLoad()
-        viewBuilder.setupUI(view: view)
+        viewBuilder.setupUI(view: view, needHint: presenter.needHint)
         SBLogger.log(.didLoad(view: self))
     }
     
@@ -102,6 +103,11 @@ final class PaymentVC: ContentVC, IPaymentVC {
             snapshot.appendItems(presenter.identifiresForSection(section), toSection: section)
         }
         dataSource?.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func configHint(with text: String) {
+        
+        viewBuilder.hintView.setup(with: text)
     }
     
     private func configDataSource() {

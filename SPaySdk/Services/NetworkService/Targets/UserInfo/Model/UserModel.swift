@@ -32,7 +32,7 @@ struct AmountData: Codable {
 }
 
 struct PaymentToolInfo: Codable {
-    let productName: String?
+    let productName: String
     let paymentId: Int
     var priorityCard: Bool
     let paymentSourceType: String

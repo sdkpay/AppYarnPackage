@@ -48,51 +48,10 @@ class ContentVC: LoggableVC {
         return view
     }()
     
-    private lazy var backgroundView: UIImageView = {
-        let view = UIImageView()
-        view.image = Asset.background.image
-        view.tag = .stickViewTag
-        view.contentMode = .scaleAspectFill
-        return view
-//        let view = LottieAnimationView(name: "Background",
-//                                       bundle: Bundle.sdkBundle,
-//                                       animationCache: DefaultAnimationCache.sharedCache)
-//        view.contentMode = .scaleAspectFill
-//        view.tag = .backgroundViewTag
-//        view.loopMode = .loop
-//        ViewCache.shared.view = view
-//        return view
-//        if let view = ViewCache.shared.view {
-//            return view
-//        } else {
-//            let view = LottieAnimationView(name: "Background",
-//                                           bundle: Bundle.sdkBundle,
-//                                           animationCache: DefaultAnimationCache.sharedCache)
-//            view.contentMode = .scaleAspectFill
-//            view.tag = .backgroundViewTag
-//            view.loopMode = .loop
-//            ViewCache.shared.view = view
-//            return view
-//        }
-//        let view = LottieAnimationView(name: "Background",
-//                                       bundle: Bundle.sdkBundle,
-//                                       animationCache: DefaultAnimationCache.sharedCache)
-//        view.contentMode = .scaleAspectFill
-//        view.tag = .backgroundViewTag
-//        view.loopMode = .loop
-//        ViewCache.shared.view = view
-//        return view
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupForContainer()
         configUI()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-      //  backgroundView.play()
     }
     
     @MainActor
@@ -111,13 +70,6 @@ class ContentVC: LoggableVC {
     }
 
     func configUI() {
-        
-        backgroundView
-            .add(toSuperview: view)
-            .touchEdge(.left, toSuperviewEdge: .left)
-            .touchEdge(.right, toSuperviewEdge: .right)
-            .touchEdge(.top, toSuperviewEdge: .top)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom)
         
         stickImageView
             .add(toSuperview: view)

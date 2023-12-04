@@ -21,10 +21,10 @@ enum CardModelFactory {
         if cardBalanceNeed {
             
             title = selectedCard.amountData.amountInt.price(.RUB)
-            subtitle = "\(selectedCard.productName ?? "none") \(selectedCard.cardNumber.card)"
+            subtitle = "\(selectedCard.productName) \(selectedCard.cardNumber.card)"
         } else {
             
-            title = selectedCard.productName ?? "none"
+            title = selectedCard.productName
             subtitle = selectedCard.cardNumber.card
         }
         

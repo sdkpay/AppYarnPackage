@@ -50,8 +50,7 @@ final class CardsPresenter: CardsPresenting {
         self.timeManager.startTraking()
     }
     
-    func viewDidLoad() {
-    }
+    func viewDidLoad() {}
 
     func model(for indexPath: IndexPath) -> CardCellModel {
         let card = cards[indexPath.row]
@@ -62,10 +61,10 @@ final class CardsPresenter: CardsPresenting {
         if featureToggle.isEnabled(.cardBalance) {
             
             title = card.amountData.amountInt.price(.RUB)
-            subtitle = "\(card.productName ?? "none") \(card.cardNumber.card)"
+            subtitle = "\(card.productName) \(card.cardNumber.card)"
         } else {
             
-            title = card.productName ?? "none"
+            title = card.productName
             subtitle = card.cardNumber.card
         }
         

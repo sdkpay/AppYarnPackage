@@ -13,6 +13,11 @@ final class PaymentViewBuilder {
     private var profileButtonDidTap: Action
     private var featureCount: Int
     
+    private(set) lazy var hintView: HintView = {
+        let view = HintView()
+        return view
+    }()
+    
     private(set) lazy var payButton: PaymentButton = {
         let view = PaymentButton()
         view.tapAction = payButtonDidTap
@@ -93,7 +98,7 @@ final class PaymentViewBuilder {
         self.cancelButtonDidTap = cancelButtonDidTap
     }
     
-    func setupUI(view: UIView) {
+    func setupUI(view: UIView, needHint: Bool) {
         view.height(ScreenHeightState.normal.height)
         
         logoImageView.add(toSuperview: view)
@@ -118,6 +123,14 @@ final class PaymentViewBuilder {
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.CollectionView.right)
             .touchEdge(.bottom, toEdge: .top, ofView: payButton, withInset: Cost.CollectionView.bottom)
         
+        if needHint {
+            hintView
+                .add(toSuperview: view)
+                .touchEdge(.left, toSameEdgeOfView: collectionView)
+                .touchEdge(.right, toSameEdgeOfView: collectionView)
+                .touchEdge(.bottom, toEdge: .top, ofView: collectionView, withInset: Cost.Hint.margin)
+        }
+        
         logoImageView
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.ImageView.left)
             .touchEdge(.top, toSuperviewEdge: .top, withInset: Cost.ImageView.top)
@@ -141,6 +154,10 @@ private extension PaymentViewBuilder {
     enum Cost {
         static let sideOffSet: CGFloat = 32.0
         static let height = 56.0
+        
+        enum Hint {
+            static let margin = 20.0
+        }
         
         enum Button {
             static let height = Cost.height

@@ -6,21 +6,38 @@
 //
 
 import UIKit
+import Lottie
 
 private extension TimeInterval {
     static let animationDuration: TimeInterval = 0.35
 }
 
 final class ContentNC: UIViewController {
+    
+    private lazy var backgroundView: LottieAnimationView = {
+        // DEBUG
+        let view = LottieAnimationView()
+        view.contentMode = .scaleToFill
+        view.tag = .backgroundViewTag
+        view.loopMode = .loop
+        return view
+    }()
+    
     var topViewController: UIViewController? {
         viewControllers.last
     }
+    
     private lazy var customTransitioningDelegate = CoverTransitioningDelegate()
     private(set) var viewControllers: [UIViewController] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        addBackground()
     }
 
     convenience init(rootViewController: UIViewController) {
@@ -74,8 +91,28 @@ final class ContentNC: UIViewController {
         return from
     }
     
+    private func addBackground() {
+        backgroundView.alpha = 0
+        self.backgroundView
+            .add(toSuperview: self.view)
+            .touchEdge(.left, toSuperviewEdge: .left)
+            .touchEdge(.right, toSuperviewEdge: .right)
+            .touchEdge(.top, toSuperviewEdge: .top)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom)
+        
+        view.sendSubviewToBack(backgroundView)
+        
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+            self.backgroundView.alpha = 1
+        } completion: { _ in
+            self.backgroundView.play()
+        }
+    }
+    
     private func setupUI() {
-        view.backgroundColor = .backgroundPrimary
+        view.backgroundColor = .backgroundSecondary
+        
         view.layer.masksToBounds = true
         let path = UIBezierPath(roundedRect: view.bounds,
                                 byRoundingCorners: [.topRight, .topLeft],

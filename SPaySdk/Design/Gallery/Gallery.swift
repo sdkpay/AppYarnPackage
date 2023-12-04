@@ -11,7 +11,6 @@ extension UIImage {
     enum Common {
         static let logoClear = Asset.logoClear.image
         static let logoMain = Asset.logoMain.image
-        static let loader = Asset.loader.image
         static let failure = Asset.failureState.image
         static let success = Asset.successNew.image
         static let checkSelected = Asset.checkSelected.image

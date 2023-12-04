@@ -63,6 +63,7 @@ final class CardsViewBuilder {
         view.textColor = Consts.Cost.textColor
         view.text = Consts.Cost.text
         view.textAlignment = .center
+        view.sizeToFit()
         view.height(view.requiredHeight)
         return view
     }()

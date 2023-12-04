@@ -23,7 +23,7 @@ protocol OTPService {
     var otpModel: OTPModel? { get }
     var otpRequired: Bool { get }
     func creteOTP() async throws
-    func confirmOTP(otpHash: String) async throws
+    func confirmOTP(code: String, cardNumber: String) async throws
 }
 
 final class DefaultOTPService: OTPService, ResponseDecoder {
@@ -57,10 +57,17 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
         self.otpModel = otpResult
     }
     
-    func confirmOTP(otpHash: String) async throws {
+    func confirmOTP(code: String, cardNumber: String) async throws {
+        
+        let otpHash = getHashCode(code: code, cardNumber: cardNumber)
+        
         try await network.request(OTPTarget.confirmOtp(bankInvoiceId: sdkManager.authInfo?.orderId ?? "",
                                                        otpHash: otpHash,
                                                        merchantLogin: sdkManager.authInfo?.merchantLogin ?? "",
                                                        sessionId: authManager.sessionId ?? ""))
+    }
+    
+    private func getHashCode(code: String, cardNumber: String) -> String {
+        (code + cardNumber).sha256()
     }
 }
