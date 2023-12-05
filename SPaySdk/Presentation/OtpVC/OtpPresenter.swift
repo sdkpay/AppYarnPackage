@@ -145,7 +145,7 @@ final class OtpPresenter: OtpPresenting {
                         
                         self.analytics.sendEvent(.RQFailConfirmOTP)
                         self.view?.hideLoading(animate: true)
-                        view?.setOtpDescription(error.description)
+                        view?.setOtpDescription(error.publicDescription)
                     } else if error.represents(.tryingError) {
                         self.alertService.show(on: self.view, type: .tryingError(back: {
                             self.dismissWithError(nil)
