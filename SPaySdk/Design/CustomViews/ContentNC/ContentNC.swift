@@ -17,7 +17,7 @@ final class ContentNC: UIViewController {
     private lazy var backgroundView: UIImageView = {
         // DEBUG
         let view = UIImageView(image: Asset.background.image)
-        view.contentMode = .scaleToFill
+        view.contentMode = .scaleAspectFill
         view.tag = .backgroundViewTag
         return view
     }()
