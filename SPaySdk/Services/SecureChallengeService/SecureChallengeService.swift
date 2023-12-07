@@ -56,6 +56,7 @@ final class DefaultSecureChallengeService: SecureChallengeService {
         } catch {
             if let sdkError = error as? SDKError,
                let secureError = SecureChallengeError(from: sdkError) {
+                
                 fraudMonСheckResult = secureError.fraudMonСheckResult
             } else {
                 throw error
