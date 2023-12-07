@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "background.png",
+      "filename" : "bg-sdk-light.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,11 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "SberPay.png",
+      "filename" : "Bg-dark.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "bg-sdk-light@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -27,10 +28,12 @@
           "value" : "dark"
         }
       ],
+      "filename" : "Bg-dark@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "bg-sdk-light@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -41,6 +44,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "Bg-dark@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
@@ -48,5 +52,8 @@
   "info" : {
     "author" : "xcode",
     "version" : 1
+  },
+  "properties" : {
+    "template-rendering-intent" : "original"
   }
 }

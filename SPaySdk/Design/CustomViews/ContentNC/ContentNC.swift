@@ -24,6 +24,7 @@ final class ContentNC: UIViewController {
                                        animationCache: DefaultAnimationCache.sharedCache)
         view.loopMode = .loop
         view.contentMode = .scaleAspectFill
+        view.tag = .backgroundViewTag
         return view
     }()
     

@@ -243,7 +243,7 @@ final class OtpVC: ContentVC, IOtpVC {
             .add(toSuperview: contentView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Stack.right)
-            .touchEdge(.top, toEdge: .top, ofView: contentView, withInset: Cost.Stack.top)
+            .touchEdge(.top, toEdge: .top, ofView: contentView, withInset: Cost.Stack.top, priority: .defaultHigh)
         
         otpTextField
             .add(toSuperview: contentView)
@@ -278,7 +278,7 @@ final class OtpVC: ContentVC, IOtpVC {
             .touchEdge(.left, toSuperviewEdge: .left)
             .touchEdge(.right, toSuperviewEdge: .right)
             .touchEdge(.top, toEdge: .bottom, ofView: contentView)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, priority: .defaultLow)
             .size(kbSize)
     }
 }

@@ -44,7 +44,7 @@ final class LogoutPresenter: LogoutPresenting {
     }
     
     func getName() -> String {
-        (authManager.userInfo?.firstName ?? "") + " " + (authManager.userInfo?.lastName ?? "")
+        "\(authManager.userInfo?.firstName ?? "")  \(authManager.userInfo?.lastName ?? "")"
     }
     
     @MainActor
