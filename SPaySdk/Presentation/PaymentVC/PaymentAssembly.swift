@@ -14,33 +14,52 @@ final class PaymentAssembly {
         self.locator = locator
     }
 
-    func createModule() -> ContentVC {
+    func createModule(with state: PaymentVCMode) -> ContentVC {
         let router = moduleRouter()
-        let presenter = modulePresenter(router)
+        let presenter = modulePresenter(router, with: state)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         router.viewController = contentView
         return contentView
     }
     
-    func modulePresenter(_ router: PaymentRouting) -> PaymentPresenter {
-        PaymentPresenter(router,
-                         manager: locator.resolve(),
-                         userService: locator.resolve(),
-                         analytics: locator.resolve(),
-                         bankManager: locator.resolve(),
-                         paymentService: locator.resolve(),
-                         locationManager: locator.resolve(),
-                         completionManager: locator.resolve(),
-                         alertService: locator.resolve(),
-                         authService: locator.resolve(),
-                         partPayService: locator.resolve(),
-                         secureChallengeService: locator.resolve(),
-                         authManager: locator.resolve(),
-                         biometricAuthProvider: locator.resolve(),
-                         featureToggle: locator.resolve(),
-                         otpService: locator.resolve(),
-                         timeManager: OptimizationCheсkerManager())
+    func modulePresenter(_ router: PaymentRouting,
+                         with state: PaymentVCMode) -> PaymentPresenter {
+        
+        var paymentVCMode: PaymentViewModel
+        
+        switch state {
+            
+        case .pay:
+            paymentVCMode = PaymentViewPayModel(userService: locator.resolve(),
+                                                featureToggle: locator.resolve(),
+                                                partPayService: locator.resolve(),
+                                                payAmountValidationManager: locator.resolve())
+        case .helper:
+            paymentVCMode = PaymentViewHelpModel(userService: locator.resolve(),
+                                                 featureToggle: locator.resolve(),
+                                                 helperConfigManager: locator.resolve())
+        }
+        
+        return PaymentPresenter(router,
+                                manager: locator.resolve(),
+                                userService: locator.resolve(),
+                                analytics: locator.resolve(),
+                                bankManager: locator.resolve(),
+                                paymentService: locator.resolve(),
+                                locationManager: locator.resolve(),
+                                completionManager: locator.resolve(),
+                                alertService: locator.resolve(),
+                                authService: locator.resolve(),
+                                partPayService: locator.resolve(),
+                                secureChallengeService: locator.resolve(),
+                                authManager: locator.resolve(),
+                                biometricAuthProvider: locator.resolve(),
+                                payAmountValidationManager: locator.resolve(),
+                                featureToggle: locator.resolve(),
+                                otpService: locator.resolve(),
+                                timeManager: OptimizationCheсkerManager(),
+                                paymentViewModel: paymentVCMode)
     }
 
     func moduleRouter() -> PaymentRouter {

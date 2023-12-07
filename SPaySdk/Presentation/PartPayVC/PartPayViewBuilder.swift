@@ -54,7 +54,7 @@ private extension PartPayViewBuilder {
             }
             
             enum Cancel {
-                static let title = String(stringLiteral: Strings.Part.Pay.Cancel.title)
+                static let title = String(stringLiteral: Strings.Cancel.title)
                 
                 static let topOffSet: CGFloat = 20.0
                 static let leftOffSet: CGFloat = Consts.margin
@@ -180,14 +180,6 @@ final class PartPayViewBuilder {
     }
     
     func setupUI(view: UIView) {
-        view.addSubview(titleLabel)
-        view.addSubview(subTitleLabel)
-        view.addSubview(backgroundTableView)
-        backgroundTableView.addSubview(partsTableView)
-        backgroundTableView.addSubview(finalStack)
-        view.addSubview(cancelButton)
-        view.addSubview(acceptButton)
-        view.addSubview(agreementView)
         
         acceptButton
             .add(toSuperview: view)

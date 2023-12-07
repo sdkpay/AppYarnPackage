@@ -65,7 +65,7 @@ final class PartCell: UITableViewCell {
     }
     
     private func setupUI() {
-        backgroundColor = .backgroundSecondary
+        backgroundColor = .clear
         
         contentView.addSubview(backgroundPointView)
         backgroundPointView.translatesAutoresizingMaskIntoConstraints = false

@@ -11,12 +11,14 @@ protocol IPaymentVC {
     func configShopInfo(with shop: String, cost: String, fullPrice: String?, iconURL: String?)
     func addSnapShot()
     func configHint(with text: String)
+    func showHint(_ value: Bool)
     func reloadData()
 }
 
 final class PaymentVC: ContentVC, IPaymentVC {
-
+    
     private lazy var viewBuilder = PaymentViewBuilder(featureCount: presenter.featureCount,
+                                                      needPayButton: presenter.needPayButton,
                                                       profileButtonDidTap: { [weak self] in
         guard let self = self else { return }
         self.presenter.profileTapped()
@@ -29,7 +31,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
     })
     
     private var dataSource: UICollectionViewDiffableDataSource<PaymentSection, Int>?
-
+    
     private var presenter: PaymentPresenting
     
     init(_ presenter: PaymentPresenting) {
@@ -46,7 +48,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
         configDataSource()
         viewBuilder.collectionView.delegate = self
         presenter.viewDidLoad()
-        viewBuilder.setupUI(view: view, needHint: presenter.needHint)
+        viewBuilder.setupUI(view: view)
         SBLogger.log(.didLoad(view: self))
     }
     
@@ -110,6 +112,13 @@ final class PaymentVC: ContentVC, IPaymentVC {
         viewBuilder.hintView.setup(with: text)
     }
     
+    func showHint(_ value: Bool) {
+        
+        UIView.animate(withDuration: 0.25) {
+            self.viewBuilder.hintView.alpha = value ? 1.0 : 0.0
+        }
+    }
+    
     private func configDataSource() {
         
         dataSource = UICollectionViewDiffableDataSource<PaymentSection, Int>(collectionView: viewBuilder.collectionView) { (
@@ -121,17 +130,31 @@ final class PaymentVC: ContentVC, IPaymentVC {
             guard let model = self.presenter.model(for: indexPath) else { return nil }
             switch section {
             case .features:
-                return self.config(collectionView: collectionView,
-                                   cellType: BlockPaymentFeatureCell.self,
-                                   with: model,
-                                   fot: indexPath)
+                
+                if self.presenter.featureCount > 1 {
+                    return self.config(collectionView: collectionView,
+                                       cellType: SquarePaymentFeatureCell.self,
+                                       with: model,
+                                       fot: indexPath)
+                } else {
+                    return self.config(collectionView: collectionView,
+                                       cellType: BlockPaymentFeatureCell.self,
+                                       with: model,
+                                       fot: indexPath)
+                }
             case .card:
+                
                 return self.config(collectionView: collectionView,
                                    cellType: PaymentCardCell.self,
                                    with: model,
                                    fot: indexPath)
             }
         }
+    }
+    
+    private func featureCellType() -> (SelfReusable & SelfConfigCell).Type {
+        
+        presenter.featureCount > 1 ? SquarePaymentFeatureCell.self : BlockPaymentFeatureCell.self
     }
     
     private func config<T: SelfReusable & SelfConfigCell, U: AbstractCellModel>(collectionView: UICollectionView,

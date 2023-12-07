@@ -119,6 +119,7 @@ final class DefaultUserService: UserService {
     }
     
     func checkUserSession() async throws {
+        
         guard let sessionId = authManager.sessionId, user != nil else {
             throw SDKError(.noData)
         }
@@ -131,6 +132,7 @@ final class DefaultUserService: UserService {
     }
     
     private func selectCard(from cards: [PaymentToolInfo]) -> PaymentToolInfo? {
+        
         cards.first(where: { $0.priorityCard }) ?? cards.first
     }
 }

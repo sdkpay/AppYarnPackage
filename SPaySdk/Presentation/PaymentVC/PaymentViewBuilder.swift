@@ -21,6 +21,7 @@ final class PaymentViewBuilder {
     private(set) lazy var payButton: PaymentButton = {
         let view = PaymentButton()
         view.tapAction = payButtonDidTap
+        view.height(.defaultButtonHeight)
         return view
     }()
 
@@ -28,6 +29,7 @@ final class PaymentViewBuilder {
         let view = DefaultButton(buttonAppearance: .cancel)
         view.setTitle(String(stringLiteral: Cost.Button.Cancel.title), for: .normal)
         view.addAction(cancelButtonDidTap)
+        view.height(.defaultButtonHeight)
         return view
     }()
     
@@ -69,6 +71,12 @@ final class PaymentViewBuilder {
         return view
     }()
     
+    private lazy var buttonStack: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        return view
+    }()
+    
     private lazy var sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
         sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
         guard let sectionKind = PaymentSection(rawValue: sectionIndex) else { return nil }
@@ -85,10 +93,14 @@ final class PaymentViewBuilder {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(PaymentCardCell.self, forCellWithReuseIdentifier: PaymentCardCell.reuseId)
         collectionView.register(BlockPaymentFeatureCell.self, forCellWithReuseIdentifier: BlockPaymentFeatureCell.reuseId)
+        collectionView.register(SquarePaymentFeatureCell.self, forCellWithReuseIdentifier: SquarePaymentFeatureCell.reuseId)
         return collectionView
     }()
     
+    private var needPayButton = false
+    
     init(featureCount: Int,
+         needPayButton: Bool,
          profileButtonDidTap: @escaping Action,
          payButtonDidTap: @escaping Action,
          cancelButtonDidTap: @escaping Action) {
@@ -96,40 +108,40 @@ final class PaymentViewBuilder {
         self.payButtonDidTap = payButtonDidTap
         self.profileButtonDidTap = profileButtonDidTap
         self.cancelButtonDidTap = cancelButtonDidTap
+        
+        self.needPayButton = needPayButton
+        
+        if needPayButton {
+            buttonStack.addArrangedSubview(payButton)
+        }
+        buttonStack.addArrangedSubview(cancelButton)
     }
     
-    func setupUI(view: UIView, needHint: Bool) {
+    func setupUI(view: UIView) {
         view.height(ScreenHeightState.normal.height)
         
         logoImageView.add(toSuperview: view)
         
-        cancelButton
+        buttonStack
             .add(toSuperview: view)
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.Cancel.bottom, usingRelation: .equal)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Cancel.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Cancel.right)
-            .height(.defaultButtonHeight)
-        
-        payButton
-            .add(toSuperview: view)
-            .height(.defaultButtonHeight)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Pay.left)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Pay.right)
-            .touchEdge(.bottom, toEdge: .top, ofView: cancelButton, withInset: Cost.Button.Pay.bottom)
         
         collectionView
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.CollectionView.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.CollectionView.right)
-            .touchEdge(.bottom, toEdge: .top, ofView: payButton, withInset: Cost.CollectionView.bottom)
+            .touchEdge(.bottom,
+                       toEdge: .top,
+                       ofView: buttonStack,
+                       withInset: needPayButton ? Cost.CollectionView.bottom : Cost.CollectionView.bottomToCancel)
         
-        if needHint {
-            hintView
-                .add(toSuperview: view)
-                .touchEdge(.left, toSameEdgeOfView: collectionView)
-                .touchEdge(.right, toSameEdgeOfView: collectionView)
-                .touchEdge(.bottom, toEdge: .top, ofView: collectionView, withInset: Cost.Hint.margin)
-        }
+        hintView
+            .add(toSuperview: view)
+            .touchEdge(.left, toEdge: .left, ofView: view, withInset: Cost.Hint.margin)
+            .touchEdge(.right, toEdge: .right, ofView: view, withInset: Cost.Hint.margin)
+            .touchEdge(.bottom, toEdge: .top, ofView: collectionView, withInset: Cost.Hint.bottom)
         
         logoImageView
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.ImageView.left)
@@ -147,6 +159,7 @@ final class PaymentViewBuilder {
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.right, toSuperviewEdge: .right)
             .touchEdge(.top, toEdge: .bottom, ofView: logoImageView, withInset: Cost.Stack.top)
+            .touchEdge(.bottom, toEdge: .top, ofView: hintView, usingRelation: .greaterThanOrEqual, priority: .defaultLow)
     }
 }
 
@@ -156,7 +169,8 @@ private extension PaymentViewBuilder {
         static let height = 56.0
         
         enum Hint {
-            static let margin = 20.0
+            static let bottom = 20.0
+            static let margin = 36.0
         }
         
         enum Button {
@@ -165,8 +179,8 @@ private extension PaymentViewBuilder {
             enum Pay {
                 static let title = Strings.Pay.title
                 static let bottom: CGFloat = 10.0
-                static let right: CGFloat = Cost.sideOffSet
-                static let left: CGFloat = Cost.sideOffSet
+                static let right: CGFloat = 16.0
+                static let left: CGFloat = 16.0
                 static let top: CGFloat = Cost.sideOffSet
             }
             
@@ -208,9 +222,10 @@ private extension PaymentViewBuilder {
         enum CollectionView {
             static let itemHeight: CGFloat = 72.0
             static let minimumLineSpacing: CGFloat = 8.0
-            static let bottom: CGFloat = 22.0
-            static let right: CGFloat = Cost.sideOffSet
-            static let left: CGFloat = Cost.sideOffSet
+            static let bottom: CGFloat = 20.0
+            static let bottomToCancel: CGFloat = 8.0
+            static let right: CGFloat = 16.0
+            static let left: CGFloat = 16.0
             static let top: CGFloat = Cost.sideOffSet
         }
         

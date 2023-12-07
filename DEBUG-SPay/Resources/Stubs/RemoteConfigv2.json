@@ -27,7 +27,24 @@
         {
             "name": "cardBalance",
             "value": true
+        },
+        {
+            "name": "seamlessAuth",
+            "value": true
+        },
+        {
+            "name": "sbp",
+            "value": true
+        },
+        {
+            "name": "newCreditCard",
+            "value": true
+        },
+        {
+            "name": "newDebitCard",
+            "value": true
         }
+        
     ],
     "bankApps": [
             {

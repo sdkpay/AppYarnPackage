@@ -9,6 +9,7 @@ import Foundation
 
 final class AssemblyManager {
     private var assemblies: [Assembly] = [
+        HelperConfigManagerAssembly(),
         VersionСontrolManagerAssembly(),
         KeychainStorageAssembly(),
         AuthManagerAssembly(),
@@ -37,6 +38,7 @@ final class AssemblyManager {
         LocationManagerAssembly(),
         SecureChallengeServiceAssembly(),
         PartPayServiceAssembly(),
+        PayAmountValidationManagerAssembly(),
         ContentLoadManagerAssembly()
     ]
     

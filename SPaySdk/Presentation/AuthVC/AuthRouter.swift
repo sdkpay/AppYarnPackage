@@ -8,7 +8,7 @@
 import UIKit
 
 protocol AuthRouting {
-    func presentPayment()
+    func presentPayment(state: PaymentVCMode)
     func presentBankAppPicker(completion: @escaping Action)
     func presentFakeScreen(completion: @escaping () -> Void)
 }
@@ -22,8 +22,8 @@ final class AuthRouter: AuthRouting {
     }
     
     @MainActor
-    func presentPayment() {
-        let vc = PaymentAssembly(locator: locator).createModule()
+    func presentPayment(state: PaymentVCMode) {
+        let vc = PaymentAssembly(locator: locator).createModule(with: state)
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
     

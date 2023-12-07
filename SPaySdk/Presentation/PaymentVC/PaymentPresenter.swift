@@ -8,6 +8,11 @@
 import Foundation
 import UIKit
 
+enum PaymentVCMode {
+    case pay
+    case helper
+}
+
 enum PaymentSection: Int, CaseIterable {
     case features
     case card
@@ -29,17 +34,19 @@ protocol PaymentPresenting {
     func viewDidAppear()
     func viewDidDisappear()
     var needHint: Bool { get }
+    var needPayButton: Bool { get }
 }
 
 final class PaymentPresenter: PaymentPresenting {
     
     var needHint: Bool {
-        // DEBUG
-        false
+        
+        paymentViewModel.needHint
     }
 
     var featureCount: Int {
-        partPayService.bnplplanEnabled ? 1 : 0
+        
+        paymentViewModel.featureCount
     }
 
     weak var view: (IPaymentVC & ContentVC)?
@@ -60,18 +67,11 @@ final class PaymentPresenter: PaymentPresenting {
     private let otpService: OTPService
     private let featureToggle: FeatureToggleService
     private var secureChallengeService: SecureChallengeService
+    private var payAmountValidationManager: PayAmountValidationManager
+    private var paymentViewModel: PaymentViewModel
+    
     private var finalCost: String = ""
-    
-    private var activeFeatures: [PaymentFeature] {
-        
-        var features = [PaymentFeature]()
-        
-        if partPayService.bnplplanEnabled {
-            features.append(.bnpl)
-        }
-        return features
-    }
-    
+
     private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
     
     init(_ router: PaymentRouting,
@@ -88,9 +88,11 @@ final class PaymentPresenter: PaymentPresenting {
          secureChallengeService: SecureChallengeService,
          authManager: AuthManager,
          biometricAuthProvider: BiometricAuthProviderProtocol,
+         payAmountValidationManager: PayAmountValidationManager,
          featureToggle: FeatureToggleService,
          otpService: OTPService,
-         timeManager: OptimizationCheсkerManager) {
+         timeManager: OptimizationCheсkerManager,
+         paymentViewModel: PaymentViewModel) {
         self.router = router
         self.sdkManager = manager
         self.userService = userService
@@ -107,17 +109,26 @@ final class PaymentPresenter: PaymentPresenting {
         self.timeManager = timeManager
         self.authManager = authManager
         self.otpService = otpService
+        self.payAmountValidationManager = payAmountValidationManager
         self.featureToggle = featureToggle
+        self.paymentViewModel = paymentViewModel
         self.timeManager.startTraking()
     }
     
     func viewDidLoad() {
         configViews()
-        setHintText()
+        setHint()
     }
     
-    func setHintText() {
-        // DEBUG
+    func setHint() {
+        
+        view?.configHint(with: paymentViewModel.hintText)
+        view?.showHint(paymentViewModel.needHint)
+    }
+    
+    var needPayButton: Bool {
+        
+        paymentViewModel.payButton
     }
     
     func payButtonTapped() {
@@ -141,41 +152,13 @@ final class PaymentPresenter: PaymentPresenting {
     }
     
     func identifiresForSection(_ section: PaymentSection) -> [Int] {
-        
-        switch section {
-        case .features:
-            return activeFeatures.map { $0.rawValue }
-        case .card:
-            if let paymentId = userService.selectedCard?.paymentId {
-                return [paymentId]
-            } else {
-                return []
-            }
-        }
+     
+        paymentViewModel.identifiresForSection(section)
     }
     
     func model(for indexPath: IndexPath) -> AbstractCellModel? {
         
-        guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
-        
-        switch section {
-        case .features:
-            
-            guard let buttonBnpl = partPayService.bnplplan?.buttonBnpl else { return nil }
-            
-            return PartPayModelFactory.build(indexPath,
-                                             buttonBnpl: buttonBnpl,
-                                             bnplplanSelected: partPayService.bnplplanSelected)
-            
-        case .card:
-            
-            guard let selectedCard = userService.selectedCard else { return nil }
-            return CardModelFactory.build(indexPath,
-                                          selectedCard: selectedCard,
-                                          additionalCards: userService.additionalCards,
-                                          cardBalanceNeed: featureToggle.isEnabled(.cardBalance),
-                                          compoundWalletNeed: featureToggle.isEnabled(.compoundWallet))
-        }
+        paymentViewModel.model(for: indexPath)
     }
     
     func didSelectItem(at indexPath: IndexPath) {
@@ -216,6 +199,7 @@ final class PaymentPresenter: PaymentPresenting {
                     self?.view?.hideLoading(animate: true)
                     self?.userService.selectedCard = card
                     self?.view?.reloadData()
+                    self?.setHint()
                 })
             }
         case false:

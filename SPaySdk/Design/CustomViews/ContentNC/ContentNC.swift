@@ -14,11 +14,16 @@ private extension TimeInterval {
 
 final class ContentNC: UIViewController {
     
-    private lazy var backgroundView: UIImageView = {
+    private lazy var backgroundView: LottieAnimationView = {
         // DEBUG
-        let view = UIImageView(image: Asset.background.image)
-        view.contentMode = .scaleToFill
-        view.tag = .backgroundViewTag
+        //        let view = UIImageView(image: Asset.background.image)
+        //        view.contentMode = .scaleToFill
+        //        view.tag = .backgroundViewTag
+        let view = LottieAnimationView(name: "Background",
+                                       bundle: Bundle.sdkBundle, 
+                                       animationCache: DefaultAnimationCache.sharedCache)
+        view.loopMode = .loop
+        view.contentMode = .scaleAspectFill
         return view
     }()
     
@@ -106,7 +111,7 @@ final class ContentNC: UIViewController {
             self.backgroundView.alpha = 1
         } completion: { _ in
             // DEBUG - Для лотти бэкграудн
-//            self.backgroundView.play()
+            self.backgroundView.play()
         }
     }
     

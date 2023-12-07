@@ -13,7 +13,7 @@ private extension CGFloat {
 
 extension UIView {
     func setupForBase() {
-        backgroundColor = .backgroundSecondary
+        backgroundColor = .clear
         layer.cornerRadius = .corner
     }
 }

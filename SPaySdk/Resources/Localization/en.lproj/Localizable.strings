@@ -24,7 +24,7 @@
 
 // PartPay
 "part.pay.title" = "Плати частями";
-"accept.title" = "Подтвердить оплату частями";
+"accept.title" = "Подтвердить";
 "part.pay.cancel.title" = "Не хочу платить частями";
 "part.pay.final" = "Итого";
 "agreement.title" = "Условия договора";

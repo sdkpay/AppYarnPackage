@@ -25,7 +25,7 @@ enum PaymentSectionLayoutManager {
         
         switch section {
         case .features:
-            return featureCount > 1 ? blockSection : blockSection
+            return featureCount > 1 ? squareSection : blockSection
         case .card:
             return blockSection
         }
@@ -40,6 +40,27 @@ enum PaymentSectionLayoutManager {
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .estimated(1))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .groupPaging
+        return section
+    }
+    
+    private static var squareSection: NSCollectionLayoutSection {
+        
+        let spacing: CGFloat = 4
+        
+        let itemSize = NSCollectionLayoutSize(
+                  widthDimension: .fractionalWidth(0.5),
+                  heightDimension: .fractionalHeight(1.0))
+        
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = .init(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
+        
+        let groupSize = NSCollectionLayoutSize(
+                  widthDimension: .fractionalWidth(1.0),
+                  heightDimension: .fractionalWidth(0.5))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging

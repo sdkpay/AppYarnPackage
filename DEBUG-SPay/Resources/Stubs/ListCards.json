@@ -24,7 +24,7 @@
         "paymentId" : 1,
         "cardNumber" : "5569",
         "amountData" : {
-            "amount" : 7985069.0199999996,
+            "amount" : 85069.0199999996,
             "currency" : "RUR"
         },
         "priorityCard" : true,
@@ -38,7 +38,7 @@
         "paymentId" : 4,
         "cardNumber" : "5533",
         "amountData" : {
-            "amount" : 7985069.0199999996,
+            "amount" : 25069.0199999996,
             "currency" : "RUR"
         },
         "priorityCard" : true,
@@ -52,7 +52,7 @@
         "paymentId" : 14,
         "cardNumber" : "5533",
         "amountData" : {
-            "amount" : 7985069.0199999996,
+            "amount" : 5.0199999996,
             "currency" : "RUR"
         },
         "priorityCard" : true,
@@ -66,7 +66,7 @@
         "paymentId" : 24,
         "cardNumber" : "5533",
         "amountData" : {
-            "amount" : 7985069.0199999996,
+            "amount" : 1276.00,
             "currency" : "RUR"
         },
         "priorityCard" : true,
@@ -84,5 +84,30 @@
   "orderAmount" : {
     "amount" : 510000,
     "currency" : "643"
-  }
+  },
+  "promoInfo" : {
+      "bannerList" : [
+        {
+          "deeplinkIos" : "transfers\/m2mPull?path=create",
+          "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/transfers\/m2mPull?action=create",
+          "type" : "sbp",
+          "iconUrl" : "",
+          "text" : "С карты другого банка"
+        },
+        {
+          "deeplinkIos" : "creditcardorder\/order?sourceType=external&entryPoint=SDKSberpay",
+          "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/creditcardorder\/order?sourceType=external&entryPoint=SDKSberpay",
+          "type" : "creditCard",
+          "iconUrl" : "",
+          "text" : "120 дней без %"
+        },
+        {
+          "deeplinkIos" : "mdcard\/mdcardrequest?segment=ssberkartamir",
+          "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/mdcard\/mdcardrequest?segment=ssberkartamir",
+          "type" : "debitCard",
+          "iconUrl" : "",
+          "text" : "Но можно выпустить цифровую СберКарту всего за пару нажатий"
+        }
+      ]
+    }
 }

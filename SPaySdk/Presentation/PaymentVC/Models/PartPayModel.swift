@@ -13,6 +13,7 @@ struct PaymentFeatureModel: Hashable, AbstractCellModel {
     let title: String?
     let subTitle: String?
     let switchOn: Bool
+    var switchNeed = true
     
     func map<T>(type: T.Type) -> T? where T: Hashable {
         self as? T

@@ -29,6 +29,7 @@ final class AuthPresenter: AuthPresenting {
     private let enviromentManager: EnvironmentManager
     private let versionСontrolManager: VersionСontrolManager
     private let seamlessAuthService: SeamlessAuthService
+    private var payAmountValidationManager: PayAmountValidationManager
     
     init(_ router: AuthRouter,
          authService: AuthService,
@@ -42,7 +43,8 @@ final class AuthPresenter: AuthPresenting {
          versionСontrolManager: VersionСontrolManager,
          contentLoadManager: ContentLoadManager,
          timeManager: OptimizationCheсkerManager,
-         enviromentManager: EnvironmentManager) {
+         enviromentManager: EnvironmentManager,
+         payAmountValidationManager: PayAmountValidationManager) {
         self.analytics = analytics
         self.router = router
         self.authService = authService
@@ -56,6 +58,7 @@ final class AuthPresenter: AuthPresenting {
         self.timeManager = timeManager
         self.enviromentManager = enviromentManager
         self.seamlessAuthService = seamlessAuthService
+        self.payAmountValidationManager = payAmountValidationManager
         self.timeManager.startTraking()
     }
     
@@ -228,7 +231,8 @@ final class AuthPresenter: AuthPresenting {
             
             do {
                 try await contentLoadManager.load()
-                 await self.router.presentPayment()
+                let mode = try getPaymentMode()
+                await self.router.presentPayment(state: mode)
             } catch {
                 if let error = error as? SDKError {
                     self.completionManager.completeWithError(error)
@@ -244,6 +248,11 @@ final class AuthPresenter: AuthPresenting {
             }
         }
     }
+    
+    private func getPaymentMode() throws -> PaymentVCMode {
+        
+        try payAmountValidationManager.checkWalletAmountEnouth() ? .pay : .helper
+     }
     
     private func validateAuthError(error: SDKError) {
         DispatchQueue.main.async { [weak self] in
