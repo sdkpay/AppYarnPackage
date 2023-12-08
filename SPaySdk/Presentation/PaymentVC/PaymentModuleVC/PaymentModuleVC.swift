@@ -1,83 +1,48 @@
 //
-//  PaymentVC.swift
+//  PaymentModuleVC.swift
 //  SPaySdk
 //
-//  Created by Alexander Ipatov on 22.11.2022.
+//  Created by Ипатов Александр Станиславович on 08.12.2023.
 //
+
 
 import UIKit
 
-protocol IPaymentVC {
-    func configShopInfo(with shop: String,
-                        iconURL: String?)
+protocol IPaymentModuleVC {
     func addSnapShot()
     func configHint(with text: String)
     func showHint(_ value: Bool)
     func reloadData()
 }
 
-final class PaymentVC: ContentVC, IPaymentVC {
+final class PaymentModuleVC: UIViewController, IPaymentModuleVC {
     
-    private lazy var viewBuilder = PaymentViewBuilder(featureCount: presenter.featureCount,
-                                                      needPayButton: presenter.needPayButton,
-                                                      profileButtonDidTap: { [weak self] in
-        guard let self = self else { return }
-        self.presenter.profileTapped()
-    }, payButtonDidTap: { [weak self] in
-        guard let self = self else { return }
-        self.presenter.payButtonTapped()
-    }, cancelButtonDidTap: { [weak self] in
-        guard let self = self else { return }
-        self.presenter.cancelTapped()
-    })
+    private var featureCount: Int
+    private var needPayButton: Bool
+    private var payButtonDidTap: Action
+    private var cancelButtonDidTap: Action
+    
+    
+    private lazy var viewBuilder = PaymentModuleViewBuilder(featureCount: featureCount,
+                                                            needPayButton: needPayButton,
+                                                            payButtonDidTap: payButtonDidTap,
+                                                            cancelButtonDidTap: cancelButtonDidTap)
+                                                                 
     
     private var dataSource: UICollectionViewDiffableDataSource<PaymentSection, Int>?
     
-    private var presenter: PaymentPresenting
-    
-    init(_ presenter: PaymentPresenting) {
-        self.presenter = presenter
-        super.init(nibName: nil, bundle: nil)
+    init(featureCount: Int, 
+         needPayButton: Bool,
+         payButtonDidTap: @escaping Action,
+         cancelButtonDidTap: @escaping Action) {
+        self.featureCount = featureCount
+        self.needPayButton = needPayButton
+        self.payButtonDidTap = payButtonDidTap
+        self.cancelButtonDidTap = cancelButtonDidTap
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configDataSource()
-        viewBuilder.collectionView.delegate = self
-        presenter.viewDidLoad()
-        viewBuilder.setupUI(view: view)
-        SBLogger.log(.didLoad(view: self))
-        
-        // DEBUG
-        viewBuilder.purchaseSwappableView.partInfoLabel.text = "из 6 060 ₽ спишем 16 декабря"
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        hideLoading(animate: true)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        presenter.viewDidAppear()
-        SBLogger.log(.didAppear(view: self))
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        presenter.viewDidDisappear()
-        SBLogger.log(.didDissapear(view: self))
-    }
-    
-    func reloadData() {
-        
-        guard var newSnapshot = dataSource?.snapshot() else { return }
-        newSnapshot.reloadSections(PaymentSection.allCases)
-        dataSource?.apply(newSnapshot)
     }
     
     func addSnapShot() {
@@ -101,6 +66,13 @@ final class PaymentVC: ContentVC, IPaymentVC {
         UIView.animate(withDuration: 0.25) {
             self.viewBuilder.hintView.alpha = value ? 1.0 : 0.0
         }
+    }
+    
+    func reloadData() {
+        
+        guard var newSnapshot = dataSource?.snapshot() else { return }
+        newSnapshot.reloadSections(PaymentSection.allCases)
+        dataSource?.apply(newSnapshot)
     }
     
     private func configDataSource() {
@@ -152,7 +124,7 @@ final class PaymentVC: ContentVC, IPaymentVC {
     }
 }
 
-extension PaymentVC: UICollectionViewDelegate {
+extension PaymentModuleVC: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         presenter.didSelectItem(at: indexPath)
