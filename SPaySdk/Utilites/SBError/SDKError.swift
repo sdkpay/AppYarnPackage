@@ -99,6 +99,7 @@ enum ErrorCode: Int {
     case timeOut = 9
     case incorrectCode = 5
     case tryingError = 6
+    case noMoney = 7
     
     var description: String {
         ""
@@ -138,6 +139,8 @@ enum ErrorCode: Int {
         case .tryingError:
             errorDescription = Strings.Error.system
         case .bankAppError:
+            errorDescription = Strings.Error.system
+        case .noMoney:
             errorDescription = Strings.Error.system
         }
         return errorDescription

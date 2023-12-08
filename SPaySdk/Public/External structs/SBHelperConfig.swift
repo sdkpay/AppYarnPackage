@@ -12,10 +12,12 @@ public final class SBHelperConfig: NSObject {
     
     var sbp: Bool
     var creditCard: Bool
+    var debitCard: Bool
 
     @objc
-    public init(sbp: Bool = true, creditCard: Bool = true) {
+    public init(sbp: Bool = true, creditCard: Bool = true, debitCard: Bool = true) {
         self.sbp = sbp
         self.creditCard = creditCard
+        self.debitCard = debitCard
     }
 }

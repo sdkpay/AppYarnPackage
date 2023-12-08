@@ -13,7 +13,7 @@ typealias PaymentResponse = (state: SPayState, info: String)
 typealias PaymentCompletion = (PaymentResponse) -> Void
 
 protocol SBPayService {
-    func setup(bnplPlan: Bool, config: SBHelperConfig, environment: SEnvironment, completion: Action?)
+    func setup(bnplPlan: Bool, helpers: Bool, config: SBHelperConfig, environment: SEnvironment, completion: Action?)
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
@@ -32,11 +32,13 @@ protocol SBPayService {
 extension SBPayService {
     
     func setup(bnplPlan: Bool = true,
+               helpers: Bool = true,
                config: SBHelperConfig = SBHelperConfig(),
                environment: SEnvironment = .prod,
                completion: Action? = nil) {
                    
         setup(bnplPlan: bnplPlan,
+              helpers: helpers,
               config: config,
               environment: environment,
               completion: completion)
@@ -56,6 +58,7 @@ final class DefaultSBPayService: SBPayService {
     private var apiKey: String?
     
     func setup(bnplPlan: Bool,
+               helpers: Bool,
                config: SBHelperConfig,
                environment: SEnvironment,
                completion: Action?) {
@@ -77,6 +80,9 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(HelperConfigManager.self)
             .setConfig(config)
+        locator
+            .resolve(HelperConfigManager.self)
+            .setHelpersNeeded(helpers)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         SBLogger.dateString = dateFormatter.string(from: Date())

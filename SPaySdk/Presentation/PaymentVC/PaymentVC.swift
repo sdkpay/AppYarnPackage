@@ -50,6 +50,9 @@ final class PaymentVC: ContentVC, IPaymentVC {
         presenter.viewDidLoad()
         viewBuilder.setupUI(view: view)
         SBLogger.log(.didLoad(view: self))
+        
+        // DEBUG
+        viewBuilder.purchaseSwappableView.partInfoLabel.text = "из 6 060 ₽ спишем 16 декабря"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,11 +84,11 @@ final class PaymentVC: ContentVC, IPaymentVC {
                                                         .font: UIFont.bodi3 ?? .systemFont(ofSize: 15),
                                                         .foregroundColor: UIColor.textSecondary
                                                      ])
-            viewBuilder.costLabel.text = nil
-            viewBuilder.costLabel.attributedText = attributedPrice
+            viewBuilder.purchaseSwappableView.costLabel.text = nil
+            viewBuilder.purchaseSwappableView.costLabel.attributedText = attributedPrice
         } else {
-            viewBuilder.costLabel.attributedText = nil
-            viewBuilder.costLabel.text = cost
+            viewBuilder.purchaseSwappableView.costLabel.attributedText = nil
+            viewBuilder.purchaseSwappableView.costLabel.text = cost
         }
     }
     

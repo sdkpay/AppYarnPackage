@@ -1,7 +1,7 @@
 //
 //  LogoutAssembly.swift
 //  SPaySdk
-//
+// 
 //  Created by Арсений on 18.08.2023.
 //
 

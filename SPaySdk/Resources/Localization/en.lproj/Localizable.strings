@@ -44,6 +44,8 @@
 "error.trying" = "Вы исчерпали попытки ввода кода.\nВыберете другой метод оплаты";
 "error.version.title" = "Сервис недоступен";
 "error.version.subtitle" = "Выберите другой способ оплаты";
+"error.noMoney.title" = "Оплатить со SberPay не получится";
+"error.noMoney.subtitle" = "Пополните карту и и попробуйте ещё раз";
 
 // Loading
 "try.to.pay.title" = "Проводим оплату...";

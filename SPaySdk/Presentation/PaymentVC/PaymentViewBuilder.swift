@@ -47,13 +47,6 @@ final class PaymentViewBuilder {
         return view
     }()
     
-    private(set) lazy var costLabel: UILabel = {
-        let view = UILabel()
-        view.font = Cost.Label.Cost.font
-        view.textColor = Cost.Label.Cost.textColor
-        return view
-    }()
-    
     private(set) lazy var logoImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
@@ -62,18 +55,21 @@ final class PaymentViewBuilder {
         view.layer.cornerRadius = Cost.ImageView.radius
         return view
     }()
-    
-    private lazy var purchaseInfoStack: UIStackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        view.addArrangedSubview(shopLabel)
-        view.addArrangedSubview(costLabel)
-        return view
-    }()
-    
+
     private lazy var buttonStack: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
+        return view
+    }()
+    
+    private(set) lazy var purchaseSwappableView: PurchaseSwappableView = {
+        let view = PurchaseSwappableView()
+        return view
+    }()
+    
+    private(set) lazy var levelsView: LevelsView = {
+        let view = LevelsView(frame: .zero)
+        view.setup(levelsCount: 4, selectedViewIndex: 0)
         return view
     }()
     
@@ -148,17 +144,28 @@ final class PaymentViewBuilder {
             .touchEdge(.top, toSuperviewEdge: .top, withInset: Cost.ImageView.top)
             .size(Cost.ImageView.size)
         
+        shopLabel
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
+            .touchEdge(.right, toSuperviewEdge: .right)
+            .touchEdge(.top, toEdge: .bottom, ofView: logoImageView, withInset: Cost.Stack.top)
+        
         profileButton
             .add(toSuperview: view)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.ProfileButton.left)
             .touchEdge(.top, toSuperviewEdge: .top, withInset: Cost.ProfileButton.top)
             .size(Cost.ProfileButton.size)
         
-        purchaseInfoStack
+        purchaseSwappableView
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.right, toSuperviewEdge: .right)
-            .touchEdge(.top, toEdge: .bottom, ofView: logoImageView, withInset: Cost.Stack.top)
+            .touchEdge(.top, toEdge: .bottom, ofView: shopLabel, withInset: Cost.Stack.topCost)
+        
+        levelsView
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
+            .touchEdge(.top, toEdge: .bottom, ofView: purchaseSwappableView, withInset: Cost.Stack.topCost)
             .touchEdge(.bottom, toEdge: .top, ofView: hintView, usingRelation: .greaterThanOrEqual, priority: .defaultLow)
     }
 }
@@ -234,6 +241,7 @@ private extension PaymentViewBuilder {
             static let right: CGFloat = Cost.sideOffSet
             static let left: CGFloat = Cost.sideOffSet
             static let top: CGFloat = 16.0
+            static let topCost: CGFloat = 4.0
             static let height: CGFloat = Cost.height
         }
     }

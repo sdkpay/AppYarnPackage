@@ -41,7 +41,7 @@ final class DefaultPayAmountValidationManager: PayAmountValidationManager {
     }
     
     func checkWalletAmountEnouth() throws -> Bool {
-
+        
         guard let user = userService.user else { throw SDKError(.noData) }
         
         return try user.paymentToolInfo.contains(where: { try checkAmountSelectedTool($0) != .notEnouth })

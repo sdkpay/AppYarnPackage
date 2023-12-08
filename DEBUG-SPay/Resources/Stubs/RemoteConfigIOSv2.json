@@ -58,6 +58,12 @@
                 "utilLink": "sbolonline://",
                 "authLink": "sbolidexternallogin://",
                 "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-2.png"
+            },
+            {
+                "name": "Зимний онлайн",
+                "utilLink": "btripsexpenses://sbolonline/",
+                "authLink": "btripsexpenses://sbolidexternallogin/",
+                "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-2.png"
             }
     ],
     "images":{

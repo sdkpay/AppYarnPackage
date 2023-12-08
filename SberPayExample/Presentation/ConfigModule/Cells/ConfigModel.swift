@@ -94,6 +94,10 @@ struct ConfigValues {
                  defaultValue: true)
     var bnpl: Bool
     
+    @UserDefault(key: CellType.helpers.rawValue,
+                 defaultValue: true)
+    var helpers: Bool
+    
     @UserDefault(key: CellType.sbp.rawValue,
                  defaultValue: true)
     var sbp: Bool

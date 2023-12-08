@@ -19,7 +19,7 @@ enum SectionData: Int, CaseIterable {
 
 enum CellType: String, CaseIterable {
     case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, refresh, environment, bnpl, next, sid
-    case sbp, newCreditCard, newDebitCard
+    case sbp, newCreditCard, newDebitCard, helpers
 }
 
 private struct ConfigCellTextModel {
@@ -96,17 +96,18 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                 .ssl,
                 .lang
             ]
+        case .merchantConfig:
+            return [
+                .bnpl,
+                .helpers,
+                .sbp,
+                .newCreditCard,
+                .newDebitCard
+            ]
         case .next:
             return [
                 .next,
                 .sid
-            ]
-        case .merchantConfig:
-            return [
-                .bnpl,
-                .sbp,
-                .newCreditCard,
-                .newDebitCard
             ]
         }
     }
@@ -153,6 +154,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             return newCreditCell(type: type)
         case .newDebitCard:
             return newDebitCell(type: type)
+        case .helpers:
+            return helpersCell(type: type)
         }
     }
     
@@ -238,6 +241,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         }
         SPay.debugConfig(network: configValues.network, ssl: configValues.ssl, refresh: configValues.refresh)
         SPay.setup(bnplPlan: configValues.bnpl,
+                   helpers: configValues.helpers,
                    helperConfig: SBHelperConfig(sbp: configValues.sbp, creditCard: configValues.newCreditCard),
                    environment: environment) {
             self.view?.stopLoader()
@@ -473,6 +477,15 @@ extension ConfigPresenter {
         cell.config(with: "BNPL",
                     value: configValues.bnpl) { bool in
             self.configValues.bnpl = bool
+        }
+        return cell
+    }
+
+    private func helpersCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "Helpers",
+                    value: configValues.helpers) { bool in
+            self.configValues.helpers = bool
         }
         return cell
     }

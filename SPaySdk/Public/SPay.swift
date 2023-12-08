@@ -22,10 +22,11 @@ public final class SPay: NSObject {
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     @objc
     public static func setup(bnplPlan: Bool = false,
+                             helpers: Bool = true,
                              helperConfig: SBHelperConfig = SBHelperConfig(),
                              environment: SEnvironment = .prod,
                              completion: Action? = nil) {
-        payService?.setup(bnplPlan: bnplPlan, config: helperConfig, environment: environment, completion: completion)
+        payService?.setup(bnplPlan: bnplPlan, helpers: helpers, config: helperConfig, environment: environment, completion: completion)
     }
     
     /**

@@ -41,7 +41,8 @@ final class HelperAssembly {
                       contentLoadManager: locator.resolve(),
                       timeManager: OptimizationCheсkerManager(),
                       enviromentManager: locator.resolve(), 
-                      payAmountValidationManager: locator.resolve())
+                      payAmountValidationManager: locator.resolve(),
+                      helperManager: locator.resolve())
     }
 
     private func moduleView(presenter: AuthPresenter) -> ContentVC & IAuthVC {
