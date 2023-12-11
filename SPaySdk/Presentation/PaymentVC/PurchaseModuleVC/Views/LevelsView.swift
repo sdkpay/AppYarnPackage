@@ -10,7 +10,7 @@ import UIKit
 private extension CGFloat {
     
     static let levelWidth = 16.0
-    static let levelRadius = 4.0
+    static let levelRadius = 3.0
     static let levelHeight = 6.0
     static let levelSpacing = 5.0
 }
@@ -33,7 +33,7 @@ private final class LevelView: UIView {
     
     private func setupUI() {
         
-        backgroundColor = .textSecondary
+        backgroundColor = Asset.grayLight.color
         layer.masksToBounds = true
         layer.cornerRadius = .levelRadius
     }
@@ -41,8 +41,7 @@ private final class LevelView: UIView {
 
 final class LevelsView: UIView {
     
-    private var levelsCount: Int = 0
-    private var currentLevel: Int = 0
+    private var levelsCount: Int = 1
     
     private var levelViews = [LevelView]()
     
@@ -65,9 +64,10 @@ final class LevelsView: UIView {
     
     func setup(levelsCount: Int, selectedViewIndex: Int) {
         self.levelsCount = levelsCount
-        addLevels()
+        if levelsCount > 0 {
+            addLevels()
+        }
         setupUI()
-        currentLevel = selectedViewIndex
         selectView(at: selectedViewIndex)
     }
     
@@ -82,38 +82,18 @@ final class LevelsView: UIView {
             stackView.addArrangedSubview(levelView)
         }
     }
-    
-    func next() {
-        
-        if levelsCount <= currentLevel + 1 {
-            
-            selectView(at: currentLevel + 1)
-            currentLevel += 1
-        }
-    }
-    
-    func back() {
-        
-        if currentLevel - 1 <= 0 {
-            
-            selectView(at: currentLevel - 1)
-            currentLevel -= 1
-        }
-    }
-    
-    private func selectView(at index: Int) {
-        
-        let currentView = levelViews[currentLevel]
+
+    func selectView(at index: Int) {
         
         let newView = levelViews[index]
         
         UIView.animate(withDuration: .animationDuration) {
             
-            currentView.backgroundColor = .backgroundSecondary
+            self.levelViews.filter({ $0 != newView }).forEach({ $0.backgroundColor = Asset.grayLight.color })
             newView.backgroundColor = .main
         }
     }
-    
+
     private func setupUI() {
 
         stackView

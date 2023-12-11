@@ -9,56 +9,21 @@ import UIKit
 
 final class PurchaseModuleVC: UIViewController {
     
-    var profileButtonDidTap: Action
+    private var presenter: PaymentPresenting
     
-    private(set) lazy var shopLabel: UILabel = {
-        let view = UILabel()
-        view.font = Cost.Label.Shop.font
-        view.textColor = Cost.Label.Shop.textColor
-        return view
-    }()
+    private lazy var viewBuilder = PurchaseViewBuilder(levelsCount: presenter.levelsCount,
+                                                       visibleItemsInvalidationHandler: { [weak self] visibleItems, location, _ in
+        
+        self?.updateLevelIfNeed(items: visibleItems, location: location)
+    },
+                                                       profileButtonDidTap: {
+        self.presenter.profileTapped()
+    })
+
+    private var dataSource: UICollectionViewDiffableDataSource<PurchaseSection, Int>?
     
-    private(set) lazy var logoImageView: UIImageView = {
-        let view = UIImageView()
-        view.contentMode = .scaleAspectFit
-        view.layer.borderColor = Asset.grayDisabled.color.cgColor
-        view.layer.borderWidth = Cost.ImageView.border
-        view.layer.cornerRadius = Cost.ImageView.radius
-        return view
-    }()
-    
-    private(set) lazy var levelsView: LevelsView = {
-        let view = LevelsView(frame: .zero)
-        view.setup(levelsCount: 4, selectedViewIndex: 0)
-        return view
-    }()
-    
-    private lazy var purchaseSectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
-        sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
-        let section = PurchaseSectionLayoutManager.getSectionLayout(layoutEnvironment: layoutEnvironment)
-        return section
-    }
-    
-    private(set) lazy var purchaseCollectionView: CompactCollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        let collectionView = CompactCollectionView(frame: .zero,
-                                                   collectionViewLayout: PurchaseCollectionViewLayoutManager.create(with: purchaseSectionProvider))
-        collectionView.backgroundColor = .clear
-        collectionView.alwaysBounceVertical = false
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.register(PurchaseCell.self, forCellWithReuseIdentifier: PurchaseCell.reuseId)
-        return collectionView
-    }()
-    
-    private(set) lazy var profileButton: ActionButton = {
-        let view = ActionButton()
-        view.addAction(profileButtonDidTap)
-        view.setImage(Asset.user.image, for: .normal)
-        return view
-    }()
-    
-    init(profileButtonDidTap: @escaping Action) {
-        self.profileButtonDidTap = profileButtonDidTap
+    init(_ presenter: PaymentPresenting) {
+        self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -68,98 +33,71 @@ final class PurchaseModuleVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        configDataSource()
+        viewBuilder.setupUI(view: view)
+        addSnapShot()
+    }
+    
+    func addSnapShot() {
+        
+        var snapshot = NSDiffableDataSourceSnapshot<PurchaseSection, Int>()
+        snapshot.appendSections(PurchaseSection.allCases)
+        snapshot.appendItems(presenter.identifiresForPurchaseSection())
+        dataSource?.apply(snapshot, animatingDifferences: true)
+    }
+    
+    func reloadData() {
+        
+        guard var newSnapshot = dataSource?.snapshot() else { return }
+        newSnapshot.reloadSections(PurchaseSection.allCases)
+        dataSource?.apply(newSnapshot)
+    }
+    
+    func showPartsView(_ value: Bool) {
+        
+        UIView.animate(withDuration: 0.25) {
+            self.viewBuilder.levelsView.alpha = value ? 1.0 : 0.0
+        }
     }
     
     func configShopInfo(with shop: String,
                         iconURL: String?) {
         
-        shopLabel.text = shop
-        logoImageView.downloadImage(from: iconURL, placeholder: .Payment.cart)
+        viewBuilder.shopLabel.text = shop
+        viewBuilder.logoImageView.downloadImage(from: iconURL, placeholder: .Payment.cart)
     }
     
-    func setupUI() {
+    private func showLevel(_ index: Int) {
         
-        logoImageView.add(toSuperview: view)
-        
-        logoImageView
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.ImageView.left)
-            .touchEdge(.top, toSuperviewEdge: .top, withInset: Cost.ImageView.top)
-            .size(Cost.ImageView.size)
-        
-        shopLabel
-            .add(toSuperview: view)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
-            .touchEdge(.right, toSuperviewEdge: .right)
-            .touchEdge(.top, toEdge: .bottom, ofView: logoImageView, withInset: Cost.Stack.top)
-        
-        profileButton
-            .add(toSuperview: view)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.ProfileButton.left)
-            .touchEdge(.top, toSuperviewEdge: .top, withInset: Cost.ProfileButton.top)
-            .size(Cost.ProfileButton.size)
-        
-        purchaseCollectionView
-            .add(toSuperview: view)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
-            .touchEdge(.right, toSuperviewEdge: .right)
-            .touchEdge(.top, toEdge: .bottom, ofView: shopLabel, withInset: Cost.Stack.topCost)
-        
-        levelsView
-            .add(toSuperview: view)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
-            .touchEdge(.top, toEdge: .bottom, ofView: purchaseCollectionView, withInset: Cost.Stack.topCost)
+        viewBuilder.levelsView.selectView(at: index)
     }
-}
-
-private extension PurchaseModuleVC {
-    enum Cost {
-        static let sideOffSet: CGFloat = 32.0
-        static let height = 56.0
-
-        enum Label {
-            enum Shop {
-                static let font = UIFont.bodi2
-                static let textColor = UIColor.textSecondary
-            }
-            
-            enum Cost {
-                static let font = UIFont.header
-                static let textColor = UIColor.textPrimory
-            }
-        }
+    
+    private func updateLevelIfNeed(items: [NSCollectionLayoutVisibleItem], location: CGPoint) {
         
-        enum ImageView {
-            static let size: CGSize = .init(width: 52, height: 52)
-            static let left: CGFloat = Cost.sideOffSet
-            static let top: CGFloat = 36.0
-            static let radius: CGFloat = 16.0
-            static let border: CGFloat = 1.0
-        }
+        guard let index = items.last?.indexPath.row else { return }
         
-        enum ProfileButton {
-            static let size: CGSize = .init(width: 32, height: 32)
-            static let top: CGFloat = 36.0
-            static let left: CGFloat = Cost.sideOffSet
-        }
+        let width = viewBuilder.purchaseCollectionView.bounds.width
+        let scrollOffset = location.x
+        let modulo = scrollOffset.truncatingRemainder(dividingBy: width)
+        let tolerance = width / 3
         
-        enum CollectionView {
-            static let itemHeight: CGFloat = 72.0
-            static let minimumLineSpacing: CGFloat = 8.0
-            static let bottom: CGFloat = 20.0
-            static let bottomToCancel: CGFloat = 8.0
-            static let right: CGFloat = 16.0
-            static let left: CGFloat = 16.0
-            static let top: CGFloat = Cost.sideOffSet
+        if modulo < tolerance {
+            self.showLevel(index)
         }
+    }
+    
+    private func configDataSource() {
         
-        enum Stack {
-            static let bottom: CGFloat = 104.0
-            static let right: CGFloat = Cost.sideOffSet
-            static let left: CGFloat = Cost.sideOffSet
-            static let top: CGFloat = 16.0
-            static let topCost: CGFloat = 4.0
-            static let height: CGFloat = Cost.height
+        dataSource = UICollectionViewDiffableDataSource<PurchaseSection, Int>(collectionView: viewBuilder.purchaseCollectionView) { (
+            collectionView: UICollectionView,
+            indexPath: IndexPath,
+            _: Int
+        ) -> UICollectionViewCell? in
+            guard let model = self.presenter.purchaseModel(for: indexPath) else { return nil }
+            return UICollectionView.config(collectionView: collectionView,
+                                           cellType: PurchaseCell.self,
+                                           with: model,
+                                           fot: indexPath)
         }
     }
 }

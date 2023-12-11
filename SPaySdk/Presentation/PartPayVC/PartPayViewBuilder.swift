@@ -16,28 +16,19 @@ private extension PartPayViewBuilder {
                 static let font = UIFont.header2
                 static let textColor = UIColor.textPrimory
                 
-                static let topOffSet: CGFloat = 24.0
-                static let leftOffSet: CGFloat = Consts.margin
-                static let rightOffSet: CGFloat = Consts.margin
-            }
-            
-            enum SubTittle {
-                static let font = UIFont.medium2
-                static let textColor = UIColor.textSecondary
-                
-                static let topOffSet: CGFloat = 24.0
-                static let leftOffSet: CGFloat = Consts.margin
+                static let topOffSet: CGFloat = 32.0
+                static let leftOffSet: CGFloat = 32.0
                 static let rightOffSet: CGFloat = Consts.margin
             }
             
             enum Final {
-                static let font = UIFont.bodi1
+                static let font = UIFont.medium5
                 static let textColor = UIColor.textPrimory
                 static let text = Strings.Part.Pay.final
             }
             
             enum FinalCost {
-                static let font = UIFont.bodi1
+                static let font = UIFont.medium5
                 static let textColor = UIColor.textPrimory
             }
         }
@@ -109,13 +100,7 @@ final class PartPayViewBuilder {
                                  kern: -0.3,
                                  string: Strings.Part.Pay.title)
         view.textColor = Consts.Label.Title.textColor
-        return view
-    }()
-    
-    private(set) lazy var subTitleLabel: UILabel = {
-       let view = UILabel()
-        view.font = Consts.Label.Title.font
-        view.textColor = Consts.Label.SubTittle.textColor
+        view.height(view.requiredHeight)
         return view
     }()
     
@@ -164,6 +149,7 @@ final class PartPayViewBuilder {
         view.separatorStyle = .none
         view.showsVerticalScrollIndicator = false
         view.isScrollEnabled = false
+        view.backgroundColor = .clear
         view.rowHeight = Consts.TableView.Background.rowHeight
         return view
     }()
@@ -190,15 +176,9 @@ final class PartPayViewBuilder {
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Label.Title.leftOffSet)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Label.Title.rightOffSet)
 
-        subTitleLabel
-            .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Label.SubTittle.leftOffSet)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Label.SubTittle.rightOffSet)
-
         backgroundTableView
             .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: subTitleLabel, withInset: Consts.TableView.Background.topOffSet)
+            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Consts.TableView.Background.topOffSet)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.TableView.Background.leftOffSet)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.Background.rightOffSet)
         

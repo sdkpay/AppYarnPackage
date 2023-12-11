@@ -84,7 +84,7 @@ final class PartPayPresenter: PartPayPresenting {
             return PartCellModel(title: "", cost: "", isSelected: true, hideLine: true)
         }
         let part = parts[indexPath.row]
-        return PartCellModel(title: (indexPath.row == 0 ? text : part.date) ?? "",
+        return PartCellModel(title: indexPath.row == 0 ? text : part.date,
                              cost: part.amount.price(part.currencyCode),
                              isSelected: indexPath.row == 0,
                              hideLine: indexPath.row == parts.count - 1)
@@ -95,7 +95,6 @@ final class PartPayPresenter: PartPayPresenting {
             view?.setFinalCost(plan.finalCost.price(plan.currencyCode))
         }
         view?.setTitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
-        view?.setSubtitle(partPayService.bnplplan?.graphBnpl?.content ?? "")
     }
 
     private func configCheckView() {

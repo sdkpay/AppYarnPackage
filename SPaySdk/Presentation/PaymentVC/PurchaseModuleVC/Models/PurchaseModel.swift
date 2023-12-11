@@ -16,4 +16,3 @@ struct PurchaseModel: Hashable, AbstractCellModel {
         self as? T
     }
 }
-

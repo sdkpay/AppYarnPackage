@@ -59,15 +59,16 @@ final class PaymentAssembly {
                                 featureToggle: locator.resolve(),
                                 otpService: locator.resolve(),
                                 timeManager: OptimizationCheсkerManager(),
-                                paymentViewModel: paymentVCMode)
+                                paymentViewModel: paymentVCMode, 
+                                mode: state)
     }
 
     func moduleRouter() -> PaymentRouter {
         PaymentRouter(with: locator)
     }
 
-    private func moduleView(presenter: PaymentPresenter) -> ContentVC & IPaymentVC {
-        let view = PaymentVC(presenter)
+    private func moduleView(presenter: PaymentPresenter) -> ContentVC & IPaymentMasterVC {
+        let view = PaymentMasterVC(presenter)
         presenter.view = view
         return view
     }

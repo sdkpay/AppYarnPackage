@@ -10,7 +10,6 @@ import UIKit
 private extension CGFloat {
     static let arrowWidth = 24.0
     static let cardWidth = 36.0
-    static let letterSpacing = -0.4
 }
 
 final class PurchaseCell: UICollectionViewCell, SelfReusable, SelfConfigCell {
@@ -35,7 +34,6 @@ final class PurchaseCell: UICollectionViewCell, SelfReusable, SelfConfigCell {
         view.addArrangedSubview(costLabel)
         return view
     }()
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -63,7 +61,7 @@ final class PurchaseCell: UICollectionViewCell, SelfReusable, SelfConfigCell {
         
         purchaseInfoStack
             .add(toSuperview: self)
-            .touchEdgesToSuperview([.top, .bottom, .left, .right])
+            .touchEdgesToSuperview([.top, .left, .right])
     }
 }
 
@@ -73,7 +71,7 @@ private extension PurchaseCell {
         
         enum Label {
             enum Part {
-                static let font = UIFont.bodi2
+                static let font = UIFont.medium2
                 static let textColor = UIColor.textSecondary
             }
             

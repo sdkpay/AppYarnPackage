@@ -234,8 +234,13 @@ final class AuthPresenter: AuthPresenting {
             
             do {
                 try await contentLoadManager.load()
-                let mode = try getPaymentMode()
-                await self.router.presentPayment(state: mode)
+                
+                if let user = userService.user, !user.paymentToolInfo.isEmpty {
+                    let mode = try getPaymentMode()
+                    await self.router.presentPayment(state: mode)
+                } else {
+                    await self.router.presentHelper()
+                }
             } catch {
                 if let error = error as? SDKError {
                     self.completionManager.completeWithError(error)

@@ -49,8 +49,8 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
         return view
     }()
     
-    private lazy var switchControl: UISwitch = {
-        let view = UISwitch(frame: .zero)
+    private lazy var switchControl: DefaultSwitch = {
+        let view = DefaultSwitch(frame: .zero)
         view.isUserInteractionEnabled = false
         return view
     }()
@@ -69,6 +69,7 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
         titleLabel.text = model.title
         subtitleLabel.text = model.subTitle
         self.switchControl.isOn = model.switchOn
+        switchControl.OffTint = model.switchOn ? .main : Asset.grayLight.color
         iconView.downloadImage(from: model.iconViewURL)
         
         setupUI(needSwitch: model.switchNeed)

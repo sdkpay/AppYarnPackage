@@ -58,8 +58,8 @@ final class SquarePaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCo
         return view
     }()
     
-    private lazy var switchControl: UISwitch = {
-        let view = UISwitch(frame: .zero)
+    private lazy var switchControl: DefaultSwitch = {
+        let view = DefaultSwitch(frame: .zero)
         view.isUserInteractionEnabled = false
         return view
     }()
@@ -68,7 +68,8 @@ final class SquarePaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCo
         guard let model = model.map(type: PaymentFeatureModel.self) else { return }
         titleLabel.text = model.title
         subtitleLabel.text = model.subTitle
-        switchControl.isOn = model.switchOn
+        switchControl.isOn = model.switchOn 
+        switchControl.OffTint = model.switchOn ? .main : Asset.grayLight.color
         cardIconView.downloadImage(from: model.iconViewURL)
         
         if model.switchNeed {

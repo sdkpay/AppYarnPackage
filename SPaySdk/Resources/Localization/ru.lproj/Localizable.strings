@@ -14,17 +14,19 @@
 "try.title" = "Попробовать ещё раз";
 "back.title" = "Вернуться";
 "from.title" = " из %@";
+"today.title" = "сегодня";
 
 // Payment
 "payment.noCards.title" = "Нет карт для оплаты";
 "payment.noCards.subtitle" = "Выберите другой способ";
 "payment.cards.compoundWallet.title" = " c %@";
-
+"payment.part.subtitile" = "из %@ спишем %@";
 "payment.cards.compoundWallet.one" = "счетом";
 "payment.cards.compoundWallet.two" = "счетами";
 
 // Cards
 "cards.title" = "К оплате";
+"cards.new.title" = "Выпустить карту";
 
 // PartPay
 "part.pay.title" = "Плати частями";

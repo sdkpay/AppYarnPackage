@@ -1,49 +1,21 @@
 //
-//  PaymentViewBuilder.swift
+//  PurchaseViewBuilder.swift
 //  SPaySdk
 //
-//  Created by Арсений on 30.06.2023.
+//  Created by Ипатов Александр Станиславович on 09.12.2023.
 //
 
 import UIKit
 
-final class PaymentViewBuilder {
-    private var payButtonDidTap: Action
-    private var cancelButtonDidTap: Action
+final class PurchaseViewBuilder {
+    
     private var profileButtonDidTap: Action
-    private var featureCount: Int
-    
-    private(set) lazy var hintView: HintView = {
-        let view = HintView()
-        return view
-    }()
-    
-    private(set) lazy var payButton: PaymentButton = {
-        let view = PaymentButton()
-        view.tapAction = payButtonDidTap
-        view.height(.defaultButtonHeight)
-        return view
-    }()
-
-    private(set) lazy var cancelButton: DefaultButton = {
-        let view = DefaultButton(buttonAppearance: .cancel)
-        view.setTitle(String(stringLiteral: Cost.Button.Cancel.title), for: .normal)
-        view.addAction(cancelButtonDidTap)
-        view.height(.defaultButtonHeight)
-        return view
-    }()
+    private var visibleItemsInvalidationHandler: NSCollectionLayoutSectionVisibleItemsInvalidationHandler
     
     private(set) lazy var shopLabel: UILabel = {
         let view = UILabel()
         view.font = Cost.Label.Shop.font
         view.textColor = Cost.Label.Shop.textColor
-        return view
-    }()
-    
-    private(set) lazy var profileButton: ActionButton = {
-        let view = ActionButton()
-        view.addAction(profileButtonDidTap)
-        view.setImage(Asset.user.image, for: .normal)
         return view
     }()
     
@@ -55,17 +27,6 @@ final class PaymentViewBuilder {
         view.layer.cornerRadius = Cost.ImageView.radius
         return view
     }()
-
-    private lazy var buttonStack: UIStackView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        return view
-    }()
-    
-    private(set) lazy var purchaseSwappableView: PurchaseSwappableView = {
-        let view = PurchaseSwappableView()
-        return view
-    }()
     
     private(set) lazy var levelsView: LevelsView = {
         let view = LevelsView(frame: .zero)
@@ -73,71 +34,50 @@ final class PaymentViewBuilder {
         return view
     }()
     
-    private lazy var sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
-        sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
-        guard let sectionKind = PaymentSection(rawValue: sectionIndex) else { return nil }
-        let section = PaymentSectionLayoutManager.getSectionLayout(sectionKind, featureCount: self.featureCount, layoutEnvironment: layoutEnvironment)
+    private lazy var purchaseSectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
+        _, layoutEnvironment -> NSCollectionLayoutSection? in
+        let section = PurchaseSectionLayoutManager.getSectionLayout(layoutEnvironment: layoutEnvironment)
+        section.visibleItemsInvalidationHandler = self.visibleItemsInvalidationHandler
         return section
     }
     
-    private(set) lazy var collectionView: CompactCollectionView = {
+    private(set) lazy var purchaseCollectionView: CompactCollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = CompactCollectionView(frame: .zero,
-                                                   collectionViewLayout: PaymentCollectionViewLayoutManager.create(with: sectionProvider))
+                                                   collectionViewLayout: PurchaseCollectionViewLayoutManager.create(with: purchaseSectionProvider))
         collectionView.backgroundColor = .clear
         collectionView.alwaysBounceVertical = false
         collectionView.showsVerticalScrollIndicator = false
-        collectionView.register(PaymentCardCell.self, forCellWithReuseIdentifier: PaymentCardCell.reuseId)
-        collectionView.register(BlockPaymentFeatureCell.self, forCellWithReuseIdentifier: BlockPaymentFeatureCell.reuseId)
-        collectionView.register(SquarePaymentFeatureCell.self, forCellWithReuseIdentifier: SquarePaymentFeatureCell.reuseId)
+        collectionView.register(PurchaseCell.self, forCellWithReuseIdentifier: PurchaseCell.reuseId)
         return collectionView
+    }()
+    
+    private(set) lazy var profileButton: ActionButton = {
+        let view = ActionButton()
+        view.addAction(profileButtonDidTap)
+        view.setImage(Asset.user.image, for: .normal)
+        return view
     }()
     
     private var needPayButton = false
     
-    init(featureCount: Int,
-         needPayButton: Bool,
-         profileButtonDidTap: @escaping Action,
-         payButtonDidTap: @escaping Action,
-         cancelButtonDidTap: @escaping Action) {
-        self.featureCount = featureCount
-        self.payButtonDidTap = payButtonDidTap
+    init(levelsCount: Int,
+         visibleItemsInvalidationHandler: @escaping NSCollectionLayoutSectionVisibleItemsInvalidationHandler,
+         profileButtonDidTap: @escaping Action) {
+        self.visibleItemsInvalidationHandler = visibleItemsInvalidationHandler
         self.profileButtonDidTap = profileButtonDidTap
-        self.cancelButtonDidTap = cancelButtonDidTap
         
-        self.needPayButton = needPayButton
-        
-        if needPayButton {
-            buttonStack.addArrangedSubview(payButton)
+        if levelsCount > 0 {
+            levelsView.alpha = 1.0
+        } else {
+            levelsView.alpha = 0
         }
-        buttonStack.addArrangedSubview(cancelButton)
+        
+        levelsView.setup(levelsCount: levelsCount, selectedViewIndex: 0)
     }
     
     func setupUI(view: UIView) {
-        view.height(ScreenHeightState.normal.height)
-        
         logoImageView.add(toSuperview: view)
-        
-        buttonStack
-            .add(toSuperview: view)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.Cancel.bottom, usingRelation: .equal)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Cancel.left)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Cancel.right)
-        
-        collectionView
-            .add(toSuperview: view)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.CollectionView.left)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.CollectionView.right)
-            .touchEdge(.bottom,
-                       toEdge: .top,
-                       ofView: buttonStack,
-                       withInset: needPayButton ? Cost.CollectionView.bottom : Cost.CollectionView.bottomToCancel)
-        
-        hintView
-            .add(toSuperview: view)
-            .touchEdge(.left, toEdge: .left, ofView: view, withInset: Cost.Hint.margin)
-            .touchEdge(.right, toEdge: .right, ofView: view, withInset: Cost.Hint.margin)
-            .touchEdge(.bottom, toEdge: .top, ofView: collectionView, withInset: Cost.Hint.bottom)
         
         logoImageView
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.ImageView.left)
@@ -158,19 +98,19 @@ final class PaymentViewBuilder {
         
         purchaseCollectionView
             .add(toSuperview: view)
+            .height(Cost.CollectionView.itemHeight)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
-            .touchEdge(.right, toSuperviewEdge: .right)
+            .width(Cost.CollectionView.itemWidth)
             .touchEdge(.top, toEdge: .bottom, ofView: shopLabel, withInset: Cost.Stack.topCost)
         
         levelsView
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.top, toEdge: .bottom, ofView: purchaseCollectionView, withInset: Cost.Stack.topCost)
-            .touchEdge(.bottom, toEdge: .top, ofView: hintView, usingRelation: .greaterThanOrEqual, priority: .defaultLow)
     }
 }
 
-private extension PaymentViewBuilder {
+private extension PurchaseViewBuilder {
     enum Cost {
         static let sideOffSet: CGFloat = 32.0
         static let height = 56.0
@@ -202,7 +142,7 @@ private extension PaymentViewBuilder {
         
         enum Label {
             enum Shop {
-                static let font = UIFont.bodi2
+                static let font = UIFont.medium2
                 static let textColor = UIColor.textSecondary
             }
             
@@ -227,7 +167,8 @@ private extension PaymentViewBuilder {
         }
         
         enum CollectionView {
-            static let itemHeight: CGFloat = 72.0
+            static let itemHeight: CGFloat = 68.0
+            static let itemWidth: CGFloat = UIScreen.main.bounds.width * 0.6
             static let minimumLineSpacing: CGFloat = 8.0
             static let bottom: CGFloat = 20.0
             static let bottomToCancel: CGFloat = 8.0

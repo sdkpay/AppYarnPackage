@@ -5,44 +5,37 @@
 //  Created by Ипатов Александр Станиславович on 08.12.2023.
 //
 
-
 import UIKit
 
-protocol IPaymentModuleVC {
-    func addSnapShot()
-    func configHint(with text: String)
-    func showHint(_ value: Bool)
-    func reloadData()
-}
-
-final class PaymentModuleVC: UIViewController, IPaymentModuleVC {
+final class PaymentModuleVC: UIViewController {
     
-    private var featureCount: Int
-    private var needPayButton: Bool
-    private var payButtonDidTap: Action
-    private var cancelButtonDidTap: Action
+    private var presenter: PaymentPresenting
     
-    
-    private lazy var viewBuilder = PaymentModuleViewBuilder(featureCount: featureCount,
-                                                            needPayButton: needPayButton,
-                                                            payButtonDidTap: payButtonDidTap,
-                                                            cancelButtonDidTap: cancelButtonDidTap)
+    private lazy var viewBuilder = PaymentModuleViewBuilder(featureCount: presenter.featureCount,
+                                                            needPayButton: presenter.needPayButton,
+                                                            payButtonDidTap: {
+        self.presenter.payButtonTapped()
+    },
+                                                            cancelButtonDidTap: {
+        self.presenter.cancelTapped()
+    })
                                                                  
-    
     private var dataSource: UICollectionViewDiffableDataSource<PaymentSection, Int>?
     
-    init(featureCount: Int, 
-         needPayButton: Bool,
-         payButtonDidTap: @escaping Action,
-         cancelButtonDidTap: @escaping Action) {
-        self.featureCount = featureCount
-        self.needPayButton = needPayButton
-        self.payButtonDidTap = payButtonDidTap
-        self.cancelButtonDidTap = cancelButtonDidTap
+    init(_ presenter: PaymentPresenting) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configDataSource()
+        viewBuilder.collectionView.delegate = self
+        viewBuilder.setupUI(view: view)
     }
     
     func addSnapShot() {
@@ -51,7 +44,7 @@ final class PaymentModuleVC: UIViewController, IPaymentModuleVC {
         snapshot.appendSections(PaymentSection.allCases)
         print(snapshot.numberOfSections)
         PaymentSection.allCases.forEach { section in
-            snapshot.appendItems(presenter.identifiresForSection(section), toSection: section)
+            snapshot.appendItems(presenter.identifiresForPaymentSection(section), toSection: section)
         }
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
@@ -83,27 +76,27 @@ final class PaymentModuleVC: UIViewController, IPaymentModuleVC {
             _: Int
         ) -> UICollectionViewCell? in
             guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
-            guard let model = self.presenter.model(for: indexPath) else { return nil }
+            guard let model = self.presenter.paymentModel(for: indexPath) else { return nil }
             switch section {
             case .features:
                 
                 if self.presenter.featureCount > 1 {
-                    return self.config(collectionView: collectionView,
-                                       cellType: SquarePaymentFeatureCell.self,
-                                       with: model,
-                                       fot: indexPath)
+                    return UICollectionView.config(collectionView: collectionView,
+                                                   cellType: SquarePaymentFeatureCell.self,
+                                                   with: model,
+                                                   fot: indexPath)
                 } else {
-                    return self.config(collectionView: collectionView,
-                                       cellType: BlockPaymentFeatureCell.self,
-                                       with: model,
-                                       fot: indexPath)
+                    return UICollectionView.config(collectionView: collectionView,
+                                                   cellType: BlockPaymentFeatureCell.self,
+                                                   with: model,
+                                                   fot: indexPath)
                 }
             case .card:
                 
-                return self.config(collectionView: collectionView,
-                                   cellType: PaymentCardCell.self,
-                                   with: model,
-                                   fot: indexPath)
+                return UICollectionView.config(collectionView: collectionView,
+                                               cellType: PaymentCardCell.self,
+                                               with: model,
+                                               fot: indexPath)
             }
         }
     }
@@ -112,21 +105,11 @@ final class PaymentModuleVC: UIViewController, IPaymentModuleVC {
         
         presenter.featureCount > 1 ? SquarePaymentFeatureCell.self : BlockPaymentFeatureCell.self
     }
-    
-    private func config<T: SelfReusable & SelfConfigCell, U: AbstractCellModel>(collectionView: UICollectionView,
-                                                                                cellType: T.Type,
-                                                                                with model: U,
-                                                                                fot indexPath: IndexPath) -> T? {
-        
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType.reuseId, for: indexPath) as? T else { return nil }
-        cell.config(with: model)
-        return cell
-    }
 }
 
 extension PaymentModuleVC: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.didSelectItem(at: indexPath)
+        presenter.didSelectPaymentItem(at: indexPath)
     }
 }

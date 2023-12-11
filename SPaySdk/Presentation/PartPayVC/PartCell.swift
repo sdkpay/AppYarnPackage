@@ -21,6 +21,7 @@ final class PartCell: UITableViewCell {
     private lazy var costLabel: UILabel = {
         let view = UILabel()
         view.textAlignment = .right
+        view.font = .medium2
         return view
     }()
     

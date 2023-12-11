@@ -33,7 +33,6 @@ final class PaymentModuleViewBuilder {
         return view
     }()
 
-
     private lazy var buttonStack: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
@@ -101,7 +100,6 @@ final class PaymentModuleViewBuilder {
             .touchEdge(.right, toEdge: .right, ofView: view, withInset: Cost.Hint.margin)
             .touchEdge(.bottom, toEdge: .top, ofView: collectionView, withInset: Cost.Hint.bottom)
             .touchEdge(.top, toEdge: .top, ofView: view, withInset: Cost.Hint.bottom)
-        
     }
 }
 
@@ -181,4 +179,3 @@ private extension PaymentModuleViewBuilder {
         }
     }
 }
-

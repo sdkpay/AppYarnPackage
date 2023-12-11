@@ -36,7 +36,7 @@ struct GraphBnpl: Codable {
 }
 
 struct Payment: Codable {
-    let date: String?
+    let date: String
     let amount: Int
     let currencyCode: String?
 }

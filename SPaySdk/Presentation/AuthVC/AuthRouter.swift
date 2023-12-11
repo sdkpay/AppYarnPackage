@@ -11,6 +11,7 @@ protocol AuthRouting {
     func presentPayment(state: PaymentVCMode)
     func presentBankAppPicker(completion: @escaping Action)
     func presentFakeScreen(completion: @escaping () -> Void)
+    func presentHelper()
 }
 
 final class AuthRouter: AuthRouting {
@@ -40,6 +41,12 @@ final class AuthRouter: AuthRouting {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             fakeViewController.dismiss(animated: true, completion: completion)
         }
+    }
+    
+    @MainActor
+    func presentHelper() {
+        let vc = HelperAssembly(locator: locator).createModule()
+        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
     
     deinit {

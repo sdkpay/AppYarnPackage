@@ -8,6 +8,7 @@
 import UIKit
 
 final class HelperAssembly {
+    
     private let locator: LocatorService
 
     init(locator: LocatorService) {
@@ -19,34 +20,25 @@ final class HelperAssembly {
         let presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
-        router.viewController = contentView
         return contentView
     }
     
-    func moduleRouter() -> AuthRouter {
-        AuthRouter(with: locator)
+    func moduleRouter() -> HelperRouter {
+        HelperRouter()
     }
 
-    private func modulePresenter(_ router: AuthRouter) -> AuthPresenter {
-        AuthPresenter(router,
-                      authService: locator.resolve(),
-                      seamlessAuthService: locator.resolve(),
-                      sdkManager: locator.resolve(),
-                      completionManager: locator.resolve(),
-                      analytics: locator.resolve(),
-                      userService: locator.resolve(),
-                      alertService: locator.resolve(),
-                      bankManager: locator.resolve(),
-                      versionСontrolManager: locator.resolve(),
-                      contentLoadManager: locator.resolve(),
-                      timeManager: OptimizationCheсkerManager(),
-                      enviromentManager: locator.resolve(), 
-                      payAmountValidationManager: locator.resolve(),
-                      helperManager: locator.resolve())
+    private func modulePresenter(_ router: HelperRouter) -> HelperPresenter {
+        HelperPresenter(router,
+                        completionManager: locator.resolve(),
+                        userService: locator.resolve(),
+                        bankAppManager: locator.resolve(),
+                        featureToggle: locator.resolve(),
+                        helperConfigManager: locator.resolve(),
+                        analytics: locator.resolve())
     }
 
-    private func moduleView(presenter: AuthPresenter) -> ContentVC & IAuthVC {
-        let view = AuthVC(presenter)
+    private func moduleView(presenter: HelperPresenter) -> ContentVC & IHelperVC {
+        let view = HelperVC(presenter)
         presenter.view = view
         return view
     }

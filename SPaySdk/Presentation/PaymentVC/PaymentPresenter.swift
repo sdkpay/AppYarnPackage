@@ -13,6 +13,10 @@ enum PaymentVCMode {
     case helper
 }
 
+enum PurchaseSection: Int, CaseIterable {
+    case all
+}
+
 enum PaymentSection: Int, CaseIterable {
     case features
     case card
@@ -24,9 +28,13 @@ enum PaymentFeature: Int, CaseIterable {
 
 protocol PaymentPresenting {
     var featureCount: Int { get }
-    func identifiresForSection(_ section: PaymentSection) -> [Int]
-    func model(for indexPath: IndexPath) -> AbstractCellModel?
-    func didSelectItem(at indexPath: IndexPath)
+    var levelsCount: Int { get }
+    var screenHeight: ScreenHeightState { get }
+    func identifiresForPaymentSection(_ section: PaymentSection) -> [Int]
+    func identifiresForPurchaseSection() -> [Int]
+    func paymentModel(for indexPath: IndexPath) -> AbstractCellModel?
+    func purchaseModel(for indexPath: IndexPath) -> AbstractCellModel?
+    func didSelectPaymentItem(at indexPath: IndexPath)
     func viewDidLoad()
     func payButtonTapped()
     func cancelTapped()
@@ -48,8 +56,33 @@ final class PaymentPresenter: PaymentPresenting {
         
         paymentViewModel.featureCount
     }
+    
+    var screenHeight: ScreenHeightState {
+        
+        switch mode {
+        case .pay:
+            
+            if featureCount > 0 {
+                return .max
+            } else {
+                return .normal
+            }
+        case .helper:
+            
+            return .normal
+        }
+    }
+    
+    var levelsCount: Int {
+        
+        if partPayService.bnplplanSelected {
+            return partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
+        } else {
+            return 0
+        }
+    }
 
-    weak var view: (IPaymentVC & ContentVC)?
+    weak var view: (IPaymentMasterVC & ContentVC)?
     private let router: PaymentRouting
     private let analytics: AnalyticsService
     private var userService: UserService
@@ -69,6 +102,7 @@ final class PaymentPresenter: PaymentPresenting {
     private var secureChallengeService: SecureChallengeService
     private var payAmountValidationManager: PayAmountValidationManager
     private var paymentViewModel: PaymentViewModel
+    private var mode: PaymentVCMode
     
     private var finalCost: String = ""
 
@@ -92,7 +126,8 @@ final class PaymentPresenter: PaymentPresenting {
          featureToggle: FeatureToggleService,
          otpService: OTPService,
          timeManager: OptimizationCheсkerManager,
-         paymentViewModel: PaymentViewModel) {
+         paymentViewModel: PaymentViewModel,
+         mode: PaymentVCMode) {
         self.router = router
         self.sdkManager = manager
         self.userService = userService
@@ -112,6 +147,7 @@ final class PaymentPresenter: PaymentPresenting {
         self.payAmountValidationManager = payAmountValidationManager
         self.featureToggle = featureToggle
         self.paymentViewModel = paymentViewModel
+        self.mode = mode
         self.timeManager.startTraking()
     }
     
@@ -151,31 +187,71 @@ final class PaymentPresenter: PaymentPresenting {
         self.completionManager.dismissCloseAction(view)
     }
     
-    func identifiresForSection(_ section: PaymentSection) -> [Int] {
-     
+    func identifiresForPaymentSection(_ section: PaymentSection) -> [Int] {
+        
         paymentViewModel.identifiresForSection(section)
     }
     
-    func model(for indexPath: IndexPath) -> AbstractCellModel? {
+    func identifiresForPurchaseSection() -> [Int] {
+        
+        if partPayService.bnplplanSelected,
+           let dates = partPayService.bnplplan?.graphBnpl?.payments.map({ $0.date }) {
+            return dates.map { $0.hash }
+        } else {
+            return [.zero]
+        }
+    }
+    
+    func paymentModel(for indexPath: IndexPath) -> AbstractCellModel? {
         
         paymentViewModel.model(for: indexPath)
     }
     
-    func didSelectItem(at indexPath: IndexPath) {
+    func purchaseModel(for indexPath: IndexPath) -> AbstractCellModel? {
+        
+        guard let orderAmount = userService.user?.orderAmount else { return nil }
+        
+        return PurchaseModelFactory.build(indexPath,
+                                          bnplPayment: partPayService.bnplplan?.graphBnpl?.payments ?? [],
+                                          fullPayment: orderAmount,
+                                          bnplplanSelected: partPayService.bnplplanSelected)
+    }
+    
+    func didSelectPaymentItem(at indexPath: IndexPath) {
         
         guard let section = PaymentSection(rawValue: indexPath.section) else { return }
         
-        switch section {
-        case .card:
-            analytics.sendEvent(.TouchCard, with: screenEvent)
-            cardTapped()
-        case .features:
-            analytics.sendEvent(.TouchBNPL, with: screenEvent)
-            router.presentPartPay { [weak self] in
-                self?.configViews()
-                self?.view?.reloadData()
+        switch mode {
+        case .pay:
+            
+            switch section {
+            case .card:
+                analytics.sendEvent(.TouchCard, with: screenEvent)
+                cardTapped()
+            case .features:
+                analytics.sendEvent(.TouchBNPL, with: screenEvent)
+                router.presentPartPay { [weak self] in
+                    self?.configViews()
+                    self?.view?.reloadData()
+                    self?.showPartsViewifNeed()
+                }
+            }
+        case .helper:
+            
+            switch section {
+            case .features:
+                
+                guard let model = userService.user?.promoInfo.bannerList else { return }
+                return
+            case .card:
+                break
             }
         }
+    }
+    
+   private func showPartsViewifNeed() {
+       
+        view?.showPartsView(partPayService.bnplplanSelected)
     }
     
     func profileTapped() {
@@ -272,17 +348,13 @@ final class PaymentPresenter: PaymentPresenting {
     
     private func configViews() {
         guard let user = userService.user else { return }
-        var fullPrice: String?
         if partPayService.bnplplanSelected {
             guard let firstPay = partPayService.bnplplan?.graphBnpl?.payments.first else { return }
             finalCost = firstPay.amount.price(firstPay.currencyCode)
-            fullPrice = user.orderAmount.amount.price(user.orderAmount.currency)
         } else {
             finalCost = user.orderAmount.amount.price(user.orderAmount.currency)
         }
         view?.configShopInfo(with: user.merchantName ?? "",
-                             cost: finalCost,
-                             fullPrice: fullPrice,
                              iconURL: user.logoUrl)
         
         if userService.selectedCard != nil {
