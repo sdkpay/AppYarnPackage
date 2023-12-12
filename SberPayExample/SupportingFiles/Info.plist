@@ -39,6 +39,7 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>btripsexpenses</string>
 		<string>sbolidexternallogin</string>
 		<string>sberbankidexternallogin</string>
 	</array>
