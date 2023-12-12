@@ -62,6 +62,10 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         }
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
+        
+        var bankApps = value.bankApps
+    
+        bankApps.append(BankApp(name: "Онлайн", link: "btripsexpenses://sbolidexternallogin/", icon: ""))
         UserDefaults.bankApps = value.bankApps
         UserDefaults.images = value.images
     }
