@@ -1,5 +1,5 @@
 //
-//  PaymentViewHelpModel.swift
+//  HelpPaymentViewModel.swift
 //  SPaySdk
 //
 //  Created by Ипатов Александр Станиславович on 05.12.2023.
@@ -7,7 +7,9 @@
 
 import Foundation
 
-final class PaymentViewHelpModel: PaymentViewModel {
+final class HelpPaymentViewModel: PaymentViewModel {
+
+    weak var presenter: PaymentPresentingInput?
 
     private let featureToggle: FeatureToggleService
     private var userService: UserService
@@ -18,14 +20,22 @@ final class PaymentViewHelpModel: PaymentViewModel {
     }
 
     init(userService: UserService,
-         featureToggle: FeatureToggleService, 
+         featureToggle: FeatureToggleService,
          helperConfigManager: HelperConfigManager) {
         self.featureToggle = featureToggle
         self.helperConfigManager = helperConfigManager
         self.userService = userService
     }
+    
+    var levelsCount: Int { 0 }
+    
+    var screenHeight: ScreenHeightState {
+        .normal
+    }
 
     var needHint: Bool { true }
+    
+    var purchaseInfoText: String? { nil }
     
     var hintText: String {
         
@@ -60,6 +70,10 @@ final class PaymentViewHelpModel: PaymentViewModel {
         }
     }
     
+    func identifiresForPurchaseSection() -> [Int] {
+        [.zero]
+    }
+
     func model(for indexPath: IndexPath) -> AbstractCellModel? {
         
         guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
@@ -74,6 +88,23 @@ final class PaymentViewHelpModel: PaymentViewModel {
         case .card:
             
             return nil
+        }
+    }
+    
+    func didSelectPaymentItem(at indexPath: IndexPath) {
+        
+        guard let section = PaymentSection(rawValue: indexPath.section) else { return }
+        
+        switch section {
+        case .features:
+            
+            let helper = activeFeatures[indexPath.row]
+            
+            presenter?.goTo(url: helper.deeplinkIos)
+            
+        case .card:
+            
+            return
         }
     }
     

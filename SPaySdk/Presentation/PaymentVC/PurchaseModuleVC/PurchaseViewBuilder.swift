@@ -19,6 +19,14 @@ final class PurchaseViewBuilder {
         return view
     }()
     
+    private(set) lazy var infoTextLabel: UILabel = {
+        let view = UILabel()
+        view.font = .header
+        view.numberOfLines = 0
+        view.textColor = .textPrimory
+        return view
+    }()
+    
     private(set) lazy var logoImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
@@ -30,7 +38,8 @@ final class PurchaseViewBuilder {
     
     private(set) lazy var levelsView: LevelsView = {
         let view = LevelsView(frame: .zero)
-        view.setup(levelsCount: 4, selectedViewIndex: 0)
+        view.alpha = 0
+        view.setup(levelsCount: levelsCount, selectedViewIndex: 0)
         return view
     }()
     
@@ -59,21 +68,26 @@ final class PurchaseViewBuilder {
         return view
     }()
     
-    private var needPayButton = false
+    private var levelsCount: Int
     
     init(levelsCount: Int,
+         needInfoText: Bool,
          visibleItemsInvalidationHandler: @escaping NSCollectionLayoutSectionVisibleItemsInvalidationHandler,
          profileButtonDidTap: @escaping Action) {
         self.visibleItemsInvalidationHandler = visibleItemsInvalidationHandler
         self.profileButtonDidTap = profileButtonDidTap
         
-        if levelsCount > 0 {
-            levelsView.alpha = 1.0
-        } else {
-            levelsView.alpha = 0
-        }
+        self.levelsCount = levelsCount
         
-        levelsView.setup(levelsCount: levelsCount, selectedViewIndex: 0)
+        if needInfoText {
+            
+            infoTextLabel.alpha = 1.0
+            purchaseCollectionView.alpha = 0.0
+        } else {
+            
+            infoTextLabel.alpha = 0.0
+            purchaseCollectionView.alpha = 1.0
+        }
     }
     
     func setupUI(view: UIView) {
@@ -96,6 +110,12 @@ final class PurchaseViewBuilder {
             .touchEdge(.top, toSuperviewEdge: .top, withInset: Cost.ProfileButton.top)
             .size(Cost.ProfileButton.size)
         
+        infoTextLabel
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Stack.left)
+            .touchEdge(.top, toEdge: .bottom, ofView: shopLabel, withInset: Cost.Stack.topCost)
+        
         purchaseCollectionView
             .add(toSuperview: view)
             .height(Cost.CollectionView.itemHeight)
@@ -114,41 +134,11 @@ private extension PurchaseViewBuilder {
     enum Cost {
         static let sideOffSet: CGFloat = 32.0
         static let height = 56.0
-        
-        enum Hint {
-            static let bottom = 20.0
-            static let margin = 36.0
-        }
-        
-        enum Button {
-            static let height = Cost.height
-
-            enum Pay {
-                static let title = Strings.Pay.title
-                static let bottom: CGFloat = 10.0
-                static let right: CGFloat = 16.0
-                static let left: CGFloat = 16.0
-                static let top: CGFloat = Cost.sideOffSet
-            }
-            
-            enum Cancel {
-                static let title = Strings.Cancel.title
-                static let bottom: CGFloat = 44.0
-                static let right: CGFloat = Cost.sideOffSet
-                static let left: CGFloat = Cost.sideOffSet
-                static let top: CGFloat = Cost.sideOffSet
-            }
-        }
-        
+     
         enum Label {
             enum Shop {
                 static let font = UIFont.medium2
                 static let textColor = UIColor.textSecondary
-            }
-            
-            enum Cost {
-                static let font = UIFont.header
-                static let textColor = UIColor.textPrimory
             }
         }
         

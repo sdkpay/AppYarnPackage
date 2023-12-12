@@ -1,5 +1,5 @@
 //
-//  PaymentViewPayModel.swift
+//  MainPaymentPresenter.swift
 //  SPaySdk
 //
 //  Created by Ипатов Александр Станиславович on 05.12.2023.
@@ -7,12 +7,17 @@
 
 import Foundation
 
-final class PaymentViewPayModel: PaymentViewModel {
+final class MainPaymentViewModel: PaymentViewModel {
+    
+    weak var presenter: PaymentPresentingInput?
     
     private let featureToggle: FeatureToggleService
     private var userService: UserService
     private var partPayService: PartPayService
     private var payAmountValidationManager: PayAmountValidationManager
+    private let authManager: AuthManager
+    
+    private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
     
     private var activeFeatures: [PaymentFeature] {
         
@@ -27,11 +32,33 @@ final class PaymentViewPayModel: PaymentViewModel {
     init(userService: UserService,
          featureToggle: FeatureToggleService,
          partPayService: PartPayService,
+         authManager: AuthManager,
          payAmountValidationManager: PayAmountValidationManager) {
         self.featureToggle = featureToggle
         self.userService = userService
         self.partPayService = partPayService
         self.payAmountValidationManager = payAmountValidationManager
+        self.authManager = authManager
+    }
+    
+    var purchaseInfoText: String? { nil }
+    
+    var levelsCount: Int {
+        
+        if partPayService.bnplplanSelected {
+            return partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
+        } else {
+            return 0
+        }
+    }
+    
+    var screenHeight: ScreenHeightState {
+        
+        if featureCount > 0 {
+            return .max
+        } else {
+            return .normal
+        }
     }
     
     var needHint: Bool {
@@ -60,6 +87,29 @@ final class PaymentViewPayModel: PaymentViewModel {
             }
         }
     }
+    
+    func identifiresForPurchaseSection() -> [Int] {
+        
+        if partPayService.bnplplanSelected,
+           let dates = partPayService.bnplplan?.graphBnpl?.payments.map({ $0.date }) {
+            return dates.map { $0.hash }
+        } else {
+            return [.zero]
+        }
+    }
+    
+    func didSelectPaymentItem(at indexPath: IndexPath) {
+        
+        guard let section = PaymentSection(rawValue: indexPath.section) else { return }
+        
+        switch section {
+        case .card:
+            presenter?.cardTapped()
+        case .features:
+            presenter?.partPayTapped()
+        }
+    }
+    
     func model(for indexPath: IndexPath) -> AbstractCellModel? {
         
         guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
@@ -91,14 +141,20 @@ final class PaymentViewPayModel: PaymentViewModel {
        let payAmountStatus = try? payAmountValidationManager.checkAmountSelectedTool(tool)
         
         switch payAmountStatus {
-        case .enouth:
-            return nil
+        case .enouth, .none:
+            return connectIfNeeded()
         case .onlyBnpl:
             return Strings.Hints.Bnpl.title
         case .notEnouth:
             return Strings.Hints.NotEnouth.title
-        case .none:
-            return nil
         }
+    }
+    
+    private func connectIfNeeded() -> String? {
+        
+        guard let merchantInfo = authManager.authModel?.merchantInfo else { return nil }
+        guard merchantInfo.bindingIsNeeded else { return nil }
+        
+        return merchantInfo.bindingSafeText
     }
 }

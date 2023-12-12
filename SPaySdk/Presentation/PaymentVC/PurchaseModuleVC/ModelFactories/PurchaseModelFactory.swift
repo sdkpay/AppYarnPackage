@@ -28,4 +28,10 @@ enum PurchaseModelFactory {
                                  subTitle: nil)
         }
     }
+    
+    static func build(title: String) -> PurchaseModel {
+        
+        PurchaseModel(title: title,
+                      subTitle: nil)
+    }
 }

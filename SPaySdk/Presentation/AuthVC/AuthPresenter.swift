@@ -31,6 +31,7 @@ final class AuthPresenter: AuthPresenting {
     private let seamlessAuthService: SeamlessAuthService
     private var payAmountValidationManager: PayAmountValidationManager
     private var helperManager: HelperConfigManager
+    private var featureToggle: FeatureToggleService
     
     init(_ router: AuthRouter,
          authService: AuthService,
@@ -46,6 +47,7 @@ final class AuthPresenter: AuthPresenting {
          timeManager: OptimizationCheсkerManager,
          enviromentManager: EnvironmentManager,
          payAmountValidationManager: PayAmountValidationManager,
+         featureToggle: FeatureToggleService,
          helperManager: HelperConfigManager) {
         self.analytics = analytics
         self.router = router
@@ -62,6 +64,7 @@ final class AuthPresenter: AuthPresenting {
         self.seamlessAuthService = seamlessAuthService
         self.payAmountValidationManager = payAmountValidationManager
         self.helperManager = helperManager
+        self.featureToggle = featureToggle
         self.timeManager.startTraking()
     }
     
@@ -264,10 +267,18 @@ final class AuthPresenter: AuthPresenting {
     
     private func getPaymentMode() throws -> PaymentVCMode {
         
+        if userService.user?.orderAmount.amount == 0 {
+            return .connect
+        }
+        
         let status: PaymentVCMode = try payAmountValidationManager.checkWalletAmountEnouth() ? .pay : .helper
         
-        if status == .helper, !helperManager.helpersNeeded {
-            throw SDKError(.noMoney)
+        if status == .helper {
+            
+            if !helperManager.helpersNeeded || !(featureToggle.isEnabled(.newCreditCard) && (featureToggle.isEnabled(.sbp))) {
+                
+                throw SDKError(.noMoney)
+            }
         }
         
        return status

@@ -12,6 +12,7 @@ final class PurchaseModuleVC: UIViewController {
     private var presenter: PaymentPresenting
     
     private lazy var viewBuilder = PurchaseViewBuilder(levelsCount: presenter.levelsCount,
+                                                       needInfoText: presenter.purchaseInfoText != nil,
                                                        visibleItemsInvalidationHandler: { [weak self] visibleItems, location, _ in
         
         self?.updateLevelIfNeed(items: visibleItems, location: location)
@@ -61,9 +62,11 @@ final class PurchaseModuleVC: UIViewController {
     }
     
     func configShopInfo(with shop: String,
-                        iconURL: String?) {
+                        iconURL: String?,
+                        purchaseInfoText: String?) {
         
         viewBuilder.shopLabel.text = shop
+        viewBuilder.infoTextLabel.text = purchaseInfoText
         viewBuilder.logoImageView.downloadImage(from: iconURL, placeholder: .Payment.cart)
     }
     
@@ -79,7 +82,7 @@ final class PurchaseModuleVC: UIViewController {
         let width = viewBuilder.purchaseCollectionView.bounds.width
         let scrollOffset = location.x
         let modulo = scrollOffset.truncatingRemainder(dividingBy: width)
-        let tolerance = width / 3
+        let tolerance = width / 5
         
         if modulo < tolerance {
             self.showLevel(index)

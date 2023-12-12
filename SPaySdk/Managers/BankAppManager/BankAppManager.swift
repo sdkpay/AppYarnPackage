@@ -17,13 +17,16 @@ final class BankAppManagerAssembly: Assembly {
 }
 
 protocol BankAppManager {
+    
     var selectedBank: BankApp? { get set }
     var avaliableBanks: [BankApp] { get }
+    func configUrl(path: String) -> URL?
     func saveSelectedBank()
     func removeSavedBank()
 }
  
 final class DefaultBankAppManager: BankAppManager {
+
     var avaliableBanks: [BankApp] {
         UserDefaults.bankApps ?? []
     }
@@ -57,6 +60,13 @@ final class DefaultBankAppManager: BankAppManager {
         analytics.sendEvent(.STSaveBankApp,
                             with: [.view: AnlyticsScreenEvent.AuthVC.rawValue])
         UserDefaults.bankApp = _selectedBank?.name
+    }
+    
+    func configUrl(path: String) -> URL? {
+        
+        guard let utilLink = selectedBank?.utilLink else { return nil }
+        
+        return URL(string: utilLink + path)
     }
     
     private func getSelectedBank() -> BankApp? {

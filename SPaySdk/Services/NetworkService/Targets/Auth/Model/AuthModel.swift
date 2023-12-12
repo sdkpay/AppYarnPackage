@@ -18,6 +18,7 @@ struct AuthModel: Codable {
     let codeChallenge: String?
     let scope: String?
     let refreshTokenIsActive: Bool?
+    let merchantInfo: MerchantInfo?
 }
 
 struct AuthRefreshModel: Codable {
@@ -33,4 +34,9 @@ struct UserInfoModel: Codable {
     let firstName: String
     let gender: Int?
     let mobilePhone: String?
+}
+
+struct MerchantInfo: Codable {
+    let bindingIsNeeded: Bool
+    let bindingSafeText: String?
 }

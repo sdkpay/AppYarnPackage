@@ -31,6 +31,7 @@ struct VersionInfo: Codable {
 struct Localization: Codable {
     let authTitle: String
     let payLoading: String
+    let connectTitle: String?
 }
 
 struct FeaturesToggle: Codable {

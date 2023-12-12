@@ -49,16 +49,15 @@ final class ChallengePresenter: ChallengePresenting {
             await view?.showLoading()
             try? await secureChallengeService.sendChallengeResult(resolution: .confirmedFraud)
 
-            guard let bankUrl = bankAppManager.selectedBank?.utilLink else {
-                await MainActor.run { completionManager.dismissCloseAction(view) }
-                return
-            }
             guard let cybercabinetURLIOS = secureChallengeService.fraudMonСheckResult?.formParameters?.cybercabinetUrlIOS else {
                 await MainActor.run { completionManager.dismissCloseAction(view) }
                 return
             }
             
-            guard let link = URL(string: bankUrl + cybercabinetURLIOS) else { return }
+            guard let link = bankAppManager.configUrl(path: cybercabinetURLIOS) else {
+                await MainActor.run { completionManager.dismissCloseAction(view) }
+                return
+            }
             
             await MainActor.run { completionManager.dismissCloseAction(view) }
             await router.openUrl(url: link)

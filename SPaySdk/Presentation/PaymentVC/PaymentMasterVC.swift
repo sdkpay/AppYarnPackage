@@ -9,7 +9,8 @@ import UIKit
 
 protocol IPaymentMasterVC {
     func configShopInfo(with shop: String,
-                        iconURL: String?)
+                        iconURL: String?,
+                        purchaseInfoText: String?)
     func addSnapShot()
     func configHint(with text: String)
     func showHint(_ value: Bool)
@@ -57,9 +58,9 @@ final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
         SBLogger.log(.didDissapear(view: self))
     }
     
-    func configShopInfo(with shop: String, iconURL: String?) {
+    func configShopInfo(with shop: String, iconURL: String?, purchaseInfoText: String?) {
         
-        purchaseModuleVC.configShopInfo(with: shop, iconURL: iconURL)
+        purchaseModuleVC.configShopInfo(with: shop, iconURL: iconURL, purchaseInfoText: purchaseInfoText)
     }
     
     func reloadData() {

@@ -41,7 +41,8 @@ final class AuthAssembly {
                       contentLoadManager: locator.resolve(),
                       timeManager: OptimizationCheсkerManager(),
                       enviromentManager: locator.resolve(),
-                      payAmountValidationManager: locator.resolve(), 
+                      payAmountValidationManager: locator.resolve(),
+                      featureToggle: locator.resolve(),
                       helperManager: locator.resolve())
     }
 

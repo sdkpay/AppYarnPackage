@@ -85,6 +85,8 @@ final class LevelsView: UIView {
 
     func selectView(at index: Int) {
         
+        guard index <= levelViews.count - 1 else { return }
+        
         let newView = levelViews[index]
         
         UIView.animate(withDuration: .animationDuration) {
