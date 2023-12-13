@@ -10,7 +10,6 @@ import Foundation
 typealias RetrySettings = (count: Int, retryCode: [Int])
 
 private enum Constants {
-    static let retryCount = 4
     static let timeoutInterval: TimeInterval = 20.0
     static let lengthUIID = 32
 }

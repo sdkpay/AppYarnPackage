@@ -15,6 +15,7 @@ enum Feature: String, Codable {
     case sbp
     case newCreditCard
     case newDebitCard
+    case retryPayment
 }
 
 final class FeatureToggleServiceAssembly: Assembly {

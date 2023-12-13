@@ -26,6 +26,7 @@ final class PaymentServiceAssembly: Assembly {
                                                                 buildSettings: container.resolve(),
                                                                 analytics: container.resolve(),
                                                                 sdkManager: container.resolve(),
+                                                                featuerToggle: container.resolve(),
                                                                 parsingErrorAnaliticManager: container.resolve())
             return service
         }
@@ -53,6 +54,7 @@ final class DefaultPaymentService: PaymentService {
     private let personalMetricsService: PersonalMetricsService
     private let buildSettings: BuildSettings
     private var paymentToken: PaymentTokenModel?
+    private var featuerToggle: FeatureToggleService
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     
     init(authManager: AuthManager,
@@ -63,6 +65,7 @@ final class DefaultPaymentService: PaymentService {
          buildSettings: BuildSettings,
          analytics: AnalyticsService,
          sdkManager: SDKManager,
+         featuerToggle: FeatureToggleService,
          parsingErrorAnaliticManager: ParsingErrorAnaliticManager) {
         self.authManager = authManager
         self.network = network
@@ -71,6 +74,7 @@ final class DefaultPaymentService: PaymentService {
         self.buildSettings = buildSettings
         self.completionManager = completionManager
         self.analytics = analytics
+        self.featuerToggle = featuerToggle
         self.personalMetricsService = personalMetricsService
         self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         SBLogger.log(.start(obj: self))
@@ -160,17 +164,20 @@ final class DefaultPaymentService: PaymentService {
                      orderId: String?,
                      merchantLogin: String) async throws {
         
+        let retryCount = featuerToggle.isEnabled(.retryPayment) ? 4 : 0
+        
         do {
             try await network.request(PaymentTarget.getPaymentOrder(operationId: .generateRandom(with: 36),
                                                                     orderId: orderId,
                                                                     merchantLogin: merchantLogin,
                                                                     ipAddress: authManager.ipAddress,
                                                                     paymentToken: token),
-                                      retrySettings: (4, [
-                                        Int(StatusCode.errorSystem.rawValue),
-                                        Int(StatusCode.unknownPayState.rawValue),
-                                        Int(StatusCode.unknownState.rawValue)
-                                      ]))
+                                      retrySettings: (retryCount,
+                                                      [
+                                                        Int(StatusCode.errorSystem.rawValue),
+                                                        Int(StatusCode.unknownPayState.rawValue),
+                                                        Int(StatusCode.unknownState.rawValue)
+                                                      ]))
             
             self.analytics.sendEvent(.RQGoodPaymentOrder,
                                      with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
