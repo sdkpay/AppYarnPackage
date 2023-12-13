@@ -33,15 +33,26 @@ private extension CGFloat {
 final class BankAppCell: UITableViewCell {
     private lazy var containerView: UIView = {
         let view = UIView()
+        
+        switch traitCollection.userInterfaceStyle {
+        case .unspecified, .light:
+            view.backgroundColor = .backgroundPrimary
+        case .dark:
+            view.applyBlurEffect(style: .systemUltraThinMaterial)
+        @unknown default:
+            view.backgroundColor = .backgroundPrimary
+        }
+        
+        view.clipsToBounds = true
         view.layer.cornerRadius = .corner
-        view.backgroundColor = .white
+        
         return view
     }()
     
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.font = .medium1
-        view.textColor = .mainBlack
+        view.textColor = .textPrimory
         view.letterSpacing(.letterSpacing)
         return view
     }()

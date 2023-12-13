@@ -31,7 +31,7 @@ final class AuthVC: ContentVC, IAuthVC {
     
     private lazy var logoImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(base64: UserDefaults.images?.logoBlack ?? "")
+        imageView.image = Asset.logo.image
         return imageView
     }()
     

@@ -27,7 +27,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         label.textAlignment = .center
         label.font = .header2
         label.text = presenter.getName()
-        label.textColor = .mainBlack
+        label.textColor = .textPrimory
         return label
     }()
     
@@ -52,7 +52,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
     }()
     
     private(set) lazy var backButton: DefaultButton = {
-        let view = DefaultButton(buttonAppearance: .blackBack)
+        let view = DefaultButton(buttonAppearance: .full)
         let string = Strings.Button.Logout.back
         view.setTitle(string, for: .normal)
         view.layer.cornerRadius = Cost.Button.cornerRadius
@@ -66,7 +66,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
        let view = UIStackView()
         view.addArrangedSubview(backButton)
         view.addArrangedSubview(nextButton)
-        view.axis = .horizontal
+        view.axis = .vertical
         view.distribution = .fillEqually
         view.spacing = Cost.Button.spacing
         return view
@@ -88,9 +88,6 @@ final class LogoutVC: ContentVC, ILogoutVC {
     }
     
     private func setupView() {
-        
-        view.height(ScreenHeightState.normal.height)
-        
         avatarImage
             .add(toSuperview: view)
             .size(.equal, to: Cost.ImageView.size)
@@ -113,6 +110,11 @@ final class LogoutVC: ContentVC, ILogoutVC {
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.sideOffSet)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.sideOffSet)
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.bottom)
+        
+        backButton
+           .height(.defaultButtonHeight)
+        
+        nextButton
             .height(.defaultButtonHeight)
     }
 }

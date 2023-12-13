@@ -50,6 +50,7 @@ struct PaymentToolInfo: Codable {
     let cardLogoUrl: String
     let countAdditionalCards: Int?
     let amountData: AmountData
+    let promoInfo: PromoInfo
 }
 
 struct PromoInfo: Codable {
