@@ -8,9 +8,8 @@
 import Foundation
 
 protocol PaymentViewModel {
-    
-    var needHint: Bool { get }
-    var hintText: String { get }
+
+    var hintsText: [String] { get }
     var featureCount: Int { get }
     var screenHeight: ScreenHeightState { get }
     var payButton: Bool { get }

@@ -1,5 +1,5 @@
 //
-//  HintView.swift
+//  HintsStackView.swift
 //  SPaySdk
 //
 //  Created by Ипатов Александр Станиславович on 02.12.2023.
@@ -16,7 +16,7 @@ private extension CGFloat {
     static let rightMargin = 20.0
 }
 
-final class HintView: SwipableView {
+private final class HintView: SwipableView {
     
     var closeAction: Action?
     
@@ -47,20 +47,12 @@ final class HintView: SwipableView {
         return view
     }()
     
-    private lazy var stackView: UIStackView = {
-        let view = UIStackView()
-        view.axis = .horizontal
-        view.distribution = .fill
-        view.spacing = 10
-        view.addArrangedSubview(hintStickView)
-        view.addArrangedSubview(textLabel)
-        view.addArrangedSubview(closeButton)
-        return view
-    }()
-    
     override init() {
         super.init()
-        closeAction = viewDismissAction
+        
+        viewDismissAction = {
+            self.closeAction?()
+        }
         setupUI()
     }
     
@@ -97,5 +89,63 @@ final class HintView: SwipableView {
             .touchEdge(.left, toSameEdgeOfView: self)
             .touchEdge(.right, toEdge: .left, ofView: textLabel, withInset: .spacing)
             .centerInView(closeButton, axis: .y)
+    }
+}
+
+final class HintsStackView: UIView {
+    
+    private var hintsStack = [String]()
+    
+    init() {
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func add(_ hint: String) {
+        
+        hintsStack.append(hint)
+    }
+    
+    func setStack(_ hints: [String]) {
+        
+        hintsStack = hints
+        
+        subviews.forEach({ $0.removeFromSuperview() })
+        show()
+    }
+    
+    func show() {
+        
+        if let hint = hintsStack.last {
+            
+            hintsStack.removeLast()
+            showHintView(with: hint)
+        }
+    }
+    
+    private func showHintView(with text: String) {
+        
+        let hint = HintView()
+        hint.alpha = 0
+        hint.setup(with: text)
+        
+        hint.closeAction = {
+            
+            hint.removeFromSuperview()
+            self.show()
+        }
+
+        hint
+            .add(toSuperview: self)
+            .touchEdge(.bottom, toEdge: .bottom, ofView: self)
+            .touchEdge(.left, toEdge: .left, ofView: self)
+            .touchEdge(.right, toEdge: .right, ofView: self)
+        
+        UIView.animate(withDuration: 0.25) {
+            hint.alpha = 1
+        }
     }
 }

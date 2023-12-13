@@ -47,6 +47,7 @@ private extension CardsViewBuilder {
 }
 
 final class CardsViewBuilder {
+    
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.font = Consts.Title.font
@@ -89,6 +90,7 @@ final class CardsViewBuilder {
     }()
     
     func setupUI(view: UIView) {
+        
         stackLabel
             .add(toSuperview: view)
             .touchEdge(.top,

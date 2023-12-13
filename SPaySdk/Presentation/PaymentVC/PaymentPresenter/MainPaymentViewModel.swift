@@ -61,12 +61,8 @@ final class MainPaymentViewModel: PaymentViewModel {
         }
     }
     
-    var needHint: Bool {
-        addHintIfNeeded() != nil
-    }
-    
-    var hintText: String {
-        addHintIfNeeded() ?? ""
+    var hintsText: [String] {
+        addHintIfNeeded()
     }
     
     var payButton: Bool { true }
@@ -134,20 +130,33 @@ final class MainPaymentViewModel: PaymentViewModel {
         }
     }
     
-    private func addHintIfNeeded() -> String? {
+    private func addHintIfNeeded() -> [String] {
         
-        guard let tool = userService.selectedCard else { return nil }
+        guard let tool = userService.selectedCard else { return [] }
         
-       let payAmountStatus = try? payAmountValidationManager.checkAmountSelectedTool(tool)
+        var hints = [String]()
+        
+        if let connectHint = connectIfNeeded() {
+            
+            hints.append(connectHint)
+        }
+        
+        let payAmountStatus = try? payAmountValidationManager.checkAmountSelectedTool(tool)
         
         switch payAmountStatus {
+            
         case .enouth, .none:
-            return connectIfNeeded()
+            
+            return hints
         case .onlyBnpl:
-            return Strings.Hints.Bnpl.title
+            
+            hints.append(Strings.Hints.Bnpl.title)
         case .notEnouth:
-            return Strings.Hints.NotEnouth.title
+            
+            hints.append(Strings.Hints.NotEnouth.title)
         }
+        
+        return hints
     }
     
     private func connectIfNeeded() -> String? {

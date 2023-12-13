@@ -49,16 +49,14 @@ final class PaymentModuleVC: UIViewController {
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
-    func configHint(with text: String) {
+    func setHint(with text: String) {
         
-        viewBuilder.hintView.setup(with: text)
+        viewBuilder.hintsStackView.add(text)
     }
-    
-    func showHint(_ value: Bool) {
+
+    func setHints(with texts: [String]) {
         
-        UIView.animate(withDuration: 0.25) {
-            self.viewBuilder.hintView.alpha = value ? 1.0 : 0.0
-        }
+        viewBuilder.hintsStackView.setStack(texts)
     }
     
     func reloadData() {

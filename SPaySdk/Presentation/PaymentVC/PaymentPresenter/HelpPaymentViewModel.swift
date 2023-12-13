@@ -32,28 +32,26 @@ final class HelpPaymentViewModel: PaymentViewModel {
     var screenHeight: ScreenHeightState {
         .normal
     }
-
-    var needHint: Bool { true }
     
     var purchaseInfoText: String? { nil }
     
-    var hintText: String {
-        
+    var hintsText: [String] {
+
         let avaliableBunners = avaliableBunners()
         
         if avaliableBunners.count > 1 {
-            return Strings.Hints.All.title
+            return [Strings.Hints.All.title]
         }
         
         if avaliableBunners.first == .sbp {
-            return Strings.Hints.Sbp.title
+            return [Strings.Hints.Sbp.title]
         }
         
         if  avaliableBunners.first == .creditCard {
-            return Strings.Hints.Credit.title
+            return [Strings.Hints.Credit.title]
         }
         
-        return ""
+        return []
     }
     
     var payButton: Bool { false }

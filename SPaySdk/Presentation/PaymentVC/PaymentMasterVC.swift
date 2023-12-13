@@ -12,14 +12,14 @@ protocol IPaymentMasterVC {
                         iconURL: String?,
                         purchaseInfoText: String?)
     func addSnapShot()
-    func configHint(with text: String)
-    func showHint(_ value: Bool)
+    func setHint(with text: String)
+    func setHints(with texts: [String])
     func showPartsView(_ value: Bool)
     func reloadData()
 }
 
 final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
-
+   
     private lazy var purchaseModuleVC = PurchaseModuleVC(presenter)
     private lazy var paymentModuleVC = PaymentModuleVC(presenter)
     
@@ -74,14 +74,14 @@ final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
         paymentModuleVC.addSnapShot()
     }
     
-    func configHint(with text: String) {
+    func setHint(with text: String) {
         
-        paymentModuleVC.configHint(with: text)
+        paymentModuleVC.setHint(with: text)
     }
     
-    func showHint(_ value: Bool) {
+    func setHints(with texts: [String]) {
         
-        paymentModuleVC.showHint(value)
+        paymentModuleVC.setHints(with: texts)
     }
     
     func showPartsView(_ value: Bool) {

@@ -34,12 +34,8 @@ final class ConnectPaymentViewModel: PaymentViewModel {
         ConfigGlobal.localization?.connectTitle
     }
     
-    var needHint: Bool {
-        addHintIfNeeded() != nil
-    }
-    
-    var hintText: String {
-        addHintIfNeeded() ?? ""
+    var hintsText: [String] {
+        addHintIfNeeded()
     }
     
     var payButton: Bool { true }
@@ -100,11 +96,12 @@ final class ConnectPaymentViewModel: PaymentViewModel {
         }
     }
     
-    private func addHintIfNeeded() -> String? {
+    private func addHintIfNeeded() -> [String] {
         
-        guard let merchantInfo = authManager.authModel?.merchantInfo else { return nil }
-        guard merchantInfo.bindingIsNeeded else { return nil }
+        guard let merchantInfo = authManager.authModel?.merchantInfo else { return [] }
+        guard merchantInfo.bindingIsNeeded else { return [] }
+        guard let bindingSafeText = merchantInfo.bindingSafeText else { return [] }
         
-        return merchantInfo.bindingSafeText
+        return [bindingSafeText]
     }
 }

@@ -44,7 +44,6 @@ protocol PaymentPresenting: NSObject {
     func profileTapped()
     func viewDidAppear()
     func viewDidDisappear()
-    var needHint: Bool { get }
     var needPayButton: Bool { get }
 }
 
@@ -60,11 +59,6 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     var purchaseInfoText: String? {
         
         paymentViewModel.purchaseInfoText
-    }
-    
-    var needHint: Bool {
-        
-        paymentViewModel.needHint
     }
 
     var featureCount: Int {
@@ -150,13 +144,12 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     func viewDidLoad() {
         
         configViews()
-        setHint()
+        setHints()
     }
-    
-    func setHint() {
+
+    func setHints() {
         
-        view?.configHint(with: paymentViewModel.hintText)
-        view?.showHint(paymentViewModel.needHint)
+        view?.setHints(with: paymentViewModel.hintsText)
     }
     
     var needPayButton: Bool {
@@ -293,7 +286,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                 self?.view?.hideLoading(animate: true)
                 self?.userService.selectedCard = card
                 self?.view?.reloadData()
-                self?.setHint()
+                self?.setHints()
             })
         }
     }

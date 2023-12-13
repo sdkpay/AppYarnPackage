@@ -13,8 +13,8 @@ final class PaymentModuleViewBuilder {
     private var cancelButtonDidTap: Action
     private var featureCount: Int
     
-    private(set) lazy var hintView: HintView = {
-        let view = HintView()
+    private(set) lazy var hintsStackView: HintsStackView = {
+        let view = HintsStackView()
         return view
     }()
     
@@ -94,7 +94,7 @@ final class PaymentModuleViewBuilder {
                        ofView: buttonStack,
                        withInset: needPayButton ? Cost.CollectionView.bottom : Cost.CollectionView.bottomToCancel)
         
-        hintView
+        hintsStackView
             .add(toSuperview: view)
             .touchEdge(.left, toEdge: .left, ofView: view, withInset: Cost.Hint.margin)
             .touchEdge(.right, toEdge: .right, ofView: view, withInset: Cost.Hint.margin)
