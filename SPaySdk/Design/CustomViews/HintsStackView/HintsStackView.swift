@@ -65,10 +65,13 @@ private final class HintView: SwipableView {
     }
     
     private func closeTapped() {
-        UIView.animate(withDuration: 0.25) {
+        
+        UIView.animate(withDuration: 0.25,
+                       animations: {
             self.alpha = 0
+        }, completion: { _ in
             self.closeAction?()
-        }
+        })
     }
     
     private func setupUI() {
@@ -143,8 +146,12 @@ final class HintsStackView: UIView {
             .touchEdge(.bottom, toEdge: .bottom, ofView: self)
             .touchEdge(.left, toEdge: .left, ofView: self)
             .touchEdge(.right, toEdge: .right, ofView: self)
+            .touchEdge(.top, toEdge: .top, ofView: self)
         
-        UIView.animate(withDuration: 0.25) {
+        layoutIfNeeded()
+        
+        UIView.animate(withDuration: 0.25,
+                       delay: 0.25) {
             hint.alpha = 1
         }
     }

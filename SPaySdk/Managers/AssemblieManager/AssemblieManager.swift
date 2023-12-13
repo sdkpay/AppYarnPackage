@@ -8,6 +8,7 @@
 import Foundation
 
 final class AssemblyManager {
+    
     private var assemblies: [Assembly] = [
         HelperConfigManagerAssembly(),
         VersionСontrolManagerAssembly(),

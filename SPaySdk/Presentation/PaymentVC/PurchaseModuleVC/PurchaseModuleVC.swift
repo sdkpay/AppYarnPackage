@@ -82,7 +82,7 @@ final class PurchaseModuleVC: UIViewController {
         let width = viewBuilder.purchaseCollectionView.bounds.width
         let scrollOffset = location.x
         let modulo = scrollOffset.truncatingRemainder(dividingBy: width)
-        let tolerance = width / 5
+        let tolerance = width / 2
         
         if modulo < tolerance {
             self.showLevel(index)

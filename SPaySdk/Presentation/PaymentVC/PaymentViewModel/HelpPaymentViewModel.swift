@@ -69,6 +69,7 @@ final class HelpPaymentViewModel: PaymentViewModel {
     }
     
     func identifiresForPurchaseSection() -> [Int] {
+        
         [.zero]
     }
 

@@ -58,6 +58,7 @@ protocol PartPayService {
     func setEnabledBnpl(_ value: Bool, enabledLevel: EnabledLevel)
     var bnplplan: BnplModel? { get }
     func getBnplPlan() async throws
+    func clearData()
 }
 
 final class DefaultPartPayService: PartPayService {
@@ -131,6 +132,10 @@ final class DefaultPartPayService: PartPayService {
             }
             throw error
         }
+    }
+    
+    func clearData() {
+        bnplplanSelected = false
     }
     
     private func checkFeatureToggle() {

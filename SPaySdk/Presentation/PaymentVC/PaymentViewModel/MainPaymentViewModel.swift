@@ -17,8 +17,6 @@ final class MainPaymentViewModel: PaymentViewModel {
     private var payAmountValidationManager: PayAmountValidationManager
     private let authManager: AuthManager
     
-    private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
-    
     private var activeFeatures: [PaymentFeature] {
         
         var features = [PaymentFeature]()

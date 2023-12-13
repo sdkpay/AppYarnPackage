@@ -47,8 +47,11 @@ class SwipableView: UIView {
                     self.alpha = 0.0
                     self.viewDismissAction?()
                 } else {
-                    self.center = self.initialCenter
-                    self.alpha = 1.0
+                    
+                    UIView.animate(withDuration: 0.25) {
+                        self.center = self.initialCenter
+                        self.alpha = 1.0
+                    }
                 }
             }
         }

@@ -96,6 +96,7 @@ final class DefaultCompletionManager: CompletionManager {
     }
     
     private func giveActualCompletion() {
+        
         if paymentTokenCompletion != nil {
             giveTokenCompletion()
         } else if paymentCompletion != nil {
