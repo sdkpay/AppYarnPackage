@@ -93,4 +93,20 @@ struct ConfigValues {
     @UserDefault(key: CellType.bnpl.rawValue,
                  defaultValue: true)
     var bnpl: Bool
+    
+    @UserDefault(key: CellType.helpers.rawValue,
+                 defaultValue: true)
+    var helpers: Bool
+    
+    @UserDefault(key: CellType.sbp.rawValue,
+                 defaultValue: true)
+    var sbp: Bool
+    
+    @UserDefault(key: CellType.newCreditCard.rawValue,
+                 defaultValue: true)
+    var newCreditCard: Bool
+    
+    @UserDefault(key: CellType.newDebitCard.rawValue,
+                 defaultValue: true)
+    var newDebitCard: Bool
 }

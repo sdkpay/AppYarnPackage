@@ -21,7 +21,7 @@ final class UserServiceAssembly: Assembly {
 }
 
 protocol UserService {
-    var getListCards: Bool { get }
+    var getListCards: Bool { get set }
     var additionalCards: Bool { get }
     var user: User? { get }
     var selectedCard: PaymentToolInfo? { get set }
@@ -99,11 +99,10 @@ final class DefaultUserService: UserService {
                                                                                     orderNumber: authInfo.orderNumber,
                                                                                     expiry: authInfo.expiry,
                                                                                     frequency: authInfo.frequency,
-                                                                                    priorityCardOnly: false),
+                                                                                    priorityCardOnly: true),
                                                             to: User.self)
             
             self.user = listCardsResult
-            self.getListCards = true
             
             self.analytics.sendEvent(.RQGoodListCards,
                                      with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
@@ -119,6 +118,7 @@ final class DefaultUserService: UserService {
     }
     
     func checkUserSession() async throws {
+        
         guard let sessionId = authManager.sessionId, user != nil else {
             throw SDKError(.noData)
         }
@@ -131,6 +131,7 @@ final class DefaultUserService: UserService {
     }
     
     private func selectCard(from cards: [PaymentToolInfo]) -> PaymentToolInfo? {
+        
         cards.first(where: { $0.priorityCard }) ?? cards.first
     }
 }

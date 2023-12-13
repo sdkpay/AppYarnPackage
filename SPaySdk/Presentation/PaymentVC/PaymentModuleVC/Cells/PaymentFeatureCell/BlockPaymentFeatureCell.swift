@@ -21,7 +21,6 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
         super.init(frame: frame)
         backgroundColor = .backgroundPrimary
         layer.cornerRadius = 20.0
-        setupUI()
     }
     
     required init?(coder: NSCoder) {
@@ -50,8 +49,8 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
         return view
     }()
     
-    private lazy var switchControl: UISwitch = {
-        let view = UISwitch(frame: .zero)
+    private lazy var switchControl: DefaultSwitch = {
+        let view = DefaultSwitch(frame: .zero)
         view.isUserInteractionEnabled = false
         return view
     }()
@@ -70,11 +69,13 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
         titleLabel.text = model.title
         subtitleLabel.text = model.subTitle
         self.switchControl.isOn = model.switchOn
+        switchControl.OffTint = model.switchOn ? .main : Asset.grayLight.color
         iconView.downloadImage(from: model.iconViewURL)
-        setupUI()
+        
+        setupUI(needSwitch: model.switchNeed)
     }
 
-    private func setupUI() {
+    private func setupUI(needSwitch: Bool) {
         iconView
             .add(toSuperview: contentView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
@@ -88,9 +89,11 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
             .touchEdge(.top, toSuperviewEdge: .top, withInset: .cellMargin)
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .cellMargin, priority: .defaultHigh)
         
-        switchControl
-            .add(toSuperview: contentView)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-            .centerInSuperview(.y)
+        if needSwitch {
+            switchControl
+                .add(toSuperview: contentView)
+                .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+                .centerInSuperview(.y)
+        }
     }
 }

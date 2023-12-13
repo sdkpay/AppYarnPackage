@@ -13,8 +13,7 @@ typealias PaymentResponse = (state: SPayState, info: String)
 typealias PaymentCompletion = (PaymentResponse) -> Void
 
 protocol SBPayService {
-    func setup(apiKey: String?, bnplPlan: Bool, environment: SEnvironment, completion: Action?)
-    func setup(config: SConfig, environment: SEnvironment, completion: Action?)
+    func setup(bnplPlan: Bool, helpers: Bool, config: SBHelperConfig, environment: SEnvironment, completion: Action?)
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
@@ -31,12 +30,16 @@ protocol SBPayService {
 }
 
 extension SBPayService {
-    func setup(apiKey: String?,
-               bnplPlan: Bool = true,
+    
+    func setup(bnplPlan: Bool = true,
+               helpers: Bool = true,
+               config: SBHelperConfig = SBHelperConfig(),
                environment: SEnvironment = .prod,
                completion: Action? = nil) {
-        setup(apiKey: apiKey,
-              bnplPlan: bnplPlan,
+                   
+        setup(bnplPlan: bnplPlan,
+              helpers: helpers,
+              config: config,
               environment: environment,
               completion: completion)
     }
@@ -54,47 +57,9 @@ final class DefaultSBPayService: SBPayService {
     private let timeManager = OptimizationCheсkerManager()
     private var apiKey: String?
     
-    func setup(apiKey: String?,
-               bnplPlan: Bool,
-               environment: SEnvironment,
-               completion: Action? = nil) {
-        self.apiKey = apiKey
-        FontFamily.registerAllCustomFonts()
-        locator.register(service: keychainStorage)
-        locator.register(service: liveCircleManager)
-        locator.register(service: logService)
-        locator.register(service: buildSettings)
-        assemblyManager.registerServices(to: locator)
-        locator
-            .resolve(LogService.self)
-            .setLogsWritable(environment: environment)
-        locator
-            .resolve(EnvironmentManager.self)
-            .setEnvironment(environment)
-        locator
-            .resolve(PartPayService.self)
-            .setEnabledBnpl(bnplPlan, enabledLevel: .merch)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
-        SBLogger.dateString = dateFormatter.string(from: Date())
-        
-        Task(priority: .medium) {
-            
-            do {
-                try await locator
-                    .resolve(RemoteConfigService.self)
-                    .getConfig(with: apiKey)
-                locator
-                    .resolve(AnalyticsService.self)
-                    .config()
-                DispatchQueue.main.async {
-                    completion?()
-                }
-            }
-        }
-    }
-    
-    func setup(config: SConfig, 
+    func setup(bnplPlan: Bool,
+               helpers: Bool,
+               config: SBHelperConfig,
                environment: SEnvironment,
                completion: Action?) {
         FontFamily.registerAllCustomFonts()
@@ -111,7 +76,13 @@ final class DefaultSBPayService: SBPayService {
             .setEnvironment(environment)
         locator
             .resolve(PartPayService.self)
-            .setEnabledBnpl(config.bnplPlan, enabledLevel: .merch)
+            .setEnabledBnpl(bnplPlan, enabledLevel: .merch)
+        locator
+            .resolve(HelperConfigManager.self)
+            .setConfig(config)
+        locator
+            .resolve(HelperConfigManager.self)
+            .setHelpersNeeded(helpers)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         SBLogger.dateString = dateFormatter.string(from: Date())

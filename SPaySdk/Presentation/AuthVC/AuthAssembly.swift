@@ -40,7 +40,10 @@ final class AuthAssembly {
                       versionСontrolManager: locator.resolve(),
                       contentLoadManager: locator.resolve(),
                       timeManager: OptimizationCheсkerManager(),
-                      enviromentManager: locator.resolve())
+                      enviromentManager: locator.resolve(),
+                      payAmountValidationManager: locator.resolve(),
+                      featureToggle: locator.resolve(),
+                      helperManager: locator.resolve())
     }
 
     private func moduleView(presenter: AuthPresenter) -> ContentVC & IAuthVC {

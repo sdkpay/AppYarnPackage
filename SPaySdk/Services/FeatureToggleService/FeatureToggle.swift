@@ -12,6 +12,9 @@ enum Feature: String, Codable {
     case refresh
     case compoundWallet
     case cardBalance
+    case sbp
+    case newCreditCard
+    case newDebitCard
 }
 
 final class FeatureToggleServiceAssembly: Assembly {

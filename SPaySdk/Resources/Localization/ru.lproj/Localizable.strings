@@ -14,21 +14,23 @@
 "try.title" = "Попробовать ещё раз";
 "back.title" = "Вернуться";
 "from.title" = " из %@";
+"today.title" = "сегодня";
 
 // Payment
 "payment.noCards.title" = "Нет карт для оплаты";
 "payment.noCards.subtitle" = "Выберите другой способ";
 "payment.cards.compoundWallet.title" = " c %@";
-
+"payment.part.subtitile" = "из %@ спишем %@";
 "payment.cards.compoundWallet.one" = "счетом";
 "payment.cards.compoundWallet.two" = "счетами";
 
 // Cards
 "cards.title" = "К оплате";
+"cards.new.title" = "Выпустить карту";
 
 // PartPay
 "part.pay.title" = "Плати частями";
-"accept.title" = "Подтвердить оплату частями";
+"accept.title" = "Подтвердить";
 "part.pay.cancel.title" = "Не хочу платить частями";
 "part.pay.final" = "Итого";
 "agreement.title" = "Условия договора";
@@ -48,6 +50,8 @@
 "error.trying" = "Вы исчерпали попытки ввода кода.\nВыберете другой метод оплаты";
 "error.version.title" = "Сервис недоступен";
 "error.version.subtitle" = "Выберите другой способ оплаты.";
+"error.noMoney.title" = "Оплатить со SberPay не получится";
+"error.noMoney.subtitle" = "Пополните карту и и попробуйте ещё раз";
 
 // Loading
 "try.to.pay.title" = "Проводим оплату...";
@@ -98,3 +102,15 @@
 "bankAppPicker.subtitle" = "Разрешите «%@» открыть приложение";
 "bankAppPicker.close" = "Закрыть";
 "bankAppPicker.deprecated" = "Не получилось открыть приложение";
+
+// Helpers
+"helpers.sbp.title" = "Перевести себе по СБП";
+"helpers.creditCard.title" = "Выпустить кредитную карту";
+"helpers.debittCard.title" = "У вас нет активных карт";
+
+// Hints
+"hints.all.title" = "Не хватает денег для оплаты. Пополните карты или выпустите кредитку";
+"hints.sbp.title" = "Не хватает денег для оплаты. Пополните карты через СБП";
+"hints.credit.title" = "Не хватает денег для оплаты, но вы можете выпустить кредитку";
+"hints.bnpl.title" = "Не хватает денег, но вы можете оплатить частями";
+"hints.notEnouth.title" = "Кажется, не хватает денег на карте";

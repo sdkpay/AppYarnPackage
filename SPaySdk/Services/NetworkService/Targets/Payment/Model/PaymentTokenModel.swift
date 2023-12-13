@@ -32,11 +32,11 @@ struct FraudMonСheckError: Codable {
 struct FraudMonСheckResult: Codable {
     let actionCode: String
     let isClientBlock: Bool?
-    let confirmMethodFactor: String
+    let confirmMethodFactor: String?
     let formParameters: FormParameters?
     
     var secureChallengeFactor: SecureChallengeFactor? {
-        SecureChallengeFactor(rawValue: confirmMethodFactor)
+        SecureChallengeFactor(rawValue: confirmMethodFactor ?? "")
     }
     
     var secureChallengeState: SecureChallengeState? {

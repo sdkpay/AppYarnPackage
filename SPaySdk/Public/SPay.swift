@@ -16,23 +16,17 @@ public enum SEnvironment: Int {
 
 @objc
 public final class SPay: NSObject {
+    
     private static var payService: SBPayService? = DefaultSBPayService()
     
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     @objc
-    public static func setup(apiKey: String? = nil,
-                             bnplPlan: Bool = false,
+    public static func setup(bnplPlan: Bool = false,
+                             helpers: Bool = true,
+                             helperConfig: SBHelperConfig = SBHelperConfig(),
                              environment: SEnvironment = .prod,
                              completion: Action? = nil) {
-        payService?.setup(apiKey: apiKey, bnplPlan: bnplPlan, environment: environment, completion: completion)
-    }
-    
-    /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
-    @objc
-    public static func setup(config: SConfig,
-                             environment: SEnvironment = .prod,
-                             completion: Action? = nil) {
-        payService?.setup(config: config, environment: environment, completion: completion)
+        payService?.setup(bnplPlan: bnplPlan, helpers: helpers, config: helperConfig, environment: environment, completion: completion)
     }
     
     /**

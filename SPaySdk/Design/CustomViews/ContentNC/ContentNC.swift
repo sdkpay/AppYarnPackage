@@ -17,7 +17,7 @@ final class ContentNC: UIViewController {
     private lazy var backgroundView: UIImageView = {
         // DEBUG
         let view = UIImageView(image: Asset.background.image)
-        view.contentMode = .scaleAspectFill
+        view.contentMode = .scaleToFill
         view.tag = .backgroundViewTag
         return view
     }()
@@ -106,7 +106,7 @@ final class ContentNC: UIViewController {
             self.backgroundView.alpha = 1
         } completion: { _ in
             // DEBUG - Для лотти бэкграудн
-//            self.backgroundView.play()
+           // self.backgroundView.play()
         }
     }
     

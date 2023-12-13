@@ -13,11 +13,13 @@ enum SectionData: Int, CaseIterable {
     case config
     case order
     case script
+    case merchantConfig
     case next
 }
 
 enum CellType: String, CaseIterable {
     case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, refresh, environment, bnpl, next, sid
+    case sbp, newCreditCard, newDebitCard, helpers
 }
 
 private struct ConfigCellTextModel {
@@ -64,7 +66,6 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         case .config:
             return [
                 .apiKey,
-                .bnpl,
                 .environment,
                 .refresh
             ]
@@ -94,6 +95,14 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                 .network,
                 .ssl,
                 .lang
+            ]
+        case .merchantConfig:
+            return [
+                .bnpl,
+                .helpers,
+                .sbp,
+                .newCreditCard,
+                .newDebitCard
             ]
         case .next:
             return [
@@ -139,6 +148,14 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             return refreshCell(type: type)
         case .sid:
             return sidButtonCell(type: type)
+        case .sbp:
+            return sbpCell(type: type)
+        case .newCreditCard:
+            return newCreditCell(type: type)
+        case .newDebitCard:
+            return newDebitCell(type: type)
+        case .helpers:
+            return helpersCell(type: type)
         }
     }
     
@@ -223,13 +240,13 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             environment = .sandboxRealBankApp
         }
         SPay.debugConfig(network: configValues.network, ssl: configValues.ssl, refresh: configValues.refresh)
-        SPay.setup(apiKey: configValues.apiKey ?? "",
-                   bnplPlan: configValues.bnpl,
+        SPay.setup(bnplPlan: configValues.bnpl,
+                   helpers: configValues.helpers,
+                   helperConfig: SBHelperConfig(sbp: configValues.sbp, creditCard: configValues.newCreditCard),
                    environment: environment) {
             self.view?.stopLoader()
-        //    self.view?.navigationController?.pushViewController(vc, animated: true)
+            self.view?.navigationController?.pushViewController(vc, animated: true)
         }
-        self.view?.navigationController?.pushViewController(vc, animated: true)
     }
     
     private func sidAuth() {
@@ -460,6 +477,42 @@ extension ConfigPresenter {
         cell.config(with: "BNPL",
                     value: configValues.bnpl) { bool in
             self.configValues.bnpl = bool
+        }
+        return cell
+    }
+
+    private func helpersCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "Helpers",
+                    value: configValues.helpers) { bool in
+            self.configValues.helpers = bool
+        }
+        return cell
+    }
+    
+    private func sbpCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "SBP",
+                    value: configValues.sbp) { bool in
+            self.configValues.sbp = bool
+        }
+        return cell
+    }
+    
+    private func newDebitCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "New debit card",
+                    value: configValues.newDebitCard) { bool in
+            self.configValues.newDebitCard = bool
+        }
+        return cell
+    }
+    
+    private func newCreditCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "New credit card",
+                    value: configValues.newCreditCard) { bool in
+            self.configValues.newCreditCard = bool
         }
         return cell
     }

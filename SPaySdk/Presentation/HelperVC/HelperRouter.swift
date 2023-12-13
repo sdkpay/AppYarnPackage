@@ -2,7 +2,20 @@
 //  HelperRouter.swift
 //  SPaySdk
 //
-//  Created by Ипатов Александр Станиславович on 19.11.2023.
+//  Created by Ипатов Александр Станиславович on 11.12.2023.
 //
 
-import Foundation
+import UIKit
+
+protocol HelperRouting {
+    
+    func openUrl(url: URL)
+}
+
+final class HelperRouter: HelperRouting {
+    
+    @MainActor
+    func openUrl(url: URL) {
+        UIApplication.shared.open(url)
+    }
+}

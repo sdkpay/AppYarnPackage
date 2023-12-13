@@ -177,6 +177,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             self.analytics.sendEvent(.RQGoodSessionId,
                                      with: [AnalyticsKey.view: AnlyticsScreenEvent.AuthVC.rawValue])
             self.authManager.sessionId = sessionIdResult.sessionId
+            self.authManager.authModel = sessionIdResult
             self.appLink = sessionIdResult.deeplink
             self.partPayService.setEnabledBnpl(sessionIdResult.isBnplEnabled ?? false, enabledLevel: .session)
             

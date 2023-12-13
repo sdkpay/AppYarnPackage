@@ -9,7 +9,6 @@ import UIKit
 
 protocol IPartPayVC {
     func setFinalCost(_ value: String)
-    func setSubtitle(_ value: String)
     func setTitle(_ value: String)
     func setButtonEnabled(value: Bool)
     func configCheckView(text: String,
@@ -65,10 +64,6 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     func setTitle(_ value: String) {
         viewBuilder.titleLabel.text = value
-    }
-    
-    func setSubtitle(_ value: String) {
-        viewBuilder.subTitleLabel.setAttributedString(lineHeightMultiple: 1.1, kern: -0.3, string: value)
     }
     
     func setButtonEnabled(value: Bool) {

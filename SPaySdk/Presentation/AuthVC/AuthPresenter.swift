@@ -29,6 +29,9 @@ final class AuthPresenter: AuthPresenting {
     private let enviromentManager: EnvironmentManager
     private let versionСontrolManager: VersionСontrolManager
     private let seamlessAuthService: SeamlessAuthService
+    private var payAmountValidationManager: PayAmountValidationManager
+    private var helperManager: HelperConfigManager
+    private var featureToggle: FeatureToggleService
     
     init(_ router: AuthRouter,
          authService: AuthService,
@@ -42,7 +45,10 @@ final class AuthPresenter: AuthPresenting {
          versionСontrolManager: VersionСontrolManager,
          contentLoadManager: ContentLoadManager,
          timeManager: OptimizationCheсkerManager,
-         enviromentManager: EnvironmentManager) {
+         enviromentManager: EnvironmentManager,
+         payAmountValidationManager: PayAmountValidationManager,
+         featureToggle: FeatureToggleService,
+         helperManager: HelperConfigManager) {
         self.analytics = analytics
         self.router = router
         self.authService = authService
@@ -56,6 +62,9 @@ final class AuthPresenter: AuthPresenting {
         self.timeManager = timeManager
         self.enviromentManager = enviromentManager
         self.seamlessAuthService = seamlessAuthService
+        self.payAmountValidationManager = payAmountValidationManager
+        self.helperManager = helperManager
+        self.featureToggle = featureToggle
         self.timeManager.startTraking()
     }
     
@@ -228,7 +237,13 @@ final class AuthPresenter: AuthPresenting {
             
             do {
                 try await contentLoadManager.load()
-                 await self.router.presentPayment()
+                
+                if let user = userService.user, !user.paymentToolInfo.isEmpty {
+                    let mode = try getPaymentMode()
+                    await self.router.presentPayment(state: mode)
+                } else {
+                    await self.router.presentHelper()
+                }
             } catch {
                 if let error = error as? SDKError {
                     self.completionManager.completeWithError(error)
@@ -236,6 +251,11 @@ final class AuthPresenter: AuthPresenting {
                         self.alertService.show(on: self.view,
                                                type: .noInternet(retry: { self.loadPaymentData() },
                                                                  completion: { self.dismissWithError(error) }))
+                    } else if error.represents(.noMoney) {
+                        self.alertService.show(on: self.view,
+                                               type: .noMoney(back: {
+                            self.dismissWithError(error)
+                        }))
                     } else {
                         self.alertService.show(on: self.view,
                                                type: .defaultError(completion: { self.dismissWithError(error) }))
@@ -243,6 +263,25 @@ final class AuthPresenter: AuthPresenting {
                 }
             }
         }
+    }
+    
+    private func getPaymentMode() throws -> PaymentVCMode {
+        
+        if userService.user?.orderAmount.amount == 0 {
+            return .connect
+        }
+        
+        let status: PaymentVCMode = try payAmountValidationManager.checkWalletAmountEnouth() ? .pay : .helper
+        
+        if status == .helper {
+            
+            if !helperManager.helpersNeeded || !(featureToggle.isEnabled(.newCreditCard) && (featureToggle.isEnabled(.sbp))) {
+                
+                throw SDKError(.noMoney)
+            }
+        }
+        
+       return status
     }
     
     private func validateAuthError(error: SDKError) {
