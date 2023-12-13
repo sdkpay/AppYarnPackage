@@ -13,7 +13,7 @@ private extension CGFloat {
     static let buttonsMargin = 32.0
     static let buttonSpacing = 2.0
     static let bottomMargin = 66.0
-    static let sideMargin = 8.0
+    static let sideMargin = 16.0
 }
 
 protocol IAlertVC {
@@ -21,6 +21,15 @@ protocol IAlertVC {
 }
 
 final class AlertVC: ContentVC, IAlertVC {
+    
+    private lazy var backgroundView: UIImageView = {
+        // DEBUG
+        let view = UIImageView(image: Asset.background.image)
+        view.contentMode = .scaleAspectFill
+        view.tag = .backgroundViewTag
+        return view
+    }()
+    
     private lazy var imageView: UIImageView = {
        let view = UIImageView()
         view.contentMode = .scaleAspectFit
@@ -31,7 +40,7 @@ final class AlertVC: ContentVC, IAlertVC {
         let view = UILabel()
         view.font = .header4
         view.numberOfLines = 0
-        view.textColor = .mainBlack
+        view.textColor = .textPrimory
         view.textAlignment = .center
         return view
     }()
@@ -103,11 +112,13 @@ final class AlertVC: ContentVC, IAlertVC {
         if model.isFailure {
             contentStack.addArrangedSubview(textStack)
             contentStack.addArrangedSubview(imageView)
+            backgroundView.image = Asset.errorBackground.image
             imageWidth = 200
             imageHeight = 100
         } else {
             contentStack.addArrangedSubview(imageView)
             contentStack.addArrangedSubview(textStack)
+            backgroundView.image = Asset.background.image
             imageWidth = 120
             imageHeight = 120
         }
@@ -149,7 +160,10 @@ final class AlertVC: ContentVC, IAlertVC {
     }
     
     func setupUI() {
-        view.height(ScreenHeightState.normal.height, priority: .defaultLow)
+        
+        backgroundView.add(toSuperview: view)
+            .height(ScreenHeightState.normal.height)
+            .touchEdgesToSuperview()
         
         buttonsStack
             .add(toSuperview: view)

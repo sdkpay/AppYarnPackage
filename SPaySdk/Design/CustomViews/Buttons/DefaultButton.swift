@@ -14,7 +14,7 @@ private struct ButtonColorScheme {
     var borderWidth: CGFloat
 
     init(backgroundColor: UIColor = .main,
-         titleColor: UIColor = .backgroundPrimary,
+         titleColor: UIColor = .textPrimory,
          borderColor: UIColor = .main,
          borderWidth: CGFloat = 0) {
         self.backgroundColor = backgroundColor

@@ -147,11 +147,11 @@ final class ContentNC: UIViewController {
             return
         }
         var fomShimView = UIView()
-        fomShimView.backgroundColor = .backgroundSecondary
+        fomShimView.backgroundColor = .backgroundPrimary
         fomShimView.alpha = 0
         
         var toShimView = UIView()
-        toShimView.backgroundColor = .backgroundSecondary
+        toShimView.backgroundColor = .backgroundPrimary
         toShimView.alpha = 1
         
         addedConstraint(fomShimView: &fomShimView, toShimView: &toShimView, from: from, to: to)

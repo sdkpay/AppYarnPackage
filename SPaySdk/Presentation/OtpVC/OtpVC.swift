@@ -38,7 +38,7 @@ final class OtpVC: ContentVC, IOtpVC {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = .medium5
-        label.textColor = .mainBlack
+        label.textColor = .textPrimory
         return label
     }()
     
