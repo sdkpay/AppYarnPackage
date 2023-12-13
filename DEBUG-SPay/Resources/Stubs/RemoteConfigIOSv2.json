@@ -44,8 +44,11 @@
         {
             "name": "newDebitCard",
             "value": true
+        },
+        {
+            "name": "retryPayment",
+            "value": true
         }
-        
     ],
     "bankApps": [
             {
