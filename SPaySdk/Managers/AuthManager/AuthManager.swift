@@ -57,7 +57,7 @@ final class DefaultAuthManager: AuthManager {
     }
     var isOtpNeed: Bool?
     var authModel: AuthModel?
-    var bnplMerchEnabled: Bool = false
+    var bnplMerchEnabled = false
     
     func setEnabledBnpl(_ value: Bool) {
         bnplMerchEnabled = value
