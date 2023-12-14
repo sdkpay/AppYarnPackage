@@ -20,7 +20,7 @@ struct ConfigModel: Codable {
     let versionInfo: VersionInfo?
     let featuresToggle: [FeaturesToggle]
     let images: Images
-    let certHashes: [String]
+    let certHashes: [String]?
 }
 
 struct VersionInfo: Codable {
