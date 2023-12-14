@@ -162,7 +162,7 @@ final class AlertVC: ContentVC, IAlertVC {
     func setupUI() {
         
         backgroundView.add(toSuperview: view)
-            .height(ScreenHeightState.normal.height)
+            .height(ScreenHeightState.normal.height, priority: .defaultHigh)
             .touchEdgesToSuperview()
         
         buttonsStack
