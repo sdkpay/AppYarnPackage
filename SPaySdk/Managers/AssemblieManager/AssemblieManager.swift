@@ -9,27 +9,32 @@ import Foundation
 
 final class AssemblyManager {
     
-    private var assemblies: [Assembly] = [
+    private var startAssemblies: [Assembly] = [
+        
         HelperConfigManagerAssembly(),
         VersionСontrolManagerAssembly(),
-        KeychainStorageAssembly(),
         AuthManagerAssembly(),
         PaymentServiceAssembly(),
         CompletionManagerAssembly(),
         SDKManagerAssembly(),
         CookieStorageAssembly(),
-        BiometricAuthProviderAssembly(),
         EnvironmentManagerAssembly(),
         HostManagerAssembly(),
-        FeatureToggleServiceAssembly(),
         AnalyticsServiceAssembly(),
-        ParsingErrorAnaliticManagerAssembly(),
         BankAppManagerAssembly(),
+        ParsingErrorAnaliticManagerAssembly(),
+        FeatureToggleServiceAssembly(),
         BaseRequestManagerAssembly(),
         NetworkServiceAssembly(),
+        RemoteConfigServiceAssembly()
+    ]
+    
+    private var sessionAssemblies: [Assembly] = [
+        
+        BiometricAuthProviderAssembly(),
+        KeychainStorageAssembly(),
+        PaymentServiceAssembly(),
         PersonalMetricsServiceAssembly(),
-        RemoteConfigServiceAssembly(),
-        SDKManagerAssembly(),
         AlertServiceAssembly(),
         SeamlessAuthServiceAssembly(),
         AuthServiceAssembly(),
@@ -43,8 +48,16 @@ final class AssemblyManager {
         ContentLoadManagerAssembly()
     ]
     
-    func registerServices(to locator: LocatorService) {
-        for assembly in assemblies {
+    func registerStartServices(to locator: LocatorService) {
+        
+        for assembly in startAssemblies {
+            assembly.register(in: locator)
+        }
+    }
+    
+    func registerSessionServices(to locator: LocatorService) {
+        
+        for assembly in sessionAssemblies {
             assembly.register(in: locator)
         }
     }

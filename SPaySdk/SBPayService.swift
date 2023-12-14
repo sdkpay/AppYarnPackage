@@ -49,7 +49,6 @@ final class DefaultSBPayService: SBPayService {
     
     private lazy var liveCircleManager: LiveCircleManager = DefaultLiveCircleManager(timeManager: timeManager)
     private lazy var locator: LocatorService = DefaultLocatorService()
-    private lazy var keychainStorage: KeychainStorage = DefaultKeychainStorage()
     private lazy var buildSettings: BuildSettings = DefaultBuildSettings()
     private lazy var logService: LogService = DefaultLogService()
     private lazy var inProgress = false
@@ -63,11 +62,11 @@ final class DefaultSBPayService: SBPayService {
                environment: SEnvironment,
                completion: Action?) {
         FontFamily.registerAllCustomFonts()
-        locator.register(service: keychainStorage)
         locator.register(service: liveCircleManager)
         locator.register(service: logService)
         locator.register(service: buildSettings)
-        assemblyManager.registerServices(to: locator)
+        
+        assemblyManager.registerStartServices(to: locator)
         locator
             .resolve(LogService.self)
             .setLogsWritable(environment: environment)
@@ -75,8 +74,8 @@ final class DefaultSBPayService: SBPayService {
             .resolve(EnvironmentManager.self)
             .setEnvironment(environment)
         locator
-            .resolve(PartPayService.self)
-            .setEnabledBnpl(bnplPlan, enabledLevel: .merch)
+            .resolve(AuthManager.self)
+            .setEnabledBnpl(bnplPlan)
         locator
             .resolve(HelperConfigManager.self)
             .setConfig(config)
@@ -161,6 +160,8 @@ final class DefaultSBPayService: SBPayService {
     func payWithBankInvoiceId(with viewController: UIViewController,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
+    
+        assemblyManager.registerSessionServices(to: locator)
         guard !inProgress else { return }
         inProgress = true
         timeManager.startCheckingCPULoad()

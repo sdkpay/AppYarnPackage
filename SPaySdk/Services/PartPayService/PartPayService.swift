@@ -97,6 +97,7 @@ final class DefaultPartPayService: PartPayService {
         self.analytics = analytics
         self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         self.featureToggle = featureToggle
+        setEnabledBnpl(authManager.bnplMerchEnabled, enabledLevel: .merch)
         SBLogger.log(.start(obj: self))
     }
     

@@ -17,6 +17,7 @@ protocol LocatorService {
 }
 
 final class DefaultLocatorService: LocatorService {
+    
     private var store = [ObjectIdentifier: ObjectRegistry]()
     
     enum ObjectRegistry {

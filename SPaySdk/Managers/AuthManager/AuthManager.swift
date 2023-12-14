@@ -35,10 +35,13 @@ protocol AuthManager {
     var authMethod: AuthMethod? { get set }
     var ipAddress: String? { get set }
     var authModel: AuthModel? { get set }
+    var bnplMerchEnabled: Bool { get }
+    
+    func setEnabledBnpl(_ value: Bool)
 }
 
 final class DefaultAuthManager: AuthManager {
-    
+
     var orderNumber: String?
     var apiKey: String?
     var sessionId: String?
@@ -54,4 +57,9 @@ final class DefaultAuthManager: AuthManager {
     }
     var isOtpNeed: Bool?
     var authModel: AuthModel?
+    var bnplMerchEnabled: Bool = false
+    
+    func setEnabledBnpl(_ value: Bool) {
+        bnplMerchEnabled = value
+    }
 }
