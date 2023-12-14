@@ -11,6 +11,7 @@ final class AssemblyManager {
     
     private var startAssemblies: [Assembly] = [
         
+        KeychainStorageAssembly(),
         HelperConfigManagerAssembly(),
         VersionСontrolManagerAssembly(),
         AuthManagerAssembly(),
@@ -32,7 +33,6 @@ final class AssemblyManager {
     private var sessionAssemblies: [Assembly] = [
         
         BiometricAuthProviderAssembly(),
-        KeychainStorageAssembly(),
         PaymentServiceAssembly(),
         PersonalMetricsServiceAssembly(),
         AlertServiceAssembly(),
