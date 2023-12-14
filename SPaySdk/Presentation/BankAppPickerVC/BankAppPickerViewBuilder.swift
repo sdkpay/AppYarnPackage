@@ -112,7 +112,7 @@ final class BankAppPickerViewBuilder {
             .touchEdge(.top, toSameEdgeOfView: view, withInset: Consts.Title.topOffSet)
             .touchEdge(.left, toSameEdgeOfView: view, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-            .(Consts.Title.height, priority: .defaultHigh)
+            .height(Consts.Title.height, priority: .defaultHigh)
         
         tableView
             .add(toSuperview: view)
