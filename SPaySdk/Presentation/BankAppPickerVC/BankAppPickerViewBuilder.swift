@@ -22,6 +22,7 @@ private extension BankAppPickerViewBuilder {
             static let textColor = UIColor.textPrimory
             static let text = UserDefaults.localization?.authTitle
             
+            static let height: CGFloat = 56.0
             static let topOffSet: CGFloat = 36.0
             static let rightOffSet = Consts.offSet
         }
@@ -111,16 +112,11 @@ final class BankAppPickerViewBuilder {
             .touchEdge(.top, toSameEdgeOfView: view, withInset: Consts.Title.topOffSet)
             .touchEdge(.left, toSameEdgeOfView: view, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-        
-        subtitleLabel
-            .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Consts.Subtitle.topOffSet)
-            .touchEdge(.left, toSameEdgeOfView: view, withInset: .margin)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
+            .(Consts.Title.height, priority: .defaultHigh)
         
         tableView
             .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: subtitleLabel, withInset: Consts.TableView.topOffSet)
+            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Consts.TableView.topOffSet)
             .touchEdge(.left, toEdge: .left, ofView: titleLabel)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.rightOffSet)
         

@@ -60,7 +60,7 @@ final class BankAppCell: UITableViewCell {
     private lazy var sutitleLabel: UILabel = {
         let view = UILabel()
         view.font = .medium3
-        view.textColor = .textSecondary
+        view.textColor = Asset.red.color
         return view
     }()
     
@@ -90,7 +90,6 @@ final class BankAppCell: UITableViewCell {
         switch model.deprecated {
         case true:
             sutitleLabel.text = Strings.BankAppPicker.deprecated
-            sutitleLabel.textColor = .notification
         case false:
             sutitleLabel.text = nil
         }
