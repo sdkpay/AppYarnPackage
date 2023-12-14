@@ -79,13 +79,6 @@ final class PaymentCardCell: UICollectionViewCell, SelfReusable, SelfConfigCell 
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .margin)
             .centerInSuperview(.y)
             .size(.init(width: .cardWidth, height: .cardWidth))
-
-        cardInfoStack
-            .add(toSuperview: contentView)
-            .touchEdge(.left, toEdge: .right, ofView: cardIconView, withInset: .margin)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
-            .touchEdge(.top, toSuperviewEdge: .top, withInset: .margin)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .margin, priority: .defaultHigh)
         
         if needArrow {
             arrowView
@@ -93,6 +86,20 @@ final class PaymentCardCell: UICollectionViewCell, SelfReusable, SelfConfigCell 
                 .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
                 .centerInSuperview(.y)
                 .size(.init(width: .arrowWidth, height: .arrowWidth))
+        }
+        
+        cardInfoStack
+            .add(toSuperview: contentView)
+            .touchEdge(.left, toEdge: .right, ofView: cardIconView, withInset: .margin)
+            .touchEdge(.top, toSuperviewEdge: .top, withInset: .margin)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .margin, priority: .defaultHigh)
+        
+        if needArrow {
+            cardInfoStack
+                .touchEdge(.right, toEdge: .left, ofView: arrowView, withInset: .margin)
+        } else {
+            cardInfoStack
+                .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
         }
     }
 }

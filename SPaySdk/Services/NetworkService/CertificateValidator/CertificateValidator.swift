@@ -14,6 +14,7 @@ private extension String {
     static let sslNoSeverCerts = "#️⃣ SSL pinning - протекция сервера не найдена"
     static let sslErrorNoSeverCerts = "🔺 Ошибка SSL pinning - не удалось найти сертификаты на сервере"
     static let sslErrorNoLocalCerts = "🔺 Ошибка SSL pinning - не удалось найти локальные сертификаты"
+    static let sslErrorNoIntermediateCert = "🔺 Ошибка SSL pinning - не удалось найти промежуточный серт"
     static let sslErrorBadSerts = "🔺 Ошибка SSL pinning - сертификаты не совпадают"
 }
 
@@ -69,7 +70,13 @@ enum CertificateValidator {
         
         guard !serverPublicKeysHashes.isEmpty else {
             SBLogger.log(level: .debug(level: .network), .sslErrorNoLocalCerts)
-            SBLogger.log(level: .debug(level: .network), .sslNoSeverCerts)
+            completionHandler(.performDefaultHandling, nil)
+            return
+        }
+        
+        guard certCount > 1 else {
+            SBLogger.log(level: .debug(level: .network), .sslErrorNoIntermediateCert)
+            completionHandler(.performDefaultHandling, nil)
             return
         }
         
@@ -79,13 +86,13 @@ enum CertificateValidator {
                 var error: Unmanaged<CFError>?
                 
                 if let publicKeyData = SecKeyCopyExternalRepresentation(publicKey, &error) as Data? {
+                    
                     var keyWithHeader = Data(rsa2048Asn1Header)
                     keyWithHeader.append(publicKeyData)
-                    var digestString = ""
-                    if #available(iOS 13.0, *) {
-                        let digest = SHA256.hash(data: keyWithHeader)
-                        digestString = Data(digest).base64EncodedString()
-                    }
+                    
+                    let digest = SHA256.hash(data: keyWithHeader)
+                    let digestString = Data(digest).base64EncodedString()
+                    
                     if serverPublicKeysHashes.contains(digestString) {
                         SBLogger.log(level: .debug(level: .network), .sslSuccess)
                         completionHandler(.useCredential, URLCredential(trust: serverTrust))
