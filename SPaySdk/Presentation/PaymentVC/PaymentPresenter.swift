@@ -291,26 +291,17 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         }
     }
     
-    private func createOTP() async {
-        do {
-            await view?.showLoading()
-            try await otpService.creteOTP()
+    private func createOTP() async throws {
+        
+        await view?.showLoading()
+        try await otpService.creteOTP()
+        
+        try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<Void, Error>) -> Void in
             
-            try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<Void, Error>) -> Void in
-                
-                self.router.presentOTPScreen(completion: {
-                    inCont.resume()
-                })
+            self.router.presentOTPScreen(completion: {
+                inCont.resume()
             })
-        } catch {
-            
-            await view?.hideLoading(animate: true)
-            
-            if let error = error as? SDKError {
-                self.alertService.show(on: self.view,
-                                       type: .defaultError(completion: { self.dismissWithError(error) }))
-            }
-        }
+        })
     }
     
     private func configViews() {
@@ -451,12 +442,14 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     private func goToPay() async {
         
         guard let paymentId = userService.selectedCard?.paymentId else { return }
-        
-        if otpService.otpRequired {
-            await createOTP()
-        }
 
         do {
+            
+            if otpService.otpRequired {
+                
+                try await createOTP()
+            }
+            
             await self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
 
             let challengeState = try await secureChallengeService.challenge(paymentId: paymentId, 
@@ -470,7 +463,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                 case .hint:
                     self.pay(resolution: resolution)
                 case .sms:
-                    await self.createOTP()
+                    try await self.createOTP()
                     self.pay(resolution: resolution)
                 case .none:
                     showSecureError()
