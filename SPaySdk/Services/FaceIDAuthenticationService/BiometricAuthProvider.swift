@@ -34,6 +34,7 @@ final class BiometricAuthProvider: BiometricAuthProviderProtocol {
         self.context.canEvaluate(completion: completion)
     }
     
+    @MainActor
     func evaluate() async -> Bool {
         
         self.context.reset()

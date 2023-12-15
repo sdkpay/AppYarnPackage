@@ -75,7 +75,7 @@ final class DefaultUserService: UserService {
                                                                                 orderNumber: authInfo.orderNumber,
                                                                                 expiry: authInfo.expiry,
                                                                                 frequency: authInfo.frequency,
-                                                                                priorityCardOnly: true),
+                                                                                priorityCardOnly: false),
                                                         to: User.self)
         self.user = listCardsResult
         additionalCards = listCardsResult.additionalCards ?? false
@@ -99,7 +99,7 @@ final class DefaultUserService: UserService {
                                                                                     orderNumber: authInfo.orderNumber,
                                                                                     expiry: authInfo.expiry,
                                                                                     frequency: authInfo.frequency,
-                                                                                    priorityCardOnly: true),
+                                                                                    priorityCardOnly: false),
                                                             to: User.self)
             
             self.user = listCardsResult

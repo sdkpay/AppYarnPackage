@@ -250,7 +250,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         
         switch authMethod {
         case .refresh:
-            Task { @MainActor in
+            Task { @MainActor [biometricAuthProvider] in
                 
                 let result = await biometricAuthProvider.evaluate()
                 
