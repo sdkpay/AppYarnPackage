@@ -317,6 +317,7 @@ final class AuthPresenter: AuthPresenting {
             if bankManager.avaliableBanks.count > 1 {
                 await showBanksStack()
             } else {
+                self.bankManager.selectedBank = nil
                 self.completionManager.dismissCloseAction(view)
             }
         }
