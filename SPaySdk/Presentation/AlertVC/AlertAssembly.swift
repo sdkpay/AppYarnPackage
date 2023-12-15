@@ -8,15 +8,22 @@
 import UIKit
 
 final class AlertAssembly {
-    func createModule(alertModel: AlertViewModel, liveCircleManager: LiveCircleManager) -> ContentVC {
-        let presenter = modulePresenter(alertModel: alertModel, liveCircleManager: liveCircleManager)
+    
+    func createModule(alertModel: AlertViewModel,
+                      liveCircleManager: LiveCircleManager,
+                      alertResultAction: @escaping AlertResultAction) -> ContentVC {
+        let presenter = modulePresenter(alertModel: alertModel,
+                                        liveCircleManager: liveCircleManager,
+                                        alertResultAction: alertResultAction)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         return contentView
     }
 
-    private func modulePresenter(alertModel: AlertViewModel, liveCircleManager: LiveCircleManager) -> AlertPresenter {
-        let presenter = AlertPresenter(with: alertModel, liveCircleManager: liveCircleManager)
+    private func modulePresenter(alertModel: AlertViewModel,
+                                 liveCircleManager: LiveCircleManager,
+                                 alertResultAction: @escaping AlertResultAction) -> AlertPresenter {
+        let presenter = AlertPresenter(with: alertModel, liveCircleManager: liveCircleManager, alertResultAction: alertResultAction)
         return presenter
     }
     

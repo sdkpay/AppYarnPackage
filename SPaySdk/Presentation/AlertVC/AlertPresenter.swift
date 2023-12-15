@@ -8,6 +8,8 @@
 import AVFAudio
 import UIKit
 
+typealias AlertResultAction = (AlertResult) -> Void
+
 private extension TimeInterval {
     static let animationDuration: TimeInterval = 0.25
     static let completionDuration: TimeInterval = 4.25
@@ -26,10 +28,13 @@ final class AlertPresenter: AlertPresenting {
     private var feedbackDispatchWorkItem: DispatchWorkItem?
     private var completionDispatchWorkItem: DispatchWorkItem?
     private var liveCircleManager: LiveCircleManager
+    private var alertResultAction: AlertResultAction
     
     init(with model: AlertViewModel,
-         liveCircleManager: LiveCircleManager) {
+         liveCircleManager: LiveCircleManager,
+         alertResultAction: @escaping AlertResultAction) {
         self.model = model
+        self.alertResultAction = alertResultAction
         self.liveCircleManager = liveCircleManager
     }
     
@@ -43,22 +48,20 @@ final class AlertPresenter: AlertPresenting {
             switch item.type {
             case .full, .info:
                 self.view?.contentNavigationController?.popViewController(animated: true, completion: {
-                    item.action()
+                    item.action?()
+                    self.alertResultAction(.approve)
                 })
-            case .cancel:
-                item.action()
-            case .clear:
-                item.action()
-                self.view?.contentNavigationController?.popViewController(animated: true)
-            case .blackBack:
-                item.action()
-            case .orangeBack:
-                item.action()
+            case .blackBack, .cancel, .orangeBack, .clear:
+                self.view?.contentNavigationController?.popViewController(animated: true, completion: {
+                    item.action?()
+                    self.alertResultAction(.cancel)
+                })
             }
         }
     }
 
     private func completeConfig() {
+        
         let feedbackDispatchWorkItem = DispatchWorkItem {
             self.playFeedback()
             self.playSound()
@@ -66,7 +69,8 @@ final class AlertPresenter: AlertPresenting {
 
         let completionDispatchWorkItem = DispatchWorkItem {
             if self.model.buttons.isEmpty {
-                self.model.completion()
+                
+                self.alertResultAction(.cancel)
             }
         }
 
@@ -89,11 +93,13 @@ final class AlertPresenter: AlertPresenting {
     }
     
     private func cancelFeedback() {
+        
         completionDispatchWorkItem?.cancel()
         feedbackDispatchWorkItem?.cancel()
     }
 
     private func playSound() {
+        
         guard let path = Bundle.sdkBundle.path(forResource: model.sound,
                                                ofType: nil) else { return }
         let url = URL(fileURLWithPath: path)
@@ -108,6 +114,7 @@ final class AlertPresenter: AlertPresenting {
     }
     
     private func playFeedback() {
+        
         UINotificationFeedbackGenerator().notificationOccurred(model.feedBack)
     }
 }

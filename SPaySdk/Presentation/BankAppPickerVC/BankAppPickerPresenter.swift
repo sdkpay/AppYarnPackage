@@ -83,17 +83,25 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     }
     
     private func showErrorAlert() {
+        
         let returnButton = AlertButtonModel(title: Strings.Return.title,
                                             type: .full) { [weak self] in
+            
             self?.completionManager.dismissCloseAction(self?.view)
         }
-        alertService.showAlert(on: self.view,
-                               with: "Strings.Alert.BankAppPicker.Error.title",
-                               with: "Strings.Alert.BankAppPicker.Error.title",
-                               with: nil,
-                               state: .warning,
-                               buttons: [returnButton],
-                               completion: {})
+        
+        Task {
+            
+            await alertService.show(on: self.view,
+                              with: "Strings.Alert.BankAppPicker.Error.title",
+                              with: "Strings.Alert.BankAppPicker.Error.title",
+                              with: nil,
+                              state: .warning,
+                              buttons: [returnButton])
+            
+            completionManager.dismissCloseAction(view)
+            
+        }
     }
     
     // Клиент сам перешел из приложения банка

@@ -86,20 +86,22 @@ final class AuthPresenter: AuthPresenting {
         analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
         
         guard !versionСontrolManager.isVersionDepicated else {
-            alertService.showAlert(on: view,
-                                   with: Strings.Error.Version.title,
-                                   with: Strings.Error.Version.subtitle,
-                                   with: nil,
-                                   state: .failure,
-                                   buttons: [
-                                    AlertButtonModel(title: Strings.Return.title,
-                                                     type: .info,
-                                                     action: { [weak self] in
-                                                         self?.completionManager.dismissCloseAction(self?.view)
-                                                     })
-                                   ]) { [weak self] in
-                                       self?.completionManager.dismissCloseAction(self?.view)
-                                   }
+            
+            Task {
+                
+                await alertService.show(on: view,
+                                       with: Strings.Error.Version.title,
+                                       with: Strings.Error.Version.subtitle,
+                                       with: nil,
+                                       state: .failure,
+                                       buttons: [
+                                        AlertButtonModel(title: Strings.Return.title,
+                                                         type: .info,
+                                                         action: { [weak self] in
+                                                             self?.completionManager.dismissCloseAction(self?.view)
+                                                         })
+                                       ])
+            }
             return
         }
         
@@ -247,18 +249,26 @@ final class AuthPresenter: AuthPresenting {
             } catch {
                 if let error = error as? SDKError {
                     self.completionManager.completeWithError(error)
+                    
                     if error.represents(.noInternetConnection) {
-                        self.alertService.show(on: self.view,
-                                               type: .noInternet(retry: { self.loadPaymentData() },
-                                                                 completion: { self.dismissWithError(error) }))
+                        
+                        let result = await alertService.show(on: view, type: .noInternet)
+                        
+                        switch result {
+                        case .approve:
+                            self.loadPaymentData()
+                        case .cancel:
+                            dismissWithError(error)
+                        }
+                       
                     } else if error.represents(.noMoney) {
-                        self.alertService.show(on: self.view,
-                                               type: .noMoney(back: {
-                            self.dismissWithError(error)
-                        }))
+                        await alertService.show(on: self.view,
+                                               type: .noMoney)
+                        dismissWithError(error)
                     } else {
-                        self.alertService.show(on: self.view,
-                                               type: .defaultError(completion: { self.dismissWithError(error) }))
+                        
+                        await alertService.show(on: view, type: .defaultError)
+                        dismissWithError(error)
                     }
                 }
             }
@@ -285,26 +295,29 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func validateAuthError(error: SDKError) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            self.view?.hideLoading()
-        }
-        if error.represents(.noInternetConnection) {
-            alertService.show(on: view,
-                              type: .noInternet(retry: {
-                self.getAccessSPay()
-            }, completion: {
-                self.dismissWithError(error)
-            }))
-        } else {
-            alertService.show(on: view,
-                              type: .defaultError(completion: { self.dismissWithError(error) }))
+        
+        Task {
+            
+            self.completionManager.completeWithError(error)
+            if error.represents(.noInternetConnection) {
+                
+                let result = await alertService.show(on: view, type: .noInternet)
+                
+                switch result {
+                case .approve:
+                    self.getAccessSPay()
+                case .cancel:
+                    dismissWithError(error)
+                }
+            } else {
+                await alertService.show(on: view, type: .defaultError)
+                dismissWithError(error)
+            }
         }
     }
     
     private func dismissWithError(_ error: SDKError) {
-        self.completionManager.completeWithError(error)
-        self.alertService.close()
+        completionManager.dismissCloseAction(view)
     }
     
      @objc

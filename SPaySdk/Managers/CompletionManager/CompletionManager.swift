@@ -118,7 +118,6 @@ final class DefaultCompletionManager: CompletionManager {
         payResponse = nil
         paymentTokenResponse = nil
         paymentCompletion = nil
-        closeActionInProgress = false
         liveCircleManager.closeSDKWindow()
     }
     
@@ -132,7 +131,6 @@ final class DefaultCompletionManager: CompletionManager {
             let response = PaymentTokenResponse((state: .cancel, info: SPaymentTokenResponseModel(error: Strings.Error.close)))
             paymentTokenCompletion?(response)
         }
-        paymentTokenCompletion = nil
         closeActionInProgress = false
         liveCircleManager.closeSDKWindow()
     }

@@ -55,45 +55,6 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                          completion: @escaping Action) {
         guard let locator = locator
         else { return }
-        let service: AlertService = locator.resolve()
-        
-        switch paymentSuccess {
-        case .success:
-            service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
-                              with: Strings.Alert.Pay.Success.title,
-                              with: Strings.Alert.Pay.Success.title,
-                              with: nil,
-                              state: .success,
-                              buttons: [],
-                              completion: completion)
-        case .waiting:
-            let button = AlertButtonModel(title: Strings.Ok.title,
-                                          type: .full,
-                                          action: completion)
-            service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
-                              with: ConfigGlobal.localization?.payLoading ?? "",
-                              with: ConfigGlobal.localization?.payLoading ?? "",
-                              with: nil,
-                              state: .waiting,
-                              buttons: [button],
-                              completion: {})
-        case .error:
-            service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
-                              with: Strings.Alert.Error.Main.title,
-                              with: Strings.Alert.Error.Main.subtitle,
-                              with: nil,
-                              state: .warning,
-                              buttons: [],
-                              completion: completion)
-        case .cancel:
-            service.showAlert(on: topVC(for: metchVC?.view.window) as? ContentVC,
-                              with: Strings.Alert.Error.Main.title,
-                              with: Strings.Alert.Error.Main.subtitle,
-                              with: nil,
-                              state: .warning,
-                              buttons: [],
-                              completion: completion)
-        }
     }
 
     private func setupWindows(viewController: UIViewController,

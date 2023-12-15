@@ -10,7 +10,7 @@ import UIKit
 struct AlertButtonModel {
     let title: String
     let type: DefaultButtonAppearance
-    let action: Action
+    let action: Action?
 }
 
 struct AlertViewModel {
@@ -22,7 +22,6 @@ struct AlertViewModel {
     let sound: String
     let feedBack: UINotificationFeedbackGenerator.FeedbackType
     let isFailure: Bool
-    let completion: Action
 }
 
 enum AlertState {
@@ -72,12 +71,12 @@ enum AlertState {
 }
 
 enum AlertType {
-    case paySuccess(completion: Action)
-    case defaultError(completion: Action)
-    case noInternet(retry: Action, completion: Action)
-    case partPayError(fullPay: Action, back: Action)
-    case tryingError(back: Action)
-    case noMoney(back: Action)
+    case paySuccess
+    case defaultError
+    case noInternet
+    case partPayError
+    case tryingError
+    case noMoney
 }
 
 final class AlertServiceAssembly: Assembly {
@@ -92,14 +91,20 @@ final class AlertServiceAssembly: Assembly {
 }
 
 protocol AlertService {
-    func showAlert(on view: ContentVC?,
-                   with text: String,
-                   with subtitle: String?,
-                   with cost: String?,
-                   state: AlertState,
-                   buttons: [AlertButtonModel],
-                   completion: @escaping Action)
-    func show(on view: ContentVC?, type: AlertType)
+    
+    @MainActor
+    @discardableResult
+    func show(on view: ContentVC?, type: AlertType) async -> AlertResult
+    
+    @MainActor
+    @discardableResult
+    func show(on view: ContentVC?,
+              with text: String,
+              with subtitle: String?,
+              with cost: String?,
+              state: AlertState,
+              buttons: [AlertButtonModel]) async -> AlertResult
+    
     func showLoading(with text: String?,
                      animate: Bool)
     func hideLoading(animate: Bool)
@@ -108,6 +113,7 @@ protocol AlertService {
 }
 
 extension AlertService {
+    
     func showLoading(with text: String? = nil,
                      animate: Bool = true) {
         showLoading(with: text, animate: animate)
@@ -120,12 +126,145 @@ extension AlertService {
     }
 }
 
+enum AlertResult {
+    
+    case approve
+    case cancel
+}
+
 final class DefaultAlertService: AlertService {
+    
     private let completionManager: CompletionManager
     
     private var alertVC: ContentVC?
     private let analytics: AnalyticsService
     private let liveCircleManager: LiveCircleManager
+    
+    
+    @MainActor
+    @discardableResult
+    func show(on view: ContentVC?, type: AlertType) async -> AlertResult {
+        
+        switch type {
+        case .paySuccess:
+            
+            analytics.sendEvent(.LCStatusSuccessViewAppeared)
+            
+            return await show(on: view,
+                              with: Strings.Alert.Pay.Success.title,
+                              with: nil,
+                              state: .success,
+                              buttons: [])
+        case .defaultError:
+            
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "error: default")
+            
+            return await show(on: view,
+                              with: Strings.Alert.Error.Main.title,
+                              with: Strings.Alert.Error.Main.subtitle,
+                              state: .warning,
+                              buttons: [])
+        case .noInternet:
+            
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "errror: noInternet")
+            
+            let tryButton = AlertButtonModel(title: Strings.Try.title,
+                                             type: .blackBack,
+                                             action: nil)
+            let cancelButton = AlertButtonModel(title: Strings.Cancel.title,
+                                                type: .info,
+                                                action: nil)
+            return await show(on: view,
+                              with: Strings.Alert.Pay.No.Internet.title,
+                              with: Strings.Alert.Pay.No.Internet.subtitle,
+                              state: .warning,
+                              buttons:
+                                [
+                                    tryButton,
+                                    cancelButton
+                                ])
+        case .partPayError:
+            
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "error: partPayError")
+            
+            let fullPayButton = AlertButtonModel(title: Strings.Pay.Full.title,
+                                                 type: .blackBack,
+                                                 action: nil)
+            let returnButton = AlertButtonModel(title: Strings.Return.title,
+                                                type: .info,
+                                                action: nil)
+            return await show(on: view,
+                              with: Strings.Alert.Error.Main.title,
+                              with: Strings.Alert.Pay.Error.title,
+                              state: .failure,
+                              buttons: [
+                                fullPayButton,
+                                returnButton
+                              ])
+        case .tryingError:
+            
+            analytics.sendEvent(.LCStatusErrorViewAppeared)
+            
+            let fullPayButton = AlertButtonModel(title: Strings.Button.Otp.back,
+                                                 type: .blackBack,
+                                                 action: nil)
+            
+            return await show(on: view,
+                              with: Strings.Error.trying,
+                              with: nil,
+                              state: .failure,
+                              buttons: [
+                                fullPayButton
+                              ])
+        case .noMoney:
+            
+            let cancel = AlertButtonModel(title: Strings.Return.title,
+                                          type: .cancel,
+                                          action: nil)
+            return await show(on: view,
+                              with: Strings.Error.NoMoney.title,
+                              with: Strings.Error.NoMoney.subtitle,
+                              state: .failure,
+                              buttons: [
+                                cancel
+                              ])
+        }
+    }
+    
+    @MainActor
+    @discardableResult
+    func show(on view: ContentVC?,
+              with text: String,
+              with subtitle: String?,
+              with cost: String? = nil,
+              state: AlertState,
+              buttons: [AlertButtonModel]) async -> AlertResult {
+        
+        let model = AlertViewModel(image: state.image,
+                                   title: text,
+                                   subtite: subtitle,
+                                   cost: cost,
+                                   buttons: buttons,
+                                   sound: state.soundPath,
+                                   feedBack: state.feedBack,
+                                   isFailure: state != .success)
+        
+        let result = await withCheckedContinuation({( inCont: CheckedContinuation<AlertResult, Never>) -> Void in
+            
+            let alertVC = AlertAssembly().createModule(alertModel: model,
+                                                       liveCircleManager: self.liveCircleManager) { result in
+                inCont.resume(with: .success(result))
+                return
+            }
+            
+            view?.contentNavigationController?.pushViewController(alertVC, animated: true)
+            self.alertVC = alertVC
+        })
+        
+        
+        return result
+    }
+    
     
     init(completionManager: CompletionManager,
          liveCircleManager: LiveCircleManager,
@@ -141,33 +280,6 @@ final class DefaultAlertService: AlertService {
     }
     
     @MainActor
-    func showAlert(on view: ContentVC?,
-                   with text: String,
-                   with subtitle: String?,
-                   with cost: String? = nil,
-                   state: AlertState,
-                   buttons: [AlertButtonModel],
-                   completion: @escaping Action) {
-        DispatchQueue.main.async {
-            let model = AlertViewModel(image: state.image,
-                                       title: text,
-                                       subtite: subtitle,
-                                       cost: cost,
-                                       buttons: buttons,
-                                       sound: state.soundPath,
-                                       feedBack: state.feedBack,
-                                       isFailure: !(state == .success),
-                                       
-                                       completion: completion)
-            let alertVC = AlertAssembly().createModule(alertModel: model,
-                                                       liveCircleManager: self.liveCircleManager)
-            view?.contentNavigationController?.pushViewController(alertVC, animated: true)
-            self.alertVC?.contentNavigationController?.popViewController(animated: true)
-            self.alertVC = alertVC
-        }
-    }
-    
-    @MainActor
     func showLoading(with text: String? = nil,
                      animate: Bool = true) {
         alertVC?.showLoading(with: text, animate: animate)
@@ -176,88 +288,6 @@ final class DefaultAlertService: AlertService {
     @MainActor
     func hideLoading(animate: Bool = true) {
         alertVC?.hideLoading(animate: animate)
-    }
-    
-    @MainActor
-    func show(on view: ContentVC?, type: AlertType) {
-        switch type {
-        case .paySuccess(let completion):
-            analytics.sendEvent(.LCStatusSuccessViewAppeared)
-            showAlert(on: view,
-                      with: Strings.Alert.Pay.Success.title,
-                      with: nil,
-                      state: .success,
-                      buttons: [],
-                      completion: completion)
-        case .defaultError(let completion):
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "error: default")
-            showAlert(on: view,
-                      with: Strings.Alert.Error.Main.title,
-                      with: Strings.Alert.Error.Main.subtitle,
-                      state: .warning,
-                      buttons: [],
-                      completion: completion)
-        case let .noInternet(retry, completion):
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "errror: noInternet")
-            let tryButton = AlertButtonModel(title: Strings.Try.title,
-                                             type: .blackBack,
-                                             action: retry)
-            let cancelButton = AlertButtonModel(title: Strings.Cancel.title,
-                                                type: .info,
-                                                action: completion)
-            showAlert(on: view,
-                      with: Strings.Alert.Pay.No.Internet.title,
-                      with: Strings.Alert.Pay.No.Internet.subtitle,
-                      state: .warning,
-                      buttons:
-                        [
-                            tryButton,
-                            cancelButton
-                        ],
-                      completion: completion)
-        case let .partPayError(fullPay: fullPay, back: back):
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "error: partPayError")
-            let fullPayButton = AlertButtonModel(title: Strings.Pay.Full.title,
-                                                 type: .blackBack,
-                                                 action: fullPay)
-            let returnButton = AlertButtonModel(title: Strings.Return.title,
-                                                type: .info,
-                                                action: back)
-            showAlert(on: view,
-                      with: Strings.Alert.Error.Main.title,
-                      with: Strings.Alert.Pay.Error.title,
-                      state: .failure,
-                      buttons: [
-                        fullPayButton,
-                        returnButton
-                      ],
-                      completion: back)
-        case .tryingError(back: let back):
-            analytics.sendEvent(.LCStatusErrorViewAppeared)
-            let fullPayButton = AlertButtonModel(title: Strings.Button.Otp.back,
-                                                 type: .blackBack,
-                                                 action: back)
-            showAlert(on: view,
-                      with: Strings.Error.trying,
-                      with: nil,
-                      state: .failure,
-                      buttons: [
-                        fullPayButton
-                      ],
-                      completion: back)
-        case .noMoney(back: let back):
-            let cancel = AlertButtonModel(title: Strings.Return.title,
-                                          type: .cancel,
-                                          action: back)
-            showAlert(on: view,
-                      with: Strings.Error.NoMoney.title,
-                      with: Strings.Error.NoMoney.subtitle,
-                      state: .failure,
-                      buttons: [
-                        cancel
-                      ],
-                      completion: back)
-        }
     }
     
     @MainActor

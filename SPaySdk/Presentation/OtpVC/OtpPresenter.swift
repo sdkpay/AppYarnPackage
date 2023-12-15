@@ -79,6 +79,7 @@ final class OtpPresenter: OtpPresenting {
         
         Task {
             do {
+                
                 await view?.showLoading()
                 try await otpService.creteOTP()
                 await view?.hideLoading(animate: true)
@@ -88,16 +89,25 @@ final class OtpPresenter: OtpPresenting {
                                          with: [AnalyticsKey.view: AnlyticsScreenEvent.OtpVC.rawValue])
             } catch {
                 if let error = error as? SDKError {
+                    
                     parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                    type: .otp(type: .creteOTP))
                     await view?.hideLoading(animate: true)
+                    
                     if error.represents(.noInternetConnection) {
-                        alertService.show(on: view,
-                                          type: .noInternet(retry: { self.createOTP() },
-                                                            completion: { self.dismissWithError(error) }))
+                        
+                        let result = await alertService.show(on: view, type: .noInternet)
+                        
+                        switch result {
+                        case .approve:
+                            createOTP()
+                        case .cancel:
+                            dismissWithError(error)
+                        }
                     } else {
-                        alertService.show(on: view,
-                                          type: .defaultError(completion: { self.dismissWithError(error) }))
+                        
+                        await alertService.show(on: view, type: .defaultError)
+                        dismissWithError(error)
                     }
                 } else {
                     self.completionManager.dismissCloseAction(view)
@@ -141,18 +151,20 @@ final class OtpPresenter: OtpPresenting {
                     
                     self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                         type: .otp(type: .confirmOTP))
+                    
                     if error.represents(.incorrectCode) || error.represents(.timeOut) {
                         
                         self.analytics.sendEvent(.RQFailConfirmOTP)
                         self.view?.hideLoading(animate: true)
-                        view?.setOtpDescription(error.publicDescription)
+                        view?.setOtpDescription(error.description)
                     } else if error.represents(.tryingError) {
-                        self.alertService.show(on: self.view, type: .tryingError(back: {
-                            self.dismissWithError(nil)
-                        }))
+                        
+                        await alertService.show(on: view, type: .tryingError)
+                        dismissWithError(nil)
                     } else {
-                        self.alertService.show(on: self.view, type: .defaultError(completion: { self.dismissWithError(error) }))
-                        self.view?.hideLoading()
+                        
+                        await alertService.show(on: view, type: .defaultError)
+                        dismissWithError(error)
                     }
                 }
             }
