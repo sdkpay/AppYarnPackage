@@ -83,8 +83,8 @@ final class SquarePaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCo
         
         cardIconView
             .add(toSuperview: contentView)
+            .touchEdge(.top, toEdge: .top, ofView: contentView, withInset: .sideMargin)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
-            .touchEdge(.right, toSuperviewEdge: .left, withInset: .sideMargin)
             .size(.init(width: .cardWidth, height: .cardWidth))
     
         infoStack
