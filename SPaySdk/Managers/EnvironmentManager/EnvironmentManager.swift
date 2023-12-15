@@ -8,6 +8,9 @@
 import Foundation
 
 final class EnvironmentManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(EnvironmentManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: EnvironmentManager = DefaultEnvironmentManager()

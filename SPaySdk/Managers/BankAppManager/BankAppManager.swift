@@ -8,6 +8,9 @@
 import UIKit
 
 final class BankAppManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(BankAppManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: BankAppManager = DefaultBankAppManager(analytics: container.resolve())

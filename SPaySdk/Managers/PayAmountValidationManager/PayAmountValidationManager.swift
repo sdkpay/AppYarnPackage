@@ -14,6 +14,9 @@ enum PayAmountStatus {
 }
 
 final class PayAmountValidationManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(PayAmountValidationManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: PayAmountValidationManager = DefaultPayAmountValidationManager(with: container.resolve(),

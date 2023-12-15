@@ -12,6 +12,9 @@ public enum NetworkState: String, CaseIterable, Codable {
 }
 
 final class BuildSettingsAssembly: Assembly {
+    
+    var type = ObjectIdentifier(BuildSettings.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: BuildSettings = DefaultBuildSettings()

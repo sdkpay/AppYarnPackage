@@ -60,6 +60,9 @@ enum KeychainError: Error {
 }
 
 final class KeychainStorageAssembly: Assembly {
+    
+    var type = ObjectIdentifier(KeychainStorage.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: KeychainStorage = DefaultKeychainStorage()

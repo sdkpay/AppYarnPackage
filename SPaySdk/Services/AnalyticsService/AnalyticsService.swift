@@ -8,6 +8,9 @@
 import Foundation
 
 final class AnalyticsServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(AnalyticsService.self)
+    
     func register(in locator: LocatorService) {
         let service: AnalyticsService = DefaultAnalyticsService(authManager: locator.resolve())
         locator.register(service: service)

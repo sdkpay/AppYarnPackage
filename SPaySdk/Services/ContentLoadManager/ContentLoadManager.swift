@@ -10,6 +10,9 @@ import Foundation
 typealias ContentLoadType = (type: ContentType, priority: Priority)
 
 final class ContentLoadManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(ContentLoadManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: ContentLoadManager = DefaultContentLoadManager(userService: container.resolve(),

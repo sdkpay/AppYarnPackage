@@ -8,6 +8,9 @@
 import Foundation
 
 final class PartPayServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(PartPayService.self)
+    
     func register(in container: LocatorService) {
         container.register(reference: {
             let service: PartPayService = DefaultPartPayService(network: container.resolve(),

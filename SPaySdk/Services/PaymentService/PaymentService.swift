@@ -17,6 +17,9 @@ enum PayError: Error {
 }
 
 final class PaymentServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(PaymentService.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: PaymentService = DefaultPaymentService(authManager: container.resolve(),

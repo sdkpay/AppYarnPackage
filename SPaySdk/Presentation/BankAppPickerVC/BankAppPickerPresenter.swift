@@ -16,7 +16,7 @@ protocol BankAppPickerPresenting {
 }
 
 final class BankAppPickerPresenter: BankAppPickerPresenting {
-
+    
     var bankAppCount: Int {
         bankAppModels.count
     }
@@ -93,14 +93,13 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         Task {
             
             await alertService.show(on: self.view,
-                              with: "Strings.Alert.BankAppPicker.Error.title",
-                              with: "Strings.Alert.BankAppPicker.Error.title",
-                              with: nil,
-                              state: .warning,
-                              buttons: [returnButton])
+                                    with: "Strings.Alert.BankAppPicker.Error.title",
+                                    with: "Strings.Alert.BankAppPicker.Error.title",
+                                    with: nil,
+                                    state: .warning,
+                                    buttons: [returnButton])
             
             completionManager.dismissCloseAction(view)
-            
         }
     }
     

@@ -8,7 +8,11 @@
 import Foundation
 
 final class UserServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(UserService.self)
+    
     func register(in container: LocatorService) {
+        
         container.register {
             let service: UserService = DefaultUserService(network: container.resolve(),
                                                           sdkManager: container.resolve(),

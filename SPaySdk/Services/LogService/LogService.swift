@@ -8,6 +8,9 @@
 import Foundation
 
 final class LogServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(LogService.self)
+    
     func register(in container: LocatorService) {
         container.register(reference: {
             let service: LogService = DefaultLogService()

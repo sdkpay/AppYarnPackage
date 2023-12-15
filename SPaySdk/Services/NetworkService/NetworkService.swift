@@ -8,6 +8,9 @@
 import UIKit
 
 final class NetworkServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(NetworkProvider.self)
+    
     func register(in container: LocatorService) {
         var provider: NetworkProvider
         

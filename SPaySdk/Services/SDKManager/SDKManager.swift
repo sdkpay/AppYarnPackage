@@ -17,6 +17,9 @@ extension Notification.Name {
 }
 
 final class SDKManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(SDKManager.self)
+    
     func register(in container: LocatorService) {
         let service: SDKManager = DefaultSDKManager(authManager: container.resolve(),
                                                     completionManager: container.resolve())

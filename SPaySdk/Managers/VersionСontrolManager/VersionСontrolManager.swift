@@ -8,6 +8,9 @@
 import Foundation
 
 final class VersionСontrolManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(VersionСontrolManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: VersionСontrolManager = DefaultVersionСontrolManager()

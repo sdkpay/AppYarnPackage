@@ -6,6 +6,8 @@
 //
 
 protocol Assembly: AnyObject {
+    
+    var type: ObjectIdentifier { get set }
     func register(in container: LocatorService)
 }
 
@@ -14,6 +16,7 @@ protocol LocatorService {
     func resolve<T>() -> T
     func register<T>(service: T)
     func register<T>(reference: @escaping () -> T)
+    func remove(_ type: ObjectIdentifier)
 }
 
 final class DefaultLocatorService: LocatorService {
@@ -61,5 +64,10 @@ final class DefaultLocatorService: LocatorService {
     
     func resolve<T>(_ type: T.Type) -> T {
         return resolve()
+    }
+    
+    func remove(_ type: ObjectIdentifier) {
+        
+        store.removeValue(forKey: type)
     }
 }

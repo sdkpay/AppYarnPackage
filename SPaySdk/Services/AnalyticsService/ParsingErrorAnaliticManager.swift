@@ -32,6 +32,9 @@ public enum AnaliticTypeRequest {
 }
 
 final class ParsingErrorAnaliticManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(ParsingErrorAnaliticManager.self)
+    
     func register(in locator: LocatorService) {
         let service: ParsingErrorAnaliticManager = DefaultParsingErrorAnaliticManager(analytics: locator.resolve())
         locator.register(service: service)

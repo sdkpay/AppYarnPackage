@@ -61,4 +61,11 @@ final class AssemblyManager {
             assembly.register(in: locator)
         }
     }
+    
+    func removeSessionServices(from locator: LocatorService) {
+        
+        for assembly in sessionAssemblies {
+            locator.remove(assembly.type)
+        }
+    }
 }

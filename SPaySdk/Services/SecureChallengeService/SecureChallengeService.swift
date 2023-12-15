@@ -14,6 +14,9 @@ enum SecureChallengeResolution: String {
 }
 
 final class SecureChallengeServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(SecureChallengeService.self)
+    
     func register(in locator: LocatorService) {
         let service: SecureChallengeService = DefaultSecureChallengeService(locator.resolve(),
                                                                             paymentService: locator.resolve())

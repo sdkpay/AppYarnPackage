@@ -19,6 +19,9 @@ enum Feature: String, Codable {
 }
 
 final class FeatureToggleServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(FeatureToggleService.self)
+    
     func register(in container: LocatorService) {
         let service: FeatureToggleService = DefaultFeatureToggleService()
         container.register(service: service)

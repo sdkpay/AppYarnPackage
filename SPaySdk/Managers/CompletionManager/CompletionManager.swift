@@ -8,6 +8,9 @@
 import UIKit
 
 final class CompletionManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(CompletionManager.self)
+    
     func register(in container: LocatorService) {
         let service: CompletionManager = DefaultCompletionManager(liveCircleManager: container.resolve())
         container.register(service: service)
@@ -82,17 +85,23 @@ final class DefaultCompletionManager: CompletionManager {
     }
     
     func completeWithError(_ error: SDKError) {
+        
         self.error = SPError(errorState: error)
     }
     
     func closeAction() {
+        
         giveActualCompletion()
     }
     
     func dismissCloseAction(_ view: ContentVC?) {
-        view?.dismiss(animated: true, completion: { [weak self] in
-            self?.giveActualCompletion()
-        })
+
+        DispatchQueue.main.async {
+            self.liveCircleManager.rootController?.dismiss(animated: true,
+                                                           completion: { [weak self] in
+                self?.giveActualCompletion()
+            })
+        }
     }
     
     private func giveActualCompletion() {

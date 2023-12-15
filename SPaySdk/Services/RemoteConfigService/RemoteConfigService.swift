@@ -8,6 +8,9 @@
 import Foundation
 
 final class RemoteConfigServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(RemoteConfigService.self)
+    
     func register(in container: LocatorService) {
         let service: RemoteConfigService = DefaultRemoteConfigService(network: container.resolve(),
                                                                       analytics: container.resolve(),

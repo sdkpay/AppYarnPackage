@@ -28,7 +28,7 @@ final class AlertPresenter: AlertPresenting {
     private var feedbackDispatchWorkItem: DispatchWorkItem?
     private var completionDispatchWorkItem: DispatchWorkItem?
     private var liveCircleManager: LiveCircleManager
-    private var alertResultAction: AlertResultAction
+    private var alertResultAction: AlertResultAction?
     
     init(with model: AlertViewModel,
          liveCircleManager: LiveCircleManager,
@@ -41,6 +41,15 @@ final class AlertPresenter: AlertPresenting {
     func viewDidLoad() {
         view?.configView(with: model)
         completeConfig()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(cancelFeedback),
+                                               name: .closeSDKNotification,
+                                               object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .closeSDKNotification, object: nil)
+        SBLogger.log(.stop(obj: self))
     }
     
     func buttonTapped(item: AlertButtonModel) {
@@ -49,12 +58,12 @@ final class AlertPresenter: AlertPresenting {
             case .full, .info:
                 self.view?.contentNavigationController?.popViewController(animated: true, completion: {
                     item.action?()
-                    self.alertResultAction(.approve)
+                    self.alertResultAction?(.approve)
                 })
             case .blackBack, .cancel, .orangeBack, .clear:
                 self.view?.contentNavigationController?.popViewController(animated: true, completion: {
                     item.action?()
-                    self.alertResultAction(.cancel)
+                    self.alertResultAction?(.cancel)
                 })
             }
         }
@@ -70,7 +79,8 @@ final class AlertPresenter: AlertPresenting {
         let completionDispatchWorkItem = DispatchWorkItem {
             if self.model.buttons.isEmpty {
                 
-                self.alertResultAction(.cancel)
+                self.alertResultAction?(.cancel)
+                self.alertResultAction = nil
             }
         }
 
@@ -88,10 +98,7 @@ final class AlertPresenter: AlertPresenting {
         }
     }
     
-    deinit {
-        SBLogger.log(.stop(obj: self))
-    }
-    
+    @objc
     private func cancelFeedback() {
         
         completionDispatchWorkItem?.cancel()

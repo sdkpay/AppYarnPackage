@@ -15,7 +15,7 @@ protocol AuthPresenting {
 final class AuthPresenter: AuthPresenting {
     
     weak var view: (IAuthVC & ContentVC)?
-
+    
     private let analytics: AnalyticsService
     private let router: AuthRouter
     private var authService: AuthService
@@ -90,17 +90,17 @@ final class AuthPresenter: AuthPresenting {
             Task {
                 
                 await alertService.show(on: view,
-                                       with: Strings.Error.Version.title,
-                                       with: Strings.Error.Version.subtitle,
-                                       with: nil,
-                                       state: .failure,
-                                       buttons: [
-                                        AlertButtonModel(title: Strings.Return.title,
-                                                         type: .info,
-                                                         action: { [weak self] in
-                                                             self?.completionManager.dismissCloseAction(self?.view)
-                                                         })
-                                       ])
+                                        with: Strings.Error.Version.title,
+                                        with: Strings.Error.Version.subtitle,
+                                        with: nil,
+                                        state: .failure,
+                                        buttons: [
+                                            AlertButtonModel(title: Strings.Return.title,
+                                                             type: .info,
+                                                             action: { [weak self] in
+                                                                 self?.completionManager.dismissCloseAction(self?.view)
+                                                             })
+                                        ])
             }
             return
         }
@@ -117,15 +117,15 @@ final class AuthPresenter: AuthPresenting {
             getAccessSPay()
         }
     }
-
+    
     @MainActor
     private func showBanksStack() {
         removeObserver()
-
-         router.presentBankAppPicker {
-             Task {
-                 await self.auth()
-             }
+        
+        router.presentBankAppPicker {
+            Task {
+                await self.auth()
+            }
         }
     }
     
@@ -140,7 +140,7 @@ final class AuthPresenter: AuthPresenting {
         Task {
             do {
                 let authMethod = try await authService.tryToGetSessionId()
-
+                
                 switch authMethod {
                 case .bank:
                     await appAuth()
@@ -156,7 +156,7 @@ final class AuthPresenter: AuthPresenting {
             }
         }
     }
-
+    
     private func appAuth() async {
         if enviromentManager.environment == .sandboxWithoutBankApp {
             await MainActor.run {  router.presentFakeScreen(completion: {
@@ -260,10 +260,9 @@ final class AuthPresenter: AuthPresenting {
                         case .cancel:
                             dismissWithError(error)
                         }
-                       
                     } else if error.represents(.noMoney) {
                         await alertService.show(on: self.view,
-                                               type: .noMoney)
+                                                type: .noMoney)
                         dismissWithError(error)
                     } else {
                         
@@ -291,7 +290,7 @@ final class AuthPresenter: AuthPresenting {
             }
         }
         
-       return status
+        return status
     }
     
     private func validateAuthError(error: SDKError) {
@@ -320,7 +319,7 @@ final class AuthPresenter: AuthPresenting {
         completionManager.dismissCloseAction(view)
     }
     
-     @objc
+    @objc
     private func applicationDidBecomeActive() {
         // Если пользователь не смог получить обратный редирект
         // от банковского приложения и перешел самостоятельно
@@ -335,7 +334,7 @@ final class AuthPresenter: AuthPresenting {
             }
         }
     }
-
+    
     private func removeObserver() {
         NotificationCenter.default.removeObserver(self,
                                                   name: UIApplication.didBecomeActiveNotification,

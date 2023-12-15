@@ -8,6 +8,9 @@
 import Foundation
 
 final class OTPManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(OTPManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: OTPManager = DefaultAOTPManager()

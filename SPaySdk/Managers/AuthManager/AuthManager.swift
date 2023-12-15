@@ -14,6 +14,9 @@ enum AuthMethod {
 }
 
 final class AuthManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(AuthManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: AuthManager = DefaultAuthManager()

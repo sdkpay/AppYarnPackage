@@ -13,12 +13,13 @@ protocol LiveCircleManager {
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
     var closeWithGesture: Action? { get set }
+    var rootController: RootVC? { get }
     func closeSDKWindow()
 }
 
 final class DefaultLiveCircleManager: LiveCircleManager {
     private var locator: LocatorService?
-    private var rootController: RootVC?
+    var rootController: RootVC?
     private weak var metchVC: UIViewController?
     private let timeManager: OptimizationCheсkerManager?
     var closeWithGesture: Action?
@@ -53,8 +54,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action) {
-        guard let locator = locator
-        else { return }
+        return
     }
 
     private func setupWindows(viewController: UIViewController,

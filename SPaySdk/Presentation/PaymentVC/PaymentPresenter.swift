@@ -60,7 +60,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         
         paymentViewModel.purchaseInfoText
     }
-
+    
     var featureCount: Int {
         
         paymentViewModel.featureCount
@@ -75,7 +75,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         
         partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
     }
-
+    
     weak var view: (IPaymentMasterVC & ContentVC)?
     private let router: PaymentRouting
     private let analytics: AnalyticsService
@@ -96,7 +96,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     private var secureChallengeService: SecureChallengeService
     private var payAmountValidationManager: PayAmountValidationManager
     private var paymentViewModel: PaymentViewModel
-
+    
     private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
     
     init(_ router: PaymentRouting,
@@ -146,7 +146,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         configViews()
         setHints()
     }
-
+    
     func setHints() {
         
         view?.setHints(with: paymentViewModel.hintsText)
@@ -161,7 +161,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         analytics.sendEvent(.TouchPay, with: screenEvent)
         
         Task {
-           await goToPay()
+            await goToPay()
         }
     }
     
@@ -226,8 +226,8 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         paymentViewModel.didSelectPaymentItem(at: indexPath)
     }
     
-   private func showPartsViewifNeed() {
-       
+    private func showPartsViewifNeed() {
+        
         view?.showPartsView(partPayService.bnplplanSelected)
     }
     
@@ -263,10 +263,10 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                     self.appAuth()
                 }
             }
-                
-            case .bank, .sid:
-                presentListCards()
-            }
+            
+        case .bank, .sid:
+            presentListCards()
+        }
     }
     
     private func presentListCards() {
@@ -308,15 +308,15 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     }
     
     private func configViews() {
-    
+        
         guard let user = userService.user else { return }
-
+        
         view?.configShopInfo(with: user.merchantName ?? "",
-                             iconURL: user.logoUrl, 
+                             iconURL: user.logoUrl,
                              purchaseInfoText: paymentViewModel.purchaseInfoText)
         view?.addSnapShot()
     }
-
+    
     private func validatePayError(_ error: PayError) async {
         
         switch error {
@@ -333,7 +333,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                 self.pay(resolution: nil)
             case .cancel:
                 
-                self.alertService.close()
+                self.completionManager.dismissCloseAction(view)
             }
         case .timeOut, .unknownStatus:
             
@@ -346,7 +346,8 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
             self.completionManager.completeWithError(SDKError(.errorSystem))
             
             await alertService.show(on: view, type: .defaultError)
-            self.alertService.close()
+            
+            self.completionManager.dismissCloseAction(view)
         }
     }
     
@@ -361,13 +362,13 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                 self.completionManager.completeWithError(SDKError(.errorSystem))
                 
                 await alertService.show(on: view, type: .defaultError)
-                self.alertService.close()
+                self.completionManager.dismissCloseAction(view)
                 return
             }
             
             do {
                 try await paymentService.getPaymentToken(paymentId: paymentId,
-                                                         isBnplEnabled: false, 
+                                                         isBnplEnabled: false,
                                                          resolution: nil)
                 
                 self.view?.reloadData()
@@ -383,11 +384,10 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                     self.view?.hideLoading(animate: true)
                 }
                 
-                self.alertService.close()
-
+                self.completionManager.dismissCloseAction(view)
             } catch {
                 if let error = error as? PayError {
-                
+                    
                     await validatePayError(error)
                 } else if let error = error as? SDKError {
                     
@@ -402,17 +402,17 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         self.completionManager.completePay(with: .waiting)
         let okButton = AlertButtonModel(title: Strings.Cancel.title,
                                         type: .full) { [weak self] in
-            self?.alertService.close()
+            self?.completionManager.dismissCloseAction(self?.view)
         }
         
         Task {
             
             await alertService.show(on: view,
-                              with: Strings.Alert.Pay.No.Waiting.title,
-                              with: ConfigGlobal.localization?.payLoading ?? "",
-                              with: nil,
-                              state: .success,
-                              buttons: [okButton])
+                                    with: Strings.Alert.Pay.No.Waiting.title,
+                                    with: ConfigGlobal.localization?.payLoading ?? "",
+                                    with: nil,
+                                    state: .success,
+                                    buttons: [okButton])
             
             await self.view?.hideLoading(animate: true)
         }
@@ -447,7 +447,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                     
                     await alertService.show(on: view, type: .defaultError)
                     dismissWithError(error)
-               }
+                }
             }
         }
     }
@@ -466,7 +466,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     private func goToPay() async {
         
         guard let paymentId = userService.selectedCard?.paymentId else { return }
-
+        
         do {
             
             if otpService.otpRequired {
@@ -475,13 +475,13 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
             }
             
             await self.view?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
-
-            let challengeState = try await secureChallengeService.challenge(paymentId: paymentId, 
+            
+            let challengeState = try await secureChallengeService.challenge(paymentId: paymentId,
                                                                             isBnplEnabled: partPayService.bnplplanSelected)
             
             switch challengeState {
             case .review:
-               let resolution = await getChallengeResolution()
+                let resolution = await getChallengeResolution()
                 
                 switch secureChallengeService.fraudMonСheckResult?.secureChallengeFactor {
                 case .hint:
@@ -524,10 +524,11 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     }
     
     private func dismissWithError(_ error: SDKError) {
+        
         self.completionManager.completeWithError(error)
         
-        Task { @MainActor [alertService] in
-            alertService.close()
+        Task {
+            self.completionManager.dismissCloseAction(view)
         }
     }
     
@@ -538,17 +539,17 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         let returnButton = AlertButtonModel(title: formParameters?.buttonDeclineText ?? "",
                                             type: .full) { [weak self] in
             self?.completionManager.completeWithError(SDKError(.errorSystem))
-            self?.alertService.close()
+            self?.completionManager.dismissCloseAction(self?.view)
         }
-
+        
         Task {
             
             await alertService.show(on: self.view,
-                                   with: formParameters?.header ?? "",
-                                   with: formParameters?.textDecline ?? "",
-                                   with: nil,
-                                   state: .failure,
-                                   buttons: [returnButton])
+                                    with: formParameters?.header ?? "",
+                                    with: formParameters?.textDecline ?? "",
+                                    with: nil,
+                                    state: .failure,
+                                    buttons: [returnButton])
             
             completionManager.dismissCloseAction(view)
         }
@@ -569,8 +570,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                 self.partPayService.bnplplanSelected = false
                 self.completionManager.completePay(with: .success)
                 await view?.setUserInteractionsEnabled()
-                
-                
+
                 await alertService.show(on: self.view, type: .paySuccess)
                 completionManager.dismissCloseAction(view)
             } catch {

@@ -81,6 +81,9 @@ final class SecureHTTPCookie: HTTPCookie, NSSecureCoding {
 }
 
 final class CookieStorageAssembly: Assembly {
+    
+    var type = ObjectIdentifier(CookieStorage.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: CookieStorage = DefaultCookieStorage(storage: container.resolve())

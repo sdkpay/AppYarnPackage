@@ -8,6 +8,9 @@
 import Foundation
 
 final class HelperConfigManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(HelperConfigManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: HelperConfigManager = DefaultHelperConfigManager()

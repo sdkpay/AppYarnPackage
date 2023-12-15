@@ -9,6 +9,9 @@ import Foundation
 @_implementationOnly import Fingerprint
 
 final class PersonalMetricsServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(PersonalMetricsService.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: PersonalMetricsService = DefaultPersonalMetricsService(analyticsService: container.resolve(),

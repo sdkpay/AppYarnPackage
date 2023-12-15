@@ -9,6 +9,9 @@ import Foundation
 import WebKit
 
 final class SeamlessAuthServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(SeamlessAuthService.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: SeamlessAuthService = DefaultSeamlessAuthService(network: container.resolve(),

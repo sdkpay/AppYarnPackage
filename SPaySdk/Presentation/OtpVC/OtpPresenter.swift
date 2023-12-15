@@ -90,6 +90,8 @@ final class OtpPresenter: OtpPresenting {
             } catch {
                 if let error = error as? SDKError {
                     
+                    self.completionManager.completeWithError(error)
+                    
                     parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                    type: .otp(type: .creteOTP))
                     await view?.hideLoading(animate: true)
@@ -148,6 +150,8 @@ final class OtpPresenter: OtpPresenting {
                 setState(.error)
                 
                 if let error = error as? SDKError {
+                    
+                    self.completionManager.completeWithError(error)
                     
                     self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                         type: .otp(type: .confirmOTP))
@@ -227,9 +231,7 @@ final class OtpPresenter: OtpPresenting {
     }
     
     private func dismissWithError(_ error: SDKError?) {
-        if let error = error {
-            self.completionManager.completeWithError(error)
-        }
-        self.alertService.close()
+ 
+        self.completionManager.dismissCloseAction(view)
     }
 }

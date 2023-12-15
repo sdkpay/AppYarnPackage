@@ -9,6 +9,9 @@ import Foundation
 import LocalAuthentication
 
 final class BiometricAuthProviderAssembly: Assembly {
+    
+    var type = ObjectIdentifier(BiometricAuthProviderProtocol.self)
+    
     func register(in container: LocatorService) {
         let service: BiometricAuthProviderProtocol = BiometricAuthProvider()
         container.register(service: service)
@@ -40,18 +43,12 @@ final class BiometricAuthProvider: BiometricAuthProviderProtocol {
         self.context.reset()
         
         do {
-            return try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<Bool, Error>) -> Void in
-                self.context.evaluate { result, error in
+            return await withCheckedContinuation({( inCont: CheckedContinuation<Bool, Never>) -> Void in
+                self.context.evaluate { result, _ in
                     
-                    if let error {
-                        inCont.resume(throwing: error)
-                    }
                     inCont.resume(with: .success(result))
                 }
             })
-        } catch {
-            
-            return false
         }
     }
 

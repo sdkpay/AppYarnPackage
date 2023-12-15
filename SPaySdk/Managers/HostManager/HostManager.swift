@@ -28,6 +28,9 @@ private enum Host: String {
 }
 
 final class HostManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(HostManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: HostManager = DefaultHostManager(environmentManager: container.resolve(),

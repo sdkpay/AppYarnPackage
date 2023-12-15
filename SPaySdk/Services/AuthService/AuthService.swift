@@ -8,6 +8,9 @@
 import UIKit
 
 final class AuthServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(AuthService.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: AuthService = DefaultAuthService(network: container.resolve(),

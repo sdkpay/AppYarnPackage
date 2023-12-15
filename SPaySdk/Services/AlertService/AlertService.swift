@@ -80,6 +80,9 @@ enum AlertType {
 }
 
 final class AlertServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(AlertService.self)
+    
     func register(in container: LocatorService) {
         container.register(reference: {
             let service: AlertService = DefaultAlertService(completionManager: container.resolve(),
@@ -109,7 +112,6 @@ protocol AlertService {
                      animate: Bool)
     func hideLoading(animate: Bool)
     func hide(animated: Bool, completion: Action?)
-    func close()
 }
 
 extension AlertService {
@@ -139,7 +141,6 @@ final class DefaultAlertService: AlertService {
     private var alertVC: ContentVC?
     private let analytics: AnalyticsService
     private let liveCircleManager: LiveCircleManager
-    
     
     @MainActor
     @discardableResult
@@ -261,10 +262,8 @@ final class DefaultAlertService: AlertService {
             self.alertVC = alertVC
         })
         
-        
         return result
     }
-    
     
     init(completionManager: CompletionManager,
          liveCircleManager: LiveCircleManager,
@@ -295,10 +294,5 @@ final class DefaultAlertService: AlertService {
         alertVC?.contentNavigationController?.popViewController(animated: animated,
                                                                 completion: completion)
         alertVC = nil
-    }
-    
-    @MainActor
-    func close() {
-        completionManager.dismissCloseAction(alertVC)
     }
 }

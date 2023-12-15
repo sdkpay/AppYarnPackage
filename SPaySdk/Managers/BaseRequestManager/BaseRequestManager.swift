@@ -46,6 +46,9 @@ enum Cookies: String {
 }
 
 final class BaseRequestManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(BaseRequestManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve(),
