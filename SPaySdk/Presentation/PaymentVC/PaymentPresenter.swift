@@ -291,16 +291,19 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         }
     }
     
+    @MainActor
     private func createOTP() async throws {
         
-        await view?.showLoading()
+        view?.showLoading()
         try await otpService.creteOTP()
         
         try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<Void, Error>) -> Void in
             
-            self.router.presentOTPScreen(completion: {
-                inCont.resume()
-            })
+            DispatchQueue.main.async {
+                self.router.presentOTPScreen(completion: {
+                    inCont.resume()
+                })
+            }
         })
     }
     

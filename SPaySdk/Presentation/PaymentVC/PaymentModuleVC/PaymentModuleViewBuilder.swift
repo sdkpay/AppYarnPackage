@@ -99,6 +99,7 @@ final class PaymentModuleViewBuilder {
             .touchEdge(.left, toEdge: .left, ofView: view, withInset: Cost.Hint.margin)
             .touchEdge(.right, toEdge: .right, ofView: view, withInset: Cost.Hint.margin)
             .touchEdge(.bottom, toEdge: .top, ofView: collectionView, withInset: Cost.Hint.bottom)
+            .height(Cost.height, priority: .defaultLow)
             .touchEdge(.top, toEdge: .top, ofView: view)
     }
 }

@@ -146,7 +146,6 @@ final class HintsStackView: UIView {
             .touchEdge(.bottom, toEdge: .bottom, ofView: self)
             .touchEdge(.left, toEdge: .left, ofView: self)
             .touchEdge(.right, toEdge: .right, ofView: self)
-            .touchEdge(.top, toEdge: .top, ofView: self)
         
         layoutIfNeeded()
         

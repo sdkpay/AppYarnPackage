@@ -78,7 +78,7 @@ final class DefaultUserService: UserService {
                                                                                 priorityCardOnly: false),
                                                         to: User.self)
         self.user = listCardsResult
-        additionalCards = listCardsResult.additionalCards ?? false
+        additionalCards = listCardsResult.paymentToolInfo.count > 1
         selectedCard = self.selectCard(from: listCardsResult.paymentToolInfo)
     }
     
@@ -103,7 +103,7 @@ final class DefaultUserService: UserService {
                                                             to: User.self)
             
             self.user = listCardsResult
-            
+            additionalCards = listCardsResult.paymentToolInfo.count > 1
             self.analytics.sendEvent(.RQGoodListCards,
                                      with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
             self.analytics.sendEvent(.RSGoodListCards,
