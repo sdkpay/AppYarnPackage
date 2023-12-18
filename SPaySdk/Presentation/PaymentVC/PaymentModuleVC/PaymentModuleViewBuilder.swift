@@ -128,8 +128,8 @@ private extension PaymentModuleViewBuilder {
             enum Cancel {
                 static let title = Strings.Cancel.title
                 static let bottom: CGFloat = 44.0
-                static let right: CGFloat = Cost.sideOffSet
-                static let left: CGFloat = Cost.sideOffSet
+                static let right: CGFloat = .margin
+                static let left: CGFloat = .margin
                 static let top: CGFloat = Cost.sideOffSet
             }
         }
