@@ -93,8 +93,8 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         Task {
             
             await alertService.show(on: self.view,
-                                    with: "Strings.Alert.BankAppPicker.Error.title",
-                                    with: "Strings.Alert.BankAppPicker.Error.title",
+                                    with: Strings.Alert.BankAppPicker.title,
+                                    with: Strings.Alert.BankAppPicker.subtitle,
                                     with: nil,
                                     state: .warning,
                                     buttons: [returnButton])
