@@ -258,8 +258,10 @@ final class DefaultAlertService: AlertService {
                 return
             }
             
-            view?.contentNavigationController?.pushViewController(alertVC, animated: true)
-            self.alertVC = alertVC
+            DispatchQueue.main.async {
+                view?.contentNavigationController?.pushViewController(alertVC, animated: true)
+                self.alertVC = alertVC
+            }
         })
         
         return result

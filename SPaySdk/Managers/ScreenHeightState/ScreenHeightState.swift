@@ -15,7 +15,7 @@ enum ScreenHeightState {
     var multiplier: CGFloat {
         switch self {
         case .max:
-            return 0.85
+            return 0.80
         case .normal:
             return 0.70
         }
