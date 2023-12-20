@@ -65,6 +65,8 @@
 "alert.pay.no.internet.subtitle" = "Проверьте подключение и попробуйте ещё раз";
 "alert.pay.no.cards.title" = "Нет подходящих карт. ";
 "alert.pay.no.cards.subtitle" = "Но можем выпустить цифровую Сберкарту всего за пару нажатий";
+"alert.bankAppPicker.title" = "Оплатить со SberPay\nне получается";
+"alert.bankAppPicker.subtitle" = "Не смогли открыть ни одно из приложений банка";
 
 // MerchantAlert
 "merchant.alert.apikey" = "⛔️ Передайте apiKey в методе setup или в текущем методе.";
