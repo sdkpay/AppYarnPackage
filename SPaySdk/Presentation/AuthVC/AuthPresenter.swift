@@ -203,7 +203,6 @@ final class AuthPresenter: AuthPresenting {
             try await authService.auth()
             loadPaymentData()
         } catch {
-            bankManager.selectedBank = nil
             if let error = error as? SDKError {
                 validateAuthError(error: error)
             }
