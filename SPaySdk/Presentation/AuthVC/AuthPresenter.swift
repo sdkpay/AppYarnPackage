@@ -121,7 +121,7 @@ final class AuthPresenter: AuthPresenting {
     @MainActor
     private func showBanksStack() {
         removeObserver()
-        
+        bankManager.removeSavedBank()
         router.presentBankAppPicker {
             Task {
                 await self.auth()
