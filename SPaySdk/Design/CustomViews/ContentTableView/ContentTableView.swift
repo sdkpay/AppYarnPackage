@@ -8,10 +8,11 @@
 import UIKit
 
 private extension CGFloat {
-    static let maxTableViewHeight = ScreenHeightState.max.height
+    static let maxTableViewHeight = ScreenHeightState.normal.height
 }
 
 class ContentTableView: UITableView {
+    
     override var contentSize: CGSize {
         didSet {
             fixHeight()
@@ -29,6 +30,7 @@ class ContentTableView: UITableView {
     }
 
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        
         guard gestureRecognizer === panGestureRecognizer else {
             return true
         }
