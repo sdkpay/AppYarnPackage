@@ -54,7 +54,7 @@ final class HelpPaymentViewModel: PaymentViewModel {
         return []
     }
     
-    var payButton: Bool { false }
+    var payButtonText: String? { nil }
     
     var featureCount: Int { activeFeatures.count }
     

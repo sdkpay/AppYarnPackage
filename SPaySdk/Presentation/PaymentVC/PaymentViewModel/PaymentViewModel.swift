@@ -12,7 +12,7 @@ protocol PaymentViewModel {
     var hintsText: [String] { get }
     var featureCount: Int { get }
     var screenHeight: ScreenHeightState { get }
-    var payButton: Bool { get }
+    var payButtonText: String? { get }
     var purchaseInfoText: String? { get }
     var presenter: PaymentPresentingInput? { get set }
     func identifiresForPurchaseSection() -> [Int]

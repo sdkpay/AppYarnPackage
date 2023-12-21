@@ -44,7 +44,7 @@ protocol PaymentPresenting: NSObject {
     func profileTapped()
     func viewDidAppear()
     func viewDidDisappear()
-    var needPayButton: Bool { get }
+    var payButtonText: String? { get }
 }
 
 protocol PaymentPresentingInput: NSObject {
@@ -152,9 +152,9 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         view?.setHints(with: paymentViewModel.hintsText)
     }
     
-    var needPayButton: Bool {
+    var payButtonText: String? {
         
-        paymentViewModel.payButton
+        paymentViewModel.payButtonText
     }
     
     func payButtonTapped() {

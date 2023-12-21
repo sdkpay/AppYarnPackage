@@ -63,7 +63,7 @@ final class MainPaymentViewModel: PaymentViewModel {
         addHintIfNeeded()
     }
     
-    var payButton: Bool { true }
+    var payButtonText: String? { Strings.Pay.title }
     
     var featureCount: Int { activeFeatures.count }
     

@@ -38,7 +38,7 @@ final class ConnectPaymentViewModel: PaymentViewModel {
         addHintIfNeeded()
     }
     
-    var payButton: Bool { true }
+    var payButtonText: String? { Strings.Connect.title }
     
     var featureCount: Int { 0 }
     

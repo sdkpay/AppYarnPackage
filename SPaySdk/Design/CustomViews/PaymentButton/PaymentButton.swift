@@ -63,6 +63,12 @@ final class PaymentButton: UIView {
         overrideUserInterfaceStyle = .light
     }
     
+    func setPayTitle(_ text: String?) {
+        
+        titleLabel.text = text
+        setupUI()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

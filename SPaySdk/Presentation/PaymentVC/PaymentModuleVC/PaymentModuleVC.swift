@@ -12,7 +12,7 @@ final class PaymentModuleVC: UIViewController {
     private var presenter: PaymentPresenting
     
     private lazy var viewBuilder = PaymentModuleViewBuilder(featureCount: presenter.featureCount,
-                                                            needPayButton: presenter.needPayButton,
+                                                            needPayButton: presenter.payButtonText != nil,
                                                             payButtonDidTap: {
         self.presenter.payButtonTapped()
     },
@@ -36,6 +36,8 @@ final class PaymentModuleVC: UIViewController {
         configDataSource()
         viewBuilder.collectionView.delegate = self
         viewBuilder.setupUI(view: view)
+        
+        viewBuilder.payButton.setPayTitle(presenter.payButtonText)
     }
     
     func addSnapShot() {
