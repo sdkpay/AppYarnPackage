@@ -85,7 +85,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     private func showErrorAlert() {
         
         let returnButton = AlertButtonModel(title: Strings.Return.title,
-                                            type: .full) { [weak self] in
+                                            type: .info) { [weak self] in
             
             self?.completionManager.dismissCloseAction(self?.view)
         }
