@@ -181,7 +181,6 @@ final class DefaultSBPayService: SBPayService {
                                      paymentRequest: paymentRequest) { response in
                 self.inProgress = false
                 completion(response)
-                self.assemblyManager.removeSessionServices(from: self.locator)
             }
         liveCircleManager.openInitialScreen(with: viewController,
                                             with: locator)
