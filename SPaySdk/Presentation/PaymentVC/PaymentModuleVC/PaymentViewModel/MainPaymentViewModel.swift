@@ -17,15 +17,7 @@ final class MainPaymentViewModel: PaymentViewModel {
     private var payAmountValidationManager: PayAmountValidationManager
     private let authManager: AuthManager
     
-    private var activeFeatures: [PaymentFeature] {
-        
-        var features = [PaymentFeature]()
-        
-        if partPayService.bnplplanEnabled {
-            features.append(.bnpl)
-        }
-        return features
-    }
+    private var activeFeatures = [PaymentFeature]()
     
     init(userService: UserService,
          featureToggle: FeatureToggleService,
@@ -37,6 +29,7 @@ final class MainPaymentViewModel: PaymentViewModel {
         self.partPayService = partPayService
         self.payAmountValidationManager = payAmountValidationManager
         self.authManager = authManager
+        configFeatures()
     }
     
     var purchaseInfoText: String? { nil }
@@ -126,6 +119,17 @@ final class MainPaymentViewModel: PaymentViewModel {
                                           cardBalanceNeed: featureToggle.isEnabled(.cardBalance),
                                           compoundWalletNeed: featureToggle.isEnabled(.compoundWallet))
         }
+    }
+    
+    private func configFeatures() {
+        
+        var features = [PaymentFeature]()
+        
+        if partPayService.bnplplanEnabled {
+            features.append(.bnpl)
+        }
+        
+        activeFeatures = features
     }
     
     private func addHintIfNeeded() -> [String] {
