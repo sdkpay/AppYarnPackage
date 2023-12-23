@@ -69,7 +69,6 @@ final class SquarePaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCo
         titleLabel.text = model.title
         subtitleLabel.text = model.subTitle
         switchControl.isOn = model.switchOn 
-        switchControl.OffTint = model.switchOn ? .main : Asset.grayLight.color
         cardIconView.downloadImage(from: model.iconViewURL)
         
         if model.switchNeed {

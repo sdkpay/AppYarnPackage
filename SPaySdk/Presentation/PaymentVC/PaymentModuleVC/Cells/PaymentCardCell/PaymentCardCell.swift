@@ -59,6 +59,7 @@ final class PaymentCardCell: UICollectionViewCell, SelfReusable, SelfConfigCell 
     private lazy var cardInfoStack: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
+        view.spacing = 4
         view.addArrangedSubview(titleLabel)
         view.addArrangedSubview(subtitleLabel)
         return view

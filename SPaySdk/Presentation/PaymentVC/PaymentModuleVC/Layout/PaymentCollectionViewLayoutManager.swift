@@ -9,7 +9,7 @@ import UIKit
 
 extension CGFloat {
     
-    static let interSectionSpacing = 5.0
+    static let interSectionSpacing = 8.0
 }
 
 enum PaymentCellForm {

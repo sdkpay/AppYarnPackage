@@ -11,6 +11,8 @@ private extension CGFloat {
     static let cellMargin = 16.0
     static let cardWidth = 36.0
     static let letterSpacing = -0.4
+    static let switchControlWidth = 40.0
+    static let switchControlHeight = 24.0
 }
 
 final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfConfigCell {
@@ -51,6 +53,7 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
     
     private lazy var switchControl: DefaultSwitch = {
         let view = DefaultSwitch(frame: .zero)
+        view.set(width: .switchControlWidth, height: .switchControlHeight)
         view.isUserInteractionEnabled = false
         return view
     }()
@@ -69,7 +72,6 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
         titleLabel.text = model.title
         subtitleLabel.text = model.subTitle
         self.switchControl.isOn = model.switchOn
-        switchControl.OffTint = model.switchOn ? .main : Asset.grayLight.color
         iconView.downloadImage(from: model.iconViewURL)
         
         setupUI(needSwitch: model.switchNeed)
@@ -92,6 +94,8 @@ final class BlockPaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCon
         if needSwitch {
             switchControl
                 .add(toSuperview: contentView)
+                .width(.switchControlWidth)
+                .height(.switchControlHeight)
                 .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
                 .centerInSuperview(.y)
         }
