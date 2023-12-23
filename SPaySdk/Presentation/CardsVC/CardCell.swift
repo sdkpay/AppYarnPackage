@@ -62,6 +62,7 @@ final class CardCell: UITableViewCell {
     private lazy var cardInfoStack: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
+        view.spacing = 4
         view.addArrangedSubview(titleLabel)
         view.addArrangedSubview(cardLabel)
         return view

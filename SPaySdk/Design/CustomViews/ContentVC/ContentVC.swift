@@ -40,7 +40,7 @@ class ContentVC: LoggableVC {
         contentNavigationController?.view.isUserInteractionEnabled = value
     }
     
-    private lazy var stickImageView: UIImageView = {
+    lazy var stickImageView: UIImageView = {
         let view = UIImageView()
         view.image = .Common.stick
         view.tag = .stickViewTag

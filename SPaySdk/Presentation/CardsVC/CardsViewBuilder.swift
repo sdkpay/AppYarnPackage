@@ -11,7 +11,7 @@ private extension CGFloat {
     static let topMargin = 20.0
     static let tableMargin = 12.0
     static let bottomMargin = 58.0
-    static let rowHeight = 88.0
+    static let rowHeight = 90.0
 }
 
 private extension CardsViewBuilder {

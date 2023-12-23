@@ -161,7 +161,8 @@ final class AlertVC: ContentVC, IAlertVC {
     
     func setupUI() {
         
-        backgroundView.add(toSuperview: view)
+        backgroundView
+            .add(toSuperview: view)
             .height(ScreenHeightState.normal.height, priority: .defaultHigh)
             .touchEdgesToSuperview()
         
@@ -176,5 +177,7 @@ final class AlertVC: ContentVC, IAlertVC {
             .centerInSuperview(.y, withOffset: -buttonsStack.bounds.height)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
+        
+        view.bringSubviewToFront(stickImageView)
     }
 }

@@ -72,12 +72,11 @@ final class CheckView: UIView {
     }
 
     private func setupUI() {
-        setupForBase()
-
+        
         addSubview(checkButton)
         checkButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            checkButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
+            checkButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             checkButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             checkButton.widthAnchor.constraint(equalToConstant: .checkWidth),
             checkButton.heightAnchor.constraint(equalToConstant: .checkWidth)

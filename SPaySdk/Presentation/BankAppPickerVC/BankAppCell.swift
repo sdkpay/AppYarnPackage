@@ -31,6 +31,7 @@ private extension CGFloat {
 }
 
 final class BankAppCell: UITableViewCell {
+    
     private lazy var containerView: UIView = {
         let view = UIView()
         
@@ -69,6 +70,7 @@ final class BankAppCell: UITableViewCell {
     private lazy var cardInfoStack: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
+        view.spacing = 4.0
         view.addArrangedSubview(titleLabel)
         view.addArrangedSubview(sutitleLabel)
         return view

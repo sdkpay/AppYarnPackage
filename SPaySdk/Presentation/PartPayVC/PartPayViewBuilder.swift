@@ -58,9 +58,9 @@ private extension PartPayViewBuilder {
         enum TableView {
             
             enum Background {
-                static let rowHeight: CGFloat = 50.0
+                static let rowHeight: CGFloat = 45.0
                 
-                static let topOffSet: CGFloat = 20.0
+                static let topOffSet: CGFloat = 6.0
                 static let leftOffSet: CGFloat = Consts.margin
                 static let rightOffSet: CGFloat = Consts.margin
             }
@@ -81,7 +81,7 @@ private extension PartPayViewBuilder {
         }
         
         enum View {
-            static let topOffSet: CGFloat = 8.0
+            static let topOffSet: CGFloat = 4.0
             static let leftOffSet: CGFloat = Consts.margin
             static let rightOffSet: CGFloat = Consts.margin
             static let bottomOffSet: CGFloat = 20.0
@@ -199,7 +199,7 @@ final class PartPayViewBuilder {
         agreementView
             .add(toSuperview: view)
             .touchEdge(.top, toEdge: .bottom, ofView: backgroundTableView, withInset: Consts.View.topOffSet)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.View.leftOffSet)
+            .touchEdge(.left, toSameEdgeOfView: finalStack)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.View.rightOffSet)
             .touchEdge(.bottom, toEdge: .top, ofView: acceptButton, withInset: Consts.View.bottomOffSet)
             

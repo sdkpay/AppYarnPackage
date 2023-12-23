@@ -23,7 +23,7 @@ private extension BankAppPickerViewBuilder {
             static let text = UserDefaults.localization?.authTitle
             
             static let height: CGFloat = 56.0
-            static let topOffSet: CGFloat = 36.0
+            static let topOffSet: CGFloat = 28.0
             static let rightOffSet = Consts.offSet
         }
         
@@ -42,7 +42,7 @@ private extension BankAppPickerViewBuilder {
             
             static let bottomOffSet: CGFloat = 58.0
             static let rightOffSet: CGFloat = Consts.offSet
-            static let topOffSet: CGFloat = 28.0
+            static let topOffSet: CGFloat = 20.0
         }
         
         enum BackButton {
