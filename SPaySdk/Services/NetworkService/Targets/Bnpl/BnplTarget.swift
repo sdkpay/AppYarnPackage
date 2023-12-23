@@ -49,7 +49,7 @@ extension BnplTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getBnplPlan:
-            return try? Data(contentsOf: Files.paymentPlanBnplJson.url)
+            return try? Data(contentsOf: Files.Stubs.paymentPlanBnplJson.url)
         }
     }
 }

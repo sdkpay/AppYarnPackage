@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Lottie
 
 private extension TimeInterval {
     static let animationDuration: TimeInterval = 0.35

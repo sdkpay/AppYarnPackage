@@ -40,7 +40,7 @@ extension IpTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getIp:
-            return try? Data(contentsOf: Files.getIpJson.url)
+            return try? Data(contentsOf: Files.Stubs.getIpJson.url)
         }
     }
 }

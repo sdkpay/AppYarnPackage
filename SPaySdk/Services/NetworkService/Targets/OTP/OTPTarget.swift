@@ -75,9 +75,9 @@ extension OTPTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .confirmOtp:
-            return try? Data(contentsOf: Files.sendOtpJson.url)
+            return try? Data(contentsOf: Files.Stubs.sendOtpJson.url)
         case .createOtpSdk:
-            return try? Data(contentsOf: Files.otpJson.url)
+            return try? Data(contentsOf: Files.Stubs.otpJson.url)
         }
     }
 }

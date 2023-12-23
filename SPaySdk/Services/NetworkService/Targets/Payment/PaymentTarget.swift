@@ -147,9 +147,9 @@ extension PaymentTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getPaymentToken:
-            return try? Data(contentsOf: Files.paymentTokenJson.url)
+            return try? Data(contentsOf: Files.Stubs.paymentTokenJson.url)
         case .getPaymentOrder:
-            return try? Data(contentsOf: Files.paymentOrderSDKJson.url)
+            return try? Data(contentsOf: Files.Stubs.paymentOrderSDKJson.url)
         }
     }
 }

@@ -23,6 +23,7 @@ fonts:
 files:
   inputs:
     - DEBUG-SPay/Resources/Stubs
+    - SPaySdk/Resources/Lottie
   outputs:
     - templateName: structured-swift5
       output: Files.swift

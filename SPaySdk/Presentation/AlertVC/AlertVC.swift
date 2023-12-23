@@ -6,6 +6,7 @@
 //
 
 import UIKit
+@_implementationOnly import Lottie
 
 private extension CGFloat {
     static let imageWidth = 80.0
@@ -18,6 +19,7 @@ private extension CGFloat {
 
 protocol IAlertVC {
     func configView(with model: AlertViewModel)
+    func playAnimation()
 }
 
 final class AlertVC: ContentVC, IAlertVC {
@@ -30,9 +32,8 @@ final class AlertVC: ContentVC, IAlertVC {
         return view
     }()
     
-    private lazy var imageView: UIImageView = {
-       let view = UIImageView()
-        view.contentMode = .scaleAspectFit
+    private lazy var imageView: LottieAnimationView = {
+        let view = LottieAnimationView()
         return view
     }()
 
@@ -102,7 +103,7 @@ final class AlertVC: ContentVC, IAlertVC {
     }
     
     func configView(with model: AlertViewModel) {
-        imageView.image = model.image
+        imageView.animation = LottieAnimation.named(model.lottie, bundle: .sdkBundle)
         alertTitle.text = model.title
         alertSubtitle.text = model.subtite
         
@@ -113,14 +114,14 @@ final class AlertVC: ContentVC, IAlertVC {
             contentStack.addArrangedSubview(textStack)
             contentStack.addArrangedSubview(imageView)
             backgroundView.image = Asset.errorBackground.image
-            imageWidth = 200
-            imageHeight = 100
+            imageWidth = 250
+            imageHeight = 150
         } else {
             contentStack.addArrangedSubview(imageView)
             contentStack.addArrangedSubview(textStack)
             backgroundView.image = Asset.background.image
-            imageWidth = 120
-            imageHeight = 120
+            imageWidth = 180
+            imageHeight = 180
         }
         
         imageView
@@ -137,6 +138,10 @@ final class AlertVC: ContentVC, IAlertVC {
             buttonsStack.addArrangedSubview(button)
         }
         setupUI()
+    }
+    
+    func playAnimation() {
+        self.imageView.play()
     }
     
     override func viewDidLoad() {

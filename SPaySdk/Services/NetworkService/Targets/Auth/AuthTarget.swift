@@ -237,11 +237,11 @@ extension AuthTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getSessionId:
-            return try? Data(contentsOf: Files.sessionIdJson.url)
+            return try? Data(contentsOf: Files.Stubs.sessionIdJson.url)
         case .checkSession:
             return nil
         case .auth:
-            return try? Data(contentsOf: Files.authJson.url)
+            return try? Data(contentsOf: Files.Stubs.authJson.url)
         case .revokeToken:
             return nil
         case .tokenExchange:

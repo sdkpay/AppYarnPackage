@@ -15,6 +15,7 @@ struct AlertButtonModel {
 
 struct AlertViewModel {
     let image: UIImage?
+    let lottie: String
     let title: String
     let subtite: String?
     let cost: String?
@@ -53,6 +54,19 @@ enum AlertState {
             return .Common.waiting
         case .warning:
             return .Common.warningAlert
+        }
+    }
+    
+    var lottieName: String {
+        switch self {
+        case .success:
+            return Files.Lottie.successJson.name
+        case .failure:
+            return Files.Lottie.errorJson.name
+        case .waiting:
+            return Files.Lottie.successJson.name
+        case .warning:
+            return Files.Lottie.errorJson.name
         }
     }
     
@@ -241,7 +255,8 @@ final class DefaultAlertService: AlertService {
               state: AlertState,
               buttons: [AlertButtonModel]) async -> AlertResult {
         
-        let model = AlertViewModel(image: state.image,
+        let model = AlertViewModel(image: state.image, 
+                                   lottie: state.lottieName,
                                    title: text,
                                    subtite: subtitle,
                                    cost: cost,

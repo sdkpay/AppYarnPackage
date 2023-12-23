@@ -51,7 +51,7 @@
 // Loading
 "try.to.pay.title" = "Проводим оплату...";
 "to.bank.title" = "Переходим в %@ для авторизации";
-"get.data.title" = "Подгружаем ваши данные";
+"get.data.title" = "Секундочку";
 "loading.showCards.title" = "Переходим в СберБанк Онлайн, чтобы показать вам ваши карты";
 
 // Alert

@@ -7,6 +7,7 @@
 
 import UIKit
 import WebKit
+@_implementationOnly import Lottie
 
 private extension CGFloat {
     static let logoWidth = 96.0
@@ -29,9 +30,9 @@ final class AuthVC: ContentVC, IAuthVC {
         return view
     }()
     
-    private lazy var logoImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = Asset.logo.image
+    private lazy var logoImage: LottieAnimationView = {
+        let imageView = LottieAnimationView(name: Files.Lottie.splashJson.name, bundle: .sdkBundle)
+        imageView.loopMode = .loop
         return imageView
     }()
     
@@ -54,6 +55,10 @@ final class AuthVC: ContentVC, IAuthVC {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         SBLogger.log(.didAppear(view: self))
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.logoImage.play()
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {

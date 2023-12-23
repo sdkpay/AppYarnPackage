@@ -93,6 +93,10 @@ final class AlertPresenter: AlertPresenting {
         DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration,
                                       execute: completionDispatchWorkItem)
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + .animationDuration) {
+            self.view?.playAnimation()
+        }
+        
         liveCircleManager.closeWithGesture = {
             self.cancelFeedback()
         }
