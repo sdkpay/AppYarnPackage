@@ -77,11 +77,6 @@ final class PaymentButton: UIView {
         backgroundColor = .main
         layer.cornerRadius = .corner
         
-        layer.shadowColor = UIColor.main.cgColor
-        layer.shadowRadius = .shadowRadius
-        layer.shadowOpacity = Float(CGFloat.shadowOpacity)
-        layer.shadowOffset = CGSize(width: 0, height: .shadowRadius)
-        
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.widthAnchor.constraint(greaterThanOrEqualToConstant: 150)
