@@ -93,7 +93,8 @@ final class AlertPresenter: AlertPresenting {
         DispatchQueue.main.asyncAfter(deadline: .now() + .completionDuration,
                                       execute: completionDispatchWorkItem)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + .animationDuration) {
+        let afterTime = model.isFailure ? 0.5 : 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + .animationDuration + afterTime) {
             self.view?.playAnimation()
         }
         
