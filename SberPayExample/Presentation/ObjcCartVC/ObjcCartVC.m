@@ -67,6 +67,15 @@
 
     }
     
+    SConfig *config = [[SConfig alloc] initWithSbp:true creditCard:true debitCard:true];
+    
+     [SPay setupWithBnplPlan:true
+                    helpers:true
+               helperConfig: config
+                environment: SEnvironmentProd
+                  completion:nil];
+    
+    
     SPaymentTokenRequest *requestModel = [[SPaymentTokenRequest alloc] initWithRedirectUri:@"sberPayExampleapp"
                                                                              merchantLogin:@"Test shop"
                                                                                     amount:*(_totalCost)

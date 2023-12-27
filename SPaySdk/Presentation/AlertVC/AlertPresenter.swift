@@ -21,6 +21,7 @@ protocol AlertPresenting {
 }
 
 final class AlertPresenter: AlertPresenting {
+    
     weak var view: (IAlertVC & ContentVC)?
 
     private var audioPlayer: AVAudioPlayer?

@@ -126,7 +126,7 @@ final class ChallengeVC: ContentVC, IChallengeVC {
     private lazy var infoStack: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
-        view.spacing = 4
+        view.spacing = 8
         view.alignment = .center
         view.addArrangedSubview(titleLabel)
         view.addArrangedSubview(subtitleLabel)
