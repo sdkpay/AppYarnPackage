@@ -23,6 +23,7 @@ struct User: Codable {
     let logoUrl: String?
     let additionalCards: Bool?
     let promoInfo: PromoInfo
+    let merchantInfo: MerchantInfo?
 }
 
 struct OrderAmount: Codable {
@@ -37,6 +38,11 @@ struct AmountData: Codable {
     var amountInt: Int {
         Int(amount * 100.0)
     }
+}
+
+struct MerchantInfo: Codable {
+    let bindingIsNeeded: Bool
+    let bindingSafeText: String?
 }
 
 struct PaymentToolInfo: Codable {

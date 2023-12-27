@@ -163,7 +163,7 @@ final class MainPaymentViewModel: PaymentViewModel {
     
     private func connectIfNeeded() -> String? {
         
-        guard let merchantInfo = authManager.authModel?.merchantInfo else { return nil }
+        guard let merchantInfo = userService.user?.merchantInfo else { return nil }
         guard merchantInfo.bindingIsNeeded else { return nil }
         
         return merchantInfo.bindingSafeText

@@ -85,6 +85,10 @@
     "amount" : 490000,
     "currency" : "643"
   },
+  "merchantInfo" : {
+    "bindingIsNeeded" : true,
+    "bindingSafeText" : "Запомним счет для оплаты в этом сервисе. Его всегда можно поменять в настройках SberPay."
+  },
   "promoInfo" : {
       "bannerList" : [
         {

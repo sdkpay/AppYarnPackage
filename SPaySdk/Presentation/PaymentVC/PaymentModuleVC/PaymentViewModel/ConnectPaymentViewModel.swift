@@ -99,7 +99,7 @@ final class ConnectPaymentViewModel: PaymentViewModel {
     
     private func addHintIfNeeded() -> [String] {
         
-        guard let merchantInfo = authManager.authModel?.merchantInfo else { return [] }
+        guard let merchantInfo = userService.user?.merchantInfo else { return [] }
         guard merchantInfo.bindingIsNeeded else { return [] }
         guard let bindingSafeText = merchantInfo.bindingSafeText else { return [] }
         
