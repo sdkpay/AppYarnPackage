@@ -222,7 +222,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let request = SPaymentTokenRequest(merchantLogin: values.merchantLogin,
                                            orderNumber: "12312312",
                                            orderId: values.orderId ?? "",
-                                           redirectUri: "testapp://test")
+                                           redirectUri: "sdknbzrxocne://spay")
         SPay.getPaymentToken(with: self, with: request) { state, info in
             switch state {
             case .success:
@@ -241,7 +241,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func paymentTokenWithPerchase() {
-        let request = SPaymentTokenRequest(redirectUri: "testapp://test",
+        let request = SPaymentTokenRequest(redirectUri: "sdknbzrxocne://spay",
                                            merchantLogin: values.merchantLogin,
                                            amount: values.cost,
                                            currency: String(values.currency),
@@ -270,7 +270,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
                                                  bankInvoiceId: values.orderId ?? "",
                                                  orderNumber: "12",
-                                                 redirectUri: "testapp://test",
+                                                 redirectUri: "sdknbzrxocne://spay",
                                                  apiKey: values.apiKey)
         SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info in
             switch state {

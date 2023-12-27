@@ -46,7 +46,7 @@ final class StatusVC: UIViewController {
         let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
                                                  bankInvoiceId: values.orderId ?? "",
                                                  orderNumber: "12",
-                                                 redirectUri: "testapp://test",
+                                                 redirectUri: "sdknbzrxocne://spay",
                                                  apiKey: values.apiKey)
         SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info in
             switch state {
