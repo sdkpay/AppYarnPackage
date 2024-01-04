@@ -10,10 +10,10 @@ import UIKit
 protocol ChallengeRouting {
 
     func presentOTPScreen(completion: @escaping Action)
-    func openUrl(url: URL) 
+    func presentBankAppPicker(completion: @escaping Action)
 }
 
-final class ChallengeRouter: ChallengeRouting {
+final class ChallengeRouter: ChallengeRouting, UrlOpenable {
     
     weak var viewController: ContentVC?
     private let locator: LocatorService
@@ -31,7 +31,8 @@ final class ChallengeRouter: ChallengeRouting {
     }
     
     @MainActor
-    func openUrl(url: URL) {
-        UIApplication.shared.open(url)
+    func presentBankAppPicker(completion: @escaping Action) {
+        let vc = BankAppPickerAssembly(locator: locator).createModule(completion: completion)
+        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
 }

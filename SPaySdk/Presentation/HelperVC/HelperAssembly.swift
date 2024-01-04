@@ -24,7 +24,7 @@ final class HelperAssembly {
     }
     
     func moduleRouter() -> HelperRouter {
-        HelperRouter()
+        HelperRouter(with: locator)
     }
 
     private func modulePresenter(_ router: HelperRouter) -> HelperPresenter {

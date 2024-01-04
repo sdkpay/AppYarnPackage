@@ -61,24 +61,33 @@ final class HelperPresenter: HelperPresenting {
     @MainActor
     func confirmTapped() async {
         
-        guard let bankUrl = bankAppManager.selectedBank?.utilLink else {
+        guard let path = userService.user?.promoInfo.bannerList.first(where: { $0.bannerListType == .debitCard })?.deeplinkIos else {
             await MainActor.run { completionManager.dismissCloseAction(view) }
             return
         }
-        guard let link = userService.user?.promoInfo.bannerList.first(where: { $0.bannerListType == .debitCard })?.deeplinkIos else {
+ 
+        guard let link = bankAppManager.configUrl(path: path, type: .util) else {
             await MainActor.run { completionManager.dismissCloseAction(view) }
             return
         }
-        
-        guard let link = URL(string: bankUrl + link) else { 
-            await MainActor.run { completionManager.dismissCloseAction(view) }
-            return }
         
         await MainActor.run { completionManager.dismissCloseAction(view) }
-        router.openUrl(url: link)
+        
+        let isOpened = await router.open(link)
+        
+        if !isOpened {
+            
+            router.presentBankAppPicker(completion: {
+                
+                Task {
+                    await self.confirmTapped()
+                }
+            })
+        }
     }
     
     func cancelTapped() {
+        
         completionManager.dismissCloseAction(view)
     }
 }

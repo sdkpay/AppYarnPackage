@@ -54,13 +54,21 @@ final class ChallengePresenter: ChallengePresenting {
                 return
             }
             
-            guard let link = bankAppManager.configUrl(path: cybercabinetURLIOS) else {
+            guard let link = bankAppManager.configUrl(path: cybercabinetURLIOS, type: .util) else {
                 await MainActor.run { completionManager.dismissCloseAction(view) }
                 return
             }
             
             await MainActor.run { completionManager.dismissCloseAction(view) }
-            await router.openUrl(url: link)
+            
+            let isOpened = await router.open(link)
+            
+            if !isOpened {
+                
+                await router.presentBankAppPicker(completion: {
+                    self.infoAlertTapped()
+                })
+            }
         }
     }
     

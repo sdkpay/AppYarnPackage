@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol PaymentRouting {
+protocol PaymentRouting: UrlOpenable {
     func presentCards(cards: [PaymentToolInfo],
                       cost: String,
                       selectedId: Int,
@@ -17,7 +17,6 @@ protocol PaymentRouting {
     func presentBankAppPicker(completion: @escaping Action)
     func presentChallenge(completion: @escaping (SecureChallengeResolution) -> Void)
     func openProfile(with userInfo: UserInfo)
-    func openUrl(url: URL)
 }
 
 final class PaymentRouter: PaymentRouting {
@@ -70,10 +69,5 @@ final class PaymentRouter: PaymentRouting {
     func openProfile(with userInfo: UserInfo) {
         let vc = LogoutAssembly(locator: self.locator).createModule(with: userInfo)
         self.viewController?.contentNavigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @MainActor
-    func openUrl(url: URL) {
-        UIApplication.shared.open(url)
     }
 }

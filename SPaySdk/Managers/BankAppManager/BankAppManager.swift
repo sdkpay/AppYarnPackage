@@ -23,7 +23,7 @@ protocol BankAppManager {
     
     var selectedBank: BankApp? { get set }
     var avaliableBanks: [BankApp] { get }
-    func configUrl(path: String) -> URL?
+    func configUrl(path: String, type: BankUrlType) -> URL?
     func saveSelectedBank()
     func removeSavedBank()
 }
@@ -65,11 +65,11 @@ final class DefaultBankAppManager: BankAppManager {
         UserDefaults.bankApp = _selectedBank?.name
     }
     
-    func configUrl(path: String) -> URL? {
+    func configUrl(path: String, type: BankUrlType) -> URL? {
         
-        guard let utilLink = selectedBank?.utilLink else { return nil }
+        guard let link = selectedBank?.url(type: type) else { return nil }
         
-        return URL(string: utilLink + path)
+        return URL(string: link + path)
     }
     
     private func getSelectedBank() -> BankApp? {

@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum BankUrlType {
+    case auth
+    case util
+}
+
 enum BankSchemeAuthType: String {
     case preffix
     case withOutPreffix
@@ -51,6 +56,17 @@ struct BankApp: Codable {
     let utilLink: String
     let authLink: String
     let iconURL: String?
+    
+    func url(type: BankUrlType) -> String {
+        
+        switch type {
+            
+        case .auth:
+            return authLink
+        case .util:
+            return utilLink
+        }
+    }
 }
 
 // MARK: - Images

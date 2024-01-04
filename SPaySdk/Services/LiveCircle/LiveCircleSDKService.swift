@@ -61,7 +61,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                               locator: LocatorService,
                               rootVC: UIViewController) {
         rootVC.modalPresentationStyle = .custom
-        viewController.present(rootVC, animated: true)
+        viewController.present(rootVC, animated: false)
     }
     
     private func topVC(for window: UIWindow?) -> UIViewController? {
