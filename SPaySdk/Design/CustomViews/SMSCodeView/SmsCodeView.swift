@@ -51,7 +51,7 @@ final class SmsCodeView: UITextField {
                                text: String(text[index]))
             } else {
                 setLabelStatus(label: currentLabel,
-                               fieldStatus: i == 0 ? .empty : .full,
+                               fieldStatus: .full,
                                text: "•")
             }
         }
