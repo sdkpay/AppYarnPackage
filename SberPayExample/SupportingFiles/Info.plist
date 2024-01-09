@@ -75,16 +75,10 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Так вы подтвердите, что именно вы выполняете вход</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Need location</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>App would like to access IDFA for tracking purpose</string>
+	<string>Данные о местонахождении собираются и отправляются на сервер для безопасного проведения оплаты</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

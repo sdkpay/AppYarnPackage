@@ -115,15 +115,11 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
-        NSLocationWhenInUseUsageDescription: Need location
-        NSUserTrackingUsageDescription: App would like to access IDFA for tracking purpose
+        NSLocationWhenInUseUsageDescription: Данные о местонахождении собираются и отправляются на сервер для безопасного проведения оплаты
         NSFaceIDUsageDescription: "Так вы подтвердите, что именно вы выполняете вход"
         LSSupportsOpeningDocumentsInPlace: true
-        NSBluetoothAlwaysUsageDescription: Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
         DTXAutoStart: false
         ITSAppUsesNonExemptEncryption: false
-        NSBluetoothPeripheralUsageDescription: Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
-        NSBluetoothAlwaysUsageDescription: Данные Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
         CFBundleURLTypes:
           - CFBundleTypeRole: Editor
             CFBundleURLName: testapp

@@ -17,7 +17,6 @@
 @protocol FPConfigurationProtocol;
 @protocol FPAuthInfoProviderProtocol;
 @protocol FPShareScreenInfoProviderProtocol;
-@protocol FPBluetoothInfoProviderProtocol;
 @protocol FPScreenshotProviderProtocol;
 
 
@@ -50,7 +49,6 @@ NS_ASSUME_NONNULL_BEGIN
 					 callStateProvider:(id<FPCallStateProviderProtocol>)callStateProvider
 					  authInfoProvider:(id<FPAuthInfoProviderProtocol>)authInfoProvider
 			   shareScreenInfoProvider:(id<FPShareScreenInfoProviderProtocol>)shareScreenInfoProvider
-				 bluetoothInfoProvider:(id<FPBluetoothInfoProviderProtocol>)bluetoothInfoProvider
 					screenshotProvider:(id<FPScreenshotProviderProtocol>)screenshotProvider
 						 configuration:(id<FPConfigurationProtocol>)configuration;
 

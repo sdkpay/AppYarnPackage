@@ -78,9 +78,6 @@ typedef NS_ENUM(int, FPMetric) {
 	FPMetricConnectedDevicePortId, /**<Connected device unique port id */
 	FPMetricConnectedDeviceName, /**<Connected device name */
 	
-	FPMetricBluetoothState, /**<Bluetooth state.*/
-	FPMetricBluetoothDevices, /**<Collection of connected bluetooth devices.*/
-	
 	FPMetricVpnConnection, /**<Detect VPN connection.*/
 	
 	FPMetricOtherAudioPlaying, /**<Check if other audio playing.*/

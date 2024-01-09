@@ -39,13 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) Boolean useAdvertiserID;
 
 /**
- * Enables bluetooth metrics poll, like: BluetoothState and BluetoothDevices.
- * When enabled user receives message with permission request in runtime. When
- * SKD address to bluetooth metrics.
- */
-@property (nonatomic) Boolean useBluetoothMetrics;
-
-/**
  * Dictionary with metric patches.
  */
 @property (copy, nonatomic) NSDictionary *metricPatches;
