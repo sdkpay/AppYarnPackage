@@ -73,6 +73,7 @@ final class ChallengePresenter: ChallengePresenting {
     }
     
     func viewDidLoad() {
+        
         let params = secureChallengeService.fraudMonСheckResult?.formParameters
         
         view?.configView(header: params?.header,
@@ -90,6 +91,14 @@ final class ChallengePresenter: ChallengePresenting {
     }
     
     func cancelTapped() {
+        
         completionManager.dismissCloseAction(view)
+        
+        if secureChallengeService.fraudMonСheckResult?.secureChallengeFactor == .hint {
+            
+            Task {
+                try? await secureChallengeService.sendChallengeResult(resolution: .unknown)
+            }
+        }
     }
 }
