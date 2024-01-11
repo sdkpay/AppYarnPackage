@@ -163,7 +163,7 @@ final class DefaultAlertService: AlertService {
         switch type {
         case .paySuccess:
             
-            analytics.sendEvent(.LCStatusSuccessViewAppeared)
+            analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.state: "success"])
             
             return await show(on: view,
                               with: Strings.Alert.Pay.Success.title,
@@ -172,7 +172,7 @@ final class DefaultAlertService: AlertService {
                               buttons: [])
         case .defaultError:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "error: default")
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.state: "default"])
             
             return await show(on: view,
                               with: Strings.Alert.Error.Main.title,
@@ -181,7 +181,7 @@ final class DefaultAlertService: AlertService {
                               buttons: [])
         case .noInternet:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "errror: noInternet")
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.state: "noInternet"])
             
             let tryButton = AlertButtonModel(title: Strings.Try.title,
                                              type: .blackBack,
@@ -200,7 +200,7 @@ final class DefaultAlertService: AlertService {
                                 ])
         case .partPayError:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: "error: partPayError")
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.state: "partPayError"])
             
             let fullPayButton = AlertButtonModel(title: Strings.Pay.Full.title,
                                                  type: .blackBack,

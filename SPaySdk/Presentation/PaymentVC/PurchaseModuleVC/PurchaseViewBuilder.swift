@@ -30,6 +30,7 @@ final class PurchaseViewBuilder {
     private(set) lazy var logoImageView: UIImageView = {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
+        view.clipsToBounds = true
         view.layer.borderColor = Asset.grayDisabled.color.cgColor
         view.layer.borderWidth = Cost.ImageView.border
         view.layer.cornerRadius = Cost.ImageView.radius

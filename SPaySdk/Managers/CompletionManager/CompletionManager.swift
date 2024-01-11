@@ -12,7 +12,8 @@ final class CompletionManagerAssembly: Assembly {
     var type = ObjectIdentifier(CompletionManager.self)
     
     func register(in container: LocatorService) {
-        let service: CompletionManager = DefaultCompletionManager(liveCircleManager: container.resolve())
+        let service: CompletionManager = DefaultCompletionManager(liveCircleManager: container.resolve(),
+                                                                  analyticsService: container.resolve())
         container.register(service: service)
     }
 }
@@ -40,6 +41,7 @@ extension CompletionManager {
 final class DefaultCompletionManager: CompletionManager {
     
     private let liveCircleManager: LiveCircleManager
+    private let analyticsService: AnalyticsService
     
     private var paymentCompletion: PaymentCompletion?
     private var paymentTokenCompletion: PaymentTokenCompletion?
@@ -50,8 +52,10 @@ final class DefaultCompletionManager: CompletionManager {
     
     private var closeActionInProgress = false
     
-    init(liveCircleManager: LiveCircleManager) {
+    init(liveCircleManager: LiveCircleManager,
+         analyticsService: AnalyticsService) {
         self.liveCircleManager = liveCircleManager
+        self.analyticsService = analyticsService
     }
     
     func setPaymentCompletion(_ completion: @escaping PaymentCompletion) {
@@ -105,6 +109,8 @@ final class DefaultCompletionManager: CompletionManager {
     }
     
     private func giveActualCompletion() {
+        
+        analyticsService.finishSession()
         
         if paymentTokenCompletion != nil {
             giveTokenCompletion()

@@ -88,10 +88,12 @@ final class LinkLabel: UILabel {
     }
     
     private func findLink(at index: Int) -> (link: String, text: String)? {
+        
         guard let text = attributedText?.string else { return nil }
+        
         for link in links {
-            if let keyRange = text.range(of: link.key),
-               keyRange.contains(String.Index(utf16Offset: index, in: text)) {
+            
+            if let range = text.ranges(of: link.key).first, range.contains(index) {
                 return (link.value, link.key)
             }
         }

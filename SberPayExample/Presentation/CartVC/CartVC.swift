@@ -269,7 +269,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     private func autoPay() {
         let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
                                                  bankInvoiceId: values.orderId ?? "",
-                                                 orderNumber: "12",
+                                                 orderNumber: values.orderNumber ?? "none",
                                                  redirectUri: "testapp://test",
                                                  apiKey: values.apiKey)
         SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info in

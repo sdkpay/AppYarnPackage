@@ -14,55 +14,21 @@ private enum DynatraceCredentional {
 }
 
 final class DefaultDynatraceAnalyticsService: AnalyticsService {
+    
     func sendEvent(_ event: AnalyticsEvent) {
         let action = DTXAction.enter(withName: event.rawValue)
         action?.leave()
     }
     
-    func sendEvent(_ event: AnalyticsEvent, with strings: String...) {
+    func sendEvent(_ event: AnalyticsEvent, with string: String) {
         let action = DTXAction.enter(withName: event.rawValue)
-        strings.forEach({ action?.reportValue(withName: event.rawValue, stringValue: $0) })
-        SBLogger.logAnalyticsEvent(name: event.rawValue, values: strings.json)
+        action?.reportValue(withName: event.rawValue, stringValue: string)
+        SBLogger.logAnalyticsEvent(name: event.rawValue, values: string)
         action?.leave()
     }
     
-    func sendEvent(_ event: AnalyticsEvent, with ints: Int...) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        ints.forEach({ action?.reportValue(withName: event.rawValue, intValue: Int64($0)) })
-        SBLogger.logAnalyticsEvent(name: event.rawValue, values: ints.json)
-        action?.leave()
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with doubles: Double...) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        doubles.forEach({ action?.reportValue(withName: event.rawValue, doubleValue: $0) })
-        SBLogger.logAnalyticsEvent(name: event.rawValue, values: doubles.json)
-        action?.leave()
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with strings: [String]) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        strings.forEach({ action?.reportValue(withName: event.rawValue, stringValue: $0) })
-        SBLogger.logAnalyticsEvent(name: event.rawValue, values: strings.json)
-        action?.leave()
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with ints: [Int]) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        ints.forEach({ action?.reportValue(withName: event.rawValue, intValue: Int64($0)) })
-        SBLogger.logAnalyticsEvent(name: event.rawValue, values: ints.json)
-        action?.leave()
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with doubles: [Double]) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        doubles.forEach({ action?.reportValue(withName: event.rawValue, doubleValue: $0) })
-        SBLogger.logAnalyticsEvent(name: event.rawValue, values: doubles.json)
-        action?.leave()
-    }
-    
-    func startSession(orderNumber: String) {
-        Dynatrace.identifyUser(orderNumber)
+    func startSession() {
+        Dynatrace.identifyUser(Bundle.main.displayName ?? "DefaultDysplayName")
     }
     
     func finishSession() {
