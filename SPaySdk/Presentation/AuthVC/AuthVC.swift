@@ -31,7 +31,16 @@ final class AuthVC: ContentVC, IAuthVC {
     }()
     
     private lazy var logoImage: LottieAnimationView = {
-        let imageView = LottieAnimationView(name: Files.Lottie.splashJson.name, bundle: .sdkBundle)
+        let imageView: LottieAnimationView
+        
+        switch traitCollection.userInterfaceStyle {
+        case .unspecified, .light:
+            imageView = LottieAnimationView(name: Files.Lottie.lightSplashJson.name, bundle: .sdkBundle)
+        case .dark:
+            imageView = LottieAnimationView(name: Files.Lottie.darkSplashJson.name, bundle: .sdkBundle)
+        @unknown default:
+            imageView = LottieAnimationView(name: Files.Lottie.lightSplashJson.name, bundle: .sdkBundle)
+        }
         imageView.loopMode = .loop
         return imageView
     }()

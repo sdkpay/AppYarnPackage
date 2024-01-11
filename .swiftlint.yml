@@ -93,7 +93,6 @@ opt_in_rules:
     - prohibited_super_call
     - protocol_property_accessors_order
     - reduce_boolean
-    - reduce_into
     - redundant_discardable_let
     - redundant_nil_coalescing
     - redundant_objc_attribute
