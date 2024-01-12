@@ -17,6 +17,8 @@ extension UrlOpenable {
     @MainActor
     func open(_ url: URL) async -> Bool {
         
-        await UIApplication.shared.open(url)
+        SBLogger.log(level: .debug(level: .lifeCycle), "➡️ Open url: \(url.absoluteString)")
+        
+        return await UIApplication.shared.open(url)
     }
 }
