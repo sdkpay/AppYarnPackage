@@ -217,9 +217,19 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     func goTo(url: String) {
         
         completionManager.dismissCloseAction(view)
-        guard let url = bankManager.configUrl(path: url, type: .util) else { return }
+        guard let fullUrl = bankManager.configUrl(path: url, type: .util) else { return }
         
-        Task { await router.open(url) }
+        Task {
+            
+           let result = await router.open(fullUrl)
+            
+            if !result {
+                
+                router.presentBankAppPicker {
+                    self.goTo(url: url)
+                }
+            }
+        }
     }
     
     func didSelectPaymentItem(at indexPath: IndexPath) {
