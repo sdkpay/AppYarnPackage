@@ -9,7 +9,7 @@
       "paymentId" : 5,
       "cardNumber" : "5091",
       "amountData" : {
-        "amount" : 956260.31000000006,
+        "amount" : 956260.10000000006,
         "currency" : "RUR"
       },
       "priorityCard" : true,
