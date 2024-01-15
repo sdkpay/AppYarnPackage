@@ -249,31 +249,28 @@ enum AnalyticsValue: String {
 enum AnalyticsKey: String {
     case view
     case orderNumber
+    case sessionId
     case errorCode
     case ParsingError
     case httpCode
     case permisson
     case biZoneCode
+    case state
 }
 
 protocol AnalyticsService {
     func sendEvent(_ event: AnalyticsEvent)
-    func sendEvent(_ event: AnalyticsEvent, with strings: String...)
-    func sendEvent(_ event: AnalyticsEvent, with ints: Int...)
-    func sendEvent(_ event: AnalyticsEvent, with doubles: Double...)
-    func sendEvent(_ event: AnalyticsEvent, with strings: [String])
-    func sendEvent(_ event: AnalyticsEvent, with ints: [Int])
-    func sendEvent(_ event: AnalyticsEvent, with doubles: [Double])
+    func sendEvent(_ event: AnalyticsEvent, with string: String)
     func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any])
     func config()
-    func startSession(orderNumber: String)
+    func startSession()
     func finishSession()
 }
 
 final class DefaultAnalyticsService: NSObject, AnalyticsService {
     
-    func startSession(orderNumber: String) {
-        analyticServices.forEach { $0.startSession(orderNumber: orderNumber) }
+    func startSession() {
+        analyticServices.forEach { $0.startSession() }
     }
     
     func finishSession() {
@@ -287,44 +284,25 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     private var authManager: AuthManager
     
     func sendEvent(_ event: AnalyticsEvent) {
-        analyticServices.forEach({ $0.sendEvent(event, with: "") })
+        
+        analyticServices.forEach({ $0.sendEvent(event) })
     }
     
-    func sendEvent(_ event: AnalyticsEvent, with strings: String...) {
-        analyticServices.forEach({ $0.sendEvent(event, with: strings) })
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with ints: Int...) {
-        analyticServices.forEach({ $0.sendEvent(event, with: ints) })
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with doubles: Double...) {
-        analyticServices.forEach({ $0.sendEvent(event, with: doubles) })
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with strings: [String]) {
-        analyticServices.forEach({ $0.sendEvent(event, with: strings) })
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with ints: [Int]) {
-        analyticServices.forEach({ $0.sendEvent(event, with: ints) })
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with doubles: [Double]) {
-        analyticServices.forEach({ $0.sendEvent(event, with: doubles) })
+    func sendEvent(_ event: AnalyticsEvent, with string: String) {
+        
+        analyticServices.forEach({ $0.sendEvent(event, with: string) })
     }
     
     func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any]) {
+        
         var dict = dictionaty
-        let orderNumber = authManager.orderNumber
-        dict[.orderNumber] = orderNumber
+        addSessionParams(to: &dict)
         analyticServices.forEach({ $0.sendEvent(event, with: dict) })
     }
     
     init(authManager: AuthManager) {
         self.authManager = authManager
         super.init()
-        self.startSession(orderNumber: authManager.orderNumber ?? "")
         SBLogger.log(.start(obj: self))
     }
     
@@ -336,5 +314,12 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     func config() {
         analyticServices.forEach({ $0.config() })
         sendEvent(.SDKVersion, with: Bundle.sdkVersion)
+        startSession()
+    }
+    
+    private func addSessionParams(to dictionary: inout [AnalyticsKey: Any]) {
+        
+        dictionary[.orderNumber] = authManager.orderNumber
+        dictionary[.sessionId] = authManager.sessionId
     }
 }
