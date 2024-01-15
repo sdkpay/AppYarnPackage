@@ -203,9 +203,7 @@ final class AuthPresenter: AuthPresenting {
             try await authService.auth()
             loadPaymentData()
         } catch {
-            if let error = error as? SDKError {
-                validateAuthError(error: error)
-            }
+            await appAuth()
         }
     }
     
