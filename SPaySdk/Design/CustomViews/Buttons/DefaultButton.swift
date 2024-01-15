@@ -79,7 +79,7 @@ enum DefaultButtonAppearance {
     fileprivate var disabled: ButtonColorScheme {
         switch self {
         case .full:
-            return ButtonColorScheme(backgroundColor: .backgroundSecondary,
+            return ButtonColorScheme(backgroundColor: .backgroundDisabled,
                                      titleColor: .textSecondary,
                                      borderColor: .clear,
                                      borderWidth: .zero)
