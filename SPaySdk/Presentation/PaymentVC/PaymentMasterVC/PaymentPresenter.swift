@@ -539,6 +539,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         self.completionManager.completeWithError(error)
         
         Task {
+            await alertService.show(on: view, type: .defaultError)
             self.completionManager.dismissCloseAction(view)
         }
     }
