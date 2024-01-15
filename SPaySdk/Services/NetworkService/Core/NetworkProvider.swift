@@ -197,7 +197,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
         if let spdmCookie = requestManager.spdmCookie {
             cookies.append(spdmCookie)
         }
-        HTTPCookieStorage.shared.cookies?.forEach(HTTPCookieStorage.shared.deleteCookie)
+
         request.allHTTPHeaderFields = HTTPCookie.requestHeaderFields(with: cookies)
     }
     
