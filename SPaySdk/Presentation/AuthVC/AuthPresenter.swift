@@ -191,7 +191,6 @@ final class AuthPresenter: AuthPresenting {
                     } else {
                         validateAuthError(error: error)
                     }
-                    await self.auth()
                 }
             }
         }
