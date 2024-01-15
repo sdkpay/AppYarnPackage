@@ -351,7 +351,20 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
             configForWaiting()
         case .partPayError:
             
-            getPaymentToken()
+            let result = await alertService.show(on: view, type: .partPayError)
+            
+            switch result {
+            case .approve:
+                
+                getPaymentToken()
+            case .cancel:
+                
+                self.completionManager.completeWithError(SDKError(.errorSystem))
+                
+                await alertService.show(on: view, type: .defaultError)
+                
+                self.completionManager.dismissCloseAction(view)
+            }
         default:
             
             self.completionManager.completeWithError(SDKError(.errorSystem))
@@ -367,7 +380,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         partPayService.bnplplanSelected = false
         partPayService.setEnabledBnpl(false, enabledLevel: .paymentToken)
         
-        Task { @MainActor [alertService] in
+        Task { @MainActor [alertService, view] in
             
             guard let paymentId = userService.selectedCard?.paymentId else {
                 self.completionManager.completeWithError(SDKError(.errorSystem))
