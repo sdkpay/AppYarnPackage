@@ -90,8 +90,8 @@ final class ChallengeVC: ContentVC, IChallengeVC {
         return view
     }()
     
-    private lazy var subtitleLabel: UILabel = {
-       let view = UILabel()
+    private lazy var subtitleLabel: PaddingLabel = {
+       let view = PaddingLabel()
         view.font = .medium5
         view.numberOfLines = 0
         view.textColor = .textSecondary
@@ -215,3 +215,4 @@ final class ChallengeVC: ContentVC, IChallengeVC {
             .touchEdge(.right, toSuperviewEdge: .right)
     }
 }
+
