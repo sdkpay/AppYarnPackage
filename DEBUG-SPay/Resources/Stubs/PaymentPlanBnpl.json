@@ -1,5 +1,5 @@
 {
-  "offerText" : "Соглашаюсь с <url=https:\/\/platichastyami.ru\/dogovor_oferty>условиями договора<\/url>\nи <url=https:\/\/platichastyami.ru\/soglashenie_ob_ispolzovanii_pep>соглашения<\/url> с ООО «ЦНФС»",
+  "offerText" : "Я соглашаюсь с <url=https:\/\/platichastyami.ru\/dogovor_oferty>условиями договора<\/url> и <url=https:\/\/platichastyami.ru\/soglashenie_ob_ispolzovanii_pep>соглашения<\/url>. Договор заключается с ООО «ЦНФС»",
   "isBnplEnabled" : true,
   "buttonBnpl" : {
     "content" : "Разбить на 4 платежа",
