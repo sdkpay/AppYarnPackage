@@ -38,13 +38,11 @@ final class DefaultLocatorService: LocatorService {
     func register<T>(service instance: T) {
         let key = ObjectIdentifier(T.self)
         store[key] = .instance(instance)
-        SBLogger.logLocatorRegister("\(type(of: T.self))")
     }
     
     func register<T>(reference: @escaping () -> T) {
         let key = ObjectIdentifier(T.self)
         store[key] = .reference(reference)
-        SBLogger.logLocatorRegisterRef("\(type(of: T.self))")
     }
 
     func resolve<T>() -> T {
@@ -55,7 +53,6 @@ final class DefaultLocatorService: LocatorService {
             case .reference: register(service: instance)
             default: break
             }
-           SBLogger.logLocatorResolve("\(type(of: T.self))")
             return instance
         } else {
             preconditionFailure("Could not resolve service for \(type(of: T.self))")
