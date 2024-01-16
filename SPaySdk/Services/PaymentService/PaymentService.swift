@@ -56,7 +56,7 @@ final class DefaultPaymentService: PaymentService {
     private let analytics: AnalyticsService
     private let personalMetricsService: PersonalMetricsService
     private let buildSettings: BuildSettings
-    private var paymentToken: PaymentTokenModel?
+    private var paymentToken: (model: PaymentTokenModel, forBNPL: Bool)?
     private var featuerToggle: FeatureToggleService
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     
@@ -92,7 +92,7 @@ final class DefaultPaymentService: PaymentService {
                   resolution: SecureChallengeResolution?) async throws {
         
         do {
-            let paymentToken = try await getPaymentToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
+            let paymentToken = try await updateTokenIfNeed(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
             
             let (orderid, merchantLogin, _) = try getCredPair(isBnplEnabled)
             
@@ -149,7 +149,7 @@ final class DefaultPaymentService: PaymentService {
             self.analytics.sendEvent(.RSGoodPaymentToken,
                                      with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
             
-            self.paymentToken = token
+            self.paymentToken = (token, isBnplEnabled)
             
             return token
         } catch {
@@ -160,6 +160,19 @@ final class DefaultPaymentService: PaymentService {
             }
             
             throw error
+        }
+    }
+    
+    private func updateTokenIfNeed(paymentId: Int,
+                                   isBnplEnabled: Bool,
+                                   resolution: SecureChallengeResolution?) async throws -> PaymentTokenModel {
+        
+        if let paymentToken = paymentToken, paymentToken.forBNPL == isBnplEnabled {
+            
+            return paymentToken.model
+        } else {
+            
+            return try await getPaymentToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
         }
     }
     
@@ -205,7 +218,7 @@ final class DefaultPaymentService: PaymentService {
         switch isBnplEnabled {
         case true:
             return (
-                orderid: paymentToken.initiateBankInvoiceId ?? "",
+                orderid: paymentToken.model.initiateBankInvoiceId ?? "",
                 merchantLogin: BnplConstants.merchantLogin(for: self.buildSettings.networkState),
                 apiKey: BnplConstants.apiKey(for: self.buildSettings.networkState)
             )
