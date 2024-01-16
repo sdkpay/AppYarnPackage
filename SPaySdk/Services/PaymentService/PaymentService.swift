@@ -96,6 +96,14 @@ final class DefaultPaymentService: PaymentService {
             
             let (orderid, merchantLogin, _) = try getCredPair(isBnplEnabled)
             
+            if isBnplEnabled {
+                
+                self.authManager.apiKey = BnplConstants.apiKey(for: self.buildSettings.networkState)
+            } else {
+                
+                self.authManager.apiKey = self.authManager.initialApiKey
+            }
+            
             switch self.sdkManager.payStrategy {
             case .auto:
                 try await pay(with: paymentToken.paymentToken ?? "", orderId: orderid, merchantLogin: merchantLogin)

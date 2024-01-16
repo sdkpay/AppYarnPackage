@@ -215,4 +215,3 @@ final class ChallengeVC: ContentVC, IChallengeVC {
             .touchEdge(.right, toSuperviewEdge: .right)
     }
 }
-

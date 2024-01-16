@@ -75,6 +75,7 @@ final class DefaultSDKManager: SDKManager {
         self.authInfo = authInfo
         payStrategy = .manual
         authManager.apiKey = apiKey
+        authManager.initialApiKey = apiKey
         authManager.lang = paymentTokenRequest.language
         authManager.orderNumber = paymentTokenRequest.orderNumber
         completionManager.setPaymentTokenCompletion(completion)
@@ -87,6 +88,7 @@ final class DefaultSDKManager: SDKManager {
         self.authInfo = authInfo
         payStrategy = .auto
         authManager.apiKey = apiKey
+        authManager.initialApiKey = apiKey
         authManager.lang = paymentRequest.language
         authManager.orderNumber = paymentRequest.orderNumber
         completionManager.setPaymentCompletion(completion)
