@@ -33,7 +33,6 @@ final class AssemblyManager {
     private var sessionAssemblies: [Assembly] = [
         
         BiometricAuthProviderAssembly(),
-        PaymentServiceAssembly(),
         PersonalMetricsServiceAssembly(),
         AlertServiceAssembly(),
         SeamlessAuthServiceAssembly(),

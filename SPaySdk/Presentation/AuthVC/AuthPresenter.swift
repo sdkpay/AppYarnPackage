@@ -33,6 +33,8 @@ final class AuthPresenter: AuthPresenting {
     private var helperManager: HelperConfigManager
     private var featureToggle: FeatureToggleService
     
+    private var authMethod: AuthMethod = .bank
+    
     init(_ router: AuthRouter,
          authService: AuthService,
          seamlessAuthService: SeamlessAuthService,
@@ -141,6 +143,8 @@ final class AuthPresenter: AuthPresenting {
             do {
                 let authMethod = try await authService.tryToGetSessionId()
                 
+                self.authMethod = authMethod
+                
                 switch authMethod {
                 case .bank:
                     await appAuth()
@@ -202,7 +206,13 @@ final class AuthPresenter: AuthPresenting {
             try await authService.auth()
             loadPaymentData()
         } catch {
-            await appAuth()
+            if authMethod == .refresh {
+                await appAuth()
+            } else if let error = error as? SDKError {
+                validateAuthError(error: error)
+            } else {
+                validateAuthError(error: .init(.errorSystem))
+            }
         }
     }
     
