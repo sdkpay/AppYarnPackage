@@ -45,7 +45,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     
     func viewDidLoad() {
         bankAppModels = bankManager.avaliableBanks.map({ BankAppCellModel(with: $0) })
-        view?.setTilte(Strings.BankAppPicker.subtitle(Bundle.main.displayName ?? "None"))
+        view?.setTilte(Strings.BankAppPicker.subtitle(Bundle.main.displayName))
         addObserver()
     }
     

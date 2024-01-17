@@ -245,6 +245,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 }
             })
         case false:
+            
             throw SDKError(.bankAppNotFound)
         }
     }
@@ -291,9 +292,9 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         do {
             
             let authResult = try await network.requestFull(AuthTarget.auth(redirectUri: authManager.authMethod == .bank ? request.redirectUri : nil,
-                                                                           authCode: authManager.authCode,
+                                                                           authCode: authManager.authMethod == .bank ? authManager.authCode : nil,
                                                                            sessionId: authManager.sessionId ?? "",
-                                                                           state: authManager.state,
+                                                                           state: authManager.authMethod == .bank ? authManager.state : nil,
                                                                            deviceInfo: deviceInfo,
                                                                            orderId: request.orderId,
                                                                            amount: request.amount,
@@ -315,7 +316,9 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             analytics.sendEvent(.RSGoodAuth,
                                 with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
         } catch {
+            
             if let error = error as? SDKError {
+                
                 parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                type: .auth(type: .sessionId))
             }
@@ -352,6 +355,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
     
     private func getIdCookies() -> [HTTPCookie] {
+        
         if let idCookies = cookieStorage.getCookie(for: .id) {
             return [idCookies]
         } else {
