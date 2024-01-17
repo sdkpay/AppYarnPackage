@@ -152,6 +152,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func appAuth() async {
+        
         if enviromentManager.environment == .sandboxWithoutBankApp {
             await MainActor.run {
                 router.presentFakeScreen(completion: {

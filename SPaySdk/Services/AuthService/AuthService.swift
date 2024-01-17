@@ -182,6 +182,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                      with: [AnalyticsKey.view: AnlyticsScreenEvent.AuthVC.rawValue])
             self.authManager.sessionId = sessionIdResult.sessionId
             self.authManager.authModel = sessionIdResult
+            self.authManager.state = sessionIdResult.state
             self.appLink = sessionIdResult.deeplink
             self.partPayService.setEnabledBnpl(sessionIdResult.isBnplEnabled ?? false, enabledLevel: .session)
             
