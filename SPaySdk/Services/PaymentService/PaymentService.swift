@@ -92,6 +92,7 @@ final class DefaultPaymentService: PaymentService {
                   resolution: SecureChallengeResolution?) async throws {
         
         do {
+            
             let paymentToken = try await updateTokenIfNeed(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
             
             let (orderid, merchantLogin, _) = try getCredPair(isBnplEnabled)
@@ -179,6 +180,8 @@ final class DefaultPaymentService: PaymentService {
             
             return paymentToken.model
         } else {
+            
+            self.authManager.apiKey = self.authManager.initialApiKey
             
             return try await getPaymentToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
         }
