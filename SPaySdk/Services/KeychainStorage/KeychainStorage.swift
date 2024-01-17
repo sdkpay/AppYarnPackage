@@ -23,7 +23,7 @@ enum StorageMode {
     var service: String {
         switch self {
         case .local:
-            return Bundle.sdkBundle.displayName ?? "Default"
+            return Bundle.sdkBundle.displayName
         case .sid:
             return "sber_id_app_token"
         }
@@ -97,7 +97,7 @@ extension KeychainStorage {
 
 final class DefaultKeychainStorage: KeychainStorage {
     
-    private let service = Bundle.sdkBundle.displayName ?? "Default"
+    private let service = Bundle.sdkBundle.displayName
     
     func exists(_ key: StorageKey, mode: StorageMode) throws -> Bool {
         

@@ -9,8 +9,15 @@ import Foundation
 
 extension Bundle {
     
-    var displayName: String? {
-        object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? object(forInfoDictionaryKey: "CFBundleName") as? String
+    var displayName: String {
+        
+        if let displayName = object(forInfoDictionaryKey: "CFBundleDisplayName") as? String, !displayName.isEmpty {
+            return displayName
+        } else if let bundleName = object(forInfoDictionaryKey: "CFBundleName") as? String, !bundleName.isEmpty {
+            return bundleName
+        } else {
+            return "No info"
+        }
     }
     
     static var sdkBundle: Bundle = {

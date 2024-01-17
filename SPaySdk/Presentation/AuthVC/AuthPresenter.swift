@@ -110,16 +110,6 @@ final class AuthPresenter: AuthPresenting {
         getSessiond()
     }
     
-    private func configAuthSettings() async {
-        if enviromentManager.environment == .sandboxWithoutBankApp {
-            getAccessSPay()
-        } else if bankManager.selectedBank == nil {
-            await MainActor.run { showBanksStack() }
-        } else {
-            getAccessSPay()
-        }
-    }
-    
     @MainActor
     private func showBanksStack() {
         removeObserver()
@@ -163,12 +153,13 @@ final class AuthPresenter: AuthPresenting {
     
     private func appAuth() async {
         if enviromentManager.environment == .sandboxWithoutBankApp {
-            await MainActor.run {  router.presentFakeScreen(completion: {
-                Task {
-                    await self.auth()
-                    return
-                }
-            })}
+            await MainActor.run {
+                router.presentFakeScreen(completion: {
+                    Task {
+                        await self.auth()
+                    }
+                })}
+            return
         }
         
         if bankManager.selectedBank == nil {

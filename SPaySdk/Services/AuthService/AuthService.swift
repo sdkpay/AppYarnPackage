@@ -33,6 +33,11 @@ final class AuthServiceAssembly: Assembly {
     }
 }
 
+private enum Constants {
+    
+    static let sendboxAuthCode = "3401216B-8B70-21FA-2592-58010E53EE5B"
+}
+
 protocol AuthService {
     func auth() async throws
     func tryToGetSessionId() async throws -> AuthMethod
@@ -146,12 +151,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         appAuthCompletion = nil
     }
     
-    private func fillFakeData() {
-        authManager.authCode = "3401216B-8B70-21FA-2592-58010E53EE5B"
-        appAuthCompletion?(.success)
-    }
-    
     private func addFrontHeaders() {
+        
         baseRequestManager.generateB3Cookie()
     }
     
@@ -217,12 +218,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
 
     @MainActor
     private func sIdAuth() async throws {
+        
         SBLogger.logThread(obj: self)
-        let target = enviromentManager.environment == .sandboxWithoutBankApp
-        guard !target else {
-            fillFakeData()
-            return
-        }
         
         guard let appLink,
               let link = authURL(link: appLink) else {
@@ -275,13 +272,20 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     }
 
     private func authMethod(deviceInfo: String) async throws {
+        
         SBLogger.logThread(obj: self)
+        
         guard let request = sdkManager.authInfo else {
             throw SDKError(.noData)
         }
         
         analytics.sendEvent(.RQAuth,
                             with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
+        
+        if enviromentManager.environment != .prod {
+            
+            authManager.authCode = Constants.sendboxAuthCode
+        }
         
         do {
             
@@ -300,7 +304,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                                                            frequency: request.frequency,
                                                                            userName: nil,
                                                                            merchantLogin: request.merchantLogin,
-                                                                           resourceName: Bundle.main.displayName ?? "None",
+                                                                           resourceName: Bundle.main.displayName,
                                                                            authCookie: getRefreshCookies()),
                                                            to: AuthRefreshModel.self)
             
