@@ -136,6 +136,8 @@ final class DefaultPaymentService: PaymentService {
               let merchantLogin = sdkManager.authInfo?.merchantLogin
         else { throw SDKError(.noData) }
         
+        self.authManager.apiKey = self.authManager.initialApiKey
+        
         do {
             let deviceInfo = try await personalMetricsService.getUserData()
             
@@ -250,7 +252,7 @@ final class DefaultPaymentService: PaymentService {
         } else if sdkError.represents(.system) {
             return .unknownStatus
         } else {
-            return  .defaultError
+            return .defaultError
         }
     }
 }
