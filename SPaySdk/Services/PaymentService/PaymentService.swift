@@ -107,11 +107,12 @@ final class DefaultPaymentService: PaymentService {
             
             switch self.sdkManager.payStrategy {
             case .auto:
-                try await pay(with: paymentToken.paymentToken ?? "", orderId: orderid, merchantLogin: merchantLogin)
+                try await pay(bnpl: isBnplEnabled, with: paymentToken.paymentToken ?? "", orderId: orderid, merchantLogin: merchantLogin)
             case .manual:
                 self.sdkManager.payHandler = { payInfo in
                     Task {
-                        try await self.pay(with: payInfo.paymentToken ?? "",
+                        try await self.pay(bnpl: isBnplEnabled,
+                                           with: payInfo.paymentToken ?? "",
                                            orderId: orderid,
                                            merchantLogin: merchantLogin)
                     }
@@ -183,13 +184,12 @@ final class DefaultPaymentService: PaymentService {
             return paymentToken.model
         } else {
             
-            self.authManager.apiKey = self.authManager.initialApiKey
-            
             return try await getPaymentToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
         }
     }
     
-    private func pay(with token: String,
+    private func pay(bnpl: Bool,
+                     with token: String,
                      orderId: String?,
                      merchantLogin: String) async throws {
         
@@ -212,6 +212,10 @@ final class DefaultPaymentService: PaymentService {
                                      with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
             self.analytics.sendEvent(.RSGoodPaymentOrder,
                                      with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+            
+            if bnpl {
+                throw SDKError(.failDecode)
+            }
         } catch {
             if let error = error as? SDKError {
                 self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
