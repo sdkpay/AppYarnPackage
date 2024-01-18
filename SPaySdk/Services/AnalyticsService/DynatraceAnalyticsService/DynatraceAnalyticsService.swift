@@ -28,7 +28,7 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
     }
     
     func startSession() {
-        Dynatrace.identifyUser(Bundle.main.displayName ?? "DefaultDysplayName")
+        Dynatrace.identifyUser(Bundle.main.displayName)
     }
     
     func finishSession() {

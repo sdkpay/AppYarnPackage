@@ -54,7 +54,8 @@ extension UserDefaults {
     
     @UserDefault(key: .schemas,
                  defaultValue: Schemas(dynatraceUrl: "foo",
-                                       dynatraceId: "foo"))
+                                       dynatraceId: "foo",
+                                       getIpUrl: "foo"))
     static var schemas: Schemas?
     
     @UserDefault(key: .images,

@@ -78,7 +78,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     func getIp() async -> String {
         
         let ip = try? await network.requestString(IpTarget.getIp,
-                                                  host: .safepayonline)
+                                                  host: .getIp)
         
         return ip ?? "None"
     }

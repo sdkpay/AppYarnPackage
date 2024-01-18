@@ -12,10 +12,11 @@ enum IpTarget {
 }
 
 extension IpTarget: TargetType {
+    
     var path: String {
         switch self {
         case .getIp:
-            return "sdk-api/getIp"
+            return ""
         }
     }
     

@@ -9,7 +9,7 @@ import Foundation
 
 enum HostSettings {
     case main
-    case safepayonline
+    case getIp
     case sid
 }
 
@@ -64,14 +64,14 @@ final class DefaultHostManager: HostManager {
             case .Local:
                 return Host.mocker.url
             }
-        case .safepayonline:
+        case .getIp:
             switch buildSettings.networkState {
             case .Mocker:
                 return Host.mocker.url
             case .Ift:
-                return Host.safepayonlineIft.url
+                return URL(string: UserDefaults.schemas?.getIpUrl ?? "") ?? Host.safepayonlineIft.url
             default:
-                return Host.safepayonlineIft.url
+                return URL(string: UserDefaults.schemas?.getIpUrl ?? "") ?? Host.safepayonlineIft.url
             }
         case .sid:
             return Host.sid.url

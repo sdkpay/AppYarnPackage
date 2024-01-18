@@ -322,10 +322,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 parsingErrorAnaliticManager.sendAnaliticsError(error: error,
                                                                type: .auth(type: .sessionId))
             }
-            
-            if self.authManager.authMethod == .bank {
-                throw error
-            }
             throw error
         }
     }
