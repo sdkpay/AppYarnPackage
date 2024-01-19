@@ -49,7 +49,7 @@ struct FeaturesToggle: Codable {
 struct Schemas: Codable {
     let dynatraceUrl: String
     let dynatraceId: String
-    let getIpUrl: String
+    let getIpUrl: String?
 }
 
 struct BankApp: Codable {
