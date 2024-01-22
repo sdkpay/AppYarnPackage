@@ -11,6 +11,7 @@ protocol IOtpVC: AnyObject {
     func updateMobilePhone(phoneNumber: String)
     func setOtpDescription(_ text: String)
     func setViewState(_ state: OtpViewState)
+    func clearOtpField()
     func setOtpError(_ text: String?)
     func hideKeyboard() async
 }
@@ -111,7 +112,6 @@ final class OtpVC: ContentVC, IOtpVC {
         switch state {
         case .ready:
 
-            otpTextField.setState(.full)
             otpDescriptionButton.isEnabled = true
             otpDescriptionButton.setTitleColor(.main, for: .normal)
         case .waiting:
@@ -127,6 +127,11 @@ final class OtpVC: ContentVC, IOtpVC {
     func setOtpDescription(_ text: String) {
         
         otpDescriptionButton.setTitle(text, for: .normal)
+    }
+    
+    func clearOtpField() {
+        
+        otpTextField.setState(.empty)
     }
     
     func setOtpError(_ text: String?) {
