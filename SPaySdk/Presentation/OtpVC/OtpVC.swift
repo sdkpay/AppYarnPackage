@@ -8,10 +8,10 @@
 import UIKit
 
 protocol IOtpVC: AnyObject {
+    func setOtpTextFieldState(_ status: FieldStatus)
     func updateMobilePhone(phoneNumber: String)
     func setOtpDescription(_ text: String)
     func setViewState(_ state: OtpViewState)
-    func clearOtpField()
     func setOtpError(_ text: String?)
     func hideKeyboard() async
 }
@@ -129,9 +129,9 @@ final class OtpVC: ContentVC, IOtpVC {
         otpDescriptionButton.setTitle(text, for: .normal)
     }
     
-    func clearOtpField() {
+    func setOtpTextFieldState(_ status: FieldStatus) {
         
-        otpTextField.setState(.empty)
+        otpTextField.setState(status)
     }
     
     func setOtpError(_ text: String?) {

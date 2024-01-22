@@ -73,7 +73,7 @@ final class OtpPresenter: OtpPresenting {
         
         timerManager.start()
         setState(.waiting)
-        view?.clearOtpField()
+        view?.setOtpTextFieldState(.empty)
         view?.setOtpError(nil)
         
         analytics.sendEvent(.RQCreteOTP,
@@ -183,6 +183,7 @@ final class OtpPresenter: OtpPresenting {
         if state == .error {
             
             view?.setOtpError(nil)
+            self.state = .waiting
         }
     }
     
