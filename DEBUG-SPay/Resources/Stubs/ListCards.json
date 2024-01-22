@@ -82,7 +82,7 @@
     "lastName" : "А."
   },
   "orderAmount" : {
-    "amount" : 490000,
+    "amount" : 0,
     "currency" : "643"
   },
   "merchantInfo" : {

@@ -192,6 +192,7 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func viewDidDisappear() {
+        timerManager.stop()
         analytics.sendEvent(.LCOTPViewDisappeared)
     }
     

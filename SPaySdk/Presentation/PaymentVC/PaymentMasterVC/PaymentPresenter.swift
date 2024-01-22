@@ -548,13 +548,26 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                 try await paymentService.tryToPay(paymentId: paymentId,
                                                   isBnplEnabled: partPayService.bnplplanSelected,
                                                   resolution: resolution)
-                self.userService.clearData()
                 self.partPayService.bnplplanSelected = false
                 self.completionManager.completePay(with: .success)
                 await view?.setUserInteractionsEnabled()
 
-                await alertService.show(on: self.view, type: .paySuccess)
-                completionManager.dismissCloseAction(view)
+                if let user = userService.user {
+                    
+                    if user.orderAmount.amount != 0 {
+                        
+                        let finalCost = partPayService.bnplplanSelected ? partPayService.bnplplan?.graphBnpl?.payments.first?.amount : user.orderAmount.amount
+                        
+                        await alertService.show(on: self.view, type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
+                                                                                 shopName: user.merchantName ?? ""))
+                        completionManager.dismissCloseAction(view)
+                    } else {
+                        
+                        await alertService.show(on: self.view, type: .connectSuccess(card: userService.selectedCard?.cardNumber.card ?? ""))
+                        completionManager.dismissCloseAction(view)
+                    }
+                }
+                self.userService.clearData()
             } catch {
                 self.userService.clearData()
                 self.partPayService.bnplplanSelected = false

@@ -74,6 +74,7 @@
 "alert.pay.no.cards.subtitle" = "Но можем выпустить цифровую Сберкарту всего за пару нажатий";
 "alert.bankAppPicker.title" = "Оплатить со SberPay\nне получается";
 "alert.bankAppPicker.subtitle" = "Не смогли открыть ни одно из приложений банка.\nПожалуйста, выберете другой способ оплаты";
+"alert.connect.title" = "Подключили SberPay %@";
 
 // MerchantAlert
 "merchant.alert.apikey" = "⛔️ Передайте apiKey в методе setup или в текущем методе.";

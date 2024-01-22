@@ -85,7 +85,8 @@ enum AlertState {
 }
 
 enum AlertType {
-    case paySuccess
+    case paySuccess(amount: String, shopName: String)
+    case connectSuccess(card: String)
     case defaultError
     case noInternet
     case partPayError
@@ -161,12 +162,20 @@ final class DefaultAlertService: AlertService {
     func show(on view: ContentVC?, type: AlertType) async -> AlertResult {
         
         switch type {
-        case .paySuccess:
+        case let .paySuccess(amount: amount, shopName: shopName):
             
             analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.state: "success"])
+    
+            return await show(on: view,
+                              with: amount,
+                              with: shopName,
+                              state: .success,
+                              buttons: [])
+            
+        case .connectSuccess(card: let card):
             
             return await show(on: view,
-                              with: Strings.Alert.Pay.Success.title,
+                              with: Strings.Alert.Connect.title(card),
                               with: nil,
                               state: .success,
                               buttons: [])
