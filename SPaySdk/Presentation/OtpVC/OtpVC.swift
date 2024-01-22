@@ -11,6 +11,7 @@ protocol IOtpVC: AnyObject {
     func updateMobilePhone(phoneNumber: String)
     func setOtpDescription(_ text: String)
     func setViewState(_ state: OtpViewState)
+    func setOtpError(_ text: String?)
     func hideKeyboard() async
 }
 
@@ -53,6 +54,16 @@ final class OtpVC: ContentVC, IOtpVC {
         return textField
     }()
     
+    private lazy var otpErrorLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.font = .medium4
+        label.textColor = Asset.red.color
+        label.isHidden = true
+        return label
+    }()
+    
     private lazy var otpDescriptionButton: ActionButton = {
         let timeButton = ActionButton()
         timeButton.setTitleColor(.textSecondary, for: .normal)
@@ -64,6 +75,17 @@ final class OtpVC: ContentVC, IOtpVC {
             self.presenter.createOTP()
         })
         return timeButton
+    }()
+    
+    private lazy var otpActionStack: UIStackView = {
+        let view = UIStackView()
+        view.distribution = .fill
+        view.alignment = .center
+        view.axis = .vertical
+        view.spacing = 10
+        view.addArrangedSubview(otpErrorLabel)
+        view.addArrangedSubview(otpDescriptionButton)
+        return view
     }()
     
     private(set) lazy var nextButton: DefaultButton = {
@@ -88,33 +110,47 @@ final class OtpVC: ContentVC, IOtpVC {
         
         switch state {
         case .ready:
-            
+
             otpTextField.setState(.full)
             otpDescriptionButton.isEnabled = true
             otpDescriptionButton.setTitleColor(.main, for: .normal)
         case .waiting:
             
-            otpTextField.setState(.empty)
             otpDescriptionButton.isEnabled = false
             otpDescriptionButton.setTitleColor(.textSecondary, for: .normal)
         case .error:
             
             otpTextField.setState(.error)
-            otpDescriptionButton.isEnabled = false
-            otpDescriptionButton.setTitleColor(.notification, for: .normal)
         }
     }
     
     func setOtpDescription(_ text: String) {
+        
         otpDescriptionButton.setTitle(text, for: .normal)
+    }
+    
+    func setOtpError(_ text: String?) {
+        
+        self.otpErrorLabel.text = text
+        
+        UIView.animate(withDuration: 0.25,
+                       delay: .zero,
+                       usingSpringWithDamping: 0.9,
+                       initialSpringVelocity: 1) {
+            
+            self.otpErrorLabel.isHidden = text == nil
+            self.otpActionStack.layoutIfNeeded()
+        }
     }
 
     @MainActor
     func hideKeyboard() async {
+        
         view.endEditing(true)
     }
     
     func updateMobilePhone(phoneNumber: String) {
+        
         titleLabel.text = Strings.TitleLabel.Message.title(phoneNumber)
     }
 
@@ -252,18 +288,19 @@ final class OtpVC: ContentVC, IOtpVC {
             .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Cost.TextField.top)
             .height(Cost.TextField.height)
         
-        otpDescriptionButton
+        otpActionStack
             .add(toSuperview: contentView)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Time.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Time.left)
             .touchEdge(.top, toEdge: .bottom, ofView: otpTextField, withInset: Cost.Button.Time.top)
+            .height(Cost.height)
                
         nextButton
             .add(toSuperview: contentView)
             .height(.defaultButtonHeight)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Next.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Next.right)
-            .touchEdge(.top, toEdge: .bottom, ofView: otpDescriptionButton, withInset: Cost.Button.Next.bottom)
+            .touchEdge(.top, toEdge: .bottom, ofView: otpActionStack, withInset: Cost.Button.Next.bottom)
         
         backButton
             .add(toSuperview: contentView)

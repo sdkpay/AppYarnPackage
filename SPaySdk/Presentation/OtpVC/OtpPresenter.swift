@@ -160,7 +160,8 @@ final class OtpPresenter: OtpPresenting {
                         
                         self.analytics.sendEvent(.RQFailConfirmOTP)
                         self.view?.hideLoading(animate: true)
-                        view?.setOtpDescription(error.description)
+                        
+                        self.view?.setOtpError(error.description)
                     } else if error.represents(.tryingError) {
                         
                         await alertService.show(on: view, type: .tryingError)
@@ -176,8 +177,10 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func otpFieldChanged() {
+        
         if state == .error {
             
+            view?.setOtpError(nil)
             setState(.waiting)
         }
     }
@@ -208,8 +211,6 @@ final class OtpPresenter: OtpPresenting {
             
             timerManager.update { seconds in
                 
-                guard self.state != .error else { return }
-                
                 if seconds > 0 {
                     self.view?.setOtpDescription(Strings.Time.Button.Repeat.isNotActive(seconds))
                 } else {
@@ -218,7 +219,7 @@ final class OtpPresenter: OtpPresenting {
             }
         case .error:
             
-            break
+            return
         }
     }
     

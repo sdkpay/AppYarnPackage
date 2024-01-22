@@ -139,7 +139,7 @@ extension SmsCodeView {
         case .full:
             label.textColor = .textPrimory
         case .error:
-            label.textColor = .notification
+            label.textColor = Asset.red.color
         }
     }
 
