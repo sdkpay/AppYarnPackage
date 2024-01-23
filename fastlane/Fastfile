@@ -8,14 +8,14 @@ ENV["SCHEME_NAME"] = "SPaySdkExample"
 ENV["PLIST_PATH"] = "./SberPayExample/SupportingFiles/Info.plist"
 
 #Appstore
-ENV["KEY_ID"] = "X7JDA74R7R"
+ENV["KEY_ID"] = "YR2LX8W79A"
 ENV["ISSUER_ID"] = "32c2a5e1-1bea-4fd8-8cff-4235733105fc"
-ENV["KEY_PATH"] = "./fastlane/AuthKey_X7JDA74R7R.p8"
+ENV["KEY_PATH"] = "./fastlane/AuthKey_YR2LX8W79A.p8"
 ENV["TEAM_ID"] = "582949"
 
 # Marvin Bot
 ENV["TG_BOT_TOKEN"] = "5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4"
-ENV["TG_CHAT_ID"] = "-866042957"
+ENV["TG_CHAT_ID"] = "-1001899215484"
 
 # PROD BOT -866042957
 # DEV BOT -1001899215484
