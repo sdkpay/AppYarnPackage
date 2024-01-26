@@ -22,6 +22,8 @@ extension String {
         static let b3TraceId = "x-b3-traceid"
         static let b3SpanId = "x-b3-spanid"
         static let netAdd = "X-Net-Add-Sourсe"
+        static let sdkVersion = "sdkVersion"
+        static let appName = "appName"
     }
 }
 
@@ -103,6 +105,8 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         
         headers[.Headers.os] = UIDevice.current.fullSystemVersion
         headers[.Headers.deviceName] = Device.current.rawValue
+        headers[.Headers.sdkVersion] = Bundle.sdkVersion
+        headers[.Headers.appName] = Bundle.main.displayName
         return headers
     }
 
