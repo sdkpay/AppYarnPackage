@@ -7,7 +7,7 @@
 
 import UIKit
 import WebKit
-@_implementationOnly import Lottie
+@_implementationOnly import SPayLottie
 
 private extension CGFloat {
     static let logoWidth = 96.0
@@ -30,16 +30,16 @@ final class AuthVC: ContentVC, IAuthVC {
         return view
     }()
     
-    private lazy var logoImage: LottieAnimationView = {
-        let imageView: LottieAnimationView
+    private lazy var logoImage: SPayLottieAnimationView = {
+        let imageView: SPayLottieAnimationView
         
         switch traitCollection.userInterfaceStyle {
         case .unspecified, .light:
-            imageView = LottieAnimationView(name: Files.Lottie.lightSplashJson.name, bundle: .sdkBundle)
+            imageView = SPayLottieAnimationView(name: Files.Lottie.lightSplashJson.name, bundle: .sdkBundle)
         case .dark:
-            imageView = LottieAnimationView(name: Files.Lottie.darkSplashJson.name, bundle: .sdkBundle)
+            imageView = SPayLottieAnimationView(name: Files.Lottie.darkSplashJson.name, bundle: .sdkBundle)
         @unknown default:
-            imageView = LottieAnimationView(name: Files.Lottie.lightSplashJson.name, bundle: .sdkBundle)
+            imageView = SPayLottieAnimationView(name: Files.Lottie.lightSplashJson.name, bundle: .sdkBundle)
         }
         imageView.loopMode = .loop
         return imageView

@@ -1,0 +1,4 @@
+framework module SPayLottie {
+  header "SPayLottie-Swift.h"
+  requires objc
+}

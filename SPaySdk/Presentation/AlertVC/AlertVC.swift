@@ -6,7 +6,7 @@
 //
 
 import UIKit
-@_implementationOnly import Lottie
+@_implementationOnly import SPayLottie
 
 private extension CGFloat {
     static let imageWidth = 80.0
@@ -32,8 +32,8 @@ final class AlertVC: ContentVC, IAlertVC {
         return view
     }()
     
-    private lazy var imageView: LottieAnimationView = {
-        let view = LottieAnimationView()
+    private lazy var imageView: SPayLottieAnimationView = {
+        let view = SPayLottieAnimationView()
         return view
     }()
 
@@ -103,7 +103,7 @@ final class AlertVC: ContentVC, IAlertVC {
     }
     
     func configView(with model: AlertViewModel) {
-        imageView.animation = LottieAnimation.named(model.lottie, bundle: .sdkBundle)
+        imageView.animation = SPayLottieAnimation.named(model.lottie, bundle: .sdkBundle)
         alertTitle.text = model.title
         alertSubtitle.text = model.subtite
         
