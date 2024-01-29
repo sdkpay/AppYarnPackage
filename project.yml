@@ -65,9 +65,9 @@ targetTemplates:
         CFBundleInfoDictionaryVersion: 6.0
         CFBundleName: $(PRODUCT_NAME)
         CFBundlePackageType: FMWK
-        CFBundleShortVersionString: 2.1.1
-        CFBundleVersion: 2.1.1
-        SDKVersion: "2.1.1"
+        CFBundleShortVersionString: 2.1.2
+        CFBundleVersion: 2.1.2
+        SDKVersion: "2.1.2"
   
 targets:
   SPaySdkExample:
