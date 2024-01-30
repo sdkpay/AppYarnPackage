@@ -85,7 +85,7 @@ final class ChallengeVC: ContentVC, IChallengeVC {
         let view = UILabel()
         view.font = .header2
         view.numberOfLines = 3
-        view.textColor = .mainBlack
+        view.textColor = .textPrimory
         view.textAlignment = .center
         return view
     }()
