@@ -320,7 +320,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             if let error = error as? SDKError {
                 
                 parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                               type: .auth(type: .sessionId))
+                                                               type: .auth(type: .auth))
             }
             throw error
         }
