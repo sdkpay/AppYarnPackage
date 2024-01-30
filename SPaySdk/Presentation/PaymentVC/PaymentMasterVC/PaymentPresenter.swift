@@ -426,17 +426,23 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                 
                 self.analytics.sendEvent(.LCBankAppAuthGood, with: self.screenEvent)
                 
-                try await self.authService.auth()
-                
-                self.authService.bankCheck = true
-                self.presentListCards()
+                repeatAuth()
             } catch {
                 if let error = error as? SDKError {
                     
                     self.analytics.sendEvent(.LCBankAppAuthFail, with: self.screenEvent)
                     
-                    await alertService.show(on: view, type: .defaultError)
-                    dismissWithError(error)
+                    if error.represents(.noData) {
+                        
+                        await MainActor.run {
+                            router.presentBankAppPicker {
+                                self.repeatAuth()
+                            }
+                        }
+                    } else {
+                        await alertService.show(on: view, type: .defaultError)
+                        dismissWithError(error)
+                    }
                 }
             }
         }
@@ -448,8 +454,21 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         // от банковского приложения и перешел самостоятельно
         
         Task {
-            await alertService.show(on: view, type: .defaultError)
-            self.dismissWithError(SDKError(.errorSystem))
+            await MainActor.run {
+                router.presentBankAppPicker {
+                    self.repeatAuth()
+                }
+            }
+        }
+    }
+    
+    private func repeatAuth() {
+        Task {
+          
+            try await self.authService.auth()
+            
+            self.authService.bankCheck = true
+            self.presentListCards()
         }
     }
     
