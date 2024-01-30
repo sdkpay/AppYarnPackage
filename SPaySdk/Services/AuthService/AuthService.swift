@@ -306,7 +306,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                                                            frequency: request.frequency,
                                                                            userName: nil,
                                                                            merchantLogin: request.merchantLogin,
-                                                                           resourceName: Bundle.main.displayName,
+                                                                           resourceName: Bundle.main.bundleIdentifier ?? "no.info",
                                                                            authCookie: getRefreshCookies()),
                                                            to: AuthRefreshModel.self)
             
