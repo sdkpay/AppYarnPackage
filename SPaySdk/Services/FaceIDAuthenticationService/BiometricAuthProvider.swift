@@ -20,6 +20,7 @@ final class BiometricAuthProviderAssembly: Assembly {
 
 protocol BiometricAuthProviderProtocol: AuthenticationEvaluateProtocol {
     func evaluate() async -> Bool
+    func canEvalute() async -> Bool
     init(context: DefaultAuthenticationContext)
 }
 
@@ -31,6 +32,18 @@ final class BiometricAuthProvider: BiometricAuthProviderProtocol {
     // MARK: - Initialization
     required init(context: DefaultAuthenticationContext = DefaultAuthenticationContext() ) {
         self.context = context
+    }
+    
+    @MainActor
+    func canEvalute() async -> Bool {
+        
+        do {
+            return await withCheckedContinuation({( inCont: CheckedContinuation<Bool, Never>) -> Void in
+                self.context.canEvaluate(completion: { result, _, _ in
+                    inCont.resume(with: .success(result))
+                })
+            })
+        }
     }
 
     func canEvaluate(completion: (Bool, BiometricType, BiometricError?) -> Void) {

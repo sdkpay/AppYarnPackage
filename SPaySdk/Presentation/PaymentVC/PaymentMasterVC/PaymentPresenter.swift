@@ -261,14 +261,23 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         
         switch authMethod {
         case .refresh:
+            
             Task { @MainActor [biometricAuthProvider] in
                 
-                let result = await biometricAuthProvider.evaluate()
+                let canEvalute = await biometricAuthProvider.canEvalute()
                 
-                switch result {
+                switch canEvalute {
                 case true:
-                    self.analytics.sendEvent(.LСGoodBioAuth, with: self.screenEvent)
-                    self.presentListCards()
+                    let result = await biometricAuthProvider.evaluate()
+                    
+                    switch result {
+                    case true:
+                        self.analytics.sendEvent(.LСGoodBioAuth, with: self.screenEvent)
+                        self.presentListCards()
+                    case false:
+                        self.analytics.sendEvent(.LСFailBioAuth, with: self.screenEvent)
+                        self.appAuth()
+                    }
                 case false:
                     self.analytics.sendEvent(.LСFailBioAuth, with: self.screenEvent)
                     self.appAuth()
