@@ -213,9 +213,6 @@ final class DefaultPaymentService: PaymentService {
             self.analytics.sendEvent(.RSGoodPaymentOrder,
                                      with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
             
-            if bnpl {
-                throw SDKError(.failDecode)
-            }
         } catch {
             if let error = error as? SDKError {
                 self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
