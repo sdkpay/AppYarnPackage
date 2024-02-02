@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         
-        if url.scheme == "testapp" && url.host == "test" {
+        if url.scheme == "sdkopfyncfkq" && url.host == "pay" {
             SPay.getAuthURL(url)
         }
         
