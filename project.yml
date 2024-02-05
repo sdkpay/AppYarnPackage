@@ -65,9 +65,9 @@ targetTemplates:
         CFBundleInfoDictionaryVersion: 6.0
         CFBundleName: $(PRODUCT_NAME)
         CFBundlePackageType: FMWK
-        CFBundleShortVersionString: 2.1.3
-        CFBundleVersion: 2.1.3
-        SDKVersion: "2.1.3"
+        CFBundleShortVersionString: 2.1.4
+        CFBundleVersion: 2.1.4
+        SDKVersion: "2.1.4"
   
 targets:
   SPaySdkExample:
@@ -149,7 +149,9 @@ targets:
       - path: ./PROD-SPay
     settings:
       base:
-        OTHER_SWIFT_FLAGS: "-DSDKPROD"
+        OTHER_SWIFT_FLAGS:
+            - "-DSDKPROD"
+            - "-no-verify-emitted-module-interface"
   SPaySdkDEBUG:
     templates:
       - SPaySdk
@@ -157,7 +159,9 @@ targets:
       - path: ./DEBUG-SPay
     settings:
       base:
-        OTHER_SWIFT_FLAGS: "-DSDKDEBUG"
+        OTHER_SWIFT_FLAGS:
+            - "-DSDKDEBUG"
+            - "-no-verify-emitted-module-interface"
 aggregateTargets:
   SPayFramework:
     buildScripts:

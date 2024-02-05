@@ -27,7 +27,7 @@
 			<string>testapp</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>sdkopfyncfkq</string>
+				<string>testapp</string>
 			</array>
 		</dict>
 	</array>
