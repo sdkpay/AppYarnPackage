@@ -263,7 +263,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         // Необязательный параметр
         request.codeChallengeMethod = "S256"
 
-        SIDManager.auth(withSberId: request, viewController: view)
+        SIDManager.auth(withSberId: request, viewController: view ?? UIViewController())
     }
     
     func generateOrderIdTapped() {

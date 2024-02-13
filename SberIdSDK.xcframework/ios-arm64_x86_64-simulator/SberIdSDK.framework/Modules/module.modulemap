@@ -1,0 +1,4 @@
+framework module SberIdSDK {
+  header "SberIdSDK-Swift.h"
+  requires objc
+}

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+@_implementationOnly import SPayLottie
 
 private extension CGFloat {
     static let loaderWidth = 40.0
@@ -13,6 +14,12 @@ private extension CGFloat {
     static let stickWidth = 38.0
     static let stickHeight = 4.0
 }
+
+private extension CGFloat {
+    static let logoWidth = 96.0
+    static let logoHeight = 48.0
+}
+
 
 private extension TimeInterval {
     static let delay: TimeInterval = 0.1
@@ -22,6 +29,21 @@ private extension TimeInterval {
 final class LoadingView: UIView {
     
     private lazy var dotsAnimatedView = DotsAnimatedView()
+    
+    private lazy var logoImage: SPayLottieAnimationView = {
+        let imageView: SPayLottieAnimationView
+        
+        switch traitCollection.userInterfaceStyle {
+        case .unspecified, .light:
+            imageView = SPayLottieAnimationView(name: Files.Lottie.lightSplashJson.name, bundle: .sdkBundle)
+        case .dark:
+            imageView = SPayLottieAnimationView(name: Files.Lottie.darkSplashJson.name, bundle: .sdkBundle)
+        @unknown default:
+            imageView = SPayLottieAnimationView(name: Files.Lottie.lightSplashJson.name, bundle: .sdkBundle)
+        }
+        imageView.loopMode = .loop
+        return imageView
+    }()
 
     private lazy var loadingTitle: UILabel = {
         let view = UILabel()
@@ -58,18 +80,10 @@ final class LoadingView: UIView {
         isUserInteractionEnabled = true
         alpha = 0
 
-        loadingStack.isHidden = true
-        
-        addSubview(loadingStack)
-        loadingStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            loadingStack.centerYAnchor.constraint(equalTo: centerYAnchor),
-            loadingStack.centerXAnchor.constraint(equalTo: centerXAnchor),
-            loadingStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
-            loadingStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin)
-        ])
-          
-        loadingStack.addArrangedSubview(dotsAnimatedView)
+        logoImage
+            .add(toSuperview: self)
+            .size(.equal, to: .init(width: .logoWidth, height: .logoHeight))
+            .centerInSuperview()
     }
     
     func show(animate: Bool = true) {
@@ -81,7 +95,7 @@ final class LoadingView: UIView {
             guard let self = self else { return }
             self.alpha = 1
         } completion: { _ in
-            self.dotsAnimatedView.startAnimation()
+            self.logoImage.play()
         }
     }
 }

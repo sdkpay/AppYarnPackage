@@ -96,7 +96,6 @@ final class ContentNC: UIViewController {
             .touchEdge(.left, toSuperviewEdge: .left)
             .touchEdge(.right, toSuperviewEdge: .right)
             .touchEdge(.top, toSuperviewEdge: .top)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom)
         
         view.sendSubviewToBack(backgroundView)
         
@@ -110,7 +109,7 @@ final class ContentNC: UIViewController {
     }
     
     private func setupUI() {
-        view.backgroundColor = .backgroundPrimary
+        view.backgroundColor = .backgroundSecondary
         
         view.layer.masksToBounds = true
         let path = UIBezierPath(roundedRect: view.bounds,
@@ -147,9 +146,23 @@ final class ContentNC: UIViewController {
         }
         var fomShimView = UIView()
         fomShimView.backgroundColor = .backgroundPrimary
+        let imageFrom = UIImageView(image: Asset.background.image)
+        imageFrom.contentMode = .scaleAspectFill
+        imageFrom.backgroundColor = .backgroundPrimary
+        imageFrom
+            .add(toSuperview: fomShimView)
+            .touchEdgesToSuperview([.top, .left, .right])
+        fomShimView.backgroundColor = .backgroundPrimary
         fomShimView.alpha = 0
         
         var toShimView = UIView()
+        toShimView.backgroundColor = .backgroundPrimary
+        let imageTo = UIImageView(image: Asset.background.image)
+        imageTo.backgroundColor = .backgroundPrimary
+        imageTo.contentMode = .scaleAspectFill
+        imageTo
+            .add(toSuperview: toShimView)
+            .touchEdgesToSuperview([.top, .left, .right])
         toShimView.backgroundColor = .backgroundPrimary
         toShimView.alpha = 1
         
@@ -226,6 +239,7 @@ final class ContentNC: UIViewController {
                                from: UIViewController,
                                containerView: UIView,
                                completion: Action?) {
+        
         UIView.animate(
             withDuration: .animationDuration,
             delay: 0,
@@ -233,16 +247,22 @@ final class ContentNC: UIViewController {
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-                fomShimView.alpha = 1
+                from.view.subviews
+                    .filter({ $0.tag != .backgroundViewTag })
+                    .forEach({ $0.alpha = 0 })
+//                if to.view.frame.height > from.view.frame.height {
+//                    toShimView.alpha = 1
+//                  //  fomShimView.alpha = 1
+//                } else {
+//                    toShimView.alpha = 1
+//                }
             }, completion: { _ in
-                to.view.alpha = 1
-                completion?()
             }
         )
         
         UIView.animate(
-            withDuration: .animationDuration,
-            delay: .animationDuration,
+            withDuration: 0.25,
+            delay: 0.25,
             usingSpringWithDamping: 1,
             initialSpringVelocity: 1,
             options: .curveEaseOut,
@@ -257,16 +277,18 @@ final class ContentNC: UIViewController {
         )
         
         UIView.animate(
-            withDuration: .animationDuration,
-            delay: .animationDuration * 2,
+            withDuration: 0.25,
+            delay: 0.25 * 2,
             usingSpringWithDamping: 1,
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-                toShimView.alpha = 0
+                to.view.alpha = 1
             }, completion: { _ in
                 fomShimView.removeFromSuperview()
                 toShimView.removeFromSuperview()
+                from.view.subviews.forEach({ $0.alpha = 1 })
+                completion?()
             }
         )
     }

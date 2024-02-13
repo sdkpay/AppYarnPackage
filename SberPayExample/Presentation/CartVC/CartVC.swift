@@ -270,7 +270,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
                                                  bankInvoiceId: values.orderId ?? "",
                                                  orderNumber: values.orderNumber ?? "none",
-                                                 redirectUri: "sdkopfyncfkq://pay",
+                                                 redirectUri: "sdkopfyncfkq://spay",
                                                  apiKey: values.apiKey)
         SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info in
             switch state {

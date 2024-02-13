@@ -1,6 +1,6 @@
 // swift-interface-format-version: 1.0
 // swift-compiler-version: Apple Swift version 5.9 (swiftlang-5.9.0.128.108 clang-1500.0.40.1)
-// swift-module-flags: -target x86_64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name SberIdSDK
+// swift-module-flags: -target x86_64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name SberIdSDK
 // swift-module-flags-ignorable: -enable-bare-slash-regex
 import CommonCrypto
 import DeveloperToolsSupport
@@ -68,10 +68,11 @@ public enum SIDStandType : Swift.Equatable {
   @objc deinit
 }
 @_inheritsConvenienceInitializers @objc final public class SIDManager : ObjectiveC.NSObject {
-  public static func initSberID(clientId: Swift.String, standType: SberIdSDK.SIDStandType = .prom)
-  @objc public static func auth(withSberId request: SberIdSDK.SIDAuthRequest, viewController: UIKit.UIViewController?)
+  public static func initSberID(clientId: Swift.String, standType: SberIdSDK.SIDStandType = .prom, appName: Swift.String = "сервис партнера", partnerProfileUrl: Swift.String? = nil, themeColorLight: UIKit.UIColor = .personalCabinetDefaultLightTheme, themeColorDark: UIKit.UIColor = .personalCabinetDefaultDarkTheme)
+  @objc public static func auth(withSberId request: SberIdSDK.SIDAuthRequest, viewController: UIKit.UIViewController)
   @objc public static func soleLoginWebPageAuth(sberIdRequest request: SberIdSDK.SIDAuthRequest, svcRedirectUrlString: Swift.String, viewController: UIKit.UIViewController) -> Swift.Bool
   @objc public static func setClientID(_ clientId: Swift.String)
+  @objc public static func setUserID(_ userID: Swift.String)
   @objc public static func getResponseFrom(_ url: Foundation.URL, completion: (SberIdSDK.SIDAuthResponse) -> Swift.Void)
   @objc public static func startSession(_ sessionID: Swift.String)
   @objc public static func logoutSession()
@@ -82,6 +83,24 @@ public enum SIDStandType : Swift.Equatable {
   @objc public static func sendOtherAuth(serviceName: Swift.String, isSuccess: SberIdSDK.SIDTrinity, userStatus: SberIdSDK.SIDTrinity)
   @objc public static func sendOtherAuth(service: SberIdSDK.SIDAuthServiceType, isSuccess: SberIdSDK.SIDTrinity, isUserNew: SberIdSDK.SIDTrinity)
   @objc override dynamic public init()
+  @objc deinit
+}
+public protocol SIDTableViewHeightDelegate : AnyObject {
+  func updateHeight()
+}
+public protocol SIDAnalyticEventHandler : AnyObject {
+  func handleOpeningEvent(url: Swift.String)
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @_Concurrency.MainActor(unsafe) final public class SIDPersonalCabinetManager : ObjectiveC.NSObject, UIKit.UITableViewDataSource {
+  @_Concurrency.MainActor(unsafe) final public let tableView: UIKit.UITableView
+  @_Concurrency.MainActor(unsafe) weak final public var heightDelegate: (any SberIdSDK.SIDTableViewHeightDelegate)? {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) weak final public var analyticEventHandler: (any SberIdSDK.SIDAnalyticEventHandler)?
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init()
+  @_Concurrency.MainActor(unsafe) @objc final public func tableView(_ tableView: UIKit.UITableView, numberOfRowsInSection section: Swift.Int) -> Swift.Int
+  @_Concurrency.MainActor(unsafe) @objc final public func tableView(_ tableView: UIKit.UITableView, cellForRowAt indexPath: Foundation.IndexPath) -> UIKit.UITableViewCell
   @objc deinit
 }
 @available(iOS, unavailable, renamed: "SIDLoginButtonTextType")
@@ -209,6 +228,10 @@ public struct UIUtils {
 @objc public protocol SIDLoginButtonObserverProtocol {
   @objc func loginButtonWasHidden()
 }
+extension UIKit.UIColor {
+  public static var personalCabinetDefaultLightTheme: UIKit.UIColor
+  public static var personalCabinetDefaultDarkTheme: UIKit.UIColor
+}
 @objc @_inheritsConvenienceInitializers @objcMembers final public class SIDAppTokenRequest : ObjectiveC.NSObject {
   @objc final public var scope: Swift.String
   @objc final public var state: Swift.String
@@ -233,6 +256,9 @@ public enum SIDOpenInType : Swift.String, Swift.Codable {
   final public let message: Swift.String?
   final public let type: SberIdSDK.SIDErrorType
   @objc deinit
+}
+extension SberIdSDK.SIDError : Swift.Equatable {
+  public static func == (lhs: SberIdSDK.SIDError, rhs: SberIdSDK.SIDError) -> Swift.Bool
 }
 public enum SIDErrorType {
   case serviceError
@@ -304,17 +330,6 @@ public enum SIDErrorType {
 }
 @objc public protocol SIDSafariViewControllerDelegate : SafariServices.SFSafariViewControllerDelegate {
   @objc var safariViewController: SafariServices.SFSafariViewController? { get set }
-}
-@_hasMissingDesignatedInitializers final public class DebugMethods {
-  public static var savedConfigJson: Swift.String {
-    get
-  }
-  public static func saveConfigJson(_ data: Foundation.Data?)
-  public static func setCustomOidcLink(_ link: Swift.String)
-  public static func removeCustomOidcLink()
-  public static func setStandType(standType: SberIdSDK.SIDStandType)
-  public static func clearFlagSberIdAppTokenHasCalled()
-  @objc deinit
 }
 @available(iOS, unavailable, renamed: "SIDLoginButtonStyle")
 extension SberIdSDK.LoginButtonStyle : Swift.Equatable {}
