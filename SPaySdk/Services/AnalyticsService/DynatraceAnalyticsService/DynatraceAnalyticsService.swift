@@ -64,7 +64,9 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
             kDTXBeaconURL: dynatraceUrl,
             kDTXLogLevel: "OFF",
             kDTXInstrumentLifecycleMonitoring: false,
-            kDTXInstrumentAutoUserAction: false
+            kDTXInstrumentAutoUserAction: false,
+            kDTXExcludedControlClasses: [],
+            kDTXExcludedControls: []
         ]
         Dynatrace.startup(withConfig: startupDictionary as [String: Any])
     }
