@@ -57,6 +57,7 @@ class ContentVC: LoggableVC {
     @MainActor
     func showLoading(with text: String? = nil,
                      animate: Bool = true) {
+        guard !self.view.subviews.contains(where: { $0.tag == .loadingTag }) else { return }
         Loader(text: text)
             .animated(with: animate)
             .show(on: self)

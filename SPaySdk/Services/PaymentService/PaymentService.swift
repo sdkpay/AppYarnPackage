@@ -212,7 +212,6 @@ final class DefaultPaymentService: PaymentService {
                                      with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
             self.analytics.sendEvent(.RSGoodPaymentOrder,
                                      with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
-            
         } catch {
             if let error = error as? SDKError {
                 self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,

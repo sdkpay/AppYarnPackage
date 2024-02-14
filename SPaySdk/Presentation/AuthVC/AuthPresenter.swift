@@ -233,8 +233,7 @@ final class AuthPresenter: AuthPresenting {
     
     private func loadPaymentData() {
         Task {
-            await self.view?.showLoading(with: Strings.Get.Data.title, animate: true)
-            
+
             do {
                 try await contentLoadManager.load()
                 

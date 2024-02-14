@@ -14,6 +14,9 @@ protocol Loadable where Self: UIView {
 
 extension Loadable {
     func startLoading(with text: String? = nil) {
+        
+        guard !self.subviews.contains(where: { $0.tag == .loadingTag }) else { return }
+        
         let loadView = LoadingView(with: text)
         loadView
             .add(toSuperview: self)

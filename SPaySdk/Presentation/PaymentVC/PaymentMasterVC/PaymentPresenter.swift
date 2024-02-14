@@ -584,14 +584,18 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                     
                     if user.orderAmount.amount != 0 {
                         
-                        let finalCost = partPayService.bnplplanSelected ? partPayService.bnplplan?.graphBnpl?.payments.first?.amount : user.orderAmount.amount
+                        let finalCost = partPayService.bnplplanSelected 
+                        ? partPayService.bnplplan?.graphBnpl?.payments.first?.amount
+                        : user.orderAmount.amount
                         
-                        await alertService.show(on: self.view, type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
-                                                                                 shopName: user.merchantName ?? ""))
+                        await alertService.show(on: self.view,
+                                                type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
+                                                                  shopName: user.merchantName ?? ""))
                         completionManager.dismissCloseAction(view)
                     } else {
                         
-                        await alertService.show(on: self.view, type: .connectSuccess(card: userService.selectedCard?.cardNumber.card ?? ""))
+                        await alertService.show(on: self.view,
+                                                type: .connectSuccess(card: userService.selectedCard?.cardNumber.card ?? ""))
                         completionManager.dismissCloseAction(view)
                     }
                 }

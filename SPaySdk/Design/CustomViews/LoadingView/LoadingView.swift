@@ -20,10 +20,14 @@ private extension CGFloat {
     static let logoHeight = 48.0
 }
 
-
 private extension TimeInterval {
     static let delay: TimeInterval = 0.1
     static let animationDuration = 0.25
+}
+
+extension Int {
+    
+    static let loadingTag = 987
 }
 
 final class LoadingView: UIView {
@@ -64,6 +68,7 @@ final class LoadingView: UIView {
 
     init(with text: String?) {
         super.init(frame: .zero)
+        tag = .loadingTag
         setupUI()
         if let text = text {
             loadingTitle.text = text
