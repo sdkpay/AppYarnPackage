@@ -84,6 +84,7 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.team11.spay.sdk
       DEVELOPMENT_TEAM: 9CYS9A2HF7
       INFOPLIST_KEY_CFBundleDisplayName: SPayTest
+      CODE_SIGN_ENTITLEMENTS: SberPayExample/SupportingFiles/SPaySdkExample.entitlements
       SWIFT_OBJC_BRIDGING_HEADER: SberPayExample/Presentation/ObjcCartVC/SberPayExample-Bridging-Header.h
     dependencies:
       - package: IQKeyboardManagerSwift
@@ -119,6 +120,7 @@ targets:
         NSFaceIDUsageDescription: "Так вы подтвердите, что именно вы выполняете вход"
         LSSupportsOpeningDocumentsInPlace: true
         DTXAutoStart: false
+        AppIdentifierPrefix: $(AppIdentifierPrefix)
         ITSAppUsesNonExemptEncryption: false
         CFBundleURLTypes:
           - CFBundleTypeRole: Editor

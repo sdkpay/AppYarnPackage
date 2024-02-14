@@ -35,7 +35,7 @@ enum StorageMode {
             return nil
         case .sid:
             let appIdPrefix = Bundle.main.object(forInfoDictionaryKey: "AppIdentifierPrefix") as? String ?? ""
-            return appIdPrefix + "ru.sberbank.onlineiphone.shared"
+            return appIdPrefix + "ru.sid.iphone.shared"
         }
     }
 }
