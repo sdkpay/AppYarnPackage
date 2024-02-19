@@ -20,7 +20,9 @@ private enum Host: String {
     case ift = "https://ift.gate1.spaymentsplus.ru"
     case psi = "https://psi.gate1.spaymentsplus.ru"
     case prom = "https://gate1.spaymentsplus.ru"
-    case sid = "https://id-ift.sber.ru"
+    case sidIft = "https://id-ift.sber.ru"
+    case sidPsi = "https://id-psi.sber.ru"
+    case sidProm = "https://id.sber.ru"
     
     var url: URL {
         URL(string: rawValue) ?? URL(string: "https://www.google.com/")!
@@ -45,7 +47,9 @@ protocol HostManager {
 }
 
 final class DefaultHostManager: HostManager {
+    
     func host(for settings: HostSettings) -> URL {
+
         switch settings {
         case .main:
             guard environmentManager.environment == .prod else {
@@ -74,7 +78,18 @@ final class DefaultHostManager: HostManager {
                 return URL(string: UserDefaults.schemas?.getIpUrl ?? "") ?? Host.safepayonlineIft.url
             }
         case .sid:
-            return Host.sid.url
+            switch buildSettings.networkState {
+            case .Mocker:
+                return Host.mocker.url
+            case .Ift:
+                return Host.sidIft.url
+            case .Psi:
+                return Host.sidPsi.url
+            case .Prom:
+                return Host.sidProm.url
+            case .Local:
+                return Host.mocker.url
+            }
         }
     }
 

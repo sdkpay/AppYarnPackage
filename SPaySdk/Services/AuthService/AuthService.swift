@@ -191,12 +191,16 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
             self.analytics.sendEvent(event)
             
-            if refreshIsActive &&
-                featureToggleService.isEnabled(.refresh) && tokenInStorage {
+            if refreshIsActive
+                && featureToggleService.isEnabled(.refresh)
+                && tokenInStorage {
+                
                 self.authManager.authMethod = .refresh
-            } else if seamlessAuthService.isReadyForSeamless() {
+            } else if seamlessAuthService.isReadyForSeamless {
+                
                 self.authManager.authMethod = .sid
             } else {
+                
                 self.authManager.authMethod = .bank
             }
             

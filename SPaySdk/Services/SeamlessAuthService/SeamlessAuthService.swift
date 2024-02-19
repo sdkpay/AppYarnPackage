@@ -18,7 +18,7 @@ final class SeamlessAuthServiceAssembly: Assembly {
                                                                           sdkManager: container.resolve(),
                                                                           analytics: container.resolve(),
                                                                           authManager: container.resolve(),
-                                                                          storage: container.resolve(),
+                                                                          storage: container.resolve(), hostManager: container.resolve(),
                                                                           parsingErrorAnaliticManager: container.resolve(),
                                                                           featureToggleService: container.resolve())
             return service
@@ -27,7 +27,7 @@ final class SeamlessAuthServiceAssembly: Assembly {
 }
 
 protocol SeamlessAuthService {
-    func isReadyForSeamless() -> Bool
+    var isReadyForSeamless: Bool { get }
     func getTransitTokenUrl() async throws -> URL
     func isValideAuth(from url: URL) throws -> Bool
 }
@@ -41,6 +41,7 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
     private let storage: KeychainStorage
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private let featureToggleService: FeatureToggleService
+    private let hostManager: HostManager
 
     private var token: AppTokenDataModel?
 
@@ -49,6 +50,7 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
          analytics: AnalyticsService,
          authManager: AuthManager,
          storage: KeychainStorage,
+         hostManager: HostManager,
          parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          featureToggleService: FeatureToggleService) {
         self.analytics = analytics
@@ -56,6 +58,7 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
         self.sdkManager = sdkManager
         self.authManager = authManager
         self.storage = storage
+        self.hostManager = hostManager
         self.featureToggleService = featureToggleService
         self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         super.init()
@@ -65,15 +68,14 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
         SBLogger.log(.stop(obj: self))
     }
     
-    func isReadyForSeamless() -> Bool {
+    var isReadyForSeamless: Bool {
         
-        guard let tokenData = try? storage.getData(for: .appToken, mode: .sid) else { return false }
-      
-        let decoder = JSONDecoder()
-        let appTokenModel = try? decoder.decode(AppTokenDataModel.self, from: tokenData)
-        token = appTokenModel
-        
-        return token != nil
+        guard let appToken = try? storage.get(for: .appToken,
+                                              mode: .sid,
+                                              to: AppTokenDataModel.self) else { return false }
+        // DEBUG
+        // return appToken.authTypeEnum == .app2app
+        return true
     }
     
     func getTransitTokenUrl() async throws -> URL {
@@ -93,11 +95,11 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
     
     private func getOidcUrl(token: String) throws -> URL {
         
-        let host = "https://id-ift.sber.ru/CSAFront/oidc/authorize.do"
+        var components = URLComponents(url: hostManager.host(for: .sid), resolvingAgainstBaseURL: true)
         
-        guard var components = URLComponents(string: host) else { throw SDKError(.noData) }
+        components?.path = "/CSAFront/oidc/authorize.do"
         
-        components.queryItems = [
+        components?.queryItems = [
             URLQueryItem(name: "client_id", value: authManager.authModel?.clientId),
             URLQueryItem(name: "scope", value: authManager.authModel?.scope),
             URLQueryItem(name: "code_challenge_method", value: authManager.authModel?.codeChallengeMethod),
@@ -107,7 +109,7 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
             URLQueryItem(name: "token", value: token)
         ]
         
-        guard let url = components.url else { throw SDKError(.noData) }
+        guard let url = components?.url else { throw SDKError(.noData) }
 
         SBLogger.log("🔗 Sid auth url: \(url.absoluteString)")
         
@@ -142,9 +144,23 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
 }
 
 struct AppTokenDataModel: Codable {
-
-    /// AppToken для бесшовной авторизации
+    
+    enum AuthType: String {
+        
+        case app2app
+        case oidc2app
+        case app2web
+    }
+    
     var appToken: String?
+    var dateOfRecieving: Double
+    var authType: String?
+    
+    var authTypeEnum: AuthType? {
+        
+        guard let authType else { return nil }
+        return AuthType(rawValue: authType)
+    }
 }
 
 extension DefaultSeamlessAuthService: WKNavigationDelegate {

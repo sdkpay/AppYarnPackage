@@ -20,6 +20,7 @@ protocol ResponseDecoder {
                                                                  cookies: [HTTPCookie])
     func decodeParametersFrom(url: URL) -> Result<BankModel, SDKError>
     func systemError(_ error: Error) -> Error
+    func decode<T: Codable>(data: Data, to type: T.Type) throws -> T 
 }
 
 extension ResponseDecoder {
@@ -50,6 +51,22 @@ extension ResponseDecoder {
             throw error
         } catch {
             let error = SDKError(.failDecode, httpCode: response.statusCode, description: error.localizedDescription)
+            throw error
+        }
+    }
+    
+    func decode<T: Codable>(data: Data, to type: T.Type) throws -> T {
+        do {
+            let decoder = JSONDecoder()
+            let decodedData = try decoder.decode(type, from: data)
+            SBLogger.responseDecodedWithSuccess(for: type)
+            return decodedData
+        } catch let error as DecodingError {
+            SBLogger.responseDecodedWithError(for: type, decodingError: error)
+            let error = ErrorConvertDecoder.getError(decodingError: error)
+            throw error
+        } catch {
+            let error = SDKError(.failDecode)
             throw error
         }
     }

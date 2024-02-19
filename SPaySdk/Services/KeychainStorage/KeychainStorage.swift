@@ -45,6 +45,8 @@ enum KeychainError: Error {
     case itemNotFound
     case errorStatus(String?)
     case badFormat
+    case noData
+    case decodeError
     
     init(status: OSStatus) {
         switch status {
@@ -77,6 +79,9 @@ protocol KeychainStorage {
     func setData(_ value: Data, for key: StorageKey) throws
     func getData(for key: StorageKey, mode: StorageMode) throws -> Data?
     func get(_ key: StorageKey, mode: StorageMode) throws -> String?
+    func get<T>(for key: StorageKey,
+                mode: StorageMode,
+                to type: T.Type) throws -> T where T: Codable
     func delete(_ key: String) throws
     func deleteAll() throws
 }
@@ -95,7 +100,7 @@ extension KeychainStorage {
     }
 }
 
-final class DefaultKeychainStorage: KeychainStorage {
+final class DefaultKeychainStorage: KeychainStorage, ResponseDecoder {
     
     private let service = Bundle.sdkBundle.displayName
     
@@ -103,13 +108,17 @@ final class DefaultKeychainStorage: KeychainStorage {
         
         var cfDictionaty: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
-            kSecAttrAccount: key.rawValue,
             kSecAttrService: mode.service,
             kSecReturnData: false
         ]
         
+        if mode == .local {
+            cfDictionaty[kSecAttrAccount] = key.rawValue
+        }
+        
         if let group = mode.group {
             cfDictionaty[kSecAttrAccessGroup] = group
+            cfDictionaty[kSecMatchLimit] = kSecMatchLimitOne
         }
         
         let status = SecItemCopyMatching(cfDictionaty as CFDictionary, nil)
@@ -145,13 +154,17 @@ final class DefaultKeychainStorage: KeychainStorage {
         
         var cfDictionaty: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
-            kSecAttrAccount: key.rawValue,
             kSecAttrService: mode.service,
             kSecReturnData: true
         ]
         
+        if mode == .local {
+            cfDictionaty[kSecAttrAccount] = key.rawValue
+        }
+        
         if let group = mode.group {
             cfDictionaty[kSecAttrAccessGroup] = group
+            cfDictionaty[kSecMatchLimit] = kSecMatchLimitOne
         }
         
         let status = SecItemCopyMatching(cfDictionaty as CFDictionary, &result)
@@ -172,6 +185,14 @@ final class DefaultKeychainStorage: KeychainStorage {
         } catch {
             throw error
         }
+    }
+
+    func get<T>(for key: StorageKey,
+                mode: StorageMode,
+                to type: T.Type) throws -> T where T: Codable {
+        
+        guard let data = try getData(for: key, mode: mode) else { throw KeychainError.noData }
+        return try self.decode(data: data, to: type)
     }
     
     func delete(_ key: String) throws {
