@@ -237,7 +237,7 @@ final class AuthPresenter: AuthPresenting {
             do {
                 try await contentLoadManager.load()
                 
-                if let user = userService.user, !user.paymentToolInfo.isEmpty {
+                if let user = userService.user, !user.paymentToolInfo.paymentTool.isEmpty {
                     let mode = try getPaymentMode()
                     await self.router.presentPayment(state: mode)
                 } else {
@@ -273,7 +273,7 @@ final class AuthPresenter: AuthPresenting {
     
     private func getPaymentMode() throws -> PaymentVCMode {
         
-        if userService.user?.orderAmount.amount == 0 {
+        if userService.user?.orderInfo.orderAmount.amount == 0 {
             return .connect
         }
         

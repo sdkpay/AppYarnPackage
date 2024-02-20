@@ -26,8 +26,8 @@ final class CardsPresenter: CardsPresenting {
 
     private let analytics: AnalyticsService
     private let userService: UserService
-    private let cards: [PaymentToolInfo]
-    private let selectedCard: (PaymentToolInfo) -> Void
+    private let cards: [PaymentTool]
+    private let selectedCard: (PaymentTool) -> Void
     private let selectedId: Int
     private var timeManager: OptimizationCheсkerManager
     private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.CardsVC.rawValue]
@@ -35,11 +35,11 @@ final class CardsPresenter: CardsPresenting {
 
     init(userService: UserService,
          analytics: AnalyticsService,
-         cards: [PaymentToolInfo],
+         cards: [PaymentTool],
          selectedId: Int,
          featureToggle: FeatureToggleService,
          timeManager: OptimizationCheсkerManager,
-         selectedCard: @escaping (PaymentToolInfo) -> Void) {
+         selectedCard: @escaping (PaymentTool) -> Void) {
         self.analytics = analytics
         self.userService = userService
         self.cards = cards
@@ -60,7 +60,7 @@ final class CardsPresenter: CardsPresenting {
         
         if featureToggle.isEnabled(.cardBalance) {
             
-            title = card.amountData.amountInt.price(.RUB)
+            title = card.amountData.amount.price(.RUB)
             subtitle = "\(card.productName) \(card.cardNumber.card)"
         } else {
             
@@ -78,8 +78,8 @@ final class CardsPresenter: CardsPresenting {
         
         return CardCellModel(title: title,
                              subtitle: subtitle,
-                             selected: card.paymentId == selectedId,
-                             cardURL: card.cardLogoUrl)
+                             selected: card.paymentID == selectedId,
+                             cardURL: card.cardLogoURL)
     }
     
     func didSelectRow(at indexPath: IndexPath) {

@@ -24,6 +24,7 @@ extension String {
         static let netAdd = "X-Net-Add-Sourсe"
         static let sdkVersion = "sdkVersion"
         static let appName = "appName"
+        static let systemId = "X-System-Id"
     }
 }
 
@@ -102,6 +103,7 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         if let ip = authManager.ipAddress {
             headers[.Headers.netAdd] = ip
         }
+        headers[.Headers.systemId] = "SBERPAY_SDK"
         
         headers[.Headers.os] = UIDevice.current.fullSystemVersion
         headers[.Headers.deviceName] = Device.current.rawValue

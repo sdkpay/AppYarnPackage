@@ -197,7 +197,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     
     func purchaseModel(for indexPath: IndexPath) -> AbstractCellModel? {
         
-        guard let orderAmount = userService.user?.orderAmount else { return nil }
+        guard let orderAmount = userService.user?.orderInfo.orderAmount else { return nil }
         
         return PurchaseModelFactory.build(indexPath,
                                           bnplPayment: partPayService.bnplplan?.graphBnpl?.payments ?? [],
@@ -291,23 +291,40 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     
     private func presentListCards() {
         
-        guard let selectedCard = userService.selectedCard,
-              let user = userService.user else { return }
-        
-        userService.getListCards = true
-        
-        let finalCost = partPayService.bnplplanSelected ? partPayService.bnplplan?.graphBnpl?.payments.first?.amount : user.orderAmount.amount
-        
-        Task { @MainActor in
-            self.router.presentCards(cards: user.paymentToolInfo,
-                                     cost: finalCost?.price(.RUB) ?? "",
-                                     selectedId: selectedCard.paymentId,
-                                     selectedCard: { [weak self] card in
-                self?.view?.hideLoading(animate: true)
-                self?.userService.selectedCard = card
-                self?.view?.reloadData()
-                self?.setHints()
-            })
+        Task {
+            
+            do {
+                
+                await view?.showLoading()
+                try await userService.getListCards()
+                
+                guard let selectedCard = userService.selectedCard,
+                      let user = userService.user else { return }
+                
+                userService.getListCards = true
+                
+                let finalCost = partPayService.bnplplanSelected
+                ? partPayService.bnplplan?.graphBnpl?.payments.first?.amount
+                : user.orderInfo.orderAmount.amount
+                
+                await MainActor.run {
+                    self.router.presentCards(cards: user.paymentToolInfo.paymentTool,
+                                             cost: finalCost?.price(.RUB) ?? "",
+                                             selectedId: selectedCard.paymentID,
+                                             selectedCard: { [weak self] card in
+                        self?.view?.hideLoading(animate: true)
+                        self?.userService.selectedCard = card
+                        self?.view?.reloadData()
+                        self?.setHints()
+                    })
+                }
+            } catch {
+                await alertService.show(on: view, type: .defaultError)
+                
+                if let error = error as? SDKError {
+                    dismissWithError(error)
+                }
+            }
         }
     }
     
@@ -331,8 +348,8 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         
         guard let user = userService.user else { return }
         
-        view?.configShopInfo(with: user.merchantName ?? "",
-                             iconURL: user.logoUrl,
+        view?.configShopInfo(with: user.merchantInfo.merchantName,
+                             iconURL: user.merchantInfo.logoURL,
                              purchaseInfoText: paymentViewModel.purchaseInfoText)
         view?.addSnapShot()
     }
@@ -474,7 +491,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     
     private func goToPay() async {
         
-        guard let paymentId = userService.selectedCard?.paymentId else { return }
+        guard let paymentId = userService.selectedCard?.paymentID else { return }
         
         do {
             
@@ -567,7 +584,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     
     private func pay(resolution: SecureChallengeResolution?) {
         
-        guard let paymentId = userService.selectedCard?.paymentId else { return }
+        guard let paymentId = userService.selectedCard?.paymentID else { return }
         
         Task {
             await self.view?.showLoading()
@@ -580,17 +597,17 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
                 self.completionManager.completePay(with: .success)
                 await view?.setUserInteractionsEnabled()
 
-                if let user = userService.user {
+                if let user = self.userService.user {
                     
-                    if user.orderAmount.amount != 0 {
+                    if user.orderInfo.orderAmount.amount != 0 {
                         
                         let finalCost = partPayService.bnplplanSelected 
                         ? partPayService.bnplplan?.graphBnpl?.payments.first?.amount
-                        : user.orderAmount.amount
+                        : user.orderInfo.orderAmount.amount
                         
                         await alertService.show(on: self.view,
                                                 type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
-                                                                  shopName: user.merchantName ?? ""))
+                                                                  shopName: user.merchantInfo.merchantName))
                         completionManager.dismissCloseAction(view)
                     } else {
                         

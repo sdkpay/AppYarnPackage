@@ -39,7 +39,7 @@ enum Environment: String, CaseIterable, Codable {
 
 struct ConfigValues {
     @UserDefault(key: CellType.apiKey.rawValue,
-                 defaultValue: "AJpyllTD+0LKpCMDVZEB2ecAAAAAAAAADDLBcwrQjr5bOjn3yzYlFpCBk1nyQ9J46Ar3DrFBNyA92UJ7g/8zwuNose2pNnduv8JnjxD4h3HXdK8jTQB3pu7/HWqntPpBUCaA/8wqXK/gbgbJdWCU/7hzbtdYkxSD0u3qau9/4wM1p9WgkzNEPtPJE/gRKMk=") // swiftlint:disable:this line_length
+                 defaultValue: "APgWA9brxUPpgEz/Qj0dHR4AAAAAAAAADDR8ezdUy7tW0Vvns+yzeJ8FMyClHvqjIdqYmXxYJ3MXG+CaM15S/073vf1A3RoXNTrl1DPxKEkvPBetfoURU7DBI0bkqayEmRROmV6Yu7vlgTwnyJt+88884H7yezp8lEkQ4/dRVlQgYChKGC1Hyi25i9I1TMA+SgxudCUwWMLJ7t7BgQ8wMgCAsLY=") // swiftlint:disable:this line_length
     var apiKey: String?
     
     @UserDefault(key: CellType.cost.rawValue,
@@ -47,7 +47,7 @@ struct ConfigValues {
     var cost: Int
     
     @UserDefault(key: CellType.merchantLogin.rawValue,
-                 defaultValue: "mineev_sdk")
+                 defaultValue: "test_sberpay")
     var merchantLogin: String?
     
     @UserDefault(key: CellType.configMethod.rawValue,

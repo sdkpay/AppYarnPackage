@@ -49,7 +49,7 @@ final class ConnectPaymentViewModel: PaymentViewModel {
             
             return []
         case .card:
-            if let paymentId = userService.selectedCard?.paymentId {
+            if let paymentId = userService.selectedCard?.paymentID {
                 return [paymentId]
             } else {
                 return []

@@ -67,7 +67,7 @@ final class MainPaymentViewModel: PaymentViewModel {
             
             return activeFeatures.map { $0.rawValue }
         case .card:
-            if let paymentId = userService.selectedCard?.paymentId {
+            if let paymentId = userService.selectedCard?.paymentID {
                 return [paymentId]
             } else {
                 return []

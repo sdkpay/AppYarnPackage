@@ -52,16 +52,18 @@ final class HelperPresenter: HelperPresenting {
         
         let needCard = helperConfigManager.config.debitCard && featureToggle.isEnabled(.newDebitCard)
         
-        view?.setup(title: banner.title,
+        view?.setup(title: banner.header,
                     subtitle: banner.text,
-                    iconUrl: banner.iconUrl,
+                    iconUrl: banner.iconURL,
                     needButton: needCard)
     }
     
     @MainActor
     func confirmTapped() async {
         
-        guard let path = userService.user?.promoInfo.bannerList.first(where: { $0.bannerListType == .debitCard })?.deeplinkIos else {
+        guard let path = userService.user?.promoInfo.bannerList
+            .first(where: { $0.bannerListType == .debitCard })?.buttons
+            .first?.deeplinkIos else {
             await MainActor.run { completionManager.dismissCloseAction(view) }
             return
         }

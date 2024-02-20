@@ -99,7 +99,8 @@ final class HelpPaymentViewModel: PaymentViewModel {
             
             let helper = activeFeatures[indexPath.row]
             
-            presenter?.goTo(url: helper.deeplinkIos)
+            guard let deeplinkIos = helper.buttons.first?.deeplinkIos else { return }
+            presenter?.goTo(url: deeplinkIos)
             
         case .card:
             

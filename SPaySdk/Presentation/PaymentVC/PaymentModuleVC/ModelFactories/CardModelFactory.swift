@@ -10,7 +10,7 @@ import Foundation
 enum CardModelFactory {
     
     static func build(_ indexPath: IndexPath,
-                      selectedCard: PaymentToolInfo,
+                      selectedCard: PaymentTool,
                       additionalCards: Bool,
                       cardBalanceNeed: Bool,
                       compoundWalletNeed: Bool) -> CardModel {
@@ -20,7 +20,7 @@ enum CardModelFactory {
         
         if cardBalanceNeed {
             
-            title = selectedCard.amountData.amountInt.price(.RUB)
+            title = selectedCard.amountData.amount.price(.RUB)
             subtitle = "\(selectedCard.productName) \(selectedCard.cardNumber.card)"
         } else {
             
@@ -36,7 +36,7 @@ enum CardModelFactory {
             ]))
         }
 
-        return CardModel(iconViewURL: selectedCard.cardLogoUrl,
+        return CardModel(iconViewURL: selectedCard.cardLogoURL,
                          title: title,
                          subTitle: subtitle,
                          needArrow: additionalCards)

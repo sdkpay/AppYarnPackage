@@ -27,8 +27,8 @@ final class UserServiceAssembly: Assembly {
 protocol UserService {
     var getListCards: Bool { get set }
     var additionalCards: Bool { get }
-    var user: User? { get }
-    var selectedCard: PaymentToolInfo? { get set }
+    var user: UserModel? { get }
+    var selectedCard: PaymentTool? { get set }
     func getUser() async throws
     func getListCards() async throws
     func checkUserSession() async throws
@@ -37,14 +37,14 @@ protocol UserService {
 
 final class DefaultUserService: UserService {
     private let network: NetworkService
-    private(set) var user: User?
+    private(set) var user: UserModel?
     private let sdkManager: SDKManager
     private let authManager: AuthManager
     private let analytics: AnalyticsService
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     var getListCards = false
     
-    var selectedCard: PaymentToolInfo?
+    var selectedCard: PaymentTool?
     
     private(set) var additionalCards = false
     
@@ -79,11 +79,11 @@ final class DefaultUserService: UserService {
                                                                                 orderNumber: authInfo.orderNumber,
                                                                                 expiry: authInfo.expiry,
                                                                                 frequency: authInfo.frequency,
-                                                                                priorityCardOnly: false),
-                                                        to: User.self)
+                                                                                priorityCardOnly: true),
+                                                        to: UserModel.self)
         self.user = listCardsResult
-        additionalCards = listCardsResult.paymentToolInfo.count > 1
-        selectedCard = self.selectCard(from: listCardsResult.paymentToolInfo)
+        additionalCards = listCardsResult.paymentToolInfo.additionalCards
+        selectedCard = self.selectCard(from: listCardsResult.paymentToolInfo.paymentTool)
     }
     
     func getListCards() async throws {
@@ -104,10 +104,10 @@ final class DefaultUserService: UserService {
                                                                                     expiry: authInfo.expiry,
                                                                                     frequency: authInfo.frequency,
                                                                                     priorityCardOnly: false),
-                                                            to: User.self)
+                                                            to: UserModel.self)
             
             self.user = listCardsResult
-            additionalCards = listCardsResult.paymentToolInfo.count > 1
+            additionalCards = listCardsResult.paymentToolInfo.additionalCards
             self.analytics.sendEvent(.RQGoodListCards,
                                      with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
             self.analytics.sendEvent(.RSGoodListCards,
@@ -134,7 +134,7 @@ final class DefaultUserService: UserService {
         user = nil
     }
     
-    private func selectCard(from cards: [PaymentToolInfo]) -> PaymentToolInfo? {
+    private func selectCard(from cards: [PaymentTool]) -> PaymentTool? {
         
         cards.first(where: { $0.priorityCard }) ?? cards.first
     }

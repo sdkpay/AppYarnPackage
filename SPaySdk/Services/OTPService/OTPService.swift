@@ -55,7 +55,7 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
     func creteOTP() async throws {
         let otpResult = try await network.request(OTPTarget.createOtpSdk(bankInvoiceId: sdkManager.authInfo?.orderId ?? "",
                                                                          sessionId: authManager.sessionId ?? "",
-                                                                         paymentId: userService.selectedCard?.paymentId ?? 0),
+                                                                         paymentId: userService.selectedCard?.paymentID ?? 0),
                                                   to: OTPModel.self)
         self.otpModel = otpResult
     }

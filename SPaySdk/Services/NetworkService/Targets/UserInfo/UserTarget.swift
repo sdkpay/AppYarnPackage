@@ -23,7 +23,7 @@ extension UserTarget: TargetType {
     var path: String {
         switch self {
         case .getListCards:
-            return "sdk-gateway/v2/listCards"
+            return "sdk-gateway/v3/listCards"
         }
     }
     

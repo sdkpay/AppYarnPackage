@@ -14,19 +14,19 @@ final class CardsAssembly {
         self.locator = locator
     }
 
-    func createModule(cards: [PaymentToolInfo],
+    func createModule(cards: [PaymentTool],
                       cost: String,
                       selectedId: Int,
-                      selectedCard: @escaping (PaymentToolInfo) -> Void) -> ContentVC {
+                      selectedCard: @escaping (PaymentTool) -> Void) -> ContentVC {
         let presenter = modulePresenter(cards: cards, selectedId: selectedId, selectedCard: selectedCard)
         let contentView = moduleView(presenter: presenter, cost: cost)
         presenter.view = contentView
         return contentView
     }
 
-    private func modulePresenter(cards: [PaymentToolInfo],
+    private func modulePresenter(cards: [PaymentTool],
                                  selectedId: Int,
-                                 selectedCard: @escaping (PaymentToolInfo) -> Void) -> CardsPresenter {
+                                 selectedCard: @escaping (PaymentTool) -> Void) -> CardsPresenter {
         let presenter = CardsPresenter(userService: locator.resolve(),
                                        analytics: locator.resolve(),
                                        cards: cards,

@@ -1,117 +1,111 @@
 {
-  "additionalCards" : true,
-  "paymentToolInfo" : [
-    {
-      "paymentSourceType" : "DebitCard",
-      "financialProductId" : "40817810438260165760",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_composite_payment.png",
-      "productName" : "МИР Сберкарта",
-      "paymentId" : 5,
-      "cardNumber" : "5091",
-      "amountData" : {
-        "amount" : 956260.10000000006,
-        "currency" : "RUR"
-      },
-      "priorityCard" : true,
-      "countAdditionalCards" : 3,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-        "paymentSourceType" : "DebitCard",
-        "financialProductId" : "40817810838980033426",
-        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
-        "productName" : "МИР Сберкарта",
-        "paymentId" : 1,
-        "cardNumber" : "5569",
-        "amountData" : {
-            "amount" : 85069.0199999996,
-            "currency" : "RUR"
-        },
-        "priorityCard" : true,
-        "paymentSystemType" : "MIR"
-    },
-    {
-        "paymentSourceType" : "DebitCard",
-        "financialProductId" : "40817810838980033321",
-        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
-        "productName" : "МИР Сберкарта",
+  "paymentToolInfo" : {
+    "paymentToolList" : [
+      {
+        "isSpPaymentToolsPriority" : true,
+        "paymentSourceType" : "OverdraftCard",
+        "financialProductId" : "40817810138260194280",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
+        "productName" : "Visa Classic",
         "paymentId" : 4,
-        "cardNumber" : "5533",
+        "cardNumber" : "6478",
+        "isSpPaymentTools" : true,
         "amountData" : {
-            "amount" : 25069.0199999996,
-            "currency" : "RUR"
+          "amount" : 180853636,
+          "currency" : "810"
         },
         "priorityCard" : true,
-        "paymentSystemType" : "MIR"
-    },
-    {
+        "paymentSystemType" : "VISA"
+      },
+      {
         "paymentSourceType" : "DebitCard",
-        "financialProductId" : "40817810838980033321",
-        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
-        "productName" : "МИР Сберкарта",
-        "paymentId" : 14,
-        "cardNumber" : "5533",
+        "financialProductId" : "40817810638260194311",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
+        "productName" : "MasterCard Сберкарта",
+        "paymentId" : 6,
+        "cardNumber" : "1966",
+        "isSpPaymentTools" : true,
         "amountData" : {
-            "amount" : 5.0199999996,
-            "currency" : "RUR"
+          "amount" : 61219964,
+          "currency" : "810"
         },
-        "priorityCard" : true,
-        "paymentSystemType" : "MIR"
-    },
-    {
-        "paymentSourceType" : "DebitCard",
-        "financialProductId" : "40817810838980033321",
-        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
-        "productName" : "МИР Сберкарта",
-        "paymentId" : 24,
-        "cardNumber" : "5533",
-        "amountData" : {
-            "amount" : 1276.00,
-            "currency" : "RUR"
-        },
-        "priorityCard" : true,
-        "paymentSystemType" : "MIR"
-    }
-  ],
-  "logoUrl" : "https:\/\/test.stat.online.sberbank.ru\/SBERBANKID\/icons\/781000012764.png",
-  "sessionId" : "769122086715932672",
-  "merchantName" : "SberPrime12()_&*СберПр.5",
-  "userInfo" : {
-    "firstName" : "Олег",
-    "gender" : 1,
-    "lastName" : "А."
-  },
-  "orderAmount" : {
-    "amount" : 499999,
-    "currency" : "643"
+        "priorityCard" : false,
+        "paymentSystemType" : "MASTERCARD"
+      }
+    ],
+    "additionalCards" : true,
+    "isSpPaymentToolsNeedUpdate" : false
   },
   "merchantInfo" : {
-    "bindingIsNeeded" : true,
-    "bindingSafeText" : "Запомним счет для оплаты в этом сервисе. Его всегда можно поменять в настройках SberPay."
+    "merchantName" : "SberPrime12()_&*СберПр.5",
+    "logoUrl" : "https:\/\/test.stat.online.sberbank.ru\/SBERCMS\/sberpay\/781000012764.png",
+    "bindingIsNeeded" : false
+  },
+  "formInfo" : {
+    "notEnoughBalanceText" : "Кажется не хватает денег на карте",
+    "onlyPartPayText" : "Не хватает денег, но Вы можете оплатить частями"
   },
   "promoInfo" : {
-      "bannerList" : [
-        {
-          "deeplinkIos" : "transfers\/m2mPull?path=create",
-          "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/transfers\/m2mPull?action=create",
-          "type" : "sbp",
-          "iconUrl" : "",
-          "text" : "С карты другого банка"
-        },
-        {
-          "deeplinkIos" : "creditcardorder\/order?sourceType=external&entryPoint=SDKSberpay",
-          "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/creditcardorder\/order?sourceType=external&entryPoint=SDKSberpay",
-          "type" : "creditCard",
-          "iconUrl" : "",
-          "text" : "120 дней без %"
-        },
-        {
-          "deeplinkIos" : "mdcard\/mdcardrequest?segment=ssberkartamir",
-          "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/mdcard\/mdcardrequest?segment=ssberkartamir",
-          "type" : "debitCard",
-          "iconUrl" : "",
-          "text" : "Но можно выпустить цифровую СберКарту всего за пару нажатий"
-        }
-      ]
+    "bannerList" : [
+      {
+        "iconUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/SDK\/sbp.png",
+        "buttons" : [
+          {
+            "type" : "View",
+            "deeplinkIos" : "transfers\/m2mPull?path=create",
+            "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/transfers\/m2mPull?action=create"
+          }
+        ],
+        "hint" : "Не хватает денег для оплаты. Пополните карты через СБП",
+        "type" : "sbp",
+        "header" : "Перевести себе по СБП",
+        "text" : "С карты другого банка"
+      },
+      {
+        "iconUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/SDK\/credit.png",
+        "buttons" : [
+          {
+            "type" : "View",
+            "deeplinkIos" : "creditcardorder\/order?sourceType=external&entryPoint=SDKSberpay",
+            "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/creditcardorder\/order?sourceType=external&entryPoint=SDKSberpay"
+          }
+        ],
+        "hint" : "Не хватает денег для оплаты, но вы можете выпустить кредитку",
+        "type" : "creditCard",
+        "header" : "Выпустить кредитную карту",
+        "text" : "120 дней без %"
+      },
+      {
+        "iconUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/SDK\/debit.png",
+        "buttons" : [
+          {
+            "deeplinkIos" : "mdcard\/mdcardrequest?segment=ssberkartamir",
+            "title" : "Выпустить карту",
+            "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/mdcard\/mdcardrequest?segment=ssberkartamir",
+            "type" : "Full"
+          },
+          {
+            "type" : "Cancel",
+            "title" : "К способам оплаты"
+          }
+        ],
+        "hint" : "Но можно выпустить цифровую СберКарту всего за пару нажатий",
+        "type" : "debitCard",
+        "header" : "У вас нет активных карт",
+        "text" : "Но можно выпустить цифровую СберКарту всего за пару нажатий"
+      }
+    ],
+    "hint" : "Не хватает денег для оплаты. Пополните карты или выпустите кредитку"
+  },
+  "orderInfo" : {
+    "orderAmount" : {
+      "amount" : 499000,
+      "currency" : "643"
     }
+  },
+  "userInfo" : {
+    "firstName" : "Сергей",
+    "gender" : 1,
+    "lastName" : "Ч."
+  }
 }

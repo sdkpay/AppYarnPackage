@@ -8,10 +8,10 @@
 import UIKit
 
 protocol PaymentRouting: UrlOpenable {
-    func presentCards(cards: [PaymentToolInfo],
+    func presentCards(cards: [PaymentTool],
                       cost: String,
                       selectedId: Int,
-                      selectedCard: @escaping (PaymentToolInfo) -> Void)
+                      selectedCard: @escaping (PaymentTool) -> Void)
     func presentPartPay(partPaySelected: @escaping Action)
     func presentOTPScreen(completion: @escaping Action)
     func presentBankAppPicker(completion: @escaping Action)
@@ -28,10 +28,10 @@ final class PaymentRouter: PaymentRouting {
     }
     
     @MainActor
-    func presentCards(cards: [PaymentToolInfo],
+    func presentCards(cards: [PaymentTool],
                       cost: String,
                       selectedId: Int,
-                      selectedCard: @escaping (PaymentToolInfo) -> Void) {
+                      selectedCard: @escaping (PaymentTool) -> Void) {
         let vc = CardsAssembly(locator: locator).createModule(cards: cards,
                                                               cost: cost,
                                                               selectedId: selectedId,

@@ -14,71 +14,100 @@ enum BannerListType: String {
     case unknown
 }
 
-struct User: Codable {
-    let sessionId: String
-    let userInfo: UserInfo
-    let orderAmount: OrderAmount
-    let paymentToolInfo: [PaymentToolInfo]
-    let merchantName: String?
-    let logoUrl: String?
-    let additionalCards: Bool?
+struct UserModel: Codable {
+    let paymentToolInfo: PaymentToolInfo
+    let merchantInfo: MerchantInfo
+    let formInfo: FormInfo
     let promoInfo: PromoInfo
-    let merchantInfo: MerchantInfo?
+    let orderInfo: OrderInfo
+    let userInfo: UserInfo
 }
 
+// MARK: - FormInfo
+struct FormInfo: Codable {
+    let notEnoughBalanceText, onlyPartPayText: String
+}
+
+// MARK: - MerchantInfo
+struct MerchantInfo: Codable {
+    let merchantName: String
+    let logoURL: String
+    let bindingIsNeeded: Bool
+    let bindingSafeText: String?
+
+    enum CodingKeys: String, CodingKey {
+        case merchantName
+        case logoURL = "logoUrl"
+        case bindingIsNeeded
+        case bindingSafeText
+    }
+}
+
+// MARK: - OrderInfo
+struct OrderInfo: Codable {
+    let orderAmount: OrderAmount
+}
+
+// MARK: - OrderAmount
 struct OrderAmount: Codable {
     let amount: Int
     let currency: String
 }
 
-struct AmountData: Codable {
-    let amount: Double
-    let currency: String
-    
-    var amountInt: Int {
-        Int(amount * 100.0)
+// MARK: - PaymentToolInfo
+struct PaymentToolInfo: Codable {
+    let paymentTool: [PaymentTool]
+    let additionalCards, isSPPaymentToolsNeedUpdate: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case paymentTool = "paymentToolList", additionalCards
+        case isSPPaymentToolsNeedUpdate = "isSpPaymentToolsNeedUpdate"
     }
 }
 
-struct MerchantInfo: Codable {
-    let bindingIsNeeded: Bool
-    let bindingSafeText: String?
-}
-
-struct PaymentToolInfo: Codable {
+// MARK: - PaymentToolList
+struct PaymentTool: Codable {
+    let isSPPaymentToolsPriority: Bool?
+    let paymentSourceType, financialProductID: String
+    let cardLogoURL: String
     let productName: String
-    let paymentId: Int
-    var priorityCard: Bool
-    let paymentSourceType: String
-    let financialProductId: String?
+    let paymentID: Int
     let cardNumber: String
+    let isSPPaymentTools: Bool
+    let amountData: OrderAmount
+    let priorityCard: Bool
     let paymentSystemType: String
-    let cardLogoUrl: String
     let countAdditionalCards: Int?
-    let amountData: AmountData
+
+    enum CodingKeys: String, CodingKey {
+        case isSPPaymentToolsPriority = "isSpPaymentToolsPriority"
+        case paymentSourceType
+        case financialProductID = "financialProductId"
+        case cardLogoURL = "cardLogoUrl"
+        case productName
+        case paymentID = "paymentId"
+        case cardNumber
+        case countAdditionalCards
+        case isSPPaymentTools = "isSpPaymentTools"
+        case amountData, priorityCard, paymentSystemType
+    }
 }
 
+// MARK: - PromoInfo
 struct PromoInfo: Codable {
     let bannerList: [BannerList]
+    let hint: String
 }
 
+// MARK: - BannerList
 struct BannerList: Codable, Hashable {
-    let deeplinkIos, deeplinkAndroid, type, iconUrl: String
-    let text: String
-    
-    var title: String {
-        
-        switch bannerListType {
-            
-        case .sbp:
-            return Strings.Helpers.Sbp.title
-        case .creditCard:
-            return Strings.Helpers.CreditCard.title
-        case .debitCard:
-            return Strings.Helpers.DebittCard.title
-        case .unknown:
-            return ""
-        }
+    let iconURL: String
+    let buttons: [Button]
+    let hint, type, header, text: String
+
+    enum CodingKeys: String, CodingKey {
+        case iconURL = "iconUrl"
+        case buttons, hint, type, header, text
     }
     
     var bannerListType: BannerListType {
@@ -86,6 +115,13 @@ struct BannerList: Codable, Hashable {
     }
 }
 
+// MARK: - Button
+struct Button: Codable, Hashable {
+    let type: String
+    let deeplinkIos, deeplinkAndroid, title: String?
+}
+
+// MARK: - UserInfo
 struct UserInfo: Codable {
     let lastName: String
     let firstName: String

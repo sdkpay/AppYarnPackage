@@ -17,6 +17,7 @@ private extension CGFloat {
 }
 
 final class TextViewCell: UITableViewCell {
+    
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .gray

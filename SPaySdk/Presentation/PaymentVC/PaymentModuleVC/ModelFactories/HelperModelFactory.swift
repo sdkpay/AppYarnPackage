@@ -12,8 +12,8 @@ enum HelperModelFactory {
     static func build(_ indexPath: IndexPath,
                       value: BannerList) -> PaymentFeatureModel {
         
-        return PaymentFeatureModel(iconViewURL: value.iconUrl,
-                                   title: value.title,
+        return PaymentFeatureModel(iconViewURL: value.iconURL,
+                                   title: value.header,
                                    subTitle: value.text,
                                    switchOn: false,
                                    switchNeed: false)
