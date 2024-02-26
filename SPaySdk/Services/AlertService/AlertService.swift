@@ -102,7 +102,8 @@ final class AlertServiceAssembly: Assembly {
         container.register(reference: {
             let service: AlertService = DefaultAlertService(completionManager: container.resolve(),
                                                             liveCircleManager: container.resolve(),
-                                                            analytics: container.resolve())
+                                                            analytics: container.resolve(),
+                                                            setupManager: container.resolve())
             return service
         })
     }
@@ -156,6 +157,7 @@ final class DefaultAlertService: AlertService {
     private var alertVC: ContentVC?
     private let analytics: AnalyticsService
     private let liveCircleManager: LiveCircleManager
+    private let setupManager: SetupManager
     
     @MainActor
     @discardableResult
@@ -165,6 +167,8 @@ final class DefaultAlertService: AlertService {
         case let .paySuccess(amount: amount, shopName: shopName):
             
             analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.state: "success"])
+            
+            guard alertViewNeeded else { return AlertResult.approve }
     
             return await show(on: view,
                               with: amount,
@@ -174,6 +178,10 @@ final class DefaultAlertService: AlertService {
             
         case .connectSuccess(card: let card):
             
+            analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.state: "success"])
+            
+            guard alertViewNeeded else { return AlertResult.approve }
+            
             return await show(on: view,
                               with: Strings.Alert.Connect.title(card),
                               with: nil,
@@ -182,6 +190,8 @@ final class DefaultAlertService: AlertService {
         case .defaultError:
             
             analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.state: "default"])
+            
+            guard alertViewNeeded else { return AlertResult.approve }
             
             return await show(on: view,
                               with: Strings.Alert.Error.Main.title,
@@ -293,10 +303,12 @@ final class DefaultAlertService: AlertService {
     
     init(completionManager: CompletionManager,
          liveCircleManager: LiveCircleManager,
-         analytics: AnalyticsService) {
+         analytics: AnalyticsService,
+         setupManager: SetupManager) {
         self.completionManager = completionManager
         self.liveCircleManager = liveCircleManager
         self.analytics = analytics
+        self.setupManager = setupManager
         SBLogger.log(.start(obj: self))
     }
     
@@ -320,5 +332,10 @@ final class DefaultAlertService: AlertService {
         alertVC?.contentNavigationController?.popViewController(animated: animated,
                                                                 completion: completion)
         alertVC = nil
+    }
+    
+    private var alertViewNeeded: Bool {
+        
+        setupManager.resultViewNeeded
     }
 }

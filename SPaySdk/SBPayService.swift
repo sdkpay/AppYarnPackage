@@ -13,7 +13,12 @@ typealias PaymentResponse = (state: SPayState, info: String)
 typealias PaymentCompletion = (PaymentResponse) -> Void
 
 protocol SBPayService {
-    func setup(bnplPlan: Bool, helpers: Bool, config: SBHelperConfig, environment: SEnvironment, completion: Action?)
+    func setup(bnplPlan: Bool,
+               resultViewNeeded: Bool,
+               helpers: Bool,
+               config: SBHelperConfig,
+               environment: SEnvironment,
+               completion: Action?)
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
@@ -29,22 +34,6 @@ protocol SBPayService {
     func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool)
 }
 
-extension SBPayService {
-    
-    func setup(bnplPlan: Bool = true,
-               helpers: Bool = true,
-               config: SBHelperConfig = SBHelperConfig(),
-               environment: SEnvironment = .prod,
-               completion: Action? = nil) {
-                   
-        setup(bnplPlan: bnplPlan,
-              helpers: helpers,
-              config: config,
-              environment: environment,
-              completion: completion)
-    }
-}
-
 final class DefaultSBPayService: SBPayService {
     
     private lazy var liveCircleManager: LiveCircleManager = DefaultLiveCircleManager(timeManager: timeManager)
@@ -57,6 +46,7 @@ final class DefaultSBPayService: SBPayService {
     private var apiKey: String?
     
     func setup(bnplPlan: Bool,
+               resultViewNeeded: Bool,
                helpers: Bool,
                config: SBHelperConfig,
                environment: SEnvironment,
@@ -67,6 +57,9 @@ final class DefaultSBPayService: SBPayService {
         locator.register(service: buildSettings)
         
         assemblyManager.registerStartServices(to: locator)
+        locator
+            .resolve(SetupManager.self)
+            .resultViewNeeded(resultViewNeeded)
         locator
             .resolve(LogService.self)
             .setLogsWritable(environment: environment)
@@ -82,6 +75,7 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(HelperConfigManager.self)
             .setHelpersNeeded(helpers)
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
         SBLogger.dateString = dateFormatter.string(from: Date())

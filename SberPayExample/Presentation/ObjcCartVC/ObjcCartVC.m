@@ -70,6 +70,7 @@
     SConfig *config = [[SConfig alloc] initWithSbp:true creditCard:true debitCard:true];
     
      [SPay setupWithBnplPlan:true
+            resultViewNeeded: true
                     helpers:true
                helperConfig: config
                 environment: SEnvironmentProd

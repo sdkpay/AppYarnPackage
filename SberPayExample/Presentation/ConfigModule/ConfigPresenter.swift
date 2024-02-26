@@ -19,7 +19,7 @@ enum SectionData: Int, CaseIterable {
 
 enum CellType: String, CaseIterable {
     case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, refresh, environment, bnpl, next, sid
-    case sbp, newCreditCard, newDebitCard, helpers
+    case sbp, newCreditCard, newDebitCard, helpers, resultViewNeeded
 }
 
 private struct ConfigCellTextModel {
@@ -99,6 +99,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         case .merchantConfig:
             return [
                 .bnpl,
+                .resultViewNeeded,
                 .helpers,
                 .sbp,
                 .newCreditCard,
@@ -156,6 +157,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             return newDebitCell(type: type)
         case .helpers:
             return helpersCell(type: type)
+        case .resultViewNeeded:
+            return resultViewNeededCell(type: type)
         }
     }
     
@@ -241,6 +244,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         }
         SPay.debugConfig(network: configValues.network, ssl: configValues.ssl, refresh: configValues.refresh)
         SPay.setup(bnplPlan: configValues.bnpl,
+                   resultViewNeeded: configValues.resultViewNeeded,
                    helpers: configValues.helpers,
                    helperConfig: SBHelperConfig(sbp: configValues.sbp, creditCard: configValues.newCreditCard),
                    environment: environment) {
@@ -559,6 +563,15 @@ extension ConfigPresenter {
         let cell = ButtonCell()
         cell.config(title: "Авторизация SID") {
             self.sidAuth()
+        }
+        return cell
+    }
+    
+    private func resultViewNeededCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "ResultViewNeeded",
+                    value: configValues.resultViewNeeded) { bool in
+            self.configValues.resultViewNeeded = bool
         }
         return cell
     }

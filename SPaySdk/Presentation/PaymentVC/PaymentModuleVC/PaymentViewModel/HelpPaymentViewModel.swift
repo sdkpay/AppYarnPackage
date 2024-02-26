@@ -76,7 +76,7 @@ final class HelpPaymentViewModel: PaymentViewModel {
     func model(for indexPath: IndexPath) -> AbstractCellModel? {
         
         guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
-        
+
         switch section {
         case .features:
             

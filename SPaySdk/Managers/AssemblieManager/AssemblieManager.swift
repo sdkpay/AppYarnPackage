@@ -11,6 +11,7 @@ final class AssemblyManager {
     
     private var startAssemblies: [Assembly] = [
         
+        SetupManagerAssembly(),
         KeychainStorageAssembly(),
         HelperConfigManagerAssembly(),
         VersionСontrolManagerAssembly(),
