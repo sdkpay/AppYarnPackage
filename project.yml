@@ -105,6 +105,8 @@ targets:
         basedOnDependencyAnalysis: false
       - name: Swiftgen
         script: |
+                export PATH="$PATH:/opt/homebrew/bin"
+                        
                 swiftgen
         basedOnDependencyAnalysis: false
     info:
