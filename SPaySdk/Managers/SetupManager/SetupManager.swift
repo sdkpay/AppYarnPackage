@@ -27,10 +27,9 @@ protocol SetupManager {
 
 final class DefaultSetupManager: SetupManager {
 
-    var resultViewNeeded: Bool = true
+    var resultViewNeeded = true
     
     func resultViewNeeded(_ value: Bool) {
         resultViewNeeded = value
     }
 }
-

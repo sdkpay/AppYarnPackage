@@ -8,7 +8,7 @@
 import UIKit
 
 final class CustomStepper: UIView {
-    
+
     private lazy var decrimentButton: UIButton = {
         let button = UIButton()
         button.setImage(nil, for: .normal)

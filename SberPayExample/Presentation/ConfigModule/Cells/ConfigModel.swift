@@ -113,5 +113,4 @@ struct ConfigValues {
     @UserDefault(key: CellType.newDebitCard.rawValue,
                  defaultValue: true)
     var newDebitCard: Bool
-    
 }
