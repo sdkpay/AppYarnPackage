@@ -100,6 +100,7 @@ enum ErrorCode: Int {
     case incorrectCode = 5
     case tryingError = 6
     case noMoney = 7
+    case configError
     
     var description: String {
         ""
@@ -142,6 +143,8 @@ enum ErrorCode: Int {
             errorDescription = Strings.Error.system
         case .noMoney:
             errorDescription = Strings.Error.system
+        case .configError:
+            errorDescription = Strings.Error.ConfigError.title
         }
         return errorDescription
     }

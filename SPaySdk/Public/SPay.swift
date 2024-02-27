@@ -26,7 +26,7 @@ public final class SPay: NSObject {
                              helpers: Bool = true,
                              helperConfig: SBHelperConfig = SBHelperConfig(),
                              environment: SEnvironment = .prod,
-                             completion: Action? = nil) {
+                             completion: ((SPError?) -> Void)? = nil) {
         payService?.setup(bnplPlan: bnplPlan,
                           resultViewNeeded: resultViewNeeded,
                           helpers: helpers,

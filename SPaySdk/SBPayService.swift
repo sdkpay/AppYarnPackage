@@ -18,7 +18,7 @@ protocol SBPayService {
                helpers: Bool,
                config: SBHelperConfig,
                environment: SEnvironment,
-               completion: Action?)
+               completion: ((SPError?) -> Void)?)
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
@@ -50,7 +50,7 @@ final class DefaultSBPayService: SBPayService {
                helpers: Bool,
                config: SBHelperConfig,
                environment: SEnvironment,
-               completion: Action?) {
+               completion: ((SPError?) -> Void)?) {
         FontFamily.registerAllCustomFonts()
         locator.register(service: liveCircleManager)
         locator.register(service: logService)
@@ -90,7 +90,11 @@ final class DefaultSBPayService: SBPayService {
                     .resolve(AnalyticsService.self)
                     .config()
                 DispatchQueue.main.async {
-                    completion?()
+                    completion?(nil)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion?(SPError(errorState: .init(.configError)))
                 }
             }
         }

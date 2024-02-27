@@ -247,9 +247,13 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                    resultViewNeeded: configValues.resultViewNeeded,
                    helpers: configValues.helpers,
                    helperConfig: SBHelperConfig(sbp: configValues.sbp, creditCard: configValues.newCreditCard),
-                   environment: environment) {
+                   environment: environment) { error in
             self.view?.stopLoader()
-            self.view?.navigationController?.pushViewController(vc, animated: true)
+            if let error {
+                self.view?.showAlert(with: error.errorDescription)
+            } else {
+                self.view?.navigationController?.pushViewController(vc, animated: true)
+            }
         }
     }
     

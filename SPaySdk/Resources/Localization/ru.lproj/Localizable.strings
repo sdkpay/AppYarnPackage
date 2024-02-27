@@ -53,6 +53,7 @@
 "error.version.subtitle" = "Выберите другой способ оплаты.";
 "error.noMoney.title" = "Оплатить со SberPay не получится";
 "error.noMoney.subtitle" = "Пополните карту и и попробуйте ещё раз";
+"error.configError.title" = "Ошибка загрузки конфигурационного файла";
 
 // Loading
 "try.to.pay.title" = "Проводим оплату...";
