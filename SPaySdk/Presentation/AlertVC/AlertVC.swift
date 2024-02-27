@@ -24,14 +24,6 @@ protocol IAlertVC {
 
 final class AlertVC: ContentVC, IAlertVC {
     
-    private lazy var backgroundView: UIImageView = {
-        // DEBUG
-        let view = UIImageView(image: Asset.background.image)
-        view.contentMode = .scaleAspectFill
-        view.tag = .backgroundViewTag
-        return view
-    }()
-    
     private lazy var imageView: SPayLottieAnimationView = {
         let view = SPayLottieAnimationView()
         return view
@@ -113,13 +105,12 @@ final class AlertVC: ContentVC, IAlertVC {
         if model.isFailure {
             contentStack.addArrangedSubview(textStack)
             contentStack.addArrangedSubview(imageView)
-            backgroundView.image = Asset.errorBackground.image
+            contentNavigationController?.setBackground(Asset.errorBackground.image)
             imageWidth = 250
             imageHeight = 150
         } else {
             contentStack.addArrangedSubview(imageView)
             contentStack.addArrangedSubview(textStack)
-            backgroundView.image = Asset.background.image
             imageWidth = 180
             imageHeight = 180
         }
@@ -158,6 +149,7 @@ final class AlertVC: ContentVC, IAlertVC {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
+        contentNavigationController?.setBackground(Asset.background.image)
     }
     
     deinit {
@@ -166,10 +158,7 @@ final class AlertVC: ContentVC, IAlertVC {
     
     func setupUI() {
         
-        backgroundView
-            .add(toSuperview: view)
-            .height(ScreenHeightState.normal.height, priority: .defaultHigh)
-            .touchEdgesToSuperview()
+        view.height(ScreenHeightState.normal.height)
         
         buttonsStack
             .add(toSuperview: view)

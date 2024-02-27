@@ -48,6 +48,10 @@ final class ContentNC: UIViewController {
         transitioningDelegate = customTransitioningDelegate
         modalPresentationStyle = .custom
     }
+    
+    func setBackground(_ image: UIImage) {
+        backgroundView.image = image
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
