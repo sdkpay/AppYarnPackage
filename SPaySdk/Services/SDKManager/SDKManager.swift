@@ -10,6 +10,7 @@ import UIKit
 enum PayStrategy {
     case auto
     case manual
+    case partPay
 }
 
 extension Notification.Name {
@@ -39,6 +40,9 @@ protocol SDKManager {
                                  completion: @escaping PaymentCompletion)
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
+    func configPartPay(apiKey: String,
+                       paymentRequest: SBankInvoicePaymentRequest,
+                       completion: @escaping PaymentCompletion)
 }
 
 final class DefaultSDKManager: SDKManager {
@@ -87,6 +91,19 @@ final class DefaultSDKManager: SDKManager {
         let authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
         self.authInfo = authInfo
         payStrategy = .auto
+        authManager.apiKey = apiKey
+        authManager.initialApiKey = apiKey
+        authManager.lang = paymentRequest.language
+        authManager.orderNumber = paymentRequest.orderNumber
+        completionManager.setPaymentCompletion(completion)
+    }
+    
+    func configPartPay(apiKey: String,
+                       paymentRequest: SBankInvoicePaymentRequest,
+                       completion: @escaping PaymentCompletion) {
+        let authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
+        self.authInfo = authInfo
+        payStrategy = .partPay
         authManager.apiKey = apiKey
         authManager.initialApiKey = apiKey
         authManager.lang = paymentRequest.language

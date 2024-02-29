@@ -73,6 +73,16 @@ public final class SPay: NSObject {
     }
     
     /**
+     Метод оплаты только для оплаты частями
+     */
+    @objc
+    public static func payWithPartPay(with viewController: UIViewController,
+                                      paymentRequest: SBankInvoicePaymentRequest,
+                                      completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
+        payService?.payWithBankInvoiceId(with: viewController, paymentRequest: paymentRequest, completion: completion)
+    }
+    
+    /**
      Метод для завершения оплаты и закрытия окна SDK
      */
     @objc

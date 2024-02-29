@@ -28,6 +28,9 @@ protocol SBPayService {
     func payWithBankInvoiceId(with viewController: UIViewController,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion)
+    func payWithPartPay(with viewController: UIViewController,
+                        paymentRequest: SBankInvoicePaymentRequest,
+                        completion: @escaping PaymentCompletion)
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
     func getResponseFrom(_ url: URL)
@@ -35,7 +38,7 @@ protocol SBPayService {
 }
 
 final class DefaultSBPayService: SBPayService {
-    
+
     private lazy var liveCircleManager: LiveCircleManager = DefaultLiveCircleManager(timeManager: timeManager)
     private lazy var locator: LocatorService = DefaultLocatorService()
     private lazy var buildSettings: BuildSettings = DefaultBuildSettings()
@@ -177,6 +180,38 @@ final class DefaultSBPayService: SBPayService {
             .resolve(SDKManager.self)
             .configWithBankInvoiceId(apiKey: apiKey,
                                      paymentRequest: paymentRequest) { response in
+                self.inProgress = false
+                completion(response)
+            }
+        liveCircleManager.openInitialScreen(with: viewController,
+                                            with: locator)
+        locator
+            .resolve(AnalyticsService.self)
+            .sendEvent(.MACPayWithBankInvoiceId)
+    }
+    
+    func payWithPartPay(with viewController: UIViewController,
+                        paymentRequest: SBankInvoicePaymentRequest,
+                        completion: @escaping PaymentCompletion) {
+        
+        assemblyManager.registerSessionServices(to: locator)
+        guard !inProgress else { return }
+        inProgress = true
+        timeManager.startCheckingCPULoad()
+        timeManager.startContectionTypeChecking()
+        locator
+            .resolve(AnalyticsService.self)
+            .sendEvent(.MAPayWithBankInvoiceId)
+        apiKey = paymentRequest.apiKey
+        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
+        if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
+            let response = PaymentResponse(SPayState.error, error)
+            completion(response)
+        }
+        locator
+            .resolve(SDKManager.self)
+            .configPartPay(apiKey: apiKey,
+                           paymentRequest: paymentRequest) { response in
                 self.inProgress = false
                 completion(response)
             }

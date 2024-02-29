@@ -129,7 +129,11 @@ targets:
             CFBundleURLName: testapp
             CFBundleURLSchemes:
               - testapp
-        NSAppTransportSecurity: 
+          - CFBundleTypeRole: Editor
+            CFBundleURLName: testapp
+            CFBundleURLSchemes:
+              - sdkopfyncfkq
+        NSAppTransportSecurity:
           NSExceptionDomains:
             psi.gate1.spaymentsplus.ru:
               NSExceptionAllowsInsecureHTTPLoads: true

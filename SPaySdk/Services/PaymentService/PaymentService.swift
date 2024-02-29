@@ -118,6 +118,9 @@ final class DefaultPaymentService: PaymentService {
                     }
                 }
                 self.completionManager.completePaymentToken(with: paymentToken.paymentToken)
+            case .partPay:
+                // DEBUG
+                return
             }
         } catch {
             if error is PayError, isBnplEnabled {
