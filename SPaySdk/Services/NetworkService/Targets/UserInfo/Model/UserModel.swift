@@ -73,7 +73,7 @@ struct PaymentTool: Codable {
     let productName: String
     let paymentID: Int
     let cardNumber: String
-    let isSPPaymentTools: Bool
+    let isSPPaymentTools: Bool?
     let amountData: OrderAmount
     let priorityCard: Bool
     let paymentSystemType: String

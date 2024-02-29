@@ -267,12 +267,38 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     private func autoPay() {
+        
         let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
                                                  bankInvoiceId: values.orderId ?? "",
                                                  orderNumber: values.orderNumber ?? "none",
                                                  redirectUri: "sdkopfyncfkq://spay",
                                                  apiKey: values.apiKey)
+        
         SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info in
+            switch state {
+            case .success:
+                self.showResult(title: "Отдали мерчу success", message: info)
+            case .waiting:
+                self.showResult(title: "Отдали мерчу waiting", message: info)
+            case .error:
+                self.showResult(title: "Отдали мерчу error", message: info)
+            case .cancel:
+                self.showResult(title: "Отдали мерчу cancel", message: info)
+            @unknown default:
+                self.showResult(title: "Отдали мерчу @unknown default", message: info)
+            }
+        }
+    }
+    
+    private func bnplPay() {
+        
+        let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
+                                                 bankInvoiceId: values.orderId ?? "",
+                                                 orderNumber: values.orderNumber ?? "none",
+                                                 redirectUri: "sdkopfyncfkq://spay",
+                                                 apiKey: values.apiKey)
+        
+        SPay.payWithPartPay(with: self, paymentRequest: request) { state, info in
             switch state {
             case .success:
                 self.showResult(title: "Отдали мерчу success", message: info)

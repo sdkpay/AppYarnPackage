@@ -42,7 +42,7 @@ final class DefaultUserService: UserService {
     private let authManager: AuthManager
     private let analytics: AnalyticsService
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
-    var getListCards = false
+    var getListCards = true
     
     var selectedCard: PaymentTool?
     
@@ -79,10 +79,10 @@ final class DefaultUserService: UserService {
                                                                                 orderNumber: authInfo.orderNumber,
                                                                                 expiry: authInfo.expiry,
                                                                                 frequency: authInfo.frequency,
-                                                                                priorityCardOnly: true),
+                                                                                priorityCardOnly: false),
                                                         to: UserModel.self)
         self.user = listCardsResult
-        additionalCards = listCardsResult.paymentToolInfo.additionalCards
+        additionalCards = listCardsResult.paymentToolInfo.paymentTool.count > 1
         selectedCard = self.selectCard(from: listCardsResult.paymentToolInfo.paymentTool)
     }
     
