@@ -42,7 +42,8 @@ final class DefaultUserService: UserService {
     private let authManager: AuthManager
     private let analytics: AnalyticsService
     private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
-    var getListCards = true
+    
+    var getListCards = false
     
     var selectedCard: PaymentTool?
     

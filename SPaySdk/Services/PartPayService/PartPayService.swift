@@ -57,6 +57,9 @@ enum EnabledLevel: String {
 
 protocol PartPayService {
     var bnplplanSelected: Bool { get set }
+    var bnplCheckAccepted: Bool { get set }
+    var bnplplanSelectedPublisher: Published<Bool>.Publisher { get }
+    var bnplCheckAcceptedPublisher: Published<Bool>.Publisher { get }
     var bnplplanEnabled: Bool { get }
     func setEnabledBnpl(_ value: Bool, enabledLevel: EnabledLevel)
     var bnplplan: BnplModel? { get }
@@ -65,8 +68,14 @@ protocol PartPayService {
 }
 
 final class DefaultPartPayService: PartPayService {
+
+    @Published var bnplplanSelected = false
     
-    var bnplplanSelected = false
+    var bnplplanSelectedPublisher: Published<Bool>.Publisher { $bnplplanSelected }
+    
+    @Published var bnplCheckAccepted = true
+    
+    var bnplCheckAcceptedPublisher: Published<Bool>.Publisher { $bnplCheckAccepted }
     
     var bnplplanEnabled: Bool {
         switch bnplAvaliable {

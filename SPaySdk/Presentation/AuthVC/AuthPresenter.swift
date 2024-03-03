@@ -273,6 +273,9 @@ final class AuthPresenter: AuthPresenting {
     
     private func getPaymentMode() throws -> PaymentVCMode {
         
+        // DEBUG
+        // return .partPay
+        
         if userService.user?.orderInfo.orderAmount.amount == 0 {
             return .connect
         }

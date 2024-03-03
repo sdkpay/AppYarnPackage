@@ -7,13 +7,6 @@
 
 import UIKit
 
-struct PartCellModel {
-    let title: String
-    let cost: String
-    let isSelected: Bool
-    let hideLine: Bool
-}
-
 protocol PartPayPresenting {
     func viewDidLoad()
     var partsCount: Int { get }
@@ -23,6 +16,7 @@ protocol PartPayPresenting {
 }
 
 final class PartPayPresenter: PartPayPresenting {
+    
     weak var view: (IPartPayVC & ContentVC)?
     
     var partsCount: Int {

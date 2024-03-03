@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Combine
 
 enum PurchaseSection: Int, CaseIterable {
     case all
@@ -17,31 +18,27 @@ protocol PurchaseModulePresenting: NSObject {
     var levelsCount: Int { get }
     func identifiresForPurchaseSection() -> [Int]
     func purchaseModel(for indexPath: IndexPath) -> AbstractCellModel?
-    func profileTapped()
     func viewDidLoad()
+    
+    var view: (IPurchaseModuleVC & ModuleVC)? { get set }
 }
 
-
-final class PayPurchaseModulePresenter: NSObject, PurchaseModulePresenting {
+final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     
     private var activeFeatures = [PaymentFeature]()
     
     var featureCount: Int { activeFeatures.count }
     
     var levelsCount: Int {
-        
-        if partPayService.bnplplanSelected {
-            return partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
-        } else {
-            return 0
-        }
+        partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
     }
     
-    weak var view: (IPaymentMasterVC & ContentVC)?
+    weak var view: (IPurchaseModuleVC & ModuleVC)?
     private let router: PaymentRouting
     private let partPayService: PartPayService
     private let userService: UserService
     private let payAmountValidationManager: PayAmountValidationManager
+    private var cancellable = Set<AnyCancellable>()
     
     init(_ router: PaymentRouting,
          manager: SDKManager,
@@ -58,12 +55,19 @@ final class PayPurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     func viewDidLoad() {
         
         configViews()
-        setHints()
+        showPartsViewifNeed()
+        addSubscribers()
     }
     
-    private func setHints() {
+    private func addSubscribers() {
         
-        view?.setHints(with: addHintIfNeeded())
+        partPayService.bnplplanSelectedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.configViews()
+                self.showPartsViewifNeed()
+            }
+            .store(in: &cancellable)
     }
 
     func identifiresForPurchaseSection() -> [Int] {
@@ -91,57 +95,8 @@ final class PayPurchaseModulePresenter: NSObject, PurchaseModulePresenting {
         view?.showPartsView(partPayService.bnplplanSelected)
     }
     
-    func profileTapped() {
-        
-        guard let user = userService.user else { return }
-        router.openProfile(with: user.userInfo)
-    }
-    
     private func configViews() {
-        
-        guard let user = userService.user else { return }
-        
-        view?.configShopInfo(with: user.merchantInfo.merchantName,
-                             iconURL: user.merchantInfo.logoURL,
-                             purchaseInfoText: nil)
+    
         view?.addSnapShot()
     }
-    
-    private func addHintIfNeeded() -> [String] {
-        
-        guard let tool = userService.selectedCard else { return [] }
-        
-        var hints = [String]()
-        
-        if let connectHint = connectIfNeeded() {
-            
-            hints.append(connectHint)
-        }
-        
-        let payAmountStatus = try? payAmountValidationManager.checkAmountSelectedTool(tool)
-        
-        switch payAmountStatus {
-            
-        case .enouth, .none:
-            
-            return hints
-        case .onlyBnpl:
-            
-            hints.append(Strings.Hints.Bnpl.title)
-        case .notEnouth:
-            
-            hints.append(Strings.Hints.NotEnouth.title)
-        }
-        
-        return hints
-    }
-    
-    private func connectIfNeeded() -> String? {
-        
-        guard let merchantInfo = userService.user?.merchantInfo else { return nil }
-        guard merchantInfo.bindingIsNeeded else { return nil }
-        
-        return merchantInfo.bindingSafeText
-    }
 }
-

@@ -9,16 +9,7 @@ import UIKit
 
 final class PurchaseViewBuilder {
     
-    private var profileButtonDidTap: Action
     private var visibleItemsInvalidationHandler: NSCollectionLayoutSectionVisibleItemsInvalidationHandler
-    
-    private(set) lazy var infoTextLabel: UILabel = {
-        let view = UILabel()
-        view.font = .header
-        view.numberOfLines = 0
-        view.textColor = .textPrimory
-        return view
-    }()
 
     private(set) lazy var levelsView: LevelsView = {
         let view = LevelsView(frame: .zero)
@@ -48,11 +39,8 @@ final class PurchaseViewBuilder {
     private var levelsCount: Int
     
     init(levelsCount: Int,
-         visibleItemsInvalidationHandler: @escaping NSCollectionLayoutSectionVisibleItemsInvalidationHandler,
-         profileButtonDidTap: @escaping Action) {
+         visibleItemsInvalidationHandler: @escaping NSCollectionLayoutSectionVisibleItemsInvalidationHandler) {
         self.visibleItemsInvalidationHandler = visibleItemsInvalidationHandler
-        self.profileButtonDidTap = profileButtonDidTap
-        
         self.levelsCount = levelsCount
     }
     
@@ -63,7 +51,7 @@ final class PurchaseViewBuilder {
             .height(Cost.CollectionView.itemHeight)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .width(Cost.CollectionView.itemWidth)
-            .touchEdge(.top, toEdge: .bottom, ofView: view, withInset: Cost.Stack.topCost)
+            .touchEdge(.top, toEdge: .top, ofView: view, withInset: Cost.Stack.topCost)
         
         levelsView
             .add(toSuperview: view)

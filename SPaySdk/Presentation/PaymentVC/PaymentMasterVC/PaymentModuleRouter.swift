@@ -16,6 +16,7 @@ protocol PaymentRouting: UrlOpenable {
     func presentOTPScreen(completion: @escaping Action)
     func presentBankAppPicker(completion: @escaping Action)
     func presentChallenge(completion: @escaping (SecureChallengeResolution) -> Void)
+    func presentWebView(with url: String) 
     func openProfile(with userInfo: UserInfo)
 }
 
@@ -69,5 +70,11 @@ final class PaymentRouter: PaymentRouting {
     func openProfile(with userInfo: UserInfo) {
         let vc = LogoutAssembly(locator: self.locator).createModule(with: userInfo)
         self.viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @MainActor
+    func presentWebView(with url: String) {
+        let vc = WebViewAssembly(locator: locator).createModule(with: url)
+        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
 }

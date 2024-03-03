@@ -101,7 +101,7 @@ final class WebViewVC: ContentVC, IWebViewVC {
     }
     
     private func setupUI() {
-        view.height(ScreenHeightState.max.height)
+        view.height(ScreenHeightState.big.height)
         
         shareButton
             .add(toSuperview: view)

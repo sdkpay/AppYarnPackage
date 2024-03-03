@@ -31,7 +31,7 @@ struct FormInfo: Codable {
 // MARK: - MerchantInfo
 struct MerchantInfo: Codable {
     let merchantName: String
-    let logoURL: String
+    let logoURL: String?
     let bindingIsNeeded: Bool
     let bindingSafeText: String?
 

@@ -15,33 +15,25 @@ final class PurchaseModuleAssembly {
         self.locator = locator
     }
 
-    func createModule(with state: PaymentVCMode, router: PaymentRouting) -> UIViewController & IPurchaseModuleVC {
+    func createModule(router: PaymentRouting) -> ModuleVC {
         
-        let presenter = modulePresenter(router, with: state)
+        var presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         return contentView
     }
     
-    func modulePresenter(_ router: PaymentRouting,
-                         with state: PaymentVCMode) -> PurchaseModulePresenting {
-        
-        switch state {
-            
-        case .pay:
-           return PayPurchaseModulePresenter(router,
-                                             manager: locator.resolve(),
-                                             userService: locator.resolve(),
-                                             partPayService: locator.resolve(),
-                                             payAmountValidationManager: locator.resolve())
-        case .helper:
-            return 
+    func modulePresenter(_ router: PaymentRouting) -> PurchaseModulePresenting {
+        PurchaseModulePresenter(router,
+                                manager: locator.resolve(),
+                                userService: locator.resolve(),
+                                partPayService: locator.resolve(),
+                                payAmountValidationManager: locator.resolve())
     }
 
-    private func moduleView(presenter: PurchaseModulePresenting) -> UIViewController & IPaymentModuleVC {
+    private func moduleView(presenter: PurchaseModulePresenting) -> ModuleVC & IPurchaseModuleVC {
         
-        let view = PaymentModuleVC(presenter)
-        presenter.view = view
+        let view = PurchaseModuleVC(presenter)
         return view
     }
 }

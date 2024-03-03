@@ -10,14 +10,17 @@ import UIKit
 enum ScreenHeightState {
     
     case max
+    case big
     case normal
     
     var multiplier: CGFloat {
         switch self {
-        case .max:
+        case .big:
             return 0.80
         case .normal:
             return 0.70
+        case .max:
+            return 0.90
         }
     }
     

@@ -1,5 +1,5 @@
 //
-//  PaymentModuleViewBuilder.swift
+//  PaymentFeatureModuleViewBuilder.swift
 //  SPaySdk
 //
 //  Created by Ипатов Александр Станиславович on 08.12.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class PaymentModuleViewBuilder {
+final class PaymentFeatureModuleViewBuilder {
 
     private var featureCount: Int
     
@@ -60,7 +60,7 @@ final class PaymentModuleViewBuilder {
     }
 }
 
-private extension PaymentModuleViewBuilder {
+private extension PaymentFeatureModuleViewBuilder {
     enum Cost {
         static let sideOffSet: CGFloat = 32.0
         static let height = 56.0

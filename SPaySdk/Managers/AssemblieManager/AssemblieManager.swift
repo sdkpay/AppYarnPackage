@@ -13,7 +13,6 @@ final class AssemblyManager {
         
         SetupManagerAssembly(),
         KeychainStorageAssembly(),
-        HelperConfigManagerAssembly(),
         VersionСontrolManagerAssembly(),
         AuthManagerAssembly(),
         AnalyticsServiceAssembly(),
@@ -26,6 +25,7 @@ final class AssemblyManager {
         BankAppManagerAssembly(),
         ParsingErrorAnaliticManagerAssembly(),
         FeatureToggleServiceAssembly(),
+        HelperConfigManagerAssembly(),
         BaseRequestManagerAssembly(),
         NetworkServiceAssembly(),
         RemoteConfigServiceAssembly()

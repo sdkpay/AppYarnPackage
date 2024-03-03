@@ -10,27 +10,19 @@ import UIKit
 protocol IPartPayModuleVC {
     func setFinalCost(_ value: String)
     func setTitle(_ value: String)
-    func setButtonEnabled(value: Bool)
     func configCheckView(text: String,
                          checkSelected: Bool,
                          checkTapped: @escaping BoolAction,
                          textTapped: @escaping LinkAction)
 }
 
-final class PartPayModuleVC: UIViewController, IPartPayModuleVC {
+final class PartPayModuleVC: ModuleVC, IPartPayModuleVC {
 
-    private lazy var viewBuilder = PartPayModuleViewBuilder(acceptButtonTapped: {
-        self.presenter.acceptButtonTapped()
-    },
-                                                 backButtonTapped: {
-        self.presenter.backButtonTapped()
-    })
+    private lazy var viewBuilder = PartPayModuleViewBuilder()
     
-    private let presenter: PartPayPresenter
-    private var analyticsService: AnalyticsService
-        
-    init(_ presenter: PartPayPresenter, analyticsService: AnalyticsService) {
-        self.analyticsService = analyticsService
+    private let presenter: PartPayModulePresenting
+    
+    init(_ presenter: PartPayModulePresenting) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -62,10 +54,6 @@ final class PartPayModuleVC: UIViewController, IPartPayModuleVC {
     
     func setTitle(_ value: String) {
         viewBuilder.titleLabel.text = value
-    }
-    
-    func setButtonEnabled(value: Bool) {
-        viewBuilder.acceptButton.isEnabled = value
     }
     
     func configCheckView(text: String,

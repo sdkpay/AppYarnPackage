@@ -13,7 +13,7 @@ final class HelperConfigManagerAssembly: Assembly {
     
     func register(in container: LocatorService) {
         container.register {
-            let service: HelperConfigManager = DefaultHelperConfigManager()
+            let service: HelperConfigManager = DefaultHelperConfigManager(featureToggle: container.resolve())
             return service
         }
     }
@@ -25,17 +25,24 @@ protocol HelperConfigManager {
     var helpersNeeded: Bool { get }
     func setConfig(_ config: SBHelperConfig)
     func setHelpersNeeded(_ value: Bool)
+    func helperAvaliable(bannerListType: BannerListType) -> Bool
 }
 
 final class DefaultHelperConfigManager: HelperConfigManager {
     
     var config = SBHelperConfig()
     
+    private let featureToggle: FeatureToggleService
+    
     var helpersNeeded = true
     
     func setConfig(_ config: SBHelperConfig) {
         self.config = config
         checkHelpers()
+    }
+    
+    init(featureToggle: FeatureToggleService) {
+        self.featureToggle = featureToggle
     }
     
     func setHelpersNeeded(_ value: Bool) {
@@ -48,5 +55,20 @@ final class DefaultHelperConfigManager: HelperConfigManager {
         if !config.creditCard && !config.debitCard && !config.sbp {
             helpersNeeded = false
         }
+    }
+    
+    func helperAvaliable(bannerListType: BannerListType) -> Bool {
+        
+        switch bannerListType {
+        case .sbp:
+            return config.sbp && featureToggle.isEnabled(.sbp)
+        case .creditCard:
+            return config.creditCard && featureToggle.isEnabled(.newCreditCard)
+        case .debitCard:
+            return config.debitCard && featureToggle.isEnabled(.newDebitCard)
+        case .unknown:
+            return false
+        }
+
     }
 }

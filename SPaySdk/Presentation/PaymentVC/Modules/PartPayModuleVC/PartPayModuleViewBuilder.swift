@@ -90,8 +90,6 @@ private extension PartPayModuleViewBuilder {
 }
 
 final class PartPayModuleViewBuilder {
-    private var acceptButtonTapped: Action
-    private var backButtonTapped: Action
     
     private(set) lazy var titleLabel: UILabel = {
        let view = UILabel()
@@ -101,20 +99,6 @@ final class PartPayModuleViewBuilder {
                                  string: Strings.Part.Pay.title)
         view.textColor = Consts.Label.Title.textColor
         view.height(view.requiredHeight)
-        return view
-    }()
-    
-    private(set) lazy var acceptButton: DefaultButton = {
-        let view = DefaultButton(buttonAppearance: .full)
-        view.setTitle(Consts.Button.Accept.title, for: .normal)
-        view.addAction(acceptButtonTapped)
-        return view
-    }()
-    
-    private(set) lazy var cancelButton: DefaultButton = {
-        let view = DefaultButton(buttonAppearance: .info)
-        view.setTitle(Consts.Button.Cancel.title, for: .normal)
-        view.addAction(backButtonTapped)
         return view
     }()
     
@@ -160,15 +144,7 @@ final class PartPayModuleViewBuilder {
         return view
     }()
     
-    init(acceptButtonTapped: @escaping Action, backButtonTapped: @escaping Action) {
-        self.acceptButtonTapped = acceptButtonTapped
-        self.backButtonTapped = backButtonTapped
-    }
-    
     func setupUI(view: UIView) {
-        
-        acceptButton
-            .add(toSuperview: view)
         
         titleLabel
             .add(toSuperview: view)
@@ -201,20 +177,6 @@ final class PartPayModuleViewBuilder {
             .touchEdge(.top, toEdge: .bottom, ofView: backgroundTableView, withInset: Consts.View.topOffSet)
             .touchEdge(.left, toSameEdgeOfView: finalStack)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.View.rightOffSet)
-            .touchEdge(.bottom, toEdge: .top, ofView: acceptButton, withInset: Consts.View.bottomOffSet)
-            
-        cancelButton
-            .add(toSuperview: view)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Button.Cancel.leftOffSet)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Button.Cancel.rightOffSet)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Consts.Button.Cancel.bottomOffSet)
-            .height(Consts.Button.Cancel.height)
-
-        acceptButton
-            .add(toSuperview: view)
-            .height(Consts.Button.Accept.height)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Button.Accept.leftOffSet)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Button.Accept.rightOffSet)
-            .touchEdge(.bottom, toEdge: .top, ofView: cancelButton, withInset: Consts.Button.Accept.bottomOffSet)
+            .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: Consts.View.bottomOffSet)
     }
 }

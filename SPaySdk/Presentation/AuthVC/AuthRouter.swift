@@ -24,7 +24,7 @@ final class AuthRouter: AuthRouting {
     
     @MainActor
     func presentPayment(state: PaymentVCMode) {
-        let vc = PaymentAssembly(locator: locator).createModule(with: state)
+        let vc = PaymentMasterAssembly(locator: locator).createModule(with: state)
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
     

@@ -1,5 +1,5 @@
 //
-//  PaymentAssembly.swift
+//  PaymenttMasterAssembly.swift
 //  SPaySdk
 //
 //  Created by Alexander Ipatov on 23.11.2022.
@@ -7,66 +7,73 @@
 
 import UIKit
 
-final class PaymentAssembly {
+final class PaymentMasterAssembly {
+    
     private let locator: LocatorService
+    
+    private var paymentVCMode: PaymentVCMode = .pay
 
     init(locator: LocatorService) {
         self.locator = locator
     }
+    
+    private var paymentsModuls: [PaymentModule] {
+        
+        switch paymentVCMode {
+            
+        case .pay:
+            return [
+                .merchInfoModule,
+                .purchaseModule,
+                .paymentFeatureModule,
+                .paymentModule
+            ]
+        case .helper:
+            return [
+                .merchInfoModule,
+                .purchaseModule,
+                .helperFeatureModule
+            ]
+        case .connect:
+            return [
+                .merchInfoModule,
+                .connectInfoModule,
+                .paymentFeatureModule,
+                .paymentModule
+            ]
+        case .partPay:
+            return [
+                .partPayModule,
+                .paymentFeatureModule,
+                .paymentModule
+            ]
+        }
+    }
 
     func createModule(with state: PaymentVCMode) -> ContentVC {
+        paymentVCMode = state
         let router = moduleRouter()
-        let presenter = modulePresenter(router, with: state)
+        let presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         router.viewController = contentView
         return contentView
     }
     
-    func modulePresenter(_ router: PaymentRouting,
-                         with state: PaymentVCMode) -> PaymentMasterPresenter {
+    func modulePresenter(_ router: PaymentRouting) -> PaymentMasterPresenter {
         
-        var paymentVCMode: PaymentViewModel
+        var moduls = [ModuleVC]()
         
-        switch state {
-            
-        case .pay:
-            paymentVCMode = MainPaymentViewModel(userService: locator.resolve(),
-                                                 featureToggle: locator.resolve(),
-                                                 partPayService: locator.resolve(),
-                                                 authManager: locator.resolve(),
-                                                 payAmountValidationManager: locator.resolve())
-        case .helper:
-            paymentVCMode = HelpPaymentViewModel(userService: locator.resolve(),
-                                                 featureToggle: locator.resolve(),
-                                                 helperConfigManager: locator.resolve())
-        case .connect:
-            paymentVCMode = ConnectPaymentViewModel(userService: locator.resolve(),
-                                                    authManager: locator.resolve(),
-                                                    featureToggle: locator.resolve())
+        paymentsModuls.forEach { module in
+            moduls.append(assemblyModule(module, router: router))
         }
         
-        let presenter = PaymentMasterPresenter(router,
-                                               manager: locator.resolve(),
-                                               userService: locator.resolve(),
-                                               analytics: locator.resolve(),
-                                               bankManager: locator.resolve(),
-                                               paymentService: locator.resolve(),
-                                               locationManager: locator.resolve(),
-                                               completionManager: locator.resolve(),
-                                               alertService: locator.resolve(),
-                                               authService: locator.resolve(),
+        let presenter = PaymentMasterPresenter(analytics: locator.resolve(),
+                                               submodule: moduls,
+                                               mode: paymentVCMode,
+                                               helperConfig: locator.resolve(),
                                                partPayService: locator.resolve(),
-                                               secureChallengeService: locator.resolve(),
-                                               authManager: locator.resolve(),
-                                               biometricAuthProvider: locator.resolve(),
-                                               payAmountValidationManager: locator.resolve(),
-                                               featureToggle: locator.resolve(),
-                                               otpService: locator.resolve(),
-                                               timeManager: OptimizationCheсkerManager(),
-                                               paymentViewModel: paymentVCMode)
-        
-        paymentVCMode.presenter = presenter
+                                               completionManager: locator.resolve())
         
         return presenter
     }
@@ -75,9 +82,37 @@ final class PaymentAssembly {
         PaymentRouter(with: locator)
     }
 
-    private func moduleView(presenter: PaymentPresenter) -> ContentVC & IPaymentMasterVC {
+    private func moduleView(presenter: PaymentMasterPresenter) -> ContentVC & IPaymentMasterVC {
         let view = PaymentMasterVC(presenter)
         presenter.view = view
         return view
+    }
+    
+    private func assemblyModule(_ module: PaymentModule, router: PaymentRouting) -> ModuleVC {
+        
+        switch module {
+            
+        case .merchInfoModule:
+            
+            return MetchInfoModuleAssembly(locator: locator).createModule(router: router)
+        case .purchaseModule:
+            
+            return PurchaseModuleAssembly(locator: locator).createModule(router: router)
+        case .connectInfoModule:
+            
+            return ConnectInfoModuleAssembly(locator: locator).createModule()
+        case .helperFeatureModule:
+            
+            return HelperFeatureModuleAssembly(locator: locator).createModule(router: router)
+        case .paymentFeatureModule:
+            
+            return PaymentFeatureModuleAssembly(locator: locator).createModule(router: router)
+        case .paymentModule:
+            
+            return PaymentModuleAssembly(locator: locator).createModule(with: paymentVCMode, router: router)
+        case .partPayModule:
+            
+            return PartPayModuleAssembly(locator: locator).createModule(router: router)
+        }
     }
 }

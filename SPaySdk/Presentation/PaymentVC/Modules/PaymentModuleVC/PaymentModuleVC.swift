@@ -7,28 +7,27 @@
 
 import UIKit
 
-protocol IPaymentModuleVC { 
+private extension CGFloat {
     
-    func addSnapShot()
-    func setHint(with text: String)
-    func setHints(with texts: [String])
-    func reloadData()
+    static let topMargin: CGFloat = 20.0
 }
 
-final class PaymentModuleVC: UIViewController, IPaymentModuleVC {
+protocol IPaymentModuleVC { 
+    
+    func setPayButtonTitle(_ title: String)
+}
+
+final class PaymentModuleVC: ModuleVC, IPaymentModuleVC {
     
     private var presenter: PaymentModulePresenting
     
-    private lazy var viewBuilder = PaymentModuleViewBuilder(featureCount: presenter.featureCount,
-                                                            needPayButton: presenter.payButtonText != nil,
-                                                            payButtonDidTap: {
-        self.presenter.payButtonTapped()
-    },
-                                                            cancelButtonDidTap: {
-        self.presenter.cancelTapped()
-    })
-    
-    private var dataSource: UICollectionViewDiffableDataSource<PaymentSection, Int>?
+    private lazy var payButton: PaymentButton = {
+        let view = PaymentButton()
+        view.tapAction = {
+            self.presenter.payButtonTapped()
+        }
+        return view
+    }()
     
     init(_ presenter: PaymentModulePresenting) {
         self.presenter = presenter
@@ -41,83 +40,22 @@ final class PaymentModuleVC: UIViewController, IPaymentModuleVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configDataSource()
-        viewBuilder.collectionView.delegate = self
-        viewBuilder.setupUI(view: view)
-        
-        viewBuilder.payButton.setPayTitle(presenter.payButtonText)
+        presenter.viewDidLoad()
+        setupUI()
     }
     
-    func addSnapShot() {
-        
-        var snapshot = NSDiffableDataSourceSnapshot<PaymentSection, Int>()
-        snapshot.appendSections(PaymentSection.allCases)
-        print(snapshot.numberOfSections)
-        PaymentSection.allCases.forEach { section in
-            snapshot.appendItems(presenter.identifiresForPaymentSection(section), toSection: section)
-        }
-        dataSource?.apply(snapshot, animatingDifferences: true)
+    func setPayButtonTitle(_ title: String) {
+        payButton.setPayTitle(title)
     }
     
-    func setHint(with text: String) {
+    private func setupUI() {
         
-        viewBuilder.hintsStackView.add(text)
-    }
-
-    func setHints(with texts: [String]) {
-        
-        viewBuilder.hintsStackView.setStack(texts)
-    }
-    
-    func reloadData() {
-        
-        guard var newSnapshot = dataSource?.snapshot() else { return }
-        newSnapshot.reloadSections(PaymentSection.allCases)
-        dataSource?.apply(newSnapshot)
-    }
-    
-    private func configDataSource() {
-        
-        dataSource = UICollectionViewDiffableDataSource<PaymentSection, Int>(collectionView: viewBuilder.collectionView) { (
-            collectionView: UICollectionView,
-            indexPath: IndexPath,
-            _: Int
-        ) -> UICollectionViewCell? in
-            guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
-            guard let model = self.presenter.paymentModel(for: indexPath) else { return nil }
-            switch section {
-            case .features:
-                
-                if self.presenter.featureCount > 1 {
-                    return UICollectionView.config(collectionView: collectionView,
-                                                   cellType: SquarePaymentFeatureCell.self,
-                                                   with: model,
-                                                   fot: indexPath)
-                } else {
-                    return UICollectionView.config(collectionView: collectionView,
-                                                   cellType: BlockPaymentFeatureCell.self,
-                                                   with: model,
-                                                   fot: indexPath)
-                }
-            case .card:
-                
-                return UICollectionView.config(collectionView: collectionView,
-                                               cellType: PaymentCardCell.self,
-                                               with: model,
-                                               fot: indexPath)
-            }
-        }
-    }
-    
-    private func featureCellType() -> (SelfReusable & SelfConfigCell).Type {
-        
-        presenter.featureCount > 1 ? SquarePaymentFeatureCell.self : BlockPaymentFeatureCell.self
-    }
-}
-
-extension PaymentModuleVC: UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        presenter.didSelectPaymentItem(at: indexPath)
+        payButton
+            .add(toSuperview: view)
+            .touchEdge(.top, toEdge: .top, ofView: view, withInset: .topMargin)
+            .touchEdge(.left, toEdge: .left, ofView: view, withInset: .margin)
+            .touchEdge(.right, toEdge: .right, ofView: view, withInset: .margin)
+            .touchEdge(.bottom, toEdge: .bottom, ofView: view)
+            .height(.defaultButtonHeight)
     }
 }

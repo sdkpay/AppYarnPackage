@@ -7,28 +7,39 @@
 
 import UIKit
 
+private extension CGFloat {
+    
+    static let bottomMargin: CGFloat = 44.0
+    static let cancelTopMargin: CGFloat = 8.0
+}
+
 protocol IPaymentMasterVC {
-    func configShopInfo(with shop: String,
-                        iconURL: String?,
-                        purchaseInfoText: String?)
-    func addSnapShot()
-    func setHint(with text: String)
-    func setHints(with texts: [String])
-    func showPartsView(_ value: Bool)
-    func reloadData()
+    func setCancelTitle(_ string: String)
 }
 
 final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
-   
-    private lazy var purchaseModuleVC = PurchaseModuleVC(presenter)
-    private lazy var paymentModuleVC = PaymentModuleVC(presenter)
     
-    private var presenter: PaymentPresenting
+    private var presenter: PaymentModuleMasterPresenting
     
-    init(_ presenter: PaymentPresenting) {
+    private(set) lazy var cancelButton: DefaultButton = {
+        let view = DefaultButton(buttonAppearance: .cancel)
+        view.addAction {
+            self.presenter.cancelTapped()
+        }
+        view.height(.defaultButtonHeight)
+        return view
+    }()
+    
+    init(_ presenter: PaymentModuleMasterPresenting) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
+    
+    private lazy var modulsStackView: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        return view
+    }()
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -36,8 +47,9 @@ final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
         presenter.viewDidLoad()
+        setupModulsStack()
+        setupUI()
         SBLogger.log(.didLoad(view: self))
     }
     
@@ -58,54 +70,40 @@ final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
         SBLogger.log(.didDissapear(view: self))
     }
     
-    func configShopInfo(with shop: String, iconURL: String?, purchaseInfoText: String?) {
+    func setCancelTitle(_ string: String) {
         
-        purchaseModuleVC.configShopInfo(with: shop, iconURL: iconURL, purchaseInfoText: purchaseInfoText)
+        cancelButton.setTitle(string, for: .normal)
     }
     
-    func reloadData() {
+    private func setupModulsStack() {
         
-        paymentModuleVC.reloadData()
-        purchaseModuleVC.addSnapShot()
-    }
-    
-    func addSnapShot() {
+        let moduls = presenter.paymentsModuls
         
-        paymentModuleVC.addSnapShot()
-    }
-    
-    func setHint(with text: String) {
-        
-        paymentModuleVC.setHint(with: text)
-    }
-    
-    func setHints(with texts: [String]) {
-        
-        paymentModuleVC.setHints(with: texts)
-    }
-    
-    func showPartsView(_ value: Bool) {
-        
-        purchaseModuleVC.showPartsView(value)
+        for module in moduls {
+            
+            self.addChild(module)
+            module.didMove(toParent: self)
+            modulsStackView.addArrangedSubview(module.view)
+        }
     }
     
     private func setupUI() {
         
-        view.height(presenter.screenHeight.height, priority: .defaultLow)
+        if let viewHeight = presenter.viewHeight {
+            view.height(viewHeight)
+        }
         
-        purchaseModuleVC.view
+        modulsStackView
             .add(toSuperview: view)
-            .touchEdgesToSuperview([.top, .left, .right])
+            .touchEdge(.top, toSuperviewEdge: .top)
+            .touchEdge(.left, toSuperviewEdge: .left)
+            .touchEdge(.right, toSuperviewEdge: .right)
         
-        self.addChild(purchaseModuleVC)
-        purchaseModuleVC.didMove(toParent: self)
-        
-        paymentModuleVC.view
+        cancelButton
             .add(toSuperview: view)
-            .touchEdgesToSuperview([.bottom, .left, .right])
-            .touchEdge(.top, toEdge: .bottom, ofView: purchaseModuleVC.view)
-        
-        self.addChild(paymentModuleVC)
-        paymentModuleVC.didMove(toParent: self)
+            .touchEdge(.top, toEdge: .bottom, ofView: modulsStackView, withInset: .cancelTopMargin)
+            .touchEdge(.left, toSuperviewEdge: .left)
+            .touchEdge(.right, toSuperviewEdge: .right)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .bottomMargin)
     }
 }

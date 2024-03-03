@@ -7,18 +7,21 @@
 
 import UIKit
 
-final class PurchaseModuleVC: UIViewController {
+protocol IPurchaseModuleVC {
+    
+    func showPartsView(_ value: Bool)
+    func addSnapShot()
+    func reloadData()
+}
+
+final class PurchaseModuleVC: ModuleVC, IPurchaseModuleVC {
     
     private var presenter: PurchaseModulePresenting
     
     private lazy var viewBuilder = PurchaseViewBuilder(levelsCount: presenter.levelsCount,
-                                                       needInfoText: presenter.purchaseInfoText != nil,
                                                        visibleItemsInvalidationHandler: { [weak self] visibleItems, location, _ in
         
         self?.updateLevelIfNeed(items: visibleItems, location: location)
-    },
-                                                       profileButtonDidTap: {
-        self.presenter.profileTapped()
     })
 
     private var dataSource: UICollectionViewDiffableDataSource<PurchaseSection, Int>?
@@ -35,6 +38,7 @@ final class PurchaseModuleVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configDataSource()
+        presenter.viewDidLoad()
         viewBuilder.setupUI(view: view)
         addSnapShot()
     }
@@ -51,6 +55,7 @@ final class PurchaseModuleVC: UIViewController {
         
         guard var newSnapshot = dataSource?.snapshot() else { return }
         newSnapshot.reloadSections(PurchaseSection.allCases)
+        newSnapshot.reloadItems(presenter.identifiresForPurchaseSection())
         dataSource?.apply(newSnapshot)
     }
     
@@ -59,15 +64,6 @@ final class PurchaseModuleVC: UIViewController {
         UIView.animate(withDuration: 0.25) {
             self.viewBuilder.levelsView.alpha = value ? 1.0 : 0.0
         }
-    }
-    
-    func configShopInfo(with shop: String,
-                        iconURL: String?,
-                        purchaseInfoText: String?) {
-        
-        viewBuilder.shopLabel.text = shop
-        viewBuilder.infoTextLabel.text = purchaseInfoText
-        viewBuilder.logoImageView.downloadImage(from: iconURL, placeholder: .Payment.cart)
     }
     
     private func showLevel(_ index: Int) {
