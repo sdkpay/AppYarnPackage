@@ -9,7 +9,7 @@ import UIKit
 
 final class PurchaseModuleVC: UIViewController {
     
-    private var presenter: PaymentPresenting
+    private var presenter: PurchaseModulePresenting
     
     private lazy var viewBuilder = PurchaseViewBuilder(levelsCount: presenter.levelsCount,
                                                        needInfoText: presenter.purchaseInfoText != nil,
@@ -23,7 +23,7 @@ final class PurchaseModuleVC: UIViewController {
 
     private var dataSource: UICollectionViewDiffableDataSource<PurchaseSection, Int>?
     
-    init(_ presenter: PaymentPresenting) {
+    init(_ presenter: PurchaseModulePresenting) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }

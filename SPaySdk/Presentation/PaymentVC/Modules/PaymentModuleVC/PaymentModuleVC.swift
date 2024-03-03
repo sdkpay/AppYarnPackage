@@ -7,9 +7,17 @@
 
 import UIKit
 
-final class PaymentModuleVC: UIViewController {
+protocol IPaymentModuleVC { 
     
-    private var presenter: PaymentPresenting
+    func addSnapShot()
+    func setHint(with text: String)
+    func setHints(with texts: [String])
+    func reloadData()
+}
+
+final class PaymentModuleVC: UIViewController, IPaymentModuleVC {
+    
+    private var presenter: PaymentModulePresenting
     
     private lazy var viewBuilder = PaymentModuleViewBuilder(featureCount: presenter.featureCount,
                                                             needPayButton: presenter.payButtonText != nil,
@@ -19,10 +27,10 @@ final class PaymentModuleVC: UIViewController {
                                                             cancelButtonDidTap: {
         self.presenter.cancelTapped()
     })
-                                                                 
+    
     private var dataSource: UICollectionViewDiffableDataSource<PaymentSection, Int>?
     
-    init(_ presenter: PaymentPresenting) {
+    init(_ presenter: PaymentModulePresenting) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }

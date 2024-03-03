@@ -12,13 +12,6 @@ final class PurchaseViewBuilder {
     private var profileButtonDidTap: Action
     private var visibleItemsInvalidationHandler: NSCollectionLayoutSectionVisibleItemsInvalidationHandler
     
-    private(set) lazy var shopLabel: UILabel = {
-        let view = UILabel()
-        view.font = Cost.Label.Shop.font
-        view.textColor = Cost.Label.Shop.textColor
-        return view
-    }()
-    
     private(set) lazy var infoTextLabel: UILabel = {
         let view = UILabel()
         view.font = .header
@@ -26,17 +19,7 @@ final class PurchaseViewBuilder {
         view.textColor = .textPrimory
         return view
     }()
-    
-    private(set) lazy var logoImageView: UIImageView = {
-        let view = UIImageView()
-        view.contentMode = .scaleAspectFit
-        view.clipsToBounds = true
-        view.layer.borderColor = Asset.grayDisabled.color.cgColor
-        view.layer.borderWidth = Cost.ImageView.border
-        view.layer.cornerRadius = Cost.ImageView.radius
-        return view
-    }()
-    
+
     private(set) lazy var levelsView: LevelsView = {
         let view = LevelsView(frame: .zero)
         view.alpha = 0
@@ -62,67 +45,25 @@ final class PurchaseViewBuilder {
         return collectionView
     }()
     
-    private(set) lazy var profileButton: ActionButton = {
-        let view = ActionButton()
-        view.addAction(profileButtonDidTap)
-        view.setImage(Asset.user.image, for: .normal)
-        return view
-    }()
-    
     private var levelsCount: Int
     
     init(levelsCount: Int,
-         needInfoText: Bool,
          visibleItemsInvalidationHandler: @escaping NSCollectionLayoutSectionVisibleItemsInvalidationHandler,
          profileButtonDidTap: @escaping Action) {
         self.visibleItemsInvalidationHandler = visibleItemsInvalidationHandler
         self.profileButtonDidTap = profileButtonDidTap
         
         self.levelsCount = levelsCount
-        
-        if needInfoText {
-            
-            infoTextLabel.alpha = 1.0
-            purchaseCollectionView.alpha = 0.0
-        } else {
-            
-            infoTextLabel.alpha = 0.0
-            purchaseCollectionView.alpha = 1.0
-        }
     }
     
     func setupUI(view: UIView) {
-        logoImageView.add(toSuperview: view)
-        
-        logoImageView
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.ImageView.left)
-            .touchEdge(.top, toSuperviewEdge: .top, withInset: Cost.ImageView.top)
-            .size(Cost.ImageView.size)
-        
-        shopLabel
-            .add(toSuperview: view)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
-            .touchEdge(.right, toSuperviewEdge: .right)
-            .touchEdge(.top, toEdge: .bottom, ofView: logoImageView, withInset: Cost.Stack.top)
-        
-        profileButton
-            .add(toSuperview: view)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.ProfileButton.left)
-            .touchEdge(.top, toSuperviewEdge: .top, withInset: Cost.ProfileButton.top)
-            .size(Cost.ProfileButton.size)
-        
-        infoTextLabel
-            .add(toSuperview: view)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Stack.left)
-            .touchEdge(.top, toEdge: .bottom, ofView: shopLabel, withInset: Cost.Stack.topCost)
         
         purchaseCollectionView
             .add(toSuperview: view)
             .height(Cost.CollectionView.itemHeight)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .width(Cost.CollectionView.itemWidth)
-            .touchEdge(.top, toEdge: .bottom, ofView: shopLabel, withInset: Cost.Stack.topCost)
+            .touchEdge(.top, toEdge: .bottom, ofView: view, withInset: Cost.Stack.topCost)
         
         levelsView
             .add(toSuperview: view)
@@ -132,30 +73,11 @@ final class PurchaseViewBuilder {
 }
 
 private extension PurchaseViewBuilder {
+    
     enum Cost {
+        
         static let sideOffSet: CGFloat = 32.0
         static let height = 56.0
-     
-        enum Label {
-            enum Shop {
-                static let font = UIFont.medium2
-                static let textColor = UIColor.textSecondary
-            }
-        }
-        
-        enum ImageView {
-            static let size: CGSize = .init(width: 52, height: 52)
-            static let left: CGFloat = Cost.sideOffSet
-            static let top: CGFloat = 36.0
-            static let radius: CGFloat = 16.0
-            static let border: CGFloat = 1.0
-        }
-        
-        enum ProfileButton {
-            static let size: CGSize = .init(width: 32, height: 32)
-            static let top: CGFloat = 36.0
-            static let left: CGFloat = Cost.sideOffSet
-        }
         
         enum CollectionView {
             static let itemHeight: CGFloat = 68.0

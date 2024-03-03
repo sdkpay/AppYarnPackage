@@ -24,7 +24,7 @@ final class PaymentAssembly {
     }
     
     func modulePresenter(_ router: PaymentRouting,
-                         with state: PaymentVCMode) -> PaymentPresenter {
+                         with state: PaymentVCMode) -> PaymentMasterPresenter {
         
         var paymentVCMode: PaymentViewModel
         
@@ -46,25 +46,25 @@ final class PaymentAssembly {
                                                     featureToggle: locator.resolve())
         }
         
-        let presenter = PaymentPresenter(router,
-                                         manager: locator.resolve(),
-                                         userService: locator.resolve(),
-                                         analytics: locator.resolve(),
-                                         bankManager: locator.resolve(),
-                                         paymentService: locator.resolve(),
-                                         locationManager: locator.resolve(),
-                                         completionManager: locator.resolve(),
-                                         alertService: locator.resolve(),
-                                         authService: locator.resolve(),
-                                         partPayService: locator.resolve(),
-                                         secureChallengeService: locator.resolve(),
-                                         authManager: locator.resolve(),
-                                         biometricAuthProvider: locator.resolve(),
-                                         payAmountValidationManager: locator.resolve(),
-                                         featureToggle: locator.resolve(),
-                                         otpService: locator.resolve(),
-                                         timeManager: OptimizationCheсkerManager(),
-                                         paymentViewModel: paymentVCMode)
+        let presenter = PaymentMasterPresenter(router,
+                                               manager: locator.resolve(),
+                                               userService: locator.resolve(),
+                                               analytics: locator.resolve(),
+                                               bankManager: locator.resolve(),
+                                               paymentService: locator.resolve(),
+                                               locationManager: locator.resolve(),
+                                               completionManager: locator.resolve(),
+                                               alertService: locator.resolve(),
+                                               authService: locator.resolve(),
+                                               partPayService: locator.resolve(),
+                                               secureChallengeService: locator.resolve(),
+                                               authManager: locator.resolve(),
+                                               biometricAuthProvider: locator.resolve(),
+                                               payAmountValidationManager: locator.resolve(),
+                                               featureToggle: locator.resolve(),
+                                               otpService: locator.resolve(),
+                                               timeManager: OptimizationCheсkerManager(),
+                                               paymentViewModel: paymentVCMode)
         
         paymentVCMode.presenter = presenter
         
