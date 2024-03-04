@@ -10,8 +10,6 @@ import UIKit
 protocol IPaymentFeatureModuleVC {
     
     func addSnapShot()
-    func setHint(with text: String)
-    func setHints(with texts: [String])
     func reloadData()
 }
 
@@ -49,16 +47,6 @@ final class PaymentFeatureModuleVC: ModuleVC, IPaymentFeatureModuleVC {
             snapshot.appendItems(presenter.identifiresForPaymentSection(section), toSection: section)
         }
         dataSource?.apply(snapshot, animatingDifferences: true)
-    }
-    
-    func setHint(with text: String) {
-        
-        viewBuilder.hintsStackView.add(text)
-    }
-
-    func setHints(with texts: [String]) {
-        
-        viewBuilder.hintsStackView.setStack(texts)
     }
     
     func reloadData() {

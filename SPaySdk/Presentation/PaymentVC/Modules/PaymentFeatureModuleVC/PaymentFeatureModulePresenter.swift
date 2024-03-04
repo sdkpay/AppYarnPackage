@@ -105,12 +105,6 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
     func viewDidLoad() {
         
         configViews()
-        setHints()
-    }
-    
-    func setHints() {
-        
-        view?.setHints(with: hintsText)
     }
     
     func identifiresForPaymentSection(_ section: PaymentSection) -> [Int] {
@@ -240,7 +234,6 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
                         self?.view?.contentParrent?.hideLoading(animate: true)
                         self?.userService.selectedCard = card
                         self?.view?.reloadData()
-                        self?.setHints()
                     })
                 }
             } catch {
@@ -321,42 +314,5 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
             self.authService.bankCheck = true
             self.presentListCards()
         }
-    }
-
-    private var hintsText: [String] {
-        
-        guard let tool = userService.selectedCard else { return [] }
-        
-        var hints = [String]()
-        
-        if let connectHint = connectIfNeeded() {
-            
-            hints.append(connectHint)
-        }
-        
-        let payAmountStatus = try? payAmountValidationManager.checkAmountSelectedTool(tool)
-        
-        switch payAmountStatus {
-            
-        case .enouth, .none:
-            
-            return hints
-        case .onlyBnpl:
-            
-            hints.append(Strings.Hints.Bnpl.title)
-        case .notEnouth:
-            
-            hints.append(Strings.Hints.NotEnouth.title)
-        }
-        
-        return hints
-    }
-    
-    private func connectIfNeeded() -> String? {
-        
-        guard let merchantInfo = userService.user?.merchantInfo else { return nil }
-        guard merchantInfo.bindingIsNeeded else { return nil }
-        
-        return merchantInfo.bindingSafeText
     }
 }

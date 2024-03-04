@@ -10,11 +10,6 @@ import UIKit
 final class PaymentFeatureModuleViewBuilder {
 
     private var featureCount: Int
-    
-    private(set) lazy var hintsStackView: HintsStackView = {
-        let view = HintsStackView()
-        return view
-    }()
 
     private lazy var sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
         sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
@@ -49,13 +44,6 @@ final class PaymentFeatureModuleViewBuilder {
             .touchEdge(.bottom,
                        toEdge: .bottom,
                        ofView: view)
-        
-        hintsStackView
-            .add(toSuperview: view)
-            .touchEdge(.left, toEdge: .left, ofView: view, withInset: Cost.Hint.margin)
-            .touchEdge(.right, toEdge: .right, ofView: view, withInset: Cost.Hint.margin)
-            .touchEdge(.bottom, toEdge: .top, ofView: collectionView, withInset: Cost.Hint.bottom)
-            .height(Cost.height, priority: .defaultLow)
             .touchEdge(.top, toEdge: .top, ofView: view)
     }
 }

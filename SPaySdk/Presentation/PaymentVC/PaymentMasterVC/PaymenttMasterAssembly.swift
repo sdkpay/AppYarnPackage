@@ -25,6 +25,7 @@ final class PaymentMasterAssembly {
             return [
                 .merchInfoModule,
                 .purchaseModule,
+                .hintModule,
                 .paymentFeatureModule,
                 .paymentModule
             ]
@@ -32,12 +33,14 @@ final class PaymentMasterAssembly {
             return [
                 .merchInfoModule,
                 .purchaseModule,
+                .hintModule,
                 .helperFeatureModule
             ]
         case .connect:
             return [
                 .merchInfoModule,
                 .connectInfoModule,
+                .hintModule,
                 .paymentFeatureModule,
                 .paymentModule
             ]
@@ -113,6 +116,9 @@ final class PaymentMasterAssembly {
         case .partPayModule:
             
             return PartPayModuleAssembly(locator: locator).createModule(router: router)
+        case .hintModule:
+            
+            return HintsModuleAssembly(locator: locator).createModule(mode: paymentVCMode)
         }
     }
 }

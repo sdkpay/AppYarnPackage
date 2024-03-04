@@ -74,12 +74,6 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     func viewDidLoad() {
         
         configViews()
-        setHints()
-    }
-    
-    func setHints() {
-        
-        view?.setHints(with: hintsText)
     }
 
     func identifiresForSection(_ section: HelperSection) -> [Int] {
@@ -196,25 +190,6 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
         return user.promoInfo.bannerList.filter { list in
             avaliableBunners.contains(list.bannerListType)
         }
-    }
-    
-    var hintsText: [String] {
-
-        let avaliableBunners = avaliableBunners()
-        
-        if avaliableBunners.count > 1 {
-            return [Strings.Hints.All.title]
-        }
-        
-        if avaliableBunners.first == .sbp {
-            return [Strings.Hints.Sbp.title]
-        }
-        
-        if  avaliableBunners.first == .creditCard {
-            return [Strings.Hints.Credit.title]
-        }
-        
-        return []
     }
     
     private func avaliableBunners() -> [BannerListType] {

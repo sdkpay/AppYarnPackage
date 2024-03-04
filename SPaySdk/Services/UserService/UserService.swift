@@ -29,6 +29,7 @@ protocol UserService {
     var additionalCards: Bool { get }
     var user: UserModel? { get }
     var selectedCard: PaymentTool? { get set }
+    var selectedCardPublisher: Published<PaymentTool?>.Publisher { get }
     func getUser() async throws
     func getListCards() async throws
     func checkUserSession() async throws
@@ -36,6 +37,7 @@ protocol UserService {
 }
 
 final class DefaultUserService: UserService {
+    
     private let network: NetworkService
     private(set) var user: UserModel?
     private let sdkManager: SDKManager
@@ -45,7 +47,9 @@ final class DefaultUserService: UserService {
     
     var getListCards = false
     
-    var selectedCard: PaymentTool?
+    @Published var selectedCard: PaymentTool?
+    
+    var selectedCardPublisher: Published<PaymentTool?>.Publisher { $selectedCard }
     
     private(set) var additionalCards = false
     

@@ -20,6 +20,7 @@ enum PaymentModule {
     case merchInfoModule
     case partPayModule
     case purchaseModule
+    case hintModule
     case connectInfoModule
     case helperFeatureModule
     case paymentFeatureModule
