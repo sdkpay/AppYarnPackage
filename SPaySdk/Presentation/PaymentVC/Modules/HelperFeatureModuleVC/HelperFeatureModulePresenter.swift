@@ -115,9 +115,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     }
     
     private func configViews() {
-        
-        guard let user = userService.user else { return }
-        
+
         view?.addSnapShot()
     }
     

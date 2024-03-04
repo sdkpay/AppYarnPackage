@@ -17,7 +17,7 @@ final class ConnectInfoModuleAssembly {
 
     func createModule() -> ModuleVC {
         
-        var presenter = modulePresenter()
+        let presenter = modulePresenter()
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         return contentView
@@ -33,4 +33,3 @@ final class ConnectInfoModuleAssembly {
         return view
     }
 }
-

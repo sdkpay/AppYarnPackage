@@ -69,6 +69,5 @@ final class DefaultHelperConfigManager: HelperConfigManager {
         case .unknown:
             return false
         }
-
     }
 }

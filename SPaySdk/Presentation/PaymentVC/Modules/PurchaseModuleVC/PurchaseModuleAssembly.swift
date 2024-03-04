@@ -17,7 +17,7 @@ final class PurchaseModuleAssembly {
 
     func createModule(router: PaymentRouting) -> ModuleVC {
         
-        var presenter = modulePresenter(router)
+        let presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         return contentView
@@ -37,4 +37,3 @@ final class PurchaseModuleAssembly {
         return view
     }
 }
-
