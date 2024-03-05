@@ -68,6 +68,7 @@ struct PaymentToolInfo: Codable {
 // MARK: - PaymentToolList
 struct PaymentTool: Codable {
     let isSPPaymentToolsPriority: Bool?
+    let precalculateBonuses: String?
     let paymentSourceType, financialProductID: String
     let cardLogoURL: String
     let productName: String
@@ -81,6 +82,7 @@ struct PaymentTool: Codable {
 
     enum CodingKeys: String, CodingKey {
         case isSPPaymentToolsPriority = "isSpPaymentToolsPriority"
+        case precalculateBonuses
         case paymentSourceType
         case financialProductID = "financialProductId"
         case cardLogoURL = "cardLogoUrl"

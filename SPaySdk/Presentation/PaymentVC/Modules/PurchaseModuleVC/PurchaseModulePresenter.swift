@@ -57,6 +57,7 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
         configViews()
         showPartsViewifNeed()
         addSubscribers()
+        configBonusesView()
     }
     
     private func addSubscribers() {
@@ -66,6 +67,12 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
             .sink { _ in
                 self.configViews()
                 self.showPartsViewifNeed()
+            }
+            .store(in: &cancellable)
+        userService.selectedCardPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { card in
+                self.configBonusesView()
             }
             .store(in: &cancellable)
     }
@@ -90,13 +97,16 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
                                           bnplplanSelected: partPayService.bnplplanSelected)
     }
     
+    private func configBonusesView() {
+        view?.configBonusesView(userService.selectedCard?.precalculateBonuses)
+    }
+    
     private func showPartsViewifNeed() {
         
         view?.showPartsView(partPayService.bnplplanSelected)
     }
     
     private func configViews() {
-    
         view?.addSnapShot()
     }
 }

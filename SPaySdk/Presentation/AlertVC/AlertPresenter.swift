@@ -54,12 +54,17 @@ final class AlertPresenter: AlertPresenting {
     }
     
     func buttonTapped(item: AlertButtonModel) {
+        if !model.isFailure {
+            self.alertResultAction?(.cancel)
+            return
+        }
         DispatchQueue.main.async {
             switch item.type {
             case .full, .info, .blackBack:
                 self.view?.contentNavigationController?.popViewController(animated: true, completion: {
-                    item.action?()
+                    
                     self.alertResultAction?(.approve)
+                    item.action?()
                 })
             case .cancel, .orangeBack, .clear:
                 self.view?.contentNavigationController?.popViewController(animated: true, completion: {

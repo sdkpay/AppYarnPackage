@@ -10,11 +10,17 @@ import UIKit
 final class PurchaseViewBuilder {
     
     private var visibleItemsInvalidationHandler: NSCollectionLayoutSectionVisibleItemsInvalidationHandler
-
+    private var topAnchor: NSLayoutConstraint?
+    
     private(set) lazy var levelsView: LevelsView = {
         let view = LevelsView(frame: .zero)
         view.alpha = 0
         view.setup(levelsCount: levelsCount, selectedViewIndex: 0)
+        return view
+    }()
+    
+    private(set) lazy var bonusesView: BonusesView = {
+        let view = BonusesView()
         return view
     }()
     
@@ -44,6 +50,10 @@ final class PurchaseViewBuilder {
         self.levelsCount = levelsCount
     }
     
+    func changeBonusesViewPosition(withLevelView: Bool) {
+        topAnchor?.constant = withLevelView ? Cost.Stack.bonusesTop : -Cost.Stack.bonusesTop
+    }
+    
     func setupUI(view: UIView) {
         
         purchaseCollectionView
@@ -57,6 +67,12 @@ final class PurchaseViewBuilder {
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.top, toEdge: .bottom, ofView: purchaseCollectionView, withInset: Cost.Stack.topCost)
+        
+        bonusesView
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
+        topAnchor = bonusesView.topAnchor.constraint(equalTo: purchaseCollectionView.bottomAnchor, constant: -Cost.Stack.bonusesTop)
+        topAnchor?.isActive = true
     }
 }
 
@@ -85,6 +101,8 @@ private extension PurchaseViewBuilder {
             static let top: CGFloat = 16.0
             static let topCost: CGFloat = 4.0
             static let height: CGFloat = Cost.height
+            static let bonusesTop: CGFloat = 25.0
+
         }
     }
 }

@@ -69,7 +69,7 @@ final class AlertVC: ContentVC, IAlertVC {
     
     private lazy var contentStack: UIStackView = {
         let view = UIStackView()
-        view.spacing = 32
+        view.spacing = 0
         view.axis = .vertical
         view.alignment = .center
         return view
@@ -112,7 +112,14 @@ final class AlertVC: ContentVC, IAlertVC {
             contentStack.addArrangedSubview(imageView)
             contentStack.addArrangedSubview(textStack)
             imageWidth = 180
-            imageHeight = 180
+            imageHeight = 140
+        }
+        
+        if let bonuses = model.bonuses {
+            let view = BonusesView()
+            view.config(with: bonuses)
+            textStack.addArrangedSubview(view)
+            textStack.setCustomSpacing(25, after: alertSubtitle)
         }
         
         imageView
@@ -166,9 +173,17 @@ final class AlertVC: ContentVC, IAlertVC {
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .buttonsMargin)
         
-        contentStack
+        let backView = UIView()
+        backView
             .add(toSuperview: view)
-            .centerInSuperview(.y, withOffset: -buttonsStack.bounds.height)
+            .touchEdge(.top, toSuperviewEdge: .top)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
+            .touchEdge(.bottom, toEdge: .top, ofView: buttonsStack)
+        
+        contentStack
+            .add(toSuperview: backView)
+            .centerInSuperview(.y)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
         

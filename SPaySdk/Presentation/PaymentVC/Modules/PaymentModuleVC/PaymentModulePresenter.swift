@@ -198,6 +198,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
                                     with: Strings.Alert.Pay.No.Waiting.title,
                                     with: ConfigGlobal.localization?.payLoading ?? "",
                                     with: nil,
+                                    with: nil,
                                     state: .success,
                                     buttons: [okButton])
             
@@ -291,6 +292,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
                                     with: formParameters?.header ?? "",
                                     with: formParameters?.textDecline ?? "",
                                     with: nil,
+                                    with: nil,
                                     state: .failure,
                                     buttons: [returnButton])
             
@@ -323,7 +325,8 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
                         
                         await alertService.show(on: self.view?.contentParrent,
                                                 type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
-                                                                  shopName: user.merchantInfo.merchantName))
+                                                                  shopName: user.merchantInfo.merchantName,
+                                                                  bonuses: userService.selectedCard?.precalculateBonuses))  
                         await completionManager.dismissCloseAction(view?.contentParrent)
                     } else {
                         

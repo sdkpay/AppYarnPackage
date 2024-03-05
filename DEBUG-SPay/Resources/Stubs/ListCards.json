@@ -3,6 +3,7 @@
     "paymentToolList" : [
       {
         "isSpPaymentToolsPriority" : true,
+        "precalculateBonuses": "123",
         "paymentSourceType" : "OverdraftCard",
         "financialProductId" : "40817810138260194280",
         "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
