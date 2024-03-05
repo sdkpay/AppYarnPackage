@@ -19,19 +19,20 @@ final class AuthPresenter: AuthPresenting {
     private let analytics: AnalyticsService
     private let router: AuthRouter
     private var authService: AuthService
+    private let authManager: AuthManager
     private let completionManager: CompletionManager
     private let sdkManager: SDKManager
     private let userService: UserService
     private var bankManager: BankAppManager
     private let alertService: AlertService
     private let timeManager: OptimizationCheсkerManager
-    private let contentLoadManager: ContentLoadManager
     private let enviromentManager: EnvironmentManager
     private let versionСontrolManager: VersionСontrolManager
     private let seamlessAuthService: SeamlessAuthService
     private var payAmountValidationManager: PayAmountValidationManager
     private var helperManager: HelperConfigManager
     private var featureToggle: FeatureToggleService
+    private var partPayService: PartPayService
     
     private var authMethod: AuthMethod = .bank
     
@@ -45,11 +46,12 @@ final class AuthPresenter: AuthPresenting {
          alertService: AlertService,
          bankManager: BankAppManager,
          versionСontrolManager: VersionСontrolManager,
-         contentLoadManager: ContentLoadManager,
+         partPayService: PartPayService,
          timeManager: OptimizationCheсkerManager,
          enviromentManager: EnvironmentManager,
          payAmountValidationManager: PayAmountValidationManager,
          featureToggle: FeatureToggleService,
+         authManager: AuthManager,
          helperManager: HelperConfigManager) {
         self.analytics = analytics
         self.router = router
@@ -59,13 +61,14 @@ final class AuthPresenter: AuthPresenting {
         self.completionManager = completionManager
         self.userService = userService
         self.alertService = alertService
-        self.contentLoadManager = contentLoadManager
+        self.partPayService = partPayService
         self.bankManager = bankManager
         self.timeManager = timeManager
         self.enviromentManager = enviromentManager
         self.seamlessAuthService = seamlessAuthService
         self.payAmountValidationManager = payAmountValidationManager
         self.helperManager = helperManager
+        self.authManager = authManager
         self.featureToggle = featureToggle
         self.timeManager.startTraking()
     }
@@ -231,53 +234,90 @@ final class AuthPresenter: AuthPresenting {
         }
     }
     
+    private func getBnplPlan() async -> (error: SDKError?, type: ContentType) {
+        
+        let type = ContentType.bnpl
+        
+        do {
+            try await partPayService.getBnplPlan()
+            return (nil, type)
+        } catch {
+            return (error.sdkError, type)
+        }
+    }
+    
+    private func getUser() async -> (error: SDKError?, type: ContentType) {
+        
+        let type = ContentType.user
+        
+        do {
+            
+            try await userService.getUser()
+            return (nil, type)
+        } catch {
+            return (error.sdkError, type)
+        }
+    }
+    
+    private enum ContentType {
+        
+        case user
+        case bnpl
+    }
+    
     private func loadPaymentData() {
+        
         Task {
+            
+            async let userError = await getUser()
+            async let bnplError = await getBnplPlan()
 
-            do {
-                try await contentLoadManager.load()
+            let errors = await [userError, bnplError]
+            
+            if let error = errors.first(where: { $0.type == .bnpl })?.error, sdkManager.payStrategy == .partPay {
                 
-                if let user = userService.user, !user.paymentToolInfo.paymentTool.isEmpty {
-                    let mode = try getPaymentMode()
-                    await self.router.presentPayment(state: mode)
-                } else {
-                    await self.router.presentHelper()
-                }
-            } catch {
-                if let error = error as? SDKError {
-                    self.completionManager.completeWithError(error)
+                // DEBUG
+                // Добавить кастомную ошибку
+                await alertService.show(on: view, type: .defaultError)
+                dismissWithError(error)
+                return
+            }
+            
+            if let error = errors.first(where: { $0.type == .user })?.error {
+                
+                if error.represents(.noInternetConnection) {
                     
-                    if error.represents(.noInternetConnection) {
-                        
-                        let result = await alertService.show(on: view, type: .noInternet)
-                        
-                        switch result {
-                        case .approve:
-                            self.loadPaymentData()
-                        case .cancel:
-                            dismissWithError(error)
-                        }
-                    } else if error.represents(.noMoney) {
-                        await alertService.show(on: self.view,
-                                                type: .noMoney)
-                        dismissWithError(error)
-                    } else {
-                        
-                        await alertService.show(on: view, type: .defaultError)
+                    let result = await alertService.show(on: view, type: .noInternet)
+                    
+                    switch result {
+                    case .approve:
+                        self.getAccessSPay()
+                    case .cancel:
                         dismissWithError(error)
                     }
+                } else {
+                    await alertService.show(on: view, type: .defaultError)
+                    dismissWithError(error)
                 }
+                return
+            }
+            if let user = userService.user, !user.paymentToolInfo.paymentTool.isEmpty {
+                let mode = try getPaymentMode()
+                await self.router.presentPayment(state: mode)
+            } else {
+                await self.router.presentHelper()
             }
         }
     }
     
     private func getPaymentMode() throws -> PaymentVCMode {
         
-        // DEBUG
-        // return .partPay
-        
         if userService.user?.orderInfo.orderAmount.amount == 0 {
             return .connect
+        }
+        
+        if sdkManager.payStrategy == .partPay {
+            return .partPay
         }
         
         let status: PaymentVCMode = try payAmountValidationManager.checkWalletAmountEnouth() ? .pay : .helper

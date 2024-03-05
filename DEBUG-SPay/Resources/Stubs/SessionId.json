@@ -1,12 +1,12 @@
 {
-  "deeplink": "sberbankid?client_id=9f80261c-3455-4942-be48-cd1b2a2d7ba5&state=ZwyFM6WS8yV&scope=openid&code_challenge_method=S256&code_challenge=Ddt8Pl8ohzMFAVPlsZ04lEDKIGQdcDD_FcuxBQxAV1I&redirect_uri=testapp://test&nonce=2Y25sDS8494W7xJva2z01nL6hajMhAUXF3Xk7hXk49M484t708GD8tjPus71NViJ",
-  "state": "af0ifjsldkj",
-  "nonce": "5f3f7d10-7005-7afe-b123-f77001c896b1",
-  "sessionId": "685113465030991900",
-  "clientId": "9f80261c-3455-4902-be48-cd1b2a2d7ba5",
-  "isBnplEnabled": true,
-  "codeChallengeMethod": "S256",
-  "codeChallenge": "B94D27B9934D3E08A52E52D7DA7DABFAC484EFE37A5380EE9088F7ACE2EFCDE9",
-  "scope": "openid+name+birthdate+priority_doc+mobile",
-  "refreshTokenIsActive": true
+    "isBnplEnabled" : true,
+    "deeplink" : "sberbankid?client_id=9f80261c-3455-4942-be48-cd1b2a2d7ba5&state=bBMo1z53exH&scope=openid+offline_access&code_challenge_method=S256&code_challenge=Dl4PhmLl1b4QWJkU3XdTFr6KgS9WhBxuyDVocpxbr3A&redirect_uri=sdkopfyncfkq:\/\/spay&nonce=175QWQm8YoTWG3C9h9p416VvK7hleKxY1Gu5l37Cx7IMn7KeC1Y6cf1FLhe11Z8z",
+    "codeChallengeMethod" : "S256",
+    "scope" : "openid+offline_access",
+    "sessionId" : "817089294130069504",
+    "clientId" : "9f80261c-3455-4942-be48-cd1b2a2d7ba5",
+    "codeChallenge" : "Dl4PhmLl1b4QWJkU3XdTFr6KgS9WhBxuyDVocpxbr3A",
+    "refreshTokenIsActive" : true,
+    "state" : "bBMo1z53exH",
+    "nonce" : "175QWQm8YoTWG3C9h9p416VvK7hleKxY1Gu5l37Cx7IMn7KeC1Y6cf1FLhe11Z8z"
 }

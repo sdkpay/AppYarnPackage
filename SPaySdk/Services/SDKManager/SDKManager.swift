@@ -11,6 +11,7 @@ enum PayStrategy {
     case auto
     case manual
     case partPay
+    case withoutRefresh
 }
 
 extension Notification.Name {
@@ -43,6 +44,9 @@ protocol SDKManager {
     func configPartPay(apiKey: String,
                        paymentRequest: SBankInvoicePaymentRequest,
                        completion: @escaping PaymentCompletion)
+    func configWithoutRefresh(apiKey: String,
+                              paymentRequest: SBankInvoicePaymentRequest,
+                              completion: @escaping PaymentCompletion)
 }
 
 final class DefaultSDKManager: SDKManager {
@@ -91,6 +95,19 @@ final class DefaultSDKManager: SDKManager {
         let authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
         self.authInfo = authInfo
         payStrategy = .auto
+        authManager.apiKey = apiKey
+        authManager.initialApiKey = apiKey
+        authManager.lang = paymentRequest.language
+        authManager.orderNumber = paymentRequest.orderNumber
+        completionManager.setPaymentCompletion(completion)
+    }
+    
+    func configWithoutRefresh(apiKey: String,
+                              paymentRequest: SBankInvoicePaymentRequest,
+                              completion: @escaping PaymentCompletion) {
+        let authInfo = AuthInfo(fullPaymentRequest: paymentRequest)
+        self.authInfo = authInfo
+        payStrategy = .withoutRefresh
         authManager.apiKey = apiKey
         authManager.initialApiKey = apiKey
         authManager.lang = paymentRequest.language

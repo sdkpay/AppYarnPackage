@@ -58,7 +58,7 @@ final class DefaultPayAmountValidationManager: PayAmountValidationManager {
             return .enouth
         }
         
-        guard let amount = partPayService.bnplplan?.graphBnpl?.payments.first?.amount else { return .notEnouth }
+        guard let amount = partPayService.bnplplan?.graphBnpl?.parts.first?.amount else { return .notEnouth }
         
         if isEnouth(amount: amount, on: tool) {
             return .onlyBnpl

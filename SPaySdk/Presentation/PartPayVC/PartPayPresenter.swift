@@ -20,7 +20,7 @@ final class PartPayPresenter: PartPayPresenting {
     weak var view: (IPartPayVC & ContentVC)?
     
     var partsCount: Int {
-        partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
+        partPayService.bnplplan?.graphBnpl?.parts.count ?? 0
     }
 
     private var partPayService: PartPayService
@@ -70,7 +70,8 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     func model(for indexPath: IndexPath) -> PartCellModel {
-        guard let parts = partPayService.bnplplan?.graphBnpl?.payments,
+        
+        guard let parts = partPayService.bnplplan?.graphBnpl?.parts,
               let text = partPayService.bnplplan?.graphBnpl?.text else {
             return PartCellModel(title: "", cost: "", isSelected: true, hideLine: true)
         }

@@ -84,7 +84,7 @@ private extension PartPayModuleViewBuilder {
             static let topOffSet: CGFloat = 4.0
             static let leftOffSet: CGFloat = Consts.margin
             static let rightOffSet: CGFloat = Consts.margin
-            static let bottomOffSet: CGFloat = 20.0
+            static let bottomOffSet: CGFloat = 12.0
         }
     }
 }
@@ -111,10 +111,11 @@ final class PartPayModuleViewBuilder {
         view.text = Consts.Label.Final.text
         return view
     }()
-    
+
     private(set) lazy var finalCostLabel: UILabel = {
        let view = UILabel()
         view.font = Consts.Label.FinalCost.font
+        view.textAlignment = .right
         view.textColor = Consts.Label.FinalCost.textColor
         return view
     }()

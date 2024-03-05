@@ -451,11 +451,15 @@ extension ConfigPresenter {
     }
 
     private func modeCell(type: CellType) -> UITableViewCell {
-        let cell = SegmentedControlCell()
+        let cell = ListCell()
         cell.config(title: "Pay mode",
-                    items: PayMode.allCases.map({ $0.rawValue }),
-                    selected: configValues.mode.rawValue) { item in
-            self.configValues.mode = PayMode(rawValue: item) ?? .Auto
+                    value: configValues.mode.rawValue) {
+            self.view?.showSelectableAlert(with: "Pay mode",
+                                           items: PayMode.allCases.map({ $0.rawValue }),
+                                           selectedItem: { item in
+                self.configValues.mode = PayMode(rawValue: item) ?? .Auto
+                self.view?.reload()
+            })
         }
         return cell
     }

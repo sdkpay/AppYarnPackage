@@ -33,7 +33,8 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
         
         var features = [PaymentFeature]()
         
-        if partPayService.bnplplanEnabled {
+        if partPayService.bnplplanEnabled,
+           sdkManager.payStrategy != .partPay {
             features.append(.bnpl)
         }
         return features
@@ -223,7 +224,7 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
                 userService.getListCards = true
                 
                 let finalCost = partPayService.bnplplanSelected
-                ? partPayService.bnplplan?.graphBnpl?.payments.first?.amount
+                ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
                 : user.orderInfo.orderAmount.amount
                 
                 await MainActor.run {

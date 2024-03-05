@@ -91,6 +91,18 @@ final class DefaultPaymentService: PaymentService {
                   isBnplEnabled: Bool,
                   resolution: SecureChallengeResolution?) async throws {
         
+        switch sdkManager.payStrategy {
+        case .auto, .manual:
+            try await tryToPayWithToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
+        case .partPay, .withoutRefresh:
+            try await tryToPayWithoutToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
+        }
+    }
+    
+    private func tryToPayWithToken(paymentId: Int,
+                                   isBnplEnabled: Bool,
+                                   resolution: SecureChallengeResolution?) async throws {
+        
         do {
             
             let paymentToken = try await updateTokenIfNeed(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
@@ -106,8 +118,10 @@ final class DefaultPaymentService: PaymentService {
             }
             
             switch self.sdkManager.payStrategy {
-            case .auto:
-                try await pay(bnpl: isBnplEnabled, with: paymentToken.paymentToken ?? "", orderId: orderid, merchantLogin: merchantLogin)
+            case .auto, .partPay, .withoutRefresh:
+                try await pay(bnpl: isBnplEnabled,
+                              with: paymentToken.paymentToken ?? "",
+                              orderId: orderid, merchantLogin: merchantLogin)
             case .manual:
                 self.sdkManager.payHandler = { payInfo in
                     Task {
@@ -118,9 +132,6 @@ final class DefaultPaymentService: PaymentService {
                     }
                 }
                 self.completionManager.completePaymentToken(with: paymentToken.paymentToken)
-            case .partPay:
-                // DEBUG
-                return
             }
         } catch {
             if error is PayError, isBnplEnabled {
@@ -128,6 +139,27 @@ final class DefaultPaymentService: PaymentService {
             }
             throw error
         }
+    }
+    
+    private func tryToPayWithoutToken(paymentId: Int,
+                                      isBnplEnabled: Bool,
+                                      resolution: SecureChallengeResolution?) async throws {
+        
+        guard let sessionId = authManager.sessionId,
+              let authInfo = sdkManager.authInfo,
+              let merchantLogin = sdkManager.authInfo?.merchantLogin
+        else { throw SDKError(.noData) }
+        
+        let deviceInfo = try await personalMetricsService.getUserData()
+        
+        try await network.request(PaymentTarget.payOnline(sessionId: sessionId,
+                                                          paymentId: paymentId,
+                                                          merchantLogin: merchantLogin,
+                                                          orderId: authInfo.orderId,
+                                                          deviceInfo: deviceInfo,
+                                                          resolution: resolution?.rawValue,
+                                                          priorityCardOnly: userService.getListCards,
+                                                          isBnplEnabled: isBnplEnabled))
     }
     
     @discardableResult

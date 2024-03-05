@@ -20,6 +20,68 @@
       {
         "paymentSourceType" : "DebitCard",
         "financialProductId" : "40817810638260194311",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
+        "productName" : "MasterCard Сберкарта",
+        "paymentId" : 6,
+        "cardNumber" : "1966",
+        "isSpPaymentTools" : true,
+        "amountData" : {
+          "amount" : 1,
+          "currency" : "810"
+        },
+        "priorityCard" : false,
+        "paymentSystemType" : "MASTERCARD"
+      },
+      {
+        "isSpPaymentToolsPriority" : true,
+        "paymentSourceType" : "OverdraftCard",
+        "financialProductId" : "40817810138260194280",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_maestro_logo.png",
+        "productName" : "Visa Classic",
+        "paymentId" : 4,
+        "cardNumber" : "6478",
+        "isSpPaymentTools" : true,
+        "amountData" : {
+          "amount" : 180853636,
+          "currency" : "810"
+        },
+        "priorityCard" : true,
+        "paymentSystemType" : "VISA"
+      },
+      {
+        "paymentSourceType" : "DebitCard",
+        "financialProductId" : "40817810638260194311",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_maestro_logo.png",
+        "productName" : "MasterCard Сберкарта",
+        "paymentId" : 6,
+        "cardNumber" : "1966",
+        "isSpPaymentTools" : true,
+        "amountData" : {
+          "amount" : 1,
+          "currency" : "810"
+        },
+        "priorityCard" : false,
+        "paymentSystemType" : "MASTERCARD"
+      },
+      {
+        "isSpPaymentToolsPriority" : true,
+        "paymentSourceType" : "OverdraftCard",
+        "financialProductId" : "40817810138260194280",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
+        "productName" : "Visa Classic",
+        "paymentId" : 4,
+        "cardNumber" : "6478",
+        "isSpPaymentTools" : true,
+        "amountData" : {
+          "amount" : 180853636,
+          "currency" : "810"
+        },
+        "priorityCard" : true,
+        "paymentSystemType" : "VISA"
+      },
+      {
+        "paymentSourceType" : "DebitCard",
+        "financialProductId" : "40817810638260194311",
         "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
         "productName" : "MasterCard Сберкарта",
         "paymentId" : 6,
@@ -31,7 +93,70 @@
         },
         "priorityCard" : false,
         "paymentSystemType" : "MASTERCARD"
-      }
+      },
+      {
+        "isSpPaymentToolsPriority" : true,
+        "paymentSourceType" : "OverdraftCard",
+        "financialProductId" : "40817810138260194280",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
+        "productName" : "Visa Classic",
+        "paymentId" : 4,
+        "cardNumber" : "6478",
+        "isSpPaymentTools" : true,
+        "amountData" : {
+          "amount" : 180853636,
+          "currency" : "810"
+        },
+        "priorityCard" : true,
+        "paymentSystemType" : "VISA"
+      },
+      {
+        "paymentSourceType" : "DebitCard",
+        "financialProductId" : "40817810638260194311",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
+        "productName" : "MasterCard Сберкарта",
+        "paymentId" : 6,
+        "cardNumber" : "1966",
+        "isSpPaymentTools" : true,
+        "amountData" : {
+          "amount" : 1,
+          "currency" : "810"
+        },
+        "priorityCard" : false,
+        "paymentSystemType" : "MASTERCARD"
+      },
+      {
+        "isSpPaymentToolsPriority" : true,
+        "paymentSourceType" : "OverdraftCard",
+        "financialProductId" : "40817810138260194280",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_uek_logo.png",
+        "productName" : "Visa Classic",
+        "paymentId" : 4,
+        "cardNumber" : "6478",
+        "isSpPaymentTools" : true,
+        "amountData" : {
+          "amount" : 180853636,
+          "currency" : "810"
+        },
+        "priorityCard" : true,
+        "paymentSystemType" : "VISA"
+      },
+      {
+        "paymentSourceType" : "DebitCard",
+        "financialProductId" : "40817810638260194311",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_uek_logo.png",
+        "productName" : "MasterCard Сберкарта",
+        "paymentId" : 6,
+        "cardNumber" : "1966",
+        "isSpPaymentTools" : true,
+        "amountData" : {
+          "amount" : 1,
+          "currency" : "810"
+        },
+        "priorityCard" : false,
+        "paymentSystemType" : "MASTERCARD"
+      },
+      
     ],
     "additionalCards" : true,
     "isSpPaymentToolsNeedUpdate" : false

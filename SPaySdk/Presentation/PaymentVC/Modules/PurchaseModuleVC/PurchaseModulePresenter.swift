@@ -30,7 +30,7 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     var featureCount: Int { activeFeatures.count }
     
     var levelsCount: Int {
-        partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
+        partPayService.bnplplan?.graphBnpl?.parts.count ?? 0
     }
     
     weak var view: (IPurchaseModuleVC & ModuleVC)?
@@ -73,7 +73,7 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     func identifiresForPurchaseSection() -> [Int] {
         
         if partPayService.bnplplanSelected,
-           let dates = partPayService.bnplplan?.graphBnpl?.payments.map({ $0.date }) {
+           let dates = partPayService.bnplplan?.graphBnpl?.parts.map({ $0.date }) {
             return dates.map { $0.hash }
         } else {
             return [.zero]
@@ -85,7 +85,7 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
         guard let orderAmount = userService.user?.orderInfo.orderAmount else { return nil }
         
         return PurchaseModelFactory.build(indexPath,
-                                          bnplPayment: partPayService.bnplplan?.graphBnpl?.payments ?? [],
+                                          bnplPayment: partPayService.bnplplan?.graphBnpl?.parts ?? [],
                                           fullPayment: orderAmount,
                                           bnplplanSelected: partPayService.bnplplanSelected)
     }

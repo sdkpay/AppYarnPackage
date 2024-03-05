@@ -38,11 +38,12 @@ final class AuthAssembly {
                       alertService: locator.resolve(),
                       bankManager: locator.resolve(),
                       versionСontrolManager: locator.resolve(),
-                      contentLoadManager: locator.resolve(),
+                      partPayService: locator.resolve(),
                       timeManager: OptimizationCheсkerManager(),
                       enviromentManager: locator.resolve(),
                       payAmountValidationManager: locator.resolve(),
                       featureToggle: locator.resolve(),
+                      authManager: locator.resolve(),
                       helperManager: locator.resolve())
     }
 

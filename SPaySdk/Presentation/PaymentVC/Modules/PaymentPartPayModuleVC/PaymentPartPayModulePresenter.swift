@@ -1,24 +1,24 @@
 //
-//  PaymentModulePresenter.swift
+//  PaymentPartPayModulePresenter.swift
 //  SPaySdk
 //
-//  Created by Ипатов Александр Станиславович on 01.03.2024.
+//  Created by Ипатов Александр Станиславович on 04.03.2024.
 //
 
 import UIKit
 import Combine
 
-protocol PaymentModulePresenting: NSObject {
+protocol PaymentPartPayModulePresenting: NSObject {
 
     func payButtonTapped()
     func viewDidLoad()
     
-    var view: (IPaymentModuleVC & ModuleVC)? { get set }
+    var view: (IPaymentPartPayModuleVC & ModuleVC)? { get set }
 }
 
-final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
+final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresenting {
     
-    weak var view: (IPaymentModuleVC & ModuleVC)?
+    weak var view: (IPaymentPartPayModuleVC & ModuleVC)?
     private let router: PaymentRouting
     private let analytics: AnalyticsService
     private var userService: UserService
@@ -31,11 +31,9 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     private let alertService: AlertService
     private let bankManager: BankAppManager
     private var partPayService: PartPayService
-    private let biometricAuthProvider: BiometricAuthProviderProtocol
-    private let otpService: OTPService
     private let featureToggle: FeatureToggleService
     private var secureChallengeService: SecureChallengeService
-    private let vcMode: PaymentVCMode
+    private let otpService: OTPService
     private var cancellable = Set<AnyCancellable>()
     
     private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
@@ -53,9 +51,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
          partPayService: PartPayService,
          secureChallengeService: SecureChallengeService,
          authManager: AuthManager,
-         biometricAuthProvider: BiometricAuthProviderProtocol,
          featureToggle: FeatureToggleService,
-         vcMode: PaymentVCMode,
          otpService: OTPService) {
         self.router = router
         self.sdkManager = manager
@@ -68,12 +64,10 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         self.alertService = alertService
         self.secureChallengeService = secureChallengeService
         self.partPayService = partPayService
-        self.biometricAuthProvider = biometricAuthProvider
         self.bankManager = bankManager
         self.authManager = authManager
-        self.otpService = otpService
-        self.vcMode = vcMode
         self.featureToggle = featureToggle
+        self.otpService = otpService
         super.init()
     }
     
@@ -91,7 +85,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             await goToPay()
         }
     }
-
+    
     @MainActor
     private func createOTP() async throws {
         
@@ -107,31 +101,20 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             }
         })
     }
-    
+
     private func setupPublishers() {
         
-        partPayService.bnplplanSelectedPublisher
+        partPayService.bnplCheckAcceptedPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] bnplplanSelected in
-                if bnplplanSelected {
-                    self?.view?.setPayButtonTitle(Strings.Part.Active.Button.title)
-                } else {
-                    self?.view?.setPayButtonTitle(Strings.Pay.title)
-                }
+            .sink { [weak self] checkState in
+                self?.view?.setButtonEnabled(checkState)
             }
             .store(in: &cancellable)
     }
     
     private func configViews() {
         
-        switch vcMode {
-        case .pay, .helper:
-            view?.setPayButtonTitle(Strings.Pay.title)
-        case .connect:
-            view?.setPayButtonTitle(Strings.Connect.title)
-        case .partPay:
-            view?.setPayButtonTitle(Strings.Part.Active.Button.title)
-        }
+        view?.setPayButtonTitle(Strings.Part.Active.Button.title)
     }
     
     private func validatePayError(_ error: PayError) async {
@@ -155,25 +138,6 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         case .timeOut, .unknownStatus:
             
             configForWaiting()
-        case .partPayError:
-            
-            let result = await alertService.show(on: view?.contentParrent, type: .partPayError)
-            
-            switch result {
-            case .approve:
-                
-                partPayService.bnplplanSelected = false
-                partPayService.setEnabledBnpl(false, enabledLevel: .paymentToken)
-                
-                await self.goToPay()
-            case .cancel:
-                
-                self.completionManager.completeWithError(SDKError(.errorSystem))
-                
-                await alertService.show(on: view?.contentParrent, type: .defaultError)
-                
-                await self.completionManager.dismissCloseAction(view?.contentParrent)
-            }
         default:
             
             self.completionManager.completeWithError(SDKError(.errorSystem))
@@ -210,16 +174,11 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         guard let paymentId = userService.selectedCard?.paymentID else { return }
         
         do {
-            
-            if otpService.otpRequired {
-                
-                try await createOTP()
-            }
-            
+        
             await self.view?.contentParrent?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
             
             let challengeState = try await secureChallengeService.challenge(paymentId: paymentId,
-                                                                            isBnplEnabled: partPayService.bnplplanSelected)
+                                                                            isBnplEnabled: true)
             
             switch challengeState {
             case .review:
@@ -307,9 +266,9 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             await view?.contentParrent?.setUserInteractionsEnabled(false)
             do {
                 try await paymentService.tryToPay(paymentId: paymentId,
-                                                  isBnplEnabled: partPayService.bnplplanSelected,
+                                                  isBnplEnabled: true,
                                                   resolution: resolution)
-                self.partPayService.bnplplanSelected = false
+                
                 self.completionManager.completePay(with: .success)
                 await view?.contentParrent?.setUserInteractionsEnabled()
 
@@ -317,9 +276,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
                     
                     if user.orderInfo.orderAmount.amount != 0 {
                         
-                        let finalCost = partPayService.bnplplanSelected
-                        ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
-                        : user.orderInfo.orderAmount.amount
+                        let finalCost = partPayService.bnplplan?.graphBnpl?.parts.first?.amount
                         
                         await alertService.show(on: self.view?.contentParrent,
                                                 type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
@@ -334,8 +291,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
                 }
                 self.userService.clearData()
             } catch {
-                self.userService.clearData()
-                self.partPayService.bnplplanSelected = false
+
                 await view?.contentParrent?.setUserInteractionsEnabled()
                 
                 if let error = error as? PayError {
@@ -347,3 +303,4 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         }
     }
 }
+

@@ -24,7 +24,7 @@ enum RequestMethod: String, CaseIterable, Codable {
 }
 
 enum PayMode: String, CaseIterable, Codable {
-    case Manual, Auto
+    case Manual, Auto, WithoutRefresh, PartPay
 }
 
 enum Lang: String, CaseIterable, Codable {

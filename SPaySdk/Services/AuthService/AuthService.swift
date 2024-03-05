@@ -180,6 +180,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             
             self.analytics.sendEvent(.RQGoodSessionId,
                                      with: [AnalyticsKey.view: AnlyticsScreenEvent.AuthVC.rawValue])
+            
             self.authManager.sessionId = sessionIdResult.sessionId
             self.authManager.authModel = sessionIdResult
             self.authManager.state = sessionIdResult.state
@@ -193,6 +194,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             
             if refreshIsActive
                 && featureToggleService.isEnabled(.refresh)
+                && sdkManager.payStrategy != .partPay
+                && sdkManager.payStrategy != .withoutRefresh
                 && tokenInStorage {
                 
                 self.authManager.authMethod = .refresh

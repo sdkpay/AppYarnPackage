@@ -215,6 +215,10 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             case .Purchase:
                 paymentTokenWithPerchase()
             }
+        case .WithoutRefresh:
+            payWithoutRefresh()
+        case .PartPay:
+            bnplPay()
         }
     }
     
@@ -299,6 +303,30 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                  apiKey: values.apiKey)
         
         SPay.payWithPartPay(with: self, paymentRequest: request) { state, info in
+            switch state {
+            case .success:
+                self.showResult(title: "Отдали мерчу success", message: info)
+            case .waiting:
+                self.showResult(title: "Отдали мерчу waiting", message: info)
+            case .error:
+                self.showResult(title: "Отдали мерчу error", message: info)
+            case .cancel:
+                self.showResult(title: "Отдали мерчу cancel", message: info)
+            @unknown default:
+                self.showResult(title: "Отдали мерчу @unknown default", message: info)
+            }
+        }
+    }
+    
+    private func payWithoutRefresh() {
+        
+        let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
+                                                 bankInvoiceId: values.orderId ?? "",
+                                                 orderNumber: values.orderNumber ?? "none",
+                                                 redirectUri: "sdkopfyncfkq://spay",
+                                                 apiKey: values.apiKey)
+        
+        SPay.payWithoutRefresh(with: self, paymentRequest: request) { state, info in
             switch state {
             case .success:
                 self.showResult(title: "Отдали мерчу success", message: info)

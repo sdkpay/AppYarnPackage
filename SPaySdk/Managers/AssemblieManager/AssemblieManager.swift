@@ -44,8 +44,7 @@ final class AssemblyManager {
         LocationManagerAssembly(),
         SecureChallengeServiceAssembly(),
         PartPayServiceAssembly(),
-        PayAmountValidationManagerAssembly(),
-        ContentLoadManagerAssembly()
+        PayAmountValidationManagerAssembly()
     ]
     
     func registerStartServices(to locator: LocatorService) {

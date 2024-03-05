@@ -122,11 +122,26 @@ final class DefaultPartPayService: PartPayService {
     }
     
     func getBnplPlan() async throws {
+        switch sdkManager.payStrategy {
+        case .auto, .manual:
+            try await getFourPartsPlan()
+        case .withoutRefresh, .partPay:
+            try await getSixPartsPlan()
+        }
+    }
+    
+    private func getFourPartsPlan() async throws {
+        
+        guard featureToggle.isEnabled(.bnpl)
+                && authManager.bnplMerchEnabled
+                && authManager.authModel?.isBnplEnabled ?? false else { return }
+        
         guard let authInfo = sdkManager.authInfo,
               let sessionId = authManager.sessionId,
               let merchantLogin = authInfo.merchantLogin,
               let orderId = authInfo.orderId
         else { throw SDKError(.noData) }
+        
         analytics.sendEvent(.RQBnpl,
                             with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
         
@@ -134,6 +149,38 @@ final class DefaultPartPayService: PartPayService {
             let bnplResult = try await network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
                                                                               merchantLogin: merchantLogin,
                                                                               orderId: orderId),
+                                                       to: BnplModel.self)
+            
+            self.bnplplan = bnplResult
+            self.analytics.sendEvent(.RQGoodBnpl)
+            self.setEnabledBnpl(bnplResult.isBnplEnabled, enabledLevel: .bnplPlan)
+        } catch {
+            if let error = error as? SDKError {
+                parsingErrorAnaliticManager.sendAnaliticsError(error: error, type: .bnpl)
+            }
+            throw error
+        }
+    }
+    
+    private func getSixPartsPlan() async throws {
+        
+        guard featureToggle.isEnabled(.bnpl)
+                && authManager.bnplMerchEnabled
+                && authManager.authModel?.isBnplEnabled ?? false else { return }
+        
+        guard let authInfo = sdkManager.authInfo,
+              let sessionId = authManager.sessionId,
+              let merchantLogin = authInfo.merchantLogin,
+              let orderId = authInfo.orderId
+        else { throw SDKError(.noData) }
+        
+        analytics.sendEvent(.RQBnpl,
+                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
+        
+        do {
+            let bnplResult = try await network.request(BnplTarget.createPaymentPlan(sessionId: sessionId,
+                                                                                    merchantLogin: merchantLogin,
+                                                                                    orderId: orderId),
                                                        to: BnplModel.self)
             
             self.bnplplan = bnplResult

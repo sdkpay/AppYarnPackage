@@ -9,7 +9,6 @@
   },
   "graphBnpl" : {
     "content" : "4 платежа раз в 2 недели",
-    "count" : "4",
     "header" : "График платежей",
     "payments" : [
       {

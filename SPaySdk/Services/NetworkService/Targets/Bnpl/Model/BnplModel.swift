@@ -22,16 +22,26 @@ struct BnplModel: Codable {
 struct GraphBnpl: Codable {
     let header: String?
     let content: String?
-    let count: String?
     let text: String?
-    let payments: [Payment]
+    private let payments: [Payment]?
+    private let singleProductSixPart: [SingleProductSixPart]?
+    
+    var parts: [Payment] {
+        if let payments = singleProductSixPart?.first?.payments {
+            return payments
+        } else if let payments {
+            return payments
+        } else {
+            return []
+        }
+    }
     
     var finalCost: Int {
-        payments.map({ $0.amount }).reduce(0, +)
+        parts.map({ $0.amount }).reduce(0, +)
     }
     
     var currencyCode: String {
-        payments.first?.currencyCode ?? "643"
+        parts.first?.currencyCode ?? "643"
     }
 }
 
@@ -39,6 +49,7 @@ struct Payment: Codable {
     let date: String
     let amount: Int
     let currencyCode: String?
+    let clientCommission: Int?
 }
 
 struct ButtonBnpl: Codable {
@@ -49,5 +60,15 @@ struct ButtonBnpl: Codable {
     
     var integrityCheck: Bool {
         activeButtonLogo != nil && inactiveButtonLogo != nil && header != nil && content != nil
+    }
+}
+
+struct SingleProductSixPart: Codable {
+    let productName: String?
+    let clientCommission: Int?
+    let payments: [Payment]
+
+    enum CodingKeys: String, CodingKey {
+        case productName, clientCommission, payments
     }
 }

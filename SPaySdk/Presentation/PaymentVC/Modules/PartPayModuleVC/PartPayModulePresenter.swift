@@ -25,7 +25,7 @@ protocol PartPayModulePresenting {
 final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
     
     var partsCount: Int {
-        partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
+        partPayService.bnplplan?.graphBnpl?.parts.count ?? 0
     }
     
     weak var view: (IPartPayModuleVC & ModuleVC)?
@@ -59,7 +59,7 @@ final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
     }
     
     func model(for indexPath: IndexPath) -> PartCellModel {
-        guard let parts = partPayService.bnplplan?.graphBnpl?.payments,
+        guard let parts = partPayService.bnplplan?.graphBnpl?.parts,
               let text = partPayService.bnplplan?.graphBnpl?.text else {
             return PartCellModel(title: "", cost: "", isSelected: true, hideLine: true)
         }

@@ -48,7 +48,7 @@ final class PaymentMasterAssembly {
             return [
                 .partPayModule,
                 .paymentFeatureModule,
-                .paymentModule
+                .paymentPartPayModule
             ]
         }
     }
@@ -119,6 +119,9 @@ final class PaymentMasterAssembly {
         case .hintModule:
             
             return HintsModuleAssembly(locator: locator).createModule(mode: paymentVCMode)
+        case .paymentPartPayModule:
+            
+            return PaymentPartPayModuleAssembly(locator: locator).createModule(router: router)
         }
     }
 }

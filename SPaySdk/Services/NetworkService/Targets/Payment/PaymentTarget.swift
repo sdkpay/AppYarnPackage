@@ -25,6 +25,14 @@ enum PaymentTarget {
                          merchantLogin: String?,
                          ipAddress: String?,
                          paymentToken: String?)
+    case payOnline(sessionId: String,
+                   paymentId: Int,
+                   merchantLogin: String?,
+                   orderId: String?,
+                   deviceInfo: String,
+                   resolution: String?,
+                   priorityCardOnly: Bool,
+                   isBnplEnabled: Bool)
 }
 
 extension PaymentTarget: TargetType {
@@ -34,12 +42,14 @@ extension PaymentTarget: TargetType {
             return "sdk-gateway/v1/paymentToken"
         case .getPaymentOrder:
             return "sdk-gateway/v1/paymentOrder"
+        case .payOnline:
+            return "sdk-gateway/v1/payOnline"
         }
     }
     
     var httpMethod: HTTPMethod {
         switch self {
-        case .getPaymentToken, .getPaymentOrder:
+        case .getPaymentToken, .getPaymentOrder, .payOnline:
             return .post
         }
     }
@@ -137,6 +147,41 @@ extension PaymentTarget: TargetType {
                 params["jsonParams"] = jsonParams
             }
             return .requestWithParameters(nil, bodyParameters: params)
+        case let .payOnline(sessionId: sessionId,
+                            paymentId: paymentId,
+                            merchantLogin: merchantLogin,
+                            orderId: orderId,
+                            deviceInfo: deviceInfo,
+                            resolution: resolution,
+                            priorityCardOnly: priorityCardOnly,
+                            isBnplEnabled: isBnplEnabled):
+            var params: [String: Any] = [
+                "sessionId": sessionId,
+                "deviceInfo": deviceInfo,
+                "paymentId": paymentId,
+                "priorityCardOnly": priorityCardOnly,
+            ]
+            
+            if let resolution {
+                let fraudMonInfo: [String: Any] = [
+                    "resolution": resolution
+                ]
+                
+                params["fraudMonInfo"] = fraudMonInfo
+            }
+            
+            if isBnplEnabled {
+                params["isBnplEnabled"] = isBnplEnabled
+            }
+            
+            if let orderId = orderId {
+                params["orderId"] = orderId
+            }
+            
+            if let merchantLogin = merchantLogin {
+                params["merchantLogin"] = merchantLogin
+            }
+            return .requestWithParameters(nil, bodyParameters: params)
         }
     }
     
@@ -150,6 +195,8 @@ extension PaymentTarget: TargetType {
             return try? Data(contentsOf: Files.Stubs.paymentTokenJson.url)
         case .getPaymentOrder:
             return try? Data(contentsOf: Files.Stubs.paymentOrderSDKJson.url)
+        case .payOnline:
+            return nil
         }
     }
 }
