@@ -10,6 +10,7 @@ import UIKit
 protocol IPurchaseModuleVC {
     
     func showPartsView(_ value: Bool)
+    func configBonusesView(_ bonuses: String?)
     func addSnapShot()
     func reloadData()
 }
@@ -61,9 +62,14 @@ final class PurchaseModuleVC: ModuleVC, IPurchaseModuleVC {
     
     func showPartsView(_ value: Bool) {
         
+        viewBuilder.changeBonusesViewPosition(withLevelView: value)
         UIView.animate(withDuration: 0.25) {
             self.viewBuilder.levelsView.alpha = value ? 1.0 : 0.0
         }
+    }
+    
+    func configBonusesView(_ bonuses: String?) {
+        viewBuilder.bonusesView.config(with: bonuses)
     }
     
     private func showLevel(_ index: Int) {

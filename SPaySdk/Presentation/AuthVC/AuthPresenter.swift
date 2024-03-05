@@ -95,6 +95,7 @@ final class AuthPresenter: AuthPresenting {
                                         with: Strings.Error.Version.title,
                                         with: Strings.Error.Version.subtitle,
                                         with: nil,
+                                        with: nil,
                                         state: .failure,
                                         buttons: [
                                             AlertButtonModel(title: Strings.Return.title,

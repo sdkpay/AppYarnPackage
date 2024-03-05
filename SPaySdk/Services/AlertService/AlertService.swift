@@ -23,6 +23,7 @@ struct AlertViewModel {
     let sound: String
     let feedBack: UINotificationFeedbackGenerator.FeedbackType
     let isFailure: Bool
+    let bonuses: String?
 }
 
 enum AlertState {
@@ -85,7 +86,7 @@ enum AlertState {
 }
 
 enum AlertType {
-    case paySuccess(amount: String, shopName: String)
+    case paySuccess(amount: String, shopName: String, bonuses: String?)
     case connectSuccess(card: String)
     case defaultError
     case noInternet
@@ -121,6 +122,7 @@ protocol AlertService {
               with text: String,
               with subtitle: String?,
               with cost: String?,
+              with bonuses: String?,
               state: AlertState,
               buttons: [AlertButtonModel]) async -> AlertResult
     
@@ -164,7 +166,7 @@ final class DefaultAlertService: AlertService {
     func show(on view: ContentVC?, type: AlertType) async -> AlertResult {
         
         switch type {
-        case let .paySuccess(amount: amount, shopName: shopName):
+        case let .paySuccess(amount: amount, shopName: shopName, bonuses: bonuses):
             
             analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.state: "success"])
             
@@ -173,8 +175,12 @@ final class DefaultAlertService: AlertService {
             return await show(on: view,
                               with: amount,
                               with: shopName,
+                              with: nil,
+                              with: bonuses,
                               state: .success,
-                              buttons: [])
+                              buttons: [AlertButtonModel(title: "Закрыть",
+                                                         type: .full,
+                                                         action: {})])
             
         case .connectSuccess(card: let card):
             
@@ -271,6 +277,7 @@ final class DefaultAlertService: AlertService {
               with text: String,
               with subtitle: String?,
               with cost: String? = nil,
+              with bonuses: String? = nil,
               state: AlertState,
               buttons: [AlertButtonModel]) async -> AlertResult {
         
@@ -282,7 +289,8 @@ final class DefaultAlertService: AlertService {
                                    buttons: buttons,
                                    sound: state.soundPath,
                                    feedBack: state.feedBack,
-                                   isFailure: state != .success)
+                                   isFailure: state != .success,
+                                   bonuses: bonuses)
         
         let result = await withCheckedContinuation({( inCont: CheckedContinuation<AlertResult, Never>) -> Void in
             
