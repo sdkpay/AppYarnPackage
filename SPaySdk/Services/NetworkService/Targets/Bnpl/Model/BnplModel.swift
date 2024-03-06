@@ -13,10 +13,6 @@ struct BnplModel: Codable {
     let offerUrl: String?
     let offerText: String?
     let graphBnpl: GraphBnpl?
-    
-    var integrityCheck: Bool {
-        buttonBnpl?.integrityCheck == true && graphBnpl != nil
-    }
 }
 
 struct GraphBnpl: Codable {
@@ -36,6 +32,10 @@ struct GraphBnpl: Codable {
         }
     }
     
+    var commission: Int? {
+        singleProductSixPart?.first?.clientCommission
+    }
+    
     var finalCost: Int {
         parts.map({ $0.amount }).reduce(0, +)
     }
@@ -45,21 +45,43 @@ struct GraphBnpl: Codable {
     }
 }
 
-struct Payment: Codable {
+struct Payment: Codable, Hashable {
     let date: String
     let amount: Int
     let currencyCode: String?
     let clientCommission: Int?
+    
+    var uid: String {
+        UUID().uuidString
+    }
 }
 
 struct ButtonBnpl: Codable {
-    let activeButtonLogo: String?
-    let inactiveButtonLogo: String?
-    let header: String?
-    let content: String?
+    private let activeButtonLogo: String?
+    private let inactiveButtonLogo: String?
+    let header: String
+    let content: String
+    private let buttonLogo: String?
+    private let buttonLogoInactive: String?
     
-    var integrityCheck: Bool {
-        activeButtonLogo != nil && inactiveButtonLogo != nil && header != nil && content != nil
+    var buttonLogoUrl: String {
+        if let activeButtonLogo {
+            return activeButtonLogo
+        } else if let buttonLogo {
+            return buttonLogo
+        } else {
+            return ""
+        }
+    }
+    
+    var inactiveButtonLogoUrl: String {
+        if let inactiveButtonLogo {
+            return inactiveButtonLogo
+        } else if let buttonLogoInactive {
+            return buttonLogoInactive
+        } else {
+            return ""
+        }
     }
 }
 

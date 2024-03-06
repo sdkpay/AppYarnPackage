@@ -130,7 +130,7 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
             switch result {
             case .approve:
                 
-                self.pay(resolution: nil)
+                await goToPay()
             case .cancel:
                 
                 await self.completionManager.dismissCloseAction(view?.contentParrent)
@@ -161,7 +161,8 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
             await alertService.show(on: view?.contentParrent,
                                     with: Strings.Alert.Pay.No.Waiting.title,
                                     with: ConfigGlobal.localization?.payLoading ?? "",
-                                    with: nil,
+                                    with: nil, 
+                                    with: userService.selectedCard?.precalculateBonuses,
                                     state: .success,
                                     buttons: [okButton])
             
@@ -172,39 +173,81 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
     private func goToPay() async {
         
         guard let paymentId = userService.selectedCard?.paymentID else { return }
+        await self.view?.contentParrent?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+        await view?.contentParrent?.setUserInteractionsEnabled(false)
         
         do {
-        
-            await self.view?.contentParrent?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
             
-            let challengeState = try await secureChallengeService.challenge(paymentId: paymentId,
-                                                                            isBnplEnabled: true)
+            let challengeResult = try await paymentService.tryToPayWithoutToken(paymentId: paymentId,
+                                                                               isBnplEnabled: true,
+                                                                               resolution: nil)
             
-            switch challengeState {
+            secureChallengeService.fraudMonСheckResult = challengeResult
+            
+            switch challengeResult?.secureChallengeState {
             case .review:
                 let resolution = await getChallengeResolution()
                 
                 switch secureChallengeService.fraudMonСheckResult?.secureChallengeFactor {
                 case .hint:
-                    self.pay(resolution: resolution)
+                    try await payWithResolution(resolution: resolution)
+                    await showPaySuccessResult()
                 case .sms:
                     try await self.createOTP()
-                    self.pay(resolution: resolution)
+                    try await payWithResolution(resolution: resolution)
+                    await showPaySuccessResult()
                 case .none:
                     showSecureError()
                 }
             case .deny:
                 showSecureError()
             case nil:
-                pay(resolution: nil)
+                await showPaySuccessResult()
             }
         } catch {
+            await view?.contentParrent?.setUserInteractionsEnabled()
+            
             if let error = error as? PayError {
                 await self.validatePayError(error)
             } else if let error = error as? SDKError {
                 self.dismissWithError(error)
             }
         }
+    }
+    
+    private func payWithResolution(resolution: SecureChallengeResolution?) async throws {
+        
+        guard let paymentId = userService.selectedCard?.paymentID else { return }
+        
+        try await paymentService.tryToPayWithoutToken(paymentId: paymentId,
+                                                      isBnplEnabled: true,
+                                                      resolution: resolution)
+    }
+    
+    private func showPaySuccessResult() async {
+        
+        self.completionManager.completePay(with: .success)
+        await view?.contentParrent?.setUserInteractionsEnabled()
+
+        if let user = self.userService.user {
+            
+            if user.orderInfo.orderAmount.amount != 0 {
+                
+                let finalCost = partPayService.bnplplan?.graphBnpl?.parts.first?.amount
+                
+                await alertService.show(on: self.view?.contentParrent,
+                                        type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
+                                                          shopName: user.merchantInfo.merchantName,
+                                                          bonuses: userService.selectedCard?.precalculateBonuses))
+                await completionManager.dismissCloseAction(view?.contentParrent)
+            } else {
+                
+                await alertService.show(on: self.view?.contentParrent,
+                                        type: .connectSuccess(card: userService.selectedCard?.cardNumber.card ?? ""))
+                await completionManager.dismissCloseAction(view?.contentParrent)
+            }
+        }
+        self.userService.clearData()
     }
     
     @MainActor
@@ -249,6 +292,7 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
             await alertService.show(on: self.view?.contentParrent,
                                     with: formParameters?.header ?? "",
                                     with: formParameters?.textDecline ?? "",
+                                    with: nil, 
                                     with: nil,
                                     state: .failure,
                                     buttons: [returnButton])
@@ -256,51 +300,4 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
             await completionManager.dismissCloseAction(view?.contentParrent)
         }
     }
-    
-    private func pay(resolution: SecureChallengeResolution?) {
-        
-        guard let paymentId = userService.selectedCard?.paymentID else { return }
-        
-        Task {
-            await self.view?.contentParrent?.showLoading()
-            await view?.contentParrent?.setUserInteractionsEnabled(false)
-            do {
-                try await paymentService.tryToPay(paymentId: paymentId,
-                                                  isBnplEnabled: true,
-                                                  resolution: resolution)
-                
-                self.completionManager.completePay(with: .success)
-                await view?.contentParrent?.setUserInteractionsEnabled()
-
-                if let user = self.userService.user {
-                    
-                    if user.orderInfo.orderAmount.amount != 0 {
-                        
-                        let finalCost = partPayService.bnplplan?.graphBnpl?.parts.first?.amount
-                        
-                        await alertService.show(on: self.view?.contentParrent,
-                                                type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
-                                                                  shopName: user.merchantInfo.merchantName))
-                        await completionManager.dismissCloseAction(view?.contentParrent)
-                    } else {
-                        
-                        await alertService.show(on: self.view?.contentParrent,
-                                                type: .connectSuccess(card: userService.selectedCard?.cardNumber.card ?? ""))
-                        await completionManager.dismissCloseAction(view?.contentParrent)
-                    }
-                }
-                self.userService.clearData()
-            } catch {
-
-                await view?.contentParrent?.setUserInteractionsEnabled()
-                
-                if let error = error as? PayError {
-                    await validatePayError(error)
-                } else if let error = error as? SDKError {
-                    self.dismissWithError(error)
-                }
-            }
-        }
-    }
 }
-

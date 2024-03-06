@@ -102,7 +102,6 @@ private extension PurchaseViewBuilder {
             static let topCost: CGFloat = 4.0
             static let height: CGFloat = Cost.height
             static let bonusesTop: CGFloat = 25.0
-
         }
     }
 }

@@ -35,7 +35,6 @@ final class HintsPaymentModulePresenter: NSObject, HintsModulePresenting {
                 self.setHints()
             }
             .store(in: &cancellable)
-
     }
     
     private func setHints() {

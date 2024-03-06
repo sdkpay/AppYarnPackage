@@ -18,6 +18,7 @@ protocol PartPayModulePresenting {
     func viewDidLoad()
     var partsCount: Int { get }
     func model(for indexPath: IndexPath) -> PartCellModel
+    var needCommission: Bool { get }
     
     var view: (IPartPayModuleVC & ModuleVC)? { get set }
 }
@@ -28,13 +29,17 @@ final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
         partPayService.bnplplan?.graphBnpl?.parts.count ?? 0
     }
     
+    var needCommission: Bool {
+        partPayService.bnplplan?.graphBnpl?.commission != nil
+    }
+    
     weak var view: (IPartPayModuleVC & ModuleVC)?
-    private let router: PaymentRouting
+    private let router: PartPayModuleRouting
     private var userService: UserService
     private let analytics: AnalyticsService
     private var partPayService: PartPayService
     
-    init(_ router: PaymentRouting,
+    init(_ router: PartPayModuleRouting,
          partPayService: PartPayService,
          analytics: AnalyticsService,
          userService: UserService) {
@@ -56,6 +61,10 @@ final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
         }
         view?.setTitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
         configCheckView()
+        
+        if let commissionCount = partPayService.bnplplan?.graphBnpl?.commission {
+            view?.setCommissionCount(commissionCount)
+        }
     }
     
     func model(for indexPath: IndexPath) -> PartCellModel {

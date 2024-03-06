@@ -18,11 +18,18 @@ enum PurchaseModelFactory {
             
             let currentPayment = bnplPayment[indexPath.row]
             
-            let subtitle = indexPath.row == 0 ? Strings.Today.title : currentPayment.date
+           // let subtitle = indexPath.row == 0 ? Strings.Today.title : currentPayment.date
             
-            return PurchaseModel(title: currentPayment.amount.price(.RUB),
-                                 subTitle: Strings.Payment.Part.subtitile(fullPayment.amount.price(.RUB),
-                                                                          subtitle))
+            if let clientCommission = currentPayment.clientCommission {
+                
+                return PurchaseModel(title: currentPayment.amount.price(.RUB),
+                                     subTitle: Strings.Payment.Part.Commission.subtitile(fullPayment.amount.price(.RUB),
+                                                                                         clientCommission.price(.RUB)))
+            } else {
+                
+                return PurchaseModel(title: currentPayment.amount.price(.RUB),
+                                     subTitle: Strings.Payment.Part.subtitile(fullPayment.amount.price(.RUB)))
+            }
         } else {
             return PurchaseModel(title: fullPayment.amount.price(.RUB),
                                  subTitle: nil)

@@ -147,7 +147,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             switch result {
             case .approve:
                 
-                self.pay(resolution: nil)
+                await self.goToPay()
             case .cancel:
                 
                 await self.completionManager.dismissCloseAction(view?.contentParrent)
@@ -208,45 +208,116 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     
     private func goToPay() async {
         
-        guard let paymentId = userService.selectedCard?.paymentID else { return }
-        
         do {
-            
-            if otpService.otpRequired {
+            switch sdkManager.payStrategy {
+            case .auto, .manual:
                 
-                try await createOTP()
-            }
-            
-            await self.view?.contentParrent?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
-            
-            let challengeState = try await secureChallengeService.challenge(paymentId: paymentId,
-                                                                            isBnplEnabled: partPayService.bnplplanSelected)
-            
-            switch challengeState {
-            case .review:
-                let resolution = await getChallengeResolution()
+                try await payWithPaymentToken()
+            case .partPay, .withoutRefresh:
                 
-                switch secureChallengeService.fraudMonСheckResult?.secureChallengeFactor {
-                case .hint:
-                    self.pay(resolution: resolution)
-                case .sms:
-                    try await self.createOTP()
-                    self.pay(resolution: resolution)
-                case .none:
-                    showSecureError()
-                }
-            case .deny:
-                showSecureError()
-            case nil:
-                pay(resolution: nil)
+                try await payWithoutPaymentToken()
             }
         } catch {
+            await view?.contentParrent?.setUserInteractionsEnabled()
+            
             if let error = error as? PayError {
                 await self.validatePayError(error)
             } else if let error = error as? SDKError {
                 self.dismissWithError(error)
             }
         }
+    }
+    
+    private func payWithPaymentToken() async throws {
+        
+        guard let paymentId = userService.selectedCard?.paymentID else { return }
+        
+        if otpService.otpRequired {
+            
+            try await createOTP()
+        }
+        
+        await self.view?.contentParrent?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+        
+        let challengeState = try await secureChallengeService.challenge(paymentId: paymentId,
+                                                                        isBnplEnabled: partPayService.bnplplanSelected)
+        
+        switch challengeState {
+        case .review:
+            
+            let resolution = await getChallengeResolution()
+            
+            switch secureChallengeService.fraudMonСheckResult?.secureChallengeFactor {
+            case .hint:
+                try await payWithResolution(resolution: resolution)
+            case .sms:
+                try await self.createOTP()
+                try await payWithResolution(resolution: resolution)
+            case .none:
+                showSecureError()
+            }
+        case .deny:
+            showSecureError()
+        case nil:
+            try await payWithResolution(resolution: nil)
+        }
+    }
+    
+    private func payWithoutPaymentToken() async throws {
+        
+        guard let paymentId = userService.selectedCard?.paymentID else { return }
+        
+        let challengeResult = try await paymentService.tryToPayWithoutToken(paymentId: paymentId,
+                                                                           isBnplEnabled: true,
+                                                                           resolution: nil)
+        
+        secureChallengeService.fraudMonСheckResult = challengeResult
+        
+        switch challengeResult?.secureChallengeState {
+        case .review:
+            let resolution = await getChallengeResolution()
+            
+            switch secureChallengeService.fraudMonСheckResult?.secureChallengeFactor {
+            case .hint:
+                try await payWithResolution(resolution: resolution)
+                await showPaySuccessResult()
+            case .sms:
+                try await self.createOTP()
+                try await payWithResolution(resolution: resolution)
+                await showPaySuccessResult()
+            case .none:
+                showSecureError()
+            }
+        case .deny:
+            showSecureError()
+        case nil:
+            await showPaySuccessResult()
+        }
+        
+    }
+    
+    
+    private func payWithResolution(resolution: SecureChallengeResolution?) async throws {
+        
+        guard let paymentId = userService.selectedCard?.paymentID else { return }
+        
+        await self.view?.contentParrent?.showLoading()
+        await view?.contentParrent?.setUserInteractionsEnabled(false)
+        
+        switch sdkManager.payStrategy {
+            
+        case .auto, .manual:
+            try await paymentService.tryToPayWithToken(paymentId: paymentId,
+                                                       isBnplEnabled: partPayService.bnplplanSelected,
+                                                       resolution: resolution)
+        case .partPay, .withoutRefresh:
+            try await paymentService.tryToPayWithoutToken(paymentId: paymentId,
+                                                          isBnplEnabled: partPayService.bnplplanSelected,
+                                                          resolution: resolution)
+        }
+    
+        await showPaySuccessResult()
+        
     }
     
     @MainActor
@@ -300,53 +371,32 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         }
     }
     
-    private func pay(resolution: SecureChallengeResolution?) {
+    private func showPaySuccessResult() async {
         
-        guard let paymentId = userService.selectedCard?.paymentID else { return }
-        
-        Task {
-            await self.view?.contentParrent?.showLoading()
-            await view?.contentParrent?.setUserInteractionsEnabled(false)
-            do {
-                try await paymentService.tryToPay(paymentId: paymentId,
-                                                  isBnplEnabled: partPayService.bnplplanSelected,
-                                                  resolution: resolution)
-                self.partPayService.bnplplanSelected = false
-                self.completionManager.completePay(with: .success)
-                await view?.contentParrent?.setUserInteractionsEnabled()
+        self.partPayService.bnplplanSelected = false
+        self.completionManager.completePay(with: .success)
+        await view?.contentParrent?.setUserInteractionsEnabled()
 
-                if let user = self.userService.user {
-                    
-                    if user.orderInfo.orderAmount.amount != 0 {
-                        
-                        let finalCost = partPayService.bnplplanSelected
-                        ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
-                        : user.orderInfo.orderAmount.amount
-                        
-                        await alertService.show(on: self.view?.contentParrent,
-                                                type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
-                                                                  shopName: user.merchantInfo.merchantName,
-                                                                  bonuses: userService.selectedCard?.precalculateBonuses))  
-                        await completionManager.dismissCloseAction(view?.contentParrent)
-                    } else {
-                        
-                        await alertService.show(on: self.view?.contentParrent,
-                                                type: .connectSuccess(card: userService.selectedCard?.cardNumber.card ?? ""))
-                        await completionManager.dismissCloseAction(view?.contentParrent)
-                    }
-                }
-                self.userService.clearData()
-            } catch {
-                self.userService.clearData()
-                self.partPayService.bnplplanSelected = false
-                await view?.contentParrent?.setUserInteractionsEnabled()
+        if let user = self.userService.user {
+            
+            if user.orderInfo.orderAmount.amount != 0 {
                 
-                if let error = error as? PayError {
-                    await validatePayError(error)
-                } else if let error = error as? SDKError {
-                    self.dismissWithError(error)
-                }
+                let finalCost = partPayService.bnplplanSelected
+                ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
+                : user.orderInfo.orderAmount.amount
+                
+                await alertService.show(on: self.view?.contentParrent,
+                                        type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
+                                                          shopName: user.merchantInfo.merchantName,
+                                                          bonuses: userService.selectedCard?.precalculateBonuses))
+                await completionManager.dismissCloseAction(view?.contentParrent)
+            } else {
+                
+                await alertService.show(on: self.view?.contentParrent,
+                                        type: .connectSuccess(card: userService.selectedCard?.cardNumber.card ?? ""))
+                await completionManager.dismissCloseAction(view?.contentParrent)
             }
         }
+        self.userService.clearData()
     }
 }

@@ -6,13 +6,11 @@
 //
 
 import UIKit
+import Combine
 
 protocol PartPayPresenting {
-    func viewDidLoad()
-    var partsCount: Int { get }
     func acceptButtonTapped()
     func backButtonTapped()
-    func model(for indexPath: IndexPath) -> PartCellModel
 }
 
 final class PartPayPresenter: PartPayPresenting {
@@ -22,7 +20,7 @@ final class PartPayPresenter: PartPayPresenting {
     var partsCount: Int {
         partPayService.bnplplan?.graphBnpl?.parts.count ?? 0
     }
-
+    
     private var partPayService: PartPayService
     private let router: PartPayRouter
     private let timeManager: OptimizationCheсkerManager
@@ -30,9 +28,13 @@ final class PartPayPresenter: PartPayPresenting {
     private var partPaySelected: Action
     private var isSelected = true
     private var screenEvents = [AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
-
+    private var cancellable = Set<AnyCancellable>()
+    
+    var partPayModule: ModuleVC
+    
     init(_ router: PartPayRouter,
          partPayService: PartPayService,
+         partPayModule: ModuleVC,
          timeManager: OptimizationCheсkerManager,
          analytics: AnalyticsService,
          partPaySelected: @escaping Action) {
@@ -40,13 +42,23 @@ final class PartPayPresenter: PartPayPresenting {
         self.router = router
         self.analytics = analytics
         self.timeManager = timeManager
+        self.partPayModule = partPayModule
         self.partPaySelected = partPaySelected
         self.timeManager.startTraking()
     }
     
     func viewDidLoad() {
-        configViews()
-        configCheckView()
+        setSubscribers()
+    }
+    
+    private func setSubscribers() {
+        
+        partPayService.bnplCheckAcceptedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { value in
+                self.view?.setButtonEnabled(value: value)
+            }
+            .store(in: &cancellable)
     }
     
     func acceptButtonTapped() {
@@ -67,51 +79,5 @@ final class PartPayPresenter: PartPayPresenting {
         DispatchQueue.main.async {
             self.view?.contentNavigationController?.popViewController(animated: true)
         }
-    }
-    
-    func model(for indexPath: IndexPath) -> PartCellModel {
-        
-        guard let parts = partPayService.bnplplan?.graphBnpl?.parts,
-              let text = partPayService.bnplplan?.graphBnpl?.text else {
-            return PartCellModel(title: "", cost: "", isSelected: true, hideLine: true)
-        }
-        let part = parts[indexPath.row]
-        return PartCellModel(title: indexPath.row == 0 ? text : part.date,
-                             cost: part.amount.price(part.currencyCode),
-                             isSelected: indexPath.row == 0,
-                             hideLine: indexPath.row == parts.count - 1)
-    }
-    
-    private func configViews() {
-        if let plan = partPayService.bnplplan?.graphBnpl {
-            view?.setFinalCost(plan.finalCost.price(plan.currencyCode))
-        }
-        view?.setTitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
-    }
-
-    private func configCheckView() {
-        view?.configCheckView(text: partPayService.bnplplan?.offerText ?? "",
-                              checkSelected: isSelected,
-                              checkTapped: { [weak self] value in
-            self?.checkTapped(value)
-        },
-                              textTapped: { [weak self] link in
-            DispatchQueue.main.async {
-                self?.agreementTextTapped(link: link.link)
-            }
-        })
-    }
-
-    private func checkTapped(_ value: Bool) {
-        analytics.sendEvent(.TouchApproveBNPL,
-                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
-        view?.setButtonEnabled(value: value)
-    }
-    
-    @MainActor
-    private func agreementTextTapped(link: String) {
-        analytics.sendEvent(.TouchAgreementView,
-                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
-        router.presentWebView(with: link)
     }
 }

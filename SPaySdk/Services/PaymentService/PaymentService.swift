@@ -38,16 +38,21 @@ final class PaymentServiceAssembly: Assembly {
 
 protocol PaymentService {
  
-    func tryToPay(paymentId: Int,
-                  isBnplEnabled: Bool,
-                  resolution: SecureChallengeResolution?) async throws
     @discardableResult
     func getPaymentToken(paymentId: Int,
                          isBnplEnabled: Bool,
                          resolution: SecureChallengeResolution?) async throws -> PaymentTokenModel
+    @discardableResult
+    func tryToPayWithoutToken(paymentId: Int,
+                              isBnplEnabled: Bool,
+                              resolution: SecureChallengeResolution?) async throws -> FraudMonСheckResult?
+    func tryToPayWithToken(paymentId: Int,
+                           isBnplEnabled: Bool,
+                           resolution: SecureChallengeResolution?) async throws
 }
 
 final class DefaultPaymentService: PaymentService {
+    
     private let network: NetworkService
     private var sdkManager: SDKManager
     private let userService: UserService
@@ -87,21 +92,9 @@ final class DefaultPaymentService: PaymentService {
         SBLogger.log(.stop(obj: self))
     }
     
-    func tryToPay(paymentId: Int,
-                  isBnplEnabled: Bool,
-                  resolution: SecureChallengeResolution?) async throws {
-        
-        switch sdkManager.payStrategy {
-        case .auto, .manual:
-            try await tryToPayWithToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
-        case .partPay, .withoutRefresh:
-            try await tryToPayWithoutToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
-        }
-    }
-    
-    private func tryToPayWithToken(paymentId: Int,
-                                   isBnplEnabled: Bool,
-                                   resolution: SecureChallengeResolution?) async throws {
+    func tryToPayWithToken(paymentId: Int,
+                           isBnplEnabled: Bool,
+                           resolution: SecureChallengeResolution?) async throws {
         
         do {
             
@@ -141,9 +134,10 @@ final class DefaultPaymentService: PaymentService {
         }
     }
     
-    private func tryToPayWithoutToken(paymentId: Int,
-                                      isBnplEnabled: Bool,
-                                      resolution: SecureChallengeResolution?) async throws {
+    @discardableResult
+    func tryToPayWithoutToken(paymentId: Int,
+                              isBnplEnabled: Bool,
+                              resolution: SecureChallengeResolution?) async throws -> FraudMonСheckResult? {
         
         guard let sessionId = authManager.sessionId,
               let authInfo = sdkManager.authInfo,
@@ -152,14 +146,23 @@ final class DefaultPaymentService: PaymentService {
         
         let deviceInfo = try await personalMetricsService.getUserData()
         
-        try await network.request(PaymentTarget.payOnline(sessionId: sessionId,
-                                                          paymentId: paymentId,
-                                                          merchantLogin: merchantLogin,
-                                                          orderId: authInfo.orderId,
-                                                          deviceInfo: deviceInfo,
-                                                          resolution: resolution?.rawValue,
-                                                          priorityCardOnly: userService.getListCards,
-                                                          isBnplEnabled: isBnplEnabled))
+        do {
+            try await network.request(PaymentTarget.payOnline(sessionId: sessionId,
+                                                              paymentId: paymentId,
+                                                              merchantLogin: merchantLogin,
+                                                              orderId: authInfo.orderId,
+                                                              deviceInfo: deviceInfo,
+                                                              resolution: resolution?.rawValue,
+                                                              priorityCardOnly: userService.getListCards,
+                                                              isBnplEnabled: isBnplEnabled))
+            return nil
+        } catch {
+            if let secureError = SecureChallengeError(from: error.sdkError) {
+                return secureError.fraudMonСheckResult
+            } else {
+                throw error
+            }
+        }
     }
     
     @discardableResult

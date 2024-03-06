@@ -78,12 +78,7 @@ final class DefaultPartPayService: PartPayService {
     var bnplCheckAcceptedPublisher: Published<Bool>.Publisher { $bnplCheckAccepted }
     
     var bnplplanEnabled: Bool {
-        switch bnplAvaliable {
-        case true:
-            return bnplplan?.integrityCheck == true
-        case false:
-            return false
-        }
+        bnplAvaliable
     }
     
     private var bnplEnabledLevels: [EnabledLevel: Bool] = [:]
@@ -155,6 +150,7 @@ final class DefaultPartPayService: PartPayService {
             self.analytics.sendEvent(.RQGoodBnpl)
             self.setEnabledBnpl(bnplResult.isBnplEnabled, enabledLevel: .bnplPlan)
         } catch {
+            self.setEnabledBnpl(false, enabledLevel: .bnplPlan)
             if let error = error as? SDKError {
                 parsingErrorAnaliticManager.sendAnaliticsError(error: error, type: .bnpl)
             }
@@ -187,6 +183,7 @@ final class DefaultPartPayService: PartPayService {
             self.analytics.sendEvent(.RQGoodBnpl)
             self.setEnabledBnpl(bnplResult.isBnplEnabled, enabledLevel: .bnplPlan)
         } catch {
+            self.setEnabledBnpl(false, enabledLevel: .bnplPlan)
             if let error = error as? SDKError {
                 parsingErrorAnaliticManager.sendAnaliticsError(error: error, type: .bnpl)
             }

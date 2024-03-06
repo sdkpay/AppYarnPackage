@@ -104,6 +104,7 @@ final class AlertServiceAssembly: Assembly {
             let service: AlertService = DefaultAlertService(completionManager: container.resolve(),
                                                             liveCircleManager: container.resolve(),
                                                             analytics: container.resolve(),
+                                                            sdkManager: container.resolve(),
                                                             setupManager: container.resolve())
             return service
         })
@@ -159,6 +160,7 @@ final class DefaultAlertService: AlertService {
     private var alertVC: ContentVC?
     private let analytics: AnalyticsService
     private let liveCircleManager: LiveCircleManager
+    private let sdkManager: SDKManager
     private let setupManager: SetupManager
     
     @MainActor
@@ -171,16 +173,18 @@ final class DefaultAlertService: AlertService {
             analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.state: "success"])
             
             guard alertViewNeeded else { return AlertResult.approve }
-    
+            
             return await show(on: view,
                               with: amount,
                               with: shopName,
                               with: nil,
                               with: bonuses,
                               state: .success,
-                              buttons: [AlertButtonModel(title: "Закрыть",
-                                                         type: .full,
-                                                         action: {})])
+                              buttons: [
+                                AlertButtonModel(title: "Закрыть",
+                                                 type: .full,
+                                                 action: {})
+                              ])
             
         case .connectSuccess(card: let card):
             
@@ -196,6 +200,15 @@ final class DefaultAlertService: AlertService {
         case .defaultError:
             
             analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.state: "default"])
+            
+            if sdkManager.payStrategy == .partPay {
+                
+                return await show(on: view,
+                                  with: Strings.Error.Partpay.title,
+                                  with: Strings.Error.Partpay.subtitle,
+                                  state: .warning,
+                                  buttons: [])
+            }
             
             guard alertViewNeeded else { return AlertResult.approve }
             
@@ -312,10 +325,12 @@ final class DefaultAlertService: AlertService {
     init(completionManager: CompletionManager,
          liveCircleManager: LiveCircleManager,
          analytics: AnalyticsService,
+         sdkManager: SDKManager,
          setupManager: SetupManager) {
         self.completionManager = completionManager
         self.liveCircleManager = liveCircleManager
         self.analytics = analytics
+        self.sdkManager = sdkManager
         self.setupManager = setupManager
         SBLogger.log(.start(obj: self))
     }

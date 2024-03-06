@@ -10,20 +10,26 @@ import UIKit
 final class PartPayModuleAssembly {
     
     private let locator: LocatorService
-
+    
     init(locator: LocatorService) {
         self.locator = locator
     }
 
-    func createModule(router: PaymentRouting) -> ModuleVC {
+    func createModule() -> ModuleVC {
         
+        var router = moduleRouter()
         var presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         return contentView
     }
     
-    func modulePresenter(_ router: PaymentRouting) -> PartPayModulePresenting {
+    private func moduleRouter() -> PartPayModuleRouting {
+        
+        PartPayModuleRouter(with: locator)
+    }
+    
+    func modulePresenter(_ router: PartPayModuleRouting) -> PartPayModulePresenting {
        PartPayModulePresenter(router,
                               partPayService: locator.resolve(),
                               analytics: locator.resolve(),

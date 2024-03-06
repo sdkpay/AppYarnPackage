@@ -205,6 +205,7 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
             }
             
         case .bank, .sid:
+            
             presentListCards()
         }
     }

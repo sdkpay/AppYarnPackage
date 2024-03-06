@@ -27,7 +27,7 @@ final class HintsModuleAssembly {
         
         switch mode {
 
-        case .pay, .connect, .partPay :
+        case .pay, .connect, .partPay:
             return HintsPaymentModulePresenter(userService: locator.resolve(), 
                                                payAmountValidationManager: locator.resolve())
         case .helper:
@@ -42,4 +42,3 @@ final class HintsModuleAssembly {
         return view
     }
 }
-

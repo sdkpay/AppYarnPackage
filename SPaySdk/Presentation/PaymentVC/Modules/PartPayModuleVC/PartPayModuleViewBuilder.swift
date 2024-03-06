@@ -103,6 +103,8 @@ final class PartPayModuleViewBuilder {
     }()
     
     private(set) lazy var agreementView = CheckView()
+    
+    private(set) lazy var commissionLabel = CommissionLabel()
 
     private(set) lazy var finalLabel: UILabel = {
         let view = UILabel()
@@ -145,19 +147,34 @@ final class PartPayModuleViewBuilder {
         return view
     }()
     
-    func setupUI(view: UIView) {
+    func setupUI(view: UIView, needCommissionLabel: Bool) {
         
         titleLabel
             .add(toSuperview: view)
             .touchEdge(.top, toSuperviewEdge: .top, withInset: Consts.Label.Title.topOffSet)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Label.Title.leftOffSet)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Label.Title.rightOffSet)
-
+        
+        if needCommissionLabel {
+            
+            commissionLabel
+                .add(toSuperview: view)
+                .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Consts.TableView.Background.topOffSet)
+                .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Label.Title.leftOffSet)
+        }
+        
         backgroundTableView
             .add(toSuperview: view)
-            .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Consts.TableView.Background.topOffSet)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.TableView.Background.leftOffSet)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.Background.rightOffSet)
+        
+        if needCommissionLabel {
+            backgroundTableView
+                .touchEdge(.top, toEdge: .bottom, ofView: commissionLabel, withInset: Consts.TableView.Background.topOffSet)
+        } else {
+            backgroundTableView
+                .touchEdge(.top, toEdge: .bottom, ofView: titleLabel, withInset: Consts.TableView.Background.topOffSet)
+        }
         
         partsTableView
             .add(toSuperview: backgroundTableView)

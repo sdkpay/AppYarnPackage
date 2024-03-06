@@ -30,7 +30,8 @@ final class PartPayAssembly {
     private func modulePresenter(_ router: PartPayRouter,
                                  partPaySelected: @escaping Action) -> PartPayPresenter {
         let presenter = PartPayPresenter(router,
-                                         partPayService: locator.resolve(),
+                                         partPayService: locator.resolve(), 
+                                         partPayModule: partPayModule(),
                                          timeManager: OptimizationCheсkerManager(),
                                          analytics: locator.resolve(),
                                          partPaySelected: partPaySelected)
@@ -42,5 +43,9 @@ final class PartPayAssembly {
         let view = PartPayVC(presenter, analyticsService: analyticsService)
         presenter.view = view
         return view
+    }
+    
+    private func partPayModule() -> ModuleVC {
+        PartPayModuleAssembly(locator: locator).createModule()
     }
 }

@@ -71,7 +71,7 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
             .store(in: &cancellable)
         userService.selectedCardPublisher
             .receive(on: DispatchQueue.main)
-            .sink { card in
+            .sink { _ in
                 self.configBonusesView()
             }
             .store(in: &cancellable)
@@ -80,7 +80,7 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     func identifiresForPurchaseSection() -> [Int] {
         
         if partPayService.bnplplanSelected,
-           let dates = partPayService.bnplplan?.graphBnpl?.parts.map({ $0.date }) {
+           let dates = partPayService.bnplplan?.graphBnpl?.parts.map({ $0.uid }) {
             return dates.map { $0.hash }
         } else {
             return [.zero]

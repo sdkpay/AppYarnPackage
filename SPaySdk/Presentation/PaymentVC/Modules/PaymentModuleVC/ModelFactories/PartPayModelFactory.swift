@@ -13,7 +13,7 @@ enum PartPayModelFactory {
                       buttonBnpl: ButtonBnpl,
                       bnplplanSelected: Bool) -> PaymentFeatureModel {
         
-        return PaymentFeatureModel(iconViewURL: bnplplanSelected ? buttonBnpl.activeButtonLogo : buttonBnpl.inactiveButtonLogo,
+        return PaymentFeatureModel(iconViewURL: bnplplanSelected ? buttonBnpl.buttonLogoUrl : buttonBnpl.inactiveButtonLogoUrl,
                                    title: buttonBnpl.header,
                                    subTitle: buttonBnpl.content,
                                    switchOn: bnplplanSelected)

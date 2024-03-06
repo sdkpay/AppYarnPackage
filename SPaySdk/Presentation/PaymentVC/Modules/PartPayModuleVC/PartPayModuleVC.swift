@@ -10,6 +10,7 @@ import UIKit
 protocol IPartPayModuleVC {
     func setFinalCost(_ value: String)
     func setTitle(_ value: String)
+    func setCommissionCount(_ value: Int)
     func configCheckView(text: String,
                          checkSelected: Bool,
                          checkTapped: @escaping BoolAction,
@@ -56,6 +57,10 @@ final class PartPayModuleVC: ModuleVC, IPartPayModuleVC {
         viewBuilder.titleLabel.text = value
     }
     
+    func setCommissionCount(_ value: Int) {
+        viewBuilder.commissionLabel.config(with: value)
+    }
+    
     func configCheckView(text: String,
                          checkSelected: Bool,
                          checkTapped: @escaping BoolAction,
@@ -64,7 +69,7 @@ final class PartPayModuleVC: ModuleVC, IPartPayModuleVC {
                                          checkSelected: checkSelected,
                                          checkTapped: checkTapped,
                                          textTapped: textTapped)
-        viewBuilder.setupUI(view: view)
+        viewBuilder.setupUI(view: view, needCommissionLabel: presenter.needCommission)
     }
 }
 

@@ -19,6 +19,7 @@ final class SecureChallengeServiceAssembly: Assembly {
     
     func register(in locator: LocatorService) {
         let service: SecureChallengeService = DefaultSecureChallengeService(locator.resolve(),
+                                                                            sdkManager: locator.resolve(),
                                                                             paymentService: locator.resolve())
         locator.register(service: service)
     }
@@ -27,7 +28,7 @@ final class SecureChallengeServiceAssembly: Assembly {
 protocol SecureChallengeService {
     
     func challenge(paymentId: Int, isBnplEnabled: Bool) async throws -> SecureChallengeState?
-    var fraudMonСheckResult: FraudMonСheckResult? { get }
+    var fraudMonСheckResult: FraudMonСheckResult? { get set }
     func sendChallengeResult(resolution: SecureChallengeResolution?) async throws
 }
 
@@ -36,13 +37,16 @@ final class DefaultSecureChallengeService: SecureChallengeService {
     private var network: NetworkService
     private var paymentService: PaymentService
     private var paymentId: Int?
+    private let sdkManager: SDKManager
     private var isBnplEnabled = false
     
     var fraudMonСheckResult: FraudMonСheckResult?
     
     init(_ network: NetworkService,
+         sdkManager: SDKManager,
          paymentService: PaymentService) {
         self.network = network
+        self.sdkManager = sdkManager
         self.paymentService = paymentService
     }
     

@@ -21,7 +21,8 @@
 "payment.noCards.title" = "Нет карт для оплаты";
 "payment.noCards.subtitle" = "Выберите другой способ";
 "payment.cards.compoundWallet.title" = " c %@";
-"payment.part.subtitile" = "из %@ спишем %@";
+"payment.part.subtitile" = "из %@";
+"payment.part.commission.subtitile" = "из %@ (с комиссией %@)";
 "payment.cards.compoundWallet.one" = "счетом";
 "payment.cards.compoundWallet.two" = "счетами";
 
@@ -39,6 +40,7 @@
 "part.active.button.title" = "Оплатить частями";
 "part.contract.title" = "условиями договора";
 "part.agreement.title" = "соглашения";
+"part.commission.title" = "Комиссия %@ включена в первый платёж";
 
 // Error
 "error.system" = "Системная или внутренняя ошибка.";
@@ -54,6 +56,8 @@
 "error.noMoney.title" = "Оплатить со SberPay не получится";
 "error.noMoney.subtitle" = "Пополните карту и и попробуйте ещё раз";
 "error.configError.title" = "Ошибка загрузки конфигурационного файла";
+"error.partpay.title" = "Оплата частями недоступна";
+"error.partpay.subtitle" = "Пожалуйста, выберите другой способ оплаты";
 
 // Loading
 "try.to.pay.title" = "Проводим оплату...";
