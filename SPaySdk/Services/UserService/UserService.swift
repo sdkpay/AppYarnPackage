@@ -112,7 +112,6 @@ final class DefaultUserService: UserService {
                                                             to: UserModel.self)
             
             self.user = listCardsResult
-            additionalCards = listCardsResult.paymentToolInfo.additionalCards
             self.analytics.sendEvent(.RQGoodListCards,
                                      with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
             self.analytics.sendEvent(.RSGoodListCards,

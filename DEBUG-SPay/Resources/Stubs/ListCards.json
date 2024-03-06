@@ -40,7 +40,8 @@
   "merchantInfo" : {
     "merchantName" : "SberPrime12()_&*СберПр.5",
     "logoUrl" : "https:\/\/test.stat.online.sberbank.ru\/SBERCMS\/sberpay\/781000012764.png",
-    "bindingIsNeeded" : false
+    "bindingIsNeeded" : true,
+    "bindingSafeText" : "Тестовый текст для связок, очень большой текст"
   },
   "formInfo" : {
     "notEnoughBalanceText" : "Кажется не хватает денег на карте",

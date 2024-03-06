@@ -209,6 +209,9 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     private func goToPay() async {
         
         do {
+            await self.view?.contentParrent?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+            await view?.contentParrent?.setUserInteractionsEnabled(false)
+
             switch sdkManager.payStrategy {
             case .auto, .manual:
                 
@@ -268,8 +271,8 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         guard let paymentId = userService.selectedCard?.paymentID else { return }
         
         let challengeResult = try await paymentService.tryToPayWithoutToken(paymentId: paymentId,
-                                                                           isBnplEnabled: true,
-                                                                           resolution: nil)
+                                                                            isBnplEnabled: partPayService.bnplplanSelected,
+                                                                            resolution: nil)
         
         secureChallengeService.fraudMonСheckResult = challengeResult
         
@@ -293,9 +296,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         case nil:
             await showPaySuccessResult()
         }
-        
     }
-    
     
     private func payWithResolution(resolution: SecureChallengeResolution?) async throws {
         
@@ -317,7 +318,6 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         }
     
         await showPaySuccessResult()
-        
     }
     
     @MainActor

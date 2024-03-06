@@ -179,8 +179,8 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
         do {
             
             let challengeResult = try await paymentService.tryToPayWithoutToken(paymentId: paymentId,
-                                                                               isBnplEnabled: true,
-                                                                               resolution: nil)
+                                                                                isBnplEnabled: true,
+                                                                                resolution: nil)
             
             secureChallengeService.fraudMonСheckResult = challengeResult
             
