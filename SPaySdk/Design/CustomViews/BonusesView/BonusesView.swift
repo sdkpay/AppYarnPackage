@@ -18,8 +18,8 @@ private extension CGFloat {
 
 final class BonusesView: UIView {
 
-    private lazy var titleLabel: LinkLabel = {
-        let view = LinkLabel()
+    private lazy var titleLabel: UILabel = {
+        let view = UILabel()
         view.font = .medium2
         view.numberOfLines = 0
         view.textColor = .backgroundPrimary

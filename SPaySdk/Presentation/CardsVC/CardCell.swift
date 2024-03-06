@@ -11,6 +11,7 @@ struct CardCellModel {
     let title: String
     let subtitle: String
     let selected: Bool
+    let bonuses: String?
     let cardURL: String?
 }
 
@@ -20,6 +21,8 @@ private extension CGFloat {
     static let checkWidth = 20.0
     static let cardWidth = 36.0
     static let letterSpacing = -0.3
+    static let bonusesStackInset = 16.0
+    static let bonusesLabelHeight = 17.0
 }
 
 final class CardCell: UITableViewCell {    
@@ -68,6 +71,27 @@ final class CardCell: UITableViewCell {
         return view
     }()
     
+    private lazy var bonusesLabel: LinkLabel = {
+        let view = LinkLabel()
+        view.font = .medium2
+        view.numberOfLines = 0
+        view.textColor = .white
+        return view
+    }()
+    
+    private lazy var bonusesImageView = UIImageView(image: Asset.sbsp.image.withRenderingMode(.alwaysTemplate))
+    
+    private lazy var bonusesStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 4
+        stackView.isHidden = true
+        stackView.addArrangedSubview(bonusesLabel)
+        stackView.addArrangedSubview(bonusesImageView)
+        stackView.alignment = .center
+        return stackView
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -81,6 +105,15 @@ final class CardCell: UITableViewCell {
         titleLabel.text = model.title
         cardLabel.text = model.subtitle
         cardIconView.downloadImage(from: model.cardURL, placeholder: .Cards.stockCard)
+        if let bonuses = model.bonuses {
+            bonusesStackView.isHidden = false
+            bonusesLabel.text = "+\(bonuses)"
+            let bonusesColor = model.selected ? Asset.greenPrimary.color : Asset.grayPrimary.color
+            bonusesLabel.textColor = bonusesColor
+            bonusesImageView.tintColor = bonusesColor
+        } else {
+            bonusesStackView.isHidden = true
+        }
     }
     
     private func setupUI() {
@@ -122,5 +155,13 @@ final class CardCell: UITableViewCell {
             checkImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin),
             checkImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
         ])
+        
+        bonusesStackView
+            .add(toSuperview: containerView)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .bonusesStackInset)
+            .centerInSuperview(.y)
+        
+        bonusesLabel
+            .height(.equal, to: .bonusesLabelHeight)
     }
 }

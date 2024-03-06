@@ -79,6 +79,7 @@ final class CardsPresenter: CardsPresenting {
         return CardCellModel(title: title,
                              subtitle: subtitle,
                              selected: card.paymentID == selectedId,
+                             bonuses: card.precalculateBonuses,
                              cardURL: card.cardLogoURL)
     }
     

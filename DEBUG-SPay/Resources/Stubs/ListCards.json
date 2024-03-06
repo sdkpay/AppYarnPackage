@@ -20,6 +20,7 @@
       },
       {
         "paymentSourceType" : "DebitCard",
+        "precalculateBonuses": "123",
         "financialProductId" : "40817810638260194311",
         "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
         "productName" : "MasterCard Сберкарта",
