@@ -275,7 +275,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
                                                  bankInvoiceId: values.orderId ?? "",
                                                  orderNumber: values.orderNumber ?? "none",
-                                                 redirectUri: "sdkopfyncfkq://spay",
+                                                 redirectUri: "testapp://spay",
                                                  apiKey: values.apiKey)
         
         SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info in
@@ -299,7 +299,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
                                                  bankInvoiceId: values.orderId ?? "",
                                                  orderNumber: values.orderNumber ?? "none",
-                                                 redirectUri: "sdkopfyncfkq://spay",
+                                                 redirectUri: "testapp://spay",
                                                  apiKey: values.apiKey)
         
         SPay.payWithPartPay(with: self, paymentRequest: request) { state, info in
@@ -323,7 +323,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
                                                  bankInvoiceId: values.orderId ?? "",
                                                  orderNumber: values.orderNumber ?? "none",
-                                                 redirectUri: "sdkopfyncfkq://spay",
+                                                 redirectUri: "testapp://spay",
                                                  apiKey: values.apiKey)
         
         SPay.payWithoutRefresh(with: self, paymentRequest: request) { state, info in
