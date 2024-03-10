@@ -81,7 +81,7 @@ final class PaymentModuleViewBuilder {
     
         buttonStack
             .add(toSuperview: view)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.Cancel.bottom, usingRelation: .equal)
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view))
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Button.Cancel.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.Button.Cancel.right)
         
