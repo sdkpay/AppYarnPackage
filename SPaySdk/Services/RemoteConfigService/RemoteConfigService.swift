@@ -61,7 +61,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.checkVersion(version: result.versionInfo?.active)
         self.setFeatures(result.featuresToggle)
         self.analytics.sendEvent(.RQGoodRemoteConfig,
-                                 with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
+                                 with: [AnalyticsKey.View: AnlyticsScreenEvent.None.rawValue])
     }
     
     private func saveConfig(_ value: ConfigModel) {

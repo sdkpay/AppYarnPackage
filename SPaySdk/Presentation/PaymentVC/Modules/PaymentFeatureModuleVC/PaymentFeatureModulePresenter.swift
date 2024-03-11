@@ -64,7 +64,7 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
     private var secureChallengeService: SecureChallengeService
     private var payAmountValidationManager: PayAmountValidationManager
     
-    private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue]
     
     init(_ router: PaymentRouting,
          manager: SDKManager,

@@ -63,9 +63,9 @@ public final class DefaultParsingErrorAnaliticManager: ParsingErrorAnaliticManag
                 result.0,
                 with:
                     [
-                        AnalyticsKey.httpCode: Int64(200),
-                        AnalyticsKey.errorCode: Int64(error.code),
-                        AnalyticsKey.view: result.2
+                        AnalyticsKey.HttpCode: Int64(200),
+                        AnalyticsKey.ErrorCode: Int64(error.code),
+                        AnalyticsKey.View: result.2
                     ]
             )
             self.analytics.sendEvent(
@@ -73,16 +73,16 @@ public final class DefaultParsingErrorAnaliticManager: ParsingErrorAnaliticManag
                 with:
                     [
                         AnalyticsKey.ParsingError: error.description,
-                        AnalyticsKey.view: result.2
+                        AnalyticsKey.View: result.2
                     ])
         default:
             self.analytics.sendEvent(
                 result.0,
                 with:
                     [
-                        AnalyticsKey.httpCode: Int64(error.httpCode ?? -1),
-                        AnalyticsKey.errorCode: Int64(error.code),
-                        AnalyticsKey.view: result.2
+                        AnalyticsKey.HttpCode: Int64(error.httpCode ?? -1),
+                        AnalyticsKey.ErrorCode: Int64(error.code),
+                        AnalyticsKey.View: result.2
                     ]
             )
         }

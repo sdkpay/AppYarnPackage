@@ -97,7 +97,7 @@ final class DefaultUserService: UserService {
               let sessionId = authManager.sessionId
         else { throw SDKError(.noData) }
         
-        analytics.sendEvent(.RQListCards, with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+        analytics.sendEvent(.RQListCards, with: [.View: AnlyticsScreenEvent.PaymentVC.rawValue])
         
         do {
             let listCardsResult = try await network.request(UserTarget.getListCards(sessionId: sessionId,
@@ -113,9 +113,9 @@ final class DefaultUserService: UserService {
             
             self.user = listCardsResult
             self.analytics.sendEvent(.RQGoodListCards,
-                                     with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                                     with: [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue])
             self.analytics.sendEvent(.RSGoodListCards,
-                                     with: [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                                     with: [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue])
         } catch {
             if let error = error as? SDKError {
                 parsingErrorAnaliticManager.sendAnaliticsError(error: error,

@@ -61,7 +61,7 @@ final class DefaultBankAppManager: BankAppManager {
     
     func saveSelectedBank() {
         analytics.sendEvent(.STSaveBankApp,
-                            with: [.view: AnlyticsScreenEvent.AuthVC.rawValue])
+                            with: [.View: AnlyticsScreenEvent.AuthVC.rawValue])
         UserDefaults.bankApp = _selectedBank?.name
     }
     
@@ -84,7 +84,7 @@ final class DefaultBankAppManager: BankAppManager {
                 return _selectedBank
             } else {
                 analytics.sendEvent(.STGetFailBankApp,
-                                    with: [.view: AnlyticsScreenEvent.AuthVC.rawValue])
+                                    with: [.View: AnlyticsScreenEvent.AuthVC.rawValue])
                 return nil
             }
         } else {

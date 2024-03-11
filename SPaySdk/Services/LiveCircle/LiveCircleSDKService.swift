@@ -37,7 +37,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         self.locator = locator
         let analytics: AnalyticsService = locator.resolve()
         analytics.sendEvent(.LCBankAppFound,
-                            with: [.view: AnlyticsScreenEvent.None.rawValue])
+                            with: [.View: AnlyticsScreenEvent.None.rawValue])
     }
     
     deinit {

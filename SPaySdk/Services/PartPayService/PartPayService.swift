@@ -138,7 +138,7 @@ final class DefaultPartPayService: PartPayService {
         else { throw SDKError(.noData) }
         
         analytics.sendEvent(.RQBnpl,
-                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
+                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
         
         do {
             let bnplResult = try await network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
@@ -171,7 +171,7 @@ final class DefaultPartPayService: PartPayService {
         else { throw SDKError(.noData) }
         
         analytics.sendEvent(.RQBnpl,
-                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
+                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
         
         do {
             let bnplResult = try await network.request(BnplTarget.createPaymentPlan(sessionId: sessionId,

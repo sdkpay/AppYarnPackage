@@ -30,7 +30,7 @@ final class CardsPresenter: CardsPresenting {
     private let selectedCard: (PaymentTool) -> Void
     private let selectedId: Int
     private var timeManager: OptimizationCheсkerManager
-    private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.CardsVC.rawValue]
+    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.CardsVC.rawValue]
     private var featureToggle: FeatureToggleService
 
     init(userService: UserService,

@@ -36,7 +36,7 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
     private let otpService: OTPService
     private var cancellable = Set<AnyCancellable>()
     
-    private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue]
     
     init(_ router: PaymentRouting,
          manager: SDKManager,

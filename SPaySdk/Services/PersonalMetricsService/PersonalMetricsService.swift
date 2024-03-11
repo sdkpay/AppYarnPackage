@@ -68,7 +68,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
                 return
             }
         } else {
-            self.analyticsService.sendEvent(.SCFailPermissions, with: [AnalyticsKey.permisson: emulator ?? сompromised ?? 0])
+            self.analyticsService.sendEvent(.SCFailPermissions, with: [AnalyticsKey.Permisson: emulator ?? сompromised ?? 0])
             throw SDKError(.personalInfo)
         }
         

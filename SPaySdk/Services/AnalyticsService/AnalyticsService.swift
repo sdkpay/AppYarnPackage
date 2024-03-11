@@ -247,15 +247,15 @@ enum AnalyticsValue: String {
 }
 
 enum AnalyticsKey: String {
-    case view
-    case orderNumber
-    case sessionId
-    case errorCode
+    case View
+    case OrderNumber
+    case SessionId
+    case ErrorCode
     case ParsingError
-    case httpCode
-    case permisson
-    case biZoneCode
-    case state
+    case HttpCode
+    case Permisson
+    case BiZoneCode
+    case State
 }
 
 protocol AnalyticsService {
@@ -319,7 +319,7 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     
     private func addSessionParams(to dictionary: inout [AnalyticsKey: Any]) {
         
-        dictionary[.orderNumber] = authManager.orderNumber
-        dictionary[.sessionId] = authManager.sessionId
+        dictionary[.OrderNumber] = authManager.orderNumber
+        dictionary[.SessionId] = authManager.sessionId
     }
 }

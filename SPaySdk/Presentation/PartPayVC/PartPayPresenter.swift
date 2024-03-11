@@ -27,7 +27,7 @@ final class PartPayPresenter: PartPayPresenting {
     private let analytics: AnalyticsService
     private var partPaySelected: Action
     private var isSelected = true
-    private var screenEvents = [AnalyticsKey.view: AnlyticsScreenEvent.PartPayVC.rawValue]
+    private var screenEvents = [AnalyticsKey.View: AnlyticsScreenEvent.PartPayVC.rawValue]
     private var cancellable = Set<AnyCancellable>()
     
     var partPayModule: ModuleVC
@@ -63,7 +63,7 @@ final class PartPayPresenter: PartPayPresenting {
     
     func acceptButtonTapped() {
         analytics.sendEvent(.TouchConfirmedByUser,
-                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
+                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
         partPayService.bnplplanSelected = true
         partPaySelected()
         DispatchQueue.main.async {
@@ -73,7 +73,7 @@ final class PartPayPresenter: PartPayPresenting {
     
     func backButtonTapped() {
         analytics.sendEvent(.TouchDeclinedByUser,
-                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
+                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
         partPayService.bnplplanSelected = false
         partPaySelected()
         DispatchQueue.main.async {

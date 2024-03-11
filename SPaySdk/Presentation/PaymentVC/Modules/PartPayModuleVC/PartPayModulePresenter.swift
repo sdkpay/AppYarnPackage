@@ -84,7 +84,7 @@ final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
                               checkSelected: partPayService.bnplCheckAccepted,
                               checkTapped: { [weak self] value in
             self?.analytics.sendEvent(.TouchApproveBNPL,
-                                      with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
+                                      with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
             self?.partPayService.bnplCheckAccepted = value
         },
                               textTapped: { [weak self] link in
@@ -97,7 +97,7 @@ final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
     @MainActor
     private func agreementTextTapped(link: String) {
         analytics.sendEvent(.TouchAgreementView,
-                            with: [.view: AnlyticsScreenEvent.PartPayVC.rawValue])
+                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
         router.presentWebView(with: link)
     }
 }

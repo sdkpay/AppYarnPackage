@@ -38,7 +38,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     private let vcMode: PaymentVCMode
     private var cancellable = Set<AnyCancellable>()
     
-    private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue]
     
     init(_ router: PaymentRouting,
          manager: SDKManager,

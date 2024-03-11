@@ -165,7 +165,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
         addFrontHeaders()
         analytics.sendEvent(.RQSessionId,
-                            with: [.view: AnlyticsScreenEvent.AuthVC.rawValue])
+                            with: [.View: AnlyticsScreenEvent.AuthVC.rawValue])
         
         do {
             let sessionIdResult = try await network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
@@ -180,7 +180,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                                             to: AuthModel.self)
             
             self.analytics.sendEvent(.RQGoodSessionId,
-                                     with: [AnalyticsKey.view: AnlyticsScreenEvent.AuthVC.rawValue])
+                                     with: [AnalyticsKey.View: AnlyticsScreenEvent.AuthVC.rawValue])
             
             self.authManager.sessionId = sessionIdResult.sessionId
             self.authManager.authModel = sessionIdResult
@@ -290,7 +290,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
         
         analytics.sendEvent(.RQAuth,
-                            with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
+                            with: [AnalyticsKey.View: AnlyticsScreenEvent.None.rawValue])
         
         if enviromentManager.environment != .prod {
             
@@ -322,7 +322,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             authManager.userInfo = authResult.result.userInfo
             authManager.isOtpNeed = authResult.result.isOtpNeed
             analytics.sendEvent(.RSGoodAuth,
-                                with: [AnalyticsKey.view: AnlyticsScreenEvent.None.rawValue])
+                                with: [AnalyticsKey.View: AnlyticsScreenEvent.None.rawValue])
         } catch {
             
             if let error = error as? SDKError {

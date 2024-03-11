@@ -195,9 +195,9 @@ final class DefaultPaymentService: PaymentService {
                                                   to: PaymentTokenModel.self)
             
             self.analytics.sendEvent(.RQGoodPaymentToken,
-                                     with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                                     with: [.View: AnlyticsScreenEvent.PaymentVC.rawValue])
             self.analytics.sendEvent(.RSGoodPaymentToken,
-                                     with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                                     with: [.View: AnlyticsScreenEvent.PaymentVC.rawValue])
             
             self.paymentToken = (token, isBnplEnabled)
             
@@ -247,9 +247,9 @@ final class DefaultPaymentService: PaymentService {
                                                       ]))
             
             self.analytics.sendEvent(.RQGoodPaymentOrder,
-                                     with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                                     with: [.View: AnlyticsScreenEvent.PaymentVC.rawValue])
             self.analytics.sendEvent(.RSGoodPaymentOrder,
-                                     with: [.view: AnlyticsScreenEvent.PaymentVC.rawValue])
+                                     with: [.View: AnlyticsScreenEvent.PaymentVC.rawValue])
         } catch {
             if let error = error as? SDKError {
                 self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,

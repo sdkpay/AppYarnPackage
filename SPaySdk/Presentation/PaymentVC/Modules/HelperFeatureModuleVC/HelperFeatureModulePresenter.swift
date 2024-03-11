@@ -45,7 +45,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     private let bankManager: BankAppManager
     private let helperConfigManager: HelperConfigManager
     
-    private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue]
     
     init(_ router: PaymentRouting,
          manager: SDKManager,

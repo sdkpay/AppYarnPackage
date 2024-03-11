@@ -170,7 +170,7 @@ final class DefaultAlertService: AlertService {
         switch type {
         case let .paySuccess(amount: amount, shopName: shopName, bonuses: bonuses):
             
-            analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.state: "success"])
+            analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.State: "success"])
             
             guard alertViewNeeded else { return AlertResult.approve }
             
@@ -188,7 +188,7 @@ final class DefaultAlertService: AlertService {
             
         case .connectSuccess(card: let card):
             
-            analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.state: "success"])
+            analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.State: "success"])
             
             guard alertViewNeeded else { return AlertResult.approve }
             
@@ -199,7 +199,7 @@ final class DefaultAlertService: AlertService {
                               buttons: [])
         case .defaultError:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.state: "default"])
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "default"])
             
             if sdkManager.payStrategy == .partPay {
                 
@@ -219,7 +219,7 @@ final class DefaultAlertService: AlertService {
                               buttons: [])
         case .noInternet:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.state: "noInternet"])
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "noInternet"])
             
             let tryButton = AlertButtonModel(title: Strings.Try.title,
                                              type: .blackBack,
@@ -238,7 +238,7 @@ final class DefaultAlertService: AlertService {
                                 ])
         case .partPayError:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.state: "partPayError"])
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "partPayError"])
             
             let fullPayButton = AlertButtonModel(title: Strings.Pay.Full.title,
                                                  type: .blackBack,

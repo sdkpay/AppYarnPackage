@@ -71,7 +71,7 @@ final class PaymentMasterPresenter: NSObject, PaymentModuleMasterPresenting {
         }
     }
     
-    private let screenEvent = [AnalyticsKey.view: AnlyticsScreenEvent.PaymentVC.rawValue]
+    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue]
     
     init(analytics: AnalyticsService,
          submodule: [ModuleVC],
