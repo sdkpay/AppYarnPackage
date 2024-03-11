@@ -128,10 +128,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         let ipAddress = await personalMetricsService.getIp()
         self.authManager.ipAddress = ipAddress
         
+#if SDKPROD
         if enviromentManager.environment == .prod {
             try await personalMetricsService.integrityCheck()
         }
-        
+#endif
         return try await getSessionId()
     }
     
