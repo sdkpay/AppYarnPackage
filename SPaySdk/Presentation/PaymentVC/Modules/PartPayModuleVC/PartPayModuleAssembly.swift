@@ -21,6 +21,7 @@ final class PartPayModuleAssembly {
         var presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
+        router.viewController = contentView
         return contentView
     }
     

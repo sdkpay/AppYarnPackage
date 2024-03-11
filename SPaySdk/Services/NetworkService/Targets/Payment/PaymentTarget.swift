@@ -159,7 +159,7 @@ extension PaymentTarget: TargetType {
                 "sessionId": sessionId,
                 "deviceInfo": deviceInfo,
                 "paymentId": paymentId,
-                "priorityCardOnly": priorityCardOnly,
+                "priorityCardOnly": priorityCardOnly
             ]
             
             if let resolution {

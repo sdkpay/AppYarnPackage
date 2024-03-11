@@ -45,7 +45,7 @@ enum SBLogger {
     static var dateString = ""
     static var writeLogs = false
     static var secureLogs = true
-    static var logFileName = "SDK_v\(Bundle.appVersion)(\(Bundle.appBuild)) \(SBLogger.dateString).txt"
+    static var logFileName = "SDKv\(Bundle.appVersion)(\(Bundle.appBuild)) \(SBLogger.dateString).txt"
     
     private static var logger = Log()
     
@@ -578,7 +578,7 @@ extension Date {
     var readable: String {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ru")
-        dateFormatter.dateFormat = "d MMMM HH:mm:ss"
+        dateFormatter.dateFormat = "d.MM HH:mm:ss"
         return dateFormatter.string(from: self)
     }
 }
