@@ -60,7 +60,11 @@ final class BonusesView: UIView {
         maskLayer.path = path.cgPath
         layer.mask = maskLayer
     }
+    
     private func setupUI() {
+        
+        overrideUserInterfaceStyle = .light
+        
         backgroundColor = Asset.greenPrimary.color
         layer.cornerRadius = 2
         titleLabel

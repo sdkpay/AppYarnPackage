@@ -55,7 +55,16 @@ final class CommissionLabel: UIView {
     private func setupUI() {
         
         layer.cornerRadius = 2
-        applyBlurEffect(style: .systemUltraThinMaterialDark, alphaValue: 0.24)
+        
+        switch traitCollection.userInterfaceStyle {
+            
+        case .unspecified, .light:
+            applyBlurEffect(style: .systemUltraThinMaterialDark, alphaValue: 0.24)
+        case .dark:
+            applyBlurEffect(style: .systemUltraThinMaterial)
+        @unknown default:
+            applyBlurEffect(style: .systemUltraThinMaterialDark, alphaValue: 0.24)
+        }
         
         titleLabel
             .add(toSuperview: self)
