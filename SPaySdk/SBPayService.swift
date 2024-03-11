@@ -57,6 +57,8 @@ final class DefaultSBPayService: SBPayService {
                config: SBHelperConfig,
                environment: SEnvironment,
                completion: ((SPError?) -> Void)?) {
+        SBLogger.dateString = Date().readable
+        
         FontFamily.registerAllCustomFonts()
         locator.register(service: liveCircleManager)
         locator.register(service: logService)
@@ -81,10 +83,6 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(HelperConfigManager.self)
             .setHelpersNeeded(helpers)
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
-        SBLogger.dateString = dateFormatter.string(from: Date())
         
         Task(priority: .medium) {
             

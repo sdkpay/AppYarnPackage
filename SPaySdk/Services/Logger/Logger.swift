@@ -45,7 +45,18 @@ enum SBLogger {
     static var dateString = ""
     static var writeLogs = false
     static var secureLogs = true
+    static var logFileName = "SDK_v\(Bundle.appVersion)(\(Bundle.appBuild)) \(SBLogger.dateString).txt"
+    
     private static var logger = Log()
+    
+    static var logPath: URL? {
+        
+        let fm = FileManager.default
+        return fm.urls(for: .documentDirectory,
+                       in: .userDomainMask)[0]
+            .appendingPathComponent("SBPayLogs")
+            .appendingPathComponent(logFileName)
+    }
     
     static func log(level: LogLevel = .debug(level: .defaultLevel), _ massage: String) {
         switch level {
@@ -551,7 +562,7 @@ struct Log: TextOutputStream {
                            in: .userDomainMask)[0]
             .appendingPathComponent("SBPayLogs")
         try? fm.createDirectory(atPath: path.path, withIntermediateDirectories: true)
-        let log = path.appendingPathComponent("log_\(SBLogger.dateString).txt")
+        let log = path.appendingPathComponent(SBLogger.logFileName)
         if let handle = try? FileHandle(forWritingTo: log) {
             handle.seekToEndOfFile()
             handle.write(string.data(using: .utf8) ?? Data())
@@ -559,5 +570,15 @@ struct Log: TextOutputStream {
         } else {
             try? string.data(using: .utf8)?.write(to: log)
         }
+    }
+}
+
+extension Date {
+    
+    var readable: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ru")
+        dateFormatter.dateFormat = "d MMMM HH:mm:ss"
+        return dateFormatter.string(from: self)
     }
 }
