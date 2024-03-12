@@ -9,7 +9,6 @@ import UIKit
 
 private extension CGFloat {
     static let imageViewWidth: CGFloat = 24.0
-    static let bottom: CGFloat = 44.0
     static let buttonMargin: CGFloat = 4.0
     static let sideMargin: CGFloat = 16.0
 }
@@ -69,7 +68,7 @@ final class InfoAlertView: UIView {
     
     private func setupUI() {
         alertStack.add(toSuperview: self)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom)
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: self))
             .touchEdge(.top, toSuperviewEdge: .top)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
@@ -190,7 +189,7 @@ final class ChallengeVC: ContentVC, IChallengeVC {
         backButton
             .add(toSuperview: view)
             .height(.defaultButtonHeight)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .bottom)
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view))
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
         

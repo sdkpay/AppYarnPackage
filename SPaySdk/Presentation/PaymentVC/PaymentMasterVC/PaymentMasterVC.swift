@@ -9,7 +9,6 @@ import UIKit
 
 private extension CGFloat {
     
-    static let bottomMargin: CGFloat = 44.0
     static let cancelTopMargin: CGFloat = 8.0
 }
 
@@ -90,7 +89,7 @@ final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
     private func setupUI() {
         
         if let viewHeight = presenter.viewHeight {
-            view.height(viewHeight)
+            view.height(viewHeight, usingRelation: .greaterThanOrEqual)
         }
         
         modulsStackView
@@ -104,6 +103,6 @@ final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
             .touchEdge(.top, toEdge: .bottom, ofView: modulsStackView, withInset: .cancelTopMargin)
             .touchEdge(.left, toSuperviewEdge: .left)
             .touchEdge(.right, toSuperviewEdge: .right)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .bottomMargin)
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view))
     }
 }
