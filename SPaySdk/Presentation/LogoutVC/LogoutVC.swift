@@ -109,7 +109,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.sideOffSet)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Cost.sideOffSet)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Cost.Button.bottom)
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view))
         
         backButton
            .height(.defaultButtonHeight)
@@ -126,7 +126,6 @@ extension LogoutVC {
         
         enum Button {
             static let height = Cost.height
-            static let bottom: CGFloat = 46.0
             static let cornerRadius: CGFloat = 12.0
             static let spacing = 4.0
 
@@ -138,7 +137,6 @@ extension LogoutVC {
             }
             
             enum Back {
-                static let bottom: CGFloat = 44.0
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
                 static let top: CGFloat = Cost.sideOffSet

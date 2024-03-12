@@ -50,7 +50,6 @@ private extension PartPayModuleViewBuilder {
                 static let topOffSet: CGFloat = 20.0
                 static let leftOffSet: CGFloat = Consts.margin
                 static let rightOffSet: CGFloat = Consts.margin
-                static let bottomOffSet: CGFloat = 44.0
                 static let height: CGFloat = 56.0
             }
         }

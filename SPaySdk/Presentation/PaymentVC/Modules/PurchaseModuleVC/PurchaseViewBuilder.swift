@@ -71,6 +71,7 @@ final class PurchaseViewBuilder {
         bonusesView
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: 5, usingRelation: .lessThanOrEqual)
         topAnchor = bonusesView.topAnchor.constraint(equalTo: purchaseCollectionView.bottomAnchor, constant: -Cost.Stack.bonusesTop)
         topAnchor?.isActive = true
     }

@@ -152,7 +152,7 @@ final class HelperVC: ContentVC, IHelperVC {
 
         buttonStack
             .add(toSuperview: view)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Helper.Button.Cancel.bottom, usingRelation: .equal)
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view), usingRelation: .equal)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Helper.Button.Cancel.left)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Helper.Button.Cancel.right)
         
@@ -178,7 +178,6 @@ private extension HelperVC {
         enum Button {
             
             enum Cancel {
-                static let bottom: CGFloat = 44.0
                 static let right: CGFloat = .margin
                 static let left: CGFloat = .margin
             }

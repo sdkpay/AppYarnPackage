@@ -39,7 +39,7 @@ private extension CardsViewBuilder {
             static let backgroundColor = UIColor.backgroundPrimary
             static let rowHeight: CGFloat = 74.0
             
-            static let bottomOffSet: CGFloat = 54.0
+            static let bottomOffSet: CGFloat = 10.0
             static let rightOffSet: CGFloat = Consts.offSet
             static let topOffSet: CGFloat = 20.0
         }
@@ -104,6 +104,6 @@ final class CardsViewBuilder {
             .touchEdge(.top, toEdge: .bottom, ofView: stackLabel, withInset: Consts.TableView.topOffSet)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.TableView.rightOffSet)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.rightOffSet)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Consts.TableView.bottomOffSet)
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view), withInset: Consts.TableView.bottomOffSet)
     }
 }

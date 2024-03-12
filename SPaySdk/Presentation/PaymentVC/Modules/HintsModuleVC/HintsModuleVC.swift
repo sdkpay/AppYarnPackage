@@ -56,11 +56,11 @@ final class HintsModuleVC: ModuleVC, IHintsModuleVC {
         
         hintsStackView
             .add(toSuperview: view)
+            .touchEdge(.top, toEdge: .top, ofView: view)
             .touchEdge(.left, toEdge: .left, ofView: view, withInset: Cost.Hint.margin)
             .touchEdge(.right, toEdge: .right, ofView: view, withInset: Cost.Hint.margin)
-            .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: Cost.Hint.bottom)
-            .height(Cost.height, priority: .defaultLow)
-            .touchEdge(.top, toEdge: .top, ofView: view)
+            .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: Cost.Hint.bottomMax, usingRelation: .lessThanOrEqual)
+            .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: Cost.Hint.bottomMin, usingRelation: .greaterThanOrEqual, priority: .defaultLow)
     }
 }
 
@@ -70,7 +70,8 @@ private extension HintsModuleVC {
         static let height = 56.0
         
         enum Hint {
-            static let bottom = 20.0
+            static let bottomMax = 20.0
+            static let bottomMin = 8.0
             static let margin = 36.0
         }
     }
