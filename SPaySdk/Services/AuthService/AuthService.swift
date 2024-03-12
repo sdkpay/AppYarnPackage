@@ -130,7 +130,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         
 #if SDKPROD
         if enviromentManager.environment == .prod {
-//            try await personalMetricsService.integrityCheck()
+            try await personalMetricsService.integrityCheck()
         }
 #endif
         return try await getSessionId()
@@ -195,8 +195,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             
             if refreshIsActive
                 && featureToggleService.isEnabled(.refresh)
-//                && sdkManager.payStrategy != .partPay
-//                && sdkManager.payStrategy != .withoutRefresh
+                && sdkManager.payStrategy != .partPay
+                && sdkManager.payStrategy != .withoutRefresh
                 && tokenInStorage {
                 
                 self.authManager.authMethod = .refresh

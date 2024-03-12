@@ -53,7 +53,7 @@
     ],
     "bankApps": [
         {
-            "name": "Онлайн",
+            "name": "Учёт Онлайн",
             "utilLink": "btripsexpenses://sbolonline/",
             "authLink": "btripsexpenses://sbolidexternallogin/",
             "iconURL": "https://cms-res-web.online.sberbank.ru/sberpay/SDK/iconSB.png"
