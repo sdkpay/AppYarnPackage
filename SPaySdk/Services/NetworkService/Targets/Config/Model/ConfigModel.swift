@@ -53,6 +53,7 @@ struct Schemas: Codable {
 }
 
 struct BankApp: Codable {
+    let appId: Int?
     let name: String
     let utilLink: String
     let authLink: String

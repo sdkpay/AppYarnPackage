@@ -59,19 +59,11 @@ final class AlertPresenter: AlertPresenting {
             return
         }
         DispatchQueue.main.async {
-            switch item.type {
-            case .full, .info, .blackBack:
                 self.view?.contentNavigationController?.popViewController(animated: true, completion: {
                     
-                    self.alertResultAction?(.approve)
+                    self.alertResultAction?(item.neededResult)
                     item.action?()
                 })
-            case .cancel, .orangeBack, .clear:
-                self.view?.contentNavigationController?.popViewController(animated: true, completion: {
-                    item.action?()
-                    self.alertResultAction?(.cancel)
-                })
-            }
         }
     }
 

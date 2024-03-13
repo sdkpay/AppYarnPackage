@@ -60,7 +60,12 @@ final class HintsModuleVC: ModuleVC, IHintsModuleVC {
             .touchEdge(.left, toEdge: .left, ofView: view, withInset: Cost.Hint.margin)
             .touchEdge(.right, toEdge: .right, ofView: view, withInset: Cost.Hint.margin)
             .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: Cost.Hint.bottomMax, usingRelation: .lessThanOrEqual)
-            .touchEdge(.bottom, toEdge: .bottom, ofView: view, withInset: Cost.Hint.bottomMin, usingRelation: .greaterThanOrEqual, priority: .defaultLow)
+            .touchEdge(.bottom,
+                       toEdge: .bottom,
+                       ofView: view,
+                       withInset: Cost.Hint.bottomMin,
+                       usingRelation: .greaterThanOrEqual,
+                       priority: .defaultLow)
     }
 }
 

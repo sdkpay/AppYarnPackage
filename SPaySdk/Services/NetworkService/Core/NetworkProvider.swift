@@ -110,6 +110,13 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
             
             return (data, response)
         } catch {
+    
+            SBLogger.logRequestCompleted(host: self.hostManager.host(for: host),
+                                         target,
+                                         response: nil,
+                                         data: nil,
+                                         error: error)
+            
             if  retrySettings.count != 1,
                 retry < retrySettings.count,
                 (error._code == URLError.Code.timedOut.rawValue || !retrySettings.retryCode.contains(error._code)) {

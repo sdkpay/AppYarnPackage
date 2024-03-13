@@ -239,10 +239,24 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
                     })
                 }
             } catch {
-                await alertService.show(on: view?.contentParrent, type: .defaultError)
-                
-                if let error = error as? SDKError {
-                    completionManager.completeWithError(error)
+                await MainActor.run {
+                    view?.contentParrent?.hideLoading()
+                }
+                if error.sdkError.represents(.noInternetConnection) {
+                    
+                    let result = await alertService.show(on: view?.contentParrent, type: .noInternet)
+                    
+                    switch result {
+                    case .approve:
+                        presentListCards()
+                    case .cancel:
+                        await alertService.show(on: view?.contentParrent, type: .defaultError)
+                        completionManager.completeWithError(error.sdkError)
+                        await completionManager.dismissCloseAction(view?.contentParrent)
+                    }
+                } else {
+                    await alertService.show(on: view?.contentParrent, type: .defaultError)
+                    completionManager.completeWithError(error.sdkError)
                     await completionManager.dismissCloseAction(view?.contentParrent)
                 }
             }

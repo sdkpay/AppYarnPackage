@@ -166,8 +166,7 @@ extension ResponseDecoder {
                 .serverCertificateHasUnknownRoot,
                 .serverCertificateNotYetValid,
                 .clientCertificateRejected,
-                .clientCertificateRequired,
-                .cancelled
+                .clientCertificateRequired
             ]
         }
         
@@ -177,10 +176,21 @@ extension ResponseDecoder {
             ]
         }
         
+        var internetError: [URLError.Code] {
+            return [
+                .networkConnectionLost,
+                .notConnectedToInternet,
+                .cannotLoadFromNetwork,
+                .cancelled
+            ]
+        }
+        
         if sslErrors.contains(where: { $0.rawValue == error._code }) {
             return SDKError(.ssl, httpCode: error._code)
         } else if timeOutErrors.contains(where: { $0.rawValue == error._code }) {
             return SDKError(.timeOut, httpCode: error._code)
+        } else if internetError.contains(where: { $0.rawValue == error._code }) {
+            return SDKError(.noInternetConnection, httpCode: error._code)
         } else {
             return error
         }

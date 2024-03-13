@@ -140,8 +140,6 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             
         case .noInternetConnection:
             
-            self.completionManager.completeWithError(SDKError(.errorSystem))
-            
             let result = await alertService.show(on: view?.contentParrent, type: .noInternet)
             
             switch result {
@@ -188,7 +186,8 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         
         self.completionManager.completePay(with: .waiting)
         let okButton = AlertButtonModel(title: Strings.Cancel.title,
-                                        type: .full) { [weak self] in
+                                        type: .full, 
+                                        neededResult: .approve) { [weak self] in
             self?.completionManager.dismissCloseAction(self?.view?.contentParrent)
         }
         
@@ -339,11 +338,25 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     
     private func dismissWithError(_ error: SDKError) {
         
-        self.completionManager.completeWithError(error)
-        
         Task {
-            await alertService.show(on: view?.contentParrent, type: .defaultError)
-            await self.completionManager.dismissCloseAction(view?.contentParrent)
+            
+            if error.represents(.noInternetConnection) {
+                
+                let result = await alertService.show(on: view?.contentParrent, type: .noInternet)
+                
+                switch result {
+                case .approve:
+                    await goToPay()
+                case .cancel:
+                    self.completionManager.completeWithError(error)
+                    await alertService.show(on: view?.contentParrent, type: .defaultError)
+                    await self.completionManager.dismissCloseAction(view?.contentParrent)
+                }
+            } else {
+                self.completionManager.completeWithError(error)
+                await alertService.show(on: view?.contentParrent, type: .defaultError)
+                await self.completionManager.dismissCloseAction(view?.contentParrent)
+            }
         }
     }
     
@@ -352,7 +365,8 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         let formParameters = secureChallengeService.fraudMonСheckResult?.formParameters
         
         let returnButton = AlertButtonModel(title: formParameters?.buttonDeclineText ?? "",
-                                            type: .full) { [weak self] in
+                                            type: .full,
+                                            neededResult: .cancel) { [weak self] in
             self?.completionManager.completeWithError(SDKError(.errorSystem))
             self?.completionManager.dismissCloseAction(self?.view?.contentParrent)
         }

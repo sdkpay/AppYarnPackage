@@ -43,8 +43,8 @@ extension UserDefaults {
 }
 
 extension UserDefaults {
-    @UserDefault(key: .selectedBank, defaultValue: "foo")
-    static var bankApp: String?
+    @UserDefault(key: .selectedBank, defaultValue: 666)
+    static var bankApp: Int?
     
     @UserDefault(key: .localization,
                  defaultValue: Localization(authTitle: "foo",

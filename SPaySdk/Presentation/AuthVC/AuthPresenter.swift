@@ -102,7 +102,8 @@ final class AuthPresenter: AuthPresenting {
                                         state: .failure,
                                         buttons: [
                                             AlertButtonModel(title: Strings.Return.title,
-                                                             type: .info,
+                                                             type: .info, 
+                                                             neededResult: .cancel,
                                                              action: { [weak self] in
                                                                  self?.completionManager.dismissCloseAction(self?.view)
                                                              })

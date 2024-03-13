@@ -152,7 +152,8 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
         
         self.completionManager.completePay(with: .waiting)
         let okButton = AlertButtonModel(title: Strings.Cancel.title,
-                                        type: .full) { [weak self] in
+                                        type: .full,
+                                        neededResult: .cancel) { [weak self] in
             self?.completionManager.dismissCloseAction(self?.view?.contentParrent)
         }
         
@@ -282,7 +283,8 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
         let formParameters = secureChallengeService.fraudMonСheckResult?.formParameters
         
         let returnButton = AlertButtonModel(title: formParameters?.buttonDeclineText ?? "",
-                                            type: .full) { [weak self] in
+                                            type: .full, 
+                                            neededResult: .cancel) { [weak self] in
             self?.completionManager.completeWithError(SDKError(.errorSystem))
             self?.completionManager.dismissCloseAction(self?.view?.contentParrent)
         }
