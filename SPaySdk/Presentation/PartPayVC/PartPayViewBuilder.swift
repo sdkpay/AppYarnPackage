@@ -50,7 +50,6 @@ private extension PartPayViewBuilder {
                 static let topOffSet: CGFloat = 20.0
                 static let leftOffSet: CGFloat = Consts.margin
                 static let rightOffSet: CGFloat = Consts.margin
-                static let bottomOffSet: CGFloat = 44.0
                 static let height: CGFloat = 56.0
             }
         }
@@ -207,7 +206,7 @@ final class PartPayViewBuilder {
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Button.Cancel.leftOffSet)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Button.Cancel.rightOffSet)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Consts.Button.Cancel.bottomOffSet)
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view))
             .height(Consts.Button.Cancel.height)
 
         acceptButton
