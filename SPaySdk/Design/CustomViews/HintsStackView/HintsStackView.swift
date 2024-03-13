@@ -14,6 +14,8 @@ private extension CGFloat {
     static let stickWidth = 12.0
     static let stickHeight = 1.5
     static let rightMargin = 20.0
+    static let buttonTop = 2.0
+    static let titleTop = 5.0
 }
 
 private final class HintView: SwipableView {
@@ -79,12 +81,12 @@ private final class HintView: SwipableView {
         closeButton
             .add(toSuperview: self)
             .touchEdge(.right, toSameEdgeOfView: self, withInset: .rightMargin)
-            .touchEdge(.top, toSameEdgeOfView: self, withInset: .topMargin)
+            .touchEdge(.top, toSameEdgeOfView: self, withInset: .buttonTop)
         
         textLabel
             .add(toSuperview: self)
             .touchEdge(.right, toEdge: .left, ofView: closeButton, withInset: .spacing)
-            .touchEdge(.top, toSameEdgeOfView: self, withInset: .rightMargin)
+            .touchEdge(.top, toSameEdgeOfView: self, withInset: .titleTop)
             .touchEdge(.bottom, toSameEdgeOfView: self)
         
         hintStickView
@@ -143,6 +145,7 @@ final class HintsStackView: UIView {
 
         hint
             .add(toSuperview: self)
+            .touchEdge(.top, toEdge: .top, ofView: self)
             .touchEdge(.bottom, toEdge: .bottom, ofView: self)
             .touchEdge(.left, toEdge: .left, ofView: self)
             .touchEdge(.right, toEdge: .right, ofView: self)

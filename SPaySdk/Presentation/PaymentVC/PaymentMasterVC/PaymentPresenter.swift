@@ -148,12 +148,7 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
     }
     
     func setHints() {
-        
-        if partPayService.bnplplanSelected {
-            view?.setHints(with: [])
-        } else {
-            view?.setHints(with: paymentViewModel.hintsText)
-        }
+        view?.setHints(with: paymentViewModel.hintsText)
     }
     
     var payButtonText: String? {
@@ -214,7 +209,6 @@ final class PaymentPresenter: NSObject, PaymentPresenting, PaymentPresentingInpu
         router.presentPartPay { [weak self] in
             self?.configViews()
             self?.view?.reloadData()
-            self?.setHints()
             self?.showPartsViewifNeed()
         }
     }

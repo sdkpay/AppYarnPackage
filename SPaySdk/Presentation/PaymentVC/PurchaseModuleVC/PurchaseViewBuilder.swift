@@ -12,6 +12,8 @@ final class PurchaseViewBuilder {
     private var profileButtonDidTap: Action
     private var visibleItemsInvalidationHandler: NSCollectionLayoutSectionVisibleItemsInvalidationHandler
     
+    var bottomConstraint: NSLayoutConstraint?
+    
     private(set) lazy var shopLabel: UILabel = {
         let view = UILabel()
         view.font = Cost.Label.Shop.font
@@ -128,6 +130,7 @@ final class PurchaseViewBuilder {
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.top, toEdge: .bottom, ofView: purchaseCollectionView, withInset: Cost.Stack.topCost)
+        bottomConstraint = levelsView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5)
     }
 }
 

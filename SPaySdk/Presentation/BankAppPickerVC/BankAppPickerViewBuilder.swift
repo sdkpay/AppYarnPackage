@@ -126,6 +126,6 @@ final class BankAppPickerViewBuilder {
             .touchEdge(.left, toEdge: .left, ofView: titleLabel)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .margin)
             .height(Consts.BackButton.heidgt)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Consts.BackButton.bottomOffSet)
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view))
     }
 }
