@@ -58,7 +58,7 @@ final class PurchaseModuleVC: UIViewController {
         
         UIView.animate(withDuration: 0.25) {
             self.viewBuilder.levelsView.alpha = value ? 1.0 : 0.0
-            self.viewBuilder.bottomConstraint?.isActive = value
+            self.viewBuilder.changeBottomConstraint(withLevelView: value)
         }
     }
     

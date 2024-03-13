@@ -12,7 +12,7 @@ final class PurchaseViewBuilder {
     private var profileButtonDidTap: Action
     private var visibleItemsInvalidationHandler: NSCollectionLayoutSectionVisibleItemsInvalidationHandler
     
-    var bottomConstraint: NSLayoutConstraint?
+    private var bottomConstraint: NSLayoutConstraint?
     
     private(set) lazy var shopLabel: UILabel = {
         let view = UILabel()
@@ -93,6 +93,10 @@ final class PurchaseViewBuilder {
         }
     }
     
+    func changeBottomConstraint(withLevelView: Bool) {
+        bottomConstraint?.constant = withLevelView ? -Cost.Stack.bottomWithLevel : Cost.Stack.bottom
+    }
+    
     func setupUI(view: UIView) {
         logoImageView.add(toSuperview: view)
         
@@ -125,12 +129,13 @@ final class PurchaseViewBuilder {
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .width(Cost.CollectionView.itemWidth)
             .touchEdge(.top, toEdge: .bottom, ofView: shopLabel, withInset: Cost.Stack.topCost)
+        bottomConstraint = purchaseCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Cost.Stack.bottom)
+        bottomConstraint?.isActive = true
         
         levelsView
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .touchEdge(.top, toEdge: .bottom, ofView: purchaseCollectionView, withInset: Cost.Stack.topCost)
-        bottomConstraint = levelsView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -5)
     }
 }
 
@@ -172,12 +177,13 @@ private extension PurchaseViewBuilder {
         }
         
         enum Stack {
-            static let bottom: CGFloat = 104.0
             static let right: CGFloat = Cost.sideOffSet
             static let left: CGFloat = Cost.sideOffSet
             static let top: CGFloat = 16.0
             static let topCost: CGFloat = 4.0
             static let height: CGFloat = Cost.height
+            static let bottomWithLevel: CGFloat = 15.0
+            static let bottom: CGFloat = 5.0
         }
     }
 }
