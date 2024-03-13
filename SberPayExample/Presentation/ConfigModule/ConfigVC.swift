@@ -23,6 +23,7 @@ protocol ConfigVCProtocol: AnyObject {
 }
 
 final class ConfigVC: UIViewController, ConfigVCProtocol {
+    
     private var presenter: ConfigPresenterProtocol
     
     private lazy var loader: UIActivityIndicatorView = {
