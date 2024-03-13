@@ -261,7 +261,7 @@ final class DefaultAlertService: AlertService {
                               ])
         case .tryingError:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared)
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "tryingError"])
             
             let fullPayButton = AlertButtonModel(title: Strings.Button.Otp.back,
                                                  type: .blackBack, 
@@ -276,6 +276,8 @@ final class DefaultAlertService: AlertService {
                                 fullPayButton
                               ])
         case .noMoney:
+            
+            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "noMoney"])
             
             let cancel = AlertButtonModel(title: Strings.Return.title,
                                           type: .cancel,

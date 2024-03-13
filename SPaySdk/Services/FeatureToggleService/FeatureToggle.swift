@@ -35,6 +35,7 @@ protocol FeatureToggleService {
 }
 
 final class DefaultFeatureToggleService: FeatureToggleService {
+    
     private var features: [FeaturesToggle] = []
     
     func setFeature(_ feature: FeaturesToggle) {

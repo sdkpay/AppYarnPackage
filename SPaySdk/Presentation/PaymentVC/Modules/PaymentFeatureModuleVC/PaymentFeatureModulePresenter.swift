@@ -214,51 +214,26 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
         
         Task {
             
-            do {
-    
-                await view?.contentParrent?.showLoading()
-                try await userService.getListCards()
-                
-                guard let selectedCard = userService.selectedCard,
-                      let user = userService.user else { return }
-                
-                userService.getListCards = true
-                
-                let finalCost = partPayService.bnplplanSelected
-                ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
-                : user.orderInfo.orderAmount.amount
-                
-                await MainActor.run {
-                    self.router.presentCards(cards: user.paymentToolInfo.paymentTool,
-                                             cost: finalCost?.price(.RUB) ?? "",
-                                             selectedId: selectedCard.paymentID,
-                                             selectedCard: { [weak self] card in
-                        self?.view?.contentParrent?.hideLoading(animate: true)
-                        self?.userService.selectedCard = card
-                        self?.view?.reloadData()
-                    })
-                }
-            } catch {
-                await MainActor.run {
-                    view?.contentParrent?.hideLoading()
-                }
-                if error.sdkError.represents(.noInternetConnection) {
-                    
-                    let result = await alertService.show(on: view?.contentParrent, type: .noInternet)
-                    
-                    switch result {
-                    case .approve:
-                        presentListCards()
-                    case .cancel:
-                        await alertService.show(on: view?.contentParrent, type: .defaultError)
-                        completionManager.completeWithError(error.sdkError)
-                        await completionManager.dismissCloseAction(view?.contentParrent)
-                    }
-                } else {
-                    await alertService.show(on: view?.contentParrent, type: .defaultError)
-                    completionManager.completeWithError(error.sdkError)
-                    await completionManager.dismissCloseAction(view?.contentParrent)
-                }
+            await view?.contentParrent?.showLoading()
+            
+            guard let selectedCard = userService.selectedCard,
+                  let user = userService.user else { return }
+            
+            userService.getListCards = true
+            
+            let finalCost = partPayService.bnplplanSelected
+            ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
+            : user.orderInfo.orderAmount.amount
+            
+            await MainActor.run {
+                self.router.presentCards(cards: user.paymentToolInfo.paymentTool,
+                                         cost: finalCost?.price(.RUB) ?? "",
+                                         selectedId: selectedCard.paymentID,
+                                         selectedCard: { [weak self] card in
+                    self?.view?.contentParrent?.hideLoading(animate: true)
+                    self?.userService.selectedCard = card
+                    self?.view?.reloadData()
+                })
             }
         }
     }
