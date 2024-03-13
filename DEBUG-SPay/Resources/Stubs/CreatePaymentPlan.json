@@ -1,10 +1,10 @@
 {
     "offerUrl": "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
-    "offerText": "Я соглашаюсь с условиями документов <offerUrl> по операции. Договор заключается с ООО «ЦНФС».",
+    "offerText": "Я соглашаюсь с <url=https:\/\/platichastyami.ru\/dogovor_oferty>условиями договора<\/url> и <url=https:\/\/platichastyami.ru\/soglashenie_ob_ispolzovanii_pep>соглашения<\/url>. Договор заключается с ООО «ЦНФС».",
     "isBnplEnabled": true,
     "buttonBnpl": {
-        "buttonLogo": "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
-        "buttonLogoInactive": "https://cms-res.online.sberbank.ru/sberpay/icons/980000084043.png",
+        "buttonLogo": "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/SDK\/activeButtonLogo.png",
+        "buttonLogoInactive": "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/SDK\/inactiveButtonLogo.png",
         "header": "Плати частями",
         "headerInactive": "Плати частями",
         "content": "Разбить на 6 платежей",
