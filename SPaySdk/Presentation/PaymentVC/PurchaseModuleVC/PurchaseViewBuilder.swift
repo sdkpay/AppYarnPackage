@@ -129,7 +129,7 @@ final class PurchaseViewBuilder {
             .touchEdge(.left, toSuperviewEdge: .left, withInset: Cost.Stack.left)
             .width(Cost.CollectionView.itemWidth)
             .touchEdge(.top, toEdge: .bottom, ofView: shopLabel, withInset: Cost.Stack.topCost)
-        bottomConstraint = purchaseCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: Cost.Stack.bottom)
+        bottomConstraint = purchaseCollectionView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor, constant: Cost.Stack.bottom)
         bottomConstraint?.isActive = true
         
         levelsView
