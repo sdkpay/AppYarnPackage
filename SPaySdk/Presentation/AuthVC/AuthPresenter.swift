@@ -276,10 +276,9 @@ final class AuthPresenter: AuthPresenting {
 
             let errors = await [userError, bnplError]
             
-            if let error = errors.first(where: { $0.type == .bnpl })?.error, sdkManager.payStrategy == .partPay {
+            if let error = errors.first(where: { $0.type == .bnpl })?.error,
+                sdkManager.payStrategy == .partPay, !partPayService.bnplplanEnabled {
                 
-                // DEBUG
-                // Добавить кастомную ошибку
                 await alertService.show(on: view, type: .defaultError)
                 dismissWithError(error)
                 return
