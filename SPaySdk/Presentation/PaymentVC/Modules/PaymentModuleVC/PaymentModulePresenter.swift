@@ -372,8 +372,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     }
     
     private func showPaySuccessResult() async {
-        
-        self.partPayService.bnplplanSelected = false
+
         self.completionManager.completePay(with: .success)
         await view?.contentParrent?.setUserInteractionsEnabled()
 

@@ -247,6 +247,10 @@ final class DefaultSBPayService: SBPayService {
                 self.inProgress = false
                 completion(response)
             }
+        
+        var partPayService = locator.resolve(PartPayService.self)
+        partPayService.bnplplanSelected = true
+        
         liveCircleManager.openInitialScreen(with: viewController,
                                             with: locator)
         locator
