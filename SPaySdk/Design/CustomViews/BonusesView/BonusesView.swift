@@ -26,7 +26,7 @@ final class BonusesView: UIView {
         return view
     }()
     
-    private lazy var imageView = UIImageView(image: Asset.sbsp.image)
+    private lazy var imageView = UIImageView(image: Asset.Image.sbsp.image)
     
     private var checkTapped: BoolAction?
     
@@ -65,7 +65,7 @@ final class BonusesView: UIView {
         
         overrideUserInterfaceStyle = .light
         
-        backgroundColor = Asset.greenPrimary.color
+        backgroundColor = Asset.Palette.greenPrimary.color
         layer.cornerRadius = 2
         titleLabel
             .add(toSuperview: self)

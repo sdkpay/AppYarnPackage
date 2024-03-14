@@ -32,7 +32,7 @@ private final class HintView: SwipableView {
     
     private lazy var closeButton: ActionButton = {
         let view = ActionButton()
-        view.setImage(Asset.cross.image, for: .normal)
+        view.setImage(Asset.Image.cross.image, for: .normal)
         view.addAction {
             self.closeTapped()
         }

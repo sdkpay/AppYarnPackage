@@ -1,0 +1,13 @@
+/* 
+  Loading.strings
+  SPaySdk
+
+  Created by Серёгин Михаил Алексеевич on 13.03.2024.
+  
+*/
+
+// Loading
+"try.to.pay.title" = "Проводим оплату...";
+"to.bank.title" = "Переходим в %@ для авторизации";
+"get.data.title" = "Секундочку";
+"showCards.title" = "Переходим в СберБанк Онлайн, чтобы показать вам ваши карты";

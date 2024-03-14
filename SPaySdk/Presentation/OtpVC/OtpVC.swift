@@ -60,7 +60,7 @@ final class OtpVC: ContentVC, IOtpVC {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = .medium4
-        label.textColor = Asset.red.color
+        label.textColor = Asset.Palette.red.color
         label.isHidden = true
         return label
     }()
@@ -91,7 +91,7 @@ final class OtpVC: ContentVC, IOtpVC {
     
     private(set) lazy var nextButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
-        view.setTitle(Strings.Next.Button.title, for: .normal)
+        view.setTitle(Strings.Otp.Next.Button.title, for: .normal)
         view.addAction {
             self.presenter.sendOTP(otpCode: self.otpCode)
         }
@@ -100,7 +100,7 @@ final class OtpVC: ContentVC, IOtpVC {
     
     private(set) lazy var backButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .clear)
-        view.setTitle(Strings.Cancel.title, for: .normal)
+        view.setTitle(Strings.Common.Cancel.title, for: .normal)
         view.addAction {
             self.presenter.back()
         }
@@ -156,7 +156,7 @@ final class OtpVC: ContentVC, IOtpVC {
     
     func updateMobilePhone(phoneNumber: String) {
         
-        titleLabel.text = Strings.TitleLabel.Message.title(phoneNumber)
+        titleLabel.text = Strings.Otp.TitleLabel.Message.title(phoneNumber)
     }
 
     override func viewDidLoad() {
@@ -349,7 +349,7 @@ extension OtpVC {
             static let height = Cost.height
 
             enum Next {
-                static let title = Strings.Pay.title
+                static let title = Strings.Common.Pay.title
                 static let bottom: CGFloat = 40.0
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet
@@ -357,7 +357,7 @@ extension OtpVC {
             }
             
             enum Back {
-                static let title = Strings.Cancel.title
+                static let title = Strings.Common.Cancel.title
                 static let bottom: CGFloat = 0
                 static let right: CGFloat = Cost.sideOffSet
                 static let left: CGFloat = Cost.sideOffSet

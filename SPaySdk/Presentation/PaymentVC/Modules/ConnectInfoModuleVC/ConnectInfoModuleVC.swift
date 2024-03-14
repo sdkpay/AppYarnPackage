@@ -56,6 +56,6 @@ final class ConnectInfoModuleVC: ModuleVC, IConnectInfoModuleVC {
             .touchEdge(.top, toSuperviewEdge: .top)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideOffSet)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideOffSet)
-            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .sideOffSet)
+            .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: .sideOffSet, usingRelation: .lessThanOrEqual, priority: .defaultLow)
     }
 }

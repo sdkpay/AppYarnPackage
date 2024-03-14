@@ -18,7 +18,7 @@ enum PurchaseModelFactory {
             
             let currentPayment = bnplPayment[indexPath.row]
             
-           // let subtitle = indexPath.row == 0 ? Strings.Today.title : currentPayment.date
+           // let subtitle = indexPath.row == 0 ? Strings.Localizable.Today.title : currentPayment.date
             
             if let clientCommission = currentPayment.clientCommission {
                 

@@ -223,12 +223,12 @@ final class DefaultAlertService: AlertService {
             
             analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "noInternet"])
             
-            let tryButton = AlertButtonModel(title: Strings.Try.title,
-                                             type: .blackBack, 
+            let tryButton = AlertButtonModel(title: Strings.Common.Try.title,
+                                             type: .blackBack,
                                              neededResult: .approve,
                                              action: nil)
-            let cancelButton = AlertButtonModel(title: Strings.Cancel.title,
-                                                type: .info, 
+            let cancelButton = AlertButtonModel(title: Strings.Common.Cancel.title,
+                                                type: .info,
                                                 neededResult: .cancel,
                                                 action: nil)
             return await show(on: view,
@@ -244,11 +244,11 @@ final class DefaultAlertService: AlertService {
             
             analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "partPayError"])
             
-            let fullPayButton = AlertButtonModel(title: Strings.Pay.Full.title,
-                                                 type: .blackBack, 
+            let fullPayButton = AlertButtonModel(title: Strings.Common.Pay.Full.title,
+                                                 type: .blackBack,
                                                  neededResult: .approve,
                                                  action: nil)
-            let returnButton = AlertButtonModel(title: Strings.Return.title,
+            let returnButton = AlertButtonModel(title: Strings.Common.Return.title,
                                                 type: .info, neededResult: .cancel,
                                                 action: nil)
             return await show(on: view,
@@ -263,8 +263,8 @@ final class DefaultAlertService: AlertService {
             
             analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "tryingError"])
             
-            let fullPayButton = AlertButtonModel(title: Strings.Button.Otp.back,
-                                                 type: .blackBack, 
+            let fullPayButton = AlertButtonModel(title: Strings.Otp.Button.Otp.back,
+                                                 type: .blackBack,
                                                  neededResult: .approve,
                                                  action: nil)
             
@@ -279,7 +279,7 @@ final class DefaultAlertService: AlertService {
             
             analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "noMoney"])
             
-            let cancel = AlertButtonModel(title: Strings.Return.title,
+            let cancel = AlertButtonModel(title: Strings.Common.Return.title,
                                           type: .cancel,
                                           neededResult: .cancel,
                                           action: nil)

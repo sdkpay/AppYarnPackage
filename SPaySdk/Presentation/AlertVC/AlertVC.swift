@@ -105,7 +105,7 @@ final class AlertVC: ContentVC, IAlertVC {
         if model.isFailure {
             contentStack.addArrangedSubview(textStack)
             contentStack.addArrangedSubview(imageView)
-            contentNavigationController?.setBackground(Asset.errorBackground.image)
+            contentNavigationController?.setBackground(Asset.Image.errorBackground.image)
             imageWidth = 250
             imageHeight = 150
         } else {
@@ -156,7 +156,7 @@ final class AlertVC: ContentVC, IAlertVC {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
-        contentNavigationController?.setBackground(Asset.background.image)
+        contentNavigationController?.setBackground(Asset.Image.background.image)
     }
     
     deinit {

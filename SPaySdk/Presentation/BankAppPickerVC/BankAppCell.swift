@@ -61,7 +61,7 @@ final class BankAppCell: UITableViewCell {
     private lazy var sutitleLabel: UILabel = {
         let view = UILabel()
         view.font = .medium3
-        view.textColor = Asset.red.color
+        view.textColor = Asset.Palette.red.color
         return view
     }()
     

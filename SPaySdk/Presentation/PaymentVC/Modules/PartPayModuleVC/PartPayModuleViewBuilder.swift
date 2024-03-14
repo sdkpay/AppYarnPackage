@@ -24,7 +24,7 @@ private extension PartPayModuleViewBuilder {
             enum Final {
                 static let font = UIFont.medium5
                 static let textColor = UIColor.textPrimory
-                static let text = Strings.Part.Pay.final
+                static let text = Strings.PartPay.final
             }
             
             enum FinalCost {
@@ -35,7 +35,7 @@ private extension PartPayModuleViewBuilder {
         
         enum Button {
             enum Accept {
-                static let title = String(stringLiteral: Strings.Accept.title)
+                static let title = String(stringLiteral: Strings.PartPay.Accept.title)
                 
                 static let topOffSet: CGFloat = 20.0
                 static let leftOffSet: CGFloat = Consts.margin
@@ -45,7 +45,7 @@ private extension PartPayModuleViewBuilder {
             }
             
             enum Cancel {
-                static let title = String(stringLiteral: Strings.Part.Pay.Cancel.title)
+                static let title = String(stringLiteral: Strings.PartPay.Cancel.title)
                 
                 static let topOffSet: CGFloat = 20.0
                 static let leftOffSet: CGFloat = Consts.margin
@@ -95,7 +95,7 @@ final class PartPayModuleViewBuilder {
         view.font = Consts.Label.Title.font
         view.setAttributedString(lineHeightMultiple: 1.12,
                                  kern: -0.3,
-                                 string: Strings.Part.Pay.title)
+                                 string: Strings.PartPay.title)
         view.textColor = Consts.Label.Title.textColor
         view.height(view.requiredHeight)
         return view

@@ -101,7 +101,7 @@ final class AuthPresenter: AuthPresenting {
                                         with: nil,
                                         state: .failure,
                                         buttons: [
-                                            AlertButtonModel(title: Strings.Return.title,
+                                            AlertButtonModel(title: Strings.Common.Return.title,
                                                              type: .info, 
                                                              neededResult: .cancel,
                                                              action: { [weak self] in

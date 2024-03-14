@@ -79,7 +79,7 @@ final class CardCell: UITableViewCell {
         return view
     }()
     
-    private lazy var bonusesImageView = UIImageView(image: Asset.sbsp.image.withRenderingMode(.alwaysTemplate))
+    private lazy var bonusesImageView = UIImageView(image: Asset.Image.sbsp.image.withRenderingMode(.alwaysTemplate))
     
     private lazy var bonusesStackView: UIStackView = {
         let stackView = UIStackView()
@@ -108,7 +108,7 @@ final class CardCell: UITableViewCell {
         if let bonuses = model.bonuses {
             bonusesStackView.isHidden = false
             bonusesLabel.text = "+\(bonuses)"
-            let bonusesColor = model.selected ? Asset.greenPrimary.color : Asset.grayPrimary.color
+            let bonusesColor = model.selected ? Asset.Palette.greenPrimary.color : Asset.Palette.grayPrimary.color
             bonusesLabel.textColor = bonusesColor
             bonusesImageView.tintColor = bonusesColor
         } else {

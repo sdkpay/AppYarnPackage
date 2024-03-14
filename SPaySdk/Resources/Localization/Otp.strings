@@ -1,0 +1,19 @@
+/* 
+  Otp.strings
+  SPaySdk
+
+  Created by Серёгин Михаил Алексеевич on 13.03.2024.
+  
+*/
+
+// OTP
+"placeholder.title" = "Код-подтверждение";
+"next.button.title" = "Продолжить";
+"back.button.title" = "Назад";
+"time.button.repeat.isActive" = "Отправить повторно";
+"time.button.repeat.isNotActive" = "Отправить повторно через %@ секунд";
+"textField.error.wrong.title" = "Неверный код. Повторите попытку.";
+"textField.placeholder" = "Введите код";
+"textField.error.timeout.title" = "Истёк срок действия этого кода";
+"titleLabel.message.title" = "Введите код подтверждения из СМС\n на номер %@";
+"button.otp.back" = "Вернуться в магазин";

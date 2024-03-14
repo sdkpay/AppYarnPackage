@@ -64,7 +64,7 @@ final class HelperVC: ContentVC, IHelperVC {
     
     private(set) lazy var cancelButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .cancel)
-        view.setTitle(Strings.Return.title, for: .normal)
+        view.setTitle(Strings.Common.Return.title, for: .normal)
         view.addAction {
             self.presenter.cancelTapped()
         }

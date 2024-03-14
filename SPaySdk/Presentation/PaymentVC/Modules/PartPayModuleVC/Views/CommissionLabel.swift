@@ -37,7 +37,7 @@ final class CommissionLabel: UIView {
     
     func config(with commission: Int) {
         
-        titleLabel.text = Strings.Part.Commission.title(commission.price(.RUB))
+        titleLabel.text = Strings.PartPay.Commission.title(commission.price(.RUB))
     }
 
     override func layoutSubviews() {

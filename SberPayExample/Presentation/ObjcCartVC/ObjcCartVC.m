@@ -72,6 +72,7 @@
      [SPay setupWithBnplPlan:true
             resultViewNeeded: true
                     helpers:true
+                    needLogs: true
                helperConfig: config
                 environment: SEnvironmentProd
                   completion:nil];

@@ -114,9 +114,9 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] bnplplanSelected in
                 if bnplplanSelected {
-                    self?.view?.setPayButtonTitle(Strings.Part.Active.Button.title)
+                    self?.view?.setPayButtonTitle(Strings.PartPay.Active.Button.title)
                 } else {
-                    self?.view?.setPayButtonTitle(Strings.Pay.title)
+                    self?.view?.setPayButtonTitle(Strings.Common.Pay.title)
                 }
             }
             .store(in: &cancellable)
@@ -126,11 +126,11 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         
         switch vcMode {
         case .pay, .helper:
-            view?.setPayButtonTitle(Strings.Pay.title)
+            view?.setPayButtonTitle(Strings.Common.Pay.title)
         case .connect:
-            view?.setPayButtonTitle(Strings.Connect.title)
+            view?.setPayButtonTitle(Strings.Common.Connect.title)
         case .partPay:
-            view?.setPayButtonTitle(Strings.Part.Active.Button.title)
+            view?.setPayButtonTitle(Strings.PartPay.Active.Button.title)
         }
     }
     
@@ -185,7 +185,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     private func configForWaiting() {
         
         self.completionManager.completePay(with: .waiting)
-        let okButton = AlertButtonModel(title: Strings.Cancel.title,
+        let okButton = AlertButtonModel(title: Strings.Common.Cancel.title,
                                         type: .full, 
                                         neededResult: .approve) { [weak self] in
             self?.completionManager.dismissCloseAction(self?.view?.contentParrent)
@@ -208,7 +208,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     private func goToPay() async {
         
         do {
-            await self.view?.contentParrent?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+            await self.view?.contentParrent?.showLoading(with: Strings.Loading.Try.To.Pay.title, animate: false)
             await view?.contentParrent?.setUserInteractionsEnabled(false)
 
             switch sdkManager.payStrategy {
@@ -239,7 +239,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             try await createOTP()
         }
         
-        await self.view?.contentParrent?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+        await self.view?.contentParrent?.showLoading(with: Strings.Loading.Try.To.Pay.title, animate: false)
         
         let challengeState = try await secureChallengeService.challenge(paymentId: paymentId,
                                                                         isBnplEnabled: partPayService.bnplplanSelected)
@@ -398,10 +398,12 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
                 ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
                 : user.orderInfo.orderAmount.amount
                 
+                let bonuses = featureToggle.isEnabled(.spasiboBonuses) ? userService.selectedCard?.precalculateBonuses : nil
+                
                 await alertService.show(on: self.view?.contentParrent,
                                         type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
                                                           shopName: user.merchantInfo.merchantName,
-                                                          bonuses: userService.selectedCard?.precalculateBonuses))
+                                                          bonuses: bonuses))
                 await completionManager.dismissCloseAction(view?.contentParrent)
             } else {
                 

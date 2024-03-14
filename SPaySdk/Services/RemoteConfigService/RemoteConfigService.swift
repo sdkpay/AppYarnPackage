@@ -80,7 +80,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         
         let currentVesion = Bundle.sdkVersion
         if version != currentVesion {
-            SBLogger.log(level: .merchant, Strings.Merchant.Alert.version)
+            SBLogger.log(level: .merchant, Strings.MerchantAlert.version)
         }
     }
 }

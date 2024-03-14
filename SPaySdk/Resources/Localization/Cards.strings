@@ -1,0 +1,11 @@
+/* 
+  Cards.strings
+  SPaySdk
+
+  Created by Серёгин Михаил Алексеевич on 13.03.2024.
+  
+*/
+
+// Cards
+"title" = "К оплате";
+"new.title" = "Выпустить карту";
