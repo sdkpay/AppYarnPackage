@@ -43,7 +43,7 @@ final class MerchInfoModuleVC: ModuleVC, IMerchInfoModuleVC {
         let view = UIImageView()
         view.contentMode = .scaleAspectFit
         view.clipsToBounds = true
-        view.layer.borderColor = Asset.grayDisabled.color.cgColor
+        view.layer.borderColor = Asset.Palette.grayDisabled.color.cgColor
         view.layer.borderWidth = 1.0
         view.layer.cornerRadius = 16.0
         return view
@@ -54,7 +54,7 @@ final class MerchInfoModuleVC: ModuleVC, IMerchInfoModuleVC {
         view.addAction {
             self.presenter.profileButtonTapped()
         }
-        view.setImage(Asset.user.image, for: .normal)
+        view.setImage(Asset.Image.user.image, for: .normal)
         return view
     }()
     

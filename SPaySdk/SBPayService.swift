@@ -127,7 +127,7 @@ final class DefaultSBPayService: SBPayService {
             apiKey = request.apiKey
         }
         
-        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
+        guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         locator
             .resolve(SDKManager.self)
             .config(apiKey: apiKey,
@@ -172,7 +172,7 @@ final class DefaultSBPayService: SBPayService {
             .resolve(AnalyticsService.self)
             .sendEvent(.MAPayWithBankInvoiceId)
         apiKey = paymentRequest.apiKey
-        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
+        guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
             let response = PaymentResponse(SPayState.error, error)
             completion(response)
@@ -203,7 +203,7 @@ final class DefaultSBPayService: SBPayService {
             .resolve(AnalyticsService.self)
             .sendEvent(.MAPayWithBankInvoiceId)
         apiKey = paymentRequest.apiKey
-        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
+        guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
             let response = PaymentResponse(SPayState.error, error)
             completion(response)
@@ -235,7 +235,7 @@ final class DefaultSBPayService: SBPayService {
             .resolve(AnalyticsService.self)
             .sendEvent(.MAPayWithBankInvoiceId)
         apiKey = paymentRequest.apiKey
-        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
+        guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
             let response = PaymentResponse(SPayState.error, error)
             completion(response)

@@ -106,7 +106,7 @@ private extension PartPayVC {
 
         enum Button {
             enum Accept {
-                static let title = String(stringLiteral: Strings.Accept.title)
+                static let title = String(stringLiteral: Strings.PartPay.Accept.title)
                 
                 static let topOffSet: CGFloat = 20.0
                 static let leftOffSet: CGFloat = Consts.margin
@@ -116,7 +116,7 @@ private extension PartPayVC {
             }
             
             enum Cancel {
-                static let title = String(stringLiteral: Strings.Part.Pay.Cancel.title)
+                static let title = String(stringLiteral: Strings.PartPay.Cancel.title)
                 
                 static let topOffSet: CGFloat = 20.0
                 static let leftOffSet: CGFloat = Consts.margin

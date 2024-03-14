@@ -1,0 +1,12 @@
+/* 
+  Helpers.strings
+  SPaySdk
+
+  Created by Серёгин Михаил Алексеевич on 13.03.2024.
+  
+*/
+
+// Helpers
+"helpers.sbp.title" = "Перевести себе по СБП";
+"helpers.creditCard.title" = "Выпустить кредитную карту";
+"helpers.debittCard.title" = "У вас нет активных карт";

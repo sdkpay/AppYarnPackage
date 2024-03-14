@@ -33,7 +33,7 @@ private final class LevelView: UIView {
     
     private func setupUI() {
         
-        backgroundColor = Asset.grayLight.color
+        backgroundColor = Asset.Palette.grayLight.color
         layer.masksToBounds = true
         layer.cornerRadius = .levelRadius
     }
@@ -91,7 +91,7 @@ final class LevelsView: UIView {
         
         UIView.animate(withDuration: .animationDuration) {
             
-            self.levelViews.filter({ $0 != newView }).forEach({ $0.backgroundColor = Asset.grayLight.color })
+            self.levelViews.filter({ $0 != newView }).forEach({ $0.backgroundColor = Asset.Palette.grayLight.color })
             newView.backgroundColor = .main
         }
     }

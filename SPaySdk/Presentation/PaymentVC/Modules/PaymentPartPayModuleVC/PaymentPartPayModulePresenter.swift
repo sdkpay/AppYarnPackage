@@ -114,7 +114,7 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
     
     private func configViews() {
         
-        view?.setPayButtonTitle(Strings.Part.Active.Button.title)
+        view?.setPayButtonTitle(Strings.PartPay.Active.Button.title)
     }
     
     private func validatePayError(_ error: PayError) async {
@@ -151,7 +151,7 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
     private func configForWaiting() {
         
         self.completionManager.completePay(with: .waiting)
-        let okButton = AlertButtonModel(title: Strings.Cancel.title,
+        let okButton = AlertButtonModel(title: Strings.Common.Cancel.title,
                                         type: .full,
                                         neededResult: .cancel) { [weak self] in
             self?.completionManager.dismissCloseAction(self?.view?.contentParrent)
@@ -174,7 +174,7 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
     private func goToPay() async {
         
         guard let paymentId = userService.selectedCard?.paymentID else { return }
-        await self.view?.contentParrent?.showLoading(with: Strings.Try.To.Pay.title, animate: false)
+        await self.view?.contentParrent?.showLoading(with: Strings.Loading.Try.To.Pay.title, animate: false)
         await view?.contentParrent?.setUserInteractionsEnabled(false)
         
         do {

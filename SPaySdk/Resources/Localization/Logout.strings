@@ -1,0 +1,11 @@
+/* 
+  Logout.strings
+  SPaySdk
+
+  Created by Серёгин Михаил Алексеевич on 13.03.2024.
+  
+*/
+
+// Logout
+"button.logout" = "Выйти из профиля";
+"button.logout.back" = "Вернуться к оплате";

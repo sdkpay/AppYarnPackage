@@ -1,8 +1,8 @@
 output_dir: Generated/
 
 strings:
-  inputs:
-    - SPaySdk/Resources/Localization/ru.lproj/Localizable.strings
+  inputs: SPaySdk/Resources/Localization
+  filter: .+\.strings$
   outputs:
     - templateName: structured-swift5
       output: Strings.swift

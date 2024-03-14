@@ -33,7 +33,7 @@ final class InfoAlertView: UIView {
     private lazy var alertImage: UIImageView = {
         let view = UIImageView()
         view.size(.init(width: .imageViewWidth, height: .imageViewWidth))
-        view.image = Asset.question.image.withRenderingMode(.alwaysOriginal).withTintColor(.main)
+        view.image = Asset.Image.question.image.withRenderingMode(.alwaysOriginal).withTintColor(.main)
         return view
     }()
     

@@ -89,7 +89,7 @@ final class PaymentMasterPresenter: NSObject, PaymentModuleMasterPresenting {
     }
     
     func viewDidLoad() {
-        view?.setCancelTitle(Strings.Cancel.title)
+        view?.setCancelTitle(Strings.Common.Cancel.title)
     }
     
     func viewDidAppear() {

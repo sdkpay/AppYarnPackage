@@ -209,13 +209,13 @@ final class OtpPresenter: OtpPresenting {
         switch state {
         case .ready:
             
-            view?.setOtpDescription(Strings.Time.Button.Repeat.isActive)
+            view?.setOtpDescription(Strings.Otp.Time.Button.Repeat.isActive)
         case .waiting:
             
             timerManager.update { seconds in
                 
                 if seconds > 0 {
-                    self.view?.setOtpDescription(Strings.Time.Button.Repeat.isNotActive(seconds))
+                    self.view?.setOtpDescription(Strings.Otp.Time.Button.Repeat.isNotActive(seconds))
                 } else {
                     self.setState(.ready)
                 }

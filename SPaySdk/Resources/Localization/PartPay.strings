@@ -1,0 +1,19 @@
+/* 
+  PartPay.strings
+  SPaySdk
+
+  Created by Серёгин Михаил Алексеевич on 13.03.2024.
+  
+*/
+
+// PartPay
+"title" = "Плати частями";
+"accept.title" = "Подтвердить";
+"cancel.title" = "Не хочу платить частями";
+"final" = "Итого";
+"agreement.title" = "Условия договора";
+"inactive.title" = "Разбить на 4 платежа";
+"active.button.title" = "Оплатить частями";
+"contract.title" = "условиями договора";
+"agreement.title" = "соглашения";
+"commission.title" = "Комиссия %@ включена в первый платёж";

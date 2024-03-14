@@ -42,7 +42,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
     
     private(set) lazy var nextButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .orangeBack)
-        let string = Strings.Button.logout
+        let string = Strings.Logout.Button.logout
         view.setTitle(string, for: .normal)
         view.layer.cornerRadius = Cost.Button.cornerRadius
         view.addAction {
@@ -53,7 +53,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
     
     private(set) lazy var backButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
-        let string = Strings.Button.Logout.back
+        let string = Strings.Logout.Button.Logout.back
         view.setTitle(string, for: .normal)
         view.layer.cornerRadius = Cost.Button.cornerRadius
         view.addAction {
