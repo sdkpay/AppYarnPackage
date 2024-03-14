@@ -69,7 +69,11 @@ final class PurchaseModuleVC: ModuleVC, IPurchaseModuleVC {
     }
     
     func configBonusesView(_ bonuses: String?) {
-        viewBuilder.bonusesView.config(with: bonuses)
+        if let bonuses = bonuses {
+            viewBuilder.bonusesView.config(with: bonuses)
+        } else {
+            viewBuilder.bonusesView.alpha = 0.0
+        }
     }
     
     private func showLevel(_ index: Int) {

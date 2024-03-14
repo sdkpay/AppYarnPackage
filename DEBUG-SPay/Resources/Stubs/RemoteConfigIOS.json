@@ -36,6 +36,10 @@
         {
             "name": "seamlessAuth",
             "value": true
+        },
+        {
+            "name": "spasiboBonuses",
+            "value": true
         }
     ],
     "bankApps":[

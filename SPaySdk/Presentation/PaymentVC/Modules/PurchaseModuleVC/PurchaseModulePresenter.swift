@@ -37,6 +37,7 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     private let router: PaymentRouting
     private let partPayService: PartPayService
     private let userService: UserService
+    private let featureToggle: FeatureToggleService
     private let payAmountValidationManager: PayAmountValidationManager
     private var cancellable = Set<AnyCancellable>()
     
@@ -44,10 +45,12 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
          manager: SDKManager,
          userService: UserService,
          partPayService: PartPayService,
+         featureToggle: FeatureToggleService,
          payAmountValidationManager: PayAmountValidationManager) {
         self.router = router
         self.partPayService = partPayService
         self.userService = userService
+        self.featureToggle = featureToggle
         self.payAmountValidationManager = payAmountValidationManager
         super.init()
     }
@@ -98,7 +101,9 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     }
     
     private func configBonusesView() {
-        view?.configBonusesView(userService.selectedCard?.precalculateBonuses)
+        let bonuses = featureToggle.isEnabled(.spasiboBonuses) ? userService.selectedCard?.precalculateBonuses : nil
+        
+        view?.configBonusesView(bonuses)
     }
     
     private func showPartsViewifNeed() {

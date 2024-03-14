@@ -16,6 +16,7 @@ protocol SBPayService {
     func setup(bnplPlan: Bool,
                resultViewNeeded: Bool,
                helpers: Bool,
+               needLogs: Bool,
                config: SBHelperConfig,
                environment: SEnvironment,
                completion: ((SPError?) -> Void)?)
@@ -54,6 +55,7 @@ final class DefaultSBPayService: SBPayService {
     func setup(bnplPlan: Bool,
                resultViewNeeded: Bool,
                helpers: Bool,
+               needLogs: Bool,
                config: SBHelperConfig,
                environment: SEnvironment,
                completion: ((SPError?) -> Void)?) {

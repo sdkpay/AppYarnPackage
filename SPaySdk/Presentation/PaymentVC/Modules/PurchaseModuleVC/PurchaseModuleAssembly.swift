@@ -28,6 +28,7 @@ final class PurchaseModuleAssembly {
                                 manager: locator.resolve(),
                                 userService: locator.resolve(),
                                 partPayService: locator.resolve(),
+                                featureToggle: locator.resolve(),
                                 payAmountValidationManager: locator.resolve())
     }
 

@@ -75,11 +75,11 @@ final class CardsPresenter: CardsPresenting {
                 "567890": Strings.Payment.Cards.CompoundWallet.two
             ]))
         }
-        
+        let bonuses = featureToggle.isEnabled(.spasiboBonuses) ? card.precalculateBonuses : nil
         return CardCellModel(title: title,
                              subtitle: subtitle,
                              selected: card.paymentID == selectedId,
-                             bonuses: card.precalculateBonuses,
+                             bonuses: bonuses,
                              cardURL: card.cardLogoURL)
     }
     

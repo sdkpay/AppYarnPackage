@@ -24,12 +24,14 @@ public final class SPay: NSObject {
     public static func setup(bnplPlan: Bool = false,
                              resultViewNeeded: Bool = false,
                              helpers: Bool = true,
+                             needLogs: Bool = true,
                              helperConfig: SBHelperConfig = SBHelperConfig(),
                              environment: SEnvironment = .prod,
                              completion: ((SPError?) -> Void)? = nil) {
         payService?.setup(bnplPlan: bnplPlan,
                           resultViewNeeded: resultViewNeeded,
                           helpers: helpers,
+                          needLogs: needLogs,
                           config: helperConfig,
                           environment: environment,
                           completion: completion)

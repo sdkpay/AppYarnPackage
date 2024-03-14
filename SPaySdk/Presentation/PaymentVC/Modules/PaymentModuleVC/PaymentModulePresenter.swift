@@ -398,10 +398,12 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
                 ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
                 : user.orderInfo.orderAmount.amount
                 
+                let bonuses = featureToggle.isEnabled(.spasiboBonuses) ? userService.selectedCard?.precalculateBonuses : nil
+                
                 await alertService.show(on: self.view?.contentParrent,
                                         type: .paySuccess(amount: finalCost?.price(.RUB) ?? "",
                                                           shopName: user.merchantInfo.merchantName,
-                                                          bonuses: userService.selectedCard?.precalculateBonuses))
+                                                          bonuses: bonuses))
                 await completionManager.dismissCloseAction(view?.contentParrent)
             } else {
                 

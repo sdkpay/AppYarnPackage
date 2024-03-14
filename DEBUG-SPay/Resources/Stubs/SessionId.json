@@ -7,5 +7,6 @@
     "clientId" : "9f80261c-3455-4942-be48-cd1b2a2d7ba5",
     "codeChallenge" : "oL6OTz5MUOrdwYttRMRqO4hM0sgFgZ0fytXCBzSOC5g",
     "state" : "gXt5uwjGo97",
-    "nonce" : "b86w0j714Mw06AkvH2O5iQ1OQWd8X8i9Ls0Tkv8WXm5IGn4CaW02Ogj93ar4gcQ6"
+    "nonce" : "b86w0j714Mw06AkvH2O5iQ1OQWd8X8i9Ls0Tkv8WXm5IGn4CaW02Ogj93ar4gcQ6",
+    "refreshTokenIsActive" : true
 }
