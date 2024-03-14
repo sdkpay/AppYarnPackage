@@ -276,12 +276,19 @@ final class AuthPresenter: AuthPresenting {
 
             let errors = await [userError, bnplError]
             
-            if let error = errors.first(where: { $0.type == .bnpl })?.error,
-                sdkManager.payStrategy == .partPay, !partPayService.bnplplanEnabled {
+            if sdkManager.payStrategy == .partPay {
                 
-                await alertService.show(on: view, type: .defaultError)
-                dismissWithError(error)
-                return
+                if let error = errors.first(where: { $0.type == .bnpl })?.error {
+                    await alertService.show(on: view, type: .defaultError)
+                    dismissWithError(error)
+                    return
+                }
+                
+                if !partPayService.bnplplanEnabled {
+                    await alertService.show(on: view, type: .defaultError)
+                    dismissWithError(.init(.errorSystem))
+                    return
+                }
             }
             
             if let error = errors.first(where: { $0.type == .user })?.error {
