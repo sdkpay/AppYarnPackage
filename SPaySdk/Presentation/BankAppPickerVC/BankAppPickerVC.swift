@@ -15,12 +15,15 @@ protocol IBankAppPickerVC: AnyObject {
 final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
     
     private let presenter: BankAppPickerPresenting
+    private let analytics: AnalyticsManager
+    
     private lazy var viewBuilder = BankAppPickerViewBuilder(backButtonDidTap: { [weak self] in
         self?.presenter.closeButtonDidTapped()
     })
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.tag = 1
         presenter.viewDidLoad()
         viewBuilder.setupUI(view: view)
         viewBuilder.tableView.delegate = self
@@ -31,10 +34,12 @@ final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         SBLogger.log(.didAppear(view: self))
+        analytics.sendAppeared(view: self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        analytics.sendDisappeared(view: self)
         SBLogger.log(.didDissapear(view: self))
     }
     
@@ -42,9 +47,11 @@ final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
         SBLogger.log(.stop(obj: self))
     }
     
-    init(_ presenter: BankAppPickerPresenting) {
+    init(_ presenter: BankAppPickerPresenting, analytics: AnalyticsManager) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .BankAppView
     }
     
     required init?(coder: NSCoder) {

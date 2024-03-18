@@ -31,7 +31,7 @@ final class LogoutAssembly {
     }
 
     private func moduleView(presenter: LogoutPresenter, with userInfo: UserInfo) -> ContentVC & ILogoutVC {
-        let view = LogoutVC(presenter, with: userInfo)
+        let view = LogoutVC(presenter, with: userInfo, analytics: locator.resolve())
         presenter.view = view
         return view
     }

@@ -35,7 +35,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     
     weak var view: (IHelperFeatureModuleVC & ModuleVC)?
     private let router: PaymentRouting
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private var userService: UserService
     private let completionManager: CompletionManager
     private let sdkManager: SDKManager
@@ -45,12 +45,10 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     private let bankManager: BankAppManager
     private let helperConfigManager: HelperConfigManager
     
-    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue]
-    
     init(_ router: PaymentRouting,
          manager: SDKManager,
          userService: UserService,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          bankManager: BankAppManager,
          completionManager: CompletionManager,
          alertService: AlertService,
@@ -89,6 +87,11 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
         case .features:
             
             let helper = activeFeatures[indexPath.row]
+            
+            analytics.send(EventBuilder()
+                .with(base: .Touch)
+                .with(value: helper.bannerListType == .sbp ? "MakeTransfer" : "MakeCard")
+                .build(), on: view?.contentParrent?.analyticsName ?? .None)
             
             guard let deeplinkIos = helper.buttons.first?.deeplinkIos else { return }
             goTo(url: deeplinkIos)
@@ -132,7 +135,11 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     }
     
     private func appAuth() {
-        analytics.sendEvent(.LCBankAppAuth, with: screenEvent)
+        
+        analytics.send(EventBuilder()
+            .with(base: .LC)
+            .with(value: "BankAppAuth")
+            .build(), on: view?.contentParrent?.analyticsName ?? .None)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
@@ -147,11 +154,19 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
                                                                 name: UIApplication.didBecomeActiveNotification,
                                                                 object: nil)
                 
-                self.analytics.sendEvent(.LCBankAppAuthGood, with: self.screenEvent)
+                await analytics.send(EventBuilder()
+                    .with(base: .LC)
+                    .with(value: "BankAppAuth")
+                    .with(postState: .Good)
+                    .build(), on: view?.contentParrent?.analyticsName ?? .None)
             } catch {
                 if let error = error as? SDKError {
                     
-                    self.analytics.sendEvent(.LCBankAppAuthFail, with: self.screenEvent)
+                    await analytics.send(EventBuilder()
+                        .with(base: .LC)
+                        .with(value: "BankAppAuth")
+                        .with(postState: .Fail)
+                        .build(), on: view?.contentParrent?.analyticsName ?? .None)
                     
                     if error.represents(.noData) {
                         

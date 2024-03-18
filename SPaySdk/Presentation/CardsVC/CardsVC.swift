@@ -10,12 +10,18 @@ import UIKit
 protocol ICardsVC { }
 
 final class CardsVC: ContentVC, ICardsVC {
+    
     private let presenter: CardsPresenting
+    private let analytics: AnalyticsManager
     private let viewBuilder = CardsViewBuilder()
     
-    init(_ presenter: CardsPresenting, cost: String) {
+    init(_ presenter: CardsPresenting,
+         analytics: AnalyticsManager,
+         cost: String) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .ListCardView
         viewBuilder.costLabel.text = cost
     }
     
@@ -34,14 +40,14 @@ final class CardsVC: ContentVC, ICardsVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presenter.viewDidAppear()
         SBLogger.log(.didAppear(view: self))
+        analytics.sendAppeared(view: self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        presenter.viewDidDisappear()
         SBLogger.log(.didDissapear(view: self))
+        analytics.sendDisappeared(view: self)
     }
 }
 

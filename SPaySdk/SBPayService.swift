@@ -85,6 +85,14 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(HelperConfigManager.self)
             .setHelpersNeeded(helpers)
+        locator
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                    .with(base: .MA)
+                    .with(action: .Init)
+                    .build(),
+                  on: .None,
+                  values: [.Environment: "\(environment.rawValue)"])
         
         Task(priority: .medium) {
             
@@ -107,14 +115,20 @@ final class DefaultSBPayService: SBPayService {
     }
     
     var isReadyForSPay: Bool {
+        
         SBLogger.log(.version)
-        locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MAIsReadyForSPay)
+        
+        let manager = locator.resolve(AnalyticsManager.self)
+        
+        manager
+            .send(EventBuilder().with(base: .MA).with(value: #function).build(),
+                  on: .None)
+        
         let apps = locator.resolve(BankAppManager.self).avaliableBanks
-        locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(apps.isEmpty ? .LCNoBankAppFound : .LCBankAppFound)
+        manager
+            .send(EventBuilder().with(base: .MAC).with(value: #function).build(),
+                  on: .None,
+                  values: [.Value: (!apps.isEmpty).description])
         SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
         return !apps.isEmpty
     }
@@ -122,9 +136,7 @@ final class DefaultSBPayService: SBPayService {
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
-        locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MAGetPaymentToken)
+
         if apiKey == nil {
             apiKey = request.apiKey
         }
@@ -138,22 +150,13 @@ final class DefaultSBPayService: SBPayService {
                 completion(response)
             })
         liveCircleManager.openInitialScreen(with: viewController, with: locator)
-        locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MACGetPaymentToken)
     }
     
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
         locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MAPay)
-        locator
             .resolve(SDKManager.self)
             .pay(with: paymentRequest, completion: completion)
-        locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MACPay)
     }
     
     func completePayment(paymentSuccess: SPayState,
@@ -170,9 +173,15 @@ final class DefaultSBPayService: SBPayService {
         inProgress = true
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
+        
         locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MAPayWithBankInvoiceId)
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MA)
+                .with(value: #function)
+                .build(),
+                  on: .None)
+        
         apiKey = paymentRequest.apiKey
         guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
@@ -189,8 +198,12 @@ final class DefaultSBPayService: SBPayService {
         liveCircleManager.openInitialScreen(with: viewController,
                                             with: locator)
         locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MACPayWithBankInvoiceId)
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MAC)
+                .with(value: #function)
+                .build(),
+                  on: .None)
     }
     
     func payWithoutRefresh(with viewController: UIViewController, 
@@ -201,9 +214,15 @@ final class DefaultSBPayService: SBPayService {
         inProgress = true
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
+        
         locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MAPayWithBankInvoiceId)
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MA)
+                .with(value: #function)
+                .build(),
+                  on: .None)
+        
         apiKey = paymentRequest.apiKey
         guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
@@ -220,8 +239,12 @@ final class DefaultSBPayService: SBPayService {
         liveCircleManager.openInitialScreen(with: viewController,
                                             with: locator)
         locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MACPayWithBankInvoiceId)
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MAC)
+                .with(value: #function)
+                .build(),
+                  on: .None)
     }
     
     func payWithPartPay(with viewController: UIViewController,
@@ -233,9 +256,15 @@ final class DefaultSBPayService: SBPayService {
         inProgress = true
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
+        
         locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MAPayWithBankInvoiceId)
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MA)
+                .with(value: #function)
+                .build(),
+                  on: .None)
+        
         apiKey = paymentRequest.apiKey
         guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
@@ -256,8 +285,12 @@ final class DefaultSBPayService: SBPayService {
         liveCircleManager.openInitialScreen(with: viewController,
                                             with: locator)
         locator
-            .resolve(AnalyticsService.self)
-            .sendEvent(.MACPayWithBankInvoiceId)
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MA)
+                .with(value: #function)
+                .build(),
+                  on: .None)
     }
     
     func getResponseFrom(_ url: URL) {

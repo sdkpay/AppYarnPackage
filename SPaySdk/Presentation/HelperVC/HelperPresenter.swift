@@ -18,7 +18,6 @@ final class HelperPresenter: HelperPresenting {
     weak var view: (IHelperVC & ContentVC)?
 
     private let router: HelperRouting
-    private let analytics: AnalyticsService
     private let completionManager: CompletionManager
     private let userService: UserService
     private let bankAppManager: BankAppManager
@@ -30,10 +29,8 @@ final class HelperPresenter: HelperPresenting {
          userService: UserService,
          bankAppManager: BankAppManager,
          featureToggle: FeatureToggleService,
-         helperConfigManager: HelperConfigManager,
-         analytics: AnalyticsService) {
+         helperConfigManager: HelperConfigManager) {
         self.router = router
-        self.analytics = analytics
         self.userService = userService
         self.featureToggle = featureToggle
         self.completionManager = completionManager

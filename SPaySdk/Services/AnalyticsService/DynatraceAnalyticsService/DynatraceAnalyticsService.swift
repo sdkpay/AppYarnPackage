@@ -15,15 +15,15 @@ private enum DynatraceCredentional {
 
 final class DefaultDynatraceAnalyticsService: AnalyticsService {
     
-    func sendEvent(_ event: AnalyticsEvent) {
-        let action = DTXAction.enter(withName: event.rawValue)
+    func sendEvent(_ event: String) {
+        let action = DTXAction.enter(withName: event)
         action?.leave()
     }
     
-    func sendEvent(_ event: AnalyticsEvent, with string: String) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        action?.reportValue(withName: event.rawValue, stringValue: string)
-        SBLogger.logAnalyticsEvent(name: event.rawValue, values: string)
+    func sendEvent(_ event: String, with string: String) {
+        let action = DTXAction.enter(withName: event)
+        action?.reportValue(withName: event, stringValue: string)
+        SBLogger.logAnalyticsEvent(name: event, values: string)
         action?.leave()
     }
     
@@ -35,8 +35,8 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
         Dynatrace.endVisit()
     }
     
-    func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any]) {
-        let action = DTXAction.enter(withName: event.rawValue)
+    func sendEvent(_ event: String, with dictionaty: [AnalyticsKey: Any]) {
+        let action = DTXAction.enter(withName: event)
         dictionaty.forEach { key, value in
             if let value = value as? Int64 {
                 action?.reportValue(withName: key.rawValue, intValue: value)
@@ -47,7 +47,7 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
             }
         }
         let values = dictionaty.reduce(into: [:]) { $0[$1.key.rawValue] = $1.value }
-        SBLogger.logAnalyticsEvent(name: event.rawValue, values: values.json)
+        SBLogger.logAnalyticsEvent(name: event, values: values.json)
         action?.leave()
     }
 

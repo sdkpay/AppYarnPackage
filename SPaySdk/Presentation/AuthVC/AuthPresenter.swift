@@ -16,7 +16,7 @@ final class AuthPresenter: AuthPresenting {
     
     weak var view: (IAuthVC & ContentVC)?
     
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private let router: AuthRouter
     private var authService: AuthService
     private let authManager: AuthManager
@@ -41,7 +41,7 @@ final class AuthPresenter: AuthPresenting {
          seamlessAuthService: SeamlessAuthService,
          sdkManager: SDKManager,
          completionManager: CompletionManager,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          userService: UserService,
          alertService: AlertService,
          bankManager: BankAppManager,
@@ -88,7 +88,6 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func startAuth() {
-        analytics.sendEvent(.MAInit, with: "environment: \(enviromentManager.environment)")
         
         guard !versionСontrolManager.isVersionDepicated else {
             

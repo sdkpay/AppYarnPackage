@@ -34,9 +34,9 @@ final class DefaultBankAppManager: BankAppManager {
         UserDefaults.bankApps ?? []
     }
     
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     
-    init(analytics: AnalyticsService) {
+    init(analytics: AnalyticsManager) {
         self.analytics = analytics
     }
     
@@ -60,8 +60,12 @@ final class DefaultBankAppManager: BankAppManager {
     }
     
     func saveSelectedBank() {
-        analytics.sendEvent(.STSaveBankApp,
-                            with: [.View: AnlyticsScreenEvent.AuthVC.rawValue])
+        analytics.send(EventBuilder()
+            .with(base: .ST)
+            .with(action: .Save)
+            .with(value: "BankApp")
+            .build(),
+                       values: [.Value: _selectedBank?.name ?? "None"])
         UserDefaults.bankApp = _selectedBank?.appId
     }
     
@@ -83,8 +87,13 @@ final class DefaultBankAppManager: BankAppManager {
                 _selectedBank = UserDefaults.bankApps?.first(where: { $0.appId == savedBank })
                 return _selectedBank
             } else {
-                analytics.sendEvent(.STGetFailBankApp,
-                                    with: [.View: AnlyticsScreenEvent.AuthVC.rawValue])
+                analytics.send(EventBuilder()
+                    .with(base: .ST)
+                    .with(action: .Get)
+                    .with(state: .Fail)
+                    .with(value: "BankApp")
+                    .build(),
+                               values: [.Value: _selectedBank?.name ?? "None"])
                 return nil
             }
         } else {

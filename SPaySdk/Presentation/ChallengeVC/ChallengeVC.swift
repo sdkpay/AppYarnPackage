@@ -79,6 +79,7 @@ final class InfoAlertView: UIView {
 final class ChallengeVC: ContentVC, IChallengeVC {
 
     private let presenter: ChallengePresenting
+    private let analytics: AnalyticsManager
     
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
@@ -132,8 +133,10 @@ final class ChallengeVC: ContentVC, IChallengeVC {
         return view
     }()
 
-    init(_ presenter: ChallengePresenting) {
+    init(_ presenter: ChallengePresenting,
+         analytics: AnalyticsManager) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -151,6 +154,8 @@ final class ChallengeVC: ContentVC, IChallengeVC {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         SBLogger.log(.didAppear(view: self))
+        analytics.sendAppeared(view: self)
+        SBLogger.log(.didDissapear(view: self))
     }
     
     override func viewDidDisappear(_ animated: Bool) {

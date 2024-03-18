@@ -10,6 +10,7 @@ import UIKit
 public typealias Action = (() -> Void)
 
 class ActionButton: UIButton {
+    
     private var action: Action?
 
     func addAction(_ action: @escaping Action) {

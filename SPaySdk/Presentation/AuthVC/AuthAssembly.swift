@@ -48,7 +48,7 @@ final class AuthAssembly {
     }
 
     private func moduleView(presenter: AuthPresenter) -> ContentVC & IAuthVC {
-        let view = AuthVC(presenter)
+        let view = AuthVC(presenter, analytics: locator.resolve())
         presenter.view = view
         return view
     }

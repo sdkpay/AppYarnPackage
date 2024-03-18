@@ -20,7 +20,7 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
     
     weak var view: (IPaymentPartPayModuleVC & ModuleVC)?
     private let router: PaymentRouting
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private var userService: UserService
     private let paymentService: PaymentService
     private let locationManager: LocationManager
@@ -36,12 +36,10 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
     private let otpService: OTPService
     private var cancellable = Set<AnyCancellable>()
     
-    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue]
-    
     init(_ router: PaymentRouting,
          manager: SDKManager,
          userService: UserService,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          bankManager: BankAppManager,
          paymentService: PaymentService,
          locationManager: LocationManager,
@@ -79,7 +77,10 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
     
     func payButtonTapped() {
         
-        analytics.sendEvent(.TouchPay, with: screenEvent)
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: "Pay")
+            .build(), on: view?.contentParrent?.analyticsName ?? .None)
         
         Task {
             await goToPay()

@@ -21,6 +21,7 @@ protocol IAuthVC {
 final class AuthVC: ContentVC, IAuthVC {
     
     private let presenter: AuthPresenting
+    private let analytics: AnalyticsManager
     
     private lazy var webView: WKWebView = {
         let configuration = WKWebViewConfiguration()
@@ -45,9 +46,11 @@ final class AuthVC: ContentVC, IAuthVC {
         return imageView
     }()
     
-    init(_ presenter: AuthPresenting) {
+    init(_ presenter: AuthPresenting, analytics: AnalyticsManager) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .AuthView
     }
     
     required init?(coder: NSCoder) {
@@ -64,6 +67,7 @@ final class AuthVC: ContentVC, IAuthVC {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         SBLogger.log(.didAppear(view: self))
+        analytics.sendAppeared(view: self)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.logoImage.play()
@@ -72,6 +76,7 @@ final class AuthVC: ContentVC, IAuthVC {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        analytics.sendDisappeared(view: self)
         SBLogger.log(.didDissapear(view: self))
     }
     

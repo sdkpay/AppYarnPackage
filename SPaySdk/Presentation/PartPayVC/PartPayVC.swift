@@ -37,12 +37,13 @@ final class PartPayVC: ContentVC, IPartPayVC {
     }
     
     private let presenter: PartPayPresenter
-    private var analyticsService: AnalyticsService
+    private var analytics: AnalyticsManager
         
-    init(_ presenter: PartPayPresenter, analyticsService: AnalyticsService) {
-        self.analyticsService = analyticsService
+    init(_ presenter: PartPayPresenter, analytics: AnalyticsManager) {
+        self.analytics = analytics
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .BNPLView
     }
     
     required init?(coder: NSCoder) {
@@ -58,13 +59,13 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        analyticsService.sendEvent(.LCBNPLViewAppeared, with: "screen: BNPLVC")
+        analytics.sendAppeared(view: self)
         SBLogger.log(.didAppear(view: self))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        analyticsService.sendEvent(.LCBNPLViewDisappeared, with: "screen: BNPLVC")
+        analytics.sendDisappeared(view: self)
         SBLogger.log(.didDissapear(view: self))
     }
 

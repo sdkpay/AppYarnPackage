@@ -47,7 +47,7 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
     
     weak var view: (IPaymentFeatureModuleVC & ModuleVC)?
     private let router: PaymentRouting
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private var userService: UserService
     private let paymentService: PaymentService
     private let locationManager: LocationManager
@@ -64,12 +64,10 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
     private var secureChallengeService: SecureChallengeService
     private var payAmountValidationManager: PayAmountValidationManager
     
-    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue]
-    
     init(_ router: PaymentRouting,
          manager: SDKManager,
          userService: UserService,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          bankManager: BankAppManager,
          paymentService: PaymentService,
          locationManager: LocationManager,
@@ -169,7 +167,10 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
 
    private func cardTapped() {
         
-        analytics.sendEvent(.TouchCard, with: screenEvent)
+       analytics.send(EventBuilder()
+           .with(base: .Touch)
+           .with(value: "Card")
+           .build(), on: view?.contentParrent?.analyticsName ?? .None)
         
         guard userService.additionalCards else { return }
         guard let authMethod = authManager.authMethod else { return }
@@ -192,14 +193,32 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
                     
                     switch result {
                     case true:
-                        self.analytics.sendEvent(.LСGoodBioAuth, with: self.screenEvent)
+                        analytics.send(EventBuilder()
+                            .with(base: .LC)
+                            .with(state: .Good)
+                            .with(value: "BioAuth")
+                            .build(), on: view?.contentParrent?.analyticsName ?? .None)
+                        
                         self.presentListCards()
                     case false:
-                        self.analytics.sendEvent(.LСFailBioAuth, with: self.screenEvent)
+                        analytics.send(EventBuilder()
+                            .with(base: .LC)
+                            .with(state: .Fail)
+                            .with(value: "BioAuth")
+                            .build(), on: view?.contentParrent?.analyticsName ?? .None)
                         self.appAuth()
                     }
                 case false:
-                    self.analytics.sendEvent(.LСFailBioAuth, with: self.screenEvent)
+                    analytics.send(EventBuilder()
+                        .with(base: .LC)
+                        .with(value: "BankAppAuth")
+                        .with(postState: .Good)
+                        .build(), on: view?.contentParrent?.analyticsName ?? .None)
+                    analytics.send(EventBuilder()
+                        .with(base: .LC)
+                        .with(state: .Fail)
+                        .with(value: "BioAuth")
+                        .build(), on: view?.contentParrent?.analyticsName ?? .None)
                     self.appAuth()
                 }
             }
@@ -244,7 +263,12 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
     }
     
     private func appAuth() {
-        analytics.sendEvent(.LCBankAppAuth, with: screenEvent)
+        
+        analytics.send(EventBuilder()
+            .with(base: .LC)
+            .with(value: "BankAppAuth")
+            .build(), on: view?.contentParrent?.analyticsName ?? .None)
+        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
@@ -259,13 +283,21 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
                                                                 name: UIApplication.didBecomeActiveNotification,
                                                                 object: nil)
                 
-                self.analytics.sendEvent(.LCBankAppAuthGood, with: self.screenEvent)
+                await analytics.send(EventBuilder()
+                    .with(base: .LC)
+                    .with(value: "BankAppAuth")
+                    .with(postState: .Good)
+                    .build(), on: view?.contentParrent?.analyticsName ?? .None)
                 
                 repeatAuth()
             } catch {
                 if let error = error as? SDKError {
                     
-                    self.analytics.sendEvent(.LCBankAppAuthFail, with: self.screenEvent)
+                    await analytics.send(EventBuilder()
+                        .with(base: .LC)
+                        .with(value: "BankAppAuth")
+                        .with(postState: .Fail)
+                        .build(), on: view?.contentParrent?.analyticsName ?? .None)
                     
                     if error.represents(.noData) {
                         

@@ -37,7 +37,7 @@ final class ChallengeAssembly {
     }
 
     private func moduleView(presenter: ChallengePresenter) -> ContentVC & IChallengeVC {
-        let view = ChallengeVC(presenter)
+        let view = ChallengeVC(presenter, analytics: locator.resolve())
         presenter.view = view
         return view
     }

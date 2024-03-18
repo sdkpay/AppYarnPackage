@@ -18,12 +18,13 @@ final class NetworkServiceAssembly: Assembly {
         case .Prom, .Mocker, .Psi, .Ift:
             provider = DefaultNetworkProvider(requestManager: container.resolve(),
                                               hostManager: container.resolve(),
-                                              buildSettings: container.resolve())
+                                              buildSettings: container.resolve(),
+                                              analytics: container.resolve())
         case .Local:
             provider = StubNetworkProvider(delayedSeconds: 0.1, hostManager: container.resolve())
         }
         
-        let service: NetworkService = DefaultNetworkService(provider: provider)
+        let service: NetworkService = DefaultNetworkService(provider: provider, analytics: container.resolve())
         container.register(service: service)
     }
 }
@@ -87,9 +88,11 @@ extension NetworkService {
 final class DefaultNetworkService: NetworkService, ResponseDecoder {
     
     private let provider: NetworkProvider
+    private let analytics: AnalyticsManager
     
-    init(provider: NetworkProvider) {
+    init(provider: NetworkProvider, analytics: AnalyticsManager) {
         self.provider = provider
+        self.analytics = analytics
     }
     
     func request(_ target: TargetType,
@@ -99,7 +102,9 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
             return try self.decodeResponse(data: result.data, response: result.response)
+            analytics.sendResponseDecoded(target)
         } catch {
+            analytics.sendResponseDecoded(target, with: error.sdkError)
             throw self.systemError(error)
         }
     }
@@ -111,8 +116,11 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
-            return try self.decodeResponse(data: result.data, response: result.response, type: to)
+            let resultDecoded = try self.decodeResponse(data: result.data, response: result.response, type: to)
+            analytics.sendResponseDecoded(target)
+            return resultDecoded
         } catch {
+            analytics.sendResponseDecoded(target, with: error.sdkError)
             throw self.systemError(error)
         }
     }
@@ -122,8 +130,11 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
                        retrySettings: RetrySettings = (1, [])) async throws -> String {
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
-            return try self.decodeResponse(data: result.data, response: result.response, type: String.self)
+            let resultDecoded = try self.decodeResponse(data: result.data, response: result.response, type: String.self)
+            analytics.sendResponseDecoded(target)
+            return resultDecoded
         } catch {
+            analytics.sendResponseDecoded(target, with: error.sdkError)
             throw self.systemError(error)
         }
     }
@@ -137,8 +148,11 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
-            return try self.decodeResponseFull(data: result.data, response: result.response, type: to)
+            let resultDecoded = try self.decodeResponseFull(data: result.data, response: result.response, type: to)
+            analytics.sendResponseDecoded(target)
+            return resultDecoded
         } catch {
+            analytics.sendResponseDecoded(target, with: error.sdkError)
             throw self.systemError(error)
         }
     }

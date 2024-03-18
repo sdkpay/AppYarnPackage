@@ -86,7 +86,7 @@ final class PaymentMasterAssembly {
     }
 
     private func moduleView(presenter: PaymentMasterPresenter) -> ContentVC & IPaymentMasterVC {
-        let view = PaymentMasterVC(presenter)
+        let view = PaymentMasterVC(presenter, analytics: locator.resolve())
         presenter.view = view
         return view
     }

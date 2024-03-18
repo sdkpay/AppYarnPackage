@@ -19,6 +19,7 @@ protocol IPaymentMasterVC {
 final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
     
     private var presenter: PaymentModuleMasterPresenting
+    private var analytics: AnalyticsManager
     
     private(set) lazy var cancelButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .cancel)
@@ -29,8 +30,10 @@ final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
         return view
     }()
     
-    init(_ presenter: PaymentModuleMasterPresenting) {
+    init(_ presenter: PaymentModuleMasterPresenting
+         , analytics: AnalyticsManager) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -59,13 +62,13 @@ final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presenter.viewDidAppear()
+        analytics.sendAppeared(view: self)
         SBLogger.log(.didAppear(view: self))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        presenter.viewDidDisappear()
+        analytics.sendDisappeared(view: self)
         SBLogger.log(.didDissapear(view: self))
     }
     

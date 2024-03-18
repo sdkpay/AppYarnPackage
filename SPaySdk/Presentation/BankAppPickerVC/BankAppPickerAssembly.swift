@@ -32,7 +32,7 @@ final class BankAppPickerAssembly {
     }
     
     private func moduleView(presenter: BankAppPickerPresenter) -> ContentVC & IBankAppPickerVC {
-        let view = BankAppPickerVC(presenter)
+        let view = BankAppPickerVC(presenter, analytics: locator.resolve())
         presenter.view = view
         return view
     }

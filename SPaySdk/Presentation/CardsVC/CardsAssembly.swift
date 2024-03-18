@@ -38,7 +38,7 @@ final class CardsAssembly {
     }
     
     private func moduleView(presenter: CardsPresenter, cost: String) -> ContentVC & ICardsVC {
-        let view = CardsVC(presenter, cost: cost)
+        let view = CardsVC(presenter, analytics: locator.resolve(), cost: cost)
         presenter.view = view
         return view
     }

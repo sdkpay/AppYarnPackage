@@ -33,16 +33,14 @@ class ContentVC: LoggableVC {
         parent as? ContentNC
     }
     
-    var analyticsViewName: String {
-        "None"
-    }
-    
     @MainActor
     func setUserInteractionsEnabled(_ value: Bool = true) {
         
         view.window?.viewWithTag(.dimmViewTag)?.isUserInteractionEnabled = value
         contentNavigationController?.view.isUserInteractionEnabled = value
     }
+    
+    var analyticsName: AnlyticsViewName = .None
     
     lazy var stickImageView: UIImageView = {
         let view = UIImageView()

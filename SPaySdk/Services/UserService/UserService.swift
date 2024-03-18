@@ -17,8 +17,7 @@ final class UserServiceAssembly: Assembly {
             let service: UserService = DefaultUserService(network: container.resolve(),
                                                           sdkManager: container.resolve(),
                                                           authManager: container.resolve(),
-                                                          analytics: container.resolve(),
-                                                          parsingErrorAnaliticManager: container.resolve())
+                                                          analytics: container.resolve())
             return service
         }
     }
@@ -43,7 +42,6 @@ final class DefaultUserService: UserService {
     private let sdkManager: SDKManager
     private let authManager: AuthManager
     private let analytics: AnalyticsService
-    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     
     var getListCards = false
     
@@ -56,13 +54,11 @@ final class DefaultUserService: UserService {
     init(network: NetworkService,
          sdkManager: SDKManager,
          authManager: AuthManager,
-         analytics: AnalyticsService,
-         parsingErrorAnaliticManager: ParsingErrorAnaliticManager) {
+         analytics: AnalyticsService) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
         self.analytics = analytics
-        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         SBLogger.log(.start(obj: self))
     }
     
@@ -97,8 +93,6 @@ final class DefaultUserService: UserService {
               let sessionId = authManager.sessionId
         else { throw SDKError(.noData) }
         
-        analytics.sendEvent(.RQListCards, with: [.View: AnlyticsScreenEvent.PaymentVC.rawValue])
-        
         do {
             let listCardsResult = try await network.request(UserTarget.getListCards(sessionId: sessionId,
                                                                                     merchantLogin: authInfo.merchantLogin,
@@ -112,15 +106,8 @@ final class DefaultUserService: UserService {
                                                             to: UserModel.self)
             
             self.user = listCardsResult
-            self.analytics.sendEvent(.RQGoodListCards,
-                                     with: [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue])
-            self.analytics.sendEvent(.RSGoodListCards,
-                                     with: [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue])
+
         } catch {
-            if let error = error as? SDKError {
-                parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                               type: .listCards)
-            }
             throw error
         }
     }

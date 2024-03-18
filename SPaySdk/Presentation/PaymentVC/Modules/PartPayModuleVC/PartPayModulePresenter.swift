@@ -36,12 +36,12 @@ final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
     weak var view: (IPartPayModuleVC & ModuleVC)?
     private let router: PartPayModuleRouting
     private var userService: UserService
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private var partPayService: PartPayService
     
     init(_ router: PartPayModuleRouting,
          partPayService: PartPayService,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          userService: UserService) {
         self.router = router
         self.partPayService = partPayService
@@ -83,8 +83,10 @@ final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
         view?.configCheckView(text: partPayService.bnplplan?.offerText ?? "",
                               checkSelected: partPayService.bnplCheckAccepted,
                               checkTapped: { [weak self] value in
-            self?.analytics.sendEvent(.TouchApproveBNPL,
-                                      with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
+            self?.analytics.send(EventBuilder()
+                .with(base: .Touch)
+                .with(value: "ApproveBNPL")
+                .build(), on: self?.view?.contentParrent?.analyticsName ?? .None)
             self?.partPayService.bnplCheckAccepted = value
         },
                               textTapped: { [weak self] link in
@@ -96,8 +98,10 @@ final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
     
     @MainActor
     private func agreementTextTapped(link: String) {
-        analytics.sendEvent(.TouchAgreementView,
-                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: "AgreementView")
+            .build(), on: view?.contentParrent?.analyticsName ?? .None)
         router.presentWebView(with: link)
     }
 }

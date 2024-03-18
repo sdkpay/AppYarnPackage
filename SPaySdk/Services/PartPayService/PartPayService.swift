@@ -17,7 +17,6 @@ final class PartPayServiceAssembly: Assembly {
                                                                 sdkManager: container.resolve(),
                                                                 authManager: container.resolve(),
                                                                 analytics: container.resolve(),
-                                                                parsingErrorAnaliticManager: container.resolve(),
                                                                 featureToggle: container.resolve())
             return service
         })
@@ -89,20 +88,17 @@ final class DefaultPartPayService: PartPayService {
     private let featureToggle: FeatureToggleService
     private var userEnableBnpl = false
     private let analytics: AnalyticsService
-    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private(set) var bnplplan: BnplModel?
     
     init(network: NetworkService,
          sdkManager: SDKManager,
          authManager: AuthManager,
          analytics: AnalyticsService,
-         parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          featureToggle: FeatureToggleService) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
         self.analytics = analytics
-        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         self.featureToggle = featureToggle
         setEnabledBnpl(authManager.bnplMerchEnabled, enabledLevel: .merch)
         SBLogger.log(.start(obj: self))
@@ -136,9 +132,7 @@ final class DefaultPartPayService: PartPayService {
               let merchantLogin = authInfo.merchantLogin,
               let orderId = authInfo.orderId
         else { throw SDKError(.noData) }
-        
-        analytics.sendEvent(.RQBnpl,
-                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
+
         
         do {
             let bnplResult = try await network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
@@ -147,13 +141,9 @@ final class DefaultPartPayService: PartPayService {
                                                        to: BnplModel.self)
             
             self.bnplplan = bnplResult
-            self.analytics.sendEvent(.RQGoodBnpl)
             self.setEnabledBnpl(bnplResult.isBnplEnabled, enabledLevel: .bnplPlan)
         } catch {
             self.setEnabledBnpl(false, enabledLevel: .bnplPlan)
-            if let error = error as? SDKError {
-                parsingErrorAnaliticManager.sendAnaliticsError(error: error, type: .bnpl)
-            }
             throw error
         }
     }
@@ -169,10 +159,6 @@ final class DefaultPartPayService: PartPayService {
               let merchantLogin = authInfo.merchantLogin,
               let orderId = authInfo.orderId
         else { throw SDKError(.noData) }
-        
-        analytics.sendEvent(.RQBnpl,
-                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
-        
         do {
             let bnplResult = try await network.request(BnplTarget.createPaymentPlan(sessionId: sessionId,
                                                                                     merchantLogin: merchantLogin,
@@ -180,13 +166,9 @@ final class DefaultPartPayService: PartPayService {
                                                        to: BnplModel.self)
             
             self.bnplplan = bnplResult
-            self.analytics.sendEvent(.RQGoodBnpl)
             self.setEnabledBnpl(bnplResult.isBnplEnabled, enabledLevel: .bnplPlan)
         } catch {
             self.setEnabledBnpl(false, enabledLevel: .bnplPlan)
-            if let error = error as? SDKError {
-                parsingErrorAnaliticManager.sendAnaliticsError(error: error, type: .bnpl)
-            }
             throw error
         }
     }

@@ -13,6 +13,7 @@ protocol ILogoutVC {
 final class LogoutVC: ContentVC, ILogoutVC {
 
     private let presenter: LogoutPresenting
+    private let analytics: AnalyticsManager
     
     private lazy var avatarImage: UIImageView = {
         let imageView = UIImageView()
@@ -72,9 +73,11 @@ final class LogoutVC: ContentVC, ILogoutVC {
         return view
     }()
     
-    init(_ presenter: LogoutPresenting, with userInfo: UserInfo) {
+    init(_ presenter: LogoutPresenting, with userInfo: UserInfo, analytics: AnalyticsManager) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .ProfileView
         self.avatarImage.image = userInfo.sdkGender.icon
     }
 
@@ -85,6 +88,18 @@ final class LogoutVC: ContentVC, ILogoutVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        SBLogger.log(.didAppear(view: self))
+        analytics.sendAppeared(view: self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        SBLogger.log(.didDissapear(view: self))
+        analytics.sendDisappeared(view: self)
     }
     
     private func setupView() {

@@ -29,8 +29,7 @@ final class PaymentServiceAssembly: Assembly {
                                                                 buildSettings: container.resolve(),
                                                                 analytics: container.resolve(),
                                                                 sdkManager: container.resolve(),
-                                                                featuerToggle: container.resolve(),
-                                                                parsingErrorAnaliticManager: container.resolve())
+                                                                featuerToggle: container.resolve())
             return service
         }
     }
@@ -63,7 +62,6 @@ final class DefaultPaymentService: PaymentService {
     private let buildSettings: BuildSettings
     private var paymentToken: (model: PaymentTokenModel, forBNPL: Bool)?
     private var featuerToggle: FeatureToggleService
-    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     
     init(authManager: AuthManager,
          network: NetworkService,
@@ -73,8 +71,7 @@ final class DefaultPaymentService: PaymentService {
          buildSettings: BuildSettings,
          analytics: AnalyticsService,
          sdkManager: SDKManager,
-         featuerToggle: FeatureToggleService,
-         parsingErrorAnaliticManager: ParsingErrorAnaliticManager) {
+         featuerToggle: FeatureToggleService) {
         self.authManager = authManager
         self.network = network
         self.userService = userService
@@ -84,7 +81,6 @@ final class DefaultPaymentService: PaymentService {
         self.analytics = analytics
         self.featuerToggle = featuerToggle
         self.personalMetricsService = personalMetricsService
-        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         SBLogger.log(.start(obj: self))
     }
     
@@ -194,20 +190,10 @@ final class DefaultPaymentService: PaymentService {
                                                                                 isBnplEnabled: isBnplEnabled),
                                                   to: PaymentTokenModel.self)
             
-            self.analytics.sendEvent(.RQGoodPaymentToken,
-                                     with: [.View: AnlyticsScreenEvent.PaymentVC.rawValue])
-            self.analytics.sendEvent(.RSGoodPaymentToken,
-                                     with: [.View: AnlyticsScreenEvent.PaymentVC.rawValue])
-            
             self.paymentToken = (token, isBnplEnabled)
             
             return token
         } catch {
-            if let error = error as? SDKError {
-                self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                    type: .payment(type: .paymentToken))
-                throw error
-            }
             
             throw error
         }
@@ -245,19 +231,11 @@ final class DefaultPaymentService: PaymentService {
                                                         Int(StatusCode.unknownPayState.rawValue),
                                                         Int(StatusCode.unknownState.rawValue)
                                                       ]))
-            
-            self.analytics.sendEvent(.RQGoodPaymentOrder,
-                                     with: [.View: AnlyticsScreenEvent.PaymentVC.rawValue])
-            self.analytics.sendEvent(.RSGoodPaymentOrder,
-                                     with: [.View: AnlyticsScreenEvent.PaymentVC.rawValue])
         } catch {
             if let error = error as? SDKError {
-                self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                    type: .payment(type: .paymentOrder))
-                throw self.parseError(error)
+                
+                throw error
             }
-            
-            throw error
         }
     }
     

@@ -31,9 +31,7 @@ enum PaymentModule {
 protocol PaymentModuleMasterPresenting {
     
     func cancelTapped()
-    func viewDidAppear()
     func viewDidLoad()
-    func viewDidDisappear()
     var viewHeight: CGFloat? { get }
     var paymentsModuls: [ModuleVC] { get }
 }
@@ -41,7 +39,7 @@ protocol PaymentModuleMasterPresenting {
 final class PaymentMasterPresenter: NSObject, PaymentModuleMasterPresenting {
 
     weak var view: (IPaymentMasterVC & ContentVC)?
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private let completionManager: CompletionManager
     private let mode: PaymentVCMode
     let paymentsModuls: [ModuleVC]
@@ -71,9 +69,7 @@ final class PaymentMasterPresenter: NSObject, PaymentModuleMasterPresenting {
         }
     }
     
-    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.PaymentVC.rawValue]
-    
-    init(analytics: AnalyticsService,
+    init(analytics: AnalyticsManager,
          submodule: [ModuleVC],
          mode: PaymentVCMode,
          helperConfig: HelperConfigManager,
@@ -88,21 +84,30 @@ final class PaymentMasterPresenter: NSObject, PaymentModuleMasterPresenting {
         super.init()
     }
     
+    private func setViewName() {
+        
+        switch mode {
+        case .pay:
+            view?.analyticsName = .PayView
+        case .helper:
+            view?.analyticsName = .HelpersView
+        case .connect:
+            view?.analyticsName = .PayView
+        case .partPay:
+            view?.analyticsName = .PayView
+        }
+    }
+    
     func viewDidLoad() {
+        setViewName()
         view?.setCancelTitle(Strings.Common.Cancel.title)
     }
     
-    func viewDidAppear() {
-        
-        analytics.sendEvent(.LCPayViewAppeared, with: screenEvent)
-    }
-    
-    func viewDidDisappear() {
-        
-        analytics.sendEvent(.LCPayViewDisappeared, with: screenEvent)
-    }
-    
     func cancelTapped() {
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: "Close")
+            .build(), on: view?.analyticsName ?? .None)
         completionManager.dismissCloseAction(view)
     }
 }

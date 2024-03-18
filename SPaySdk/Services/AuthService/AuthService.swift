@@ -24,7 +24,6 @@ final class AuthServiceAssembly: Assembly {
                                                           personalMetricsService: container.resolve(),
                                                           enviromentManager: container.resolve(),
                                                           cookieStorage: container.resolve(),
-                                                          parsingErrorAnaliticManager: container.resolve(),
                                                           featureToggleService: container.resolve(),
                                                           buildSettings: container.resolve(),
                                                           seamlessAuthService: container.resolve())
@@ -55,7 +54,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         case sessionId
     }
     
-    private var analytics: AnalyticsService
+    private var analytics: AnalyticsManager
     private let network: NetworkService
     private let sdkManager: SDKManager
     private let bankAppManager: BankAppManager
@@ -68,7 +67,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var storage: KeychainStorage
     private var baseRequestManager: BaseRequestManager
     private var cookieStorage: CookieStorage
-    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private let seamlessAuthService: SeamlessAuthService
     private var appAuthCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
@@ -88,7 +86,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     init(network: NetworkService,
          sdkManager: SDKManager,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          bankAppManager: BankAppManager,
          authManager: AuthManager,
          partPayService: PartPayService,
@@ -97,7 +95,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
          personalMetricsService: PersonalMetricsService,
          enviromentManager: EnvironmentManager,
          cookieStorage: CookieStorage,
-         parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          featureToggleService: FeatureToggleService,
          buildSettings: BuildSettings,
          seamlessAuthService: SeamlessAuthService) {
@@ -115,7 +112,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         self.cookieStorage = cookieStorage
         self.seamlessAuthService = seamlessAuthService
         self.featureToggleService = featureToggleService
-        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         SBLogger.log(.start(obj: self))
     }
     
@@ -164,8 +160,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
     
         addFrontHeaders()
-        analytics.sendEvent(.RQSessionId,
-                            with: [.View: AnlyticsScreenEvent.AuthVC.rawValue])
         
         do {
             let sessionIdResult = try await network.request(AuthTarget.getSessionId(redirectUri: request.redirectUri,
@@ -179,9 +173,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                                                                     authCookie: getRefreshCookies()),
                                                             to: AuthModel.self)
             
-            self.analytics.sendEvent(.RQGoodSessionId,
-                                     with: [AnalyticsKey.View: AnlyticsScreenEvent.AuthVC.rawValue])
-            
             self.authManager.sessionId = sessionIdResult.sessionId
             self.authManager.authModel = sessionIdResult
             self.authManager.state = sessionIdResult.state
@@ -189,9 +180,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             self.partPayService.setEnabledBnpl(sessionIdResult.isBnplEnabled ?? false, enabledLevel: .session)
             
             let refreshIsActive = sessionIdResult.refreshTokenIsActive ?? false
-
-            let event: AnalyticsEvent = refreshIsActive ? .STGetGoodRefresh : .STGetFailRefresh
-            self.analytics.sendEvent(event)
             
             if refreshIsActive
                 && featureToggleService.isEnabled(.refresh)
@@ -210,10 +198,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             
             return self.authManager.authMethod ?? .bank
         } catch {
-            if let error = error as? SDKError {
-                parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                               type: .auth(type: .sessionId))
-            }
             throw error
         }
     }
@@ -289,9 +273,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             throw SDKError(.noData)
         }
         
-        analytics.sendEvent(.RQAuth,
-                            with: [AnalyticsKey.View: AnlyticsScreenEvent.None.rawValue])
-        
         if enviromentManager.environment != .prod {
             
             authManager.authCode = Constants.sendboxAuthCode
@@ -321,15 +302,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             saveRefreshIfNeeded(from: authResult.cookies)
             authManager.userInfo = authResult.result.userInfo
             authManager.isOtpNeed = authResult.result.isOtpNeed
-            analytics.sendEvent(.RSGoodAuth,
-                                with: [AnalyticsKey.View: AnlyticsScreenEvent.None.rawValue])
         } catch {
-            
-            if let error = error as? SDKError {
-                
-                parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                               type: .auth(type: .auth))
-            }
             throw error
         }
     }
@@ -356,6 +329,15 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         }
         if let cookieData = cookieStorage.getCookie(for: .refreshData) {
             cookies.append(cookieData)
+        }
+        
+        let event = EventBuilder().with(base: .ST).with(value: "Refresh")
+        
+        if cookies.isEmpty {
+            event.with(state: .Fail)
+        } else {
+            event.with(state: .Good)
+            
         }
         return cookies
     }

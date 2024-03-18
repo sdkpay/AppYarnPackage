@@ -9,8 +9,6 @@ import UIKit
 
 protocol CardsPresenting {
     func viewDidLoad()
-    func viewDidAppear()
-    func viewDidDisappear()
     var cardsCount: Int { get }
     func model(for indexPath: IndexPath) -> CardCellModel
     func didSelectRow(at indexPath: IndexPath)
@@ -24,17 +22,16 @@ final class CardsPresenter: CardsPresenting {
         cards.count
     }
 
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private let userService: UserService
     private let cards: [PaymentTool]
     private let selectedCard: (PaymentTool) -> Void
     private let selectedId: Int
     private var timeManager: OptimizationCheсkerManager
-    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.CardsVC.rawValue]
     private var featureToggle: FeatureToggleService
 
     init(userService: UserService,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          cards: [PaymentTool],
          selectedId: Int,
          featureToggle: FeatureToggleService,
@@ -84,18 +81,13 @@ final class CardsPresenter: CardsPresenting {
     }
     
     func didSelectRow(at indexPath: IndexPath) {
-        analytics.sendEvent(.TouchCard, with: screenEvent)
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: "Card")
+            .build(), on: view?.analyticsName ?? .None)
         selectedCard(cards[indexPath.row])
         DispatchQueue.main.async {
             self.view?.contentNavigationController?.popViewController(animated: true)
         }
-    }
-    
-    func viewDidAppear() {
-        analytics.sendEvent(.LCPayViewAppeared, with: screenEvent)
-    }
-    
-    func viewDidDisappear() {
-        analytics.sendEvent(.LCPayViewDisappeared, with: screenEvent)
     }
 }

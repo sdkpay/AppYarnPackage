@@ -19,7 +19,6 @@ final class SeamlessAuthServiceAssembly: Assembly {
                                                                           analytics: container.resolve(),
                                                                           authManager: container.resolve(),
                                                                           storage: container.resolve(), hostManager: container.resolve(),
-                                                                          parsingErrorAnaliticManager: container.resolve(),
                                                                           featureToggleService: container.resolve())
             return service
         }
@@ -39,7 +38,6 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
     private let analytics: AnalyticsService
     private var authManager: AuthManager
     private let storage: KeychainStorage
-    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private let featureToggleService: FeatureToggleService
     private let hostManager: HostManager
 
@@ -51,7 +49,6 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
          authManager: AuthManager,
          storage: KeychainStorage,
          hostManager: HostManager,
-         parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          featureToggleService: FeatureToggleService) {
         self.analytics = analytics
         self.network = network
@@ -60,7 +57,6 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
         self.storage = storage
         self.hostManager = hostManager
         self.featureToggleService = featureToggleService
-        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
         super.init()
     }
     

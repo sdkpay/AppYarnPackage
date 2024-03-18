@@ -25,6 +25,9 @@ protocol IWebViewVC {
 }
 
 final class WebViewVC: ContentVC, IWebViewVC {
+    
+    private let analytics: AnalyticsManager
+    
     private lazy var titleLabel: UILabel = {
        let view = UILabel()
         view.font = .header2
@@ -61,9 +64,12 @@ final class WebViewVC: ContentVC, IWebViewVC {
 
     private let presenter: WebViewPresenter
     
-    init(_ presenter: WebViewPresenter) {
+    init(_ presenter: WebViewPresenter,
+         analytics: AnalyticsManager) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .WebViewVC
     }
 
     required init?(coder: NSCoder) {
@@ -78,12 +84,12 @@ final class WebViewVC: ContentVC, IWebViewVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presenter.viewDidAppear()
+        analytics.sendAppeared(view: self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        presenter.viewDidDisappear()
+        analytics.sendDisappeared(view: self)
     }
     
     func goTo(to url: URL) {

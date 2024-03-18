@@ -43,6 +43,18 @@ final class ChallengePresenter: ChallengePresenting {
         SBLogger.log(.stop(obj: self))
     }
     
+    private func getViewName() {
+        switch secureChallengeService.fraudMonСheckResult?.secureChallengeFactor {
+            
+        case .none:
+            view?.analyticsName = .None
+        case .hint:
+            view?.analyticsName = .ReviewHintView
+        case .sms:
+            view?.analyticsName = .OtpReviewView
+        }
+    }
+    
     func infoAlertTapped() {
         
         Task {
@@ -73,6 +85,7 @@ final class ChallengePresenter: ChallengePresenting {
     }
     
     func viewDidLoad() {
+        getViewName()
         
         let params = secureChallengeService.fraudMonСheckResult?.formParameters
         

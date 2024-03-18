@@ -26,10 +26,9 @@ final class OtpPresenter: OtpPresenting {
     private let sdkManager: SDKManager
     private let alertService: AlertService
     private let authManager: AuthManager
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private let completionManager: CompletionManager
     private var timerManager: TimerManager
-    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     
     private var state: OtpViewState = .waiting
     
@@ -40,10 +39,9 @@ final class OtpPresenter: OtpPresenting {
          authManager: AuthManager,
          sdkManager: SDKManager,
          alertService: AlertService,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          completionManager: CompletionManager,
          timerManager: TimerManager = DefaultTimerManager(),
-         parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          completion: @escaping Action) {
         self.otpService = otpService
         self.userService = userService
@@ -54,7 +52,6 @@ final class OtpPresenter: OtpPresenting {
         self.analytics = analytics
         self.timerManager = timerManager
         self.completionManager = completionManager
-        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
     }
     
     func viewDidLoad() {
@@ -75,9 +72,7 @@ final class OtpPresenter: OtpPresenting {
         setState(.waiting)
         view?.setOtpTextFieldState(.empty)
         view?.setOtpError(nil)
-        
-        analytics.sendEvent(.RQCreteOTP,
-                            with: [AnalyticsKey.View: AnlyticsScreenEvent.OtpVC.rawValue])
+
         
         Task {
             do {
@@ -85,17 +80,11 @@ final class OtpPresenter: OtpPresenting {
                 await view?.showLoading()
                 try await otpService.creteOTP()
                 await view?.hideLoading(animate: true)
-                self.analytics.sendEvent(.RQGoodCreteOTP,
-                                         with: [AnalyticsKey.View: AnlyticsScreenEvent.OtpVC.rawValue])
-                self.analytics.sendEvent(.RSGoodCreteOTP,
-                                         with: [AnalyticsKey.View: AnlyticsScreenEvent.OtpVC.rawValue])
             } catch {
                 if let error = error as? SDKError {
                     
                     self.completionManager.completeWithError(error)
                     
-                    parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                   type: .otp(type: .creteOTP))
                     await view?.hideLoading(animate: true)
                     
                     if error.represents(.noInternetConnection) {
@@ -122,10 +111,8 @@ final class OtpPresenter: OtpPresenting {
     
     func sendOTP(otpCode: String) {
         
-        analytics.sendEvent(.TouchNext,
-                            with: [AnalyticsKey.View: AnlyticsScreenEvent.OtpVC.rawValue])
-        analytics.sendEvent(.RQConfirmOTP,
-                            with: [AnalyticsKey.View: AnlyticsScreenEvent.OtpVC.rawValue])
+        analytics.send(EventBuilder().with(base: .Touch).with(value: "Next").build(),
+                       on: view?.analyticsName ?? .None)
         
         Task { @MainActor [view] in
             do {
@@ -135,15 +122,6 @@ final class OtpPresenter: OtpPresenting {
                                                 cardNumber: userService.selectedCard?.cardNumber ?? "")
                 
                 view?.hideLoading(animate: true)
-                
-                analytics.sendEvent(.RSGoodConfirmOTP,
-                                    with: [
-                                        AnalyticsKey.View: AnlyticsScreenEvent.OtpVC.rawValue
-                                    ])
-                analytics.sendEvent(.RQGoodConfirmOTP,
-                                    with: [
-                                        AnalyticsKey.View: AnlyticsScreenEvent.OtpVC.rawValue
-                                    ])
                 
                 await self.view?.hideKeyboard()
                 self.closeWithSuccess()
@@ -155,12 +133,8 @@ final class OtpPresenter: OtpPresenting {
                     
                     self.completionManager.completeWithError(error)
                     
-                    self.parsingErrorAnaliticManager.sendAnaliticsError(error: error,
-                                                                        type: .otp(type: .confirmOTP))
-                    
                     if error.represents(.incorrectCode) || error.represents(.timeOut) {
                         
-                        self.analytics.sendEvent(.RQFailConfirmOTP)
                         self.view?.hideLoading(animate: true)
                         
                         self.view?.setOtpError(error.description)
@@ -188,16 +162,14 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func viewDidAppear() {
-        analytics.sendEvent(.LCOTPViewAppeared)
     }
     
     func viewDidDisappear() {
-        timerManager.stop()
-        analytics.sendEvent(.LCOTPViewDisappeared)
     }
     
     func back() {
-        analytics.sendEvent(.TouchBack, with: [AnalyticsKey.View: AnlyticsScreenEvent.OtpVC.rawValue])
+        analytics.send(EventBuilder().with(base: .Touch).with(value: "Back").build(),
+                       on: view?.analyticsName ?? .None)
         self.completionManager.dismissCloseAction(view)
     }
     

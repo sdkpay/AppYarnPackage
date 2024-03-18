@@ -159,7 +159,7 @@ final class DefaultAlertService: AlertService {
     private let completionManager: CompletionManager
     
     private var alertVC: ContentVC?
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private let liveCircleManager: LiveCircleManager
     private let sdkManager: SDKManager
     private let setupManager: SetupManager
@@ -168,10 +168,17 @@ final class DefaultAlertService: AlertService {
     @discardableResult
     func show(on view: ContentVC?, type: AlertType) async -> AlertResult {
         
+        var event = EventBuilder()
+            .with(base: .LC)
+            .with(postAction: .Appeared)
+        
+        var eventValue = [AnalyticsKey: Any]()
+        
         switch type {
         case let .paySuccess(amount: amount, shopName: shopName, bonuses: bonuses):
             
-            analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.State: "success"])
+            event.with(value: "StatusSuccessView")
+            eventValue[.State] = "Success"
             
             guard alertViewNeeded else { return AlertResult.approve }
             
@@ -190,7 +197,8 @@ final class DefaultAlertService: AlertService {
             
         case .connectSuccess(card: let card):
             
-            analytics.sendEvent(.LCStatusSuccessViewAppeared, with: [AnalyticsKey.State: "success"])
+            event.with(value: "StatusSuccessView")
+            eventValue[.State] = "Success"
             
             guard alertViewNeeded else { return AlertResult.approve }
             
@@ -201,7 +209,8 @@ final class DefaultAlertService: AlertService {
                               buttons: [])
         case .defaultError:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "default"])
+            event.with(value: "StatusErrorView")
+            eventValue[.State] = "default"
             
             if sdkManager.payStrategy == .partPay {
                 
@@ -221,7 +230,8 @@ final class DefaultAlertService: AlertService {
                               buttons: [])
         case .noInternet:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "noInternet"])
+            event.with(value: "StatusErrorView")
+            eventValue[.State] = "NoInternet"
             
             let tryButton = AlertButtonModel(title: Strings.Common.Try.title,
                                              type: .blackBack,
@@ -242,7 +252,8 @@ final class DefaultAlertService: AlertService {
                                 ])
         case .partPayError:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "partPayError"])
+            event.with(value: "StatusErrorView")
+            eventValue[.State] = "PartPayError"
             
             let fullPayButton = AlertButtonModel(title: Strings.Common.Pay.Full.title,
                                                  type: .blackBack,
@@ -261,7 +272,8 @@ final class DefaultAlertService: AlertService {
                               ])
         case .tryingError:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "tryingError"])
+            event.with(value: "StatusErrorView")
+            eventValue[.State] = "TryingError"
             
             let fullPayButton = AlertButtonModel(title: Strings.Otp.Button.Otp.back,
                                                  type: .blackBack,
@@ -277,7 +289,8 @@ final class DefaultAlertService: AlertService {
                               ])
         case .noMoney:
             
-            analytics.sendEvent(.LCStatusErrorViewAppeared, with: [AnalyticsKey.State: "noMoney"])
+            event.with(value: "StatusErrorView")
+            eventValue[.State] = "NoMoney"
             
             let cancel = AlertButtonModel(title: Strings.Common.Return.title,
                                           type: .cancel,
@@ -291,6 +304,8 @@ final class DefaultAlertService: AlertService {
                                 cancel
                               ])
         }
+        
+        analytics.send(event.build(), on: .StatusView, values: eventValue)
     }
     
     @MainActor
@@ -333,7 +348,7 @@ final class DefaultAlertService: AlertService {
     
     init(completionManager: CompletionManager,
          liveCircleManager: LiveCircleManager,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          sdkManager: SDKManager,
          setupManager: SetupManager) {
         self.completionManager = completionManager

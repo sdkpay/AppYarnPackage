@@ -29,13 +29,12 @@ final class OtpAssembly {
                                      alertService: locator.resolve(),
                                      analytics: locator.resolve(),
                                      completionManager: locator.resolve(),
-                                     parsingErrorAnaliticManager: locator.resolve(),
                                      completion: completion)
         return presenter
     }
     
     private func moduleView(presenter: OtpPresenter) -> ContentVC & IOtpVC {
-        let view = OtpVC(presenter)
+        let view = OtpVC(presenter, analytics: locator.resolve())
         presenter.view = view
         return view
     }

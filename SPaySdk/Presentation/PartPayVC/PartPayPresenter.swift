@@ -24,10 +24,9 @@ final class PartPayPresenter: PartPayPresenting {
     private var partPayService: PartPayService
     private let router: PartPayRouter
     private let timeManager: OptimizationCheсkerManager
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private var partPaySelected: Action
     private var isSelected = true
-    private var screenEvents = [AnalyticsKey.View: AnlyticsScreenEvent.PartPayVC.rawValue]
     private var cancellable = Set<AnyCancellable>()
     
     var partPayModule: ModuleVC
@@ -36,7 +35,7 @@ final class PartPayPresenter: PartPayPresenting {
          partPayService: PartPayService,
          partPayModule: ModuleVC,
          timeManager: OptimizationCheсkerManager,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          partPaySelected: @escaping Action) {
         self.partPayService = partPayService
         self.router = router
@@ -62,8 +61,11 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     func acceptButtonTapped() {
-        analytics.sendEvent(.TouchConfirmedByUser,
-                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: "ConfirmedByUser")
+            .build(), on: view?.analyticsName ?? .None)
+        
         partPayService.bnplplanSelected = true
         partPaySelected()
         DispatchQueue.main.async {
@@ -72,8 +74,10 @@ final class PartPayPresenter: PartPayPresenting {
     }
     
     func backButtonTapped() {
-        analytics.sendEvent(.TouchDeclinedByUser,
-                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: "DeclinedByUser")
+            .build(), on: view?.analyticsName ?? .None)
         partPayService.bnplplanSelected = false
         partPaySelected()
         DispatchQueue.main.async {

@@ -8,10 +8,8 @@
 import UIKit
 
 protocol WebViewPresenting {
-    func viewDidLoad()
-    func viewDidAppear()
     func backButtonTapped()
-    func viewDidDisappear()
+    func viewDidLoad()
     func shareButtonTapped()
     func webTitle(_ title: String?)
 }
@@ -25,14 +23,14 @@ final class WebViewPresenter: WebViewPresenting {
     private let url: String
     @UserDefault(key: .offerTitle, defaultValue: nil)
     private var title: String?
-    private let analitics: AnalyticsService
+    private let analytics: AnalyticsManager
     
     weak var view: (IWebViewVC & ContentVC)?
     
     init(with url: String,
-         analitics: AnalyticsService) {
+         analytics: AnalyticsManager) {
         self.url = url
-        self.analitics = analitics
+        self.analytics = analytics
     }
     
     func viewDidLoad() {
@@ -41,25 +39,19 @@ final class WebViewPresenter: WebViewPresenting {
     
     @MainActor
     func backButtonTapped() {
-        analitics.sendEvent(.TouchBack,
-                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: "Back")
+            .build(), on: view?.analyticsName ?? .None)
         view?.contentNavigationController?.popViewController(animated: true)
     }
     
     func shareButtonTapped() {
-        analitics.sendEvent(.TouchShare,
-                            with: [.View: AnlyticsScreenEvent.PartPayVC.rawValue])
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: "Share")
+            .build(), on: view?.analyticsName ?? .None)
         shareUrlAddress()
-    }
-    
-    func viewDidAppear() {
-        analitics.sendEvent(.LCWebViewAppeared,
-                            with: [.View: AnlyticsScreenEvent.WebViewVC.rawValue])
-    }
-    
-    func viewDidDisappear() {
-        analitics.sendEvent(.LCWebViewDisappeared,
-                            with: [.View: AnlyticsScreenEvent.WebViewVC.rawValue])
     }
 
     private func setupWebView() {
@@ -75,7 +67,6 @@ final class WebViewPresenter: WebViewPresenting {
     }
     
     private func shareUrlAddress() {
-        analitics.sendEvent(.TouchShare)
         DispatchQueue.global(qos: .userInteractive).async {
             guard let url = URL(string: self.url) else { return }
             let text = self.title ?? ""

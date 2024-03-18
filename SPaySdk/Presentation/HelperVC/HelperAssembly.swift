@@ -33,8 +33,7 @@ final class HelperAssembly {
                         userService: locator.resolve(),
                         bankAppManager: locator.resolve(),
                         featureToggle: locator.resolve(),
-                        helperConfigManager: locator.resolve(),
-                        analytics: locator.resolve())
+                        helperConfigManager: locator.resolve())
     }
 
     private func moduleView(presenter: HelperPresenter) -> ContentVC & IHelperVC {

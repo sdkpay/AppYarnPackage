@@ -35,9 +35,6 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         metchVC = viewController
         setupWindows(viewController: viewController, locator: locator, rootVC: rootVC)
         self.locator = locator
-        let analytics: AnalyticsService = locator.resolve()
-        analytics.sendEvent(.LCBankAppFound,
-                            with: [.View: AnlyticsScreenEvent.None.rawValue])
     }
     
     deinit {

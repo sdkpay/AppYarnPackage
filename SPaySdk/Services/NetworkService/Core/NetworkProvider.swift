@@ -63,14 +63,17 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private var session: URLSession?
     private var requestManager: BaseRequestManager
     private var hostManager: HostManager
+    private var analytics: AnalyticsManager
     private let timeManager = OptimizationCheсkerManager()
     private var buildSettings: BuildSettings
 
     init(requestManager: BaseRequestManager,
          hostManager: HostManager,
-         buildSettings: BuildSettings) {
+         buildSettings: BuildSettings,
+         analytics: AnalyticsManager) {
         self.requestManager = requestManager
         self.hostManager = hostManager
+        self.analytics = analytics
         self.buildSettings = buildSettings
         super.init()
         session = URLSession(configuration: .default,
@@ -93,7 +96,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
             
             let request = try self.buildRequest(from: target, hostSettings: host)
             SBLogger.logRequestStarted(request)
-            
+            analytics.sendRequestStarted(request)
             guard let session else {
                 throw SDKError(.system)
             }
@@ -107,6 +110,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                                          response: response,
                                          data: data,
                                          error: nil)
+            analytics.sendRequestCompleted(target, response: response, error: nil)
             
             return (data, response)
         } catch {
@@ -116,6 +120,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                                          response: nil,
                                          data: nil,
                                          error: error)
+            analytics.sendRequestCompleted(target, response: nil, error: error)
             
             if  retrySettings.count != 1,
                 retry < retrySettings.count,

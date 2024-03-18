@@ -27,6 +27,7 @@ enum OtpViewState {
 final class OtpVC: ContentVC, IOtpVC {
     
     private let presenter: OtpPresenting
+    private let analytics: AnalyticsManager
     private var otpCode = ""
     private var kbSize = CGSize(width: UIScreen.main.bounds.width,
                                 height: 300)
@@ -170,16 +171,22 @@ final class OtpVC: ContentVC, IOtpVC {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         presenter.viewDidAppear()
+        SBLogger.log(.didAppear(view: self))
+        analytics.sendAppeared(view: self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         presenter.viewDidDisappear()
+        SBLogger.log(.didDissapear(view: self))
+        analytics.sendDisappeared(view: self)
     }
     
-    init(_ presenter: OtpPresenting) {
+    init(_ presenter: OtpPresenting, analytics: AnalyticsManager) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .OTPView
     }
     
     required init?(coder: NSCoder) {

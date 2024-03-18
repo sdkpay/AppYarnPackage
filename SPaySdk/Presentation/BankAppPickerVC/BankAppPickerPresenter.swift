@@ -12,8 +12,6 @@ protocol BankAppPickerPresenting {
     func closeButtonDidTapped()
     func model(for indexPath: IndexPath) -> BankAppCellModel
     func didSelectRow(at indexPath: IndexPath)
-    func viewWillAppear()
-    func viewWillDissapear()
     func viewDidLoad()
 }
 
@@ -30,14 +28,14 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     private var authService: AuthService
     private let completionManager: CompletionManager
     private let alertService: AlertService
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     
     private var completion: Action?
     
     init(bankManager: BankAppManager,
          authService: AuthService,
          alertService: AlertService,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          completionManager: CompletionManager,
          completion: @escaping Action) {
         self.completion = completion
@@ -63,8 +61,10 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         bankAppModels.indices.forEach({ bankAppModels[$0].deprecated = false })
         bankAppModels[indexPath.row].deprecated = true
         bankAppModels[indexPath.row].tapped = true
-        analytics.sendEvent(.TouchBankApp,
-                            with: screenEvent)
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: "BankApp")
+            .build(), on: view?.analyticsName ?? .None)
         appAuthMethod()
     }
     
@@ -73,27 +73,24 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
             showErrorAlert()
         }
     }
-    
-    func viewWillAppear() {
-        analytics.sendEvent(.LCBankAppsViewAppeared, 
-                            with: screenEvent)
-    }
-    
-    func viewWillDissapear() {
-        analytics.sendEvent(.LCBankAppsViewDisappeared,
-                            with: screenEvent)
-    }
 
     private func appAuthMethod() {
         Task { @MainActor [view] in
             do {
                 try await authService.appAuth()
+                analytics.send(EventBuilder()
+                    .with(base: .Touch)
+                    .with(value: "BankApp")
+                    .with(postState: .Good)
+                    .build(), on: view?.analyticsName ?? .None)
                 removeObserver()
                 completion?()
                 view?.contentNavigationController?.popViewController(animated: true)
             } catch {
-                analytics.sendEvent(.LCBankAppOpenFail,
-                                    with: screenEvent)
+                analytics.send(EventBuilder()
+                    .with(base: .LC)
+                    .with(postState: .Fail)
+                    .build(), on: view?.analyticsName ?? .None)
                 bankManager.selectedBank = nil
                 checkTappedAppsCount()
                 view?.reloadTableView()

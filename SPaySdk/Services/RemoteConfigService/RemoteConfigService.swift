@@ -15,7 +15,6 @@ final class RemoteConfigServiceAssembly: Assembly {
         let service: RemoteConfigService = DefaultRemoteConfigService(network: container.resolve(),
                                                                       analytics: container.resolve(),
                                                                       featureToggle: container.resolve(),
-                                                                      parsingErrorAnaliticManager: container.resolve(),
                                                                       versionСontrolManager: container.resolve())
         container.register(service: service)
     }
@@ -32,20 +31,17 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private var apiKey: String?
     private let featureToggle: FeatureToggleService
     private let analytics: AnalyticsService
-    private let parsingErrorAnaliticManager: ParsingErrorAnaliticManager
     private let versionСontrolManager: VersionСontrolManager
     private var retryWithCerts = true
     
     init(network: NetworkService,
          analytics: AnalyticsService,
          featureToggle: FeatureToggleService,
-         parsingErrorAnaliticManager: ParsingErrorAnaliticManager,
          versionСontrolManager: VersionСontrolManager) {
         self.network = network
         self.analytics = analytics
         self.versionСontrolManager = versionСontrolManager
         self.featureToggle = featureToggle
-        self.parsingErrorAnaliticManager = parsingErrorAnaliticManager
     }
     
     func getConfig(with apiKey: String?) async throws {
@@ -60,8 +56,6 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.saveConfig(result)
         self.checkVersion(version: result.versionInfo?.active)
         self.setFeatures(result.featuresToggle)
-        self.analytics.sendEvent(.RQGoodRemoteConfig,
-                                 with: [AnalyticsKey.View: AnlyticsScreenEvent.None.rawValue])
     }
     
     private func saveConfig(_ value: ConfigModel) {

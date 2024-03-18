@@ -14,7 +14,7 @@ final class PersonalMetricsServiceAssembly: Assembly {
     
     func register(in container: LocatorService) {
         container.register {
-            let service: PersonalMetricsService = DefaultPersonalMetricsService(analyticsService: container.resolve(),
+            let service: PersonalMetricsService = DefaultPersonalMetricsService(analytics: container.resolve(),
                                                                                 network: container.resolve())
             return service
         }
@@ -29,12 +29,12 @@ protocol PersonalMetricsService {
 
 final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     private var provider: FPReportProviderProtocol?
-    private let analyticsService: AnalyticsService
+    private let analytics: AnalyticsManager
     private let network: NetworkService
     
-    init(analyticsService: AnalyticsService,
+    init(analytics: AnalyticsManager,
          network: NetworkService) {
-        self.analyticsService = analyticsService
+        self.analytics = analytics
         self.network = network
         super.init()
         config()
@@ -46,7 +46,8 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     }
     
     func integrityCheck() async throws {
-        analyticsService.sendEvent(.SCPermissions)
+        analytics.send(EventBuilder().with(base: .SC).with(value: "Permissions").build(),
+                       on: .AuthView)
         
         guard let data = self.provider?.report(.mixedWithCoord) else {
             throw SDKError(.personalInfo)
@@ -64,11 +65,21 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
             
             if сompromised == 0,
                emulator == 0 {
-                self.analyticsService.sendEvent(.SCGoodPermissions)
+                analytics.send(EventBuilder()
+                    .with(base: .SC)
+                    .with(value: "Permissions")
+                    .with(state: .Good)
+                    .build(),
+                               on: .AuthView)
                 return
             }
         } else {
-            self.analyticsService.sendEvent(.SCFailPermissions, with: [AnalyticsKey.Permisson: emulator ?? сompromised ?? 0])
+            analytics.send(EventBuilder()
+                .with(base: .SC)
+                .with(value: "Permissions")
+                .with(state: .Fail)
+                .build(),
+                           on: .AuthView, values: [.Permisson : emulator ?? сompromised ?? 0])
             throw SDKError(.personalInfo)
         }
         
@@ -84,7 +95,11 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     }
     
     func getUserData() async throws -> String {
-        analyticsService.sendEvent(.SCBiZone)
+        analytics.send(EventBuilder()
+            .with(base: .SC)
+            .with(value: "BiZone")
+            .build(),
+                       on: .AuthView)
         
         return try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<String, Error>) -> Void in
             
@@ -92,7 +107,12 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
                 if let string = string {
                     inCont.resume(returning: string)
                 } else {
-                    self.analyticsService.sendEvent(.SCFailBiZone)
+                    self.analytics.send(EventBuilder()
+                        .with(base: .SC)
+                        .with(value: "BiZone")
+                        .with(postState: .Fail)
+                        .build(),
+                                   on: .AuthView)
                     inCont.resume(throwing: SDKError(.personalInfo))
                 }
             }
