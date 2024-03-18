@@ -25,8 +25,6 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     
     private var bankAppModels: [BankAppCellModel] = []
     
-    private let screenEvent = [AnalyticsKey.View: AnlyticsScreenEvent.BankAppVC.rawValue]
-    
     weak var view: (IBankAppPickerVC & ContentVC)?
     private var bankManager: BankAppManager
     private var authService: AuthService
@@ -85,8 +83,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         analytics.sendEvent(.LCBankAppsViewDisappeared,
                             with: screenEvent)
     }
-    
-    
+
     private func appAuthMethod() {
         Task { @MainActor [view] in
             do {

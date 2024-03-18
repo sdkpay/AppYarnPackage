@@ -12,12 +12,12 @@ final class AnalyticsServiceAssembly: Assembly {
     var type = ObjectIdentifier(AnalyticsService.self)
     
     func register(in locator: LocatorService) {
-        let service: AnalyticsService = DefaultAnalyticsService(authManager: locator.resolve())
+        let service: AnalyticsService = DefaultAnalyticsService()
         locator.register(service: service)
     }
 }
 
-enum AnlyticsScreenEvent: String {
+enum AnlyticsViewName: String {
     case AuthVC
     case BankAppVC
     case CardsVC
@@ -252,6 +252,7 @@ enum AnalyticsValue: String {
 enum AnalyticsKey: String {
     case View
     case OrderNumber
+    case MerchLogin
     case SessionId
     case ErrorCode
     case ParsingError
@@ -284,8 +285,6 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         DefaultDynatraceAnalyticsService()
     ]
     
-    private var authManager: AuthManager
-    
     func sendEvent(_ event: AnalyticsEvent) {
         
         analyticServices.forEach({ $0.sendEvent(event) })
@@ -298,13 +297,10 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     
     func sendEvent(_ event: AnalyticsEvent, with dictionaty: [AnalyticsKey: Any]) {
         
-        var dict = dictionaty
-        addSessionParams(to: &dict)
-        analyticServices.forEach({ $0.sendEvent(event, with: dict) })
+        analyticServices.forEach({ $0.sendEvent(event, with: dictionaty) })
     }
     
-    init(authManager: AuthManager) {
-        self.authManager = authManager
+    override init() {
         super.init()
         SBLogger.log(.start(obj: self))
     }
@@ -319,10 +315,5 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         sendEvent(.SDKVersion, with: Bundle.sdkVersion)
         startSession()
     }
-    
-    private func addSessionParams(to dictionary: inout [AnalyticsKey: Any]) {
-        
-        dictionary[.OrderNumber] = authManager.orderNumber
-        dictionary[.SessionId] = authManager.sessionId
-    }
 }
+

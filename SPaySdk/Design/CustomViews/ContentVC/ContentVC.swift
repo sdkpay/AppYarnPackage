@@ -33,6 +33,10 @@ class ContentVC: LoggableVC {
         parent as? ContentNC
     }
     
+    var analyticsViewName: String {
+        "None"
+    }
+    
     @MainActor
     func setUserInteractionsEnabled(_ value: Bool = true) {
         
