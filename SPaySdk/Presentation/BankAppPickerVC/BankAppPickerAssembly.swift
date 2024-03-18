@@ -24,7 +24,8 @@ final class BankAppPickerAssembly {
     private func modulePresenter(completion: @escaping Action) -> BankAppPickerPresenter {
         let presenter = BankAppPickerPresenter(bankManager: locator.resolve(),
                                                authService: locator.resolve(),
-                                               alertService: locator.resolve(), analytics: <#AnalyticsService#>,
+                                               alertService: locator.resolve(), 
+                                               analytics: locator.resolve(),
                                                completionManager: locator.resolve(),
                                                completion: completion)
         return presenter
