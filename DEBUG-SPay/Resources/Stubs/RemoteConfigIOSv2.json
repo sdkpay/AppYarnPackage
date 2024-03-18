@@ -49,6 +49,10 @@
         {
             "name": "retryPayment",
             "value": true
+        },
+        {
+            "name": "spasiboBonuses",
+            "value": true
         }
     ],
     "bankApps": [

@@ -19,6 +19,7 @@ final class AnalyticsServiceAssembly: Assembly {
 
 enum AnlyticsScreenEvent: String {
     case AuthVC
+    case BankAppVC
     case CardsVC
     case OtpVC
     case PartPayVC
@@ -54,6 +55,8 @@ enum AnalyticsEvent: String {
     case RQFailSessionId
     /// Парсинг ответа от сервера на запрос SessionId проведен успешно
     case RSGoodSessionId
+    case TouchBankApp
+    case LCBankAppOpenFail
     /// Получена ошибка от шлюза при обработке запроса SessionId
     case RSFailSessionId
     /// Отправлен запрос auth

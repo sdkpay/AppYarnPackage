@@ -26,7 +26,20 @@ struct PaymentTokenModel: Codable {
 struct FraudMonСheckError: Codable {
     let errorCode: String?
     let description: String?
-    let fraudMonСheckResult: FraudMonСheckResult
+    
+    private var fraudMonСheckResult: FraudMonСheckResult?
+    private var froudMonCheckResult: FraudMonСheckResult?
+    
+    var result: FraudMonСheckResult? {
+        
+        if let fraudMonСheckResult {
+            return fraudMonСheckResult
+        } else if let froudMonCheckResult {
+            return froudMonCheckResult
+        } else {
+            return nil
+        }
+    }
 }
 
 struct FraudMonСheckResult: Codable {
