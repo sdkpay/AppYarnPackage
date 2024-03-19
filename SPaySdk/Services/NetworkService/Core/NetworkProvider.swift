@@ -120,6 +120,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                                          response: nil,
                                          data: nil,
                                          error: error)
+            
             analytics.sendRequestCompleted(target, response: nil, error: error)
             
             if  retrySettings.count != 1,

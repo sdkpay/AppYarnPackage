@@ -210,7 +210,6 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         
         do {
             await self.view?.contentParrent?.showLoading(with: Strings.Loading.Try.To.Pay.title, animate: false)
-            await view?.contentParrent?.setUserInteractionsEnabled(false)
 
             switch sdkManager.payStrategy {
             case .auto, .manual:
@@ -303,7 +302,6 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         guard let paymentId = userService.selectedCard?.paymentID else { return }
         
         await self.view?.contentParrent?.showLoading()
-        await view?.contentParrent?.setUserInteractionsEnabled(false)
         
         switch sdkManager.payStrategy {
             

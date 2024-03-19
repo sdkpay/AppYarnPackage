@@ -102,9 +102,9 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
             return try self.decodeResponse(data: result.data, response: result.response)
-            analytics.sendResponseDecoded(target)
+            analytics.sendResponseDecoded(target, response: result.response)
         } catch {
-            analytics.sendResponseDecoded(target, with: error.sdkError)
+            analytics.sendResponseDecoded(target, response: nil, with: error.sdkError)
             throw self.systemError(error)
         }
     }
@@ -117,10 +117,10 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
             let resultDecoded = try self.decodeResponse(data: result.data, response: result.response, type: to)
-            analytics.sendResponseDecoded(target)
+            analytics.sendResponseDecoded(target, response: result.response)
             return resultDecoded
         } catch {
-            analytics.sendResponseDecoded(target, with: error.sdkError)
+            analytics.sendResponseDecoded(target, response: nil, with: error.sdkError)
             throw self.systemError(error)
         }
     }
@@ -131,10 +131,11 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
             let resultDecoded = try self.decodeResponse(data: result.data, response: result.response, type: String.self)
-            analytics.sendResponseDecoded(target)
+            analytics.sendResponseDecoded(target, response: result.response)
             return resultDecoded
         } catch {
-            analytics.sendResponseDecoded(target, with: error.sdkError)
+            print((error as? URLError)?.failureURLString)
+            analytics.sendResponseDecoded(target, response: nil, with: error.sdkError)
             throw self.systemError(error)
         }
     }
@@ -149,10 +150,10 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
         do {
             let result = try await provider.request(target, retrySettings: retrySettings, host: host)
             let resultDecoded = try self.decodeResponseFull(data: result.data, response: result.response, type: to)
-            analytics.sendResponseDecoded(target)
+            analytics.sendResponseDecoded(target, response: result.response)
             return resultDecoded
         } catch {
-            analytics.sendResponseDecoded(target, with: error.sdkError)
+            analytics.sendResponseDecoded(target, response: nil, with: error.sdkError)
             throw self.systemError(error)
         }
     }

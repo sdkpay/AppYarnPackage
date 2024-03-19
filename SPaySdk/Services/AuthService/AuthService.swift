@@ -336,8 +336,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         if cookies.isEmpty {
             event.with(state: .Fail)
         } else {
-            event.with(state: .Good)
-            
+            event.with(state: .Good)   
         }
         return cookies
     }

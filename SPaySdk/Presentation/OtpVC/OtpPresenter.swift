@@ -73,7 +73,6 @@ final class OtpPresenter: OtpPresenting {
         view?.setOtpTextFieldState(.empty)
         view?.setOtpError(nil)
 
-        
         Task {
             do {
                 

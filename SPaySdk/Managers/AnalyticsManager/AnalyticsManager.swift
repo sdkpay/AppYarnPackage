@@ -63,8 +63,8 @@ protocol AnalyticsManager: NSObject {
     func sendRequestCompleted(_ target: TargetType,
                               response: URLResponse?,
                               error: Error?)
-    func sendResponseDecoded(_ target: TargetType)
-    func sendResponseDecoded(_ target: TargetType, with error: SDKError)
+    func sendResponseDecoded(_ target: TargetType, response: URLResponse?)
+    func sendResponseDecoded(_ target: TargetType, response: URLResponse?, with error: SDKError)
     
     func sendAppeared(view: ContentVC)
     func sendDisappeared(view: ContentVC)
@@ -132,7 +132,7 @@ extension DefaultAnalyticsManager {
                               response: URLResponse?,
                               error: Error?) {
         Task {
-            let path = getLastComponent(target.path)
+            let path = response?.url?.lastPathComponent ?? getLastComponent(target.path)
             let viewName = await getTopVCName()
             var analytics = [AnalyticsKey: String]()
             
@@ -162,10 +162,10 @@ extension DefaultAnalyticsManager {
         }
     }
     
-    func sendResponseDecoded(_ target: TargetType) {
+    func sendResponseDecoded(_ target: TargetType, response: URLResponse?) {
         
         Task {
-            let path = getLastComponent(target.path)
+            let path = response?.url?.lastPathComponent ?? getLastComponent(target.path)
             let viewName = await getTopVCName()
             let event = EventBuilder()
                 .with(base: .RS)
@@ -178,12 +178,12 @@ extension DefaultAnalyticsManager {
         }
     }
     
-    func sendResponseDecoded(_ target: TargetType, with error: SDKError) {
+    func sendResponseDecoded(_ target: TargetType, response: URLResponse?, with error: SDKError) {
         
         Task {
             guard error.represents(.failDecode) else { return }
             
-            let path = getLastComponent(target.path)
+            let path = response?.url?.lastPathComponent ?? getLastComponent(target.path)
             let viewName = await getTopVCName()
             let event = EventBuilder()
                 .with(base: .RS)
@@ -199,7 +199,13 @@ extension DefaultAnalyticsManager {
     
     private func getLastComponent(_ value: String) -> String {
         let host = "https://www.google.ru/" + value
-        return URL(string: host)?.lastPathComponent ?? "none"
+        let lastComp = URL(string: host)?.lastPathComponent ?? "none"
+
+        if lastComp.isEmpty {
+            // Костыль для getIp
+            return "getIp"
+        }
+        return lastComp
     }
 
     @MainActor

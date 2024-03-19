@@ -43,3 +43,25 @@ extension String {
         return ((regex?.firstMatch(in: self, range: NSRange(location: 0, length: utf16.count))) != nil)
     }
 }
+
+extension String {
+    
+    var removeArgs: String {
+        
+        var res = ""
+        var countS = 0
+        for c in self {
+            switch c {
+            case "(": countS += 1; break
+            case ")": countS -= 1; break
+            default:
+                if countS == 0 {
+                    res += String(c)
+                }
+                break
+            }
+        }
+        
+        return res
+    }
+}

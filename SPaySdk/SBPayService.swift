@@ -121,12 +121,12 @@ final class DefaultSBPayService: SBPayService {
         let manager = locator.resolve(AnalyticsManager.self)
         
         manager
-            .send(EventBuilder().with(base: .MA).with(value: #function).build(),
+            .send(EventBuilder().with(base: .MA).with(value: #function.removeArgs).build(),
                   on: .None)
         
         let apps = locator.resolve(BankAppManager.self).avaliableBanks
         manager
-            .send(EventBuilder().with(base: .MAC).with(value: #function).build(),
+            .send(EventBuilder().with(base: .MAC).with(value: #function.removeArgs).build(),
                   on: .None,
                   values: [.Value: (!apps.isEmpty).description])
         SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
@@ -201,7 +201,7 @@ final class DefaultSBPayService: SBPayService {
             .resolve(AnalyticsManager.self)
             .send(EventBuilder()
                 .with(base: .MAC)
-                .with(value: #function)
+                .with(value: #function.removeArgs)
                 .build(),
                   on: .None)
     }
@@ -219,7 +219,7 @@ final class DefaultSBPayService: SBPayService {
             .resolve(AnalyticsManager.self)
             .send(EventBuilder()
                 .with(base: .MA)
-                .with(value: #function)
+                .with(value: #function.removeArgs)
                 .build(),
                   on: .None)
         
@@ -242,7 +242,7 @@ final class DefaultSBPayService: SBPayService {
             .resolve(AnalyticsManager.self)
             .send(EventBuilder()
                 .with(base: .MAC)
-                .with(value: #function)
+                .with(value: #function.removeArgs)
                 .build(),
                   on: .None)
     }
@@ -261,7 +261,7 @@ final class DefaultSBPayService: SBPayService {
             .resolve(AnalyticsManager.self)
             .send(EventBuilder()
                 .with(base: .MA)
-                .with(value: #function)
+                .with(value: #function.removeArgs)
                 .build(),
                   on: .None)
         
@@ -288,7 +288,7 @@ final class DefaultSBPayService: SBPayService {
             .resolve(AnalyticsManager.self)
             .send(EventBuilder()
                 .with(base: .MA)
-                .with(value: #function)
+                .with(value: #function.removeArgs)
                 .build(),
                   on: .None)
     }

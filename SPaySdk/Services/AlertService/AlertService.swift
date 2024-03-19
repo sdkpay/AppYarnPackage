@@ -168,7 +168,7 @@ final class DefaultAlertService: AlertService {
     @discardableResult
     func show(on view: ContentVC?, type: AlertType) async -> AlertResult {
         
-        var event = EventBuilder()
+        let event = EventBuilder()
             .with(base: .LC)
             .with(postAction: .Appeared)
         

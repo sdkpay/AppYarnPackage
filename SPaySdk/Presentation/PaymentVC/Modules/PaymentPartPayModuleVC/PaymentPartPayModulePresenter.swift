@@ -176,7 +176,6 @@ final class PaymentPartPayModulePresenter: NSObject, PaymentPartPayModulePresent
         
         guard let paymentId = userService.selectedCard?.paymentID else { return }
         await self.view?.contentParrent?.showLoading(with: Strings.Loading.Try.To.Pay.title, animate: false)
-        await view?.contentParrent?.setUserInteractionsEnabled(false)
         
         do {
             

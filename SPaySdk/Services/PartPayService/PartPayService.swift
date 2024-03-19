@@ -132,8 +132,7 @@ final class DefaultPartPayService: PartPayService {
               let merchantLogin = authInfo.merchantLogin,
               let orderId = authInfo.orderId
         else { throw SDKError(.noData) }
-
-        
+  
         do {
             let bnplResult = try await network.request(BnplTarget.getBnplPlan(sessionId: sessionId,
                                                                               merchantLogin: merchantLogin,

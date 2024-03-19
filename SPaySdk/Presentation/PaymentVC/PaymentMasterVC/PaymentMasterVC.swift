@@ -30,8 +30,8 @@ final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
         return view
     }()
     
-    init(_ presenter: PaymentModuleMasterPresenting
-         , analytics: AnalyticsManager) {
+    init(_ presenter: PaymentModuleMasterPresenting,
+         analytics: AnalyticsManager) {
         self.presenter = presenter
         self.analytics = analytics
         super.init(nibName: nil, bundle: nil)

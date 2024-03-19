@@ -106,7 +106,6 @@ final class DefaultUserService: UserService {
                                                             to: UserModel.self)
             
             self.user = listCardsResult
-
         } catch {
             throw error
         }
