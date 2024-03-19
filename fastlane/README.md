@@ -31,14 +31,6 @@ Builds, achieves and uploads IPA to testflight
 
 Create xcframework
 
-### ios framework_plist_version
-
-```sh
-[bundle exec] fastlane ios framework_plist_version
-```
-
-Framework version from plist
-
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

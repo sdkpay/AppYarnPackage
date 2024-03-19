@@ -14,7 +14,6 @@ private extension TimeInterval {
 final class ContentNC: UIViewController {
     
     private lazy var backgroundView: UIImageView = {
-        // DEBUG
         let view = UIImageView(image: Asset.Image.background.image)
         view.contentMode = .scaleAspectFill
         view.tag = .backgroundViewTag

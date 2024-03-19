@@ -225,6 +225,20 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             if let error = error as? PayError {
                 await self.validatePayError(error)
             } else if let error = error as? SDKError {
+                
+                if error.represents(.noInternetConnection) {
+                    
+                    let result = await alertService.show(on: view?.contentParrent, type: .noInternet)
+                    
+                    switch result {
+                    case .approve:
+                        await goToPay()
+                    case .cancel:
+                        self.completionManager.completeWithError(error)
+                        await alertService.show(on: view?.contentParrent, type: .defaultError)
+                        await self.completionManager.dismissCloseAction(view?.contentParrent)
+                    }
+                }
                 self.dismissWithError(error)
             }
         }
