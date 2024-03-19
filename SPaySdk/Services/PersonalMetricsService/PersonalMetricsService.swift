@@ -79,7 +79,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
                 .with(value: "Permissions")
                 .with(state: .Fail)
                 .build(),
-                           on: .AuthView, values: [.Permisson : emulator ?? сompromised ?? 0])
+                           on: .AuthView, values: [.Permisson: String(emulator ?? сompromised ?? 0)])
             throw SDKError(.personalInfo)
         }
         

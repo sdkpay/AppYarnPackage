@@ -57,7 +57,7 @@ final class AnalyticsServiceManager: Assembly {
 
 protocol AnalyticsManager: NSObject {
     
-    func send(_ event: String, on view: AnlyticsViewName?, values: [AnalyticsKey: Any])
+    func send(_ event: String, on view: AnlyticsViewName?, values: [AnalyticsKey: String])
     
     func sendRequestStarted(_ request: URLRequest)
     func sendRequestCompleted(_ target: TargetType,
@@ -72,7 +72,7 @@ protocol AnalyticsManager: NSObject {
 
 extension AnalyticsManager {
     
-    func send(_ event: String, on view: AnlyticsViewName? = nil, values: [AnalyticsKey: Any] = [:]) {
+    func send(_ event: String, on view: AnlyticsViewName? = nil, values: [AnalyticsKey: String] = [:]) {
         send(event, on: view, values: values)
     }
 }
@@ -91,23 +91,22 @@ final class DefaultAnalyticsManager: NSObject, AnalyticsManager {
         self.sdkManager = sdkManager
     }
     
-    func send(_ event: String, on view: AnlyticsViewName?, values: [AnalyticsKey: Any]) {
+    func send(_ event: String, on view: AnlyticsViewName?, values: [AnalyticsKey: String]) {
         
         Task {
             var dict = values
-            
-            dict[.View] = view?.rawValue
-            
-            if dict[.View] == nil {
-                dict[.View] = await getTopVCName()
+    
+            if let viewEvent = view?.rawValue {
+                dict[.View] = viewEvent
+            } else {
+                dict[.View] = await getTopVCName().rawValue
             }
-            
             addSessionParams(to: &dict)
             service.sendEvent(event, with: dict)
         }
     }
 
-    private func addSessionParams(to dictionary: inout [AnalyticsKey: Any]) {
+    private func addSessionParams(to dictionary: inout [AnalyticsKey: String]) {
         
         dictionary[.OrderNumber] = authManager.orderNumber
         dictionary[.SessionId] = authManager.sessionId
@@ -135,7 +134,7 @@ extension DefaultAnalyticsManager {
         Task {
             let path = getLastComponent(target.path)
             let viewName = await getTopVCName()
-            var analytics = [AnalyticsKey: Any]()
+            var analytics = [AnalyticsKey: String]()
             
             let event = EventBuilder()
                 .with(base: .RQ)
@@ -153,10 +152,9 @@ extension DefaultAnalyticsManager {
                 event.with(state: .Good)
             } else {
                 event.with(state: .Fail)
+                analytics[.ErrorCode] = String(error?.sdkError.httpCode ?? 0)
+                analytics[.ParsingError] = error?.sdkError.description
             }
-            
-            analytics[.ErrorCode] = error?.sdkError.httpCode
-            analytics[.ParsingError] = error?.sdkError.description
             
             send(event.build(),
                  on: viewName,
@@ -207,7 +205,7 @@ extension DefaultAnalyticsManager {
     @MainActor
     private func getTopVCName() -> AnlyticsViewName {
         
-        let keyWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
+        let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow })
 
         if var topController = keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {

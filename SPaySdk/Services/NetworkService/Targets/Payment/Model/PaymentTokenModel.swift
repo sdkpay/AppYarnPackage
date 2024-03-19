@@ -28,14 +28,14 @@ struct FraudMonСheckError: Codable {
     let description: String?
     
     private var fraudMonСheckResult: FraudMonСheckResult?
-    private var froudMonCheckResult: FraudMonСheckResult?
+    private var fraudMonCheckResult: FraudMonСheckResult?
     
     var result: FraudMonСheckResult? {
         
         if let fraudMonСheckResult {
             return fraudMonСheckResult
-        } else if let froudMonCheckResult {
-            return froudMonCheckResult
+        } else if let fraudMonCheckResult {
+            return fraudMonCheckResult
         } else {
             return nil
         }

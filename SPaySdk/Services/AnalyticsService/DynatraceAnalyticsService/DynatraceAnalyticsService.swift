@@ -35,16 +35,10 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
         Dynatrace.endVisit()
     }
     
-    func sendEvent(_ event: String, with dictionaty: [AnalyticsKey: Any]) {
+    func sendEvent(_ event: String, with dictionaty: [AnalyticsKey: String]) {
         let action = DTXAction.enter(withName: event)
         dictionaty.forEach { key, value in
-            if let value = value as? Int64 {
-                action?.reportValue(withName: key.rawValue, intValue: value)
-            } else if let value = value as? String {
-                action?.reportValue(withName: key.rawValue, stringValue: value)
-            } else {
-                assertionFailure("Неверный тип для \(value)")
-            }
+            action?.reportValue(withName: key.rawValue, stringValue: value)
         }
         let values = dictionaty.reduce(into: [:]) { $0[$1.key.rawValue] = $1.value }
         SBLogger.logAnalyticsEvent(name: event, values: values.json)

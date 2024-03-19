@@ -172,7 +172,7 @@ final class DefaultAlertService: AlertService {
             .with(base: .LC)
             .with(postAction: .Appeared)
         
-        var eventValue = [AnalyticsKey: Any]()
+        var eventValue = [AnalyticsKey: String]()
         
         switch type {
         case let .paySuccess(amount: amount, shopName: shopName, bonuses: bonuses):

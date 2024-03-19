@@ -9,7 +9,7 @@ import Foundation
 
 struct SecureChallengeError: Error, LocalizedError {
 
-    let fraudMonСheckResult: FraudMonСheckResult?
+    let fraudMonСheckResult: FraudMonСheckResult
     
     init?(from error: SDKError) {
         
@@ -17,7 +17,7 @@ struct SecureChallengeError: Error, LocalizedError {
         
         let decoder = JSONDecoder()
         
-        guard let decodedData = try? decoder.decode(FraudMonСheckError.self, from: data) else { return nil }
-        fraudMonСheckResult = decodedData.result
+        guard let decodedData = try? decoder.decode(FraudMonСheckError.self, from: data).result else { return nil }
+        fraudMonСheckResult = decodedData
     }
 }

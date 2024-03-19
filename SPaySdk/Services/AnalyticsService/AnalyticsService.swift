@@ -24,7 +24,7 @@ enum AnalyticsValue: String {
 protocol AnalyticsService {
     func sendEvent(_ event: String)
     func sendEvent(_ event: String, with string: String)
-    func sendEvent(_ event: String, with dictionaty: [AnalyticsKey: Any])
+    func sendEvent(_ event: String, with dictionaty: [AnalyticsKey: String])
     func config()
     func startSession()
     func finishSession()
@@ -54,7 +54,7 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         analyticServices.forEach({ $0.sendEvent(event, with: string) })
     }
     
-    func sendEvent(_ event: String, with dictionaty: [AnalyticsKey: Any]) {
+    func sendEvent(_ event: String, with dictionaty: [AnalyticsKey: String]) {
         
         analyticServices.forEach({ $0.sendEvent(event, with: dictionaty) })
     }
