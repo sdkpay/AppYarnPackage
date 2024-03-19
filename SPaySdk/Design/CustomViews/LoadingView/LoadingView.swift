@@ -95,7 +95,7 @@ final class LoadingView: UIView {
         DispatchQueue.main.asyncAfter(deadline: .now() + .delay, execute: {
             self.loadingStack.isHidden = false
         })
-        UIView.animate(withDuration: 0.25,
+        UIView.animate(withDuration: 0.5,
                        delay: .delay) { [weak self] in
             guard let self = self else { return }
             self.alpha = 1

@@ -134,7 +134,6 @@ final class DefaultNetworkService: NetworkService, ResponseDecoder {
             analytics.sendResponseDecoded(target, response: result.response)
             return resultDecoded
         } catch {
-            print((error as? URLError)?.failureURLString)
             analytics.sendResponseDecoded(target, response: nil, with: error.sdkError)
             throw self.systemError(error)
         }

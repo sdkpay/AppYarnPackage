@@ -52,13 +52,12 @@ extension String {
         var countS = 0
         for c in self {
             switch c {
-            case "(": countS += 1; break
-            case ")": countS -= 1; break
+            case "(": countS += 1
+            case ")": countS -= 1
             default:
                 if countS == 0 {
                     res += String(c)
                 }
-                break
             }
         }
         

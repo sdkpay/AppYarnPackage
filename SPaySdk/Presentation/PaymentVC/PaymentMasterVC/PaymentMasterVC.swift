@@ -57,7 +57,6 @@ final class PaymentMasterVC: ContentVC, IPaymentMasterVC {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        hideLoading(animate: true)
         contentNavigationController?.setBackground(Asset.Image.background.image)
     }
     

@@ -96,13 +96,13 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     @MainActor
     private func createOTP() async throws {
         
-        view?.contentParrent?.showLoading()
         try await otpService.creteOTP()
         
         try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<Void, Error>) -> Void in
             
             DispatchQueue.main.async {
                 self.router.presentOTPScreen(completion: {
+                    self.view?.contentParrent?.showLoading()
                     inCont.resume()
                 })
             }
@@ -209,7 +209,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     private func goToPay() async {
         
         do {
-            await self.view?.contentParrent?.showLoading(with: Strings.Loading.Try.To.Pay.title, animate: false)
+            await self.view?.contentParrent?.showLoading(animate: false)
 
             switch sdkManager.payStrategy {
             case .auto, .manual:
@@ -252,8 +252,6 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             
             try await createOTP()
         }
-        
-        await self.view?.contentParrent?.showLoading(with: Strings.Loading.Try.To.Pay.title, animate: false)
         
         let challengeState = try await secureChallengeService.challenge(paymentId: paymentId,
                                                                         isBnplEnabled: partPayService.bnplplanSelected)
@@ -314,8 +312,6 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     private func payWithResolution(resolution: SecureChallengeResolution?) async throws {
         
         guard let paymentId = userService.selectedCard?.paymentID else { return }
-        
-        await self.view?.contentParrent?.showLoading()
         
         switch sdkManager.payStrategy {
             

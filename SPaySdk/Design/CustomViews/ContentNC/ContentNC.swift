@@ -227,7 +227,11 @@ final class ContentNC: UIViewController {
                 from.removeFromParent()
                 from.view.removeFromSuperview()
                 from.didMove(toParent: nil)
-                from.view.subviews.forEach({ $0.alpha = 1 })
+                if let loadView = from.view.subviews.first(where: { $0.tag == .loadingTag }) {
+                    loadView.alpha = 1
+                } else {
+                    from.view.subviews.forEach({ $0.alpha = 1 })
+                }
                 completion?()
             }
         )
