@@ -277,8 +277,8 @@ final class DefaultAlertService: AlertService {
             
             let fullPayButton = AlertButtonModel(title: Strings.Otp.Button.Otp.back,
                                                  type: .blackBack,
-                                                 neededResult: .approve,
-                                                 action: nil)
+                                                 neededResult: .cancel,
+                                                 action: {})
             
             return await show(on: view,
                               with: Strings.Error.trying,

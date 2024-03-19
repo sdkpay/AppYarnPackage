@@ -54,7 +54,7 @@ final class AlertPresenter: AlertPresenting {
     }
     
     func buttonTapped(item: AlertButtonModel) {
-        if !model.isFailure {
+        if !model.isFailure || item.neededResult == .cancel {
             self.alertResultAction?(.cancel)
             return
         }
