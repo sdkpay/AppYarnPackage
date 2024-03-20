@@ -203,8 +203,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             
             if refreshIsActive
                 && featureToggleService.isEnabled(.refresh)
-//                && sdkManager.payStrategy != .partPay
-//                && sdkManager.payStrategy != .withoutRefresh
+                && sdkManager.payStrategy != .partPay
+                && sdkManager.payStrategy != .withoutRefresh
                 && tokenInStorage {
                 
                 self.authManager.authMethod = .refresh
