@@ -66,15 +66,15 @@ private extension PartPayModuleViewBuilder {
             
             enum Parts {
                 static let topOffSet: CGFloat = 20.0
-                static let leftOffSet: CGFloat = Consts.margin
-                static let rightOffSet: CGFloat = Consts.margin
+                static let leftOffSet: CGFloat = Consts.margin * 2
+                static let rightOffSet: CGFloat = Consts.margin * 2
             }
         }
         
         enum Stack {
             static let topOffSet: CGFloat = 20.0
-            static let leftOffSet: CGFloat = 22.0
-            static let rightOffSet: CGFloat = Consts.margin
+            static let leftOffSet: CGFloat = 22.0 + Consts.margin
+            static let rightOffSet: CGFloat = Consts.margin * 2
             static let bottomOffSet: CGFloat = Consts.margin
             static let height: CGFloat = Consts.margin
         }
@@ -140,14 +140,13 @@ final class PartPayModuleViewBuilder {
         return view
     }()
     
-    private(set) lazy var backgroundTableView: UIView = {
-        let view = UIView()
+    private(set) lazy var backgroundTableView: UIScrollView = {
+        let view = UIScrollView()
         view.setupForBase()
         return view
     }()
     
     func setupUI(view: UIView, needCommissionLabel: Bool) {
-        
         titleLabel
             .add(toSuperview: view)
             .touchEdge(.top, toSuperviewEdge: .top, withInset: Consts.Label.Title.topOffSet)
@@ -164,8 +163,8 @@ final class PartPayModuleViewBuilder {
         
         backgroundTableView
             .add(toSuperview: view)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.TableView.Background.leftOffSet)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.Background.rightOffSet)
+            .touchEdge(.left, toSuperviewEdge: .left)
+            .touchEdge(.right, toSuperviewEdge: .right)
         
         if needCommissionLabel {
             backgroundTableView
@@ -178,14 +177,14 @@ final class PartPayModuleViewBuilder {
         partsTableView
             .add(toSuperview: backgroundTableView)
             .touchEdge(.top, toEdge: .top, ofView: backgroundTableView, withInset: Consts.TableView.Parts.topOffSet)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.TableView.Parts.leftOffSet)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.Parts.rightOffSet)
+            .touchEdge(.left, toEdge: .left, ofView: view, withInset: Consts.TableView.Parts.leftOffSet)
+            .touchEdge(.right, toEdge: .right, ofView: view, withInset: Consts.TableView.Parts.rightOffSet)
         
         finalStack
             .add(toSuperview: backgroundTableView)
             .touchEdge(.top, toEdge: .bottom, ofView: partsTableView)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Stack.leftOffSet)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Stack.rightOffSet)
+            .touchEdge(.left, toEdge: .left, ofView: view, withInset: Consts.Stack.leftOffSet)
+            .touchEdge(.right, toEdge: .right, ofView: view, withInset: Consts.Stack.rightOffSet)
             .touchEdge(.bottom, toSuperviewEdge: .bottom, withInset: Consts.Stack.bottomOffSet)
             .height(Consts.Stack.height)
 
