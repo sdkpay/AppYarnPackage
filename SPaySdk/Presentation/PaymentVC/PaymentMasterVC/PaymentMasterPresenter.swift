@@ -65,7 +65,7 @@ final class PaymentMasterPresenter: NSObject, PaymentModuleMasterPresenting {
             
             return ScreenHeightState.normal.height
         case .partPay:
-            return ScreenHeightState.max.height
+            return nil
         }
     }
     

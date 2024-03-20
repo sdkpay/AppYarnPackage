@@ -7,11 +7,9 @@
 
 import UIKit
 
-private extension CGFloat {
-    static let maxTableViewHeight = ScreenHeightState.normal.height
-}
-
 class ContentTableView: UITableView {
+    
+    private var maxTableViewHeight = ScreenHeightState.normal.height
     
     override var contentSize: CGSize {
         didSet {
@@ -21,12 +19,17 @@ class ContentTableView: UITableView {
 
     private lazy var tableHeightConstraint: NSLayoutConstraint = {
         let constraint = heightAnchor.constraint(equalToConstant: 0)
+        constraint.priority = .defaultLow
         constraint.isActive = true
         return constraint
     }()
+    
+    func setMaxHeight(_ maxHeight: CGFloat) {
+        maxTableViewHeight = maxHeight
+    }
 
     private func fixHeight() {
-        tableHeightConstraint.constant = contentSize.height > .maxTableViewHeight ? .maxTableViewHeight : contentSize.height
+        tableHeightConstraint.constant = contentSize.height > maxTableViewHeight ? maxTableViewHeight : contentSize.height
     }
 
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {

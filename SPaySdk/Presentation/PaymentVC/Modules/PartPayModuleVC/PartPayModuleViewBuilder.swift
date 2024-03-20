@@ -134,14 +134,13 @@ final class PartPayModuleViewBuilder {
         view.register(cellClass: PartCell.self)
         view.separatorStyle = .none
         view.showsVerticalScrollIndicator = false
-        view.isScrollEnabled = false
         view.backgroundColor = .clear
         view.rowHeight = Consts.TableView.Background.rowHeight
         return view
     }()
     
-    private(set) lazy var backgroundTableView: UIScrollView = {
-        let view = UIScrollView()
+    private(set) lazy var backgroundTableView: UIView = {
+        let view = UIView()
         view.setupForBase()
         return view
     }()

@@ -20,7 +20,7 @@ enum ScreenHeightState {
         case .normal:
             return 0.70
         case .max:
-            return 0.95
+            return 0.90
         }
     }
     
