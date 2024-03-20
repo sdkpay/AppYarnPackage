@@ -8,6 +8,12 @@
 import UIKit
 import Combine
 
+extension MetricsValue {
+    
+    static let declinedByUser = MetricsValue(rawValue: "DeclinedByUser")
+    static let confirmedByUser = MetricsValue(rawValue: "ConfirmedByUser")
+}
+
 protocol PartPayPresenting {
     func acceptButtonTapped()
     func backButtonTapped()
@@ -63,7 +69,7 @@ final class PartPayPresenter: PartPayPresenting {
     func acceptButtonTapped() {
         analytics.send(EventBuilder()
             .with(base: .Touch)
-            .with(value: "ConfirmedByUser")
+            .with(value: .confirmedByUser)
             .build(), on: view?.analyticsName ?? .None)
         
         partPayService.bnplplanSelected = true
@@ -76,7 +82,7 @@ final class PartPayPresenter: PartPayPresenting {
     func backButtonTapped() {
         analytics.send(EventBuilder()
             .with(base: .Touch)
-            .with(value: "DeclinedByUser")
+            .with(value: .declinedByUser)
             .build(), on: view?.analyticsName ?? .None)
         partPayService.bnplplanSelected = false
         partPaySelected()

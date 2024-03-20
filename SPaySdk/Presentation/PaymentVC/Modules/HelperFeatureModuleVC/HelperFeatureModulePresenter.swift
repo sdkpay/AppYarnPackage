@@ -7,6 +7,12 @@
 
 import UIKit
 
+private extension MetricsValue {
+    
+    static let makeTransfer = MetricsValue(rawValue: "MakeTransfer")
+    static let makeCard = MetricsValue(rawValue: "MakeCard")
+}
+
 enum HelperSection: Int, CaseIterable {
     case features
 }
@@ -90,7 +96,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
             
             analytics.send(EventBuilder()
                 .with(base: .Touch)
-                .with(value: helper.bannerListType == .sbp ? "MakeTransfer" : "MakeCard")
+                .with(value: helper.bannerListType == .sbp ? .makeTransfer : .makeCard)
                 .build(), on: view?.contentParrent?.analyticsName ?? .None)
             
             guard let deeplinkIos = helper.buttons.first?.deeplinkIos else { return }
@@ -136,10 +142,6 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     
     private func appAuth() {
         
-        analytics.send(EventBuilder()
-            .with(base: .LC)
-            .with(value: "BankAppAuth")
-            .build(), on: view?.contentParrent?.analyticsName ?? .None)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
@@ -153,20 +155,8 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
                 await NotificationCenter.default.removeObserver(self,
                                                                 name: UIApplication.didBecomeActiveNotification,
                                                                 object: nil)
-                
-                await analytics.send(EventBuilder()
-                    .with(base: .LC)
-                    .with(value: "BankAppAuth")
-                    .with(postState: .Good)
-                    .build(), on: view?.contentParrent?.analyticsName ?? .None)
             } catch {
                 if let error = error as? SDKError {
-                    
-                    await analytics.send(EventBuilder()
-                        .with(base: .LC)
-                        .with(value: "BankAppAuth")
-                        .with(postState: .Fail)
-                        .build(), on: view?.contentParrent?.analyticsName ?? .None)
                     
                     if error.represents(.noData) {
                         

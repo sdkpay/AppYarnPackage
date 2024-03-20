@@ -9,6 +9,7 @@ import UIKit
 
 protocol AuthPresenting {
     func viewDidLoad()
+    func viewDidDisappear()
     func webViewGoTo(url: URL)
 }
 
@@ -85,6 +86,11 @@ final class AuthPresenter: AuthPresenting {
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)
         startAuth()
+    }
+    
+    func viewDidDisappear() {
+        
+        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     private func startAuth() {

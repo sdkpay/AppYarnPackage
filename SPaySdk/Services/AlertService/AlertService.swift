@@ -177,7 +177,7 @@ final class DefaultAlertService: AlertService {
         switch type {
         case let .paySuccess(amount: amount, shopName: shopName, bonuses: bonuses):
             
-            event.with(value: "StatusSuccessView")
+            event.with(value: MetricsValue(rawValue: "StatusSuccessView"))
             eventValue[.State] = "Success"
             
             guard alertViewNeeded else { return AlertResult.approve }
@@ -197,7 +197,7 @@ final class DefaultAlertService: AlertService {
             
         case .connectSuccess(card: let card):
             
-            event.with(value: "StatusSuccessView")
+            event.with(value: MetricsValue(rawValue: "StatusSuccessView"))
             eventValue[.State] = "Success"
             
             guard alertViewNeeded else { return AlertResult.approve }
@@ -209,7 +209,7 @@ final class DefaultAlertService: AlertService {
                               buttons: [])
         case .defaultError:
             
-            event.with(value: "StatusErrorView")
+            event.with(value: MetricsValue(rawValue: "StatusErrorView"))
             eventValue[.State] = "default"
             
             if sdkManager.payStrategy == .partPay {
@@ -230,7 +230,7 @@ final class DefaultAlertService: AlertService {
                               buttons: [])
         case .noInternet:
             
-            event.with(value: "StatusErrorView")
+            event.with(value: MetricsValue(rawValue: "StatusErrorView"))
             eventValue[.State] = "NoInternet"
             
             let tryButton = AlertButtonModel(title: Strings.Common.Try.title,
@@ -252,7 +252,7 @@ final class DefaultAlertService: AlertService {
                                 ])
         case .partPayError:
             
-            event.with(value: "StatusErrorView")
+            event.with(value: MetricsValue(rawValue: "StatusErrorView"))
             eventValue[.State] = "PartPayError"
             
             let fullPayButton = AlertButtonModel(title: Strings.Common.Pay.Full.title,
@@ -272,7 +272,7 @@ final class DefaultAlertService: AlertService {
                               ])
         case .tryingError:
             
-            event.with(value: "StatusErrorView")
+            event.with(value: MetricsValue(rawValue: "StatusErrorView"))
             eventValue[.State] = "TryingError"
             
             let fullPayButton = AlertButtonModel(title: Strings.Otp.Button.Otp.back,
@@ -289,7 +289,7 @@ final class DefaultAlertService: AlertService {
                               ])
         case .noMoney:
             
-            event.with(value: "StatusErrorView")
+            event.with(value: MetricsValue(rawValue: "StatusErrorView"))
             eventValue[.State] = "NoMoney"
             
             let cancel = AlertButtonModel(title: Strings.Common.Return.title,

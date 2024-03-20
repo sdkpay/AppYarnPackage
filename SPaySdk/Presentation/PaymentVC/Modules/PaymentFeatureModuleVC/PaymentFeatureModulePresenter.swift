@@ -7,6 +7,12 @@
 
 import UIKit
 
+private extension MetricsValue {
+    
+    static let bioAuth = MetricsValue(rawValue: "BioAuth")
+    static let card = MetricsValue(rawValue: "Card")
+}
+
 enum PaymentSection: Int, CaseIterable {
     case features
     case card
@@ -169,7 +175,7 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
         
        analytics.send(EventBuilder()
            .with(base: .Touch)
-           .with(value: "Card")
+           .with(value: .card)
            .build(), on: view?.contentParrent?.analyticsName ?? .None)
         
         guard userService.additionalCards else { return }
@@ -196,7 +202,7 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
                         analytics.send(EventBuilder()
                             .with(base: .LC)
                             .with(state: .Good)
-                            .with(value: "BioAuth")
+                            .with(value: .bioAuth)
                             .build(), on: view?.contentParrent?.analyticsName ?? .None)
                         
                         self.presentListCards()
@@ -204,20 +210,15 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
                         analytics.send(EventBuilder()
                             .with(base: .LC)
                             .with(state: .Fail)
-                            .with(value: "BioAuth")
+                            .with(value: .bioAuth)
                             .build(), on: view?.contentParrent?.analyticsName ?? .None)
                         self.appAuth()
                     }
                 case false:
                     analytics.send(EventBuilder()
                         .with(base: .LC)
-                        .with(value: "BankAppAuth")
-                        .with(postState: .Good)
-                        .build(), on: view?.contentParrent?.analyticsName ?? .None)
-                    analytics.send(EventBuilder()
-                        .with(base: .LC)
                         .with(state: .Fail)
-                        .with(value: "BioAuth")
+                        .with(value: .bioAuth)
                         .build(), on: view?.contentParrent?.analyticsName ?? .None)
                     self.appAuth()
                 }
@@ -263,12 +264,7 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
     }
     
     private func appAuth() {
-        
-        analytics.send(EventBuilder()
-            .with(base: .LC)
-            .with(value: "BankAppAuth")
-            .build(), on: view?.contentParrent?.analyticsName ?? .None)
-        
+
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
@@ -283,21 +279,9 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
                                                                 name: UIApplication.didBecomeActiveNotification,
                                                                 object: nil)
                 
-                await analytics.send(EventBuilder()
-                    .with(base: .LC)
-                    .with(value: "BankAppAuth")
-                    .with(postState: .Good)
-                    .build(), on: view?.contentParrent?.analyticsName ?? .None)
-                
                 repeatAuth()
             } catch {
                 if let error = error as? SDKError {
-                    
-                    await analytics.send(EventBuilder()
-                        .with(base: .LC)
-                        .with(value: "BankAppAuth")
-                        .with(postState: .Fail)
-                        .build(), on: view?.contentParrent?.analyticsName ?? .None)
                     
                     if error.represents(.noData) {
                         

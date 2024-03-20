@@ -7,6 +7,11 @@
 
 import UIKit
 
+extension MetricsValue {
+    
+    static let bankApp = MetricsValue(rawValue: "BankApp")
+}
+
 final class BankAppManagerAssembly: Assembly {
     
     var type = ObjectIdentifier(BankAppManager.self)
@@ -63,7 +68,7 @@ final class DefaultBankAppManager: BankAppManager {
         analytics.send(EventBuilder()
             .with(base: .ST)
             .with(action: .Save)
-            .with(value: "BankApp")
+            .with(value: .bankApp)
             .build(),
                        values: [.Value: _selectedBank?.name ?? "None"])
         UserDefaults.bankApp = _selectedBank?.appId
@@ -85,15 +90,22 @@ final class DefaultBankAppManager: BankAppManager {
             // Если больше 1 то смотрим на сохраненный банк
             if let savedBank = UserDefaults.bankApp {
                 _selectedBank = UserDefaults.bankApps?.first(where: { $0.appId == savedBank })
+                
+                analytics.send(EventBuilder()
+                    .with(base: .ST)
+                    .with(action: .Get)
+                    .with(state: .Good)
+                    .with(value: .bankApp)
+                    .build(),
+                               values: [.Value: _selectedBank?.name ?? "None"])
                 return _selectedBank
             } else {
                 analytics.send(EventBuilder()
                     .with(base: .ST)
                     .with(action: .Get)
                     .with(state: .Fail)
-                    .with(value: "BankApp")
-                    .build(),
-                               values: [.Value: _selectedBank?.name ?? "None"])
+                    .with(value: .bankApp)
+                    .build())
                 return nil
             }
         } else {

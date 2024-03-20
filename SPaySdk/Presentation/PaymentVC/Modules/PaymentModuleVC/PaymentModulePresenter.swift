@@ -85,7 +85,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         
         analytics.send(EventBuilder()
             .with(base: .Touch)
-            .with(value: "Pay")
+            .with(value: MetricsValue(rawValue: "Pay"))
             .build(), on: view?.contentParrent?.analyticsName ?? .None)
         
         Task {

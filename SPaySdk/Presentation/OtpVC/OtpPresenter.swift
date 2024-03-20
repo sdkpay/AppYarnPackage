@@ -7,6 +7,12 @@
 
 import UIKit
 
+extension MetricsValue {
+    
+    static let next = MetricsValue(rawValue: "Next")
+    static let back = MetricsValue(rawValue: "Back")
+}
+
 protocol OtpPresenting {
     func viewDidLoad()
     func sendOTP(otpCode: String)
@@ -110,7 +116,7 @@ final class OtpPresenter: OtpPresenting {
     
     func sendOTP(otpCode: String) {
         
-        analytics.send(EventBuilder().with(base: .Touch).with(value: "Next").build(),
+        analytics.send(EventBuilder().with(base: .Touch).with(value: .next).build(),
                        on: view?.analyticsName ?? .None)
         
         Task { @MainActor [view] in
@@ -167,7 +173,7 @@ final class OtpPresenter: OtpPresenting {
     }
     
     func back() {
-        analytics.send(EventBuilder().with(base: .Touch).with(value: "Back").build(),
+        analytics.send(EventBuilder().with(base: .Touch).with(value: .back).build(),
                        on: view?.analyticsName ?? .None)
         self.completionManager.dismissCloseAction(view)
     }

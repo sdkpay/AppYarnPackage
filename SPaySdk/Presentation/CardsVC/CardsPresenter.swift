@@ -7,6 +7,11 @@
 
 import UIKit
 
+private extension MetricsValue {
+    
+    static let card = MetricsValue(rawValue: "Card")
+}
+
 protocol CardsPresenting {
     func viewDidLoad()
     var cardsCount: Int { get }
@@ -83,7 +88,7 @@ final class CardsPresenter: CardsPresenting {
     func didSelectRow(at indexPath: IndexPath) {
         analytics.send(EventBuilder()
             .with(base: .Touch)
-            .with(value: "Card")
+            .with(value: .card)
             .build(), on: view?.analyticsName ?? .None)
         selectedCard(cards[indexPath.row])
         DispatchQueue.main.async {

@@ -123,7 +123,7 @@ extension DefaultAnalyticsManager {
         Task {
             let viewName = await getTopVCName()
             
-            send(EventBuilder().with(base: .RQ).with(value: path).build(),
+            send(EventBuilder().with(base: .RQ).with(value: MetricsValue(rawValue: path)).build(),
                  on: viewName)
         }
     }
@@ -138,7 +138,7 @@ extension DefaultAnalyticsManager {
             
             let event = EventBuilder()
                 .with(base: .RQ)
-                .with(value: path)
+                .with(value: MetricsValue(rawValue: path))
             
             var code = "None"
             
@@ -169,7 +169,7 @@ extension DefaultAnalyticsManager {
             let viewName = await getTopVCName()
             let event = EventBuilder()
                 .with(base: .RS)
-                .with(value: path)
+                .with(value: MetricsValue(rawValue: path))
                 .with(state: .Good)
                 .build()
             
@@ -187,7 +187,7 @@ extension DefaultAnalyticsManager {
             let viewName = await getTopVCName()
             let event = EventBuilder()
                 .with(base: .RS)
-                .with(value: path)
+                .with(value: MetricsValue(rawValue: path))
                 .with(state: .Fail)
                 .build()
             
@@ -233,7 +233,7 @@ extension DefaultAnalyticsManager {
         
         send(EventBuilder()
             .with(base: .LC)
-            .with(value: view.analyticsName.rawValue)
+            .with(value: MetricsValue(rawValue: view.analyticsName.rawValue))
             .with(postAction: .Appeared)
             .build(),
              on: view.analyticsName)
@@ -243,7 +243,7 @@ extension DefaultAnalyticsManager {
         
         send(EventBuilder()
             .with(base: .LC)
-            .with(value: view.analyticsName.rawValue)
+            .with(value: MetricsValue(rawValue: view.analyticsName.rawValue))
             .with(postAction: .Disappeared)
             .build(),
              on: view.analyticsName)

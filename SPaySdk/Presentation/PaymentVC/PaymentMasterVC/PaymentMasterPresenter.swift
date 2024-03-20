@@ -100,13 +100,19 @@ final class PaymentMasterPresenter: NSObject, PaymentModuleMasterPresenting {
     
     func viewDidLoad() {
         setViewName()
-        view?.setCancelTitle(Strings.Common.Cancel.title)
+        
+        switch mode {
+        case .pay, .helper, .connect:
+            view?.setCancelTitle(Strings.Common.Cancel.title)
+        case .partPay:
+            view?.setCancelTitle(Strings.Common.Cancel.Pay.title)
+        }
     }
     
     func cancelTapped() {
         analytics.send(EventBuilder()
             .with(base: .Touch)
-            .with(value: "Close")
+            .with(value: MetricsValue(rawValue: "Close"))
             .build(), on: view?.analyticsName ?? .None)
         completionManager.dismissCloseAction(view)
     }

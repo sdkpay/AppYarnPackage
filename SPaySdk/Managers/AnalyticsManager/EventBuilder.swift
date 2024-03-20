@@ -47,6 +47,15 @@ enum MetricsStateKey: String {
     case Fail
 }
 
+struct MetricsValue: RawRepresentable {
+    
+    var rawValue: String
+    
+    init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+}
+
 final class EventBuilder {
     
     private var base = ""
@@ -80,9 +89,9 @@ final class EventBuilder {
     }
     
     @discardableResult
-    func with(value: String) -> Self {
+    func with(value: MetricsValue) -> Self {
         
-        self.value = value
+        self.value = value.rawValue
         return self
     }
     

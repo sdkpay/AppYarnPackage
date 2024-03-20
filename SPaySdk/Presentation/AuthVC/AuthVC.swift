@@ -76,6 +76,7 @@ final class AuthVC: ContentVC, IAuthVC {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        self.presenter.viewDidDisappear()
         analytics.sendDisappeared(view: self)
         SBLogger.log(.didDissapear(view: self))
     }

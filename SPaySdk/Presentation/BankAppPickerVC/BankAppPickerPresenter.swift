@@ -63,7 +63,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         bankAppModels[indexPath.row].tapped = true
         analytics.send(EventBuilder()
             .with(base: .Touch)
-            .with(value: "BankApp")
+            .with(value: .bankApp)
             .build(), on: view?.analyticsName ?? .None)
         appAuthMethod()
     }
@@ -79,8 +79,8 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
             do {
                 try await authService.appAuth()
                 analytics.send(EventBuilder()
-                    .with(base: .Touch)
-                    .with(value: "BankApp")
+                    .with(base: .LC)
+                    .with(value: .bankApp)
                     .with(postState: .Good)
                     .build(), on: view?.analyticsName ?? .None)
                 removeObserver()
@@ -93,6 +93,11 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
                     .build(), on: view?.analyticsName ?? .None)
                 bankManager.selectedBank = nil
                 checkTappedAppsCount()
+                analytics.send(EventBuilder()
+                    .with(base: .LC)
+                    .with(value: .bankApp)
+                    .with(postState: .Fail)
+                    .build(), on: view?.analyticsName ?? .None)
                 view?.reloadTableView()
             }
         }
@@ -127,6 +132,14 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         SBLogger.log("📲 Become active without redirect")
         view?.reloadTableView()
         checkTappedAppsCount()
+        analytics.send(EventBuilder()
+            .with(base: .LC)
+            .with(value: .bankApp)
+            .with(postAction: .Open)
+            .with(postState: .Fail)
+            .build(), on: view?.analyticsName ?? .None)
+        removeObserver()
+        completion?()
     }
     
     private func findIndexPath(_ bankApp: BankApp) -> IndexPath? {

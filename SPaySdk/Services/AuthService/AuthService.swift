@@ -32,6 +32,12 @@ final class AuthServiceAssembly: Assembly {
     }
 }
 
+private extension MetricsValue {
+    
+    static let refresh = MetricsValue(rawValue: "Refresh")
+    static let bankAppAuth = MetricsValue(rawValue: "BankAppAuth")
+}
+
 private enum Constants {
     
     static let sendboxAuthCode = "3401216B-8B70-21FA-2592-58010E53EE5B"
@@ -141,8 +147,22 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         case .success(let result):
             authManager.authCode = result.code
             authManager.state = result.state
+            
+            analytics.send(EventBuilder()
+                .with(base: .LC)
+                .with(value: .bankAppAuth)
+                .with(postState: .Good)
+                .build())
+            
             appAuthCompletion?(.success)
         case .failure(let error):
+            
+            analytics.send(EventBuilder()
+                .with(base: .LC)
+                .with(value: .bankAppAuth)
+                .with(postState: .Fail)
+                .build())
+            
             appAuthCompletion?(.failure(error))
         }
         appAuthCompletion = nil
@@ -206,6 +226,11 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     func appAuth() async throws {
         SBLogger.logThread(obj: self)
         self.authManager.authMethod = .bank
+        
+        analytics.send(EventBuilder()
+            .with(base: .LC)
+            .with(value: .bankAppAuth)
+            .build())
         try await sIdAuth()
     }
 
@@ -315,6 +340,12 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         
         if let dataCookie = cookies.first(where: { $0.name == Cookies.refreshData.rawValue }) {
             cookieStorage.setCookie(cookie: dataCookie, for: .refreshData)
+            
+            analytics.send(EventBuilder()
+                .with(base: .ST)
+                .with(action: .Save)
+                .with(value: .refresh)
+                .build())
         }
     }
         
@@ -331,13 +362,15 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             cookies.append(cookieData)
         }
         
-        let event = EventBuilder().with(base: .ST).with(value: "Refresh")
+        let event = EventBuilder().with(base: .ST).with(action: .Get).with(value: .refresh)
         
         if cookies.isEmpty {
             event.with(state: .Fail)
         } else {
             event.with(state: .Good)   
         }
+        
+        analytics.send(event.build())
         return cookies
     }
     

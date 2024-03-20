@@ -8,6 +8,12 @@
 import Foundation
 @_implementationOnly import Fingerprint
 
+extension MetricsValue {
+    
+    static let permissions = MetricsValue(rawValue: "Permissions")
+    static let biZone = MetricsValue(rawValue: "BiZone")
+}
+
 final class PersonalMetricsServiceAssembly: Assembly {
     
     var type = ObjectIdentifier(PersonalMetricsService.self)
@@ -46,7 +52,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     }
     
     func integrityCheck() async throws {
-        analytics.send(EventBuilder().with(base: .SC).with(value: "Permissions").build(),
+        analytics.send(EventBuilder().with(base: .SC).with(value: .permissions).build(),
                        on: .AuthView)
         
         guard let data = self.provider?.report(.mixedWithCoord) else {
@@ -67,7 +73,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
                emulator == 0 {
                 analytics.send(EventBuilder()
                     .with(base: .SC)
-                    .with(value: "Permissions")
+                    .with(value: .permissions)
                     .with(state: .Good)
                     .build(),
                                on: .AuthView)
@@ -76,7 +82,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
         } else {
             analytics.send(EventBuilder()
                 .with(base: .SC)
-                .with(value: "Permissions")
+                .with(value: .permissions)
                 .with(state: .Fail)
                 .build(),
                            on: .AuthView, values: [.Permisson: String(emulator ?? сompromised ?? 0)])
@@ -97,7 +103,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
     func getUserData() async throws -> String {
         analytics.send(EventBuilder()
             .with(base: .SC)
-            .with(value: "BiZone")
+            .with(value: .biZone)
             .build(),
                        on: .AuthView)
         
@@ -109,7 +115,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
                 } else {
                     self.analytics.send(EventBuilder()
                         .with(base: .SC)
-                        .with(value: "BiZone")
+                        .with(value: .biZone)
                         .with(postState: .Fail)
                         .build(),
                                    on: .AuthView)

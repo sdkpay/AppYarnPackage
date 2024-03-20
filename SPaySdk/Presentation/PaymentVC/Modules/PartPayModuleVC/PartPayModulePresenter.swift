@@ -7,6 +7,12 @@
 
 import UIKit
 
+extension MetricsValue {
+    
+    static let approveBNPL = MetricsValue(rawValue: "ApproveBNPL")
+    static let agreementView = MetricsValue(rawValue: "AgreementView")
+}
+
 struct PartCellModel {
     let title: String
     let cost: String
@@ -83,11 +89,11 @@ final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
         view?.configCheckView(text: partPayService.bnplplan?.offerText ?? "",
                               checkSelected: partPayService.bnplCheckAccepted,
                               checkTapped: { [weak self] value in
+            self?.partPayService.bnplCheckAccepted = value
             self?.analytics.send(EventBuilder()
                 .with(base: .Touch)
-                .with(value: "ApproveBNPL")
+                .with(value: .approveBNPL)
                 .build(), on: self?.view?.contentParrent?.analyticsName ?? .None)
-            self?.partPayService.bnplCheckAccepted = value
         },
                               textTapped: { [weak self] link in
             DispatchQueue.main.async {
@@ -100,7 +106,7 @@ final class PartPayModulePresenter: NSObject, PartPayModulePresenting {
     private func agreementTextTapped(link: String) {
         analytics.send(EventBuilder()
             .with(base: .Touch)
-            .with(value: "AgreementView")
+            .with(value: .agreementView)
             .build(), on: view?.contentParrent?.analyticsName ?? .None)
         router.presentWebView(with: link)
     }

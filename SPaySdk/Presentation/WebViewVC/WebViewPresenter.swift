@@ -41,7 +41,7 @@ final class WebViewPresenter: WebViewPresenting {
     func backButtonTapped() {
         analytics.send(EventBuilder()
             .with(base: .Touch)
-            .with(value: "Back")
+            .with(value: .back)
             .build(), on: view?.analyticsName ?? .None)
         view?.contentNavigationController?.popViewController(animated: true)
     }
@@ -49,7 +49,7 @@ final class WebViewPresenter: WebViewPresenting {
     func shareButtonTapped() {
         analytics.send(EventBuilder()
             .with(base: .Touch)
-            .with(value: "Share")
+            .with(value: MetricsValue(rawValue: "Share"))
             .build(), on: view?.analyticsName ?? .None)
         shareUrlAddress()
     }
