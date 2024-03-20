@@ -111,16 +111,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     
     private func setupPublishers() {
         
-        partPayService.bnplplanSelectedPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] bnplplanSelected in
-                if bnplplanSelected {
-                    self?.view?.setPayButtonTitle(Strings.PartPay.Active.Button.title)
-                } else {
-                    self?.view?.setPayButtonTitle(Strings.Common.Pay.title)
-                }
-            }
-            .store(in: &cancellable)
+        view?.setPayButtonTitle(Strings.Common.Pay.title)
     }
     
     private func configViews() {

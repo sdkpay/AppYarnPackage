@@ -99,7 +99,7 @@ platform :ios do
     status = (options[:success] ? "✅" : "❌")
       
     message = "
-<i>@lessov @DKovchina #сборка🚀</i>
+<i>@lessov @DKovchina @Alisa_Umnikova #сборка🚀</i>
 <b><ins>Новая сборка:</ins></b>
     <i>Проект: </i><code>#{ENV["TARGET_NAME"]}</code>
     <i>Статус: </i>#{status}
