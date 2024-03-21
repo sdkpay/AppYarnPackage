@@ -46,25 +46,6 @@ public final class SPay: NSObject {
     }
     
     /**
-     Метод получения PaymentToken
-     */
-    @objc
-    public static func getPaymentToken(with viewController: UIViewController,
-                                       with paymentTokenRequest: SPaymentTokenRequest,
-                                       completion: @escaping (_ state: SPayTokenState, _ info: SPaymentTokenResponseModel) -> Void) {
-        payService?.getPaymentToken(with: viewController, with: paymentTokenRequest, completion: completion)
-    }
-    
-    /**
-     Метод для оплаты
-     */
-    @objc
-    public static func pay(with paymentRequest: SPaymentRequest,
-                           completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
-        payService?.pay(with: paymentRequest, completion: completion)
-    }
-    
-    /**
      Единый метод для оплаты
      */
     @objc
@@ -93,16 +74,7 @@ public final class SPay: NSObject {
                                       completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
         payService?.payWithPartPay(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }
-    
-    /**
-     Метод для завершения оплаты и закрытия окна SDK
-     */
-    @objc
-    public static func completePayment(paymentState: SPayState,
-                                       completion: @escaping () -> Void) {
-        payService?.completePayment(paymentSuccess: paymentState, completion: completion)
-    }
-    
+
     /**
      Метод для авторизации банка необходимо интегрировать в AppDelegate
      */

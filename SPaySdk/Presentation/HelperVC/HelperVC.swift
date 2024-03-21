@@ -99,10 +99,13 @@ final class HelperVC: ContentVC, IHelperVC {
     }()
     
     private let presenter: HelperPresenting
+    private let analytics: AnalyticsManager
     
-    init(_ presenter: HelperPresenting) {
+    init(_ presenter: HelperPresenting, analytics: AnalyticsManager) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .HelpersView
     }
     
     required init?(coder: NSCoder) {
@@ -118,11 +121,13 @@ final class HelperVC: ContentVC, IHelperVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        analytics.sendAppeared(view: self)
         SBLogger.log(.didAppear(view: self))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        analytics.sendDisappeared(view: self)
         SBLogger.log(.didDissapear(view: self))
     }
     

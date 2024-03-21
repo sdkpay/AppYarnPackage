@@ -37,7 +37,7 @@ final class HelperAssembly {
     }
 
     private func moduleView(presenter: HelperPresenter) -> ContentVC & IHelperVC {
-        let view = HelperVC(presenter)
+        let view = HelperVC(presenter, analytics: locator.resolve())
         presenter.view = view
         return view
     }

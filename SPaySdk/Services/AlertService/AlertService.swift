@@ -332,6 +332,7 @@ final class DefaultAlertService: AlertService {
         let result = await withCheckedContinuation({( inCont: CheckedContinuation<AlertResult, Never>) -> Void in
             
             let alertVC = AlertAssembly().createModule(alertModel: model,
+                                                       analytics: analytics,
                                                        liveCircleManager: self.liveCircleManager) { result in
                 inCont.resume(with: .success(result))
                 return

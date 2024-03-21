@@ -208,65 +208,10 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         switch values.mode {
         case .Auto:
             autoPay()
-        case .Manual:
-            switch values.configMethod {
-            case .OrderId:
-                getPaymentToken()
-            case .Purchase:
-                paymentTokenWithPerchase()
-            }
         case .WithoutRefresh:
             payWithoutRefresh()
         case .PartPay:
             bnplPay()
-        }
-    }
-    
-    private func getPaymentToken() {
-        let request = SPaymentTokenRequest(merchantLogin: values.merchantLogin,
-                                           orderNumber: "12312312",
-                                           orderId: values.orderId ?? "",
-                                           redirectUri: "testapp://test")
-        SPay.getPaymentToken(with: self, with: request) { state, info in
-            switch state {
-            case .success:
-                self.showResult(title: "Отдали мерчу success", message: info.error ?? "")
-                guard let paymentToken = info.paymentToken else { return }
-                self.pay(with: paymentToken)
-            case .cancel:
-                self.showResult(title: "Отдали мерчу cancel", message: info.error ?? "")
-            case .error:
-                // Обработка ошибки
-                self.showResult(title: "Отдали мерчу error", message: info.error ?? "")
-            @unknown default:
-                fatalError()
-            }
-        }
-    }
-    
-    private func paymentTokenWithPerchase() {
-        let request = SPaymentTokenRequest(redirectUri: "testapp://test",
-                                           merchantLogin: values.merchantLogin,
-                                           amount: values.cost,
-                                           currency: String(values.currency),
-                                           mobilePhone: nil,
-                                           orderNumber: values.orderNumber ?? "",
-                                           recurrentExipiry: "20230821",
-                                           recurrentFrequency: 2)
-        SPay.getPaymentToken(with: self, with: request) { state, info in
-            switch state {
-            case .success:
-                self.showResult(title: "Отдали мерчу success", message: info.error ?? "")
-                guard let paymentToken = info.paymentToken else { return }
-                self.pay(with: paymentToken)
-            case .cancel:
-                self.showResult(title: "Отдали мерчу cancel", message: info.error ?? "")
-            case .error:
-                // Обработка ошибки
-                self.showResult(title: "Отдали мерчу error", message: info.error ?? "")
-            @unknown default:
-                fatalError()
-            }
         }
     }
     
@@ -339,32 +284,6 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
             @unknown default:
                 self.showResult(title: "Отдали мерчу @unknown default", message: info)
             }
-        }
-    }
-    
-    private func pay(with token: String) {
-        let request = SPaymentRequest(orderId: values.orderId ?? "",
-                                      paymentToken: token)
-        SPay.pay(with: request) { state, info  in
-            switch state {
-            case .success:
-                self.showResult(title: "Отдали мерчу success", message: info)
-                print("Успешный результат")
-            case .waiting:
-                self.showResult(title: "Отдали мерчу waiting", message: info)
-            case .error:
-                self.showResult(title: "Отдали мерчу error", message: info)
-            case .cancel:
-                self.showResult(title: "Отдали мерчу cancel", message: info)
-            @unknown default:
-                self.showResult(title: "Отдали мерчу @unknown default", message: info)
-            }
-        }
-    }
-    
-    private func completePayment() {
-        SPay.completePayment(paymentState: .success) {
-            // Действия после закрытия шторки
         }
     }
 }

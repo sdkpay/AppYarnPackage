@@ -84,10 +84,13 @@ final class AlertVC: ContentVC, IAlertVC {
     }()
     
     private let presenter: AlertPresenting
+    private let analytics: AnalyticsManager
     
-    init(_ presenter: AlertPresenting) {
+    init(_ presenter: AlertPresenting, analytics: AnalyticsManager) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .StatusView
     }
 
     required init?(coder: NSCoder) {
@@ -150,12 +153,14 @@ final class AlertVC: ContentVC, IAlertVC {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        analytics.sendAppeared(view: self)
         SBLogger.log(.didAppear(view: self))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
+        analytics.sendDisappeared(view: self)
         contentNavigationController?.setBackground(Asset.Image.background.image)
     }
     

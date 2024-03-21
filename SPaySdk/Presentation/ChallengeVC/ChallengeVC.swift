@@ -155,12 +155,12 @@ final class ChallengeVC: ContentVC, IChallengeVC {
         super.viewDidAppear(animated)
         SBLogger.log(.didAppear(view: self))
         analytics.sendAppeared(view: self)
-        SBLogger.log(.didDissapear(view: self))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
+        analytics.sendDisappeared(view: self)
     }
     
     func configView(header: String?, 

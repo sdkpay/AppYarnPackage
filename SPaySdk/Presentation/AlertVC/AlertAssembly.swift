@@ -10,12 +10,13 @@ import UIKit
 final class AlertAssembly {
     
     func createModule(alertModel: AlertViewModel,
+                      analytics: AnalyticsManager,
                       liveCircleManager: LiveCircleManager,
                       alertResultAction: @escaping AlertResultAction) -> ContentVC {
         let presenter = modulePresenter(alertModel: alertModel,
                                         liveCircleManager: liveCircleManager,
                                         alertResultAction: alertResultAction)
-        let contentView = moduleView(presenter: presenter)
+        let contentView = moduleView(presenter: presenter, analytics: analytics)
         presenter.view = contentView
         return contentView
     }
@@ -27,8 +28,8 @@ final class AlertAssembly {
         return presenter
     }
     
-    private func moduleView(presenter: AlertPresenter) -> ContentVC & IAlertVC {
-        let view = AlertVC(presenter)
+    private func moduleView(presenter: AlertPresenter, analytics: AnalyticsManager) -> ContentVC & IAlertVC {
+        let view = AlertVC(presenter, analytics: analytics)
         presenter.view = view
         return view
     }
