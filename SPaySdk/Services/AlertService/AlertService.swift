@@ -189,7 +189,7 @@ final class DefaultAlertService: AlertService {
                               with: bonuses,
                               state: .success,
                               buttons: [
-                                AlertButtonModel(title: "Закрыть",
+                                AlertButtonModel(title: Strings.Alert.Button.Close.title,
                                                  type: .full,
                                                  neededResult: .cancel,
                                                  action: {})
@@ -206,7 +206,12 @@ final class DefaultAlertService: AlertService {
                               with: Strings.Alert.Connect.title(card),
                               with: nil,
                               state: .success,
-                              buttons: [])
+                              buttons: [
+                                AlertButtonModel(title: Strings.Alert.Button.Close.title,
+                                                 type: .full,
+                                                 neededResult: .cancel,
+                                                 action: {})
+                                ])
         case .defaultError:
             
             event.with(value: MetricsValue(rawValue: "StatusErrorView"))
@@ -218,7 +223,12 @@ final class DefaultAlertService: AlertService {
                                   with: Strings.Error.Partpay.title,
                                   with: Strings.Error.Partpay.subtitle,
                                   state: .warning,
-                                  buttons: [])
+                                  buttons: [
+                                    AlertButtonModel(title: Strings.Alert.Button.Return.title,
+                                                     type: .info,
+                                                     neededResult: .cancel,
+                                                     action: {})
+                                  ])
             }
             
             guard alertViewNeeded else { return AlertResult.approve }
@@ -227,7 +237,12 @@ final class DefaultAlertService: AlertService {
                               with: Strings.Alert.Error.Main.title,
                               with: Strings.Alert.Error.Main.subtitle,
                               state: .warning,
-                              buttons: [])
+                              buttons: [
+                                AlertButtonModel(title: Strings.Alert.Button.Return.title,
+                                                 type: .info,
+                                                 neededResult: .cancel,
+                                                 action: {})
+                              ])
         case .noInternet:
             
             event.with(value: MetricsValue(rawValue: "StatusErrorView"))
@@ -237,7 +252,7 @@ final class DefaultAlertService: AlertService {
                                              type: .blackBack,
                                              neededResult: .approve,
                                              action: nil)
-            let cancelButton = AlertButtonModel(title: Strings.Common.Cancel.title,
+            let cancelButton = AlertButtonModel(title: Strings.Alert.Button.Return.title,
                                                 type: .info,
                                                 neededResult: .cancel,
                                                 action: nil)
@@ -260,7 +275,8 @@ final class DefaultAlertService: AlertService {
                                                  neededResult: .approve,
                                                  action: nil)
             let returnButton = AlertButtonModel(title: Strings.Common.Return.title,
-                                                type: .info, neededResult: .cancel,
+                                                type: .info,
+                                                neededResult: .cancel,
                                                 action: nil)
             return await show(on: view,
                               with: Strings.Alert.Error.Main.title,

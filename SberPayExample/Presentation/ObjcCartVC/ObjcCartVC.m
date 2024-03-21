@@ -80,9 +80,6 @@
 }
 
 -(void)pay {
-    SPaymentRequest *request = [[SPaymentRequest alloc] initWithOrderId: @""
-                                                          paymentToken: @""];
-
 }
 
 -(void)fullPay {
