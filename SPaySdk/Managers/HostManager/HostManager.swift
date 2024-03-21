@@ -72,8 +72,6 @@ final class DefaultHostManager: HostManager {
             switch buildSettings.networkState {
             case .Mocker:
                 return Host.mocker.url
-            case .Ift:
-                return URL(string: UserDefaults.schemas?.getIpUrl ?? "") ?? Host.safepayonlineIft.url
             default:
                 return URL(string: UserDefaults.schemas?.getIpUrl ?? "") ?? Host.safepayonlineIft.url
             }
