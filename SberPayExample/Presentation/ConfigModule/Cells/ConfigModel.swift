@@ -113,4 +113,8 @@ struct ConfigValues {
     @UserDefault(key: CellType.newDebitCard.rawValue,
                  defaultValue: true)
     var newDebitCard: Bool
+    
+    @UserDefault(key: "DebugLogLevel",
+                 defaultValue: DebugLogLevel.allCases)
+    var debugLogLevels: [DebugLogLevel]
 }

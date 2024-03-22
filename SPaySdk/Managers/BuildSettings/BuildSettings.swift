@@ -27,7 +27,7 @@ protocol BuildSettings {
     var networkState: NetworkState { get }
     var ssl: Bool { get }
     var refresh: Bool { get }
-    func setConfig(networkState: NetworkState, ssl: Bool, refresh: Bool)
+    func setConfig(networkState: NetworkState, ssl: Bool, refresh: Bool, debugLogLevel: [DebugLogLevel])
 }
 
 final class DefaultBuildSettings: BuildSettings {
@@ -35,9 +35,11 @@ final class DefaultBuildSettings: BuildSettings {
     private(set) var ssl = true
     private(set) var refresh = true
     
-    func setConfig(networkState: NetworkState, ssl: Bool, refresh: Bool) {
+    func setConfig(networkState: NetworkState, ssl: Bool, refresh: Bool, debugLogLevel: [DebugLogLevel]) {
         self.networkState = networkState
         self.ssl = ssl
         self.refresh = refresh
+        
+        SBLogger.logLevels = debugLogLevel
     }
 }

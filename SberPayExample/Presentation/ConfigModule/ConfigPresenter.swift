@@ -38,6 +38,7 @@ protocol ConfigPresenterProtocol {
     func removeKeychainTapped()
     func removeSavedBank()
     func generateOrderIdTapped()
+    func configLogs()
     func refreshData()
     func viewDidLoad()
     var sectionCount: Int { get }
@@ -74,21 +75,12 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             case .OrderId:
                 return [
                     .mode,
-                    .configMethod,
                     .merchantLogin,
                     .orderId,
                     .orderNumber
                 ]
             case .Purchase:
-                return [
-                    .mode,
-                    .configMethod,
-                    .merchantLogin,
-                    .orderId,
-                    .orderNumber,
-                    .cost,
-                    .currency
-                ]
+                return []
             }
         case .script:
             return [
@@ -242,10 +234,16 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         case .SandboxRealBankApp:
             environment = .sandboxRealBankApp
         }
-        SPay.debugConfig(network: configValues.network, ssl: configValues.ssl, refresh: configValues.refresh)
+        
+        SPay.debugConfig(network: configValues.network,
+                         ssl: configValues.ssl,
+                         refresh: configValues.refresh,
+                         debugLogLevel: configValues.debugLogLevels)
+        
         SPay.setup(bnplPlan: configValues.bnpl,
                    resultViewNeeded: configValues.resultViewNeeded,
                    helpers: configValues.helpers,
+                   needLogs: true,
                    helperConfig: SBHelperConfig(sbp: configValues.sbp, creditCard: configValues.newCreditCard),
                    environment: environment) { error in
             self.view?.stopLoader()
@@ -317,6 +315,18 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         let defaults = UserDefaults.standard
         defaults.removeObject(forKey: "selectedBank")
         view?.showAlert(with: "Removed selectedBank")
+    }
+    
+    func configLogs() {
+        
+        let vc = CustomAlertVC(with: "Log levels",
+                               values: DebugLogLevel.allCases.map({ $0.rawValue }),
+                               selected: configValues.debugLogLevels.map({ $0.rawValue })) { selected in
+            self.configValues.debugLogLevels = selected.map({ DebugLogLevel(rawValue: $0) ?? .defaultLevel })
+        }
+        vc.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+        vc.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+        view?.present(vc, animated: true)
     }
     
     @available(iOS 13.0, *)

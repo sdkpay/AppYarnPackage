@@ -120,10 +120,10 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
     private func addMenu() {
         var menuItems: [UIAction] {
             return [
-                UIAction(title: "Generate order",
+                UIAction(title: "Config logs",
                          image: UIImage(systemName: "network"),
                          handler: { _ in
-                             self.presenter.generateOrderIdTapped()
+                             self.presenter.configLogs()
                          }),
                 UIAction(title: "Refresh data",
                          image: UIImage(systemName: "arrow.clockwise"),

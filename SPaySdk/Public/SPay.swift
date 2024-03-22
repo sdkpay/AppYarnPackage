@@ -21,8 +21,8 @@ public final class SPay: NSObject {
     
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     @objc
-    public static func setup(bnplPlan: Bool = false,
-                             resultViewNeeded: Bool = false,
+    public static func setup(bnplPlan: Bool = true,
+                             resultViewNeeded: Bool = true,
                              helpers: Bool = true,
                              needLogs: Bool = true,
                              helperConfig: SBHelperConfig = SBHelperConfig(),
@@ -87,8 +87,11 @@ public final class SPay: NSObject {
      Метод для установки моков, только для тестовых версий
      */
 #if SDKDEBUG
-    public static func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool) {
-        payService?.debugConfig(network: network, ssl: ssl, refresh: refresh)
+    public static func debugConfig(network: NetworkState,
+                                   ssl: Bool,
+                                   refresh: Bool,
+                                   debugLogLevel: [DebugLogLevel]) {
+        payService?.debugConfig(network: network, ssl: ssl, refresh: refresh, debugLogLevel: debugLogLevel)
     }
 #endif
 }

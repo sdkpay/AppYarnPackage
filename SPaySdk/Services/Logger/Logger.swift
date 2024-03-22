@@ -32,6 +32,16 @@ enum LogLevel {
     case debug(level: DebugLogLevel)
 }
 
+#if SDKDEBUG
+public enum DebugLogLevel: String, CaseIterable, Codable {
+    case bank = "Auth"
+    case network = "Network"
+    case lifeCycle = "LifeCycle"
+    case analytics = "Analytics"
+    case storage = "Storage"
+    case defaultLevel = "Default"
+}
+#else
 enum DebugLogLevel: String, CaseIterable {
     case bank = "Auth"
     case network = "Network"
@@ -40,11 +50,16 @@ enum DebugLogLevel: String, CaseIterable {
     case storage = "Storage"
     case defaultLevel = "Default"
 }
+#endif
 
 enum SBLogger {
+    
     static var dateString = ""
     static var writeLogs = false
     static var secureLogs = true
+    
+    static var logLevels: [DebugLogLevel] = DebugLogLevel.allCases
+    
     static var logFileName = "SDKv\(Bundle.appVersion)(\(Bundle.appBuild)) \(SBLogger.dateString).txt"
     
     private static var logger = Log()
@@ -64,6 +79,7 @@ enum SBLogger {
             NSLog(massage)
         case let .debug(level: level):
             guard writeLogs else { return }
+            guard logLevels.contains(level) else { return }
             print(massage)
             print("|\(level.rawValue) \(Date()) \n\(massage)", to: &logger)
         }
