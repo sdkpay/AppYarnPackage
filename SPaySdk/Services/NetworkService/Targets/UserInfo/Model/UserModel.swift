@@ -57,7 +57,7 @@ struct OrderAmount: Codable {
 // MARK: - PaymentToolInfo
 struct PaymentToolInfo: Codable {
     let paymentTool: [PaymentTool]
-    let additionalCards, isSPPaymentToolsNeedUpdate: Bool
+    let additionalCards, isSPPaymentToolsNeedUpdate: Bool?
 
     enum CodingKeys: String, CodingKey {
         case paymentTool = "paymentToolList", additionalCards
