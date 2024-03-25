@@ -94,6 +94,7 @@ enum AlertType {
     case partPayError
     case tryingError
     case noMoney
+    case serverError(subtitle: String)
 }
 
 final class AlertServiceAssembly: Assembly {
@@ -315,6 +316,21 @@ final class DefaultAlertService: AlertService {
             return await show(on: view,
                               with: Strings.Error.NoMoney.title,
                               with: Strings.Error.NoMoney.subtitle,
+                              state: .failure,
+                              buttons: [
+                                cancel
+                              ])
+        case let .serverError(subtitle: subtitle):
+            event.with(value: MetricsValue(rawValue: "StatusErrorView"))
+            eventValue[.State] = "TimeOutRetry"
+            
+            let cancel = AlertButtonModel(title: Strings.Common.Return.title,
+                                          type: .cancel,
+                                          neededResult: .cancel,
+                                          action: nil)
+            return await show(on: view,
+                              with: Strings.Alert.Error.Main.title,
+                              with: subtitle,
                               state: .failure,
                               buttons: [
                                 cancel

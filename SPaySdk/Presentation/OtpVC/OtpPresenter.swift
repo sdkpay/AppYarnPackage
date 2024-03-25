@@ -86,6 +86,18 @@ final class OtpPresenter: OtpPresenting {
                 try await otpService.creteOTP()
                 await view?.hideLoading(animate: true)
             } catch {
+                
+                if let error = error as? OTPError {
+                    
+                    if let errorMessage = error.errorMessage {
+                        
+                        await alertService.show(on: view, type: .serverError(subtitle: errorMessage))
+                        dismissWithError(SDKError(.system))
+                    } else {
+                        await alertService.show(on: view, type: .defaultError)
+                        dismissWithError(SDKError(.system))
+                    }
+                }
                 if let error = error as? SDKError {
                     
                     self.completionManager.completeWithError(error)
@@ -102,10 +114,6 @@ final class OtpPresenter: OtpPresenting {
                         case .cancel:
                             dismissWithError(error)
                         }
-                    } else {
-                        
-                        await alertService.show(on: view, type: .defaultError)
-                        dismissWithError(error)
                     }
                 } else {
                     self.completionManager.dismissCloseAction(view)

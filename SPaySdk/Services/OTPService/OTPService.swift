@@ -7,6 +7,23 @@
 
 import Foundation
 
+struct OTPError: Error {
+    
+    let code: String
+    let errorMessage: String?
+    
+    init(code: String, errorMessage: String?) {
+        self.code = code
+        self.errorMessage = errorMessage
+    }
+    
+    init?(model: OTPModel) {
+        
+        guard model.errorCode != "0" else { return nil }
+        self.init(code: model.errorCode, errorMessage: model.errorMessage)
+    }
+}
+
 final class OTPServiceAssembly: Assembly {
     
     var type = ObjectIdentifier(OTPService.self)
@@ -58,6 +75,10 @@ final class DefaultOTPService: OTPService, ResponseDecoder {
                                                                          paymentId: userService.selectedCard?.paymentID ?? 0),
                                                   to: OTPModel.self)
         self.otpModel = otpResult
+        
+        if let error = OTPError(model: otpResult) {
+            throw error
+        }
     }
     
     func confirmOTP(code: String, cardNumber: String) async throws {
