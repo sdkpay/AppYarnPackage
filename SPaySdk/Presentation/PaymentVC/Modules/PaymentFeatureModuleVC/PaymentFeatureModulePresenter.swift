@@ -264,20 +264,12 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
     }
     
     private func appAuth() {
-
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(applicationDidBecomeActive),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
         
         Task {
             do {
                 try await authService.appAuth()
                 
                 await self.view?.contentParrent?.showLoading()
-                await NotificationCenter.default.removeObserver(self,
-                                                                name: UIApplication.didBecomeActiveNotification,
-                                                                object: nil)
                 
                 repeatAuth()
             } catch {

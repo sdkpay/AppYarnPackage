@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class AuthServiceAssembly: Assembly {
     
@@ -63,7 +64,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private var analytics: AnalyticsManager
     private let network: NetworkService
     private let sdkManager: SDKManager
-    private let bankAppManager: BankAppManager
+    private var bankAppManager: BankAppManager
     private var authManager: AuthManager
     private var buildSettings: BuildSettings
     private var partPayService: PartPayService
@@ -76,6 +77,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private let seamlessAuthService: SeamlessAuthService
     private var appAuthCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
+    
+    private var cancellable: Cancellable?
     
     var bankCheck = false
     
@@ -224,7 +227,9 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     
     @MainActor
     func appAuth() async throws {
+        
         SBLogger.logThread(obj: self)
+        
         self.authManager.authMethod = .bank
         
         analytics.send(EventBuilder()
@@ -246,6 +251,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         
        SBLogger.logRequestToSbolStarted(link)
         
+        addOnScreenNotification()
+        
        let result = await UIApplication.shared.open(link)
         
         switch result {
@@ -256,13 +263,15 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     switch result {
                     case .success:
                         inCont.resume()
+                        self.removeOnScreenNotification()
                     case .failure(let error):
+                        self.removeOnScreenNotification()
                         inCont.resume(throwing: error)
                     }
                 }
             })
         case false:
-            
+            removeOnScreenNotification()
             throw SDKError(.bankAppNotFound)
         }
     }
@@ -381,5 +390,25 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         } else {
             return []
         }
+    }
+    
+    private func addOnScreenNotification() {
+    
+        cancellable = NotificationCenter.default
+            .publisher(for: UIApplication.didBecomeActiveNotification)
+            .sink { _ in
+                
+                self.analytics.send(EventBuilder()
+                    .with(base: .LC)
+                    .with(value: .bankAppAuth)
+                    .with(postState: .Fail)
+                    .build())
+                self.bankAppManager.selectedBank = nil
+                self.appAuthCompletion?(.failure(SDKError(.bankAppError)))
+        }
+    }
+    
+    private func removeOnScreenNotification() {
+        cancellable?.cancel()
     }
 }

@@ -61,6 +61,12 @@ final class DefaultBankAppManager: BankAppManager {
     
     func removeSavedBank() {
         SBLogger.log("🗑 Remove value for key: selectedBank")
+        analytics.send(EventBuilder()
+            .with(base: .ST)
+            .with(action: .Remove)
+            .with(value: .bankApp)
+            .build(),
+                       values: [.Value: _selectedBank?.name ?? "None"])
         UserDefaults.removeValue(for: .selectedBank)
     }
     

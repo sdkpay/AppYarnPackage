@@ -75,23 +75,15 @@ final class AuthPresenter: AuthPresenting {
     }
     
     deinit {
-        removeObserver()
         SBLogger.log(.stop(obj: self))
     }
     
     func viewDidLoad() {
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(applicationDidBecomeActive),
-                                               name: UIApplication.didBecomeActiveNotification,
-                                               object: nil)
+
         startAuth()
     }
     
-    func viewDidDisappear() {
-        
-        NotificationCenter.default.removeObserver(self, name: UIApplication.didBecomeActiveNotification, object: nil)
-    }
+    func viewDidDisappear() {}
     
     private func startAuth() {
         
@@ -122,7 +114,6 @@ final class AuthPresenter: AuthPresenting {
     
     @MainActor
     private func showBanksStack() {
-        removeObserver()
         bankManager.removeSavedBank()
         router.presentBankAppPicker {
             Task {
@@ -185,18 +176,15 @@ final class AuthPresenter: AuthPresenting {
             do {
                 SBLogger.logThread(obj: self)
                 try await authService.appAuth()
-                removeObserver()
                 SBLogger.logThread(obj: self)
                 await auth()
             } catch {
-                if let error = error as? SDKError {
-                    bankManager.selectedBank = nil
-                    await showBanksStack()
-                    if error.represents(.bankAppNotFound) {
-                        await view?.hideLoading()
-                    } else {
-                        validateAuthError(error: error)
-                    }
+                bankManager.selectedBank = nil
+                await showBanksStack()
+                if error.sdkError.represents(.bankAppNotFound) {
+                    await view?.hideLoading()
+                } else {
+                    validateAuthError(error: error.sdkError)
                 }
             }
         }
@@ -386,11 +374,5 @@ final class AuthPresenter: AuthPresenting {
                 self.completionManager.dismissCloseAction(view)
             }
         }
-    }
-    
-    private func removeObserver() {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: UIApplication.didBecomeActiveNotification,
-                                                  object: nil)
     }
 }

@@ -30,6 +30,7 @@ enum MetricsActionKey: String {
     
     case Get
     case Save
+    case Remove
     
     case Start
     case End
