@@ -39,6 +39,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) Boolean useAdvertiserID;
 
 /**
+ * Enables bluetooth metrics poll, like: BluetoothState and BluetoothDevices.
+ * When enabled user receives message with permission request in runtime. When
+ * SKD address to bluetooth metrics.
+ */
+@property (nonatomic) Boolean useBluetoothMetrics;
+
+/**
+ * Fetching or not fonts list. FontInfo:FontFamilyNames and
+ * FontInfo:FontNamesForFamilyName parameters.
+ */
+@property (nonatomic) Boolean fetchFontsList;
+
+/**
+ * Fetching or not all available locale identifiers list.
+ * LocaleInfo:AvailableLocaleIdentifiers  paramter.
+ */
+@property (nonatomic) Boolean fetchLocaleIdentifiersList;
+
+/**
  * Dictionary with metric patches.
  */
 @property (copy, nonatomic) NSDictionary *metricPatches;

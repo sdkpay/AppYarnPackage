@@ -63,6 +63,7 @@ typedef NS_ENUM(int, FPMetric) {
 	FPMetricPhoneCallDirection, /**< Phone call direction. Incoming, outgoing ets*/
 	FPMetricPhoneCallDuration, /**< Phone call duration. Incoming, outgoing ets*/
 	FPMetricPhoneCallType, /**< Phone call type. Voip, cell ets*/
+	FPMetricPhoneCallActDur, /**< Active call duration*/
 	
 	FPMetricAccessibilityServices, /**<AccessibilityServices info */
 	FPMetricVoiceOver, /**<Detect VoiceOver */
@@ -78,12 +79,50 @@ typedef NS_ENUM(int, FPMetric) {
 	FPMetricConnectedDevicePortId, /**<Connected device unique port id */
 	FPMetricConnectedDeviceName, /**<Connected device name */
 	
+	FPMetricBluetoothState, /**<Bluetooth state.*/
+	FPMetricBluetoothDevices, /**<Collection of connected bluetooth devices.*/
+	
 	FPMetricVpnConnection, /**<Detect VPN connection.*/
 	
 	FPMetricOtherAudioPlaying, /**<Check if other audio playing.*/
 
 	FPMetricScreenshotCounter, /**<Counts screenshots.*/
-	
+
+	FPMetricHoursSinceAirdroidInstall, /**< Hours since app Airdroid installed*/
+	FPMetricHoursSinceAircastInstall, /**< Hours since app Aircast installed*/
+	FPMetricHoursSinceAirmirrorInstall, /**< Hours since app AirMirror installed*/
+	FPMetricHoursSinceAnyDeskInstall, /**< Hours since app Anydesk installed*/
+	FPMetricHoursSinceAPowerMirrorInstall, /**< Hours since app APowerMirror installed*/
+	FPMetricHoursSinceDiscordInstall, /**< Hours since app Discord installed*/
+	FPMetricHoursSinceISLLightInstall, /**< Hours since app ISLLight installed*/
+	FPMetricHoursSinceLogMeinInstall, /**< Hours since app LogMein installed*/
+	FPMetricHoursSinceAirdroidRemoteSupportInstall, /**< Hours since app Support installed*/
+	FPMetricHoursSinceZoomInstall, /**< Hours since app Zoom installed*/
+	FPMetricHoursSinceSBPaySInstall, /**< Hours since app SB Pay installed*/
+	FPMetricHoursSinceSbpPaySInstall, /**< Hours since app SB Pay installed*/
+	FPMetricHoursSinceSkypeInstall, /**< Hours since app Skype installed*/
+
+	FPMetricAppProcStartTime, /**< Application process start time*/
+	FPMetricAppDurationStartTime, /**< Application duration start time. Time between application process launch
+								   and Fingerprint SDK initialization.*/
+	FPMetricDebugger, /**< Is application being debugged*/
+
+	FPMetricFontInfo, /**< Font information*/
+	FPMetricButtonFontSize, /**< Font default button size*/
+	FPMetricFontFamilyNames, /**< All  font family names*/
+	FPMetricFontNamesForFamilyName, /**< Font names for default font family*/
+	FPMetricLabelFontSize, /**< Label default font size*/
+	FPMetricSmallSystemFontSize, /**< System font small size*/
+	FPMetricSystemFont, /**< System font*/
+	FPMetricSystemFontSize, /**< System font size*/
+
+	FPMetricLocaleInfo, /**< Locale information*/
+	FPMetricAvailableLocaleIdentifiers, /**< List of available locales*/
+	FPMetricPreferredLanguages, /**< List of preferred languages*/
+	FPMetricSystemLocale, /**< System locale*/
+
+	FPMetricUserInterfaceIdiom, /**< The style of interface to use on the current device.*/
+
 	FPMetricEmpty /**< Empty metric. Used when no empty metric needed.*/
 };
 
