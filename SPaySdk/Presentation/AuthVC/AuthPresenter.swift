@@ -179,9 +179,10 @@ final class AuthPresenter: AuthPresenting {
                 SBLogger.logThread(obj: self)
                 await auth()
             } catch {
-                bankManager.selectedBank = nil
-                await showBanksStack()
-                if error.sdkError.represents(.bankAppNotFound) {
+                
+                if error.sdkError.represents(.bankAppNotFound)
+                    || error.sdkError.represents(.bankAppError) {
+                    await showBanksStack()
                     await view?.hideLoading()
                 } else {
                     validateAuthError(error: error.sdkError)

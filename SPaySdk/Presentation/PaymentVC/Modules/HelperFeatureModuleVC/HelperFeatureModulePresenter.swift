@@ -150,7 +150,9 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
             } catch {
                 if let error = error as? SDKError {
                     
-                    if error.represents(.noData) {
+                    if error.represents(.noData)
+                        || error.represents(.bankAppError)
+                        || error.represents(.bankAppNotFound) {
                         
                         await MainActor.run {
                             router.presentBankAppPicker {
