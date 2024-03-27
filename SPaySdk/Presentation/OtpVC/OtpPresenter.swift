@@ -78,7 +78,7 @@ final class OtpPresenter: OtpPresenting {
         setState(.waiting)
         view?.setOtpTextFieldState(.empty)
         view?.setOtpError(nil)
-
+        
         Task {
             do {
                 
@@ -86,37 +86,22 @@ final class OtpPresenter: OtpPresenting {
                 try await otpService.creteOTP()
                 await view?.hideLoading(animate: true)
             } catch {
-                
-                if let error = error as? OTPError {
+                if error.sdkError.represents(.noInternetConnection) {
+                    let result = await alertService.show(on: view, type: .noInternet)
                     
-                    if let errorMessage = error.errorMessage {
-                        
-                        await alertService.show(on: view, type: .serverError(subtitle: errorMessage))
-                        dismissWithError(SDKError(.system))
-                    } else {
-                        await alertService.show(on: view, type: .defaultError)
-                        dismissWithError(SDKError(.system))
+                    switch result {
+                    case .approve:
+                        createOTP()
+                    case .cancel:
+                        dismissWithError(error.sdkError)
                     }
-                }
-                if let error = error as? SDKError {
-                    
-                    self.completionManager.completeWithError(error)
-                    
-                    await view?.hideLoading(animate: true)
-                    
-                    if error.represents(.noInternetConnection) {
-                        
-                        let result = await alertService.show(on: view, type: .noInternet)
-                        
-                        switch result {
-                        case .approve:
-                            createOTP()
-                        case .cancel:
-                            dismissWithError(error)
-                        }
-                    }
+                } else if !error.sdkError.description.isEmpty {
+                    await alertService.show(on: view,
+                                            type: .serverError(subtitle: error.sdkError.description))
+                    dismissWithError(SDKError(.system))
                 } else {
-                    self.completionManager.dismissCloseAction(view)
+                    await alertService.show(on: view, type: .defaultError)
+                    dismissWithError(SDKError(.system))
                 }
             }
         }
