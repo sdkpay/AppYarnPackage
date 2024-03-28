@@ -9,7 +9,7 @@
 // Payment
 "noCards.title" = "Нет карт для оплаты";
 "noCards.subtitle" = "Выберите другой способ";
-"cards.compoundWallet.title" = " c %@";
+"cards.compoundWallet.title" = " и ещё %@";
 "part.subtitile" = "из %@";
 "part.commission.subtitile" = " (с комиссией %@)";
 "part.commission.subtitile" = " (с комиссией %@)";

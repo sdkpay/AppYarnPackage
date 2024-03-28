@@ -29,11 +29,7 @@ enum CardModelFactory {
         }
         
         if let count = selectedCard.countAdditionalCards, compoundWalletNeed {
-            subtitle += Strings.Payment.Cards.CompoundWallet.title(String(count).addEnding(ends: [
-                "1": Strings.Payment.Cards.CompoundWallet.one,
-                "234": Strings.Payment.Cards.CompoundWallet.two,
-                "567890": Strings.Payment.Cards.CompoundWallet.two
-            ]))
+            subtitle += Strings.Payment.Cards.CompoundWallet.title(String(count))
         }
 
         return CardModel(iconViewURL: selectedCard.cardLogoURL,

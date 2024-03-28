@@ -71,11 +71,7 @@ final class CardsPresenter: CardsPresenting {
         }
         
         if let count = card.countAdditionalCards, featureToggle.isEnabled(.compoundWallet) {
-            subtitle += Strings.Payment.Cards.CompoundWallet.title(String(count).addEnding(ends: [
-                "1": Strings.Payment.Cards.CompoundWallet.one,
-                "234": Strings.Payment.Cards.CompoundWallet.two,
-                "567890": Strings.Payment.Cards.CompoundWallet.two
-            ]))
+            subtitle += Strings.Payment.Cards.CompoundWallet.title(String(count))
         }
         let bonuses = featureToggle.isEnabled(.spasiboBonuses) ? card.precalculateBonuses : nil
         return CardCellModel(title: title,
