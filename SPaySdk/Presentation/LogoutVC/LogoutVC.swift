@@ -19,7 +19,7 @@ final class LogoutVC: ContentVC, ILogoutVC {
         let imageView = UIImageView()
         imageView.image = UIImage(base64: UserDefaults.images?.logoIcon ?? "")
         imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = Cost.ImageView.cornerRadius
+        imageView.layer.cornerRadius = Cost.ImageView.size.width / 2
         return imageView
     }()
     
