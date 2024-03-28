@@ -7,9 +7,8 @@
 
 import UIKit
 
-private extension MetricsValue {
+extension MetricsValue {
     
-    static let bioAuth = MetricsValue(rawValue: "BioAuth")
     static let card = MetricsValue(rawValue: "Card")
 }
 
@@ -277,7 +276,7 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
                     
                     if error.represents(.noData)
                         || error.represents(.bankAppError)
-                        || error.represents(.bankAppNotFound)  {
+                        || error.represents(.bankAppNotFound) {
                         
                         await MainActor.run {
                             router.presentBankAppPicker {
@@ -293,23 +292,9 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
         }
     }
     
-    @objc
-    private func applicationDidBecomeActive() {
-        // Если пользователь не смог получить обратный редирект
-        // от банковского приложения и перешел самостоятельно
-        
-        Task {
-            await MainActor.run {
-                router.presentBankAppPicker {
-                    self.repeatAuth()
-                }
-            }
-        }
-    }
-    
     private func repeatAuth() {
         Task {
-          
+            
             try await self.authService.auth()
             
             self.authService.bankCheck = true

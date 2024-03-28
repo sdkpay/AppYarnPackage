@@ -111,7 +111,14 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     
     private func setupPublishers() {
         
-        view?.setPayButtonTitle(Strings.Common.Pay.title)
+        if vcMode == .partPay {
+            partPayService.bnplCheckAcceptedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] checkState in
+                self?.view?.setButtonEnabled(checkState)
+            }
+            .store(in: &cancellable)
+        }
     }
     
     private func configViews() {

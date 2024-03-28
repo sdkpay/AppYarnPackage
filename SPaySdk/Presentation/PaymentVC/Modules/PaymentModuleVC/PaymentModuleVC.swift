@@ -15,6 +15,7 @@ private extension CGFloat {
 protocol IPaymentModuleVC { 
     
     func setPayButtonTitle(_ title: String)
+    func setButtonEnabled(_ value: Bool)
 }
 
 final class PaymentModuleVC: ModuleVC, IPaymentModuleVC {
@@ -46,6 +47,10 @@ final class PaymentModuleVC: ModuleVC, IPaymentModuleVC {
     
     func setPayButtonTitle(_ title: String) {
         payButton.setPayTitle(title)
+    }
+    
+    func setButtonEnabled(_ value: Bool) {
+        payButton.isEnabled = value
     }
     
     private func setupUI() {

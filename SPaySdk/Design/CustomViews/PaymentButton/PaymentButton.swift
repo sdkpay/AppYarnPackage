@@ -28,6 +28,21 @@ final class PaymentButton: UIView {
         return view
     }()
     
+    var isEnabled: Bool = true {
+        didSet {
+            backgroundButton.isEnabled = isEnabled
+            backgroundButton.setTitleColor(.textSecondary, for: .disabled)
+            backgroundButton.setTitleColor(Asset.Palette.whiteAlways.color, for: .normal)
+            
+            switch isEnabled {
+            case true:
+                backgroundColor = .main
+            case false:
+                backgroundColor = .backgroundDisabled
+            }
+        }
+    }
+    
     private lazy var logoImageView: UIImageView = {
         let view = UIImageView()
         view.image = UIImage(base64: UserDefaults.images?.logoClear ?? "")

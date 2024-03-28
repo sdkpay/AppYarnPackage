@@ -18,7 +18,7 @@ final class PaymentModuleAssembly {
     func createModule(with mode: PaymentVCMode, router: PaymentRouting) -> ModuleVC {
         
         let presenter = modulePresenter(router, mode: mode)
-        let contentView = moduleView(presenter: presenter)
+        let contentView = moduleView(presenter: presenter, mode: mode)
         presenter.view = contentView
         return contentView
     }
@@ -43,9 +43,16 @@ final class PaymentModuleAssembly {
                                otpService: locator.resolve())
     }
 
-    private func moduleView(presenter: PaymentModulePresenting) -> ModuleVC & IPaymentModuleVC {
+    private func moduleView(presenter: PaymentModulePresenting, mode: PaymentVCMode) -> ModuleVC & IPaymentModuleVC {
         
-        let view = PaymentModuleVC(presenter)
+        var view: ModuleVC & IPaymentModuleVC
+        
+        switch mode {
+        case .partPay:
+            view = PaymentPartPayModuleVC(presenter)
+        default:
+            view = PaymentModuleVC(presenter)
+        }
         presenter.view = view
         return view
     }

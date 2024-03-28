@@ -18,6 +18,8 @@ protocol PaymentRouting: UrlOpenable {
     func presentChallenge(completion: @escaping (SecureChallengeResolution) -> Void)
     func presentWebView(with url: String) 
     func openProfile(with userInfo: UserInfo)
+    @MainActor
+    func presentPartPayPayment()
 }
 
 final class PaymentRouter: PaymentRouting {
@@ -75,6 +77,12 @@ final class PaymentRouter: PaymentRouting {
     @MainActor
     func presentWebView(with url: String) {
         let vc = WebViewAssembly(locator: locator).createModule(with: url)
+        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @MainActor
+    func presentPartPayPayment() {
+        let vc = PaymentMasterAssembly(locator: locator).createModule(with: .partPay)
         viewController?.contentNavigationController?.pushViewController(vc, animated: true)
     }
 }

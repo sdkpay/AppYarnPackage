@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 extension MetricsValue {
     
@@ -27,6 +28,7 @@ final class BankAppManagerAssembly: Assembly {
 protocol BankAppManager {
     
     var selectedBank: BankApp? { get set }
+    var bankAppSavedPublisher: Published<BankApp?>.Publisher { get }
     var avaliableBanks: [BankApp] { get }
     func configUrl(path: String, type: BankUrlType) -> URL?
     func saveSelectedBank()
@@ -46,6 +48,10 @@ final class DefaultBankAppManager: BankAppManager {
     }
     
     private var _selectedBank: BankApp?
+    
+    @Published private var bankAppSaved: BankApp?
+    
+    var bankAppSavedPublisher: Published<BankApp?>.Publisher { $bankAppSaved }
     
     var selectedBank: BankApp? {
         get {
@@ -78,6 +84,7 @@ final class DefaultBankAppManager: BankAppManager {
             .build(),
                        values: [.Value: _selectedBank?.name ?? "None"])
         UserDefaults.bankApp = _selectedBank?.appId
+        bankAppSaved = _selectedBank
     }
     
     func configUrl(path: String, type: BankUrlType) -> URL? {

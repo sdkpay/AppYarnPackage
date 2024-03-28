@@ -12,6 +12,23 @@ enum BannerListType: String {
     case creditCard
     case debitCard
     case unknown
+    
+    var castToHelperType: HelperType? {
+        switch self {
+        case .sbp:
+            return .sbp
+        case .creditCard:
+            return .credit
+        case .debitCard:
+            return nil
+        case .unknown:
+            return nil
+        }
+    }
+    
+    func equel(to helperType: HelperType) -> Bool {
+        self.castToHelperType == helperType
+    }
 }
 
 struct UserModel: Codable {

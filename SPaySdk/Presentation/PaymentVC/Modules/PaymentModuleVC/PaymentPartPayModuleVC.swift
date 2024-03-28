@@ -12,15 +12,9 @@ private extension CGFloat {
     static let topMargin: CGFloat = 20.0
 }
 
-protocol IPaymentPartPayModuleVC {
-    
-    func setPayButtonTitle(_ title: String)
-    func setButtonEnabled(_ value: Bool)
-}
+final class PaymentPartPayModuleVC: ModuleVC, IPaymentModuleVC {
 
-final class PaymentPartPayModuleVC: ModuleVC, IPaymentPartPayModuleVC {
-
-    private var presenter: PaymentPartPayModulePresenting
+    private var presenter: PaymentModulePresenting
     
     private lazy var payButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
@@ -30,7 +24,7 @@ final class PaymentPartPayModuleVC: ModuleVC, IPaymentPartPayModuleVC {
         return view
     }()
     
-    init(_ presenter: PaymentPartPayModulePresenting) {
+    init(_ presenter: PaymentModulePresenting) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }

@@ -21,6 +21,8 @@ protocol LocatorService {
 
 final class DefaultLocatorService: LocatorService {
     
+    static let shared = DefaultLocatorService()
+    
     private var store = [ObjectIdentifier: ObjectRegistry]()
     
     enum ObjectRegistry {

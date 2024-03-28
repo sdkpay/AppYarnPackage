@@ -10,7 +10,7 @@ import UIKit
 final class BankAppPickerAssembly {
     private let locator: LocatorService
     
-    init(locator: LocatorService) {
+    init(locator: LocatorService = DefaultLocatorService.shared) {
         self.locator = locator
     }
     

@@ -11,10 +11,19 @@ private extension MetricsValue {
     
     static let makeTransfer = MetricsValue(rawValue: "MakeTransfer")
     static let makeCard = MetricsValue(rawValue: "MakeCard")
+    static let bnpl = MetricsValue(rawValue: "BNPL")
 }
 
 enum HelperSection: Int, CaseIterable {
+    
     case features
+}
+
+enum HelperType: Hashable, CaseIterable {
+    
+    case sbp
+    case credit
+    case bnpl
 }
 
 protocol HelperFeatureModulePresenting: NSObject {
@@ -29,9 +38,9 @@ protocol HelperFeatureModulePresenting: NSObject {
 }
 
 final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresenting {
-
-    private var activeFeatures: [BannerList] {
-        configBanners()
+    
+    private var activeFeatures: [HelperType] {
+        avaliableBunners()
     }
     
     var featureCount: Int {
@@ -49,7 +58,9 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     private var authService: AuthService
     private let alertService: AlertService
     private let bankManager: BankAppManager
+    private let partPayService: PartPayService
     private let helperConfigManager: HelperConfigManager
+    private let biometricAuthProvider: BiometricAuthProvider
     
     init(_ router: PaymentRouting,
          manager: SDKManager,
@@ -61,6 +72,8 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
          authService: AuthService,
          secureChallengeService: SecureChallengeService,
          authManager: AuthManager,
+         biometricAuthProvider: BiometricAuthProvider,
+         partPayService: PartPayService,
          helperConfigManager: HelperConfigManager) {
         self.router = router
         self.sdkManager = manager
@@ -71,7 +84,9 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
         self.alertService = alertService
         self.bankManager = bankManager
         self.authManager = authManager
+        self.partPayService = partPayService
         self.helperConfigManager = helperConfigManager
+        self.biometricAuthProvider = biometricAuthProvider
         super.init()
     }
     
@@ -79,7 +94,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
         
         configViews()
     }
-
+    
     func identifiresForSection(_ section: HelperSection) -> [Int] {
         
         return activeFeatures.compactMap({ $0.hashValue })
@@ -87,33 +102,178 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     
     func didSelectPaymentItem(at indexPath: IndexPath) {
         
-        guard let section = HelperSection(rawValue: indexPath.section) else { return }
+        let feature = activeFeatures[indexPath.row]
         
-        switch section {
-        case .features:
+        let event = EventBuilder().with(base: .Touch)
+        
+        switch feature {
+        case .sbp:
+            event.with(value: .makeTransfer)
+        case .credit:
+            event.with(value: .makeCard)
+        case .bnpl:
+            event.with(value: .bnpl)
+        }
+        
+        analytics.send(event.build(), on: view?.contentParrent?.analyticsName)
+        
+        switch feature {
             
-            let helper = activeFeatures[indexPath.row]
+        case .sbp, .credit:
             
-            analytics.send(EventBuilder()
-                .with(base: .Touch)
-                .with(value: helper.bannerListType == .sbp ? .makeTransfer : .makeCard)
-                .build(), on: view?.contentParrent?.analyticsName ?? .None)
+            guard let deeplinkIos = userService.user?.promoInfo.bannerList
+                .first(where: { $0.bannerListType.equel(to: feature) })?.buttons
+                .first?.deeplinkIos
+            else { return }
             
-            guard let deeplinkIos = helper.buttons.first?.deeplinkIos else { return }
             goTo(url: deeplinkIos)
+        case .bnpl:
+            cardTapped()
+        }
+    }
+    
+    private func cardTapped() {
+         
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: .card)
+            .build(), on: view?.contentParrent?.analyticsName ?? .None)
+         
+         guard userService.additionalCards else { return }
+         guard let authMethod = authManager.authMethod else { return }
+         
+         guard !userService.getListCards else {
+             presentListCards()
+             return
+         }
+         
+         switch authMethod {
+         case .refresh:
+             
+             Task { @MainActor [biometricAuthProvider] in
+                 
+                 let canEvalute = await biometricAuthProvider.canEvalute()
+                 
+                 switch canEvalute {
+                 case true:
+                     let result = await biometricAuthProvider.evaluate()
+                     
+                     switch result {
+                     case true:
+                         analytics.send(EventBuilder()
+                             .with(base: .LC)
+                             .with(state: .Good)
+                             .with(value: .bioAuth)
+                             .build(), on: view?.contentParrent?.analyticsName ?? .None)
+                         
+                         self.presentListCards()
+                     case false:
+                         analytics.send(EventBuilder()
+                             .with(base: .LC)
+                             .with(state: .Fail)
+                             .with(value: .bioAuth)
+                             .build(), on: view?.contentParrent?.analyticsName ?? .None)
+                         self.appAuth()
+                     }
+                 case false:
+                     analytics.send(EventBuilder()
+                         .with(base: .LC)
+                         .with(state: .Fail)
+                         .with(value: .bioAuth)
+                         .build(), on: view?.contentParrent?.analyticsName ?? .None)
+                     self.appAuth()
+                 }
+             }
+             
+         case .bank, .sid:
+             
+             presentListCards()
+         }
+     }
+    
+    private func appAuth() {
+        
+        Task {
+            do {
+                try await authService.appAuth()
+                
+                await self.view?.contentParrent?.showLoading()
+                
+                repeatAuth()
+            } catch {
+                if let error = error as? SDKError {
+                    
+                    if error.represents(.noData)
+                        || error.represents(.bankAppError)
+                        || error.represents(.bankAppNotFound) {
+                        
+                        await MainActor.run {
+                            router.presentBankAppPicker {
+                                self.repeatAuth()
+                            }
+                        }
+                    } else {
+                        await alertService.show(on: view?.contentParrent, type: .defaultError)
+                        await completionManager.dismissCloseAction(view?.contentParrent)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func repeatAuth() {
+        Task {
+            
+            try await self.authService.auth()
+            
+            self.authService.bankCheck = true
+            self.presentListCards()
+        }
+    }
+    
+    private func presentListCards() {
+        
+        Task {
+            
+            await view?.contentParrent?.showLoading()
+            
+            guard let selectedCard = userService.selectedCard,
+                  let user = userService.user else { return }
+            
+            userService.getListCards = true
+            
+            let finalCost = partPayService.bnplplanSelected
+            ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
+            : user.orderInfo.orderAmount.amount
+            
+            await MainActor.run {
+                self.router.presentCards(cards: user.paymentToolInfo.paymentTool,
+                                         cost: finalCost?.price(.RUB) ?? "",
+                                         selectedId: selectedCard.paymentID,
+                                         selectedCard: { [weak self] card in
+                    self?.view?.contentParrent?.hideLoading(animate: true)
+                    self?.userService.selectedCard = card
+                    self?.view?.reloadData()
+                })
+            }
         }
     }
     
     func paymentModel(for indexPath: IndexPath) -> AbstractCellModel? {
         
-        guard let section = HelperSection(rawValue: indexPath.section) else { return nil }
-
-        switch section {
-        case .features:
+        let feature = activeFeatures[indexPath.row]
+        
+        switch feature {
+        case .sbp, .credit:
             
-            let helper = activeFeatures[indexPath.row]
+            guard let bunner = userService.user?.promoInfo.bannerList
+                .first(where: { $0.bannerListType.equel(to: feature) })
+            else { return nil }
+            return HelperModelFactory.build(value: bunner)
+        case .bnpl:
             
-            return HelperModelFactory.build(indexPath, value: helper)
+            guard let button = partPayService.bnplplan?.buttonBnpl else { return nil }
+            return HelperModelFactory.build(button: button)
         }
     }
     
@@ -139,33 +299,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
             }
         }
     }
-    
-    private func appAuth() {
-        
-        Task {
-            do {
-                try await authService.appAuth()
-                
-                await self.view?.contentParrent?.showLoading()
-            } catch {
-                if let error = error as? SDKError {
-                    
-                    if error.represents(.noData)
-                        || error.represents(.bankAppError)
-                        || error.represents(.bankAppNotFound) {
-                        
-                        await MainActor.run {
-                            router.presentBankAppPicker {
-                            }
-                        }
-                    } else {
-                        await alertService.show(on: view?.contentParrent, type: .defaultError)
-                        await completionManager.dismissCloseAction(view?.contentParrent)
-                    }
-                }
-            }
-        }
-    }
+
     
     @objc
     private func applicationDidBecomeActive() {
@@ -180,29 +314,27 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
         }
     }
     
-    private func configBanners() -> [BannerList] {
-
+    private func avaliableBunners() -> [HelperType] {
+        
         guard let user = userService.user else { return [] }
         
-        let avaliableBunners = avaliableBunners()
+        var list = [HelperType]()
         
-        return user.promoInfo.bannerList.filter { list in
-            avaliableBunners.contains(list.bannerListType)
+        if partPayService.bnplplanEnabled {
+            list.append(.bnpl)
         }
-    }
-    
-    private func avaliableBunners() -> [BannerListType] {
         
-        var list = [BannerListType]()
-        
-        if helperConfigManager.helperAvaliable(bannerListType: .sbp) {
+        if helperConfigManager.helperAvaliable(bannerListType: .sbp)
+           && user.promoInfo.bannerList.contains(where: { $0.bannerListType == .sbp }) {
             list.append(.sbp)
         }
         
-        if helperConfigManager.helperAvaliable(bannerListType: .creditCard) {
-            list.append(.creditCard)
+        if helperConfigManager.helperAvaliable(bannerListType: .creditCard)
+           && user.promoInfo.bannerList.contains(where: { $0.bannerListType == .sbp }) {
+            list.append(.credit)
         }
         
         return list
     }
+    
 }
