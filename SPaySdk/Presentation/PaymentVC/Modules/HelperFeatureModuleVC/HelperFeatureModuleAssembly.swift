@@ -34,6 +34,8 @@ final class HelperFeatureModuleAssembly {
                                      authService: locator.resolve(),
                                      secureChallengeService: locator.resolve(),
                                      authManager: locator.resolve(),
+                                     biometricAuthProvider: locator.resolve(),
+                                     partPayService: locator.resolve(),
                                      helperConfigManager: locator.resolve())
     }
 

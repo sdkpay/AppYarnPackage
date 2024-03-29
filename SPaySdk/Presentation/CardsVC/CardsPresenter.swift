@@ -7,11 +7,6 @@
 
 import UIKit
 
-private extension MetricsValue {
-    
-    static let card = MetricsValue(rawValue: "Card")
-}
-
 protocol CardsPresenting {
     func viewDidLoad()
     var cardsCount: Int { get }

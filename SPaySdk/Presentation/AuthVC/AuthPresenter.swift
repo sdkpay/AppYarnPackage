@@ -322,7 +322,12 @@ final class AuthPresenter: AuthPresenting {
             return .partPay
         }
         
-        let status: PaymentVCMode = try payAmountValidationManager.checkWalletAmountEnouth() ? .pay : .helper
+        var status: PaymentVCMode
+        
+        switch try payAmountValidationManager.checkWalletAmountEnouth() {
+        case .enouth: status = .pay
+        case .notEnouth, .onlyBnpl: status = .helper
+        }
         
         if status == .helper {
             

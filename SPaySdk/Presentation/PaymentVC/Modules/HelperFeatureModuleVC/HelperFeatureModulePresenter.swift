@@ -60,7 +60,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     private let bankManager: BankAppManager
     private let partPayService: PartPayService
     private let helperConfigManager: HelperConfigManager
-    private let biometricAuthProvider: BiometricAuthProvider
+    private let biometricAuthProvider: BiometricAuthProviderProtocol
     
     init(_ router: PaymentRouting,
          manager: SDKManager,
@@ -72,7 +72,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
          authService: AuthService,
          secureChallengeService: SecureChallengeService,
          authManager: AuthManager,
-         biometricAuthProvider: BiometricAuthProvider,
+         biometricAuthProvider: BiometricAuthProviderProtocol,
          partPayService: PartPayService,
          helperConfigManager: HelperConfigManager) {
         self.router = router

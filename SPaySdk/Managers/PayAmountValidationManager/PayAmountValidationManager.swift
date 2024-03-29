@@ -28,7 +28,7 @@ final class PayAmountValidationManagerAssembly: Assembly {
 
 protocol PayAmountValidationManager {
     
-    func checkWalletAmountEnouth() throws -> Bool
+    func checkWalletAmountEnouth() throws -> PayAmountStatus
     func checkAmountSelectedTool(_ tool: PaymentTool) throws -> PayAmountStatus
 }
 
@@ -43,11 +43,24 @@ final class DefaultPayAmountValidationManager: PayAmountValidationManager {
         self.partPayService = partPayService
     }
     
-    func checkWalletAmountEnouth() throws -> Bool {
+    func checkWalletAmountEnouth() throws -> PayAmountStatus {
         
         guard let user = userService.user else { throw SDKError(.noData) }
         
-        return try user.paymentToolInfo.paymentTool.contains(where: { try checkAmountSelectedTool($0) != .notEnouth })
+        var state = PayAmountStatus.notEnouth
+        
+        try user.paymentToolInfo.paymentTool.forEach { tool in
+            
+            if try checkAmountSelectedTool(tool) == .enouth {
+                state = .enouth
+                return
+            } else if try checkAmountSelectedTool(tool) == .onlyBnpl {
+                state = .onlyBnpl
+                return
+            }
+        }
+        
+        return state
     }
     
     func checkAmountSelectedTool(_ tool: PaymentTool) throws -> PayAmountStatus {

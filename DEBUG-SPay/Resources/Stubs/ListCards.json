@@ -12,7 +12,7 @@
         "cardNumber" : "6478",
         "isSpPaymentTools" : true,
         "amountData" : {
-          "amount" : 180853636,
+          "amount" : 200000,
           "currency" : "810"
         },
         "priorityCard" : true,
