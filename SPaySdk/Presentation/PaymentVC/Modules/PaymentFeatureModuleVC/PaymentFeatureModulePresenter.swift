@@ -12,9 +12,9 @@ extension MetricsValue {
     static let card = MetricsValue(rawValue: "Card")
 }
 
-enum PaymentSection: Int, CaseIterable {
+enum PaymentFeatureSection: Int, CaseIterable {
+    
     case features
-    case card
 }
 
 enum PaymentFeature: Int, CaseIterable {
@@ -24,7 +24,7 @@ enum PaymentFeature: Int, CaseIterable {
 protocol PaymentFeatureModulePresenting: NSObject {
     
     var featureCount: Int { get }
-    func identifiresForPaymentSection(_ section: PaymentSection) -> [Int]
+    func identifiresForPaymentSection(_ section: PaymentFeatureSection) -> [Int]
     func paymentModel(for indexPath: IndexPath) -> AbstractCellModel?
     func didSelectPaymentItem(at indexPath: IndexPath)
     func viewDidLoad()
@@ -111,194 +111,36 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
         configViews()
     }
     
-    func identifiresForPaymentSection(_ section: PaymentSection) -> [Int] {
+    func identifiresForPaymentSection(_ section: PaymentFeatureSection) -> [Int] {
         
-        switch section {
-        case .features:
-            
-            return activeFeatures.map { $0.rawValue }
-        case .card:
-            if let paymentId = userService.selectedCard?.cardNumber.hash {
-                return [paymentId]
-            } else {
-                return []
-            }
-        }
+        return activeFeatures.map { $0.rawValue }
     }
     
     func didSelectPaymentItem(at indexPath: IndexPath) {
         
-        guard let section = PaymentSection(rawValue: indexPath.section) else { return }
-        
-        switch section {
-        case .card:
-            cardTapped()
-        case .features:
-            partPayTapped()
-        }
+        partPayTapped()
     }
     
     func paymentModel(for indexPath: IndexPath) -> AbstractCellModel? {
         
-        guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
+        guard let buttonBnpl = partPayService.bnplplan?.buttonBnpl else { return nil }
         
-        switch section {
-        case .features:
-
-            guard let buttonBnpl = partPayService.bnplplan?.buttonBnpl else { return nil }
-            
-            return PartPayModelFactory.build(indexPath,
-                                             buttonBnpl: buttonBnpl,
-                                             bnplplanSelected: partPayService.bnplplanSelected)
-            
-        case .card:
-            
-            guard let selectedCard = userService.selectedCard else { return nil }
-            return CardModelFactory.build(indexPath,
-                                          selectedCard: selectedCard,
-                                          additionalCards: userService.additionalCards,
-                                          cardBalanceNeed: featureToggle.isEnabled(.cardBalance),
-                                          compoundWalletNeed: featureToggle.isEnabled(.compoundWallet))
-        }
+        return PartPayModelFactory.build(indexPath,
+                                         buttonBnpl: buttonBnpl,
+                                         bnplplanSelected: partPayService.bnplplanSelected)
     }
     
     private func partPayTapped() {
         
-        router.presentPartPay { [weak self] in
-            self?.configViews()
-            self?.view?.reloadData()
-        }
-    }
-
-   private func cardTapped() {
-        
-       analytics.send(EventBuilder()
-           .with(base: .Touch)
-           .with(value: .card)
-           .build(), on: view?.contentParrent?.analyticsName ?? .None)
-        
-        guard userService.additionalCards else { return }
-        guard let authMethod = authManager.authMethod else { return }
-        
-        guard !userService.getListCards else {
-            presentListCards()
-            return
-        }
-        
-        switch authMethod {
-        case .refresh:
-            
-            Task { @MainActor [biometricAuthProvider] in
-                
-                let canEvalute = await biometricAuthProvider.canEvalute()
-                
-                switch canEvalute {
-                case true:
-                    let result = await biometricAuthProvider.evaluate()
-                    
-                    switch result {
-                    case true:
-                        analytics.send(EventBuilder()
-                            .with(base: .LC)
-                            .with(state: .Good)
-                            .with(value: .bioAuth)
-                            .build(), on: view?.contentParrent?.analyticsName ?? .None)
-                        
-                        self.presentListCards()
-                    case false:
-                        analytics.send(EventBuilder()
-                            .with(base: .LC)
-                            .with(state: .Fail)
-                            .with(value: .bioAuth)
-                            .build(), on: view?.contentParrent?.analyticsName ?? .None)
-                        self.appAuth()
-                    }
-                case false:
-                    analytics.send(EventBuilder()
-                        .with(base: .LC)
-                        .with(state: .Fail)
-                        .with(value: .bioAuth)
-                        .build(), on: view?.contentParrent?.analyticsName ?? .None)
-                    self.appAuth()
-                }
-            }
-            
-        case .bank, .sid:
-            
-            presentListCards()
-        }
-    }
-    
-    private func presentListCards() {
-        
         Task {
-            
-            await view?.contentParrent?.showLoading()
-            
-            guard let selectedCard = userService.selectedCard,
-                  let user = userService.user else { return }
-            
-            userService.getListCards = true
-            
-            let finalCost = partPayService.bnplplanSelected
-            ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
-            : user.orderInfo.orderAmount.amount
-            
-            await MainActor.run {
-                self.router.presentCards(cards: user.paymentToolInfo.paymentTool,
-                                         cost: finalCost?.price(.RUB) ?? "",
-                                         selectedId: selectedCard.paymentID,
-                                         selectedCard: { [weak self] card in
-                    self?.view?.contentParrent?.hideLoading(animate: true)
-                    self?.userService.selectedCard = card
-                    self?.view?.reloadData()
-                })
-            }
+           await router.presentPartPay()
+            configViews()
+            view?.reloadData()
         }
     }
     
     private func configViews() {
         
         view?.addSnapShot()
-    }
-    
-    private func appAuth() {
-        
-        Task {
-            do {
-                try await authService.appAuth()
-                
-                await self.view?.contentParrent?.showLoading()
-                
-                repeatAuth()
-            } catch {
-                if let error = error as? SDKError {
-                    
-                    if error.represents(.noData)
-                        || error.represents(.bankAppError)
-                        || error.represents(.bankAppNotFound) {
-                        
-                        await MainActor.run {
-                            router.presentBankAppPicker {
-                                self.repeatAuth()
-                            }
-                        }
-                    } else {
-                        await alertService.show(on: view?.contentParrent, type: .defaultError)
-                        await completionManager.dismissCloseAction(view?.contentParrent)
-                    }
-                }
-            }
-        }
-    }
-    
-    private func repeatAuth() {
-        Task {
-            
-            try await self.authService.auth()
-            
-            self.authService.bankCheck = true
-            self.presentListCards()
-        }
     }
 }

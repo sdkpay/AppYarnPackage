@@ -8,23 +8,25 @@
 import UIKit
 
 final class AuthAssembly {
+    
     private let locator: LocatorService
 
     init(locator: LocatorService) {
         self.locator = locator
     }
     
-    func createModule() -> ContentVC {
+    @MainActor
+    func createModule(transition: Transition) {
         let router = moduleRouter()
         let presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         router.viewController = contentView
-        return contentView
+        transition.performTransition(for: contentView)
     }
     
-    func moduleRouter() -> AuthRouter {
-        AuthRouter(with: locator)
+    private func moduleRouter() -> AuthRouter {
+        AuthRouter(with: locator.resolve())
     }
 
     private func modulePresenter(_ router: AuthRouter) -> AuthPresenter {

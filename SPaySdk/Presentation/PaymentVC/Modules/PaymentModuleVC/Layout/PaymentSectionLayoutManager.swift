@@ -19,7 +19,7 @@ private extension CGFloat {
 
 enum PaymentSectionLayoutManager {
     
-    static func getSectionLayout(_ section: PaymentSection,
+    static func getSectionLayout(_ section: PaymentFeatureSection,
                                  featureCount: Int,
                                  layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection {
         
@@ -31,39 +31,32 @@ enum PaymentSectionLayoutManager {
             case 1...2:
                 return squareSection
             default:
-                return longSection
+                return longSection(featureCount: featureCount)
             }
-        case .card:
-            return blockSection
         }
     }
     
-    private static var longSection: NSCollectionLayoutSection {
+    private static func longSection(featureCount: Int) -> NSCollectionLayoutSection {
         
         let spacing: CGFloat = 4
         
-        let longtemSize = NSCollectionLayoutSize(
-                  widthDimension: .fractionalWidth(0.7),
-                  heightDimension: .fractionalHeight(1.0))
-        
-        let longItem = NSCollectionLayoutItem(layoutSize: longtemSize)
-        longItem.contentInsets = .init(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
-        
         let itemSize = NSCollectionLayoutSize(
-                  widthDimension: .fractionalWidth(0.5),
+                  widthDimension: .estimated(1),
                   heightDimension: .fractionalHeight(1.0))
         
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = .init(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
         
         let groupSize = NSCollectionLayoutSize(
-                  widthDimension: .estimated(1.0),
+                  widthDimension: .estimated(1),
                   heightDimension: .fractionalWidth(0.5))
-        
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [longItem, item])
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .fixed(8)
+        group.contentInsets = .init(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
         
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .groupPaging
+        section.orthogonalScrollingBehavior = .continuous
+        section.contentInsets = .init(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
         return section
     }
 

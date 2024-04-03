@@ -19,7 +19,7 @@ final class PaymentFeatureModuleVC: ModuleVC, IPaymentFeatureModuleVC {
     
     private lazy var viewBuilder = PaymentFeatureModuleViewBuilder(featureCount: presenter.featureCount)
     
-    private var dataSource: UICollectionViewDiffableDataSource<PaymentSection, Int>?
+    private var dataSource: UICollectionViewDiffableDataSource<PaymentFeatureSection, Int>?
     
     init(_ presenter: PaymentFeatureModulePresenting) {
         self.presenter = presenter
@@ -40,10 +40,10 @@ final class PaymentFeatureModuleVC: ModuleVC, IPaymentFeatureModuleVC {
     
     func addSnapShot() {
         
-        var snapshot = NSDiffableDataSourceSnapshot<PaymentSection, Int>()
-        snapshot.appendSections(PaymentSection.allCases)
+        var snapshot = NSDiffableDataSourceSnapshot<PaymentFeatureSection, Int>()
+        snapshot.appendSections(PaymentFeatureSection.allCases)
         print(snapshot.numberOfSections)
-        PaymentSection.allCases.forEach { section in
+        PaymentFeatureSection.allCases.forEach { section in
             snapshot.appendItems(presenter.identifiresForPaymentSection(section), toSection: section)
         }
         dataSource?.apply(snapshot, animatingDifferences: true)
@@ -52,46 +52,31 @@ final class PaymentFeatureModuleVC: ModuleVC, IPaymentFeatureModuleVC {
     func reloadData() {
         
         guard var newSnapshot = dataSource?.snapshot() else { return }
-        newSnapshot.reloadSections(PaymentSection.allCases)
+        newSnapshot.reloadSections(PaymentFeatureSection.allCases)
         dataSource?.apply(newSnapshot)
     }
     
     private func configDataSource() {
         
-        dataSource = UICollectionViewDiffableDataSource<PaymentSection, Int>(collectionView: viewBuilder.collectionView) { (
+        dataSource = UICollectionViewDiffableDataSource<PaymentFeatureSection, Int>(collectionView: viewBuilder.collectionView) { (
             collectionView: UICollectionView,
             indexPath: IndexPath,
             _: Int
         ) -> UICollectionViewCell? in
-            guard let section = PaymentSection(rawValue: indexPath.section) else { return nil }
             guard let model = self.presenter.paymentModel(for: indexPath) else { return nil }
-            switch section {
-            case .features:
-                
-                if self.presenter.featureCount > 1 {
-                    return UICollectionView.config(collectionView: collectionView,
-                                                   cellType: SquarePaymentFeatureCell.self,
-                                                   with: model,
-                                                   fot: indexPath)
-                } else {
-                    return UICollectionView.config(collectionView: collectionView,
-                                                   cellType: BlockPaymentFeatureCell.self,
-                                                   with: model,
-                                                   fot: indexPath)
-                }
-            case .card:
-                
+            
+            if self.presenter.featureCount > 1 {
                 return UICollectionView.config(collectionView: collectionView,
-                                               cellType: PaymentCardCell.self,
+                                               cellType: SquarePaymentFeatureCell.self,
+                                               with: model,
+                                               fot: indexPath)
+            } else {
+                return UICollectionView.config(collectionView: collectionView,
+                                               cellType: BlockPaymentFeatureCell.self,
                                                with: model,
                                                fot: indexPath)
             }
         }
-    }
-    
-    private func featureCellType() -> (SelfReusable & SelfConfigCell).Type {
-        
-        presenter.featureCount > 1 ? SquarePaymentFeatureCell.self : BlockPaymentFeatureCell.self
     }
 }
 

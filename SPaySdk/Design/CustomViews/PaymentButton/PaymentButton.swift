@@ -28,7 +28,7 @@ final class PaymentButton: UIView {
         return view
     }()
     
-    var isEnabled: Bool = true {
+    var isEnabled = true {
         didSet {
             backgroundButton.isEnabled = isEnabled
             backgroundButton.setTitleColor(.textSecondary, for: .disabled)

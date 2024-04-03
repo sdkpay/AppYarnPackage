@@ -8,81 +8,99 @@
 import UIKit
 
 protocol PaymentRouting: UrlOpenable {
+    @MainActor
     func presentCards(cards: [PaymentTool],
                       cost: String,
-                      selectedId: Int,
-                      selectedCard: @escaping (PaymentTool) -> Void)
-    func presentPartPay(partPaySelected: @escaping Action)
-    func presentOTPScreen(completion: @escaping Action)
-    func presentBankAppPicker(completion: @escaping Action)
-    func presentChallenge(completion: @escaping (SecureChallengeResolution) -> Void)
-    func presentWebView(with url: String) 
+                      selectedId: Int) async throws -> PaymentTool
+    @MainActor
+    func presentPartPay() async
+    @MainActor
+    func presentOTPScreen() async
+    @MainActor
+    func presentBankAppPicker() async
+    @MainActor
+    func presentChallenge() async throws -> SecureChallengeResolution
+    @MainActor
+    func presentWebView(with url: String)
+    @MainActor
     func openProfile(with userInfo: UserInfo)
     @MainActor
     func presentPartPayPayment()
 }
 
 final class PaymentRouter: PaymentRouting {
+    
     weak var viewController: ContentVC?
-    private let locator: LocatorService
+    private let paymentRouteMap: PaymentRouteMap
+    private let challangeRouteMap: ChallengeRouteMap
+    private let authRouteMap: AuthRouteMap
     
-    init(with locator: LocatorService) {
-        self.locator = locator
+    init(with paymentRouteMap: PaymentRouteMap,
+         challangeRouteMap: ChallengeRouteMap,
+         authRouteMap: AuthRouteMap) {
+        self.paymentRouteMap = paymentRouteMap
+        self.challangeRouteMap = challangeRouteMap
+        self.authRouteMap = authRouteMap
     }
     
-    @MainActor
-    func presentCards(cards: [PaymentTool],
-                      cost: String,
-                      selectedId: Int,
-                      selectedCard: @escaping (PaymentTool) -> Void) {
-        let vc = CardsAssembly(locator: locator).createModule(cards: cards,
-                                                              cost: cost,
-                                                              selectedId: selectedId,
-                                                              selectedCard: selectedCard)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @MainActor
-    func presentPartPay(partPaySelected: @escaping Action) {
-        let vc = PartPayAssembly(locator: locator).createModule(partPaySelected: partPaySelected)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @MainActor
-    func presentBankAppPicker(completion: @escaping Action) {
-        let vc = BankAppPickerAssembly(locator: locator).createModule(completion: completion)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @MainActor
-    func presentOTPScreen(completion: @escaping Action) {
-        DispatchQueue.main.async {
-            let vc = OtpAssembly(locator: self.locator).createModule(completion: completion)
-            self.viewController?.contentNavigationController?.pushViewController(vc, animated: true)
-        }
-    }
-    
-    @MainActor
-    func presentChallenge(completion: @escaping (SecureChallengeResolution) -> Void) {
-        let vc = ChallengeAssembly(locator: locator).createModule(completion: completion)
-        self.viewController?.contentNavigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @MainActor
-    func openProfile(with userInfo: UserInfo) {
-        let vc = LogoutAssembly(locator: self.locator).createModule(with: userInfo)
-        self.viewController?.contentNavigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @MainActor
     func presentWebView(with url: String) {
-        let vc = WebViewAssembly(locator: locator).createModule(with: url)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        paymentRouteMap.presentWebView(by: CoverPushTransition(pushInto: nc),
+                                       with: url)
     }
     
-    @MainActor
+    func openProfile(with userInfo: UserInfo) {
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        paymentRouteMap.openProfile(by: CoverPushTransition(pushInto: nc),
+                                    with: userInfo)
+    }
+    
     func presentPartPayPayment() {
-        let vc = PaymentMasterAssembly(locator: locator).createModule(with: .partPay)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        paymentRouteMap.presentPartPayPayment(by: CoverPushTransition(pushInto: nc))
+    }
+    
+    func presentCards(cards: [PaymentTool], cost: String, selectedId: Int) async throws -> PaymentTool {
+        
+        guard let nc = viewController?.contentNavigationController else { throw SDKError(.unowned) }
+        
+        return await paymentRouteMap.presentCards(by: CoverPushTransition(pushInto: nc),
+                                                  cards: cards,
+                                                  cost: cost,
+                                                  selectedId: selectedId)
+    }
+    
+    func presentPartPay() async {
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        await paymentRouteMap.presentPartPay(by: CoverPushTransition(pushInto: nc))
+    }
+    
+    func presentOTPScreen() async {
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        await challangeRouteMap.presentOTP(by: CoverPushTransition(pushInto: nc))
+    }
+    
+    func presentBankAppPicker() async {
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        await authRouteMap.presentBankAppPicker(by: CoverPushTransition(pushInto: nc))
+    }
+    
+    func presentChallenge() async throws -> SecureChallengeResolution {
+        
+        guard let nc = viewController?.contentNavigationController else { throw SDKError(.unowned) }
+        
+        return await paymentRouteMap.presentChallenge(by: CoverPushTransition(pushInto: nc))
     }
 }

@@ -9,30 +9,37 @@ import UIKit
 
 protocol ChallengeRouting {
 
-    func presentOTPScreen(completion: @escaping Action)
-    func presentBankAppPicker(completion: @escaping Action)
+    @MainActor
+    func presentOTPScreen() async
+    @MainActor
+    func presentBankAppPicker() async
 }
 
 final class ChallengeRouter: ChallengeRouting, UrlOpenable {
     
     weak var viewController: ContentVC?
-    private let locator: LocatorService
+    private let authRouteMap: AuthRouteMap
+    private let challangeRouteMap: ChallengeRouteMap
     
-    init(with locator: LocatorService) {
-        self.locator = locator
+    init(with authRouteMap: AuthRouteMap,
+         challangeRouteMap: ChallengeRouteMap) {
+        self.authRouteMap = authRouteMap
+        self.challangeRouteMap = challangeRouteMap
     }
 
     @MainActor
-    func presentOTPScreen(completion: @escaping Action) {
-        DispatchQueue.main.async {
-            let vc = OtpAssembly(locator: self.locator).createModule(completion: completion)
-            self.viewController?.contentNavigationController?.pushViewController(vc, animated: true)
-        }
+    func presentOTPScreen() async {
+        
+        guard let contentNC = viewController?.contentNavigationController else { return }
+        
+        await challangeRouteMap.presentOTP(by: CoverPushTransition(pushInto: contentNC))
     }
     
     @MainActor
-    func presentBankAppPicker(completion: @escaping Action) {
-        let vc = BankAppPickerAssembly(locator: locator).createModule(completion: completion)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+    func presentBankAppPicker() async {
+        
+        guard let contentNC = viewController?.contentNavigationController else { return }
+        
+        await authRouteMap.presentBankAppPicker(by: CoverPushTransition(pushInto: contentNC))
     }
 }

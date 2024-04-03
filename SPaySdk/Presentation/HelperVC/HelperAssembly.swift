@@ -15,16 +15,17 @@ final class HelperAssembly {
         self.locator = locator
     }
     
-    func createModule() -> ContentVC {
+    @MainActor
+    func createModule(transition: Transition) {
         let router = moduleRouter()
         let presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
-        return contentView
+        transition.performTransition(for: contentView)
     }
     
-    func moduleRouter() -> HelperRouter {
-        HelperRouter(with: locator)
+    private func moduleRouter() -> HelperRouter {
+        HelperRouter(with: locator.resolve())
     }
 
     private func modulePresenter(_ router: HelperRouter) -> HelperPresenter {

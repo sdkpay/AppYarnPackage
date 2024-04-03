@@ -97,16 +97,8 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     private func createOTP() async throws {
         
         try await otpService.creteOTP()
-        
-        try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<Void, Error>) -> Void in
-            
-            DispatchQueue.main.async {
-                self.router.presentOTPScreen(completion: {
-                    self.view?.contentParrent?.showLoading()
-                    inCont.resume()
-                })
-            }
-        })
+        await router.presentOTPScreen()
+        self.view?.contentParrent?.showLoading()
     }
     
     private func setupPublishers() {
@@ -328,19 +320,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     
     @MainActor
     private func getChallengeResolution() async -> SecureChallengeResolution? {
-        
-        do {
-            let result = try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<SecureChallengeResolution?, Error>) -> Void in
-                
-                router.presentChallenge(completion: { resolution in
-                    inCont.resume(with: .success(resolution))
-                })
-            })
-            
-            return result
-        } catch {
-            return nil
-        }
+        return try? await router.presentChallenge()
     }
     
     private func dismissWithError(_ error: SDKError) {

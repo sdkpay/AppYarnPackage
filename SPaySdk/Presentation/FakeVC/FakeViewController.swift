@@ -8,6 +8,9 @@
 import UIKit
 
 final class FakeViewController: UIViewController {
+    
+    private let completion: Action
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = Strings.Fake.title
@@ -23,6 +26,26 @@ final class FakeViewController: UIViewController {
         
         view.backgroundColor = .white
         setupUI()
+        Task {
+         await dismissWithDelay()
+        }
+    }
+    
+    init(completion: @escaping Action) {
+        self.completion = completion
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func dismissWithDelay() async {
+        
+        try? await Task.sleep(nanoseconds: UInt64(2) * 1000000000)
+        
+        completion()
+        dismiss(animated: true)
     }
     
     private func setupUI() {

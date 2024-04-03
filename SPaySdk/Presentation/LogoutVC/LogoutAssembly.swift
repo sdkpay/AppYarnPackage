@@ -14,11 +14,12 @@ final class LogoutAssembly {
         self.locator = locator
     }
     
-    func createModule(with userInfo: UserInfo) -> ContentVC {
+    @MainActor 
+    func createModule(transition: Transition, with userInfo: UserInfo) {
         let presenter = modulePresenter()
         let contentView = moduleView(presenter: presenter, with: userInfo)
         presenter.view = contentView
-        return contentView
+        transition.performTransition(for: contentView)
     }
 
     private func modulePresenter() -> LogoutPresenter {

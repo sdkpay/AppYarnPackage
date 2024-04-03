@@ -21,8 +21,6 @@ protocol LocatorService {
 
 final class DefaultLocatorService: LocatorService {
     
-    static let shared = DefaultLocatorService()
-    
     private var store = [ObjectIdentifier: ObjectRegistry]()
     
     enum ObjectRegistry {
@@ -68,5 +66,9 @@ final class DefaultLocatorService: LocatorService {
     func remove(_ type: ObjectIdentifier) {
         
         store.removeValue(forKey: type)
+    }
+    
+    deinit {
+        print("DEINIT")
     }
 }

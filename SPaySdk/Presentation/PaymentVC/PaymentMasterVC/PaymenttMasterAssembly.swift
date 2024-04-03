@@ -27,6 +27,7 @@ final class PaymentMasterAssembly {
                 .purchaseModule,
                 .hintModule,
                 .paymentFeatureModule,
+                .cardModule,
                 .paymentModule
             ]
         case .helper:
@@ -41,26 +42,27 @@ final class PaymentMasterAssembly {
                 .merchInfoModule,
                 .connectInfoModule,
                 .hintModule,
-                .paymentFeatureModule,
+                .cardModule,
                 .paymentModule
             ]
         case .partPay:
             return [
                 .partPayModule,
-                .paymentFeatureModule,
+                .cardModule,
                 .paymentModule
             ]
         }
     }
 
-    func createModule(with state: PaymentVCMode) -> ContentVC {
+    @MainActor 
+    func createModule(transition: Transition, state: PaymentVCMode) {
         paymentVCMode = state
         let router = moduleRouter()
         let presenter = modulePresenter(router)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
         router.viewController = contentView
-        return contentView
+        transition.performTransition(for: contentView)
     }
     
     func modulePresenter(_ router: PaymentRouting) -> PaymentMasterPresenter {
@@ -82,7 +84,7 @@ final class PaymentMasterAssembly {
     }
 
     func moduleRouter() -> PaymentRouter {
-        PaymentRouter(with: locator)
+        PaymentRouter(with: locator.resolve(), challangeRouteMap: locator.resolve(), authRouteMap: locator.resolve())
     }
 
     private func moduleView(presenter: PaymentMasterPresenter) -> ContentVC & IPaymentMasterVC {
@@ -119,6 +121,9 @@ final class PaymentMasterAssembly {
         case .hintModule:
             
             return HintsModuleAssembly(locator: locator).createModule(mode: paymentVCMode)
+        case .cardModule:
+            
+            return CardModuleAssembly(locator: locator).createModule(router: router)
         }
     }
 }

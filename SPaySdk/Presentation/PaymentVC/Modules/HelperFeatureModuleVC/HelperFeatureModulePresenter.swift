@@ -14,11 +14,6 @@ private extension MetricsValue {
     static let bnpl = MetricsValue(rawValue: "BNPL")
 }
 
-enum HelperSection: Int, CaseIterable {
-    
-    case features
-}
-
 enum HelperType: Hashable, CaseIterable {
     
     case sbp
@@ -29,7 +24,7 @@ enum HelperType: Hashable, CaseIterable {
 protocol HelperFeatureModulePresenting: NSObject {
     
     var featureCount: Int { get }
-    func identifiresForSection(_ section: HelperSection) -> [Int]
+    func identifiresForSection(_ section: PaymentFeatureSection) -> [Int]
     func paymentModel(for indexPath: IndexPath) -> AbstractCellModel?
     func didSelectPaymentItem(at indexPath: IndexPath)
     func viewDidLoad()
@@ -95,7 +90,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
         configViews()
     }
     
-    func identifiresForSection(_ section: HelperSection) -> [Int] {
+    func identifiresForSection(_ section: PaymentFeatureSection) -> [Int] {
         
         return activeFeatures.compactMap({ $0.hashValue })
     }
@@ -207,11 +202,8 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
                         || error.represents(.bankAppError)
                         || error.represents(.bankAppNotFound) {
                         
-                        await MainActor.run {
-                            router.presentBankAppPicker {
-                                self.repeatAuth()
-                            }
-                        }
+                        await router.presentBankAppPicker()
+                        self.repeatAuth()
                     } else {
                         await alertService.show(on: view?.contentParrent, type: .defaultError)
                         await completionManager.dismissCloseAction(view?.contentParrent)
@@ -246,16 +238,12 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
             ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
             : user.orderInfo.orderAmount.amount
             
-            await MainActor.run {
-                self.router.presentCards(cards: user.paymentToolInfo.paymentTool,
-                                         cost: finalCost?.price(.RUB) ?? "",
-                                         selectedId: selectedCard.paymentID,
-                                         selectedCard: { [weak self] card in
-                    self?.view?.contentParrent?.hideLoading(animate: true)
-                    self?.userService.selectedCard = card
-                    self?.view?.reloadData()
-                })
-            }
+            let card = try await router.presentCards(cards: user.paymentToolInfo.paymentTool,
+                                                     cost: finalCost?.price(.RUB) ?? "",
+                                                     selectedId: selectedCard.paymentID)
+            await view?.contentParrent?.hideLoading(animate: true)
+            userService.selectedCard = card
+            view?.reloadData()
         }
     }
     
@@ -293,24 +281,19 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
             
             if !result {
                 
-                router.presentBankAppPicker {
-                    self.goTo(url: url)
-                }
+                await router.presentBankAppPicker()
+                goTo(url: url)
             }
         }
     }
 
-    
     @objc
     private func applicationDidBecomeActive() {
         // Если пользователь не смог получить обратный редирект
         // от банковского приложения и перешел самостоятельно
         
         Task {
-            await MainActor.run {
-                router.presentBankAppPicker {
-                }
-            }
+            await router.presentBankAppPicker()
         }
     }
     
@@ -336,5 +319,4 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
         
         return list
     }
-    
 }

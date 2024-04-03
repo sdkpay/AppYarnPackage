@@ -77,9 +77,8 @@ final class ChallengePresenter: ChallengePresenting {
             
             if !isOpened {
                 
-                await router.presentBankAppPicker(completion: {
-                    self.infoAlertTapped()
-                })
+                await router.presentBankAppPicker()
+                self.infoAlertTapped()
             }
         }
     }

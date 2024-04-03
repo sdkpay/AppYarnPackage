@@ -64,7 +64,7 @@ final class HelperPresenter: HelperPresenting {
             await MainActor.run { completionManager.dismissCloseAction(view) }
             return
         }
- 
+        
         guard let link = bankAppManager.configUrl(path: path, type: .util) else {
             await MainActor.run { completionManager.dismissCloseAction(view) }
             return
@@ -76,12 +76,8 @@ final class HelperPresenter: HelperPresenting {
         
         if !isOpened {
             
-            router.presentBankAppPicker(completion: {
-                
-                Task {
-                    await self.confirmTapped()
-                }
-            })
+            await router.presentBankAppPicker()
+            await self.confirmTapped()
         }
     }
     

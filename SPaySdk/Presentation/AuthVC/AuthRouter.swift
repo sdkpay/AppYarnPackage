@@ -6,47 +6,55 @@
 //
 
 import UIKit
+import Combine
 
 protocol AuthRouting {
     func presentPayment(state: PaymentVCMode)
-    func presentBankAppPicker(completion: @escaping Action)
-    func presentFakeScreen(completion: @escaping () -> Void)
+    func presentFakeScreen() async
+    func presentBankAppPicker() async
     func presentHelper()
 }
 
 final class AuthRouter: AuthRouting {
+
     weak var viewController: ContentVC?
-    private let locator: LocatorService
+    private let routeMap: AuthRouteMap
     
-    init(with locator: LocatorService) {
-        self.locator = locator
+    init(with routeMap: AuthRouteMap) {
+        self.routeMap = routeMap
     }
     
     @MainActor
     func presentPayment(state: PaymentVCMode) {
-        let vc = PaymentMasterAssembly(locator: locator).createModule(with: state)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        routeMap.presentPayment(by: CoverPushTransition(pushInto: nc),
+                                state: state)
     }
     
     @MainActor
-    func presentBankAppPicker(completion: @escaping Action) {
-        let vc = BankAppPickerAssembly(locator: locator).createModule(completion: completion)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+    func presentBankAppPicker() async {
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        await routeMap.presentBankAppPicker(by: CoverPushTransition(pushInto: nc))
     }
     
     @MainActor
-    func presentFakeScreen(completion: @escaping () -> Void) {
-        let fakeViewController = FakeViewController()
-        viewController?.present(fakeViewController, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            fakeViewController.dismiss(animated: true, completion: completion)
-        }
+    func presentFakeScreen() async {
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        await routeMap.presentFakeScreen(by: CoverPushTransition(pushInto: nc))
     }
     
     @MainActor
     func presentHelper() {
-        let vc = HelperAssembly(locator: locator).createModule()
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        routeMap.presentHelper(by: CoverPushTransition(pushInto: nc))
     }
     
     deinit {

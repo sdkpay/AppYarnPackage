@@ -25,6 +25,7 @@ enum PaymentModule {
     case helperFeatureModule
     case paymentFeatureModule
     case paymentModule
+    case cardModule
 }
 
 protocol PaymentModuleMasterPresenting {

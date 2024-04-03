@@ -14,17 +14,18 @@ final class PartPayAssembly {
         self.locator = locator
     }
 
-    func createModule(partPaySelected: @escaping Action) -> ContentVC {
+    @MainActor
+    func createModule(transition: Transition, partPaySelected: @escaping Action) {
         let router = moduleRouter()
         let presenter = modulePresenter(router, partPaySelected: partPaySelected)
         let contentView = moduleView(presenter: presenter, analyticsService: locator.resolve())
         presenter.view = contentView
         router.viewController = contentView
-        return contentView
+        transition.performTransition(for: contentView)
     }
     
     func moduleRouter() -> PartPayRouter {
-        PartPayRouter(with: locator)
+        PartPayRouter(with: locator.resolve())
     }
 
     private func modulePresenter(_ router: PartPayRouter,

@@ -15,7 +15,8 @@ enum HelperModelFactory {
                                    title: value.header,
                                    subTitle: value.text,
                                    switchOn: false,
-                                   switchNeed: false)
+                                   switchNeed: false,
+                                   width: .square)
     }
     
     static func build(button: ButtonBnpl) -> PaymentFeatureModel {
@@ -24,7 +25,7 @@ enum HelperModelFactory {
                                    title: button.header,
                                    subTitle: button.content,
                                    switchOn: false,
-                                   switchNeed: false)
-        
+                                   switchNeed: false,
+                                   width: .long)
     }
 }

@@ -28,6 +28,6 @@ final class RootAssembly {
     }
     
     func moduleRouter() -> RootRouter {
-        RootRouter(with: locator)
+        RootRouter(with: locator.resolve())
     }
 }

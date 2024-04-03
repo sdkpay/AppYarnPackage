@@ -9,6 +9,7 @@ import UIKit
 
 protocol PartPayModuleRouting: UrlOpenable {
     
+    @MainActor
     func presentWebView(with url: String)
     
     var viewController: ModuleVC? { get set }
@@ -17,15 +18,17 @@ protocol PartPayModuleRouting: UrlOpenable {
 final class PartPayModuleRouter: PartPayModuleRouting {
     
     weak var viewController: ModuleVC?
-    private let locator: LocatorService
+    private let paymentRouteMap: PaymentRouteMap
     
-    init(with locator: LocatorService) {
-        self.locator = locator
+    init(with paymentRouteMap: PaymentRouteMap) {
+        self.paymentRouteMap = paymentRouteMap
     }
 
     @MainActor
     func presentWebView(with url: String) {
-        let vc = WebViewAssembly(locator: locator).createModule(with: url)
-        viewController?.contentParrent?.contentNavigationController?.pushViewController(vc, animated: true)
+        
+        guard let contentNC = viewController?.contentParrent?.contentNavigationController else { return }
+        
+        paymentRouteMap.presentWebView(by: CoverPushTransition(pushInto: contentNC), with: url)
     }
 }

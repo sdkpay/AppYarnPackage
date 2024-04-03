@@ -34,6 +34,7 @@ final class MerchInfoModulePresenter: NSObject, MerchInfoModulePresenting {
         configViews()
     }
     
+    @MainActor 
     func profileButtonTapped() {
         
         guard let userInfo = userService.user?.userInfo else { return }

@@ -14,11 +14,12 @@ final class OtpAssembly {
         self.locator = locator
     }
     
-    func createModule(completion: @escaping Action) -> ContentVC {
+    @MainActor 
+    func createModule(transition: Transition, completion: @escaping Action) {
         let presenter = modulePresenter(completion: completion)
         let contentView = moduleView(presenter: presenter)
         presenter.view = contentView
-        return contentView
+        transition.performTransition(for: contentView)
     }
 
     private func modulePresenter(completion: @escaping Action) -> OtpPresenter {

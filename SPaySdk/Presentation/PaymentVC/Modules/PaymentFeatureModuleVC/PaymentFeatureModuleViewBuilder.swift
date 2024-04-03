@@ -13,8 +13,10 @@ final class PaymentFeatureModuleViewBuilder {
 
     private lazy var sectionProvider: UICollectionViewCompositionalLayoutSectionProvider = {
         sectionIndex, layoutEnvironment -> NSCollectionLayoutSection? in
-        guard let sectionKind = PaymentSection(rawValue: sectionIndex) else { return nil }
-        let section = PaymentSectionLayoutManager.getSectionLayout(sectionKind, featureCount: self.featureCount, layoutEnvironment: layoutEnvironment)
+        guard let sectionKind = PaymentFeatureSection(rawValue: sectionIndex) else { return nil }
+        let section = PaymentSectionLayoutManager.getSectionLayout(sectionKind,
+                                                                   featureCount: self.featureCount,
+                                                                   layoutEnvironment: layoutEnvironment)
         return section
     }
     
@@ -25,7 +27,6 @@ final class PaymentFeatureModuleViewBuilder {
         collectionView.backgroundColor = .clear
         collectionView.alwaysBounceVertical = false
         collectionView.showsVerticalScrollIndicator = false
-        collectionView.register(PaymentCardCell.self, forCellWithReuseIdentifier: PaymentCardCell.reuseId)
         collectionView.register(BlockPaymentFeatureCell.self, forCellWithReuseIdentifier: BlockPaymentFeatureCell.reuseId)
         collectionView.register(SquarePaymentFeatureCell.self, forCellWithReuseIdentifier: SquarePaymentFeatureCell.reuseId)
         return collectionView

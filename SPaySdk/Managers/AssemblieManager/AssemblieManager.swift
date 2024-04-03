@@ -47,16 +47,19 @@ final class AssemblyManager {
         PayAmountValidationManagerAssembly()
     ]
     
-    func registerStartServices(to locator: LocatorService) {
+    private var routeMaps: [Assembly] = [
         
-        for assembly in startAssemblies {
-            assembly.register(in: locator)
-        }
-    }
+        SDKRouteMapAssembly(),
+        AuthRouteMapAssembly(),
+        ChallengeRouteMapAssembly(),
+        PaymentRouteMapAssembly()
+    ]
     
-    func registerSessionServices(to locator: LocatorService) {
+    func registerServices(to locator: LocatorService) {
         
-        for assembly in sessionAssemblies {
+        for assembly in startAssemblies
+                + sessionAssemblies
+                + routeMaps {
             assembly.register(in: locator)
         }
     }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 protocol BankAppPickerPresenting {
     var bankAppCount: Int { get }
@@ -139,7 +140,6 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
             .with(postState: .Fail)
             .build(), on: view?.analyticsName ?? .None)
         removeObserver()
-        completion?()
     }
     
     private func findIndexPath(_ bankApp: BankApp) -> IndexPath? {

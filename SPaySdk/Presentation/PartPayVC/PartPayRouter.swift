@@ -8,20 +8,24 @@
 import UIKit
 
 protocol PartPayRouting {
+    @MainActor
     func presentWebView(with url: String)
 }
 
 final class PartPayRouter: PartPayRouting {
-    weak var viewController: ContentVC?
-    private let locator: LocatorService
     
-    init(with locator: LocatorService) {
-        self.locator = locator
+    weak var viewController: ContentVC?
+    private let paymentRouteMap: PaymentRouteMap
+    
+    init(with paymentRouteMap: PaymentRouteMap) {
+        self.paymentRouteMap = paymentRouteMap
     }
     
     @MainActor
     func presentWebView(with url: String) {
-        let vc = WebViewAssembly(locator: locator).createModule(with: url)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+        
+        guard let contentNC = viewController?.contentNavigationController else { return }
+        
+        paymentRouteMap.presentWebView(by: CoverPushTransition(pushInto: contentNC), with: url)
     }
 }

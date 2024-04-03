@@ -8,20 +8,25 @@
 import UIKit
 
 protocol RootRouting {
+    @MainActor
     func presentAuth()
 }
 
 final class RootRouter: RootRouting {
-    weak var viewController: UIViewController?
-    private let locator: LocatorService
     
-    init(with locator: LocatorService) {
-        self.locator = locator
+    weak var viewController: UIViewController?
+    private let routeMap: SDKRouteMap
+    
+    init(with routeMap: SDKRouteMap) {
+        self.routeMap = routeMap
     }
     
+    @MainActor
     func presentAuth() {
-        let vc = AuthAssembly(locator: locator).createModule()
-        let navVC = ContentNC(rootViewController: vc)
-        viewController?.present(navVC, animated: true, completion: nil)
+        
+        guard let viewController else { return }
+        
+        routeMap.openAuth(by: CoverWrappingInNavigationTransition(on: viewController,
+                                                                  animated: true))
     }
 }

@@ -15,6 +15,8 @@ private extension CGFloat {
 
 final class SquarePaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfConfigCell {
     
+    private var sizeState = PaymentFeatureWidth.estimated
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .backgroundPrimary
@@ -70,12 +72,26 @@ final class SquarePaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCo
         subtitleLabel.text = model.subTitle
         switchControl.isOn = model.switchOn 
         cardIconView.downloadImage(from: model.iconViewURL)
+        sizeState = model.width
         
         if model.switchNeed {
             infoStack.addArrangedSubview(switchControl)
         }
         
         setupUI()
+    }
+    
+    private func getWidth() -> CGFloat? {
+        
+        switch sizeState {
+            
+        case .long:
+            return (UIScreen.main.bounds.width - (.margin * 2) - 8.0) * 0.6
+        case .square:
+            return (UIScreen.main.bounds.width - (.margin * 2) - 8.0) * 0.5
+        case .estimated:
+            return nil
+        }
     }
 
     private func setupUI() {
@@ -91,5 +107,9 @@ final class SquarePaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCo
             .touchEdge(.top, toEdge: .bottom, ofView: cardIconView, withInset: .margin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
+        
+        if let widthCell = getWidth() {
+            contentView.width(widthCell)
+        }
     }
 }

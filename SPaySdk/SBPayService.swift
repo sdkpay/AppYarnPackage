@@ -66,7 +66,7 @@ final class DefaultSBPayService: SBPayService {
         locator.register(service: logService)
         locator.register(service: buildSettings)
         
-        assemblyManager.registerStartServices(to: locator)
+        assemblyManager.registerServices(to: locator)
         locator
             .resolve(SetupManager.self)
             .resultViewNeeded(resultViewNeeded)
@@ -167,8 +167,6 @@ final class DefaultSBPayService: SBPayService {
     func payWithBankInvoiceId(with viewController: UIViewController,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
-    
-        assemblyManager.registerSessionServices(to: locator)
         guard !inProgress else { return }
         inProgress = true
         timeManager.startCheckingCPULoad()
@@ -209,7 +207,6 @@ final class DefaultSBPayService: SBPayService {
     func payWithoutRefresh(with viewController: UIViewController, 
                            paymentRequest: SBankInvoicePaymentRequest,
                            completion: @escaping PaymentCompletion) {
-        assemblyManager.registerSessionServices(to: locator)
         guard !inProgress else { return }
         inProgress = true
         timeManager.startCheckingCPULoad()
@@ -250,8 +247,6 @@ final class DefaultSBPayService: SBPayService {
     func payWithPartPay(with viewController: UIViewController,
                         paymentRequest: SBankInvoicePaymentRequest,
                         completion: @escaping PaymentCompletion) {
-        
-        assemblyManager.registerSessionServices(to: locator)
         guard !inProgress else { return }
         inProgress = true
         timeManager.startCheckingCPULoad()

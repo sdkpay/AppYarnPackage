@@ -54,4 +54,8 @@ final class DefaultFeatureToggleService: FeatureToggleService {
     private func getFeature(_ feature: Feature) -> FeaturesToggle? {
         features.first(where: { $0.name == feature.rawValue })
     }
+    
+    deinit {
+        print("ADS")
+    }
 }

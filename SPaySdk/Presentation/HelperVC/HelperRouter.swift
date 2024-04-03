@@ -9,21 +9,24 @@ import UIKit
 
 protocol HelperRouting: UrlOpenable {
     
-    func presentBankAppPicker(completion: @escaping Action)
+    @MainActor
+    func presentBankAppPicker() async
 }
 
 final class HelperRouter: HelperRouting {
     
     weak var viewController: ContentVC?
-    private let locator: LocatorService
+    private let authRouteMap: AuthRouteMap
     
-    init(with locator: LocatorService) {
-        self.locator = locator
+    init(with authRouteMap: AuthRouteMap) {
+        self.authRouteMap = authRouteMap
     }
     
     @MainActor
-    func presentBankAppPicker(completion: @escaping Action) {
-        let vc = BankAppPickerAssembly(locator: locator).createModule(completion: completion)
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+    func presentBankAppPicker() async {
+        
+        guard let contentNC = viewController?.contentNavigationController else { return }
+        
+        await authRouteMap.presentBankAppPicker(by: CoverPushTransition(pushInto: contentNC))
     }
 }

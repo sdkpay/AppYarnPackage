@@ -8,20 +8,23 @@
 import UIKit
 
 final class CardsAssembly {
+    
     private let locator: LocatorService
 
     init(locator: LocatorService) {
         self.locator = locator
     }
 
-    func createModule(cards: [PaymentTool],
+    @MainActor 
+    func createModule(transition: Transition,
+                      cards: [PaymentTool],
                       cost: String,
                       selectedId: Int,
-                      selectedCard: @escaping (PaymentTool) -> Void) -> ContentVC {
+                      selectedCard: @escaping (PaymentTool) -> Void) {
         let presenter = modulePresenter(cards: cards, selectedId: selectedId, selectedCard: selectedCard)
         let contentView = moduleView(presenter: presenter, cost: cost)
         presenter.view = contentView
-        return contentView
+        transition.performTransition(for: contentView)
     }
 
     private func modulePresenter(cards: [PaymentTool],

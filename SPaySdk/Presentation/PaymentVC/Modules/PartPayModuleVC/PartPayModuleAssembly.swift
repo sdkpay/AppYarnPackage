@@ -27,7 +27,7 @@ final class PartPayModuleAssembly {
     
     private func moduleRouter() -> PartPayModuleRouting {
         
-        PartPayModuleRouter(with: locator)
+        PartPayModuleRouter(with: locator.resolve())
     }
     
     func modulePresenter(_ router: PartPayModuleRouting) -> PartPayModulePresenting {

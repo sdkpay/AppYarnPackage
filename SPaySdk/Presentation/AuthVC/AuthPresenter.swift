@@ -115,10 +115,9 @@ final class AuthPresenter: AuthPresenting {
     @MainActor
     private func showBanksStack() {
         bankManager.removeSavedBank()
-        router.presentBankAppPicker {
-            Task {
-                await self.auth()
-            }
+        Task {
+            await router.presentBankAppPicker()
+            await self.auth()
         }
     }
     
@@ -155,13 +154,8 @@ final class AuthPresenter: AuthPresenting {
     private func appAuth() async {
         
         if enviromentManager.environment == .sandboxWithoutBankApp {
-            await MainActor.run {
-                router.presentFakeScreen(completion: {
-                    Task {
-                        await self.auth()
-                    }
-                })}
-            return
+            await router.presentFakeScreen()
+            await self.auth()
         }
         
         if bankManager.selectedBank == nil {
@@ -304,8 +298,12 @@ final class AuthPresenter: AuthPresenting {
                 return
             }
             if let user = userService.user, !user.paymentToolInfo.paymentTool.isEmpty {
-                let mode = try getPaymentMode()
-                await self.router.presentPayment(state: mode)
+                do {
+                    let mode = try getPaymentMode()
+                    await self.router.presentPayment(state: mode)
+                } catch {
+                    await alertService.show(on: view, type: .noMoney)
+                }
             } else {
                 await self.router.presentHelper()
             }
@@ -331,7 +329,7 @@ final class AuthPresenter: AuthPresenting {
         
         if status == .helper {
             
-            if !helperManager.helpersNeeded || !(featureToggle.isEnabled(.newCreditCard) && (featureToggle.isEnabled(.sbp))) {
+            if !helperManager.helpersNeeded || (!featureToggle.isEnabled(.newCreditCard) && (!featureToggle.isEnabled(.sbp))) {
                 
                 throw SDKError(.noMoney)
             }
