@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 enum CardCollectionViewLayoutManager {
     
     static func create(with sectionProvider: @escaping UICollectionViewCompositionalLayoutSectionProvider) -> UICollectionViewLayout {
@@ -17,4 +16,3 @@ enum CardCollectionViewLayoutManager {
         return UICollectionViewCompositionalLayout(sectionProvider: sectionProvider, configuration: config)
     }
 }
-

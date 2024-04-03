@@ -178,9 +178,9 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
     
     private func presentListCards() {
         
-        Task {
+        Task { @MainActor [view] in
             
-            await view?.contentParrent?.showLoading()
+            view?.contentParrent?.showLoading()
             
             guard let selectedCard = userService.selectedCard,
                   let user = userService.user else { return }
@@ -194,7 +194,7 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
             let card = try? await self.router.presentCards(cards: user.paymentToolInfo.paymentTool,
                                                            cost: finalCost?.price(.RUB) ?? "",
                                                            selectedId: selectedCard.paymentID)
-            await view?.contentParrent?.hideLoading(animate: true)
+            view?.contentParrent?.hideLoading(animate: true)
             userService.selectedCard = card
             view?.reloadData()
         }
@@ -242,4 +242,3 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
         }
     }
 }
-

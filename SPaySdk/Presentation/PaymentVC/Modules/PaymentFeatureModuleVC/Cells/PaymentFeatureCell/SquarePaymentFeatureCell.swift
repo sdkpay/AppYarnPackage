@@ -96,6 +96,8 @@ final class SquarePaymentFeatureCell: UICollectionViewCell, SelfReusable, SelfCo
 
     private func setupUI() {
         
+        contentView.translatesAutoresizingMaskIntoConstraints = true
+        
         cardIconView
             .add(toSuperview: contentView)
             .touchEdge(.top, toEdge: .top, ofView: contentView, withInset: .sideMargin)

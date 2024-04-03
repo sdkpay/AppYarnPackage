@@ -225,9 +225,9 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     
     private func presentListCards() {
         
-        Task {
+        Task { @MainActor [view, router] in
             
-            await view?.contentParrent?.showLoading()
+            view?.contentParrent?.showLoading()
             
             guard let selectedCard = userService.selectedCard,
                   let user = userService.user else { return }
@@ -241,9 +241,9 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
             let card = try await router.presentCards(cards: user.paymentToolInfo.paymentTool,
                                                      cost: finalCost?.price(.RUB) ?? "",
                                                      selectedId: selectedCard.paymentID)
-            await view?.contentParrent?.hideLoading(animate: true)
+            view?.contentParrent?.hideLoading(animate: true)
             userService.selectedCard = card
-            view?.reloadData()
+            router.presentPartPayPayment()
         }
     }
     

@@ -31,32 +31,31 @@ enum PaymentSectionLayoutManager {
             case 1...2:
                 return squareSection
             default:
-                return longSection(featureCount: featureCount)
+                return longSection
             }
         }
     }
     
-    private static func longSection(featureCount: Int) -> NSCollectionLayoutSection {
+    private static var longSection: NSCollectionLayoutSection {
         
         let spacing: CGFloat = 4
         
         let itemSize = NSCollectionLayoutSize(
-                  widthDimension: .estimated(1),
+                  widthDimension: .estimated(0.5),
                   heightDimension: .fractionalHeight(1.0))
         
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = .init(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
         
         let groupSize = NSCollectionLayoutSize(
-                  widthDimension: .estimated(1),
+                  widthDimension: .estimated(0.5),
                   heightDimension: .fractionalWidth(0.5))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        group.interItemSpacing = .fixed(8)
-        group.contentInsets = .init(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
+        group.interItemSpacing = .flexible(10)
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
-        section.contentInsets = .init(top: spacing, leading: spacing, bottom: spacing, trailing: spacing)
+        section.interGroupSpacing = 10
         return section
     }
 
