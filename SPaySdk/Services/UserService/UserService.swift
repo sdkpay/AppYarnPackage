@@ -126,6 +126,6 @@ final class DefaultUserService: UserService {
     
     private func selectCard(from cards: [PaymentTool]) -> PaymentTool? {
         
-        cards.first(where: { $0.priorityCard }) ?? cards.first
+        cards.first(where: { $0.priorityCard })
     }
 }
