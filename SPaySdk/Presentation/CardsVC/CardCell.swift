@@ -13,6 +13,7 @@ struct CardCellModel {
     let selected: Bool
     let bonuses: String?
     let cardURL: String?
+    let isEnoughtMoney: Bool
 }
 
 private extension CGFloat {
@@ -23,9 +24,10 @@ private extension CGFloat {
     static let letterSpacing = -0.3
     static let bonusesStackInset = 16.0
     static let bonusesLabelHeight = 17.0
+    static let horizontalInset = 16.0
 }
 
-final class CardCell: UITableViewCell {    
+final class CardCell: UITableViewCell, Shakable {
     
     private lazy var containerView: UIView = {
         let view = UIView()
@@ -105,7 +107,8 @@ final class CardCell: UITableViewCell {
         titleLabel.text = model.title
         cardLabel.text = model.subtitle
         cardIconView.downloadImage(from: model.cardURL, placeholder: .Cards.stockCard)
-        if let bonuses = model.bonuses {
+        if let bonuses = model.bonuses,
+           model.isEnoughtMoney {
             bonusesStackView.isHidden = false
             bonusesLabel.text = "+\(bonuses)"
             let bonusesColor = model.selected ? Asset.Palette.greenPrimary.color : Asset.Palette.grayPrimary.color
@@ -114,6 +117,22 @@ final class CardCell: UITableViewCell {
         } else {
             bonusesStackView.isHidden = true
         }
+        if !model.isEnoughtMoney {
+            titleLabel.textColor = .textSecondary
+            cardLabel.textColor = .textSecondary
+        }
+    }
+    
+    func shake() {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.07
+        animation.repeatCount = 4
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: self.center.x - 8, y: self.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: self.center.x + 8, y: self.center.y))
+
+        self.layer.add(animation, forKey: "position")
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
     }
     
     private func setupUI() {
@@ -126,15 +145,15 @@ final class CardCell: UITableViewCell {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: .horizontalInset),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -.horizontalInset),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -.topMargin)
         ])
         
         containerView.addSubview(cardIconView)
         cardIconView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cardIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
+            cardIconView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: .margin),
             cardIconView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             cardIconView.widthAnchor.constraint(equalToConstant: .cardWidth),
             cardIconView.heightAnchor.constraint(equalToConstant: .cardWidth)

@@ -29,11 +29,13 @@ final class CardsAssembly {
 
     private func modulePresenter(cards: [PaymentTool],
                                  selectedId: Int,
+                                 cost: String,
                                  selectedCard: @escaping (PaymentTool) -> Void) -> CardsPresenter {
         let presenter = CardsPresenter(userService: locator.resolve(),
                                        analytics: locator.resolve(),
                                        cards: cards,
                                        selectedId: selectedId,
+                                       cost: cost,
                                        featureToggle: locator.resolve(),
                                        timeManager: OptimizationCheсkerManager(),
                                        selectedCard: selectedCard)

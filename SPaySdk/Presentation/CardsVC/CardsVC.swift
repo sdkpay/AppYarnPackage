@@ -7,6 +7,10 @@
 
 import UIKit
 
+extension CGFloat {
+    static let headerHeight = 54.0
+}
+
 protocol ICardsVC { }
 
 final class CardsVC: ContentVC, ICardsVC {
@@ -52,8 +56,25 @@ final class CardsVC: ContentVC, ICardsVC {
 }
 
 extension CardsVC: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.cardsCount
+        if section == 0 {
+            presenter.enougthCardsCount
+        } else {
+            presenter.notEnougthCardsCount
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        presenter.sectionsCount
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return section == 1 ? .headerHeight : .zero
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return section == 1 ? NotEnoughtHeaderView() : nil
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -67,6 +88,11 @@ extension CardsVC: UITableViewDataSource {
 
 extension CardsVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        presenter.didSelectRow(at: indexPath)
+        if indexPath.section == 0 {
+            presenter.didSelectRow(at: indexPath)
+        } else {
+            let cell = tableView.cellForRow(at: indexPath) as? CardCell
+            cell?.shake()
+        }
     }
 }
