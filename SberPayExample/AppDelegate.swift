@@ -28,11 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication,
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        
-        if url.scheme == "testapp" && url.host == "spay" {
-            SPay.getAuthURL(url)
-        }
-        
+        SPay.getAuthURL(url)
 //        if url.scheme == "testapp" && url.host == "spay" {
 //            SIDManager.getResponseFrom(url) { response in
 //                
