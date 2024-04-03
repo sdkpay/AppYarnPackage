@@ -9,6 +9,12 @@ import UIKit
 
 class ContentTableView: UITableView {
     
+    func setHeaderPadding(_ padding: CGFloat) {
+        if #available(iOS 15.0, *) {
+            sectionHeaderTopPadding = padding
+        }
+    }
+    
     private var maxTableViewHeight = ScreenHeightState.normal.height
     
     override var contentSize: CGSize {

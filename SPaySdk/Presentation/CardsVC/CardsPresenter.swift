@@ -9,7 +9,9 @@ import UIKit
 
 protocol CardsPresenting {
     func viewDidLoad()
-    var cardsCount: Int { get }
+    var enougthCardsCount: Int { get }
+    var notEnougthCardsCount: Int { get }
+    var sectionsCount: Int { get }
     func model(for indexPath: IndexPath) -> CardCellModel
     func didSelectRow(at indexPath: IndexPath)
 }
@@ -18,15 +20,35 @@ final class CardsPresenter: CardsPresenting {
     
     weak var view: (ICardsVC & ContentVC)?
     
-    var cardsCount: Int {
-        cards.count
+    var enougthCardsCount: Int {
+        enoughtCards.count
+    }
+    
+    var notEnougthCardsCount: Int {
+        notEnoughtCards.count
+    }
+    
+    var sectionsCount: Int {
+        enoughtCards = []
+        notEnoughtCards = []
+        cards.forEach { if Double($0.amountData.amount) >= Double(cost
+            .replacingOccurrences(of: "₽", with: "")
+            .replacingOccurrences(of: " ", with: "")) ?? 0 {
+            enoughtCards.append($0)
+        } else {
+            notEnoughtCards.append($0)
+        }}
+        return notEnoughtCards.isEmpty ? 1 : 2
     }
 
     private let analytics: AnalyticsManager
     private let userService: UserService
     private let cards: [PaymentTool]
+    private var enoughtCards: [PaymentTool] = []
+    private var notEnoughtCards: [PaymentTool] = []
     private let selectedCard: (PaymentTool) -> Void
     private let selectedId: Int
+    private var cost: String
     private var timeManager: OptimizationCheсkerManager
     private var featureToggle: FeatureToggleService
 
@@ -34,6 +56,7 @@ final class CardsPresenter: CardsPresenting {
          analytics: AnalyticsManager,
          cards: [PaymentTool],
          selectedId: Int,
+         cost: String,
          featureToggle: FeatureToggleService,
          timeManager: OptimizationCheсkerManager,
          selectedCard: @escaping (PaymentTool) -> Void) {
@@ -42,6 +65,7 @@ final class CardsPresenter: CardsPresenting {
         self.cards = cards
         self.selectedCard = selectedCard
         self.selectedId = selectedId
+        self.cost = cost
         self.featureToggle = featureToggle
         self.timeManager = timeManager
         self.timeManager.startTraking()
@@ -50,7 +74,7 @@ final class CardsPresenter: CardsPresenting {
     func viewDidLoad() {}
 
     func model(for indexPath: IndexPath) -> CardCellModel {
-        let card = cards[indexPath.row]
+        let card = indexPath.section == 0 ? enoughtCards[indexPath.row] : notEnoughtCards[indexPath.row]
         
         var title: String
         var subtitle: String
@@ -73,11 +97,13 @@ final class CardsPresenter: CardsPresenting {
             ]))
         }
         let bonuses = featureToggle.isEnabled(.spasiboBonuses) ? card.precalculateBonuses : nil
+        
         return CardCellModel(title: title,
                              subtitle: subtitle,
                              selected: card.paymentID == selectedId,
                              bonuses: bonuses,
-                             cardURL: card.cardLogoURL)
+                             cardURL: card.cardLogoURL,
+                             isEnoughtMoney: indexPath.section == 0)
     }
     
     func didSelectRow(at indexPath: IndexPath) {

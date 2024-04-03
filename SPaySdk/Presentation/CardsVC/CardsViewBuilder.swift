@@ -79,8 +79,9 @@ final class CardsViewBuilder {
     }()
     
     private(set) lazy var tableView: ContentTableView = {
-        let view = ContentTableView()
+        let view = ContentTableView(frame: .zero, style: .grouped)
         view.register(cellClass: CardCell.self)
+        view.setHeaderPadding(0)
         view.separatorStyle = .none
         view.backgroundColor = .clear
         view.backgroundView?.backgroundColor = Consts.TableView.backgroundColor
@@ -102,8 +103,8 @@ final class CardsViewBuilder {
         tableView
             .add(toSuperview: view)
             .touchEdge(.top, toEdge: .bottom, ofView: stackLabel, withInset: Consts.TableView.topOffSet)
-            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.TableView.rightOffSet)
-            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.TableView.rightOffSet)
+            .touchEdge(.left, toSuperviewEdge: .left)
+            .touchEdge(.right, toSuperviewEdge: .right)
             .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view), withInset: Consts.TableView.bottomOffSet)
     }
 }
