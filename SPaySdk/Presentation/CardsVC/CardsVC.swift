@@ -11,7 +11,9 @@ extension CGFloat {
     static let headerHeight = 54.0
 }
 
-protocol ICardsVC { }
+protocol ICardsVC {
+    func reloadTableView()
+}
 
 final class CardsVC: ContentVC, ICardsVC {
     
@@ -52,6 +54,14 @@ final class CardsVC: ContentVC, ICardsVC {
         super.viewDidDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
         analytics.sendDisappeared(view: self)
+    }
+    
+    func reloadTableView() {
+        UIView.transition(with: viewBuilder.tableView,
+                          duration: 0.3,
+                          options: .transitionCrossDissolve,
+                          animations: { self.viewBuilder.tableView.reloadData() },
+                          completion: nil)
     }
 }
 

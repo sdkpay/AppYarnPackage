@@ -132,8 +132,8 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
     
     private func partPayTapped() {
         
-        Task {
-           await router.presentPartPay()
+        Task { @MainActor [view, router] in
+            await router.presentPartPay()
             configViews()
             view?.reloadData()
         }

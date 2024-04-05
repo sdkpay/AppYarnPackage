@@ -57,7 +57,7 @@ final class DefaultCompletionManager: CompletionManager {
         self.liveCircleManager = liveCircleManager
         self.analyticsService = analyticsService
     }
-    
+
     func setPaymentCompletion(_ completion: @escaping PaymentCompletion) {
         paymentCompletion = completion
     }

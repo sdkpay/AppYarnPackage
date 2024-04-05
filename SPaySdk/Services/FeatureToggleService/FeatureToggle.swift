@@ -17,6 +17,7 @@ enum Feature: String, Codable {
     case newDebitCard
     case retryPayment
     case spasiboBonuses
+    case dynamicCardsUpdate
 }
 
 final class FeatureToggleServiceAssembly: Assembly {
@@ -53,9 +54,5 @@ final class DefaultFeatureToggleService: FeatureToggleService {
     
     private func getFeature(_ feature: Feature) -> FeaturesToggle? {
         features.first(where: { $0.name == feature.rawValue })
-    }
-    
-    deinit {
-        print("ADS")
     }
 }

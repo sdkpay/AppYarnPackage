@@ -55,6 +55,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     private let bankManager: BankAppManager
     private let partPayService: PartPayService
     private let helperConfigManager: HelperConfigManager
+    private var featureToggle: FeatureToggleService
     private let biometricAuthProvider: BiometricAuthProviderProtocol
     
     init(_ router: PaymentRouting,
@@ -67,12 +68,14 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
          authService: AuthService,
          secureChallengeService: SecureChallengeService,
          authManager: AuthManager,
+         featureToggle: FeatureToggleService,
          biometricAuthProvider: BiometricAuthProviderProtocol,
          partPayService: PartPayService,
          helperConfigManager: HelperConfigManager) {
         self.router = router
         self.sdkManager = manager
         self.userService = userService
+        self.featureToggle = featureToggle
         self.completionManager = completionManager
         self.analytics = analytics
         self.authService = authService
@@ -137,7 +140,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
          guard userService.additionalCards else { return }
          guard let authMethod = authManager.authMethod else { return }
          
-         guard !userService.getListCards else {
+        guard userService.firstCardUpdate else {
              presentListCards()
              return
          }
@@ -232,12 +235,19 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
             guard let selectedCard = userService.selectedCard,
                   let user = userService.user else { return }
             
-            userService.getListCards = true
+            if userService.firstCardUpdate, !featureToggle.isEnabled(.dynamicCardsUpdate) {
+                try await userService.getListCards()
+            } else {
+                Task {
+                    try await userService.getListCards()
+                }
+            }
             
             let finalCost = partPayService.bnplplanSelected
             ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
             : user.orderInfo.orderAmount.amount
             
+            userService.firstCardUpdate = false
             let card = try await router.presentCards(cards: user.paymentToolInfo.paymentTool,
                                                      cost: finalCost?.price(.RUB) ?? "",
                                                      selectedId: selectedCard.paymentID)

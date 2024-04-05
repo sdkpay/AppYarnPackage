@@ -32,6 +32,7 @@ final class HintsModuleAssembly {
                                                payAmountValidationManager: locator.resolve())
         case .helper:
             return HintsHelperModulePresenter(helperConfigManager: locator.resolve(),
+                                              partPayService: locator.resolve(),
                                               payAmountValidationManager: locator.resolve())
         }
     }

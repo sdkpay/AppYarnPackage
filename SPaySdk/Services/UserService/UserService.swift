@@ -24,11 +24,12 @@ final class UserServiceAssembly: Assembly {
 }
 
 protocol UserService {
-    var getListCards: Bool { get set }
+    var firstCardUpdate: Bool { get set }
     var additionalCards: Bool { get }
     var user: UserModel? { get }
     var selectedCard: PaymentTool? { get set }
     var selectedCardPublisher: Published<PaymentTool?>.Publisher { get }
+    var userPublisher: Published<UserModel?>.Publisher { get }
     func getUser() async throws
     func getListCards() async throws
     func checkUserSession() async throws
@@ -38,15 +39,17 @@ protocol UserService {
 final class DefaultUserService: UserService {
     
     private let network: NetworkService
-    private(set) var user: UserModel?
+    
+    @Published private(set) var user: UserModel?
+    var userPublisher: Published<UserModel?>.Publisher { $user }
+    
     private let sdkManager: SDKManager
     private let authManager: AuthManager
     private let analytics: AnalyticsService
     
-    var getListCards = false
+    var firstCardUpdate = true
     
     @Published var selectedCard: PaymentTool?
-    
     var selectedCardPublisher: Published<PaymentTool?>.Publisher { $selectedCard }
     
     private(set) var additionalCards = false
@@ -121,6 +124,7 @@ final class DefaultUserService: UserService {
     }
     
     func clearData() {
+        firstCardUpdate = true
         user = nil
     }
     

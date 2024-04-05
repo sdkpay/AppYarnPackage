@@ -23,7 +23,7 @@ final class AuthPresenter: AuthPresenting {
     private let authManager: AuthManager
     private let completionManager: CompletionManager
     private let sdkManager: SDKManager
-    private let userService: UserService
+    private var userService: UserService
     private var bankManager: BankAppManager
     private let alertService: AlertService
     private let timeManager: OptimizationCheсkerManager
@@ -34,6 +34,7 @@ final class AuthPresenter: AuthPresenting {
     private var helperManager: HelperConfigManager
     private var featureToggle: FeatureToggleService
     private var partPayService: PartPayService
+    private let biometricAuthProvider: BiometricAuthProviderProtocol
     
     private var authMethod: AuthMethod = .bank
     
@@ -50,6 +51,7 @@ final class AuthPresenter: AuthPresenting {
          partPayService: PartPayService,
          timeManager: OptimizationCheсkerManager,
          enviromentManager: EnvironmentManager,
+         biometricAuthProvider: BiometricAuthProviderProtocol,
          payAmountValidationManager: PayAmountValidationManager,
          featureToggle: FeatureToggleService,
          authManager: AuthManager,
@@ -71,6 +73,7 @@ final class AuthPresenter: AuthPresenting {
         self.helperManager = helperManager
         self.authManager = authManager
         self.featureToggle = featureToggle
+        self.biometricAuthProvider = biometricAuthProvider
         self.timeManager.startTraking()
     }
     
@@ -297,6 +300,16 @@ final class AuthPresenter: AuthPresenting {
                 }
                 return
             }
+            
+            if userService.selectedCard == nil {
+                cardNeeded()
+                return
+            } else if let card = userService.selectedCard,
+                      try payAmountValidationManager.checkAmountSelectedTool(card) != .enouth {
+                cardNeeded()
+                return
+            }
+            
             if let user = userService.user, !user.paymentToolInfo.paymentTool.isEmpty {
                 do {
                     let mode = try getPaymentMode()
@@ -379,4 +392,141 @@ final class AuthPresenter: AuthPresenting {
             }
         }
     }
+    
+    private func cardNeeded() {
+         
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: .card)
+            .build(), on: view?.analyticsName ?? .None)
+         
+         guard userService.additionalCards else { return }
+         guard let authMethod = authManager.authMethod else { return }
+         
+        guard userService.firstCardUpdate else {
+            presentListCards()
+            return
+        }
+         
+         switch authMethod {
+         case .refresh:
+             
+             Task { @MainActor [biometricAuthProvider] in
+                 
+                 let canEvalute = await biometricAuthProvider.canEvalute()
+                 
+                 switch canEvalute {
+                 case true:
+                     let result = await biometricAuthProvider.evaluate()
+                     
+                     switch result {
+                     case true:
+                         analytics.send(EventBuilder()
+                             .with(base: .LC)
+                             .with(state: .Good)
+                             .with(value: .bioAuth)
+                             .build(), on: view?.analyticsName ?? .None)
+                         
+                         self.presentListCards()
+                     case false:
+                         analytics.send(EventBuilder()
+                             .with(base: .LC)
+                             .with(state: .Fail)
+                             .with(value: .bioAuth)
+                             .build(), on: view?.analyticsName ?? .None)
+                         await self.appAuth()
+                     }
+                 case false:
+                     analytics.send(EventBuilder()
+                         .with(base: .LC)
+                         .with(state: .Fail)
+                         .with(value: .bioAuth)
+                         .build(), on: view?.analyticsName ?? .None)
+                     await self.appAuth()
+                 }
+             }
+             
+         case .bank, .sid:
+             
+             presentListCards()
+         }
+     }
+     
+     private func presentListCards() {
+         
+         Task { @MainActor [view, router] in
+             
+             view?.showLoading()
+             
+             guard let selectedCard = userService.user?.paymentToolInfo.paymentTool.first?.paymentID,
+                   let user = userService.user else { return }
+              
+             if userService.firstCardUpdate || !featureToggle.isEnabled(.dynamicCardsUpdate) {
+                 try await userService.getListCards()
+             } else {
+                 Task {
+                     try await userService.getListCards()
+                 }
+             }
+   
+             let finalCost = partPayService.bnplplanSelected
+             ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
+             : user.orderInfo.orderAmount.amount
+             
+             userService.firstCardUpdate = false
+             let card = try? await router.presentCards(cards: user.paymentToolInfo.paymentTool,
+                                                       cost: finalCost?.price(.RUB) ?? "",
+                                                       selectedId: selectedCard)
+             view?.hideLoading(animate: true)
+             userService.selectedCard = card
+             
+             if let user = userService.user, !user.paymentToolInfo.paymentTool.isEmpty {
+                 do {
+                     let mode = try getPaymentMode()
+                     router.presentPayment(state: mode)
+                 } catch {
+                     await alertService.show(on: view, type: .noMoney)
+                 }
+             } else {
+                 router.presentHelper()
+             }
+         }
+     }
+     
+     private func appAuth() {
+         
+         Task {
+             do {
+                 try await authService.appAuth()
+                 
+                 await self.view?.showLoading()
+                 
+                 repeatAuth()
+             } catch {
+                 if let error = error as? SDKError {
+                     
+                     if error.represents(.noData)
+                         || error.represents(.bankAppError)
+                         || error.represents(.bankAppNotFound) {
+                         
+                         await router.presentBankAppPicker()
+                         self.repeatAuth()
+                     } else {
+                         await alertService.show(on: view, type: .defaultError)
+                         completionManager.dismissCloseAction(view)
+                     }
+                 }
+             }
+         }
+     }
+     
+     private func repeatAuth() {
+         Task {
+             
+             try await self.authService.auth()
+             
+             self.authService.bankCheck = true
+             self.presentListCards()
+         }
+     }
 }

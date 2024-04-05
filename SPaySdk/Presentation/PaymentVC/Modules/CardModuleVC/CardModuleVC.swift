@@ -94,7 +94,7 @@ final class CardModuleVC: ModuleVC, ICardModuleVC {
             .touchEdge(.bottom,
                        toEdge: .bottom,
                        ofView: view)
-            .touchEdge(.top, toEdge: .top, ofView: view, withInset: Cost.CollectionView.top)
+            .touchEdge(.top, toEdge: .top, ofView: view)
     }
 }
 

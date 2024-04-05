@@ -120,6 +120,8 @@ final class CardCell: UITableViewCell, Shakable {
         if !model.isEnoughtMoney {
             titleLabel.textColor = .textSecondary
             cardLabel.textColor = .textSecondary
+        } else {
+            titleLabel.textColor = .textPrimory
         }
     }
     

@@ -21,7 +21,10 @@ final class CardsAssembly {
                       cost: String,
                       selectedId: Int,
                       selectedCard: @escaping (PaymentTool) -> Void) {
-        let presenter = modulePresenter(cards: cards, selectedId: selectedId, selectedCard: selectedCard)
+        let presenter = modulePresenter(cards: cards,
+                                        selectedId: selectedId,
+                                        cost: cost,
+                                        selectedCard: selectedCard)
         let contentView = moduleView(presenter: presenter, cost: cost)
         presenter.view = contentView
         transition.performTransition(for: contentView)

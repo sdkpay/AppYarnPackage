@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 protocol CardsPresenting {
     func viewDidLoad()
@@ -43,7 +44,7 @@ final class CardsPresenter: CardsPresenting {
 
     private let analytics: AnalyticsManager
     private let userService: UserService
-    private let cards: [PaymentTool]
+    private var cards: [PaymentTool]
     private var enoughtCards: [PaymentTool] = []
     private var notEnoughtCards: [PaymentTool] = []
     private let selectedCard: (PaymentTool) -> Void
@@ -51,6 +52,8 @@ final class CardsPresenter: CardsPresenting {
     private var cost: String
     private var timeManager: OptimizationCheсkerManager
     private var featureToggle: FeatureToggleService
+    
+    private var cancellable = Set<AnyCancellable>()
 
     init(userService: UserService,
          analytics: AnalyticsManager,
@@ -71,7 +74,22 @@ final class CardsPresenter: CardsPresenting {
         self.timeManager.startTraking()
     }
     
-    func viewDidLoad() {}
+    func viewDidLoad() {
+        setupBinding()
+    }
+    
+    private func setupBinding() {
+        
+        userService.userPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let value {
+                    self?.cards = value.paymentToolInfo.paymentTool
+                    self?.view?.reloadTableView()
+                }
+            }
+            .store(in: &cancellable)
+    }
 
     func model(for indexPath: IndexPath) -> CardCellModel {
         let card = indexPath.section == 0 ? enoughtCards[indexPath.row] : notEnoughtCards[indexPath.row]

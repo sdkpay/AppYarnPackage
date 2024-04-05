@@ -84,6 +84,11 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
         configViews()
     }
     
+    private func configViews() {
+        
+        view?.addSnapShot()
+    }
+    
     func identifiresForSection() -> [Int] {
         
         if let paymentId = userService.selectedCard?.cardNumber.hash {
@@ -127,10 +132,10 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
         guard userService.additionalCards else { return }
         guard let authMethod = authManager.authMethod else { return }
         
-        guard !userService.getListCards else {
-            presentListCards()
-            return
-        }
+       guard userService.firstCardUpdate else {
+           presentListCards()
+           return
+       }
         
         switch authMethod {
         case .refresh:
@@ -178,33 +183,36 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
     
     private func presentListCards() {
         
-        Task { @MainActor [view] in
+        Task { @MainActor [view, router] in
             
             view?.contentParrent?.showLoading()
             
             guard let selectedCard = userService.selectedCard,
-                  let user = userService.user else { return }
+                  let user = userService.user
+            else { return }
             
-            userService.getListCards = true
+            if userService.firstCardUpdate {
+                try await userService.getListCards()
+            } else {
+                Task {
+                    try await userService.getListCards()
+                }
+            }
             
             let finalCost = partPayService.bnplplanSelected
             ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
             : user.orderInfo.orderAmount.amount
             
-            let card = try? await self.router.presentCards(cards: user.paymentToolInfo.paymentTool,
-                                                           cost: finalCost?.price(.RUB) ?? "",
-                                                           selectedId: selectedCard.paymentID)
+            userService.firstCardUpdate = false
+            let card = try? await router.presentCards(cards: user.paymentToolInfo.paymentTool,
+                                                      cost: finalCost?.price(.RUB) ?? "",
+                                                      selectedId: selectedCard.paymentID)
             view?.contentParrent?.hideLoading(animate: true)
             userService.selectedCard = card
             view?.reloadData()
         }
     }
-    
-    private func configViews() {
         
-        view?.addSnapShot()
-    }
-    
     private func appAuth() {
         
         Task {

@@ -9,9 +9,13 @@ import UIKit
 import Combine
 
 protocol AuthRouting {
+    @MainActor
     func presentPayment(state: PaymentVCMode)
+    @MainActor
     func presentFakeScreen() async
+    @MainActor
     func presentBankAppPicker() async
+    @MainActor
     func presentHelper()
 }
 
@@ -22,6 +26,17 @@ final class AuthRouter: AuthRouting {
     
     init(with routeMap: AuthRouteMap) {
         self.routeMap = routeMap
+    }
+    
+    @MainActor
+    func presentCards(cards: [PaymentTool], cost: String, selectedId: Int) async throws -> PaymentTool {
+        
+        guard let nc = viewController?.contentNavigationController else { throw SDKError(.unowned) }
+        
+        return await routeMap.presentCards(by: CoverPushTransition(pushInto: nc),
+                                           cards: cards,
+                                           cost: cost,
+                                           selectedId: selectedId)
     }
     
     @MainActor

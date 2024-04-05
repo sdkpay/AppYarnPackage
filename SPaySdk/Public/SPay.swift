@@ -17,7 +17,7 @@ public enum SEnvironment: Int {
 @objc
 public final class SPay: NSObject {
     
-    private static var payService: SBPayService? = DefaultSBPayService()
+    private static var payService: SBPayService?
     
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     @objc
@@ -28,6 +28,10 @@ public final class SPay: NSObject {
                              helperConfig: SBHelperConfig = SBHelperConfig(),
                              environment: SEnvironment = .prod,
                              completion: ((SPError?) -> Void)? = nil) {
+        
+        if payService == nil {
+            payService = DefaultSBPayService()
+        }
         payService?.setup(bnplPlan: bnplPlan,
                           resultViewNeeded: resultViewNeeded,
                           helpers: helpers,
@@ -91,6 +95,10 @@ public final class SPay: NSObject {
                                    ssl: Bool,
                                    refresh: Bool,
                                    debugLogLevel: [DebugLogLevel]) {
+        
+        if payService == nil {
+            payService = DefaultSBPayService()
+        }
         payService?.debugConfig(network: network, ssl: ssl, refresh: refresh, debugLogLevel: debugLogLevel)
     }
 #endif

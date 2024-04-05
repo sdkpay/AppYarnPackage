@@ -149,7 +149,7 @@ final class DefaultPaymentService: PaymentService {
                                                               orderId: authInfo.orderId,
                                                               deviceInfo: deviceInfo,
                                                               resolution: resolution?.rawValue,
-                                                              priorityCardOnly: userService.getListCards,
+                                                              priorityCardOnly: true,
                                                               isBnplEnabled: isBnplEnabled))
             return nil
         } catch {

@@ -66,7 +66,7 @@ final class DefaultSBPayService: SBPayService {
         locator.register(service: logService)
         locator.register(service: buildSettings)
         
-        assemblyManager.registerServices(to: locator)
+        assemblyManager.registerStartServices(to: locator)
         locator
             .resolve(SetupManager.self)
             .resultViewNeeded(resultViewNeeded)
@@ -136,7 +136,7 @@ final class DefaultSBPayService: SBPayService {
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
-
+        assemblyManager.registerSessionServices(to: locator)
         if apiKey == nil {
             apiKey = request.apiKey
         }
@@ -167,6 +167,7 @@ final class DefaultSBPayService: SBPayService {
     func payWithBankInvoiceId(with viewController: UIViewController,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
+        assemblyManager.registerSessionServices(to: locator)
         guard !inProgress else { return }
         inProgress = true
         timeManager.startCheckingCPULoad()
@@ -207,6 +208,7 @@ final class DefaultSBPayService: SBPayService {
     func payWithoutRefresh(with viewController: UIViewController, 
                            paymentRequest: SBankInvoicePaymentRequest,
                            completion: @escaping PaymentCompletion) {
+        assemblyManager.registerSessionServices(to: locator)
         guard !inProgress else { return }
         inProgress = true
         timeManager.startCheckingCPULoad()
@@ -247,6 +249,7 @@ final class DefaultSBPayService: SBPayService {
     func payWithPartPay(with viewController: UIViewController,
                         paymentRequest: SBankInvoicePaymentRequest,
                         completion: @escaping PaymentCompletion) {
+        assemblyManager.registerSessionServices(to: locator)
         guard !inProgress else { return }
         inProgress = true
         timeManager.startCheckingCPULoad()

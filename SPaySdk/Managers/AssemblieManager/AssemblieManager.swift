@@ -55,11 +55,16 @@ final class AssemblyManager {
         PaymentRouteMapAssembly()
     ]
     
-    func registerServices(to locator: LocatorService) {
+    func registerStartServices(to locator: LocatorService) {
         
-        for assembly in startAssemblies
-                + sessionAssemblies
-                + routeMaps {
+        for assembly in startAssemblies + routeMaps {
+            assembly.register(in: locator)
+        }
+    }
+    
+    func registerSessionServices(to locator: LocatorService) {
+        
+        for assembly in sessionAssemblies {
             assembly.register(in: locator)
         }
     }

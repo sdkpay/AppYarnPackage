@@ -30,6 +30,11 @@ protocol AuthRouteMap: AnyObject {
     func presentBankAppPicker(by transition: Transition) async
     @MainActor
     func presentHelper(by transition: Transition)
+    @MainActor
+    func presentCards(by transition: Transition,
+                      cards: [PaymentTool],
+                      cost: String,
+                      selectedId: Int) async -> PaymentTool
 }
 
 final class DefaultAuthRouteMap: AuthRouteMap {
@@ -71,5 +76,20 @@ final class DefaultAuthRouteMap: AuthRouteMap {
     func presentHelper(by transition: Transition) {
         
         HelperAssembly(locator: locator).createModule(transition: transition)
+    }
+    
+    @MainActor
+    func presentCards(by transition: Transition,
+                      cards: [PaymentTool],
+                      cost: String,
+                      selectedId: Int) async -> PaymentTool {
+        await withCheckedContinuation { continuation in
+            CardsAssembly(locator: locator).createModule(transition: transition,
+                                                         cards: cards,
+                                                         cost: cost,
+                                                         selectedId: selectedId) { tool in
+                continuation.resume(returning: tool)
+            }
+        }
     }
 }
