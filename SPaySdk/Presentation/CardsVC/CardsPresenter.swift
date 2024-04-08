@@ -42,6 +42,7 @@ final class CardsPresenter: CardsPresenting {
         return notEnoughtCards.isEmpty ? 1 : 2
     }
 
+    private let router: CardsRouting
     private let analytics: AnalyticsManager
     private let userService: UserService
     private var cards: [PaymentTool]
@@ -54,8 +55,9 @@ final class CardsPresenter: CardsPresenting {
     private var featureToggle: FeatureToggleService
     
     private var cancellable = Set<AnyCancellable>()
-
-    init(userService: UserService,
+    
+    init(_ router: CardsRouting,
+         userService: UserService,
          analytics: AnalyticsManager,
          cards: [PaymentTool],
          selectedId: Int,
@@ -63,6 +65,7 @@ final class CardsPresenter: CardsPresenting {
          featureToggle: FeatureToggleService,
          timeManager: OptimizationCheсkerManager,
          selectedCard: @escaping (PaymentTool) -> Void) {
+        self.router = router
         self.analytics = analytics
         self.userService = userService
         self.cards = cards
@@ -84,11 +87,21 @@ final class CardsPresenter: CardsPresenting {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 if let value {
-                    self?.cards = value.paymentToolInfo.paymentTool
-                    self?.view?.reloadTableView()
+                    if value.paymentToolInfo.paymentTool.isEmpty {
+                        self?.presentHelper()
+                    } else {
+                        self?.cards = value.paymentToolInfo.paymentTool
+                        self?.view?.reloadTableView()
+                    }
                 }
             }
             .store(in: &cancellable)
+    }
+    
+    private func presentHelper() {
+        Task {
+            await router.presentHelper()
+        }
     }
 
     func model(for indexPath: IndexPath) -> CardCellModel {

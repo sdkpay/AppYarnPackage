@@ -21,20 +21,29 @@ final class CardsAssembly {
                       cost: String,
                       selectedId: Int,
                       selectedCard: @escaping (PaymentTool) -> Void) {
-        let presenter = modulePresenter(cards: cards,
+        let router = moduleRouter()
+        let presenter = modulePresenter(router,
+                                        cards: cards,
                                         selectedId: selectedId,
                                         cost: cost,
                                         selectedCard: selectedCard)
         let contentView = moduleView(presenter: presenter, cost: cost)
+        router.viewController = contentView
         presenter.view = contentView
         transition.performTransition(for: contentView)
     }
-
-    private func modulePresenter(cards: [PaymentTool],
+    
+    private func moduleRouter() -> CardsRouter {
+        CardsRouter(with: locator.resolve())
+    }
+    
+    private func modulePresenter(_ router: CardsRouter,
+                                 cards: [PaymentTool],
                                  selectedId: Int,
                                  cost: String,
                                  selectedCard: @escaping (PaymentTool) -> Void) -> CardsPresenter {
-        let presenter = CardsPresenter(userService: locator.resolve(),
+        let presenter = CardsPresenter(router,
+                                       userService: locator.resolve(),
                                        analytics: locator.resolve(),
                                        cards: cards,
                                        selectedId: selectedId,
