@@ -69,9 +69,9 @@ extension CardsVC: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            presenter.enougthCardsCount
+            return presenter.enougthCardsCount
         } else {
-            presenter.notEnougthCardsCount
+            return presenter.notEnougthCardsCount
         }
     }
     
