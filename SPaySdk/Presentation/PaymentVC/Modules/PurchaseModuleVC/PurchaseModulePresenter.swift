@@ -101,7 +101,8 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     }
     
     private func configBonusesView() {
-        let bonuses = featureToggle.isEnabled(.spasiboBonuses) ? userService.selectedCard?.precalculateBonuses : nil
+        let bonusesEnabled = featureToggle.isEnabled(.spasiboBonuses) && !partPayService.bnplplanSelected
+        let bonuses = bonusesEnabled ? userService.selectedCard?.precalculateBonuses : nil
         
         view?.configBonusesView(bonuses)
     }

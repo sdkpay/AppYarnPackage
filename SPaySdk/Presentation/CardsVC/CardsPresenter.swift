@@ -45,6 +45,7 @@ final class CardsPresenter: CardsPresenting {
     private let router: CardsRouting
     private let analytics: AnalyticsManager
     private let userService: UserService
+    private let partPayService: PartPayService
     private var cards: [PaymentTool]
     private var enoughtCards: [PaymentTool] = []
     private var notEnoughtCards: [PaymentTool] = []
@@ -58,6 +59,7 @@ final class CardsPresenter: CardsPresenting {
     
     init(_ router: CardsRouting,
          userService: UserService,
+         partPayService: PartPayService,
          analytics: AnalyticsManager,
          cards: [PaymentTool],
          selectedId: Int,
@@ -68,6 +70,7 @@ final class CardsPresenter: CardsPresenting {
         self.router = router
         self.analytics = analytics
         self.userService = userService
+        self.partPayService = partPayService
         self.cards = cards
         self.selectedCard = selectedCard
         self.selectedId = selectedId
@@ -127,7 +130,8 @@ final class CardsPresenter: CardsPresenting {
                 "567890": Strings.Payment.Cards.CompoundWallet.two
             ]))
         }
-        let bonuses = featureToggle.isEnabled(.spasiboBonuses) ? card.precalculateBonuses : nil
+        let bonusesEnabled = featureToggle.isEnabled(.spasiboBonuses) && !partPayService.bnplplanSelected
+        let bonuses = bonusesEnabled ? card.precalculateBonuses : nil
         
         return CardCellModel(title: title,
                              subtitle: subtitle,

@@ -44,6 +44,7 @@ final class CardsAssembly {
                                  selectedCard: @escaping (PaymentTool) -> Void) -> CardsPresenter {
         let presenter = CardsPresenter(router,
                                        userService: locator.resolve(),
+                                       partPayService: locator.resolve(),
                                        analytics: locator.resolve(),
                                        cards: cards,
                                        selectedId: selectedId,
