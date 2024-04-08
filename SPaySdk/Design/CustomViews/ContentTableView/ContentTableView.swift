@@ -7,11 +7,16 @@
 
 import UIKit
 
-private extension CGFloat {
-    static let maxTableViewHeight = UIScreen.main.bounds.height * 0.6
-}
-
 class ContentTableView: UITableView {
+    
+    func setHeaderPadding(_ padding: CGFloat) {
+        if #available(iOS 15.0, *) {
+            sectionHeaderTopPadding = padding
+        }
+    }
+    
+    private var maxTableViewHeight = ScreenHeightState.normal.height
+    
     override var contentSize: CGSize {
         didSet {
             fixHeight()
@@ -24,12 +29,17 @@ class ContentTableView: UITableView {
         constraint.isActive = true
         return constraint
     }()
+    
+    func setMaxHeight(_ maxHeight: CGFloat) {
+        maxTableViewHeight = maxHeight
+    }
 
     private func fixHeight() {
-        tableHeightConstraint.constant = contentSize.height > .maxTableViewHeight ? .maxTableViewHeight : contentSize.height
+        tableHeightConstraint.constant = contentSize.height > maxTableViewHeight ? maxTableViewHeight : contentSize.height
     }
 
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        
         guard gestureRecognizer === panGestureRecognizer else {
             return true
         }

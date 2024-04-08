@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SBLayout
 
 private extension CGFloat {
     static let cellHeight = 50.0
@@ -24,10 +23,11 @@ protocol ConfigVCProtocol: AnyObject {
 }
 
 final class ConfigVC: UIViewController, ConfigVCProtocol {
+    
     private var presenter: ConfigPresenterProtocol
     
     private lazy var loader: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: .whiteLarge)
+        let view = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
         view.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
         view.backgroundColor = .gray
         view.layer.cornerRadius = 10
@@ -91,7 +91,6 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
         loader.center = view.center
         view.addSubview(loader)
         view.bringSubviewToFront(loader)
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         loader.startAnimating()
     }
     
@@ -121,15 +120,21 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
     private func addMenu() {
         var menuItems: [UIAction] {
             return [
-                UIAction(title: "Generate order",
+                UIAction(title: "Config logs",
                          image: UIImage(systemName: "network"),
                          handler: { _ in
-                             self.presenter.generateOrderIdTapped()
+                             self.presenter.configLogs()
                          }),
                 UIAction(title: "Refresh data",
                          image: UIImage(systemName: "arrow.clockwise"),
                          handler: { _ in
                              self.presenter.refreshData()
+                         }),
+                UIAction(title: "Cleare private storage",
+                         image: UIImage(systemName: "trash"),
+                         attributes: .destructive,
+                         handler: { _ in
+                             self.presenter.removeKeychainTapped()
                          }),
                 UIAction(title: "Cleare logs",
                          image: UIImage(systemName: "trash"),
@@ -142,6 +147,12 @@ final class ConfigVC: UIViewController, ConfigVCProtocol {
                          attributes: .destructive,
                          handler: { _ in
                              self.presenter.removeButtonTapped()
+                         }),
+                UIAction(title: "Cleare selected bank app",
+                         image: UIImage(systemName: "trash"),
+                         attributes: .destructive,
+                         handler: { _ in
+                             self.presenter.removeSavedBank()
                          })
             ]
         }

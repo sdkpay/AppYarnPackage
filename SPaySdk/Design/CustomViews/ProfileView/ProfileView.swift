@@ -30,6 +30,8 @@ private extension CGFloat {
 }
 
 final class ProfileView: UIView {
+    private var buttonAction: Action?
+    
     private lazy var nameLabel: UILabel = {
         let view = UILabel()
         view.font = .bodi2
@@ -38,10 +40,11 @@ final class ProfileView: UIView {
         return view
     }()
     
-    private lazy var iconView: UIImageView = {
-        let view = UIImageView()
+    private lazy var iconButton: UIButton = {
+        let view = UIButton()
         view.layer.masksToBounds = true
         view.layer.cornerRadius = .iconWidth / 2
+        view.addTarget(self, action: #selector(iconActionDidTap), for: .touchUpInside)
         return view
     }()
 
@@ -56,19 +59,27 @@ final class ProfileView: UIView {
     
     func config(with userInfo: UserInfo) {
         nameLabel.text = userInfo.fullName
-        iconView.image = userInfo.sdkGender.icon
+        iconButton.setImage(userInfo.sdkGender.icon, for: .normal)
         setupUI()
     }
     
+    func addAction(action: Action?) {
+        buttonAction = action
+    }
+    
+    @objc private func iconActionDidTap() {
+        buttonAction?()
+    }
+    
     private func setupUI() {
-        addSubview(iconView)
-        iconView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(iconButton)
+        iconButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            iconView.topAnchor.constraint(equalTo: topAnchor),
-            iconView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            iconView.widthAnchor.constraint(equalToConstant: .iconWidth),
-            iconView.heightAnchor.constraint(equalToConstant: .iconWidth),
-            iconView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            iconButton.topAnchor.constraint(equalTo: topAnchor),
+            iconButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            iconButton.widthAnchor.constraint(equalToConstant: .iconWidth),
+            iconButton.heightAnchor.constraint(equalToConstant: .iconWidth),
+            iconButton.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
         addSubview(nameLabel)
@@ -76,7 +87,7 @@ final class ProfileView: UIView {
         NSLayoutConstraint.activate([
             nameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            nameLabel.trailingAnchor.constraint(equalTo: iconView.leadingAnchor, constant: -.minMargin)
+            nameLabel.trailingAnchor.constraint(equalTo: iconButton.leadingAnchor, constant: -.minMargin)
         ])
     }
 }

@@ -7,21 +7,22 @@
 
 import UIKit
 
-let closeSDKNotification = "CloseSDKWithoutError"
-
 protocol LiveCircleManager {
     func openInitialScreen(with viewController: UIViewController,
                            with locator: LocatorService)
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
+    var closeWithGesture: Action? { get set }
+    var rootController: RootVC? { get }
     func closeSDKWindow()
 }
 
 final class DefaultLiveCircleManager: LiveCircleManager {
-    private var sdkWindow: TransparentWindow?
     private var locator: LocatorService?
-    private weak var rootController: RootVC?
+    var rootController: RootVC?
+    private weak var metchVC: UIViewController?
     private let timeManager: OptimizationCheсkerManager?
+    var closeWithGesture: Action?
     
     init(timeManager: OptimizationCheсkerManager) {
         self.timeManager = timeManager
@@ -31,15 +32,9 @@ final class DefaultLiveCircleManager: LiveCircleManager {
                            with locator: LocatorService) {
         let rootVC = RootAssembly(locator: locator).createModule()
         rootController = rootVC
+        metchVC = viewController
         setupWindows(viewController: viewController, locator: locator, rootVC: rootVC)
         self.locator = locator
-        let analytics: AnalyticsService = locator.resolve()
-        analytics.sendEvent(.BankAppFound)
-        setenv("CFNETWORK_DIAGNOSTICS", "3", 1)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(closeSdk),
-                                               name: Notification.Name(closeSDKNotification),
-                                               object: nil)
     }
     
     deinit {
@@ -47,63 +42,30 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     }
     
     func closeSDKWindow() {
-        rootController?.dismiss(animated: true)
-        rootController = nil
-        sdkWindow = nil
+        locator?.resolve(NetworkService.self).cancelTask()
+        DispatchQueue.main.async {
+            self.rootController?.dismiss(animated: false)
+            self.rootController = nil
+        }
     }
     
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action) {
-        guard let locator = locator
-        else { return }
-        let service: AlertService = locator.resolve()
-        
-        switch paymentSuccess {
-        case .success:
-            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
-                              with: Strings.Alert.Pay.Success.title,
-                              state: .success,
-                              buttons: [],
-                              completion: completion)
-        case .waiting:
-            let button = AlertButtonModel(title: Strings.Ok.title,
-                                          type: .full,
-                                          action: completion)
-            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
-                              with: ConfigGlobal.localization?.payLoading ?? "",
-                              state: .waiting,
-                              buttons: [button],
-                              completion: {})
-        case .error:
-            service.showAlert(on: sdkWindow?.topVC as? ContentVC,
-                              with: Strings.Alert.Error.Main.title,
-                              state: .failure,
-                              buttons: [],
-                              completion: completion)
-        }
-    
-        closeSdk()
+        return
     }
-    
-    @objc
-    private func closeSdk(isErrorCompleted: Bool = false) {
-        guard let locator = locator else { return }
-        let network: NetworkService = locator.resolve()
-        network.cancelTask()
-        closeSDKWindow()
-        if !isErrorCompleted {
-            let manager: SDKManager = locator.resolve()
-            manager.completionWithError(error: .cancelled)
-        }
-        let analytics: AnalyticsService = locator.resolve()
-        analytics.sendEvent(.ManuallyClosed)
-        timeManager?.stopContectionTypeChecking()
-    }
-    
+
     private func setupWindows(viewController: UIViewController,
                               locator: LocatorService,
                               rootVC: UIViewController) {
         rootVC.modalPresentationStyle = .custom
-        viewController.present(rootVC, animated: true)
+        viewController.present(rootVC, animated: false)
+    }
+    
+    private func topVC(for window: UIWindow?) -> UIViewController? {
+        var topController: UIViewController? = window?.rootViewController
+           while topController?.presentedViewController != nil {
+               topController = topController?.presentedViewController
+           }
+           return topController
     }
 }

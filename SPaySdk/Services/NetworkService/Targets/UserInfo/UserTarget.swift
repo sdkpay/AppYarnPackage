@@ -8,24 +8,22 @@
 import Foundation
 
 enum UserTarget {
-    case getListCards(redirectUri: String,
-                        authCode: String,
-                        sessionId: String,
-                        state: String,
-                        merchantLogin: String?,
-                        orderId: String?,
-                        amount: Int?,
-                        currency: String?,
-                        orderNumber: String?,
-                        expiry: String?,
-                        frequency: Int?)
+    case getListCards(sessionId: String,
+                      merchantLogin: String?,
+                      orderId: String?,
+                      amount: Int?,
+                      currency: String?,
+                      orderNumber: String?,
+                      expiry: String?,
+                      frequency: Int?,
+                      priorityCardOnly: Bool)
 }
 
 extension UserTarget: TargetType {
     var path: String {
         switch self {
         case .getListCards:
-            return "/listCards"
+            return "sdk-gateway/v3/listCards"
         }
     }
     
@@ -38,22 +36,17 @@ extension UserTarget: TargetType {
     
     var task: HTTPTask {
         switch self {
-        case let .getListCards(redirectUri: redirectUri,
-                               authCode: authCode,
-                               sessionId: sessionId,
-                               state: state,
+        case let .getListCards(sessionId: sessionId,
                                merchantLogin: merchantLogin,
                                orderId: orderId,
                                amount: amount,
                                currency: currency,
                                orderNumber: orderNumber,
                                expiry: expiry,
-                               frequency: frequency):
+                               frequency: frequency,
+                               priorityCardOnly: priorityCardOnly):
             var params: [String: Any] = [
-                "redirectUri": redirectUri,
-                "authCode": authCode,
-                "sessionId": sessionId,
-                "state": state
+                "sessionId": sessionId
             ]
             
             if let merchantLogin = merchantLogin {
@@ -62,6 +55,9 @@ extension UserTarget: TargetType {
             if let orderId = orderId {
                 params["orderId"] = orderId
             }
+            
+            params["priorityCardOnly"] = priorityCardOnly
+            
             if let amount = amount,
                amount != 0,
                let currency = currency,
@@ -100,7 +96,7 @@ extension UserTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getListCards:
-            return StubbedResponse.listCards.data
+            return try? Data(contentsOf: Files.Stubs.listCardsJson.url)
         }
     }
 }

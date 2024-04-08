@@ -14,7 +14,7 @@ private struct ButtonColorScheme {
     var borderWidth: CGFloat
 
     init(backgroundColor: UIColor = .main,
-         titleColor: UIColor = .backgroundPrimary,
+         titleColor: UIColor = Asset.Palette.whiteAlways.color,
          borderColor: UIColor = .main,
          borderWidth: CGFloat = 0) {
         self.backgroundColor = backgroundColor
@@ -29,6 +29,8 @@ enum DefaultButtonAppearance {
     case clear
     case cancel
     case info
+    case blackBack
+    case orangeBack
     
     fileprivate var selected: ButtonColorScheme {
         switch self {
@@ -36,13 +38,19 @@ enum DefaultButtonAppearance {
             return ButtonColorScheme()
         case .cancel:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .notification)
+                                     titleColor: .textPrimory)
         case .info:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .notification)
         case .clear:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .main)
+                                     titleColor: .textPrimory)
+        case .blackBack:
+            return ButtonColorScheme(backgroundColor: .clear,
+                                     titleColor: .textPrimory)
+        case .orangeBack:
+            return ButtonColorScheme(backgroundColor: .backgroundSecondary,
+                                     titleColor: .notification)
         }
     }
     
@@ -52,32 +60,44 @@ enum DefaultButtonAppearance {
             return ButtonColorScheme()
         case .cancel:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .notification)
+                                     titleColor: .textPrimory)
         case .info:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .textPrimory)
         case .clear:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .main)
+                                     titleColor: .textPrimory)
+        case .blackBack:
+            return ButtonColorScheme(backgroundColor: .mainBlack,
+                                     titleColor: .white)
+        case .orangeBack:
+            return ButtonColorScheme(backgroundColor: .backgroundSecondary,
+                                     titleColor: .notification)
         }
     }
     
     fileprivate var disabled: ButtonColorScheme {
         switch self {
         case .full:
-            return ButtonColorScheme(backgroundColor: .backgroundSecondary,
+            return ButtonColorScheme(backgroundColor: .backgroundDisabled,
                                      titleColor: .textSecondary,
                                      borderColor: .clear,
                                      borderWidth: .zero)
         case .cancel:
             return ButtonColorScheme(backgroundColor: .clear,
-                                     titleColor: .notification)
+                                     titleColor: .textPrimory)
         case .info:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .notification)
         case .clear:
             return ButtonColorScheme(backgroundColor: .clear,
                                      titleColor: .main)
+        case .blackBack:
+            return ButtonColorScheme(backgroundColor: .clear,
+                                     titleColor: .textPrimory)
+        case .orangeBack:
+            return ButtonColorScheme(backgroundColor: .backgroundSecondary,
+                                     titleColor: .notification)
         }
     }
 }
@@ -129,7 +149,7 @@ final class DefaultButton: ActionButton {
     }
 
     private func applyScheme() {
-        titleLabel?.font = .bodi1
+        titleLabel?.font = .medium5
         let selected = scheme.selected
         let normal = scheme.normal
         let disabled = scheme.disabled

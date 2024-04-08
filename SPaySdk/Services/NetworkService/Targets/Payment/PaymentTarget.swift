@@ -18,27 +18,38 @@ enum PaymentTarget {
                          orderNumber: String?,
                          expiry: String?,
                          frequency: Int?,
+                         resolution: String?,
                          isBnplEnabled: Bool)
     case getPaymentOrder(operationId: String,
                          orderId: String?,
                          merchantLogin: String?,
                          ipAddress: String?,
                          paymentToken: String?)
+    case payOnline(sessionId: String,
+                   paymentId: Int,
+                   merchantLogin: String?,
+                   orderId: String?,
+                   deviceInfo: String,
+                   resolution: String?,
+                   priorityCardOnly: Bool,
+                   isBnplEnabled: Bool)
 }
 
 extension PaymentTarget: TargetType {
     var path: String {
         switch self {
         case .getPaymentToken:
-            return "/paymentToken"
+            return "sdk-gateway/v1/paymentToken"
         case .getPaymentOrder:
-            return "/paymentOrder"
+            return "sdk-gateway/v1/paymentOrder"
+        case .payOnline:
+            return "sdk-gateway/v1/payOnline"
         }
     }
     
     var httpMethod: HTTPMethod {
         switch self {
-        case .getPaymentToken, .getPaymentOrder:
+        case .getPaymentToken, .getPaymentOrder, .payOnline:
             return .post
         }
     }
@@ -55,12 +66,21 @@ extension PaymentTarget: TargetType {
                                   orderNumber: orderNumber,
                                   expiry: expiry,
                                   frequency: frequency,
+                                  resolution: resolution,
                                   isBnplEnabled):
             var params: [String: Any] = [
                 "sessionId": sessionId,
                 "deviceInfo": deviceInfo,
                 "paymentId": paymentId
             ]
+            
+            if let resolution {
+                let fraudMonInfo: [String: Any] = [
+                    "resolution": resolution
+                ]
+                
+                params["fraudMonInfo"] = fraudMonInfo
+            }
             
             if isBnplEnabled {
                 params["isBnplEnabled"] = isBnplEnabled
@@ -127,6 +147,41 @@ extension PaymentTarget: TargetType {
                 params["jsonParams"] = jsonParams
             }
             return .requestWithParameters(nil, bodyParameters: params)
+        case let .payOnline(sessionId: sessionId,
+                            paymentId: paymentId,
+                            merchantLogin: merchantLogin,
+                            orderId: orderId,
+                            deviceInfo: deviceInfo,
+                            resolution: resolution,
+                            priorityCardOnly: priorityCardOnly,
+                            isBnplEnabled: isBnplEnabled):
+            var params: [String: Any] = [
+                "sessionId": sessionId,
+                "deviceInfo": deviceInfo,
+                "paymentId": paymentId,
+                "priorityCardOnly": priorityCardOnly
+            ]
+            
+            if let resolution {
+                let fraudMonInfo: [String: Any] = [
+                    "resolution": resolution
+                ]
+                
+                params["fraudMonInfo"] = fraudMonInfo
+            }
+            
+            if isBnplEnabled {
+                params["isBnplEnabled"] = isBnplEnabled
+            }
+            
+            if let orderId = orderId {
+                params["orderId"] = orderId
+            }
+            
+            if let merchantLogin = merchantLogin {
+                params["merchantLogin"] = merchantLogin
+            }
+            return .requestWithParameters(nil, bodyParameters: params)
         }
     }
     
@@ -137,9 +192,11 @@ extension PaymentTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getPaymentToken:
-            return StubbedResponse.paymentToken.data
+            return try? Data(contentsOf: Files.Stubs.paymentTokenJson.url)
         case .getPaymentOrder:
-            return StubbedResponse.paymentOrderSDK.data
+            return try? Data(contentsOf: Files.Stubs.paymentOrderSDKJson.url)
+        case .payOnline:
+            return nil
         }
     }
 }

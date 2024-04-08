@@ -7,16 +7,19 @@
 
 import UIKit
 import SPaySdkDEBUG
+import SberIdSDK
 
 enum SectionData: Int, CaseIterable {
     case config
     case order
     case script
+    case merchantConfig
     case next
 }
 
 enum CellType: String, CaseIterable {
-    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, environment, bnpl, next
+    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, refresh, environment, bnpl, next, sid
+    case sbp, newCreditCard, newDebitCard, helpers, resultViewNeeded
 }
 
 private struct ConfigCellTextModel {
@@ -32,7 +35,10 @@ protocol ConfigPresenterProtocol {
     func cell(for indexPath: IndexPath) -> UITableViewCell
     func removeButtonTapped()
     func removeLogsTapped()
+    func removeKeychainTapped()
+    func removeSavedBank()
     func generateOrderIdTapped()
+    func configLogs()
     func refreshData()
     func viewDidLoad()
     var sectionCount: Int { get }
@@ -61,29 +67,20 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         case .config:
             return [
                 .apiKey,
-                .bnpl,
-                .environment
+                .environment,
+                .refresh
             ]
         case .order:
             switch configMethod {
             case .OrderId:
                 return [
                     .mode,
-                    .configMethod,
                     .merchantLogin,
                     .orderId,
                     .orderNumber
                 ]
             case .Purchase:
-                return [
-                    .mode,
-                    .configMethod,
-                    .merchantLogin,
-                    .orderId,
-                    .orderNumber,
-                    .cost,
-                    .currency
-                ]
+                return []
             }
         case .script:
             return [
@@ -91,9 +88,19 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                 .ssl,
                 .lang
             ]
+        case .merchantConfig:
+            return [
+                .bnpl,
+                .resultViewNeeded,
+                .helpers,
+                .sbp,
+                .newCreditCard,
+                .newDebitCard
+            ]
         case .next:
             return [
-                .next
+                .next,
+                .sid
             ]
         }
     }
@@ -130,6 +137,20 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             return bnplCell(type: type)
         case .next:
             return nextButtonCell(type: type)
+        case .refresh:
+            return refreshCell(type: type)
+        case .sid:
+            return sidButtonCell(type: type)
+        case .sbp:
+            return sbpCell(type: type)
+        case .newCreditCard:
+            return newCreditCell(type: type)
+        case .newDebitCard:
+            return newDebitCell(type: type)
+        case .helpers:
+            return helpersCell(type: type)
+        case .resultViewNeeded:
+            return resultViewNeededCell(type: type)
         }
     }
     
@@ -213,13 +234,42 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         case .SandboxRealBankApp:
             environment = .sandboxRealBankApp
         }
-        SPay.debugConfig(network: configValues.network, ssl: configValues.ssl)
-        SPay.setup(apiKey: configValues.apiKey ?? "",
-                   bnplPlan: configValues.bnpl,
-                   environment: environment) {
+        
+        SPay.debugConfig(network: configValues.network,
+                         ssl: configValues.ssl,
+                         refresh: configValues.refresh,
+                         debugLogLevel: configValues.debugLogLevels)
+        
+        SPay.setup(bnplPlan: configValues.bnpl,
+                   resultViewNeeded: configValues.resultViewNeeded,
+                   helpers: configValues.helpers,
+                   needLogs: true,
+                   helperConfig: SBHelperConfig(sbp: configValues.sbp, creditCard: configValues.newCreditCard),
+                   environment: environment) { error in
             self.view?.stopLoader()
-            self.view?.navigationController?.pushViewController(vc, animated: true)
+            if let error {
+                self.view?.showAlert(with: error.errorDescription)
+            } else {
+                self.view?.navigationController?.pushViewController(vc, animated: true)
+            }
         }
+    }
+    
+    private func sidAuth() {
+        // Параметры для поддержки PKCE
+         
+        let request = SIDAuthRequest()
+        request.nonce = "2Y25sDS8494W7xJva2z01nL6hajMhAUXF3Xk7hXk49M484t708GD8tjPus71NViJ"
+        // Перечисление scope через пробел
+        request.scope = "openid+mapp_sso"
+        request.state = "ZwyFM6WS8yV"
+        request.redirectUri = "testapp://spay"
+        // Необязательный параметр
+        request.codeChallenge = "Ddt8Pl8ohzMFAVPlsZ04lEDKIGQdcDD_FcuxBQxAV1I"
+        // Необязательный параметр
+        request.codeChallengeMethod = "S256"
+
+        SIDManager.auth(withSberId: request, viewController: view ?? UIViewController())
     }
     
     func generateOrderIdTapped() {
@@ -238,6 +288,45 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                                    currency: results[2])
             }
         }
+    }
+    
+    func removeKeychainTapped() {
+        
+        let keys = ["cookieData", "cookieId"]
+        
+        let service = "SPaySdkDEBUG"
+        
+        var statuses = [OSStatus]()
+        
+        for key in keys {
+            let status = SecItemDelete([
+                kSecClass: kSecClassGenericPassword,
+                kSecAttrAccount: key,
+                kSecAttrService: service
+            ] as NSDictionary)
+            
+            statuses.append(status)
+        }
+        
+        view?.showAlert(with: "Keychain storage statuses \(statuses.compactMap({ $0.description }))")
+    }
+    
+    func removeSavedBank() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "selectedBank")
+        view?.showAlert(with: "Removed selectedBank")
+    }
+    
+    func configLogs() {
+        
+        let vc = CustomAlertVC(with: "Log levels",
+                               values: DebugLogLevel.allCases.map({ $0.rawValue }),
+                               selected: configValues.debugLogLevels.map({ $0.rawValue })) { selected in
+            self.configValues.debugLogLevels = selected.map({ DebugLogLevel(rawValue: $0) ?? .defaultLevel })
+        }
+        vc.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+        vc.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+        view?.present(vc, animated: true)
     }
     
     @available(iOS 13.0, *)
@@ -372,11 +461,15 @@ extension ConfigPresenter {
     }
 
     private func modeCell(type: CellType) -> UITableViewCell {
-        let cell = SegmentedControlCell()
+        let cell = ListCell()
         cell.config(title: "Pay mode",
-                    items: PayMode.allCases.map({ $0.rawValue }),
-                    selected: configValues.mode.rawValue) { item in
-            self.configValues.mode = PayMode(rawValue: item) ?? .Auto
+                    value: configValues.mode.rawValue) {
+            self.view?.showSelectableAlert(with: "Pay mode",
+                                           items: PayMode.allCases.map({ $0.rawValue }),
+                                           selectedItem: { item in
+                self.configValues.mode = PayMode(rawValue: item) ?? .Auto
+                self.view?.reload()
+            })
         }
         return cell
     }
@@ -391,11 +484,57 @@ extension ConfigPresenter {
         return cell
     }
     
+    private func refreshCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "Refresh active:",
+                    value: configValues.refresh) { bool in
+            self.configValues.refresh = bool
+        }
+        
+        return cell
+    }
+    
     private func bnplCell(type: CellType) -> UITableViewCell {
         let cell = SwitchCell()
         cell.config(with: "BNPL",
                     value: configValues.bnpl) { bool in
             self.configValues.bnpl = bool
+        }
+        return cell
+    }
+
+    private func helpersCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "Helpers",
+                    value: configValues.helpers) { bool in
+            self.configValues.helpers = bool
+        }
+        return cell
+    }
+    
+    private func sbpCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "SBP",
+                    value: configValues.sbp) { bool in
+            self.configValues.sbp = bool
+        }
+        return cell
+    }
+    
+    private func newDebitCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "New debit card",
+                    value: configValues.newDebitCard) { bool in
+            self.configValues.newDebitCard = bool
+        }
+        return cell
+    }
+    
+    private func newCreditCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "New credit card",
+                    value: configValues.newCreditCard) { bool in
+            self.configValues.newCreditCard = bool
         }
         return cell
     }
@@ -434,6 +573,23 @@ extension ConfigPresenter {
         let cell = ButtonCell()
         cell.config(title: "Далее") {
             self.goForward()
+        }
+        return cell
+    }
+    
+    private func sidButtonCell(type: CellType) -> UITableViewCell {
+        let cell = ButtonCell()
+        cell.config(title: "Авторизация SID") {
+            self.sidAuth()
+        }
+        return cell
+    }
+    
+    private func resultViewNeededCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "ResultViewNeeded",
+                    value: configValues.resultViewNeeded) { bool in
+            self.configValues.resultViewNeeded = bool
         }
         return cell
     }

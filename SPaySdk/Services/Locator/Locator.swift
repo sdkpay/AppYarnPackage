@@ -6,6 +6,8 @@
 //
 
 protocol Assembly: AnyObject {
+    
+    var type: ObjectIdentifier { get set }
     func register(in container: LocatorService)
 }
 
@@ -14,9 +16,11 @@ protocol LocatorService {
     func resolve<T>() -> T
     func register<T>(service: T)
     func register<T>(reference: @escaping () -> T)
+    func remove(_ type: ObjectIdentifier)
 }
 
 final class DefaultLocatorService: LocatorService {
+    
     private var store = [ObjectIdentifier: ObjectRegistry]()
     
     enum ObjectRegistry {
@@ -34,13 +38,11 @@ final class DefaultLocatorService: LocatorService {
     func register<T>(service instance: T) {
         let key = ObjectIdentifier(T.self)
         store[key] = .instance(instance)
-        SBLogger.logLocatorRegister("\(type(of: T.self))")
     }
     
     func register<T>(reference: @escaping () -> T) {
         let key = ObjectIdentifier(T.self)
         store[key] = .reference(reference)
-        SBLogger.logLocatorRegisterRef("\(type(of: T.self))")
     }
 
     func resolve<T>() -> T {
@@ -51,7 +53,6 @@ final class DefaultLocatorService: LocatorService {
             case .reference: register(service: instance)
             default: break
             }
-            SBLogger.logLocatorResolve("\(type(of: T.self))")
             return instance
         } else {
             preconditionFailure("Could not resolve service for \(type(of: T.self))")
@@ -60,5 +61,14 @@ final class DefaultLocatorService: LocatorService {
     
     func resolve<T>(_ type: T.Type) -> T {
         return resolve()
+    }
+    
+    func remove(_ type: ObjectIdentifier) {
+        
+        store.removeValue(forKey: type)
+    }
+    
+    deinit {
+        print("DEINIT")
     }
 }

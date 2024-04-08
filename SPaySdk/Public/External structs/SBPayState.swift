@@ -11,5 +11,13 @@ import Foundation
 public enum SPayState: Int {
     case success = 0
     case waiting
+    case cancel
+    case error
+}
+
+@objc
+public enum SPayTokenState: Int {
+    case success = 0
+    case cancel
     case error
 }

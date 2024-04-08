@@ -6,12 +6,18 @@
 //
 
 import UIKit
+@_implementationOnly import SPayLottie
 
 private extension CGFloat {
-    static let loaderWidth = 80.0
+    static let loaderWidth = 40.0
     static let stickTopMargin = 8.0
     static let stickWidth = 38.0
     static let stickHeight = 4.0
+}
+
+private extension CGFloat {
+    static let logoWidth = 96.0
+    static let logoHeight = 48.0
 }
 
 private extension TimeInterval {
@@ -19,26 +25,36 @@ private extension TimeInterval {
     static let animationDuration = 0.25
 }
 
+extension Int {
+    
+    static let loadingTag = 987
+}
+
 final class LoadingView: UIView {
-    private lazy var loadingImageView: UIImageView = {
-        let view = UIImageView()
-        view.image = .Common.loader
-        return view
+    
+    private lazy var dotsAnimatedView = DotsAnimatedView()
+    
+    private lazy var logoImage: SPayLottieAnimationView = {
+        let imageView: SPayLottieAnimationView
+        
+        switch traitCollection.userInterfaceStyle {
+        case .unspecified, .light:
+            imageView = SPayLottieAnimationView(name: Files.Lottie.lightSplashJson.name, bundle: .sdkBundle)
+        case .dark:
+            imageView = SPayLottieAnimationView(name: Files.Lottie.darkSplashJson.name, bundle: .sdkBundle)
+        @unknown default:
+            imageView = SPayLottieAnimationView(name: Files.Lottie.lightSplashJson.name, bundle: .sdkBundle)
+        }
+        imageView.loopMode = .loop
+        return imageView
     }()
 
     private lazy var loadingTitle: UILabel = {
         let view = UILabel()
-        view.font = .bodi3
+        view.font = .header2
         view.numberOfLines = 0
         view.textColor = .textPrimory
         view.textAlignment = .center
-        return view
-    }()
-    
-    private lazy var stickImageView: UIImageView = {
-       let view = UIImageView()
-        view.image = .Common.stick
-        view.contentMode = .scaleAspectFill
         return view
     }()
     
@@ -49,19 +65,10 @@ final class LoadingView: UIView {
         view.alignment = .center
         return view
     }()
-    
-    private lazy var animation: CABasicAnimation = {
-        let animation = CABasicAnimation(keyPath: "transform.rotation")
-        animation.fromValue = 0
-        animation.toValue = 2 * Double.pi
-        animation.duration = 1
-        animation.repeatCount = .infinity
-        animation.isRemovedOnCompletion = false
-        return animation
-    }()
-    
+
     init(with text: String?) {
         super.init(frame: .zero)
+        tag = .loadingTag
         setupUI()
         if let text = text {
             loadingTitle.text = text
@@ -74,49 +81,26 @@ final class LoadingView: UIView {
     }
     
     func setupUI() {
-        backgroundColor = .backgroundPrimary
+        backgroundColor = .backgroundSecondary
         isUserInteractionEnabled = true
         alpha = 0
-        loadingStack.isHidden = true
-        NSLayoutConstraint.activate([
-            loadingImageView.widthAnchor.constraint(equalToConstant: .loaderWidth),
-            loadingImageView.heightAnchor.constraint(equalToConstant: .loaderWidth)
-        ])
-        addSubview(loadingStack)
-        loadingStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            loadingStack.centerYAnchor.constraint(equalTo: centerYAnchor),
-            loadingStack.centerXAnchor.constraint(equalTo: centerXAnchor),
-            loadingStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
-            loadingStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin)
-        ])
-        loadingStack.addArrangedSubview(loadingImageView)
-        
-        addSubview(stickImageView)
-        stickImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stickImageView.widthAnchor.constraint(equalToConstant: .stickWidth),
-            stickImageView.heightAnchor.constraint(equalToConstant: .stickHeight),
-            stickImageView.topAnchor.constraint(equalTo: topAnchor, constant: .stickTopMargin),
-            stickImageView.centerXAnchor.constraint(equalTo: centerXAnchor)
-        ])
+
+        logoImage
+            .add(toSuperview: self)
+            .size(.equal, to: .init(width: .logoWidth, height: .logoHeight))
+            .centerInSuperview()
     }
     
     func show(animate: Bool = true) {
         DispatchQueue.main.asyncAfter(deadline: .now() + .delay, execute: {
             self.loadingStack.isHidden = false
         })
-        if animate {
-            UIView.animate(withDuration: 0.25,
-                           delay: .delay) { [weak self] in
-                guard let self = self else { return }
-                self.alpha = 1
-            } completion: { _ in
-                self.loadingImageView.layer.add(self.animation, forKey: "Spin")
-            }
-        } else {
+        UIView.animate(withDuration: 0.5,
+                       delay: .delay) { [weak self] in
+            guard let self = self else { return }
             self.alpha = 1
-            self.loadingImageView.layer.add(self.animation, forKey: "Spin")
+        } completion: { _ in
+            self.logoImage.play()
         }
     }
 }

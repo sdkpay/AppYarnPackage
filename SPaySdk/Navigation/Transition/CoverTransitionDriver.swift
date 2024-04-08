@@ -60,7 +60,7 @@ final class CoverTransitionDriver: UIPercentDrivenInteractiveTransition, UIGestu
                 percentComplete: percentComplete
             ) {
                 finish()
-                NotificationCenter.default.post(name: Notification.Name(closeSDKNotification),
+                NotificationCenter.default.post(name: .closeSDKNotification,
                                                 object: nil,
                                                 userInfo: nil)
             } else {

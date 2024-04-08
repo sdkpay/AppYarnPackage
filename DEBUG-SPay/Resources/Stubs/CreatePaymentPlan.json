@@ -1,0 +1,63 @@
+{
+    "offerUrl": "https://cms-res.online.sberbank.ru/sberpay/icons/980000084093.png",
+    "offerText": "Я соглашаюсь с <url=https:\/\/platichastyami.ru\/dogovor_oferty>условиями договора<\/url> и <url=https:\/\/platichastyami.ru\/soglashenie_ob_ispolzovanii_pep>соглашения<\/url>. Договор заключается с ООО «ЦНФС».",
+    "isBnplEnabled": true,
+    "buttonBnpl": {
+        "buttonLogo": "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/SDK\/activeButtonLogo.png",
+        "buttonLogoInactive": "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/SDK\/inactiveButtonLogo.png",
+        "header": "Плати частями",
+        "headerInactive": "Плати частями",
+        "content": "Разбить на 6 платежей",
+        "contentInactive": "Разбить на 6 платежей"
+    },
+    "graphBnpl": {
+        "header": "График платежей",
+        "content": "Разбить на 6 платежей",
+        "text": "Спишем сегодня",
+        "singleProductSixPart": [
+        {
+            "productId": 5,
+            "productName": "4 платежа через 1 месяц",
+            "clientCommission": 1800000,
+            "payments": [
+            {
+                "clientCommission": 180000,
+                "date": "18 Апреля",
+                "amount": 43434,
+                "currencyCode": "RUB"
+            },
+            {
+                "clientCommission": 180000,
+                "date": "18 Апреля",
+                "amount": 43434,
+                "currencyCode": "RUB"
+            },
+            {
+                "clientCommission": 180000,
+                "date": "18 Апреля",
+                "amount": 43434,
+                "currencyCode": "RUB"
+            },
+            {
+                "clientCommission": 180000,
+                "date": "18 Апреля",
+                "amount": 43434,
+                "currencyCode": "RUB"
+            },
+            {
+                "clientCommission": 180000,
+                "date": "18 Апреля",
+                "amount": 43434,
+                "currencyCode": "RUB"
+            },
+            {
+                "clientCommission": 180000,
+                "date": "18 Апреля",
+                "amount": 43434,
+                "currencyCode": "RUB"
+            }
+            ]
+        }
+        ]
+    }
+}

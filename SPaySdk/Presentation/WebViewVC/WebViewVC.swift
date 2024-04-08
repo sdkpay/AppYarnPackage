@@ -25,6 +25,9 @@ protocol IWebViewVC {
 }
 
 final class WebViewVC: ContentVC, IWebViewVC {
+    
+    private let analytics: AnalyticsManager
+    
     private lazy var titleLabel: UILabel = {
        let view = UILabel()
         view.font = .header2
@@ -42,17 +45,17 @@ final class WebViewVC: ContentVC, IWebViewVC {
         return view
     }()
     
-    private lazy var webView: LoadableWebView = {
+    private lazy var webView: WKWebView = {
         let configuration = WKWebViewConfiguration()
         configuration.websiteDataStore = .default()
-        let view = LoadableWebView(frame: .zero, configuration: configuration)
+        let view = WKWebView(frame: .zero, configuration: configuration)
         view.navigationDelegate = self
         return view
     }()
     
     private lazy var backButton: DefaultButton = {
         let view = DefaultButton(buttonAppearance: .full)
-        view.setTitle(String(stringLiteral: Strings.Back.title), for: .normal)
+        view.setTitle(String(stringLiteral: Strings.Common.Back.title), for: .normal)
         view.addAction { [weak self] in
             self?.presenter.backButtonTapped()
         }
@@ -61,9 +64,12 @@ final class WebViewVC: ContentVC, IWebViewVC {
 
     private let presenter: WebViewPresenter
     
-    init(_ presenter: WebViewPresenter) {
+    init(_ presenter: WebViewPresenter,
+         analytics: AnalyticsManager) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .WebViewVC
     }
 
     required init?(coder: NSCoder) {
@@ -73,8 +79,17 @@ final class WebViewVC: ContentVC, IWebViewVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
-        topBarIsHidden = true
         setupUI()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analytics.sendAppeared(view: self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analytics.sendDisappeared(view: self)
     }
     
     func goTo(to url: URL) {
@@ -92,7 +107,7 @@ final class WebViewVC: ContentVC, IWebViewVC {
     }
     
     private func setupUI() {
-        view.height(.vcMaxHeight)
+        view.height(ScreenHeightState.big.height)
         
         shareButton
             .add(toSuperview: view)
@@ -127,14 +142,8 @@ final class WebViewVC: ContentVC, IWebViewVC {
 }
 
 extension WebViewVC: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        (webView as? LoadableWebView)?.startLoading()
-    }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        (webView as? LoadableWebView)?.stopLoading()
         presenter.webTitle(webView.title)
     }
 }
-
-final class LoadableWebView: WKWebView, Loadable {}

@@ -7,15 +7,28 @@
 
 import UIKit
 
-protocol ICardsVC { }
+extension CGFloat {
+    static let headerHeight = 54.0
+}
+
+protocol ICardsVC {
+    func reloadTableView()
+}
 
 final class CardsVC: ContentVC, ICardsVC {
+    
     private let presenter: CardsPresenting
+    private let analytics: AnalyticsManager
     private let viewBuilder = CardsViewBuilder()
     
-    init(_ presenter: CardsPresenting) {
+    init(_ presenter: CardsPresenting,
+         analytics: AnalyticsManager,
+         cost: String) {
         self.presenter = presenter
+        self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .ListCardView
+        viewBuilder.costLabel.text = cost
     }
     
     required init?(coder: NSCoder) {
@@ -25,7 +38,7 @@ final class CardsVC: ContentVC, ICardsVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter.viewDidLoad()
-        viewBuilder.setupUI(view: view, logoImage: logoImage)
+        viewBuilder.setupUI(view: view)
         viewBuilder.tableView.delegate = self
         viewBuilder.tableView.dataSource = self
         SBLogger.log(.didLoad(view: self))
@@ -34,17 +47,44 @@ final class CardsVC: ContentVC, ICardsVC {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         SBLogger.log(.didAppear(view: self))
+        analytics.sendAppeared(view: self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
+        analytics.sendDisappeared(view: self)
+    }
+    
+    func reloadTableView() {
+        UIView.transition(with: viewBuilder.tableView,
+                          duration: 0.3,
+                          options: .transitionCrossDissolve,
+                          animations: { self.viewBuilder.tableView.reloadData() },
+                          completion: nil)
     }
 }
 
 extension CardsVC: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.cardsCount
+        if section == 0 {
+            presenter.enougthCardsCount
+        } else {
+            presenter.notEnougthCardsCount
+        }
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        presenter.sectionsCount
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return section == 1 ? .headerHeight : .zero
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return section == 1 ? NotEnoughtHeaderView() : nil
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -58,6 +98,11 @@ extension CardsVC: UITableViewDataSource {
 
 extension CardsVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        presenter.didSelectRow(at: indexPath)
+        if indexPath.section == 0 {
+            presenter.didSelectRow(at: indexPath)
+        } else {
+            let cell = tableView.cellForRow(at: indexPath) as? CardCell
+            cell?.shake()
+        }
     }
 }

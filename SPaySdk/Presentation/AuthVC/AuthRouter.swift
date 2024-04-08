@@ -6,30 +6,73 @@
 //
 
 import UIKit
+import Combine
 
 protocol AuthRouting {
-    func presentPayment()
-    func presentFakeScreen(completion: @escaping () -> Void)
+    @MainActor
+    func presentPayment(state: PaymentVCMode)
+    @MainActor
+    func presentFakeScreen() async
+    @MainActor
+    func presentBankAppPicker() async
+    @MainActor
+    func presentHelper()
 }
 
 final class AuthRouter: AuthRouting {
+
     weak var viewController: ContentVC?
-    private let locator: LocatorService
+    private let routeMap: AuthRouteMap
     
-    init(with locator: LocatorService) {
-        self.locator = locator
+    init(with routeMap: AuthRouteMap) {
+        self.routeMap = routeMap
     }
     
-    func presentPayment() {
-        let vc = PaymentAssembly(locator: locator).createModule()
-        viewController?.contentNavigationController?.pushViewController(vc, animated: true)
+    @MainActor
+    func presentCards(cards: [PaymentTool], cost: String, selectedId: Int) async throws -> PaymentTool {
+        
+        guard let nc = viewController?.contentNavigationController else { throw SDKError(.unowned) }
+        
+        return await routeMap.presentCards(by: CoverPushTransition(pushInto: nc),
+                                           cards: cards,
+                                           cost: cost,
+                                           selectedId: selectedId)
     }
     
-    func presentFakeScreen(completion: @escaping () -> Void) {
-        let fakeViewController = FakeViewController()
-        viewController?.present(fakeViewController, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            fakeViewController.dismiss(animated: true, completion: completion)
-        }
+    @MainActor
+    func presentPayment(state: PaymentVCMode) {
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        routeMap.presentPayment(by: CoverPushTransition(pushInto: nc),
+                                state: state)
+    }
+    
+    @MainActor
+    func presentBankAppPicker() async {
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        await routeMap.presentBankAppPicker(by: CoverPushTransition(pushInto: nc))
+    }
+    
+    @MainActor
+    func presentFakeScreen() async {
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        await routeMap.presentFakeScreen(by: CoverPushTransition(pushInto: nc))
+    }
+    
+    @MainActor
+    func presentHelper() {
+        
+        guard let nc = viewController?.contentNavigationController else { return }
+        
+        routeMap.presentHelper(by: CoverPushTransition(pushInto: nc))
+    }
+    
+    deinit {
+        SBLogger.log(.stop(obj: self))
     }
 }

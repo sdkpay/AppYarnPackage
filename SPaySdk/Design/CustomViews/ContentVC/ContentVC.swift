@@ -21,93 +21,63 @@ private extension TimeInterval {
     static let animationDuration = 0.25
 }
 
+extension Int {
+    static let backgroundViewTag = 888
+    static let stickViewTag = 555
+}
+
 class ContentVC: LoggableVC {
+    
+    @MainActor
     var contentNavigationController: ContentNC? {
         parent as? ContentNC
     }
     
-    var userInteractionsEnabled = true {
-        didSet {
-            view.window?.viewWithTag(.dimmViewTag)?.isUserInteractionEnabled = userInteractionsEnabled
-            contentNavigationController?.view.isUserInteractionEnabled = userInteractionsEnabled
-        }
+    @MainActor
+    func setUserInteractionsEnabled(_ value: Bool = true) {
+        
+        view.window?.viewWithTag(.dimmViewTag)?.isUserInteractionEnabled = value
+        contentNavigationController?.view.isUserInteractionEnabled = value
     }
-
-    lazy var logoImage: UIImageView = {
-        let view = UIImageView()
-        view.image = UIImage(base64: UserDefaults.images?.logoIcon ?? "")
-        return view
-    }()
     
-    private lazy var stickImageView: UIImageView = {
-       let view = UIImageView()
+    var analyticsName: AnlyticsViewName = .None
+    
+    lazy var stickImageView: UIImageView = {
+        let view = UIImageView()
         view.image = .Common.stick
+        view.tag = .stickViewTag
         view.contentMode = .scaleAspectFill
         return view
     }()
     
-    var topBarIsHidden = false {
-        didSet {
-            logoImage.isHidden = topBarIsHidden
-            profileView.isHidden = topBarIsHidden
-        }
-    }
-    
-    private lazy var profileView = ProfileView()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupForContainer()
         configUI()
     }
     
-    func configProfileView(with userInfo: UserInfo) {
-        profileView.isHidden = false
-        profileView.config(with: userInfo)
-    }
-
-    func configUI() {
-        profileView.isHidden = true
-
-        view.addSubview(logoImage)
-        logoImage.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            logoImage.widthAnchor.constraint(equalToConstant: .logoWidth),
-            logoImage.heightAnchor.constraint(equalToConstant: .logoHeight),
-            logoImage.topAnchor.constraint(equalTo: view.topAnchor, constant: .topMargin),
-            logoImage.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: .margin)
-        ])
-        
-        view.addSubview(stickImageView)
-        stickImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stickImageView.widthAnchor.constraint(equalToConstant: .stickWidth),
-            stickImageView.heightAnchor.constraint(equalToConstant: .stickHeight),
-            stickImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: .stickTopMargin),
-            stickImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
-        
-        view.addSubview(profileView)
-        profileView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            profileView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -.margin),
-            profileView.topAnchor.constraint(equalTo: logoImage.topAnchor)
-        ])
-    }
-}
-
-// ContentVC + Loading
-extension ContentVC {
+    @MainActor
     func showLoading(with text: String? = nil,
                      animate: Bool = true) {
+        guard !self.view.subviews.contains(where: { $0.tag == .loadingTag }) else { return }
         Loader(text: text)
             .animated(with: animate)
             .show(on: self)
     }
     
+    @MainActor
     func hideLoading(animate: Bool = true) {
         Loader()
             .animated(with: animate)
             .hide(from: self)
+    }
+
+    func configUI() {
+        
+        stickImageView
+            .add(toSuperview: view)
+            .size(.equal, to: .init(width: .stickWidth, height: .stickHeight))
+            .touchEdge(.top, toSuperviewEdge: .top, withInset: .stickTopMargin)
+            .centerInSuperview(.x)
     }
 }

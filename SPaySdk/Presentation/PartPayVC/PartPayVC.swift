@@ -8,32 +8,42 @@
 import UIKit
 
 protocol IPartPayVC {
-    func setFinalCost(_ value: String)
-    func setSubtitle(_ value: String)
-    func setTitle(_ value: String)
+
     func setButtonEnabled(value: Bool)
-    func configCheckView(text: String,
-                         checkSelected: Bool,
-                         checkTapped: @escaping BoolAction,
-                         textTapped: @escaping LinkAction)
 }
 
 final class PartPayVC: ContentVC, IPartPayVC {
 
-    private lazy var viewBuilder = PartPayViewBuilder(acceptButtonTapped: {
-        self.presenter.acceptButtonTapped()
-    },
-                                                 backButtonTapped: { 
-        self.presenter.backButtonTapped()
-    })
+    private(set) lazy var acceptButton: DefaultButton = {
+        let view = DefaultButton(buttonAppearance: .full)
+        view.setTitle(Consts.Button.Accept.title, for: .normal)
+        view.addAction {
+            self.presenter.acceptButtonTapped()
+        }
+        return view
+    }()
+    
+    private lazy var cancelButton: DefaultButton = {
+        let view = DefaultButton(buttonAppearance: .info)
+        view.setTitle(Consts.Button.Cancel.title, for: .normal)
+        view.addAction {
+            self.presenter.backButtonTapped()
+        }
+        return view
+    }()
+    
+    private var partPayModule: ModuleVC {
+        presenter.partPayModule
+    }
     
     private let presenter: PartPayPresenter
-    private var analyticsService: AnalyticsService
+    private var analytics: AnalyticsManager
         
-    init(_ presenter: PartPayPresenter, analyticsService: AnalyticsService) {
-        self.analyticsService = analyticsService
+    init(_ presenter: PartPayPresenter, analytics: AnalyticsManager) {
+        self.analytics = analytics
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+        analyticsName = .BNPLView
     }
     
     required init?(coder: NSCoder) {
@@ -42,61 +52,78 @@ final class PartPayVC: ContentVC, IPartPayVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        topBarIsHidden = true
         presenter.viewDidLoad()
-        viewBuilder.partsTableView.dataSource = self
+        setupUI()
         SBLogger.log(.didLoad(view: self))
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        analyticsService.sendEvent(.BNPLViewAppeared)
+        analytics.sendAppeared(view: self)
         SBLogger.log(.didAppear(view: self))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        analytics.sendDisappeared(view: self)
         SBLogger.log(.didDissapear(view: self))
     }
-    
-    func setFinalCost(_ value: String) {
-        viewBuilder.finalCostLabel.text = value
-    }
-    
-    func setTitle(_ value: String) {
-        viewBuilder.titleLabel.text = value
-    }
-    
-    func setSubtitle(_ value: String) {
-        viewBuilder.subTitleLabel.setAttributedString(lineHeightMultiple: 1.1, kern: -0.3, string: value)
-    }
-    
+
     func setButtonEnabled(value: Bool) {
-        viewBuilder.acceptButton.isEnabled = value
+        acceptButton.isEnabled = value
     }
     
-    func configCheckView(text: String,
-                         checkSelected: Bool,
-                         checkTapped: @escaping BoolAction,
-                         textTapped: @escaping LinkAction) {
-        viewBuilder.agreementView.config(with: text,
-                                         checkSelected: checkSelected,
-                                         checkTapped: checkTapped,
-                                         textTapped: textTapped)
-        viewBuilder.setupUI(view: view)
+    private func setupUI() {
+
+        self.addChild(partPayModule)
+        partPayModule.didMove(toParent: self)
+        
+        partPayModule.view
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left)
+            .touchEdge(.right, toSuperviewEdge: .right)
+            .touchEdge(.top, toSuperviewEdge: .top)
+        
+        cancelButton
+            .add(toSuperview: view)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Button.Cancel.leftOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Button.Cancel.rightOffSet)
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view))
+            .height(Consts.Button.Cancel.height)
+
+        acceptButton
+            .add(toSuperview: view)
+            .height(Consts.Button.Accept.height)
+            .touchEdge(.top, toEdge: .bottom, ofView: partPayModule.view, withInset: Consts.Button.Accept.leftOffSet)
+            .touchEdge(.left, toSuperviewEdge: .left, withInset: Consts.Button.Accept.leftOffSet)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: Consts.Button.Accept.rightOffSet)
+            .touchEdge(.bottom, toEdge: .top, ofView: cancelButton, withInset: Consts.Button.Accept.bottomOffSet)
     }
 }
 
-extension PartPayVC: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.partsCount
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: PartCell = tableView.dequeueResuableCell(forIndexPath: indexPath)
-        cell.selectionStyle = .none
-        let model = presenter.model(for: indexPath)
-        cell.config(with: model)
-        return cell
+private extension PartPayVC {
+    enum Consts {
+        static let margin: CGFloat = 16.0
+
+        enum Button {
+            enum Accept {
+                static let title = String(stringLiteral: Strings.PartPay.Accept.title)
+                
+                static let topOffSet: CGFloat = 20.0
+                static let leftOffSet: CGFloat = Consts.margin
+                static let rightOffSet: CGFloat = Consts.margin
+                static let bottomOffSet: CGFloat = 10.0
+                static let height: CGFloat = 56.0
+            }
+            
+            enum Cancel {
+                static let title = String(stringLiteral: Strings.PartPay.Cancel.title)
+                
+                static let topOffSet: CGFloat = 20.0
+                static let leftOffSet: CGFloat = Consts.margin
+                static let rightOffSet: CGFloat = Consts.margin
+                static let height: CGFloat = 56.0
+            }
+        }
     }
 }

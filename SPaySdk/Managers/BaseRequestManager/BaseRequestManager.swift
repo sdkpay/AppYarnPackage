@@ -5,7 +5,7 @@
 //  Created by Alexander Ipatov on 09.02.2023.
 //
 
-import Foundation
+import UIKit
 
 extension String {
     enum Headers {
@@ -16,13 +16,46 @@ extension String {
         static let localTime = "UserTm"
         static let lang = "Accept-Language"
         static let authorization = "Authorization"
+        static let os = "OS"
+        static let deviceName = "deviceName"
+        static let orderNumber = "orderNumber"
+        static let b3TraceId = "x-b3-traceid"
+        static let b3SpanId = "x-b3-spanid"
+        static let netAdd = "X-Net-Add-Sourсe"
+        static let sdkVersion = "sdkVersion"
+        static let appName = "appName"
+        static let systemId = "X-System-Id"
+    }
+}
+
+enum Cookies: String {
+    case spdm = "X-SP-D-M"
+    case geo = "X-Geo-Sticky"
+    case refreshData = "X-Sdk-Refresh-Data"
+    case id = "X-Sdk-Id-Key"
+    
+    var storage: StorageKey? {
+        switch self {
+        case .geo:
+            return nil
+        case .refreshData:
+            return .cookieData
+        case .id:
+            return .cookieId
+        case .spdm:
+            return nil
+        }
     }
 }
 
 final class BaseRequestManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(BaseRequestManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
-            let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve())
+            let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve(),
+                                                                        storage: container.resolve())
             return service
         }
     }
@@ -30,21 +63,25 @@ final class BaseRequestManagerAssembly: Assembly {
 
 protocol BaseRequestManager {
     var headers: HTTPHeaders { get }
-    var cookie: String? { get set }
+    var spdmCookie: HTTPCookie? { get set }
+    var geoCookie: HTTPCookie? { get set }
     var pod: String? { get set }
+    func generateB3Cookie()
 }
 
 final class DefaultBaseRequestManager: BaseRequestManager {
-    var cookie: String?
-    var pod: String?
     
-    private let authManager: AuthManager 
+    var spdmCookie: HTTPCookie?
+    var geoCookie: HTTPCookie?
+    var pod: String?
+    var b3TraceId: String?
+    var b3SpanId: String?
+    
+    private let authManager: AuthManager
+    private let storage: KeychainStorage
 
     var headers: HTTPHeaders {
         var headers = HTTPHeaders()
-        if let cookie = cookie {
-            headers[.Headers.cookie] = cookie
-        }
         if let pod = pod {
             headers[.Headers.pod] = pod
         }
@@ -54,10 +91,35 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         if let lang = authManager.lang {
             headers[.Headers.lang] = lang
         }
+        if let orderNumber = authManager.orderNumber {
+            headers[.Headers.orderNumber] = orderNumber
+        }
+        if let b3TraceId = b3TraceId {
+            headers[.Headers.b3TraceId] = b3TraceId
+        }
+        if let b3SpanId = b3SpanId {
+            headers[.Headers.b3SpanId] = b3SpanId
+        }
+        if let ip = authManager.ipAddress {
+            headers[.Headers.netAdd] = ip
+        }
+        headers[.Headers.systemId] = "SBERPAY_SDK"
+        
+        headers[.Headers.os] = UIDevice.current.fullSystemVersion
+        headers[.Headers.deviceName] = Device.current.rawValue
+        headers[.Headers.sdkVersion] = Bundle.sdkVersion
+        headers[.Headers.appName] = Bundle.main.displayName
         return headers
     }
-    
-    init(authManager: AuthManager) {
+
+    init(authManager: AuthManager,
+         storage: KeychainStorage) {
         self.authManager = authManager
+        self.storage = storage
+    }
+    
+    func generateB3Cookie() {
+        b3TraceId = .generateRandom(with: 32)
+        b3SpanId = .generateRandom(with: 16)
     }
 }

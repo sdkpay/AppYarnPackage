@@ -27,16 +27,11 @@ struct UserDefault<Value: Codable> {
         get {
             let data = container.object(forKey: key.rawValue) as? Data ?? Data()
             let value = data.decode(to: Value.self)
-            SBLogger.log(level: .debug(level: .storage),
-                         "⬆️ Get value: '\((value as? String) ?? "none")' from key: '\(key.rawValue)'")
             return value
         }
         set {
             guard let data = newValue.data else { return }
             container.set(data, forKey: key.rawValue)
-            guard let newValue = newValue else { return }
-            SBLogger.log(level: .debug(level: .storage),
-                         "⬇️ Set value: '\(newValue)' for key: '\(key.rawValue)'")
         }
     }
 }
@@ -48,27 +43,29 @@ extension UserDefaults {
 }
 
 extension UserDefaults {
-    @UserDefault(key: .selectedBank, defaultValue: "foo")
-    static var bankApp: String?
+    @UserDefault(key: .selectedBank, defaultValue: 666)
+    static var bankApp: Int?
     
     @UserDefault(key: .localization,
-                 defaultValue: Localization(authTitle: "foo", payLoading: "foo"))
+                 defaultValue: Localization(authTitle: "foo",
+                                            payLoading: "foo",
+                                            connectTitle: "foo"))
     static var localization: Localization?
     
     @UserDefault(key: .schemas,
-                 defaultValue: Schemas(payLinkFirstApp: "foo",
-                                       payLinkSecondApp: "foo",
-                                       dynatraceUrl: "foo",
-                                       dynatraceId: "foo"))
+                 defaultValue: Schemas(dynatraceUrl: "foo",
+                                       dynatraceId: "foo",
+                                       getIpUrl: "foo"))
     static var schemas: Schemas?
     
     @UserDefault(key: .images,
                  defaultValue: Images(logoIcon: "foo",
-                                      logoClear: "foo"))
+                                      logoClear: "foo",
+                                      logoBlack: "foo"))
     static var images: Images?
     
     @UserDefault(key: .bankApps,
-                 defaultValue: [BankApp(name: "", link: "", icon: "")])
+                 defaultValue: [])
     static var bankApps: [BankApp]?
     
     @UserDefault(key: .certKeys, defaultValue: [String]())

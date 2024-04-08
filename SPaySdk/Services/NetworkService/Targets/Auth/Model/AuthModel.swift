@@ -8,10 +8,29 @@
 import Foundation
 
 struct AuthModel: Codable {
-    let deeplink: String
-    let state: String
-    let sessionId: String
-    let clientId: String
-    let nonce: String
+    let deeplink: String?
+    let state: String?
+    let sessionId: String?
+    let clientId: String?
+    let nonce: String?
     let isBnplEnabled: Bool?
+    let codeChallengeMethod: String?
+    let codeChallenge: String?
+    let scope: String?
+    let refreshTokenIsActive: Bool?
+}
+
+struct AuthRefreshModel: Codable {
+    let sessionId: String
+    let userInfo: UserInfoModel
+    let merchantName: String?
+    let logo: String?
+    let isOtpNeed: Bool?
+}
+
+struct UserInfoModel: Codable {
+    let lastName: String
+    let firstName: String
+    let gender: Int?
+    let mobilePhone: String?
 }

@@ -6,117 +6,88 @@
 //
 
 import UIKit
+import Combine
 
-struct PartCellModel {
-    let title: String
-    let cost: String
-    let isSelected: Bool
-    let hideLine: Bool
+extension MetricsValue {
+    
+    static let declinedByUser = MetricsValue(rawValue: "DeclinedByUser")
+    static let confirmedByUser = MetricsValue(rawValue: "ConfirmedByUser")
 }
 
 protocol PartPayPresenting {
-    func viewDidLoad()
-    var partsCount: Int { get }
     func acceptButtonTapped()
     func backButtonTapped()
-    func model(for indexPath: IndexPath) -> PartCellModel
 }
 
 final class PartPayPresenter: PartPayPresenting {
+    
     weak var view: (IPartPayVC & ContentVC)?
     
     var partsCount: Int {
-        partPayService.bnplplan?.graphBnpl?.payments.count ?? 0
+        partPayService.bnplplan?.graphBnpl?.parts.count ?? 0
     }
-
+    
     private var partPayService: PartPayService
     private let router: PartPayRouter
     private let timeManager: OptimizationCheсkerManager
-    private let analytics: AnalyticsService
+    private let analytics: AnalyticsManager
     private var partPaySelected: Action
     private var isSelected = true
-
+    private var cancellable = Set<AnyCancellable>()
+    
+    var partPayModule: ModuleVC
+    
     init(_ router: PartPayRouter,
          partPayService: PartPayService,
+         partPayModule: ModuleVC,
          timeManager: OptimizationCheсkerManager,
-         analytics: AnalyticsService,
+         analytics: AnalyticsManager,
          partPaySelected: @escaping Action) {
         self.partPayService = partPayService
         self.router = router
         self.analytics = analytics
         self.timeManager = timeManager
+        self.partPayModule = partPayModule
         self.partPaySelected = partPaySelected
         self.timeManager.startTraking()
     }
     
     func viewDidLoad() {
-        timeManager.endTraking(CardsVC.self.description()) {
-            analytics.sendEvent(.CardsViewAppeared, with: [$0])
-        }
-        configViews()
-        configCheckView()
+        setSubscribers()
+    }
+    
+    private func setSubscribers() {
+        
+        partPayService.bnplCheckAcceptedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { value in
+                self.view?.setButtonEnabled(value: value)
+            }
+            .store(in: &cancellable)
     }
     
     func acceptButtonTapped() {
-        analytics.sendEvent(.BNPLConfirmedByUser)
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: .confirmedByUser)
+            .build(), on: view?.analyticsName ?? .None)
+        
         partPayService.bnplplanSelected = true
         partPaySelected()
-        view?.contentNavigationController?.popViewController(animated: true)
+        DispatchQueue.main.async {
+            self.view?.contentNavigationController?.popViewController(animated: true)
+        }
     }
     
     func backButtonTapped() {
-        analytics.sendEvent(.BNPLDeclinedByUser)
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: .declinedByUser)
+            .build(), on: view?.analyticsName ?? .None)
         partPayService.bnplplanSelected = false
         partPaySelected()
-        view?.contentNavigationController?.popViewController(animated: true)
-    }
-    
-    func model(for indexPath: IndexPath) -> PartCellModel {
-        guard let parts = partPayService.bnplplan?.graphBnpl?.payments,
-              let text = partPayService.bnplplan?.graphBnpl?.text else {
-            return PartCellModel(title: "", cost: "", isSelected: true, hideLine: true)
+        DispatchQueue.main.async {
+            self.view?.contentNavigationController?.popViewController(animated: true)
         }
-        let part = parts[indexPath.row]
-        return PartCellModel(title: (indexPath.row == 0 ? text : part.date) ?? "",
-                             cost: part.amount.price(part.currencyCode),
-                             isSelected: indexPath.row == 0,
-                             hideLine: indexPath.row == parts.count - 1)
-    }
-    
-    private func configViews() {
-        if let plan = partPayService.bnplplan?.graphBnpl {
-            view?.setFinalCost(plan.finalCost.price(plan.currencyCode))
-        }
-        view?.setTitle(partPayService.bnplplan?.graphBnpl?.header ?? "")
-        view?.setSubtitle(partPayService.bnplplan?.graphBnpl?.content ?? "")
-    }
-
-    private func configCheckView() {
-        view?.configCheckView(text: partPayService.bnplplan?.offerText ?? "",
-                              checkSelected: isSelected,
-                              checkTapped: { [weak self] value in
-            self?.checkTapped(value)
-        },
-                              textTapped: { [weak self] link in
-            DispatchQueue.main.async {
-                self?.agreementTextTapped(link: link.link)
-            }
-            switch link.text {
-            case Strings.Part.Contract.title:
-                self?.analytics.sendEvent(.PayWithBNPLContractView)
-            case Strings.Part.Agreement.title:
-                self?.analytics.sendEvent(.PayWithBNPLAgreementView)
-            default:
-                return
-            }
-        })
-    }
-
-    private func checkTapped(_ value: Bool) {
-        view?.setButtonEnabled(value: value)
-    }
-    
-    private func agreementTextTapped(link: String) {
-        router.presentWebView(with: link)
     }
 }

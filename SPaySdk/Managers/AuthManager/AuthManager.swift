@@ -7,7 +7,16 @@
 
 import Foundation
 
+enum AuthMethod {
+    case refresh
+    case bank
+    case sid
+}
+
 final class AuthManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(AuthManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: AuthManager = DefaultAuthManager()
@@ -17,17 +26,46 @@ final class AuthManagerAssembly: Assembly {
 }
 
 protocol AuthManager {
+    
+    var orderNumber: String? { get set }
     var apiKey: String? { get set }
     var sessionId: String? { get set }
     var authCode: String? { get set }
     var state: String? { get set }
     var lang: String? { get set }
+    var isOtpNeed: Bool? { get set }
+    var userInfo: UserInfoModel? { get set }
+    var authMethod: AuthMethod? { get set }
+    var ipAddress: String? { get set }
+    var authModel: AuthModel? { get set }
+    var bnplMerchEnabled: Bool { get }
+    var initialApiKey: String? { get set }
+    
+    func setEnabledBnpl(_ value: Bool)
 }
 
 final class DefaultAuthManager: AuthManager {
+
+    var orderNumber: String?
     var apiKey: String?
     var sessionId: String?
     var authCode: String?
     var state: String?
     var lang: String?
+    var ipAddress: String?
+    var userInfo: UserInfoModel?
+    var authMethod: AuthMethod? {
+        didSet {
+            SBLogger.log("🚪 Метод авторизации изменился на \(String(describing: authMethod ?? .none))")
+        }
+    }
+    var isOtpNeed: Bool?
+    var authModel: AuthModel?
+    var bnplMerchEnabled = false
+    
+    var initialApiKey: String?
+    
+    func setEnabledBnpl(_ value: Bool) {
+        bnplMerchEnabled = value
+    }
 }

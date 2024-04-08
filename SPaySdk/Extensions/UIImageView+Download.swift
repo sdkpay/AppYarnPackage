@@ -11,11 +11,13 @@ extension UIImageView {
     func downloadImage(from url: String?,
                        placeholder: UIImage? = nil,
                        shimmer: Bool = true) {
-        self.shimmer(shimmer)
+            self.shimmer(shimmer)
         ImageDownloader.shared.downloadImage(with: url,
                                              completionHandler: { image, _ in
-            self.shimmer(false)
-            self.image = image
+            DispatchQueue.main.async {
+                self.shimmer(false)
+                self.image = image
+            }
         }, placeholderImage: placeholder)
     }
 }

@@ -7,60 +7,69 @@
 
 import UIKit
 
-typealias PaymentTokenCompletion = (SPaymentTokenResponse) -> Void
-typealias PaymentCompletion = (_ state: SPayState, _ info: String) -> Void
+typealias PaymentTokenResponse = (state: SPayTokenState, info: SPaymentTokenResponseModel)
+typealias PaymentTokenCompletion = (PaymentTokenResponse) -> Void
+typealias PaymentResponse = (state: SPayState, info: String)
+typealias PaymentCompletion = (PaymentResponse) -> Void
 
 protocol SBPayService {
-    func setup(apiKey: String, bnplPlan: Bool, environment: SEnvironment, completion: Action?)
+    func setup(bnplPlan: Bool,
+               resultViewNeeded: Bool,
+               helpers: Bool,
+               needLogs: Bool,
+               config: SBHelperConfig,
+               environment: SEnvironment,
+               completion: ((SPError?) -> Void)?)
     var isReadyForSPay: Bool { get }
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion)
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
-    func payWithOrderId(with viewController: UIViewController,
-                        paymentRequest: SFullPaymentRequest,
-                        completion: @escaping PaymentCompletion)
+    func payWithoutRefresh(with viewController: UIViewController,
+                           paymentRequest: SBankInvoicePaymentRequest,
+                           completion: @escaping PaymentCompletion)
     func payWithBankInvoiceId(with viewController: UIViewController,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion)
+    func payWithPartPay(with viewController: UIViewController,
+                        paymentRequest: SBankInvoicePaymentRequest,
+                        completion: @escaping PaymentCompletion)
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
     func getResponseFrom(_ url: URL)
-    func debugConfig(network: NetworkState, ssl: Bool)
-}
-
-extension SBPayService {
-    func setup(apiKey: String,
-               bnplPlan: Bool = true,
-               environment: SEnvironment = .prod,
-               completion: Action? = nil) {
-        setup(apiKey: apiKey,
-              bnplPlan: bnplPlan,
-              environment: environment,
-              completion: completion)
-    }
+    func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool, debugLogLevel: [DebugLogLevel])
 }
 
 final class DefaultSBPayService: SBPayService {
+
     private lazy var liveCircleManager: LiveCircleManager = DefaultLiveCircleManager(timeManager: timeManager)
     private lazy var locator: LocatorService = DefaultLocatorService()
     private lazy var buildSettings: BuildSettings = DefaultBuildSettings()
     private lazy var logService: LogService = DefaultLogService()
+    private lazy var inProgress = false
     private let assemblyManager = AssemblyManager()
     private let timeManager = OptimizationCheсkerManager()
     private var apiKey: String?
     
-    func setup(apiKey: String,
-               bnplPlan: Bool,
+    func setup(bnplPlan: Bool,
+               resultViewNeeded: Bool,
+               helpers: Bool,
+               needLogs: Bool,
+               config: SBHelperConfig,
                environment: SEnvironment,
-               completion: Action? = nil) {
-        self.apiKey = apiKey
+               completion: ((SPError?) -> Void)?) {
+        SBLogger.dateString = Date().readable
+        
         FontFamily.registerAllCustomFonts()
         locator.register(service: liveCircleManager)
         locator.register(service: logService)
         locator.register(service: buildSettings)
-        assemblyManager.registerServices(to: locator)
+        
+        assemblyManager.registerStartServices(to: locator)
+        locator
+            .resolve(SetupManager.self)
+            .resultViewNeeded(resultViewNeeded)
         locator
             .resolve(LogService.self)
             .setLogsWritable(environment: environment)
@@ -68,71 +77,76 @@ final class DefaultSBPayService: SBPayService {
             .resolve(EnvironmentManager.self)
             .setEnvironment(environment)
         locator
-            .resolve(PartPayService.self)
-            .setUserEnableBnpl(bnplPlan, enabledLevel: .merch)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
-        SBLogger.dateString = dateFormatter.string(from: Date())
+            .resolve(AuthManager.self)
+            .setEnabledBnpl(bnplPlan)
         locator
-            .resolve(RemoteConfigService.self)
-            .getConfig(with: apiKey) { error in
-                completion?()
-                guard error == nil else { return }
-                self.locator
+            .resolve(HelperConfigManager.self)
+            .setConfig(config)
+        locator
+            .resolve(HelperConfigManager.self)
+            .setHelpersNeeded(helpers)
+        locator
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                    .with(base: .MA)
+                    .with(action: .Init)
+                    .build(),
+                  on: .None,
+                  values: [.Environment: "\(environment.rawValue)"])
+        
+        Task(priority: .medium) {
+            
+            do {
+                try await locator
+                    .resolve(RemoteConfigService.self)
+                    .getConfig(with: apiKey)
+                locator
                     .resolve(AnalyticsService.self)
                     .config()
-                self.locator.resolve(AnalyticsService.self)
-                    .sendEvent(.Setup,
-                               with: [
-                                "apiKey: \(apiKey)",
-                                "bnpl: \(bnplPlan)",
-                                "environment: \(environment.rawValue)"
-                               ])
+                DispatchQueue.main.async {
+                    completion?(nil)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion?(SPError(errorState: .init(.configError)))
+                }
             }
+        }
     }
     
     var isReadyForSPay: Bool {
-        SBLogger.log(.version)
-        let service = locator.resolve(AnalyticsService.self)
-        // Для симулятора всегда true для удобства разработки
-#if targetEnvironment(simulator)
-        service.sendEvent(.IsReadyForSPay,
-                          with: "\(true)")
-        return true
-#else
         
-        let target = locator.resolve(EnvironmentManager.self).environment == .sandboxWithoutBankApp
-        if target {
-            service.sendEvent(.IsReadyForSPay,
-                              with: "\(true)")
-            return true
-        } else {
-            let apps = locator.resolve(BankAppManager.self).avaliableBanks
-            locator
-                .resolve(AnalyticsService.self)
-                .sendEvent(apps.isEmpty ? .NoBankAppFound : .BankAppFound)
-            SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
-            service.sendEvent(.IsReadyForSPay,
-                              with: "\(!apps.isEmpty)")
-            return !apps.isEmpty
-        }
-#endif
+        SBLogger.log(.version)
+        
+        let manager = locator.resolve(AnalyticsManager.self)
+        
+        manager
+            .send(EventBuilder().with(base: .MA).with(value: MetricsValue(rawValue: #function.removeArgs)).build(),
+                  on: .None)
+        
+        let apps = locator.resolve(BankAppManager.self).avaliableBanks
+        manager
+            .send(EventBuilder().with(base: .MAC).with(value: MetricsValue(rawValue: #function.removeArgs)).build(),
+                  on: .None,
+                  values: [.Value: (!apps.isEmpty).description])
+        SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
+        return !apps.isEmpty
     }
-    
+
     func getPaymentToken(with viewController: UIViewController,
                          with request: SPaymentTokenRequest,
                          completion: @escaping PaymentTokenCompletion) {
-        locator.resolve(AnalyticsService.self)
-            .sendEvent(.GetPaymentToken,
-                       with: ["request: \(request)"])
-        SBLogger.logRequestPaymentToken(with: request)
-        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
+        assemblyManager.registerSessionServices(to: locator)
+        if apiKey == nil {
+            apiKey = request.apiKey
+        }
+        
+        guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         locator
             .resolve(SDKManager.self)
             .config(apiKey: apiKey,
                     paymentTokenRequest: request,
                     completion: { response in
-                SBLogger.logResponsePaymentToken(with: response)
                 completion(response)
             })
         liveCircleManager.openInitialScreen(with: viewController, with: locator)
@@ -140,8 +154,6 @@ final class DefaultSBPayService: SBPayService {
     
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
-        locator.resolve(AnalyticsService.self)
-            .sendEvent(.Pay, with: ["paymentRequest: \(paymentRequest)"])
         locator
             .resolve(SDKManager.self)
             .pay(with: paymentRequest, completion: completion)
@@ -150,66 +162,142 @@ final class DefaultSBPayService: SBPayService {
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action) {
         liveCircleManager.completePayment(paymentSuccess: paymentSuccess, completion: completion)
-        locator.resolve(AnalyticsService.self)
-            .sendEvent(.CompletePayment, with: ["paymentRequest: \(paymentSuccess.rawValue)"])
-    }
-    
-    func payWithOrderId(with viewController: UIViewController,
-                        paymentRequest: SFullPaymentRequest,
-                        completion: @escaping PaymentCompletion) {
-        timeManager.startCheckingCPULoad()
-        timeManager.startContectionTypeChecking()
-        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
-        locator.resolve(AnalyticsService.self)
-            .sendEvent(.PayWithOrderId, with: ["paymentRequest: \(paymentRequest)"])
-        locator
-            .resolve(SDKManager.self)
-            .configWithOrderId(apiKey: apiKey,
-                               paymentRequest: paymentRequest,
-                               completion: completion)
-        liveCircleManager.openInitialScreen(with: viewController,
-                                            with: locator)
-        timeManager.stopCheckingCPULoad {
-            self.locator
-                .resolve(AnalyticsService.self)
-                .sendEvent(.StartTime, with: [$0])
-        }
     }
     
     func payWithBankInvoiceId(with viewController: UIViewController,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
+        assemblyManager.registerSessionServices(to: locator)
+        guard !inProgress else { return }
+        inProgress = true
         timeManager.startCheckingCPULoad()
         timeManager.startContectionTypeChecking()
-        guard let apiKey = apiKey else { return assertionFailure(Strings.Merchant.Alert.apikey) }
+        
+        locator
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MA)
+                .with(value: MetricsValue(rawValue: #function.removeArgs))
+                .build(),
+                  on: .None)
+        
+        apiKey = paymentRequest.apiKey
+        guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
-            return assertionFailure(error)
+            let response = PaymentResponse(SPayState.error, error)
+            completion(response)
         }
-        locator.resolve(AnalyticsService.self)
-            .sendEvent(.PayWithOrderId, with: ["paymentRequest: \(paymentRequest)"])
         locator
             .resolve(SDKManager.self)
             .configWithBankInvoiceId(apiKey: apiKey,
-                                     paymentRequest: paymentRequest,
-                                     completion: completion)
+                                     paymentRequest: paymentRequest) { response in
+                self.inProgress = false
+                completion(response)
+            }
         liveCircleManager.openInitialScreen(with: viewController,
                                             with: locator)
-        timeManager.stopCheckingCPULoad {
-            self.locator
-                .resolve(AnalyticsService.self)
-                .sendEvent(.StartTime, with: [$0])
+        locator
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MAC)
+                .with(value: MetricsValue(rawValue: #function.removeArgs))
+                .build(),
+                  on: .None)
+    }
+    
+    func payWithoutRefresh(with viewController: UIViewController, 
+                           paymentRequest: SBankInvoicePaymentRequest,
+                           completion: @escaping PaymentCompletion) {
+        assemblyManager.registerSessionServices(to: locator)
+        guard !inProgress else { return }
+        inProgress = true
+        timeManager.startCheckingCPULoad()
+        timeManager.startContectionTypeChecking()
+        
+        locator
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MA)
+                .with(value: MetricsValue(rawValue: #function.removeArgs))
+                .build(),
+                  on: .None)
+        
+        apiKey = paymentRequest.apiKey
+        guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
+        if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
+            let response = PaymentResponse(SPayState.error, error)
+            completion(response)
         }
+        locator
+            .resolve(SDKManager.self)
+            .configWithoutRefresh(apiKey: apiKey,
+                                  paymentRequest: paymentRequest) { response in
+                self.inProgress = false
+                completion(response)
+            }
+        liveCircleManager.openInitialScreen(with: viewController,
+                                            with: locator)
+        locator
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MAC)
+                .with(value: MetricsValue(rawValue: #function.removeArgs))
+                .build(),
+                  on: .None)
+    }
+    
+    func payWithPartPay(with viewController: UIViewController,
+                        paymentRequest: SBankInvoicePaymentRequest,
+                        completion: @escaping PaymentCompletion) {
+        assemblyManager.registerSessionServices(to: locator)
+        guard !inProgress else { return }
+        inProgress = true
+        timeManager.startCheckingCPULoad()
+        timeManager.startContectionTypeChecking()
+        
+        locator
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MA)
+                .with(value: MetricsValue(rawValue: #function.removeArgs))
+                .build(),
+                  on: .None)
+        
+        apiKey = paymentRequest.apiKey
+        guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
+        if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
+            let response = PaymentResponse(SPayState.error, error)
+            completion(response)
+        }
+        locator
+            .resolve(SDKManager.self)
+            .configPartPay(apiKey: apiKey,
+                           paymentRequest: paymentRequest) { response in
+                self.inProgress = false
+                completion(response)
+            }
+        
+        var partPayService = locator.resolve(PartPayService.self)
+        partPayService.bnplplanSelected = true
+        
+        liveCircleManager.openInitialScreen(with: viewController,
+                                            with: locator)
+        locator
+            .resolve(AnalyticsManager.self)
+            .send(EventBuilder()
+                .with(base: .MA)
+                .with(value: MetricsValue(rawValue: #function.removeArgs))
+                .build(),
+                  on: .None)
     }
     
     func getResponseFrom(_ url: URL) {
-        locator.resolve(AnalyticsService.self)
-            .sendEvent(.GetResponseFrom, with: ["url: \(url)"])
         locator
             .resolve(AuthService.self)
             .completeAuth(with: url)
     }
     
-    func debugConfig(network: NetworkState, ssl: Bool) {
-        buildSettings.setConfig(networkState: network, ssl: ssl)
+    func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool, debugLogLevel: [DebugLogLevel]) {
+        buildSettings.setConfig(networkState: network, ssl: ssl, refresh: refresh, debugLogLevel: debugLogLevel)
     }
 }

@@ -81,6 +81,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         super.viewDidLoad()
         navigationItem.title = "Корзина"
         setupUI()
+        addDebugGesture()
     }
     
     init(values: ConfigValues) {
@@ -131,6 +132,26 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         }
     }
     
+    private func addDebugGesture() {
+        let tapGr = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        view.addGestureRecognizer(tapGr)
+    }
+    
+    @objc
+    private func viewTapped() {
+        let vc = UIAlertController(title: "Обнаружено нажатие", message: "", preferredStyle: .alert)
+        vc.addAction(UIAlertAction(title: "OK", style: .cancel))
+        present(vc, animated: true)
+    }
+
+    private func showResult(title: String, message: String) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let vc = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            vc.addAction(UIAlertAction(title: "OK", style: .cancel))
+            self.present(vc, animated: true)
+        }
+    }
+ 
     private func setupUI() {
         view.backgroundColor = .white
         view.addSubview(tableView)
@@ -187,91 +208,82 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         switch values.mode {
         case .Auto:
             autoPay()
-        case .Manual:
-            switch values.configMethod {
-            case .OrderId:
-                getPaymentToken()
-            case .Purchase:
-                paymentTokenWithPerchase()
-            }
-        }
-    }
-    
-    private func getPaymentToken() {
-        let request = SPaymentTokenRequest(merchantLogin: values.merchantLogin,
-                                           orderId: values.orderId ?? "",
-                                           redirectUri: "testapp://test")
-        SPay.getPaymentToken(with: self, with: request) { response in
-            if let error = response.error {
-                // Обработка ошибки
-                print("\(error.errorDescription) - описание ошибки")
-            } else {
-                // Обработка успешно полученных данных...
-                guard let paymentToken = response.paymentToken else { return }
-                self.pay(with: paymentToken)
-            }
-        }
-    }
-    
-    private func paymentTokenWithPerchase() {
-        let request = SPaymentTokenRequest(redirectUri: "testapp://test",
-                                           merchantLogin: values.merchantLogin,
-                                           amount: values.cost,
-                                           currency: String(values.currency),
-                                           mobilePhone: nil,
-                                           orderNumber: values.orderNumber ?? "",
-                                           recurrentExipiry: "20230821",
-                                           recurrentFrequency: 2)
-        SPay.getPaymentToken(with: self, with: request) { response in
-            if let error = response.error {
-                // Обработка ошибки
-                print("\(error.errorDescription) - описание ошибки")
-            } else {
-                // Обработка успешно полученных данных...
-                guard let paymentToken = response.paymentToken else { return }
-                self.pay(with: paymentToken)
-            }
+        case .WithoutRefresh:
+            payWithoutRefresh()
+        case .PartPay:
+            bnplPay()
         }
     }
     
     private func autoPay() {
-        let request = SFullPaymentRequest(merchantLogin: values.merchantLogin,
-                                          orderId: values.orderId ?? "",
-                                          redirectUri: "testapp://test")
-        SPay.payWithOrderId(with: self, with: request) { state, info  in
+        
+        let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
+                                                 bankInvoiceId: values.orderId ?? "",
+                                                 orderNumber: values.orderNumber ?? "none",
+                                                 redirectUri: "testapp://spay",
+                                                 apiKey: values.apiKey)
+        
+        SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info in
             switch state {
             case .success:
-                print("Успешный результат")
+                self.showResult(title: "Отдали мерчу success", message: info)
             case .waiting:
-                print("Необходимо проверить статус оплаты")
+                self.showResult(title: "Отдали мерчу waiting", message: info)
             case .error:
-                print("\(info) - описание ошибки")
+                self.showResult(title: "Отдали мерчу error", message: info)
+            case .cancel:
+                self.showResult(title: "Отдали мерчу cancel", message: info)
             @unknown default:
-                print("Неопределенная ошибка")
+                self.showResult(title: "Отдали мерчу @unknown default", message: info)
             }
         }
     }
     
-    private func pay(with token: String) {
-        let request = SPaymentRequest(orderId: values.orderId ?? "",
-                                      paymentToken: token)
-        SPay.pay(with: request) { state, info  in
+    private func bnplPay() {
+        
+        let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
+                                                 bankInvoiceId: values.orderId ?? "",
+                                                 orderNumber: values.orderNumber ?? "none",
+                                                 redirectUri: "testapp://spay",
+                                                 apiKey: values.apiKey)
+        
+        SPay.payWithPartPay(with: self, paymentRequest: request) { state, info in
             switch state {
             case .success:
-                print("Успешный результат")
+                self.showResult(title: "Отдали мерчу success", message: info)
             case .waiting:
-                print("Необходимо проверить статус оплаты")
+                self.showResult(title: "Отдали мерчу waiting", message: info)
             case .error:
-                print("\(info) - описание ошибки")
+                self.showResult(title: "Отдали мерчу error", message: info)
+            case .cancel:
+                self.showResult(title: "Отдали мерчу cancel", message: info)
             @unknown default:
-                print("Неопределенная ошибка")
+                self.showResult(title: "Отдали мерчу @unknown default", message: info)
             }
         }
     }
     
-    private func completePayment() {
-        SPay.completePayment(paymentState: .success) {
-            // Действия после закрытия шторки
+    private func payWithoutRefresh() {
+        
+        let request = SBankInvoicePaymentRequest(merchantLogin: values.merchantLogin,
+                                                 bankInvoiceId: values.orderId ?? "",
+                                                 orderNumber: values.orderNumber ?? "none",
+                                                 redirectUri: "testapp://spay",
+                                                 apiKey: values.apiKey)
+        
+        SPay.payWithoutRefresh(with: self, paymentRequest: request) { state, info in
+            switch state {
+            case .success:
+                self.showResult(title: "Отдали мерчу success", message: info)
+            case .waiting:
+                self.showResult(title: "Отдали мерчу waiting", message: info)
+            case .error:
+                self.showResult(title: "Отдали мерчу error", message: info)
+            case .cancel:
+                self.showResult(title: "Отдали мерчу cancel", message: info)
+            @unknown default:
+                self.showResult(title: "Отдали мерчу @unknown default", message: info)
+            }
         }
     }
 }

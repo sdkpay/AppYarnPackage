@@ -20,46 +20,46 @@ final class OptimizationCheсkerManager {
     }
     
     func checkSavedDataSize(object: Codable, clouser: (Int) -> Void) {
-        let size = MemoryLayout.size(ofValue: object)
-        clouser(size)
-        SBLogger.logSavedData(size)
+//        let size = MemoryLayout.size(ofValue: object)
+//        clouser(size)
+//        SBLogger.logSavedData(size)
     }
     
     func checkNetworkDataSize(object: Data?) {
-        guard let object else { return }
-        let size = MemoryLayout.size(ofValue: object)
-        networkDataSize = networkDataSize == nil ? size : networkDataSize! + size
-        SBLogger.logNetworkDownloadingDataSize(networkDataSize ?? 0)
+//        guard let object else { return }
+//        let size = MemoryLayout.size(ofValue: object)
+//        networkDataSize = networkDataSize == nil ? size : networkDataSize! + size
+//        SBLogger.logNetworkDownloadingDataSize(networkDataSize ?? 0)
     }
     
     func startContectionTypeChecking() {
-        networkMonitorManager.startMonitoring()
+     //   networkMonitorManager.startMonitoring()
     }
     
     func stopContectionTypeChecking() {
-        networkMonitorManager.stopMonitoring()
+     //   networkMonitorManager.stopMonitoring()
     }
     
     func startCheckingCPULoad() {
-        startTimeCPUCheking = mach_absolute_time()
+//        startTimeCPUCheking = mach_absolute_time()
     }
     
     func stopCheckingCPULoad(clouser: (Double) -> Void) {
-        let endTime = mach_absolute_time()
-        guard let startTimeCPUCheking else { return }
-        let elapsedTicks = endTime - startTimeCPUCheking
-        var timebaseInfo = mach_timebase_info_data_t()
-        mach_timebase_info(&timebaseInfo)
-        let elapsedSeconds = Double(elapsedTicks) * Double(timebaseInfo.numer) / Double(timebaseInfo.denom) / Double(NSEC_PER_SEC)
-        SBLogger.logStartSdkTime(elapsedSeconds)
+//        let endTime = mach_absolute_time()
+//        guard let startTimeCPUCheking else { return }
+//        let elapsedTicks = endTime - startTimeCPUCheking
+//        var timebaseInfo = mach_timebase_info_data_t()
+//        mach_timebase_info(&timebaseInfo)
+//        let elapsedSeconds = Double(elapsedTicks) * Double(timebaseInfo.numer) / Double(timebaseInfo.denom) / Double(NSEC_PER_SEC)
+//        SBLogger.logStartSdkTime(elapsedSeconds)
     }
     
     func endTraking(_ classDescription: String, clouser: (String) -> Void) {
-        let endTime = CFAbsoluteTimeGetCurrent()
-        guard let startTime else { return }
-        let launchTime = endTime - startTime
-        clouser("\(launchTime)")
-        SBLogger.logScreenDownloadTime(launchTime, screen: classDescription)
+//        let endTime = CFAbsoluteTimeGetCurrent()
+//        guard let startTime else { return }
+//        let launchTime = endTime - startTime
+//        clouser("\(launchTime)")
+//        SBLogger.logScreenDownloadTime(launchTime, screen: classDescription)
     }
     
     private func hostCPULoadInfo() -> host_cpu_load_info? {

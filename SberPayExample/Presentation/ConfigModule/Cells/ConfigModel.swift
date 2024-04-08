@@ -24,7 +24,7 @@ enum RequestMethod: String, CaseIterable, Codable {
 }
 
 enum PayMode: String, CaseIterable, Codable {
-    case Manual, Auto
+    case Auto, WithoutRefresh, PartPay
 }
 
 enum Lang: String, CaseIterable, Codable {
@@ -86,7 +86,35 @@ struct ConfigValues {
                  defaultValue: true)
     var ssl: Bool
     
+    @UserDefault(key: CellType.refresh.rawValue,
+                 defaultValue: true)
+    var refresh: Bool
+    
     @UserDefault(key: CellType.bnpl.rawValue,
                  defaultValue: true)
     var bnpl: Bool
+    
+    @UserDefault(key: CellType.resultViewNeeded.rawValue,
+                 defaultValue: true)
+    var resultViewNeeded: Bool
+    
+    @UserDefault(key: CellType.helpers.rawValue,
+                 defaultValue: true)
+    var helpers: Bool
+    
+    @UserDefault(key: CellType.sbp.rawValue,
+                 defaultValue: true)
+    var sbp: Bool
+    
+    @UserDefault(key: CellType.newCreditCard.rawValue,
+                 defaultValue: true)
+    var newCreditCard: Bool
+    
+    @UserDefault(key: CellType.newDebitCard.rawValue,
+                 defaultValue: true)
+    var newDebitCard: Bool
+    
+    @UserDefault(key: "DebugLogLevel",
+                 defaultValue: DebugLogLevel.allCases)
+    var debugLogLevels: [DebugLogLevel]
 }

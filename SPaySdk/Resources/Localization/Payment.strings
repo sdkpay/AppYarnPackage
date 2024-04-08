@@ -1,0 +1,19 @@
+/* 
+  Paymen.strings
+  SPaySdk
+
+  Created by Серёгин Михаил Алексеевич on 13.03.2024.
+  
+*/
+
+// Payment
+"noCards.title" = "Нет карт для оплаты";
+"noCards.subtitle" = "Выберите другой способ";
+"cards.compoundWallet.title" = " c %@";
+"part.subtitile" = "из %@";
+"part.commission.subtitile" = " (с комиссией %@)";
+"part.commission.subtitile" = " (с комиссией %@)";
+"part.subtitile.date.subtitile" = " спишем %@";
+"part.subtitile.date.first.subtitile" = "сегодня";
+"cards.compoundWallet.one" = "счетом";
+"cards.compoundWallet.two" = "счетами";

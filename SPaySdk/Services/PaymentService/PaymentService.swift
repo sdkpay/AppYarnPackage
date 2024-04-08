@@ -17,43 +17,69 @@ enum PayError: Error {
 }
 
 final class PaymentServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(PaymentService.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: PaymentService = DefaultPaymentService(authManager: container.resolve(),
                                                                 network: container.resolve(), userService: container.resolve(),
                                                                 personalMetricsService: container.resolve(),
-                                                                sdkManager: container.resolve())
+                                                                completionManager: container.resolve(),
+                                                                buildSettings: container.resolve(),
+                                                                analytics: container.resolve(),
+                                                                sdkManager: container.resolve(),
+                                                                featuerToggle: container.resolve())
             return service
         }
     }
 }
 
 protocol PaymentService {
-    func tryToPay(paymentId: Int,
-                  isBnplEnabled: Bool,
-                  completion: @escaping ((Result<Void, PayError>) -> Void))
-    func tryToGetPaymenyToken(paymentId: Int,
+ 
+    @discardableResult
+    func getPaymentToken(paymentId: Int,
+                         isBnplEnabled: Bool,
+                         resolution: SecureChallengeResolution?) async throws -> PaymentTokenModel
+    @discardableResult
+    func tryToPayWithoutToken(paymentId: Int,
                               isBnplEnabled: Bool,
-                              completion: @escaping (Result<Void, PayError>) -> Void)
+                              resolution: SecureChallengeResolution?) async throws -> FraudMonСheckResult?
+    func tryToPayWithToken(paymentId: Int,
+                           isBnplEnabled: Bool,
+                           resolution: SecureChallengeResolution?) async throws
 }
 
 final class DefaultPaymentService: PaymentService {
+    
     private let network: NetworkService
     private var sdkManager: SDKManager
     private let userService: UserService
-    private let authManager: AuthManager
+    private let completionManager: CompletionManager
+    private var authManager: AuthManager
+    private let analytics: AnalyticsService
     private let personalMetricsService: PersonalMetricsService
-    private var paymentToken: PaymentTokenModel?
+    private let buildSettings: BuildSettings
+    private var paymentToken: (model: PaymentTokenModel, forBNPL: Bool)?
+    private var featuerToggle: FeatureToggleService
     
     init(authManager: AuthManager,
          network: NetworkService,
          userService: UserService,
          personalMetricsService: PersonalMetricsService,
-         sdkManager: SDKManager) {
+         completionManager: CompletionManager,
+         buildSettings: BuildSettings,
+         analytics: AnalyticsService,
+         sdkManager: SDKManager,
+         featuerToggle: FeatureToggleService) {
         self.authManager = authManager
         self.network = network
         self.userService = userService
         self.sdkManager = sdkManager
+        self.buildSettings = buildSettings
+        self.completionManager = completionManager
+        self.analytics = analytics
+        self.featuerToggle = featuerToggle
         self.personalMetricsService = personalMetricsService
         SBLogger.log(.start(obj: self))
     }
@@ -62,126 +88,186 @@ final class DefaultPaymentService: PaymentService {
         SBLogger.log(.stop(obj: self))
     }
     
-    func tryToPay(paymentId: Int,
-                  isBnplEnabled: Bool,
-                  completion: @escaping ((Result<Void, PayError>) -> Void)) {
-        tryToGetPaymenyToken(paymentId: paymentId,
-                             isBnplEnabled: isBnplEnabled) { result in
-            switch result {
-            case .success:
-                guard let paymentToken = self.paymentToken else { return }
-                guard let authInfo = self.sdkManager.authInfo else { return }
-                var orderid: String?
-                if isBnplEnabled {
-                    orderid = paymentToken.initiateBankInvoiceId
-                } else {
-                    orderid = authInfo.orderId
-                }
-                switch self.sdkManager.payStrategy {
-                case .auto:
-                    self.pay(with: paymentToken.paymentToken, orderId: orderid, completion: completion)
-                case .manual:
-                    self.sdkManager.payHandler = { [weak self] payInfo in
-                        if isBnplEnabled {
-                            orderid = paymentToken.initiateBankInvoiceId
-                        } else {
-                            orderid = payInfo.orderId
-                        }
-                        self?.pay(with: payInfo.paymentToken ?? paymentToken.paymentToken,
-                                  orderId: orderid, completion: completion)
-                    }
-                    self.sdkManager.completionPaymentToken(with: paymentToken.paymentToken)
-                }
-            case .failure(let failure):
-                if isBnplEnabled {
-                    // Если получили с сервака ошибку, отдаем специальную ошибку
-                    if failure == .defaultError {
-                        completion(.failure(.partPayError))
-                    } else {
-                        completion(.failure(failure))
-                    }
-                } else {
-                    completion(.failure(failure))
-                }
-            }
-        }
-    }
-    
-    func tryToGetPaymenyToken(paymentId: Int,
-                              isBnplEnabled: Bool,
-                              completion: @escaping (Result<Void, PayError>) -> Void) {
-        getPaymenyToken(paymentId: paymentId,
-                        isBnplEnabled: isBnplEnabled) { result in
-            switch result {
-            case .success(let success):
-                self.paymentToken = success
-                completion(.success)
-            case .failure(let failure):
-                completion(.failure(self.parseError(failure)))
-            }
-        }
-    }
-    
-    private func getPaymenyToken(paymentId: Int,
-                                 isBnplEnabled: Bool,
-                                 completion: @escaping (Result<PaymentTokenModel, SDKError>) -> Void) {
-        guard let sessionId = authManager.sessionId,
-              let authInfo = sdkManager.authInfo
-        else { return }
-        personalMetricsService.getUserData { deviceInfo in
-            if let deviceInfo = deviceInfo {
-                self.network.request(PaymentTarget.getPaymentToken(sessionId: sessionId,
-                                                                   deviceInfo: deviceInfo,
-                                                                   paymentId: paymentId,
-                                                                   merchantLogin: authInfo.merchantLogin,
-                                                                   orderId: authInfo.orderId,
-                                                                   amount: authInfo.amount,
-                                                                   currency: authInfo.currency,
-                                                                   orderNumber: authInfo.orderNumber,
-                                                                   expiry: authInfo.expiry,
-                                                                   frequency: authInfo.frequency,
-                                                                   isBnplEnabled: isBnplEnabled),
-                                     to: PaymentTokenModel.self,
-                                     completion: completion)
+    func tryToPayWithToken(paymentId: Int,
+                           isBnplEnabled: Bool,
+                           resolution: SecureChallengeResolution?) async throws {
+        
+        do {
+            
+            let paymentToken = try await updateTokenIfNeed(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
+            
+            let (orderid, merchantLogin, _) = try getCredPair(isBnplEnabled)
+            
+            if isBnplEnabled {
+                
+                self.authManager.apiKey = BnplConstants.apiKey(for: self.buildSettings.networkState)
             } else {
-                completion(.failure(.personalInfo))
+                
+                self.authManager.apiKey = self.authManager.initialApiKey
+            }
+            
+            switch self.sdkManager.payStrategy {
+            case .auto, .partPay, .withoutRefresh:
+                try await pay(bnpl: isBnplEnabled,
+                              with: paymentToken.paymentToken ?? "",
+                              orderId: orderid, merchantLogin: merchantLogin)
+            case .manual:
+                self.sdkManager.payHandler = { payInfo in
+                    Task {
+                        try await self.pay(bnpl: isBnplEnabled,
+                                           with: payInfo.paymentToken ?? "",
+                                           orderId: orderid,
+                                           merchantLogin: merchantLogin)
+                    }
+                }
+                self.completionManager.completePaymentToken(with: paymentToken.paymentToken)
+            }
+        } catch {
+            if error is PayError, isBnplEnabled {
+                throw PayError.partPayError
+            }
+            throw error
+        }
+    }
+    
+    @discardableResult
+    func tryToPayWithoutToken(paymentId: Int,
+                              isBnplEnabled: Bool,
+                              resolution: SecureChallengeResolution?) async throws -> FraudMonСheckResult? {
+        
+        guard let sessionId = authManager.sessionId,
+              let authInfo = sdkManager.authInfo,
+              let merchantLogin = sdkManager.authInfo?.merchantLogin
+        else { throw SDKError(.noData) }
+        
+        let deviceInfo = try await personalMetricsService.getUserData()
+        
+        do {
+            try await network.request(PaymentTarget.payOnline(sessionId: sessionId,
+                                                              paymentId: paymentId,
+                                                              merchantLogin: merchantLogin,
+                                                              orderId: authInfo.orderId,
+                                                              deviceInfo: deviceInfo,
+                                                              resolution: resolution?.rawValue,
+                                                              priorityCardOnly: true,
+                                                              isBnplEnabled: isBnplEnabled))
+            return nil
+        } catch {
+            if let secureError = SecureChallengeError(from: error.sdkError) {
+                return secureError.fraudMonСheckResult
+            } else {
+                throw error
             }
         }
     }
-
-    private func pay(with token: String,
+    
+    @discardableResult
+    func getPaymentToken(paymentId: Int,
+                         isBnplEnabled: Bool,
+                         resolution: SecureChallengeResolution?) async throws -> PaymentTokenModel {
+        
+        guard let sessionId = authManager.sessionId,
+              let authInfo = sdkManager.authInfo,
+              let merchantLogin = sdkManager.authInfo?.merchantLogin
+        else { throw SDKError(.noData) }
+        
+        self.authManager.apiKey = self.authManager.initialApiKey
+        
+        do {
+            let deviceInfo = try await personalMetricsService.getUserData()
+            
+            let token = try await network.request(PaymentTarget.getPaymentToken(sessionId: sessionId,
+                                                                                deviceInfo: deviceInfo,
+                                                                                paymentId: paymentId,
+                                                                                merchantLogin: merchantLogin,
+                                                                                orderId: authInfo.orderId,
+                                                                                amount: authInfo.amount,
+                                                                                currency: authInfo.currency,
+                                                                                orderNumber: authInfo.orderNumber,
+                                                                                expiry: authInfo.expiry,
+                                                                                frequency: authInfo.frequency,
+                                                                                resolution: resolution?.rawValue,
+                                                                                isBnplEnabled: isBnplEnabled),
+                                                  to: PaymentTokenModel.self)
+            
+            self.paymentToken = (token, isBnplEnabled)
+            
+            return token
+        } catch {
+            
+            throw error
+        }
+    }
+    
+    private func updateTokenIfNeed(paymentId: Int,
+                                   isBnplEnabled: Bool,
+                                   resolution: SecureChallengeResolution?) async throws -> PaymentTokenModel {
+        
+        if let paymentToken = paymentToken, paymentToken.forBNPL == isBnplEnabled {
+            
+            return paymentToken.model
+        } else {
+            
+            return try await getPaymentToken(paymentId: paymentId, isBnplEnabled: isBnplEnabled, resolution: resolution)
+        }
+    }
+    
+    private func pay(bnpl: Bool,
+                     with token: String,
                      orderId: String?,
-                     completion: @escaping ((Result<Void, PayError>) -> Void)) {
-        guard let authInfo = sdkManager.authInfo else { return }
-        network.request(PaymentTarget.getPaymentOrder(operationId: .generateRandom(with: 36),
-                                                      orderId: orderId,
-                                                      merchantLogin: authInfo.merchantLogin,
-                                                      ipAddress: personalMetricsService.ipAddress,
-                                                      paymentToken: token),
-                        to: PaymentOrderModel.self,
-                        retrySettings: (4, [
-                            StatusCode.errorSystem.rawValue,
-                            StatusCode.unknownPayState.rawValue,
-                            StatusCode.unknownState.rawValue
-                        ])) { result in
-                            switch result {
-            case .success:
-                completion(.success)
-            case .failure(let error):
-                completion(.failure(self.parseError(error)))
+                     merchantLogin: String) async throws {
+        
+        let retryCount = featuerToggle.isEnabled(.retryPayment) ? 4 : 0
+        
+        do {
+            try await network.request(PaymentTarget.getPaymentOrder(operationId: .generateRandom(with: 36),
+                                                                    orderId: orderId,
+                                                                    merchantLogin: merchantLogin,
+                                                                    ipAddress: authManager.ipAddress,
+                                                                    paymentToken: token),
+                                      retrySettings: (retryCount,
+                                                      [
+                                                        Int(StatusCode.errorSystem.rawValue),
+                                                        Int(StatusCode.unknownPayState.rawValue),
+                                                        Int(StatusCode.unknownState.rawValue)
+                                                      ]))
+        } catch {
+            if let error = error as? SDKError {
+                
+                throw error
             }
+        }
+    }
+    
+    private func getCredPair(_ isBnplEnabled: Bool) throws -> (orderid: String, merchantLogin: String, apiKey: String) {
+        
+        guard let authInfo = self.sdkManager.authInfo else { throw SDKError(.noData) }
+        guard let paymentToken = self.paymentToken else { throw SDKError(.noData) }
+        
+        switch isBnplEnabled {
+        case true:
+            return (
+                orderid: paymentToken.model.initiateBankInvoiceId ?? "",
+                merchantLogin: BnplConstants.merchantLogin(for: self.buildSettings.networkState),
+                apiKey: BnplConstants.apiKey(for: self.buildSettings.networkState)
+            )
+        case false:
+            return (
+                orderid: authInfo.orderId ?? "",
+                merchantLogin: self.sdkManager.authInfo?.merchantLogin ?? "",
+                apiKey: self.authManager.apiKey ?? ""
+            )
         }
     }
     
     private func parseError(_ sdkError: SDKError) -> PayError {
-        switch sdkError {
-        case .noInternetConnection:
+        if sdkError.represents(.noInternetConnection) {
             return .noInternetConnection
-        case .timeOut:
+        } else if sdkError.represents(.timeOut) {
             return .timeOut
-        case .badResponseWithStatus(code: .errorSystem):
+        } else if sdkError.represents(.system) {
             return .unknownStatus
-        default:
+        } else {
             return .defaultError
         }
     }

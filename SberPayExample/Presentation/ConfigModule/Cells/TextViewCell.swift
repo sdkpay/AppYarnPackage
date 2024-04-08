@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SBLayout
 
 extension CGFloat {
     static let sideMargin = 5.0
@@ -18,6 +17,7 @@ private extension CGFloat {
 }
 
 final class TextViewCell: UITableViewCell {
+    
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .gray

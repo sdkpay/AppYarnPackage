@@ -1,7 +1,7 @@
 name: SPaySdk
 
 options:
-  deploymentTarget: 12.0
+  deploymentTarget: 13.0
   groupSortPosition: top
   generateEmptyDirectories: false
   findCarthageFrameworks: false
@@ -20,27 +20,30 @@ packages:
    url: https://github.com/Dynatrace/swift-mobile-sdk.git
    from: 8.0.0
   FingerprintPackage:
-    path: ./FingerprintPackage
+    path: ./FingerprintPack
+  YandexMobileMetrica:
+   url: https://github.com/yandexmobile/metrica-sdk-ios
+   from: 4.5.2
 
 targetTemplates:
   Framework:
     type: framework
     platform: iOS
-    deploymentTarget: 12.0
+    deploymentTarget: 13.0
     settings:
       base:
-        MARKETING_VERSION: 1.0
+        MARKETING_VERSION: 1.2
   SPaySdk: 
     type: framework
     platform: iOS
-    deploymentTarget: 12.0
+    deploymentTarget: 13.0
     scheme: {}
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.s.pay.SPaySdk
         BUILD_LIBRARY_FOR_DISTRIBUTION: true
         ONLY_ACTIVE_ARCH: false
-        MARKETING_VERSION: 1.0
+        MARKETING_VERSION: 2.1.1
         OTHER_LDFLAGS:
           - $(inherited)
           - $(OTHER_LDFLAGS)
@@ -52,29 +55,44 @@ targetTemplates:
       - package: Dynatrace-Static
       - package: FingerprintPackage
       - sdk: libresolv.9.tbd
+      - framework: ./SPayLottie.xcframework
     info:
       path: ./SPaySdk/SupportingFiles/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: $(DEVELOPMENT_LANGUAGE)
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleInfoDictionaryVersion: 6.0
+        CFBundleName: $(PRODUCT_NAME)
+        CFBundlePackageType: FMWK
+        CFBundleShortVersionString: 2.2.0
+        CFBundleVersion: 2.2.0
+        SDKVersion: "2.2.0"
   
 targets:
   SPaySdkExample:
     type: application
     platform: iOS
-    deploymentTarget: "12.0"
+    deploymentTarget: "13.0"
     scheme: {}
     sources:
        - path: ./SberPayExample
     settings:
-      MARKETING_VERSION: 1.1
-      CURRENT_PROJECT_VERSION: 112
-      PRODUCT_BUNDLE_IDENTIFIER: ru.ir.resheniya.PayTestApp
-      DEVELOPMENT_TEAM: 9C29T4D59W
+      TARGETED_DEVICE_FAMILY: 1
+      MARKETING_VERSION: 2.2.0
+      CURRENT_PROJECT_VERSION: 26
+      PRODUCT_BUNDLE_IDENTIFIER: com.team11.spay.sdk
+      DEVELOPMENT_TEAM: 9CYS9A2HF7
+      INFOPLIST_KEY_CFBundleDisplayName: SPayTest
+      CODE_SIGN_ENTITLEMENTS: SberPayExample/SupportingFiles/SPaySdkExample.entitlements
       SWIFT_OBJC_BRIDGING_HEADER: SberPayExample/Presentation/ObjcCartVC/SberPayExample-Bridging-Header.h
     dependencies:
       - package: IQKeyboardManagerSwift
-      - framework: ./SberPayExample/SupportingFiles/SBLayout.xcframework
+      - package: YandexMobileMetrica
       - target: SPaySdkDEBUG
         link: true
-    preBuildScripts: 
+      - framework: ./SberIdSDK.xcframework
+    preBuildScripts:
       - name: Swiftlint
         script: |
                 export PATH="$PATH:/opt/homebrew/bin"
@@ -87,6 +105,8 @@ targets:
         basedOnDependencyAnalysis: false
       - name: Swiftgen
         script: |
+                export PATH="$PATH:/opt/homebrew/bin"
+                
                 swiftgen
         basedOnDependencyAnalysis: false
     info:
@@ -98,21 +118,38 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
-        NSLocationWhenInUseUsageDescription: Need location
-        NSUserTrackingUsageDescription: App would like to access IDFA for tracking purpose
+        NSLocationWhenInUseUsageDescription: Данные о местонахождении собираются и отправляются на сервер для безопасного проведения оплаты
+        NSFaceIDUsageDescription: "Так вы подтвердите, что именно вы выполняете вход"
         LSSupportsOpeningDocumentsInPlace: true
         DTXAutoStart: false
+        AppIdentifierPrefix: $(AppIdentifierPrefix)
+        ITSAppUsesNonExemptEncryption: false
         CFBundleURLTypes:
           - CFBundleTypeRole: Editor
             CFBundleURLName: testapp
             CFBundleURLSchemes:
               - testapp
-        LSApplicationQueriesSchemes:
-          - sbolidexternallogin
-          - sberbankidexternallogin
-        NSAppTransportSecurity: 
-          NSAllowsArbitraryLoads: true
+          - CFBundleTypeRole: Editor
+            CFBundleURLName: testapp
+            CFBundleURLSchemes:
+              - sdkopfyncfkq
+        NSAppTransportSecurity:
+          NSExceptionDomains:
+            psi.gate1.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            ift.gate1.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            gate1.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            ift.gate2.spaymentsplus.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            cms-res.online.sberbank.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
         UIFileSharingEnabled: true
+        LSApplicationQueriesSchemes:
+            - sberbankidexternallogin
+            - sbolidexternallogin
+        
   SPaySdk:
     templates:
       - SPaySdk
@@ -120,7 +157,9 @@ targets:
       - path: ./PROD-SPay
     settings:
       base:
-        OTHER_SWIFT_FLAGS: "-DSDKPROD"
+        OTHER_SWIFT_FLAGS:
+            - "-DSDKPROD"
+            - "-no-verify-emitted-module-interface"
   SPaySdkDEBUG:
     templates:
       - SPaySdk
@@ -128,4 +167,11 @@ targets:
       - path: ./DEBUG-SPay
     settings:
       base:
-        OTHER_SWIFT_FLAGS: "-DSDKDEBUG"
+        OTHER_SWIFT_FLAGS:
+            - "-DSDKDEBUG"
+            - "-no-verify-emitted-module-interface"
+aggregateTargets:
+  SPayFramework:
+    buildScripts:
+      - path: ./build.sh
+

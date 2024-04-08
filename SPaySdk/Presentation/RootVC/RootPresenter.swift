@@ -18,6 +18,7 @@ final class RootPresenter: RootPresenting {
         self.router = router
     }
     
+    @MainActor 
     func viewDidLoad() {
         router.presentAuth()
     }

@@ -9,9 +9,21 @@ import Foundation
 
 enum Feature: String, Codable {
     case bnpl
+    case refresh
+    case compoundWallet
+    case cardBalance
+    case sbp
+    case newCreditCard
+    case newDebitCard
+    case retryPayment
+    case spasiboBonuses
+    case dynamicCardsUpdate
 }
 
 final class FeatureToggleServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(FeatureToggleService.self)
+    
     func register(in container: LocatorService) {
         let service: FeatureToggleService = DefaultFeatureToggleService()
         container.register(service: service)
@@ -25,6 +37,7 @@ protocol FeatureToggleService {
 }
 
 final class DefaultFeatureToggleService: FeatureToggleService {
+    
     private var features: [FeaturesToggle] = []
     
     func setFeature(_ feature: FeaturesToggle) {

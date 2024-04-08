@@ -1,0 +1,161 @@
+require 'net/http'
+require 'uri'
+
+#Common
+ENV["PROJECT_NAME"] = "SPaySdk"
+ENV["TARGET_NAME"] = "SPaySdkExample"
+ENV["SCHEME_NAME"] = "SPaySdkExample"
+ENV["PLIST_PATH"] = "./SberPayExample/SupportingFiles/Info.plist"
+
+#Appstore
+ENV["KEY_ID"] = "YR2LX8W79A"
+ENV["ISSUER_ID"] = "32c2a5e1-1bea-4fd8-8cff-4235733105fc"
+ENV["KEY_PATH"] = "./fastlane/AuthKey_YR2LX8W79A.p8"
+ENV["TEAM_ID"] = "582949"
+
+# Marvin Bot
+ENV["TG_BOT_TOKEN"] = "5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4"
+ENV["TG_CHAT_ID"] = "-866042957"
+
+# PROD BOT -866042957
+# DEV BOT -1001899215484
+# GIT
+ENV["REPO_URL"] = "https://github.com/sdkpay/paySDK-ios"
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Builds, achieves and uploads IPA to testflight"
+  lane :release_to_testflight do
+    prebuild
+    build_and_upload
+    upload_to_repo
+    marvin_bot(success: true)
+    add_and_upload_tags
+  end
+
+  private_lane :add_and_upload_tags do
+    add_git_tag(
+      grouping: "fastlane-builds",
+      includes_lane: true,
+      prefix: "v",
+      build_number: "#{plist_version}(#{plist_build})"
+    )
+    sh("git push --tags")
+  end
+
+  desc "Commit and upload changes"
+  private_lane :build_and_upload do
+    cert
+    sigh
+    gym(
+      scheme: ENV["SCHEME_NAME"],
+      output_directory: "./buildApp/ipa"
+    )
+    app_store_connect_api_key(
+      key_id: ENV["KEY_ID"],
+      issuer_id: ENV["ISSUER_ID"],
+      key_filepath: ENV["KEY_PATH"],
+      duration: 1200,
+      in_house: false
+    )
+    upload_to_testflight(
+           skip_submission: true,
+           skip_waiting_for_build_processing: true
+    )
+  end
+
+  desc "Commit and upload changes"
+  private_lane :upload_to_repo do
+    git_commit(path: "./", message: "Release to Testflight. Version: #{plist_version} (#{plist_build})")
+    sh("git pull")
+    sh("git push")
+  end
+  
+  desc "Prebuild actions"
+  private_lane :prebuild do
+    get_certificates
+    get_provisioning_profile
+  end
+
+  desc "Version from plist"
+  private_lane :plist_version do 
+    version = get_version_number(
+      xcodeproj: "SPaySdk.xcodeproj",
+      target: ENV["TARGET_NAME"]
+    )
+  end
+
+  desc "Build from plist"
+  private_lane :plist_build do 
+    build_number = get_build_number(
+      xcodeproj: "SPaySdk.xcodeproj"
+      )
+    build_number
+  end
+
+  desc "Build message for bot"
+  private_lane :build_message do |options|
+    status = (options[:success] ? "✅" : "❌")
+      
+    message = "
+<i>@lessov @DKovchina @Alisa_Umnikova </i>
+<b><ins>🚀 Новая сборка:</ins></b>
+    <i>Проект: </i><code>#{ENV["TARGET_NAME"]}</code>
+    <i>Статус: </i>#{status}
+    <i>Платформа: #iOS </i>
+    <i>Версия: #{plist_version}(#{plist_build})</i>
+    <i>Ветка: </i><code>#{git_branch}</code>
+<b><ins>Изменения:</ins></b>
+#{get_changelog}
+    "
+ if options[:exception]
+      message += "
+  #{options[:exception]}
+ "
+    end
+    message
+  end
+
+  private_lane :get_changelog do
+    changelog = prompt(
+      text: "Changelog: ",
+      multi_line_end_keyword: "END"
+    )
+  end
+  
+  desc "Send message to Marvin bot"
+  private_lane :marvin_bot do |options|
+    telegram(
+      token: ENV['TG_BOT_TOKEN'],
+      chat_id: ENV['TG_CHAT_ID'],
+      text: build_message(success: options[:success], exception: options[:exception]),
+      parse_mode: "HTML"
+    )
+  end
+  
+  error do |lane, exception|
+    marvin_bot(success: false, exception: exception)
+  end
+
+  #  Build xcframework lanes
+
+  desc "Framework version from plist"
+  private_lane :framework_plist_version do 
+    version = get_info_plist_value(
+      path: "./SPaySdk/SupportingFiles/Info.plist",
+      key: "SDKVersion"
+      )
+  end
+
+  desc "Create XCframework"
+  private_lane :build_xcframework do 
+    xcodebuild(
+    scheme: "SPayFramework",
+    configuration: "Release",
+    clean: true,
+    build: true
+  )
+  end
+
+end

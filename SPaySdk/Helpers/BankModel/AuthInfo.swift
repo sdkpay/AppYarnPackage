@@ -17,17 +17,6 @@ struct AuthInfo: Hashable {
     let expiry: String?
     let frequency: Int?
     
-    init(fullPaymentRequest: SFullPaymentRequest) {
-        self.merchantLogin = fullPaymentRequest.merchantLogin
-        self.orderId = fullPaymentRequest.orderId
-        self.redirectUri = fullPaymentRequest.redirectUri
-        self.amount = nil
-        self.currency = nil
-        self.orderNumber = nil
-        self.expiry = nil
-        self.frequency = nil
-    }
-    
     init(fullPaymentRequest: SBankInvoicePaymentRequest) {
         self.merchantLogin = fullPaymentRequest.merchantLogin
         self.orderId = fullPaymentRequest.bankInvoiceId

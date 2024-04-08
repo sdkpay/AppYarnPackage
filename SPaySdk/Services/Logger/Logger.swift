@@ -32,6 +32,16 @@ enum LogLevel {
     case debug(level: DebugLogLevel)
 }
 
+#if SDKDEBUG
+public enum DebugLogLevel: String, CaseIterable, Codable {
+    case bank = "Auth"
+    case network = "Network"
+    case lifeCycle = "LifeCycle"
+    case analytics = "Analytics"
+    case storage = "Storage"
+    case defaultLevel = "Default"
+}
+#else
 enum DebugLogLevel: String, CaseIterable {
     case bank = "Auth"
     case network = "Network"
@@ -40,12 +50,28 @@ enum DebugLogLevel: String, CaseIterable {
     case storage = "Storage"
     case defaultLevel = "Default"
 }
+#endif
 
 enum SBLogger {
+    
     static var dateString = ""
-    static var writeLogs = true
+    static var writeLogs = false
     static var secureLogs = true
+    
+    static var logLevels: [DebugLogLevel] = DebugLogLevel.allCases
+    
+    static var logFileName = "SDKv\(Bundle.appVersion)(\(Bundle.appBuild)) \(SBLogger.dateString).txt"
+    
     private static var logger = Log()
+    
+    static var logPath: URL? {
+        
+        let fm = FileManager.default
+        return fm.urls(for: .documentDirectory,
+                       in: .userDomainMask)[0]
+            .appendingPathComponent("SBPayLogs")
+            .appendingPathComponent(logFileName)
+    }
     
     static func log(level: LogLevel = .debug(level: .defaultLevel), _ massage: String) {
         switch level {
@@ -53,6 +79,7 @@ enum SBLogger {
             NSLog(massage)
         case let .debug(level: level):
             guard writeLogs else { return }
+            guard logLevels.contains(level) else { return }
             print(massage)
             print("|\(level.rawValue) \(Date()) \n\(massage)", to: &logger)
         }
@@ -244,7 +271,7 @@ enum SBLogger {
         )
     }
     
-    static func logResponsePaymentToken(with params: SPaymentTokenResponse) {
+    static func logResponsePaymentToken(with params: SPaymentTokenResponseModel) {
         log(
             level: .debug(level: .defaultLevel),
             """
@@ -252,7 +279,7 @@ enum SBLogger {
                paymentToken: \(params.paymentToken ?? "none")
                paymentTokenId: \(params.paymentTokenId ?? "none")
                tokenExpiration: \(params.tokenExpiration)
-               error: \(params.error?.errorDescription ?? "none")
+               error: \(params.error ?? "none")
             """
         )
     }
@@ -480,6 +507,17 @@ enum SBLogger {
         )
     }
     
+    static func logAnalyticsEvent(name: String, values: String) {
+           log(
+               level: .debug(level: .analytics),
+               """
+               🕵️‍♂️ Sent event with name: \(name)
+                  values: \(values)
+                  
+               """
+           )
+       }
+    
     static func logThread(obj: Any,
                           thread: Thread = .current,
                           functionName: String = #function,
@@ -540,7 +578,7 @@ struct Log: TextOutputStream {
                            in: .userDomainMask)[0]
             .appendingPathComponent("SBPayLogs")
         try? fm.createDirectory(atPath: path.path, withIntermediateDirectories: true)
-        let log = path.appendingPathComponent("log_\(SBLogger.dateString).txt")
+        let log = path.appendingPathComponent(SBLogger.logFileName)
         if let handle = try? FileHandle(forWritingTo: log) {
             handle.seekToEndOfFile()
             handle.write(string.data(using: .utf8) ?? Data())
@@ -548,5 +586,15 @@ struct Log: TextOutputStream {
         } else {
             try? string.data(using: .utf8)?.write(to: log)
         }
+    }
+}
+
+extension Date {
+    
+    var readable: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ru")
+        dateFormatter.dateFormat = "d.MM HH:mm:ss"
+        return dateFormatter.string(from: self)
     }
 }

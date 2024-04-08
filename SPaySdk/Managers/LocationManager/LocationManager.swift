@@ -9,6 +9,9 @@ import Foundation
 import CoreLocation
 
 final class LocationManagerAssembly: Assembly {
+    
+    var type = ObjectIdentifier(LocationManager.self)
+    
     func register(in container: LocatorService) {
         container.register {
             let service: LocationManager = DefaultLocationManager()

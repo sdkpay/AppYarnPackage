@@ -12,8 +12,10 @@ private extension TimeInterval {
 }
 
 struct Loader {
+    
+    @MainActor
     private var window: UIWindow? {
-        return UIApplication.shared.keyWindow ?? UIApplication.shared.windows.last
+        UIApplication.shared.windows.last
     }
     
     private let text: String?
@@ -45,34 +47,37 @@ struct Loader {
     }
     
     @discardableResult
-    func show(on vc: UIViewController) -> Loader {
+    @MainActor
+    func show(on vc: ContentVC) -> Loader {
+        
         guard window != nil else { return self }
-        if let oldLaoding = vc.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView {
-            oldLaoding.removeFromSuperview()
+        
+        if vc.view?.subviews.first(where: { $0 is LoadingView }) is LoadingView {
+            hide(from: vc)
         }
+        
         let subview = LoadingView(with: text)
+    
         guard let rootView = vc.view else { return self }
-        subview.translatesAutoresizingMaskIntoConstraints = false
-        rootView.addSubview(subview)
         
-        NSLayoutConstraint.activate([
-            subview.bottomAnchor.constraint(equalTo: rootView.bottomAnchor),
-            subview.trailingAnchor.constraint(equalTo: rootView.trailingAnchor),
-            subview.leadingAnchor.constraint(equalTo: rootView.leadingAnchor),
-            subview.topAnchor.constraint(equalTo: rootView.topAnchor)
-        ])
+        hideContext(from: vc, aniamated: true)
         
-        subview.layoutIfNeeded()
+        subview
+            .add(toSuperview: rootView)
+            .centerInSuperview()
         subview.show(animate: isNeedToAnimate)
         return self
     }
     
     @discardableResult
-    func hide(from vc: UIViewController) -> Loader {
+    @MainActor
+    func hide(from vc: ContentVC) -> Loader {
+        
         guard let subview = vc.view?.subviews.first(where: { $0 is LoadingView }) as? LoadingView else {
             return self
         }
         
+        showContext(from: vc, aniamated: true)
         if isNeedToAnimate {
             UIView.animate(withDuration: .animationDuration,
                            delay: 0) {
@@ -84,5 +89,25 @@ struct Loader {
             subview.removeFromSuperview()
         }
         return self
+    }
+    
+    private func hideContext(from view: ContentVC, aniamated: Bool) {
+        
+        if aniamated {
+            
+            view.view.subviews.forEach {
+                if $0.tag != .backgroundViewTag, $0.tag != .stickViewTag {
+                    $0.alpha = 0
+                }
+            }
+        }
+    }
+    
+    private func showContext(from view: ContentVC, aniamated: Bool) {
+        
+        if aniamated {
+            
+            view.view.subviews.forEach { $0.alpha = 1 }
+        }
     }
 }

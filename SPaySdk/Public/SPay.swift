@@ -16,15 +16,29 @@ public enum SEnvironment: Int {
 
 @objc
 public final class SPay: NSObject {
-    private static var payService: SBPayService? = DefaultSBPayService()
+    
+    private static var payService: SBPayService?
     
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     @objc
-    public static func setup(apiKey: String,
-                             bnplPlan: Bool = false,
+    public static func setup(bnplPlan: Bool = true,
+                             resultViewNeeded: Bool = true,
+                             helpers: Bool = true,
+                             needLogs: Bool = true,
+                             helperConfig: SBHelperConfig = SBHelperConfig(),
                              environment: SEnvironment = .prod,
-                             completion: Action? = nil) {
-        payService?.setup(apiKey: apiKey, bnplPlan: bnplPlan, environment: environment, completion: completion)
+                             completion: ((SPError?) -> Void)? = nil) {
+        
+        if payService == nil {
+            payService = DefaultSBPayService()
+        }
+        payService?.setup(bnplPlan: bnplPlan,
+                          resultViewNeeded: resultViewNeeded,
+                          helpers: helpers,
+                          needLogs: needLogs,
+                          config: helperConfig,
+                          environment: environment,
+                          completion: completion)
     }
     
     /**
@@ -34,45 +48,6 @@ public final class SPay: NSObject {
     public static var isReadyForSPay: Bool {
          payService?.isReadyForSPay ?? false
     }
-    
-    /**
-     Метод получения PaymentToken
-     */
-    @objc
-    public static func getPaymentToken(with viewController: UIViewController,
-                                       with paymentTokenRequest: SPaymentTokenRequest,
-                                       completion: @escaping (SPaymentTokenResponse) -> Void) {
-        payService?.getPaymentToken(with: viewController, with: paymentTokenRequest, completion: completion)
-    }
-    
-    /**
-     Метод для оплаты
-     */
-    @objc
-    public static func pay(with paymentRequest: SPaymentRequest,
-                           completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
-        payService?.pay(with: paymentRequest, completion: completion)
-    }
-    
-    /**
-     Единый метод для оплаты
-     */
-#if SDKDEBUG
-    @objc
-    public static func payWithOrderId(with viewController: UIViewController,
-                                      with paymentRequest: SFullPaymentRequest,
-                                      completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
-        payService?.payWithOrderId(with: viewController, paymentRequest: paymentRequest, completion: completion)
-    }
-#else
-    @objc
-    @available(*, deprecated, message: "Метод устарел, используйте payWithBankInvoiceId")
-    public static func payWithOrderId(with viewController: UIViewController,
-                                      with paymentRequest: SFullPaymentRequest,
-                                      completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
-        payService?.payWithOrderId(with: viewController, paymentRequest: paymentRequest, completion: completion)
-    }
-#endif
     
     /**
      Единый метод для оплаты
@@ -85,14 +60,25 @@ public final class SPay: NSObject {
     }
     
     /**
-     Метод для завершения оплаты и закрытия окна SDK
+    Метод оплаты только для оплаты частями
      */
     @objc
-    public static func completePayment(paymentState: SPayState,
-                                       completion: @escaping () -> Void) {
-        payService?.completePayment(paymentSuccess: paymentState, completion: completion)
+    public static func payWithoutRefresh(with viewController: UIViewController,
+                                         paymentRequest: SBankInvoicePaymentRequest,
+                                         completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
+        payService?.payWithoutRefresh(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }
     
+    /**
+     Метод оплаты только для оплаты частями
+     */
+    @objc
+    public static func payWithPartPay(with viewController: UIViewController,
+                                      paymentRequest: SBankInvoicePaymentRequest,
+                                      completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
+        payService?.payWithPartPay(with: viewController, paymentRequest: paymentRequest, completion: completion)
+    }
+
     /**
      Метод для авторизации банка необходимо интегрировать в AppDelegate
      */
@@ -105,8 +91,15 @@ public final class SPay: NSObject {
      Метод для установки моков, только для тестовых версий
      */
 #if SDKDEBUG
-    public static func debugConfig(network: NetworkState, ssl: Bool) {
-        payService?.debugConfig(network: network, ssl: ssl)
+    public static func debugConfig(network: NetworkState,
+                                   ssl: Bool,
+                                   refresh: Bool,
+                                   debugLogLevel: [DebugLogLevel]) {
+        
+        if payService == nil {
+            payService = DefaultSBPayService()
+        }
+        payService?.debugConfig(network: network, ssl: ssl, refresh: refresh, debugLogLevel: debugLogLevel)
     }
 #endif
 }

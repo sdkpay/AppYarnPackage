@@ -8,38 +8,60 @@
 import Foundation
 
 final class UserServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(UserService.self)
+    
     func register(in container: LocatorService) {
+        
         container.register {
             let service: UserService = DefaultUserService(network: container.resolve(),
                                                           sdkManager: container.resolve(),
-                                                          authManager: container.resolve())
+                                                          authManager: container.resolve(),
+                                                          analytics: container.resolve())
             return service
         }
     }
 }
 
 protocol UserService {
-    var user: User? { get }
-    var selectedCard: PaymentToolInfo? { get set }
-    func getUser(completion: @escaping (SDKError?) -> Void)
-    func checkUserSession(completion: @escaping (Result<Void, SDKError>) -> Void)
+    var firstCardUpdate: Bool { get set }
+    var additionalCards: Bool { get }
+    var user: UserModel? { get }
+    var selectedCard: PaymentTool? { get set }
+    var selectedCardPublisher: Published<PaymentTool?>.Publisher { get }
+    var userPublisher: Published<UserModel?>.Publisher { get }
+    func getUser() async throws
+    func getListCards() async throws
+    func checkUserSession() async throws
     func clearData()
 }
 
 final class DefaultUserService: UserService {
+    
     private let network: NetworkService
-    private(set) var user: User?
+    
+    @Published private(set) var user: UserModel?
+    var userPublisher: Published<UserModel?>.Publisher { $user }
+    
     private let sdkManager: SDKManager
     private let authManager: AuthManager
+    private let analytics: AnalyticsService
     
-    var selectedCard: PaymentToolInfo?
+    var firstCardUpdate = true
+    
+    @Published var selectedCard: PaymentTool?
+    var selectedCardPublisher: Published<PaymentTool?>.Publisher { $selectedCard }
+    
+    private(set) var additionalCards = false
     
     init(network: NetworkService,
          sdkManager: SDKManager,
-         authManager: AuthManager) {
+         authManager: AuthManager,
+         analytics: AnalyticsService) {
         self.network = network
         self.sdkManager = sdkManager
         self.authManager = authManager
+        self.analytics = analytics
         SBLogger.log(.start(obj: self))
     }
     
@@ -47,51 +69,67 @@ final class DefaultUserService: UserService {
         SBLogger.log(.stop(obj: self))
     }
     
-    func getUser(completion: @escaping (SDKError?) -> Void) {
-        guard let authInfo = sdkManager.authInfo,
-              let sessionId = authManager.sessionId,
-              let authCode = authManager.authCode,
-              let state = authManager.state
-        else { return }
+    func getUser() async throws {
         
-        network.request(UserTarget.getListCards(redirectUri: authInfo.redirectUri,
-                                                authCode: authCode,
-                                                sessionId: sessionId,
-                                                state: state,
-                                                merchantLogin: authInfo.merchantLogin,
-                                                orderId: authInfo.orderId,
-                                                amount: authInfo.amount,
-                                                currency: authInfo.currency,
-                                                orderNumber: authInfo.orderNumber,
-                                                expiry: authInfo.expiry,
-                                                frequency: authInfo.frequency),
-                        to: User.self) { [weak self] result in
-            switch result {
-            case .success(let user):
-                guard let self = self else { return }
-                self.user = user
-                self.selectedCard = self.selectCard(from: user.paymentToolInfo)
-                completion(nil)
-            case .failure(let error):
-                completion(error)
-            }
+        guard let authInfo = sdkManager.authInfo,
+              let sessionId = authManager.sessionId
+        else { throw SDKError(.noData) }
+        
+        let listCardsResult = try await network.request(UserTarget.getListCards(sessionId: sessionId,
+                                                                                merchantLogin: authInfo.merchantLogin,
+                                                                                orderId: authInfo.orderId,
+                                                                                amount: authInfo.amount,
+                                                                                currency: authInfo.currency,
+                                                                                orderNumber: authInfo.orderNumber,
+                                                                                expiry: authInfo.expiry,
+                                                                                frequency: authInfo.frequency,
+                                                                                priorityCardOnly: false),
+                                                        to: UserModel.self)
+        self.user = listCardsResult
+        additionalCards = listCardsResult.paymentToolInfo.paymentTool.count > 1
+        selectedCard = self.selectCard(from: listCardsResult.paymentToolInfo.paymentTool)
+    }
+    
+    func getListCards() async throws {
+        
+        guard let authInfo = sdkManager.authInfo,
+              let sessionId = authManager.sessionId
+        else { throw SDKError(.noData) }
+        
+        do {
+            let listCardsResult = try await network.request(UserTarget.getListCards(sessionId: sessionId,
+                                                                                    merchantLogin: authInfo.merchantLogin,
+                                                                                    orderId: authInfo.orderId,
+                                                                                    amount: authInfo.amount,
+                                                                                    currency: authInfo.currency,
+                                                                                    orderNumber: authInfo.orderNumber,
+                                                                                    expiry: authInfo.expiry,
+                                                                                    frequency: authInfo.frequency,
+                                                                                    priorityCardOnly: false),
+                                                            to: UserModel.self)
+            
+            self.user = listCardsResult
+        } catch {
+            throw error
         }
     }
     
-    func checkUserSession(completion: @escaping (Result<Void, SDKError>) -> Void) {
+    func checkUserSession() async throws {
+        
         guard let sessionId = authManager.sessionId, user != nil else {
-            completion(.failure(.noData))
-            return
+            throw SDKError(.noData)
         }
-        network.request(AuthTarget.checkSession(sessionId: sessionId),
-                        completion: completion)
+        
+        try await network.request(AuthTarget.checkSession(sessionId: sessionId))
     }
     
     func clearData() {
+        firstCardUpdate = true
         user = nil
     }
-
-    private func selectCard(from cards: [PaymentToolInfo]) -> PaymentToolInfo? {
-        cards.first(where: { $0.priorityCard }) ?? cards.first
+    
+    private func selectCard(from cards: [PaymentTool]) -> PaymentTool? {
+        
+        cards.first(where: { $0.priorityCard })
     }
 }

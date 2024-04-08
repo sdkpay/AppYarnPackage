@@ -9,35 +9,54 @@ import UIKit
 
 struct CardCellModel {
     let title: String
-    let number: String
+    let subtitle: String
     let selected: Bool
+    let bonuses: String?
     let cardURL: String?
+    let isEnoughtMoney: Bool
 }
 
 private extension CGFloat {
-    static let topMargin = 12.0
-    static let corner = 8.0
+    static let topMargin = 8.0
+    static let corner = 20.0
     static let checkWidth = 20.0
     static let cardWidth = 36.0
+    static let letterSpacing = -0.3
+    static let bonusesStackInset = 16.0
+    static let bonusesLabelHeight = 17.0
+    static let horizontalInset = 16.0
 }
 
-final class CardCell: UITableViewCell {    
+final class CardCell: UITableViewCell, Shakable {
+    
     private lazy var containerView: UIView = {
         let view = UIView()
+        
+        switch traitCollection.userInterfaceStyle {
+        case .unspecified, .light:
+            view.backgroundColor = .backgroundPrimary
+        case .dark:
+            view.applyBlurEffect(style: .systemUltraThinMaterial)
+        @unknown default:
+            view.backgroundColor = .backgroundPrimary
+        }
+        
+        view.clipsToBounds = true
         view.layer.cornerRadius = .corner
         return view
     }()
-
+    
     private lazy var titleLabel: UILabel = {
-       let view = UILabel()
-        view.font = .bodi1
+        let view = UILabel()
+        view.font = .medium7
         view.textColor = .textPrimory
+        view.letterSpacing(.letterSpacing)
         return view
     }()
     
     private lazy var cardLabel: UILabel = {
-       let view = UILabel()
-        view.font = .bodi2
+        let view = UILabel()
+        view.font = .medium2
         view.textColor = .textSecondary
         return view
     }()
@@ -48,9 +67,31 @@ final class CardCell: UITableViewCell {
     private lazy var cardInfoStack: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
+        view.spacing = 4
         view.addArrangedSubview(titleLabel)
         view.addArrangedSubview(cardLabel)
         return view
+    }()
+    
+    private lazy var bonusesLabel: LinkLabel = {
+        let view = LinkLabel()
+        view.font = .medium2
+        view.numberOfLines = 0
+        view.textColor = .white
+        return view
+    }()
+    
+    private lazy var bonusesImageView = UIImageView(image: Asset.Image.sbsp.image.withRenderingMode(.alwaysTemplate))
+    
+    private lazy var bonusesStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 4
+        stackView.isHidden = true
+        stackView.addArrangedSubview(bonusesLabel)
+        stackView.addArrangedSubview(bonusesImageView)
+        stackView.alignment = .center
+        return stackView
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -63,15 +104,41 @@ final class CardCell: UITableViewCell {
     }
     
     func config(with model: CardCellModel) {
-        containerView.backgroundColor = model.selected ? .mainSecondary : .backgroundSecondary
-        checkImageView.image = model.selected ? .Common.checkSelected : .Common.checkDeselected
         titleLabel.text = model.title
-        cardLabel.text = model.number
+        cardLabel.text = model.subtitle
         cardIconView.downloadImage(from: model.cardURL, placeholder: .Cards.stockCard)
+        if let bonuses = model.bonuses,
+           model.isEnoughtMoney {
+            bonusesStackView.isHidden = false
+            bonusesLabel.text = "+\(bonuses)"
+            let bonusesColor = model.selected ? Asset.Palette.greenPrimary.color : Asset.Palette.grayPrimary.color
+            bonusesLabel.textColor = bonusesColor
+            bonusesImageView.tintColor = bonusesColor
+        } else {
+            bonusesStackView.isHidden = true
+        }
+        if !model.isEnoughtMoney {
+            titleLabel.textColor = .textSecondary
+            cardLabel.textColor = .textSecondary
+        } else {
+            titleLabel.textColor = .textPrimory
+        }
+    }
+    
+    func shake() {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.07
+        animation.repeatCount = 4
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: self.center.x - 8, y: self.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: self.center.x + 8, y: self.center.y))
+
+        self.layer.add(animation, forKey: "position")
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
     }
     
     private func setupUI() {
-        backgroundColor = .backgroundPrimary
+        backgroundColor = .clear
         contentView.addSubview(containerView)
         containerView.addSubview(titleLabel)
         containerView.addSubview(cardLabel)
@@ -80,15 +147,15 @@ final class CardCell: UITableViewCell {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: .horizontalInset),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -.horizontalInset),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -.topMargin)
         ])
         
         containerView.addSubview(cardIconView)
         cardIconView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cardIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .margin),
+            cardIconView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: .margin),
             cardIconView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             cardIconView.widthAnchor.constraint(equalToConstant: .cardWidth),
             cardIconView.heightAnchor.constraint(equalToConstant: .cardWidth)
@@ -109,5 +176,13 @@ final class CardCell: UITableViewCell {
             checkImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -.margin),
             checkImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
         ])
+        
+        bonusesStackView
+            .add(toSuperview: containerView)
+            .touchEdge(.right, toSuperviewEdge: .right, withInset: .bonusesStackInset)
+            .centerInSuperview(.y)
+        
+        bonusesLabel
+            .height(.equal, to: .bonusesLabelHeight)
     }
 }

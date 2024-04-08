@@ -1,0 +1,97 @@
+//
+//  OTPService.swift
+//  SPaySdk
+//
+//  Created by Арсений on 08.08.2023.
+//
+
+import Foundation
+
+struct OTPError: Error {
+    
+    let code: String
+    let errorMessage: String?
+    
+    init(code: String, errorMessage: String?) {
+        self.code = code
+        self.errorMessage = errorMessage
+    }
+    
+    init?(model: OTPModel) {
+        
+        guard model.errorCode != "0" else { return nil }
+        self.init(code: model.errorCode, errorMessage: model.errorMessage)
+    }
+}
+
+final class OTPServiceAssembly: Assembly {
+    
+    var type = ObjectIdentifier(OTPService.self)
+    
+    func register(in container: LocatorService) {
+        container.register {
+            let service: OTPService = DefaultOTPService(network: container.resolve(),
+                                                        sdkManager: container.resolve(),
+                                                        userService: container.resolve(),
+                                                        authManager: container.resolve())
+            return service
+        }
+    }
+}
+
+protocol OTPService {
+    var otpModel: OTPModel? { get }
+    var otpRequired: Bool { get }
+    func creteOTP() async throws
+    func confirmOTP(code: String, cardNumber: String) async throws
+}
+
+final class DefaultOTPService: OTPService, ResponseDecoder {
+    
+    private let network: NetworkService
+    private let authManager: AuthManager
+    private let sdkManager: SDKManager
+    private let userService: UserService
+    
+    var otpModel: OTPModel?
+    
+    var otpRequired: Bool {
+        authManager.isOtpNeed ?? true
+    }
+    
+    init(network: NetworkService,
+         sdkManager: SDKManager,
+         userService: UserService,
+         authManager: AuthManager) {
+        self.network = network
+        self.sdkManager = sdkManager
+        self.userService = userService
+        self.authManager = authManager
+    }
+    
+    func creteOTP() async throws {
+        let otpResult = try await network.request(OTPTarget.createOtpSdk(bankInvoiceId: sdkManager.authInfo?.orderId ?? "",
+                                                                         sessionId: authManager.sessionId ?? "",
+                                                                         paymentId: userService.selectedCard?.paymentID ?? 0),
+                                                  to: OTPModel.self)
+        self.otpModel = otpResult
+        
+        if let error = OTPError(model: otpResult) {
+            throw error
+        }
+    }
+    
+    func confirmOTP(code: String, cardNumber: String) async throws {
+        
+        let otpHash = getHashCode(code: code, cardNumber: cardNumber)
+        
+        try await network.request(OTPTarget.confirmOtp(bankInvoiceId: sdkManager.authInfo?.orderId ?? "",
+                                                       otpHash: otpHash,
+                                                       merchantLogin: sdkManager.authInfo?.merchantLogin ?? "",
+                                                       sessionId: authManager.sessionId ?? ""))
+    }
+    
+    private func getHashCode(code: String, cardNumber: String) -> String {
+        (code + cardNumber).sha256()
+    }
+}

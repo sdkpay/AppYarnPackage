@@ -8,19 +8,33 @@
 import UIKit
 
 private extension TimeInterval {
-    static let animationDuration: TimeInterval = 0.45
+    static let animationDuration: TimeInterval = 0.35
 }
 
 final class ContentNC: UIViewController {
+    
+    private lazy var backgroundView: UIImageView = {
+        let view = UIImageView(image: Asset.Image.background.image)
+        view.contentMode = .scaleAspectFill
+        view.tag = .backgroundViewTag
+        return view
+    }()
+    
     var topViewController: UIViewController? {
         viewControllers.last
     }
+    
     private lazy var customTransitioningDelegate = CoverTransitioningDelegate()
     private(set) var viewControllers: [UIViewController] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        addBackground()
     }
 
     convenience init(rootViewController: UIViewController) {
@@ -33,11 +47,16 @@ final class ContentNC: UIViewController {
         transitioningDelegate = customTransitioningDelegate
         modalPresentationStyle = .custom
     }
+    
+    func setBackground(_ image: UIImage) {
+        backgroundView.image = image
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @MainActor
     func setViewControllers(_ viewControllers: [UIViewController], animated: Bool) {
         guard let to = viewControllers.last else {
             return
@@ -51,6 +70,7 @@ final class ContentNC: UIViewController {
         self.viewControllers = viewControllers
     }
 
+    @MainActor
     func pushViewController(_ viewController: ContentVC, animated: Bool) {
         guard let from = topViewController else {
             setRootViewController(viewController)
@@ -60,6 +80,7 @@ final class ContentNC: UIViewController {
         self.viewControllers.append(viewController)
     }
 
+    @MainActor
     @discardableResult
     func popViewController(animated: Bool, completion: Action? = nil) -> UIViewController? {
         guard let from = topViewController, from != viewControllers.first else { return nil }
@@ -71,8 +92,28 @@ final class ContentNC: UIViewController {
         return from
     }
     
+    private func addBackground() {
+        backgroundView.alpha = 0
+        self.backgroundView
+            .add(toSuperview: self.view)
+            .touchEdge(.left, toSuperviewEdge: .left)
+            .touchEdge(.right, toSuperviewEdge: .right)
+            .touchEdge(.top, toSuperviewEdge: .top)
+        
+        view.sendSubviewToBack(backgroundView)
+        
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+            self.backgroundView.alpha = 1
+        } completion: { _ in
+            // DEBUG - Для лотти бэкграудн
+           // self.backgroundView.play()
+        }
+    }
+    
     private func setupUI() {
-        view.backgroundColor = .backgroundPrimary
+        view.backgroundColor = .backgroundSecondary
+        
         view.layer.masksToBounds = true
         let path = UIBezierPath(roundedRect: view.bounds,
                                 byRoundingCorners: [.topRight, .topLeft],
@@ -106,16 +147,7 @@ final class ContentNC: UIViewController {
         guard let containerView = presentationController?.containerView else {
             return
         }
-        var fomShimView = UIView()
-        fomShimView.backgroundColor = .backgroundPrimary
-        fomShimView.alpha = 0
-        
-        var toShimView = UIView()
-        toShimView.backgroundColor = .backgroundPrimary
-        toShimView.alpha = 1
-        
-        addedConstraint(fomShimView: &fomShimView, toShimView: &toShimView, from: from, to: to)
-        
+
         addChild(to)
         view.addSubview(to.view)
         from.willMove(toParent: nil)
@@ -135,11 +167,9 @@ final class ContentNC: UIViewController {
             fromTop,
             from.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             from.view.widthAnchor.constraint(equalTo: view.widthAnchor),
-            from.view.heightAnchor.constraint(lessThanOrEqualToConstant: .vcMaxHeight),
             
             to.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            to.view.widthAnchor.constraint(equalTo: view.widthAnchor),
-            to.view.heightAnchor.constraint(lessThanOrEqualToConstant: .vcMaxHeight)
+            to.view.widthAnchor.constraint(equalTo: view.widthAnchor)
         ])
         
         view.layoutIfNeeded()
@@ -147,48 +177,17 @@ final class ContentNC: UIViewController {
         fromTop.isActive = false
         toTop.isActive = true
         
-        animatedViews(fomShimView: fomShimView,
-                      toShimView: toShimView,
-                      to: to,
+        animatedViews(to: to,
                       from: from,
                       containerView: containerView,
                       completion: completion)
     }
     
-    private func addedConstraint(fomShimView: inout UIView,
-                                 toShimView: inout UIView,
-                                 from: UIViewController,
-                                 to: UIViewController) {
-        from.view.addSubview(fomShimView)
-        fomShimView.translatesAutoresizingMaskIntoConstraints = false
-        to.view.addSubview(toShimView)
-        toShimView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            fomShimView.bottomAnchor.constraint(equalTo: from.view.bottomAnchor),
-            fomShimView.topAnchor.constraint(equalTo: from.view.topAnchor),
-            fomShimView.leftAnchor.constraint(equalTo: from.view.leftAnchor),
-            fomShimView.rightAnchor.constraint(equalTo: from.view.rightAnchor)
-        ])
-    
-        to.view.addSubview(toShimView)
-        toShimView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            toShimView.bottomAnchor.constraint(equalTo: to.view.bottomAnchor),
-            toShimView.topAnchor.constraint(equalTo: to.view.topAnchor),
-            toShimView.leftAnchor.constraint(equalTo: to.view.leftAnchor),
-            toShimView.rightAnchor.constraint(equalTo: to.view.rightAnchor)
-        ])
-        
-        fomShimView.layoutIfNeeded()
-        toShimView.layoutIfNeeded()
-    }
-    
-    private func animatedViews(fomShimView: UIView,
-                               toShimView: UIView,
-                               to: UIViewController,
+    private func animatedViews(to: UIViewController,
                                from: UIViewController,
                                containerView: UIView,
                                completion: Action?) {
+        
         UIView.animate(
             withDuration: .animationDuration,
             delay: 0,
@@ -196,16 +195,16 @@ final class ContentNC: UIViewController {
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-                fomShimView.alpha = 1
+                from.view.subviews
+                    .filter({ $0.tag != .backgroundViewTag })
+                    .forEach({ $0.alpha = 0 })
             }, completion: { _ in
-                to.view.alpha = 1
-                completion?()
             }
         )
         
         UIView.animate(
-            withDuration: .animationDuration,
-            delay: .animationDuration,
+            withDuration: 0.25,
+            delay: 0.25,
             usingSpringWithDamping: 1,
             initialSpringVelocity: 1,
             options: .curveEaseOut,
@@ -213,24 +212,36 @@ final class ContentNC: UIViewController {
                 containerView.layoutIfNeeded()
             }, completion: { _ in
                 to.didMove(toParent: self)
-                from.removeFromParent()
-                from.view.removeFromSuperview()
-                from.didMove(toParent: nil)
             }
         )
         
         UIView.animate(
-            withDuration: .animationDuration,
-            delay: .animationDuration * 2,
+            withDuration: 0.25,
+            delay: 0.25 * 2,
             usingSpringWithDamping: 1,
             initialSpringVelocity: 1,
             options: .curveEaseOut,
             animations: {
-                toShimView.alpha = 0
+                to.view.alpha = 1
             }, completion: { _ in
-                fomShimView.removeFromSuperview()
-                toShimView.removeFromSuperview()
+                from.removeFromParent()
+                from.view.removeFromSuperview()
+                from.didMove(toParent: nil)
+                if let loadView = from.view.subviews.first(where: { $0.tag == .loadingTag }) {
+                    loadView.alpha = 1
+                } else {
+                    from.view.subviews.forEach({ $0.alpha = 1 })
+                }
+                completion?()
             }
         )
+    }
+}
+
+extension NSLayoutConstraint {
+    
+    func withPriority(_ priority: Float) -> NSLayoutConstraint {
+        self.priority = UILayoutPriority(priority)
+        return self
     }
 }

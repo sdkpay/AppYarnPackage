@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  SPaySdk
+
+  Created by Серёгин Михаил Алексеевич on 13.03.2024.
+  
+*/
+
+// Common
+"pay.title" = "Оплатить";
+"connect.title" = "Подключить";
+"pay.full.title" = "Оплатить полностью";
+"cancel.title" = "Отменить";
+"cancel.pay.title" = "Отменить оплату";
+"ok.title" = "Понятно";
+"return.title" = "К способам оплаты";
+"try.title" = "Попробовать ещё раз";
+"back.title" = "Вернуться";
+"from.title" = " из %@";
+"today.title" = "сегодня";

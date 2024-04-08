@@ -18,28 +18,79 @@ struct BnplModel: Codable {
 struct GraphBnpl: Codable {
     let header: String?
     let content: String?
-    let count: String?
     let text: String?
-    let payments: [Payment]
+    private let payments: [Payment]?
+    private let singleProductSixPart: [SingleProductSixPart]?
+    
+    var parts: [Payment] {
+        if let payments = singleProductSixPart?.first?.payments {
+            return payments
+        } else if let payments {
+            return payments
+        } else {
+            return []
+        }
+    }
+    
+    var commission: Int? {
+        singleProductSixPart?.first?.clientCommission
+    }
     
     var finalCost: Int {
-        payments.map({ $0.amount }).reduce(0, +)
+        parts.map({ $0.amount }).reduce(0, +)
     }
     
     var currencyCode: String {
-        payments.first?.currencyCode ?? "643"
+        parts.first?.currencyCode ?? "643"
     }
 }
 
-struct Payment: Codable {
-    let date: String?
+struct Payment: Codable, Hashable {
+    let date: String
     let amount: Int
     let currencyCode: String?
+    let clientCommission: Int?
+    
+    var uid: String {
+        UUID().uuidString
+    }
 }
 
 struct ButtonBnpl: Codable {
-    let activeButtonLogo: String?
-    let inactiveButtonLogo: String?
-    let header: String?
-    let content: String?
+    private let activeButtonLogo: String?
+    private let inactiveButtonLogo: String?
+    let header: String
+    let content: String
+    private let buttonLogo: String?
+    private let buttonLogoInactive: String?
+    
+    var buttonLogoUrl: String {
+        if let activeButtonLogo {
+            return activeButtonLogo
+        } else if let buttonLogo {
+            return buttonLogo
+        } else {
+            return ""
+        }
+    }
+    
+    var inactiveButtonLogoUrl: String {
+        if let inactiveButtonLogo {
+            return inactiveButtonLogo
+        } else if let buttonLogoInactive {
+            return buttonLogoInactive
+        } else {
+            return ""
+        }
+    }
+}
+
+struct SingleProductSixPart: Codable {
+    let productName: String?
+    let clientCommission: Int?
+    let payments: [Payment]
+
+    enum CodingKeys: String, CodingKey {
+        case productName, clientCommission, payments
+    }
 }

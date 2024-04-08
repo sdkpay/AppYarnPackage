@@ -66,55 +66,40 @@
     if (SPay.isReadyForSPay) {
 
     }
-    SPaymentTokenRequest *requestModel = [[SPaymentTokenRequest alloc] initWithRedirectUri:@"sberPayExampleapp"
-                                                                        merchantLogin:@"Test shop"
-                                                                               amount:*(_totalCost)
-                                                                             currency:@""
-                                                                          mobilePhone:@""
-                                                                          orderNumber:@""
-                                                                     recurrentExipiry:@""
-                                                                   recurrentFrequency:0];
-
-    [SPay getPaymentTokenWith:self with:requestModel completion:^(SPaymentTokenResponse * _Nonnull response) {
-        if (response.error) {
-            // Обработка ошибки
-            NSLog(@"%@ - описание ошибки", response.error.errorDescription);
-        } else {
-            // Обработка успешно полученных данных
-        }
-    }];
+    
+    SConfig *config = [[SConfig alloc] initWithSbp:true creditCard:true debitCard:true];
+    
+     [SPay setupWithBnplPlan:true
+            resultViewNeeded: true
+                    helpers:true
+                    needLogs: true
+               helperConfig: config
+                environment: SEnvironmentProd
+                  completion:nil];
+    
 }
 
 -(void)pay {
-    SPaymentRequest *request = [[SPaymentRequest alloc] initWithOrderId: @""
-                                                          paymentToken: @""];
-    [SPay payWith:request completion:^(enum SPayState state, NSString * _Nonnull info) {
-        switch(state) {
-            case SPayStateSuccess:
-                NSLog(@"Успешный результат");
-                break;
-            case SPayStateWaiting:
-                NSLog(@"Необходимо проверить статус оплаты");
-                break;
-            case SPayStateError:
-                NSLog(@"%@ - описание ошибки", info);
-                break;
-        }
-    }];
 }
 
 -(void)fullPay {
-    SFullPaymentRequest *request = [[SFullPaymentRequest alloc] initWithMerchantLogin: @"Test shop"
-                                                                              orderId:@"12312312"
+    SBankInvoiceIdPaymentRequest *request = [[SBankInvoiceIdPaymentRequest alloc] initWithMerchantLogin: @"Test shop"
+                                                                                          bankInvoiceId:@"12312312"
+                                                                          orderNumber:@"12312312"
                                                                              language:nil
-                                                                          redirectUri:@"testapp://test"];
-    [SPay payWithOrderIdWith:self with:request completion:^(enum SPayState state, NSString * _Nonnull info) {
+                                                                          redirectUri:@"testapp://test"
+                                                                               apiKey: @"a12312"];
+    
+    [SPay payWithBankInvoiceIdWith:self paymentRequest:request completion:^(enum SPayState state, NSString * _Nonnull info) {
         switch(state) {
             case SPayStateSuccess:
                 NSLog(@"Успешный результат");
                 break;
             case SPayStateWaiting:
                 NSLog(@"Необходимо проверить статус оплаты");
+                break;
+            case SPayStateCancel:
+                NSLog(@"Отмена");
                 break;
             case SPayStateError:
                 NSLog(@"%@ - описание ошибки", info);
@@ -124,9 +109,6 @@
 }
 
 -(void)completePayment {
-    [SPay completePaymentWithPaymentState: SPayStateSuccess completion:^{
-        // Блок отработает после закрытия окна SDK
-    }];
 }
 
 @end

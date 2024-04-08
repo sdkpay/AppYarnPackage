@@ -33,6 +33,8 @@ public final class SPaymentTokenRequest: NSObject {
     let recurrentFrequency: Int
     /// Cсылка для редиректа обратно в приложение
     let redirectUri: String
+    /// Api key
+    let apiKey: String?
     
     @objc
     init(merchantLogin: String?,
@@ -46,7 +48,9 @@ public final class SPaymentTokenRequest: NSObject {
          language: String? = nil,
          recurrentExipiry: String? = nil,
          recurrentFrequency: Int,
-         redirectUri: String) {
+         redirectUri: String,
+         apiKey: String? = nil) {
+        self.apiKey = apiKey
         self.merchantLogin = merchantLogin
         self.amount = amount
         self.currency = currency
@@ -67,6 +71,7 @@ public final class SPaymentTokenRequest: NSObject {
     // With orderId
     @objc
     public convenience init(merchantLogin: String?,
+                            orderNumber: String,
                             orderId: String? = nil,
                             bankInvoiceId: String? = nil,
                             redirectUri: String) {
@@ -75,7 +80,7 @@ public final class SPaymentTokenRequest: NSObject {
                   orderId: orderId,
                   bankInvoiceId: bankInvoiceId,
                   mobilePhone: nil,
-                  orderNumber: nil,
+                  orderNumber: orderNumber,
                   orderDescription: nil,
                   language: nil,
                   recurrentExipiry: nil,
@@ -92,14 +97,20 @@ public final class SPaymentTokenRequest: NSObject {
                             mobilePhone: String?,
                             orderNumber: String,
                             recurrentExipiry: String,
-                            recurrentFrequency: Int) {
-        self.init(merchantLogin: merchantLogin,
+                            recurrentFrequency: Int,
+                            apiKey: String? = nil) {
+        self.init(merchantLogin: redirectUri,
                   amount: amount,
                   currency: currency,
+                  orderId: nil,
+                  bankInvoiceId: nil,
                   mobilePhone: mobilePhone,
                   orderNumber: orderNumber,
+                  orderDescription: nil,
+                  language: nil,
                   recurrentExipiry: recurrentExipiry,
                   recurrentFrequency: recurrentFrequency,
-                  redirectUri: redirectUri)
+                  redirectUri: redirectUri,
+                  apiKey: apiKey)
     }
 }

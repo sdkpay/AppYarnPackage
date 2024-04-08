@@ -1,141 +1,114 @@
 {
-  "orderAmount" : {
-    "amount" : 4862000,
-    "currency" : "643"
+  "paymentToolInfo" : {
+    "paymentToolList" : [
+      {
+        "isSpPaymentToolsPriority" : true,
+        "precalculateBonuses": "123",
+        "paymentSourceType" : "OverdraftCard",
+        "financialProductId" : "40817810138260194280",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
+        "productName" : "Visa Classic",
+        "paymentId" : 4,
+        "cardNumber" : "6478",
+        "isSpPaymentTools" : true,
+        "amountData" : {
+          "amount" : 2000000,
+          "currency" : "810"
+        },
+        "priorityCard" : true,
+        "paymentSystemType" : "VISA"
+      },
+      {
+        "paymentSourceType" : "DebitCard",
+        "precalculateBonuses": "123",
+        "financialProductId" : "40817810638260194311",
+        "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
+        "productName" : "MasterCard Сберкарта",
+        "paymentId" : 6,
+        "cardNumber" : "1966",
+        "isSpPaymentTools" : true,
+        "amountData" : {
+          "amount" : 1,
+          "currency" : "810"
+        },
+        "priorityCard" : false,
+        "paymentSystemType" : "MASTERCARD"
+      }
+    ],
+    "additionalCards" : true,
+    "isSpPaymentToolsNeedUpdate" : false
   },
-  "merchantName" : "Денежка плюс",
-  "logoUrl" : "https:\/\/test.stat.online.sberbank.ru\/SBERBANKID\/icons\/781000013690.png",
-  "sessionId" : "689072247511674880",
-  "paymentToolInfo" : [
-    {
-      "paymentSourceType" : "OverdraftCard",
-      "financialProductId" : "40817810138260194280",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
-      "productName" : "Visa Classic",
-      "paymentId" : 0,
-      "cardNumber" : "6478",
-      "amountData" : {
-        "amount" : 9819645.9499999993,
-        "currency" : "RUR"
+  "merchantInfo" : {
+    "merchantName" : "SberPrime12()_&*СберПр.5",
+    "logoUrl" : "https:\/\/test.stat.online.sberbank.ru\/SBERCMS\/sberpay\/781000012764.png",
+    "bindingIsNeeded" : true,
+    "bindingSafeText" : "Тестовый текст для связок, очень большой текст"
+  },
+  "formInfo" : {
+    "notEnoughBalanceText" : "Кажется не хватает денег на карте",
+    "onlyPartPayText" : "Не хватает денег, но Вы можете оплатить частями"
+  },
+  "promoInfo" : {
+    "bannerList" : [
+      {
+        "iconUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/SDK\/sbp.png",
+        "buttons" : [
+          {
+            "type" : "View",
+            "deeplinkIos" : "transfers\/m2mPull?path=create",
+            "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/transfers\/m2mPull?action=create"
+          }
+        ],
+        "hint" : "Не хватает денег для оплаты. Пополните карты через СБП",
+        "type" : "sbp",
+        "header" : "Перевести себе по СБП",
+        "text" : "С карты другого банка"
       },
-      "priorityCard" : true,
-      "paymentSystemType" : "VISA"
-    },
-    {
-      "paymentSourceType" : "DebitCard",
-      "financialProductId" : "40817810938260220011",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
-      "productName" : "МИР Сберкарта",
-      "paymentId" : 1,
-      "cardNumber" : "8817",
-      "amountData" : {
-        "amount" : 1899950,
-        "currency" : "RUR"
+      {
+        "iconUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/SDK\/credit.png",
+        "buttons" : [
+          {
+            "type" : "View",
+            "deeplinkIos" : "creditcardorder\/order?sourceType=external&entryPoint=SDKSberpay",
+            "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/creditcardorder\/order?sourceType=external&entryPoint=SDKSberpay"
+          }
+        ],
+        "hint" : "Не хватает денег для оплаты, но вы можете выпустить кредитку",
+        "type" : "creditCard",
+        "header" : "Выпустить кредитную карту",
+        "text" : "120 дней без %"
       },
-      "priorityCard" : false,
-      "paymentSystemType" : "MIR"
-    },
-    {
-      "paymentSourceType" : "DebitCard",
-      "financialProductId" : "40817810338260194323",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mir_logo.png",
-      "productName" : "МИР Сберкарта",
-      "paymentId" : 2,
-      "cardNumber" : "1723",
-      "amountData" : {
-        "amount" : 1000006,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MIR"
-    },
-    {
-      "paymentSourceType" : "DebitCard",
-      "financialProductId" : "40817810638260194311",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
-      "productName" : "MasterCard Сберкарта",
-      "paymentId" : 3,
-      "cardNumber" : "1966",
-      "amountData" : {
-        "amount" : 998688.94999999995,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "DebitCard",
-      "financialProductId" : "40817810638260194311",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
-      "productName" : "MasterCard Сберкарта",
-      "paymentId" : 4,
-      "cardNumber" : "1916",
-      "amountData" : {
-        "amount" : 998688.94999999995,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "DebitCard",
-      "financialProductId" : "40817810638260194311",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
-      "productName" : "MasterCard Сберкарта",
-      "paymentId" : 5,
-      "cardNumber" : "1233",
-      "amountData" : {
-        "amount" : 998688.94999999995,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "DebitCard",
-      "financialProductId" : "40817810638260194311",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
-      "productName" : "MasterCard Сберкарта",
-      "paymentId" : 6,
-      "cardNumber" : "1203",
-      "amountData" : {
-        "amount" : 998688.94999999995,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "DebitCard",
-      "financialProductId" : "40817810638260194311",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
-      "productName" : "MasterCard Сберкарта",
-      "paymentId" : 7,
-      "cardNumber" : "0003",
-      "amountData" : {
-        "amount" : 998688.94999999995,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
-    },
-    {
-      "paymentSourceType" : "DebitCard",
-      "financialProductId" : "40817810638260194311",
-      "cardLogoUrl" : "https:\/\/cms-res.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_mastercard_logo.png",
-      "productName" : "MasterCard Сберкарта",
-      "paymentId" : 8,
-      "cardNumber" : "0423",
-      "amountData" : {
-        "amount" : 998688.94999999995,
-        "currency" : "RUR"
-      },
-      "priorityCard" : false,
-      "paymentSystemType" : "MASTERCARD"
+      {
+        "iconUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/SDK\/debit.png",
+        "buttons" : [
+          {
+            "deeplinkIos" : "mdcard\/mdcardrequest?segment=ssberkartamir",
+            "title" : "Выпустить карту",
+            "deeplinkAndroid" : "android-app:\/\/ru.sberbankmobile\/android-app\/ru.sberbankmobile\/mdcard\/mdcardrequest?segment=ssberkartamir",
+            "type" : "Full"
+          },
+          {
+            "type" : "Cancel",
+            "title" : "К способам оплаты"
+          }
+        ],
+        "hint" : "Но можно выпустить цифровую СберКарту всего за пару нажатий",
+        "type" : "debitCard",
+        "header" : "У вас нет активных карт",
+        "text" : "Но можно выпустить цифровую СберКарту всего за пару нажатий"
+      }
+    ],
+    "hint" : "Не хватает денег для оплаты. Пополните карты или выпустите кредитку"
+  },
+  "orderInfo" : {
+    "orderAmount" : {
+      "amount" : 499000,
+      "currency" : "643"
     }
-  ],
+  },
   "userInfo" : {
-    "firstName" : "СЕРГЕЙ",
+    "firstName" : "Сергей",
+    "gender" : 1,
     "lastName" : "Ч."
   }
 }

@@ -10,17 +10,18 @@ import UIKit
 private extension CGFloat {
     static let pointBackgroundWidth = 20.0
     static let pointWidth = 12.0
-    static let lineHeight = 22.0
     static let lineWidth = 2.0
-    static let lineMargin = 2.0
+    static let lineMargin = 4.0
 }
 
 final class PartCell: UITableViewCell {
+    
     private lazy var titleLabel = UILabel()
 
     private lazy var costLabel: UILabel = {
         let view = UILabel()
         view.textAlignment = .right
+        view.font = .medium2
         return view
     }()
     
@@ -39,6 +40,7 @@ final class PartCell: UITableViewCell {
     private lazy var lineView: UIView = {
         let view = UIView()
         view.backgroundColor = .textSecondary.withAlphaComponent(0.1)
+        view.layer.cornerRadius = 2.0
         return view
     }()
     
@@ -65,13 +67,13 @@ final class PartCell: UITableViewCell {
     }
     
     private func setupUI() {
-        backgroundColor = .backgroundSecondary
+        backgroundColor = .clear
         
         contentView.addSubview(backgroundPointView)
         backgroundPointView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             backgroundPointView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            backgroundPointView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundPointView.topAnchor.constraint(equalTo: topAnchor, constant: .lineMargin),
             backgroundPointView.widthAnchor.constraint(equalToConstant: .pointBackgroundWidth),
             backgroundPointView.heightAnchor.constraint(equalToConstant: .pointBackgroundWidth)
         ])
@@ -104,8 +106,8 @@ final class PartCell: UITableViewCell {
         NSLayoutConstraint.activate([
             lineView.centerXAnchor.constraint(equalTo: backgroundPointView.centerXAnchor),
             lineView.topAnchor.constraint(equalTo: backgroundPointView.bottomAnchor, constant: .lineMargin),
-            lineView.widthAnchor.constraint(equalToConstant: .lineWidth),
-            lineView.heightAnchor.constraint(equalToConstant: .lineHeight)
+            lineView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            lineView.widthAnchor.constraint(equalToConstant: .lineWidth)
         ])
     }
 }

@@ -1,0 +1,25 @@
+/* 
+  Alert.strings
+  SPaySdk
+
+  Created by Серёгин Михаил Алексеевич on 13.03.2024.
+  
+*/
+
+// Alert
+"pay.success.title" = "Успешно оплатили";
+"pay.error.title" = "Сервис оплаты частями недоступен. \nОплатите заказ полностью или выберите другой способ оплаты.";
+"otp.error.title" = "Вы исчерпали попытки ввода кода.\nВыберете другой метод оплаты.";
+"pay.no.waiting.title" = "Платеж в обработке";
+"pay.no.waiting.subtitle" = "Следите за статусом в Истории приложения %@";
+"error.main.title" = "Не получилось оплатить";
+"error.main.subtitle" = "Попробуйте ещё раз или выберите другой способ оплаты";
+"pay.no.internet.title" = "Нет интернета";
+"pay.no.internet.subtitle" = "Проверьте подключение и попробуйте ещё раз";
+"pay.no.cards.title" = "Нет подходящих карт. ";
+"pay.no.cards.subtitle" = "Но можем выпустить цифровую Сберкарту всего за пару нажатий";
+"bankAppPicker.title" = "Оплатить со SberPay\nне получается";
+"bankAppPicker.subtitle" = "Не смогли открыть ни одно из приложений банка.\nПожалуйста, выберете другой способ оплаты";
+"connect.title" = "Подключили SberPay %@";
+"button.close.title" = "Закрыть";
+"button.return.title" = "К способам оплаты";

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_implementationOnly import DynatraceStatic
+ @_implementationOnly import DynatraceStatic
 
 private enum DynatraceCredentional {
     static let url = "https://vito.sbrf.ru:443/mbeacon/7e4bdb68-cd47-4ecc-b649-69eb5cd44c91"
@@ -14,44 +14,34 @@ private enum DynatraceCredentional {
 }
 
 final class DefaultDynatraceAnalyticsService: AnalyticsService {
-    func sendEvent(_ event: AnalyticsEvent) {
-        let action = DTXAction.enter(withName: event.rawValue)
+    
+    func sendEvent(_ event: String) {
+        let action = DTXAction.enter(withName: event)
         action?.leave()
     }
     
-    func sendEvent(_ event: AnalyticsEvent, with strings: String...) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        strings.forEach({ action?.reportValue(withName: event.rawValue, stringValue: $0) })
+    func sendEvent(_ event: String, with string: String) {
+        let action = DTXAction.enter(withName: event)
+        action?.reportValue(withName: event, stringValue: string)
+        SBLogger.logAnalyticsEvent(name: event, values: string)
         action?.leave()
     }
     
-    func sendEvent(_ event: AnalyticsEvent, with ints: Int...) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        ints.forEach({ action?.reportValue(withName: event.rawValue, intValue: Int64($0)) })
-        action?.leave()
+    func startSession() {
+        Dynatrace.identifyUser(Bundle.main.displayName)
     }
     
-    func sendEvent(_ event: AnalyticsEvent, with doubles: Double...) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        doubles.forEach({ action?.reportValue(withName: event.rawValue, doubleValue: $0) })
-        action?.leave()
+    func finishSession() {
+        Dynatrace.endVisit()
     }
     
-    func sendEvent(_ event: AnalyticsEvent, with strings: [String]) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        strings.forEach({ action?.reportValue(withName: event.rawValue, stringValue: $0) })
-        action?.leave()
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with ints: [Int]) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        ints.forEach({ action?.reportValue(withName: event.rawValue, intValue: Int64($0)) })
-        action?.leave()
-    }
-    
-    func sendEvent(_ event: AnalyticsEvent, with doubles: [Double]) {
-        let action = DTXAction.enter(withName: event.rawValue)
-        doubles.forEach({ action?.reportValue(withName: event.rawValue, doubleValue: $0) })
+    func sendEvent(_ event: String, with dictionaty: [AnalyticsKey: String]) {
+        let action = DTXAction.enter(withName: event)
+        dictionaty.forEach { key, value in
+            action?.reportValue(withName: key.rawValue, stringValue: value)
+        }
+        let values = dictionaty.reduce(into: [:]) { $0[$1.key.rawValue] = $1.value }
+        SBLogger.logAnalyticsEvent(name: event, values: values.json)
         action?.leave()
     }
 
@@ -66,9 +56,12 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
         let startupDictionary: [String: Any?] = [
             kDTXApplicationID: dynatraceId,
             kDTXBeaconURL: dynatraceUrl,
-            kDTXLogLevel: "OFF"
+            kDTXLogLevel: "OFF",
+            kDTXInstrumentLifecycleMonitoring: false,
+            kDTXInstrumentAutoUserAction: false,
+            kDTXExcludedControlClasses: [],
+            kDTXExcludedControls: []
         ]
         Dynatrace.startup(withConfig: startupDictionary as [String: Any])
-        Dynatrace.identifyUser(Bundle.main.displayName)
     }
 }

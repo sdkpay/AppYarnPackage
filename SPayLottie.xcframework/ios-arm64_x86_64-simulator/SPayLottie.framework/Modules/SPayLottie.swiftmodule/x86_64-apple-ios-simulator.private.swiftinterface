@@ -1,0 +1,1475 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7.1 (swiftlang-5.7.1.135.3 clang-1400.0.29.51)
+// swift-module-flags: -target x86_64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name SPayLottie
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import Combine
+import Compression
+import CoreFoundation
+import CoreGraphics
+import CoreText
+import Foundation
+import QuartzCore
+import Swift
+import SwiftUI
+import UIKit
+import _Concurrency
+import _StringProcessing
+import zlib
+@objc @_Concurrency.MainActor(unsafe) open class AnimatedControl : SPayLottie.LottieControlType {
+  @_Concurrency.MainActor(unsafe) public init(animation: SPayLottie.SPayLottieAnimation?, configuration: SPayLottie.SPayLottieConfiguration = .shared)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public init()
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open var isEnabled: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open var isSelected: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open var isHighlighted: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open var intrinsicContentSize: CoreFoundation.CGSize {
+    @objc get
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func beginTracking(_ touch: UIKit.UITouch, with event: UIKit.UIEvent?) -> Swift.Bool
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func continueTracking(_ touch: UIKit.UITouch, with event: UIKit.UIEvent?) -> Swift.Bool
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func endTracking(_ touch: UIKit.UITouch?, with event: UIKit.UIEvent?)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func cancelTracking(with event: UIKit.UIEvent?)
+  @_Concurrency.MainActor(unsafe) open func animationDidSet()
+  @_Concurrency.MainActor(unsafe) final public let animationView: SPayLottie.SPayLottieAnimationView
+  @_Concurrency.MainActor(unsafe) public var animation: SPayLottie.SPayLottieAnimation? {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var animationSpeed: CoreFoundation.CGFloat {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public func setLayer(named: Swift.String, forState: SPayLottie.LottieControlState)
+  @_Concurrency.MainActor(unsafe) public func setValueProvider(_ valueProvider: SPayLottie.AnyValueProvider, keypath: SPayLottie.AnimationKeypath)
+  @objc deinit
+}
+public protocol DotLottieCacheProvider {
+  func file(forKey: Swift.String) -> SPayLottie.DotLottieFile?
+  func setFile(_ lottie: SPayLottie.DotLottieFile, forKey: Swift.String)
+  func clearCache()
+}
+public typealias AnimationFrameTime = CoreFoundation.CGFloat
+public typealias AnimationProgressTime = CoreFoundation.CGFloat
+public struct LottieVector1D : Swift.Hashable, Swift.Sendable {
+  public init(_ value: Swift.Double)
+  public let value: Swift.Double
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: SPayLottie.LottieVector1D, b: SPayLottie.LottieVector1D) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct LottieVector3D : Swift.Hashable, Swift.Sendable {
+  public let x: Swift.Double
+  public let y: Swift.Double
+  public let z: Swift.Double
+  public init(x: Swift.Double, y: Swift.Double, z: Swift.Double)
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: SPayLottie.LottieVector3D, b: SPayLottie.LottieVector3D) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public protocol SpayAnimationKeypathTextProvider : AnyObject {
+  func text(for keypath: SPayLottie.AnimationKeypath, sourceText: Swift.String) -> Swift.String?
+}
+@available(*, deprecated, message: "`AnimationKeypathTextProvider` has been deprecated and renamed to `LegacyAnimationTextProvider`. Instead, conform to `AnimationKeypathTextProvider` instead or conform to `LegacyAnimationTextProvider` explicitly.")
+public typealias AnimationTextProvider = SPayLottie.LegacyAnimationTextProvider
+public protocol LegacyAnimationTextProvider : SPayLottie.SpayAnimationKeypathTextProvider {
+  func textFor(keypathName: Swift.String, sourceText: Swift.String) -> Swift.String
+}
+extension SPayLottie.LegacyAnimationTextProvider {
+  public func text(for _: SPayLottie.AnimationKeypath, sourceText _: Swift.String) -> Swift.String?
+}
+final public class DictionaryTextProvider : SPayLottie.SpayAnimationKeypathTextProvider, SPayLottie.LegacyAnimationTextProvider {
+  public init(_ values: [Swift.String : Swift.String])
+  final public func text(for keypath: SPayLottie.AnimationKeypath, sourceText: Swift.String) -> Swift.String?
+  final public func textFor(keypathName: Swift.String, sourceText: Swift.String) -> Swift.String
+  @objc deinit
+}
+extension SPayLottie.DictionaryTextProvider : Swift.Equatable {
+  public static func == (lhs: SPayLottie.DictionaryTextProvider, rhs: SPayLottie.DictionaryTextProvider) -> Swift.Bool
+}
+final public class DefaultTextProvider : SPayLottie.SpayAnimationKeypathTextProvider, SPayLottie.LegacyAnimationTextProvider {
+  public init()
+  final public func textFor(keypathName _: Swift.String, sourceText: Swift.String) -> Swift.String
+  final public func text(for _: SPayLottie.AnimationKeypath, sourceText: Swift.String) -> Swift.String
+  @objc deinit
+}
+extension SPayLottie.DefaultTextProvider : Swift.Equatable {
+  public static func == (_: SPayLottie.DefaultTextProvider, _: SPayLottie.DefaultTextProvider) -> Swift.Bool
+}
+public enum LottieAnimationSource : Swift.Sendable {
+  case lottieAnimation(SPayLottie.SPayLottieAnimation)
+  case dotLottieFile(SPayLottie.DotLottieFile)
+}
+extension SPayLottie.SPayLottieAnimation {
+  final public var animationSource: SPayLottie.LottieAnimationSource {
+    get
+  }
+}
+extension SPayLottie.DotLottieFile {
+  final public var animationSource: SPayLottie.LottieAnimationSource {
+    get
+  }
+}
+public protocol Interpolatable : SPayLottie.AnyInterpolatable {
+  func interpolate(to: Self, amount: CoreFoundation.CGFloat) -> Self
+}
+public protocol SpatialInterpolatable : SPayLottie.AnyInterpolatable {
+  func interpolate(to: Self, amount: CoreFoundation.CGFloat, spatialOutTangent: CoreFoundation.CGPoint?, spatialInTangent: CoreFoundation.CGPoint?) -> Self
+}
+public protocol AnyInterpolatable {
+  func _interpolate(to: Self, amount: CoreFoundation.CGFloat, spatialOutTangent: CoreFoundation.CGPoint?, spatialInTangent: CoreFoundation.CGPoint?) -> Self
+}
+extension SPayLottie.Interpolatable {
+  public func _interpolate(to: Self, amount: CoreFoundation.CGFloat, spatialOutTangent _: CoreFoundation.CGPoint?, spatialInTangent _: CoreFoundation.CGPoint?) -> Self
+}
+extension SPayLottie.SpatialInterpolatable {
+  public func interpolate(to: Self, amount: CoreFoundation.CGFloat) -> Self
+  public func _interpolate(to: Self, amount: CoreFoundation.CGFloat, spatialOutTangent: CoreFoundation.CGPoint?, spatialInTangent: CoreFoundation.CGPoint?) -> Self
+}
+extension Swift.Double : SPayLottie.Interpolatable {
+}
+extension CoreFoundation.CGFloat : SPayLottie.Interpolatable {
+}
+extension Swift.Float : SPayLottie.Interpolatable {
+}
+extension SPayLottie.Interpolatable where Self : Swift.BinaryFloatingPoint {
+  public func interpolate(to: Self, amount: CoreFoundation.CGFloat) -> Self
+}
+extension CoreFoundation.CGRect : SPayLottie.Interpolatable {
+  public func interpolate(to: CoreFoundation.CGRect, amount: CoreFoundation.CGFloat) -> CoreFoundation.CGRect
+}
+extension CoreFoundation.CGSize : SPayLottie.Interpolatable {
+  public func interpolate(to: CoreFoundation.CGSize, amount: CoreFoundation.CGFloat) -> CoreFoundation.CGSize
+}
+extension CoreFoundation.CGPoint : SPayLottie.SpatialInterpolatable {
+  public func interpolate(to: CoreFoundation.CGPoint, amount: CoreFoundation.CGFloat, spatialOutTangent: CoreFoundation.CGPoint?, spatialInTangent: CoreFoundation.CGPoint?) -> CoreFoundation.CGPoint
+}
+extension SPayLottie.LottieColor : SPayLottie.Interpolatable {
+  public func interpolate(to: SPayLottie.LottieColor, amount: CoreFoundation.CGFloat) -> SPayLottie.LottieColor
+}
+extension SPayLottie.LottieVector1D : SPayLottie.Interpolatable {
+  public func interpolate(to: SPayLottie.LottieVector1D, amount: CoreFoundation.CGFloat) -> SPayLottie.LottieVector1D
+}
+extension SPayLottie.LottieVector2D : SPayLottie.SpatialInterpolatable {
+  public func interpolate(to: SPayLottie.LottieVector2D, amount: CoreFoundation.CGFloat, spatialOutTangent: CoreFoundation.CGPoint?, spatialInTangent: CoreFoundation.CGPoint?) -> SPayLottie.LottieVector2D
+}
+extension SPayLottie.LottieVector3D : SPayLottie.SpatialInterpolatable {
+  public func interpolate(to: SPayLottie.LottieVector3D, amount: CoreFoundation.CGFloat, spatialOutTangent: CoreFoundation.CGPoint?, spatialInTangent: CoreFoundation.CGPoint?) -> SPayLottie.LottieVector3D
+}
+extension Swift.Array : SPayLottie.Interpolatable, SPayLottie.AnyInterpolatable where Element : SPayLottie.Interpolatable {
+  public func interpolate(to: [Element], amount: CoreFoundation.CGFloat) -> [Element]
+}
+public enum LottieBackgroundBehavior {
+  case stop
+  case pause
+  case pauseAndRestore
+  case forceFinish
+  case continuePlaying
+  public static func `default`(for renderingEngine: SPayLottie.RenderingEngine) -> SPayLottie.LottieBackgroundBehavior
+  public static func == (a: SPayLottie.LottieBackgroundBehavior, b: SPayLottie.LottieBackgroundBehavior) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum LottieLoopMode : Swift.Hashable {
+  case playOnce
+  case loop
+  case autoReverse
+  case `repeat`(Swift.Float)
+  case repeatBackwards(Swift.Float)
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension SPayLottie.LottieLoopMode : Swift.Equatable {
+  public static func == (lhs: SPayLottie.LottieLoopMode, rhs: SPayLottie.LottieLoopMode) -> Swift.Bool
+}
+@objc @_inheritsConvenienceInitializers @IBDesignable @_Concurrency.MainActor(unsafe) open class SPayLottieAnimationView : SPayLottie.LottieAnimationViewBase {
+  @_Concurrency.MainActor(unsafe) public init(animation: SPayLottie.SPayLottieAnimation?, imageProvider: SPayLottie.SPayAnimationImageProvider? = nil, textProvider: SPayLottie.SpayAnimationKeypathTextProvider = DefaultTextProvider(), fontProvider: SPayLottie.SPayAnimationFontProvider = DefaultFontProvider(), configuration: SPayLottie.SPayLottieConfiguration = .shared, logger: SPayLottie.LottieLogger = .shared)
+  @_Concurrency.MainActor(unsafe) public init(dotLottie: SPayLottie.DotLottieFile?, animationId: Swift.String? = nil, textProvider: SPayLottie.SpayAnimationKeypathTextProvider = DefaultTextProvider(), fontProvider: SPayLottie.SPayAnimationFontProvider = DefaultFontProvider(), configuration: SPayLottie.SPayLottieConfiguration = .shared, logger: SPayLottie.LottieLogger = .shared)
+  @_Concurrency.MainActor(unsafe) public init(configuration: SPayLottie.SPayLottieConfiguration = .shared, logger: SPayLottie.LottieLogger = .shared)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreFoundation.CGRect)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @_Concurrency.MainActor(unsafe) open func play(_ mode: SPayLottie.LottiePlaybackMode.PlaybackMode, completion: SPayLottie.LottieCompletionBlock? = nil)
+  @_Concurrency.MainActor(unsafe) open func play(completion: SPayLottie.LottieCompletionBlock? = nil)
+  @_Concurrency.MainActor(unsafe) open func play(fromProgress: SPayLottie.AnimationProgressTime? = nil, toProgress: SPayLottie.AnimationProgressTime, loopMode: SPayLottie.LottieLoopMode? = nil, completion: SPayLottie.LottieCompletionBlock? = nil)
+  @_Concurrency.MainActor(unsafe) open func play(fromFrame: SPayLottie.AnimationFrameTime? = nil, toFrame: SPayLottie.AnimationFrameTime, loopMode: SPayLottie.LottieLoopMode? = nil, completion: SPayLottie.LottieCompletionBlock? = nil)
+  @_Concurrency.MainActor(unsafe) open func play(fromMarker: Swift.String? = nil, toMarker: Swift.String, playEndMarkerFrame: Swift.Bool = true, loopMode: SPayLottie.LottieLoopMode? = nil, completion: SPayLottie.LottieCompletionBlock? = nil)
+  @_Concurrency.MainActor(unsafe) open func play(marker: Swift.String, loopMode: SPayLottie.LottieLoopMode? = nil, completion: SPayLottie.LottieCompletionBlock? = nil)
+  @_Concurrency.MainActor(unsafe) open func play(markers: [Swift.String], completion: SPayLottie.LottieCompletionBlock? = nil)
+  @_Concurrency.MainActor(unsafe) open func stop()
+  @_Concurrency.MainActor(unsafe) open func pause()
+  @available(*, deprecated, renamed: "setPlaybackMode(_:completion:)", message: "Will be removed in a future major release.")
+  @_Concurrency.MainActor(unsafe) open func play(_ playbackMode: SPayLottie.LottiePlaybackMode, animationCompletionHandler: SPayLottie.LottieCompletionBlock? = nil)
+  @_Concurrency.MainActor(unsafe) open func setPlaybackMode(_ playbackMode: SPayLottie.LottiePlaybackMode, completion: SPayLottie.LottieCompletionBlock? = nil)
+  @_Concurrency.MainActor(unsafe) public var animateLayoutChangesWithCurrentCoreAnimationContext: Swift.Bool
+  @_Concurrency.MainActor(unsafe) public var configuration: SPayLottie.SPayLottieConfiguration {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var valueProviders: [SPayLottie.AnimationKeypath : SPayLottie.AnyValueProvider] {
+    get
+  }
+  @_Concurrency.MainActor(unsafe) public var backgroundBehavior: SPayLottie.LottieBackgroundBehavior {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var animation: SPayLottie.SPayLottieAnimation? {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var animationLoaded: ((_ animationView: SPayLottie.SPayLottieAnimationView, _ animation: SPayLottie.SPayLottieAnimation) -> Swift.Void)? {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var imageProvider: SPayLottie.SPayAnimationImageProvider {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var textProvider: SPayLottie.SpayAnimationKeypathTextProvider {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var fontProvider: SPayLottie.SPayAnimationFontProvider {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var maskAnimationToBounds: Swift.Bool {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var isAnimationPlaying: Swift.Bool {
+    get
+  }
+  @_Concurrency.MainActor(unsafe) public var isAnimationQueued: Swift.Bool {
+    get
+  }
+  @_Concurrency.MainActor(unsafe) public var loopMode: SPayLottie.LottieLoopMode {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var shouldRasterizeWhenIdle: Swift.Bool {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var currentProgress: SPayLottie.AnimationProgressTime {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var currentTime: Foundation.TimeInterval {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var currentFrame: SPayLottie.AnimationFrameTime {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var realtimeAnimationFrame: SPayLottie.AnimationFrameTime {
+    get
+  }
+  @_Concurrency.MainActor(unsafe) public var realtimeAnimationProgress: SPayLottie.AnimationProgressTime {
+    get
+  }
+  @_Concurrency.MainActor(unsafe) public var animationSpeed: CoreFoundation.CGFloat {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var respectAnimationFrameRate: Swift.Bool {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public var viewportFrame: CoreFoundation.CGRect? {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var intrinsicContentSize: CoreFoundation.CGSize {
+    @objc get
+  }
+  @_Concurrency.MainActor(unsafe) public var currentRenderingEngine: SPayLottie.RenderingEngine? {
+    get
+  }
+  @_Concurrency.MainActor(unsafe) public var currentPlaybackMode: SPayLottie.LottiePlaybackMode? {
+    get
+  }
+  @_Concurrency.MainActor(unsafe) public var mainThreadRenderingEngineShouldForceDisplayUpdateOnEachFrame: Swift.Bool {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public func loadAnimation(_ animationId: Swift.String? = nil, from dotLottieFile: SPayLottie.DotLottieFile)
+  @_Concurrency.MainActor(unsafe) public func loadAnimation(atIndex index: Swift.Int, from dotLottieFile: SPayLottie.DotLottieFile)
+  @_Concurrency.MainActor(unsafe) public func reloadImages()
+  @_Concurrency.MainActor(unsafe) public func forceDisplayUpdate()
+  @_Concurrency.MainActor(unsafe) public func setValueProvider(_ valueProvider: SPayLottie.AnyValueProvider, keypath: SPayLottie.AnimationKeypath)
+  @_Concurrency.MainActor(unsafe) public func getValue(for keypath: SPayLottie.AnimationKeypath, atFrame: SPayLottie.AnimationFrameTime?) -> Any?
+  @_Concurrency.MainActor(unsafe) public func getOriginalValue(for keypath: SPayLottie.AnimationKeypath, atFrame: SPayLottie.AnimationFrameTime?) -> Any?
+  @_Concurrency.MainActor(unsafe) public func logHierarchyKeypaths()
+  @_Concurrency.MainActor(unsafe) public func allHierarchyKeypaths() -> [Swift.String]
+  @_Concurrency.MainActor(unsafe) public func addSubview(_ subview: SPayLottie.AnimationSubview, forLayerAt keypath: SPayLottie.AnimationKeypath)
+  @_Concurrency.MainActor(unsafe) public func convert(_ rect: CoreFoundation.CGRect, toLayerAt keypath: SPayLottie.AnimationKeypath?) -> CoreFoundation.CGRect?
+  @_Concurrency.MainActor(unsafe) public func convert(_ point: CoreFoundation.CGPoint, toLayerAt keypath: SPayLottie.AnimationKeypath?) -> CoreFoundation.CGPoint?
+  @_Concurrency.MainActor(unsafe) public func setNodeIsEnabled(isEnabled: Swift.Bool, keypath: SPayLottie.AnimationKeypath)
+  @_Concurrency.MainActor(unsafe) public func progressTime(forMarker named: Swift.String) -> SPayLottie.AnimationProgressTime?
+  @_Concurrency.MainActor(unsafe) public func frameTime(forMarker named: Swift.String) -> SPayLottie.AnimationFrameTime?
+  @_Concurrency.MainActor(unsafe) public func durationFrameTime(forMarker named: Swift.String) -> SPayLottie.AnimationFrameTime?
+  @objc deinit
+}
+final public class PointValueProvider {
+  public init(block: @escaping SPayLottie.PointValueProvider.PointValueBlock)
+  public init(_ point: CoreFoundation.CGPoint)
+  public typealias PointValueBlock = (CoreFoundation.CGFloat) -> CoreFoundation.CGPoint
+  final public var point: CoreFoundation.CGPoint {
+    get
+    set
+  }
+  final public var valueType: Any.Type {
+    get
+  }
+  final public var storage: SPayLottie.ValueProviderStorage<SPayLottie.LottieVector3D> {
+    get
+  }
+  final public func hasUpdate(frame _: CoreFoundation.CGFloat) -> Swift.Bool
+  @objc deinit
+}
+extension SPayLottie.PointValueProvider : Swift.Equatable {
+  public static func == (lhs: SPayLottie.PointValueProvider, rhs: SPayLottie.PointValueProvider) -> Swift.Bool
+}
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) open class AnimatedButton : SPayLottie.AnimatedControl {
+  @_Concurrency.MainActor(unsafe) override public init(animation: SPayLottie.SPayLottieAnimation?, configuration: SPayLottie.SPayLottieConfiguration = .shared)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init()
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func beginTracking(_ touch: UIKit.UITouch, with event: UIKit.UIEvent?) -> Swift.Bool
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func endTracking(_ touch: UIKit.UITouch?, with event: UIKit.UIEvent?)
+  @_Concurrency.MainActor(unsafe) public var performAction: (() -> Swift.Void)?
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var accessibilityTraits: UIKit.UIAccessibilityTraits {
+    @objc get
+    @objc set
+  }
+  @_Concurrency.MainActor(unsafe) public func setPlayRange(fromProgress: SPayLottie.AnimationProgressTime, toProgress: SPayLottie.AnimationProgressTime, event: SPayLottie.LottieControlEvent)
+  @_Concurrency.MainActor(unsafe) public func setPlayRange(fromMarker fromName: Swift.String, toMarker toName: Swift.String, event: SPayLottie.LottieControlEvent)
+  @objc deinit
+}
+@available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
+public struct LottieSwitch {
+  public init(animation: SPayLottie.SPayLottieAnimation?)
+  @_Concurrency.MainActor(unsafe) public var body: some SwiftUI.View {
+    get
+  }
+  public func configure(_ configure: @escaping (SPayLottie.AnimatedSwitch) -> Swift.Void) -> SPayLottie.LottieSwitch
+  public func configuration(_ configuration: SPayLottie.SPayLottieConfiguration) -> SPayLottie.LottieSwitch
+  public func isOn(_ binding: SwiftUI.Binding<Swift.Bool>) -> SPayLottie.LottieSwitch
+  public func onAnimation(fromProgress onStartProgress: SPayLottie.AnimationProgressTime, toProgress onEndProgress: SPayLottie.AnimationProgressTime) -> SPayLottie.LottieSwitch
+  public func offAnimation(fromProgress offStartProgress: SPayLottie.AnimationProgressTime, toProgress offEndProgress: SPayLottie.AnimationProgressTime) -> SPayLottie.LottieSwitch
+  public func valueProvider<ValueProvider>(_ valueProvider: ValueProvider, for keypath: SPayLottie.AnimationKeypath) -> SPayLottie.LottieSwitch where ValueProvider : SPayLottie.AnyValueProvider, ValueProvider : Swift.Equatable
+  public typealias Body = @_opaqueReturnTypeOf("$s10SPayLottie0B6SwitchV4bodyQrvp", 0) __
+}
+public enum RenderingEngineOption : Swift.Hashable {
+  case automatic
+  case specific(SPayLottie.RenderingEngine)
+  public static var mainThread: SPayLottie.RenderingEngineOption {
+    get
+  }
+  public static var coreAnimation: SPayLottie.RenderingEngineOption {
+    get
+  }
+}
+public enum RenderingEngine : Swift.Hashable {
+  case mainThread
+  case coreAnimation
+}
+extension SPayLottie.RenderingEngineOption : Swift.RawRepresentable, Swift.CustomStringConvertible {
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.String
+}
+extension SPayLottie.RenderingEngine : Swift.RawRepresentable, Swift.CustomStringConvertible {
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.String
+}
+final public class FloatValueProvider {
+  public init(block: @escaping SPayLottie.FloatValueProvider.CGFloatValueBlock)
+  public init(_ float: CoreFoundation.CGFloat)
+  public typealias CGFloatValueBlock = (CoreFoundation.CGFloat) -> CoreFoundation.CGFloat
+  final public var float: CoreFoundation.CGFloat {
+    get
+    set
+  }
+  final public var valueType: Any.Type {
+    get
+  }
+  final public var storage: SPayLottie.ValueProviderStorage<SPayLottie.LottieVector1D> {
+    get
+  }
+  final public func hasUpdate(frame _: CoreFoundation.CGFloat) -> Swift.Bool
+  @objc deinit
+}
+extension SPayLottie.FloatValueProvider : Swift.Equatable {
+  public static func == (lhs: SPayLottie.FloatValueProvider, rhs: SPayLottie.FloatValueProvider) -> Swift.Bool
+}
+public enum ReducedMotionOption {
+  case specific(SPayLottie.ReducedMotionMode)
+  case dynamic(SPayLottie.ReducedMotionOptionProvider, dataID: Swift.AnyHashable)
+}
+extension SPayLottie.ReducedMotionOption {
+  public static var standardMotion: SPayLottie.ReducedMotionOption {
+    get
+  }
+  public static var reducedMotion: SPayLottie.ReducedMotionOption {
+    get
+  }
+  public static var systemReducedMotionToggle: SPayLottie.ReducedMotionOption {
+    get
+  }
+}
+extension SPayLottie.ReducedMotionOption {
+  public var currentReducedMotionMode: SPayLottie.ReducedMotionMode {
+    get
+  }
+}
+extension SPayLottie.ReducedMotionOption : Swift.Hashable {
+  public static func == (lhs: SPayLottie.ReducedMotionOption, rhs: SPayLottie.ReducedMotionOption) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum ReducedMotionMode : Swift.Hashable {
+  case standardMotion
+  case reducedMotion
+  public static func == (a: SPayLottie.ReducedMotionMode, b: SPayLottie.ReducedMotionMode) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public protocol ReducedMotionOptionProvider {
+  var currentReducedMotionMode: SPayLottie.ReducedMotionMode { get }
+}
+public struct SystemReducedMotionOptionProvider : SPayLottie.ReducedMotionOptionProvider {
+  public init()
+  public var currentReducedMotionMode: SPayLottie.ReducedMotionMode {
+    get
+  }
+}
+public class BundleImageProvider : SPayLottie.SPayAnimationImageProvider {
+  public init(bundle: Foundation.Bundle, searchPath: Swift.String?, contentsGravity: QuartzCore.CALayerContentsGravity = .resize)
+  public func imageForAsset(asset: SPayLottie.ImageAsset) -> CoreGraphics.CGImage?
+  public func contentsGravity(for _: SPayLottie.ImageAsset) -> QuartzCore.CALayerContentsGravity
+  @objc deinit
+}
+extension SPayLottie.BundleImageProvider : Swift.Equatable {
+  public static func == (lhs: SPayLottie.BundleImageProvider, rhs: SPayLottie.BundleImageProvider) -> Swift.Bool
+}
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) open class LottieAnimationViewBase : UIKit.UIView {
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var contentMode: UIKit.UIView.ContentMode {
+    @objc get
+    @objc set
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func didMoveToWindow()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func layoutSubviews()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreFoundation.CGRect)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+extension SPayLottie.SPayLottieAnimationView {
+  @_Concurrency.MainActor(unsafe) convenience public init(name: Swift.String, bundle: Foundation.Bundle = Bundle.main, subdirectory: Swift.String? = nil, imageProvider: SPayLottie.SPayAnimationImageProvider? = nil, animationCache: SPayLottie.AnimationCacheProvider? = LottieAnimationCache.shared, configuration: SPayLottie.SPayLottieConfiguration = .shared)
+  @_Concurrency.MainActor(unsafe) convenience public init(filePath: Swift.String, imageProvider: SPayLottie.SPayAnimationImageProvider? = nil, animationCache: SPayLottie.AnimationCacheProvider? = LottieAnimationCache.shared, configuration: SPayLottie.SPayLottieConfiguration = .shared)
+  @_Concurrency.MainActor(unsafe) convenience public init(url: Foundation.URL, imageProvider: SPayLottie.SPayAnimationImageProvider? = nil, session: Foundation.URLSession = .shared, closure: @escaping SPayLottie.SPayLottieAnimationView.DownloadClosure, animationCache: SPayLottie.AnimationCacheProvider? = LottieAnimationCache.shared, configuration: SPayLottie.SPayLottieConfiguration = .shared)
+  @_Concurrency.MainActor(unsafe) convenience public init(asset name: Swift.String, bundle: Foundation.Bundle = Bundle.main, imageProvider: SPayLottie.SPayAnimationImageProvider? = nil, animationCache: SPayLottie.AnimationCacheProvider? = LottieAnimationCache.shared, configuration: SPayLottie.SPayLottieConfiguration = .shared)
+  @_Concurrency.MainActor(unsafe) convenience public init(dotLottieName name: Swift.String, bundle: Foundation.Bundle = Bundle.main, subdirectory: Swift.String? = nil, animationId: Swift.String? = nil, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache, configuration: SPayLottie.SPayLottieConfiguration = .shared, completion: ((SPayLottie.SPayLottieAnimationView, Swift.Error?) -> Swift.Void)? = nil)
+  @_Concurrency.MainActor(unsafe) convenience public init(dotLottieFilePath filePath: Swift.String, animationId: Swift.String? = nil, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache, configuration: SPayLottie.SPayLottieConfiguration = .shared, completion: ((SPayLottie.SPayLottieAnimationView, Swift.Error?) -> Swift.Void)? = nil)
+  @_Concurrency.MainActor(unsafe) convenience public init(dotLottieUrl url: Foundation.URL, animationId: Swift.String? = nil, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache, configuration: SPayLottie.SPayLottieConfiguration = .shared, session: Foundation.URLSession = .shared, completion: ((SPayLottie.SPayLottieAnimationView, Swift.Error?) -> Swift.Void)? = nil)
+  @_Concurrency.MainActor(unsafe) convenience public init(dotLottieAsset name: Swift.String, bundle: Foundation.Bundle = Bundle.main, animationId: Swift.String? = nil, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache, configuration: SPayLottie.SPayLottieConfiguration = .shared, completion: ((SPayLottie.SPayLottieAnimationView, Swift.Error?) -> Swift.Void)? = nil)
+  public typealias DownloadClosure = (Swift.Error?) -> Swift.Void
+}
+extension SPayLottie.LottieColor : Swift.Codable {
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public class DotLottieCache : SPayLottie.DotLottieCacheProvider {
+  public init()
+  public static let sharedCache: SPayLottie.DotLottieCache
+  public var cacheSize: Swift.Int {
+    get
+    set
+  }
+  public func clearCache()
+  public func file(forKey key: Swift.String) -> SPayLottie.DotLottieFile?
+  public func setFile(_ lottie: SPayLottie.DotLottieFile, forKey key: Swift.String)
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) open class AnimatedSwitch : SPayLottie.AnimatedControl {
+  @_Concurrency.MainActor(unsafe) override public init(animation: SPayLottie.SPayLottieAnimation?, configuration: SPayLottie.SPayLottieConfiguration = .shared)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init()
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @_Concurrency.MainActor(unsafe) override open func animationDidSet()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func endTracking(_ touch: UIKit.UITouch?, with event: UIKit.UIEvent?)
+  public enum CancelBehavior {
+    case reverse
+    case none
+    public static func == (a: SPayLottie.AnimatedSwitch.CancelBehavior, b: SPayLottie.AnimatedSwitch.CancelBehavior) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  @_Concurrency.MainActor(unsafe) public var cancelBehavior: SPayLottie.AnimatedSwitch.CancelBehavior
+  @_Concurrency.MainActor(unsafe) public var animateUpdateWhenChangingAnimation: Swift.Bool
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public var accessibilityTraits: UIKit.UIAccessibilityTraits {
+    @objc get
+    @objc set
+  }
+  @_Concurrency.MainActor(unsafe) public var stateUpdated: ((_ isOn: Swift.Bool) -> Swift.Void)?
+  @_Concurrency.MainActor(unsafe) public var isOn: Swift.Bool {
+    get
+    set
+  }
+  @_Concurrency.MainActor(unsafe) public func setIsOn(_ isOn: Swift.Bool, animated: Swift.Bool, shouldFireHaptics: Swift.Bool = true)
+  @_Concurrency.MainActor(unsafe) public func setProgressForState(fromProgress: SPayLottie.AnimationProgressTime, toProgress: SPayLottie.AnimationProgressTime, forOnState: Swift.Bool)
+  @objc deinit
+}
+final public class GradientValueProvider {
+  public init(block: @escaping SPayLottie.GradientValueProvider.ColorsValueBlock, locations: SPayLottie.GradientValueProvider.ColorLocationsBlock? = nil)
+  public init(_ colors: [SPayLottie.LottieColor], locations: [Swift.Double] = [])
+  public typealias ColorsValueBlock = (CoreFoundation.CGFloat) -> [SPayLottie.LottieColor]
+  public typealias ColorLocationsBlock = (CoreFoundation.CGFloat) -> [Swift.Double]
+  final public var colors: [SPayLottie.LottieColor] {
+    get
+    set
+  }
+  final public var locations: [Swift.Double] {
+    get
+    set
+  }
+  final public var valueType: Any.Type {
+    get
+  }
+  final public var storage: SPayLottie.ValueProviderStorage<[Swift.Double]> {
+    get
+  }
+  final public func hasUpdate(frame _: CoreFoundation.CGFloat) -> Swift.Bool
+  @objc deinit
+}
+extension SPayLottie.GradientValueProvider : Swift.Equatable {
+  public static func == (lhs: SPayLottie.GradientValueProvider, rhs: SPayLottie.GradientValueProvider) -> Swift.Bool
+}
+extension UIKit.UIColor {
+  public var lottieColorValue: SPayLottie.LottieColor {
+    get
+  }
+}
+@objc @_hasMissingDesignatedInitializers public class SPayLottieAnimationLayer : QuartzCore.CALayer {
+  public init(animation: SPayLottie.SPayLottieAnimation?, imageProvider: SPayLottie.SPayAnimationImageProvider? = nil, textProvider: SPayLottie.SpayAnimationKeypathTextProvider = DefaultTextProvider(), fontProvider: SPayLottie.SPayAnimationFontProvider = DefaultFontProvider(), configuration: SPayLottie.SPayLottieConfiguration = .shared, logger: SPayLottie.LottieLogger = .shared)
+  public init(dotLottie: SPayLottie.DotLottieFile?, animationId: Swift.String? = nil, textProvider: SPayLottie.SpayAnimationKeypathTextProvider = DefaultTextProvider(), fontProvider: SPayLottie.SPayAnimationFontProvider = DefaultFontProvider(), configuration: SPayLottie.SPayLottieConfiguration = .shared, logger: SPayLottie.LottieLogger = .shared)
+  public init(configuration: SPayLottie.SPayLottieConfiguration = .shared, logger: SPayLottie.LottieLogger = .shared)
+  open func play(completion: SPayLottie.LottieCompletionBlock? = nil)
+  open func play(fromProgress: SPayLottie.AnimationProgressTime? = nil, toProgress: SPayLottie.AnimationProgressTime, loopMode: SPayLottie.LottieLoopMode? = nil, completion: SPayLottie.LottieCompletionBlock? = nil)
+  open func play(fromFrame: SPayLottie.AnimationFrameTime? = nil, toFrame: SPayLottie.AnimationFrameTime, loopMode: SPayLottie.LottieLoopMode? = nil, completion: SPayLottie.LottieCompletionBlock? = nil)
+  open func play(fromMarker: Swift.String? = nil, toMarker: Swift.String, playEndMarkerFrame: Swift.Bool = true, loopMode: SPayLottie.LottieLoopMode? = nil, completion: SPayLottie.LottieCompletionBlock? = nil)
+  open func play(marker: Swift.String, loopMode: SPayLottie.LottieLoopMode? = nil, completion: SPayLottie.LottieCompletionBlock? = nil)
+  open func play(markers: [Swift.String], completion: SPayLottie.LottieCompletionBlock? = nil)
+  open func stop()
+  open func pause()
+  open func pause(at state: SPayLottie.LottiePlaybackMode.PausedState)
+  @available(*, deprecated, renamed: "setPlaybackMode(_:completion:)", message: "Will be removed in a future major release.")
+  open func play(_ playbackMode: SPayLottie.LottiePlaybackMode, animationCompletionHandler: SPayLottie.LottieCompletionBlock? = nil)
+  open func setPlaybackMode(_ playbackMode: SPayLottie.LottiePlaybackMode, completion: SPayLottie.LottieCompletionBlock? = nil)
+  open func play(_ playbackMode: SPayLottie.LottiePlaybackMode.PlaybackMode, completion: SPayLottie.LottieCompletionBlock? = nil)
+  public var currentPlaybackMode: SPayLottie.LottiePlaybackMode? {
+    get
+  }
+  public var valueProviders: [SPayLottie.AnimationKeypath : SPayLottie.AnyValueProvider] {
+    get
+  }
+  public var animationLayerDidLoad: ((_ animationLayer: SPayLottie.SPayLottieAnimationLayer, _ renderingEngine: SPayLottie.RenderingEngineOption) -> Swift.Void)?
+  public var configuration: SPayLottie.SPayLottieConfiguration {
+    get
+    set
+  }
+  public var animationLayer: QuartzCore.CALayer? {
+    get
+  }
+  public var screenScale: CoreFoundation.CGFloat {
+    get
+    set
+  }
+  public var backgroundBehavior: SPayLottie.LottieBackgroundBehavior {
+    get
+    set
+  }
+  public var animation: SPayLottie.SPayLottieAnimation? {
+    get
+    set
+  }
+  public var animationLoaded: ((_ animationLayer: SPayLottie.SPayLottieAnimationLayer, _ animation: SPayLottie.SPayLottieAnimation) -> Swift.Void)? {
+    get
+    set
+  }
+  public var imageProvider: SPayLottie.SPayAnimationImageProvider {
+    get
+    set
+  }
+  public var textProvider: SPayLottie.SpayAnimationKeypathTextProvider {
+    get
+    set
+  }
+  public var fontProvider: SPayLottie.SPayAnimationFontProvider {
+    get
+    set
+  }
+  public var maskAnimationToBounds: Swift.Bool {
+    get
+    set
+  }
+  public var isAnimationPlaying: Swift.Bool {
+    get
+  }
+  public var loopMode: SPayLottie.LottieLoopMode {
+    get
+    set
+  }
+  public var shouldRasterizeWhenIdle: Swift.Bool {
+    get
+    set
+  }
+  public var currentProgress: SPayLottie.AnimationProgressTime {
+    get
+    set
+  }
+  public var currentTime: Foundation.TimeInterval {
+    get
+    set
+  }
+  public var currentFrame: SPayLottie.AnimationFrameTime {
+    get
+    set
+  }
+  public var realtimeAnimationFrame: SPayLottie.AnimationFrameTime {
+    get
+  }
+  public var realtimeAnimationProgress: SPayLottie.AnimationProgressTime {
+    get
+  }
+  public var animationSpeed: CoreFoundation.CGFloat {
+    get
+    set
+  }
+  public var respectAnimationFrameRate: Swift.Bool {
+    get
+    set
+  }
+  public var currentRenderingEngine: SPayLottie.RenderingEngine? {
+    get
+  }
+  public var mainThreadRenderingEngineShouldForceDisplayUpdateOnEachFrame: Swift.Bool {
+    get
+    set
+  }
+  public func loadAnimation(_ animationId: Swift.String? = nil, from dotLottieFile: SPayLottie.DotLottieFile)
+  public func loadAnimation(atIndex index: Swift.Int, from dotLottieFile: SPayLottie.DotLottieFile)
+  public func reloadImages()
+  public func forceDisplayUpdate()
+  public func setValueProvider(_ valueProvider: SPayLottie.AnyValueProvider, keypath: SPayLottie.AnimationKeypath)
+  public func getValue(for keypath: SPayLottie.AnimationKeypath, atFrame: SPayLottie.AnimationFrameTime?) -> Any?
+  public func getOriginalValue(for keypath: SPayLottie.AnimationKeypath, atFrame: SPayLottie.AnimationFrameTime?) -> Any?
+  public func logHierarchyKeypaths()
+  public func allHierarchyKeypaths() -> [Swift.String]
+  public func convert(_ rect: CoreFoundation.CGRect, toLayerAt keypath: SPayLottie.AnimationKeypath?) -> CoreFoundation.CGRect?
+  public func convert(_ point: CoreFoundation.CGPoint, toLayerAt keypath: SPayLottie.AnimationKeypath?) -> CoreFoundation.CGPoint?
+  public func setNodeIsEnabled(isEnabled: Swift.Bool, keypath: SPayLottie.AnimationKeypath)
+  public func progressTime(forMarker named: Swift.String) -> SPayLottie.AnimationProgressTime?
+  public func frameTime(forMarker named: Swift.String) -> SPayLottie.AnimationFrameTime?
+  public func durationFrameTime(forMarker named: Swift.String) -> SPayLottie.AnimationFrameTime?
+  public func updateAnimationForBackgroundState()
+  public func updateAnimationForForegroundState(wasWaitingToPlayAnimation: Swift.Bool)
+  @objc deinit
+}
+extension QuartzCore.CALayer {
+  @nonobjc public func logLayerTree(withIndent: Swift.Int = 0)
+}
+public protocol AnimationCacheProvider : AnyObject, Swift.Sendable {
+  func animation(forKey: Swift.String) -> SPayLottie.SPayLottieAnimation?
+  func setAnimation(_ animation: SPayLottie.SPayLottieAnimation, forKey: Swift.String)
+  func clearCache()
+}
+public protocol SPayAnimationImageProvider {
+  var cacheEligible: Swift.Bool { get }
+  func imageForAsset(asset: SPayLottie.ImageAsset) -> CoreGraphics.CGImage?
+  func contentsGravity(for asset: SPayLottie.ImageAsset) -> QuartzCore.CALayerContentsGravity
+}
+extension SPayLottie.SPayAnimationImageProvider {
+  public var cacheEligible: Swift.Bool {
+    get
+  }
+  public func contentsGravity(for _: SPayLottie.ImageAsset) -> QuartzCore.CALayerContentsGravity
+}
+@available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
+public struct LottieView<Placeholder> where Placeholder : SwiftUI.View {
+  public init(animation: SPayLottie.SPayLottieAnimation?) where Placeholder == SwiftUI.EmptyView
+  public init(dotLottieFile: SPayLottie.DotLottieFile?) where Placeholder == SwiftUI.EmptyView
+  #if compiler(>=5.3) && $AsyncAwait
+  public init(_ loadAnimation: @escaping () async throws -> SPayLottie.SPayLottieAnimation?) where Placeholder == SwiftUI.EmptyView
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public init(_ loadAnimation: @escaping () async throws -> SPayLottie.SPayLottieAnimation?, @SwiftUI.ViewBuilder placeholder: @escaping (() -> Placeholder))
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public init(_ loadDotLottieFile: @escaping () async throws -> SPayLottie.DotLottieFile?) where Placeholder == SwiftUI.EmptyView
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public init(_ loadDotLottieFile: @escaping () async throws -> SPayLottie.DotLottieFile?, @SwiftUI.ViewBuilder placeholder: @escaping (() -> Placeholder))
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public init(_ loadAnimation: @escaping () async throws -> SPayLottie.LottieAnimationSource?) where Placeholder == SwiftUI.EmptyView
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public init(_ loadAnimation: @escaping () async throws -> SPayLottie.LottieAnimationSource?, @SwiftUI.ViewBuilder placeholder: @escaping () -> Placeholder)
+  #endif
+  @_Concurrency.MainActor(unsafe) public var body: some SwiftUI.View {
+    get
+  }
+  public func configure(_ configure: @escaping (SPayLottie.SPayLottieAnimationView) -> Swift.Void) -> SPayLottie.LottieView<Placeholder>
+  public func resizable() -> SPayLottie.LottieView<Placeholder>
+  @available(*, deprecated, renamed: "playing()", message: "Will be removed in a future major release.")
+  public func play() -> SPayLottie.LottieView<Placeholder>
+  public func looping() -> SPayLottie.LottieView<Placeholder>
+  @available(*, deprecated, renamed: "playing(_:)", message: "Will be removed in a future major release.")
+  public func play(loopMode: SPayLottie.LottieLoopMode = .playOnce) -> SPayLottie.LottieView<Placeholder>
+  @available(*, deprecated, renamed: "playbackMode(_:)", message: "Will be removed in a future major release.")
+  public func play(_ playbackMode: SPayLottie.LottiePlaybackMode) -> SPayLottie.LottieView<Placeholder>
+  public func playing(_ mode: SPayLottie.LottiePlaybackMode.PlaybackMode) -> SPayLottie.LottieView<Placeholder>
+  public func playing(loopMode: SPayLottie.LottieLoopMode) -> SPayLottie.LottieView<Placeholder>
+  public func playing() -> SPayLottie.LottieView<Placeholder>
+  public func paused(at state: SPayLottie.LottiePlaybackMode.PausedState = .currentFrame) -> SPayLottie.LottieView<Placeholder>
+  public func playbackMode(_ playbackMode: SPayLottie.LottiePlaybackMode) -> SPayLottie.LottieView<Placeholder>
+  public func animationDidLoad(_ animationDidLoad: @escaping (SPayLottie.LottieAnimationSource) -> Swift.Void) -> SPayLottie.LottieView<Placeholder>
+  public func animationDidFinish(_ animationCompletionHandler: SPayLottie.LottieCompletionBlock?) -> SPayLottie.LottieView<Placeholder>
+  public func backgroundBehavior(_ value: SPayLottie.LottieBackgroundBehavior) -> SPayLottie.LottieView<Placeholder>
+  public func accessibilityLabel(_ accessibilityLabel: Swift.String?) -> SPayLottie.LottieView<Placeholder>
+  public func configuration(_ configuration: SPayLottie.SPayLottieConfiguration) -> SPayLottie.LottieView<Placeholder>
+  public func logger(_ logger: SPayLottie.LottieLogger) -> SPayLottie.LottieView<Placeholder>
+  public func imageProvider<ImageProvider>(_ imageProvider: ImageProvider) -> SPayLottie.LottieView<Placeholder> where ImageProvider : SPayLottie.SPayAnimationImageProvider, ImageProvider : Swift.Equatable
+  public func textProvider<TextProvider>(_ textProvider: TextProvider) -> SPayLottie.LottieView<Placeholder> where TextProvider : SPayLottie.SpayAnimationKeypathTextProvider, TextProvider : Swift.Equatable
+  public func fontProvider<FontProvider>(_ fontProvider: FontProvider) -> SPayLottie.LottieView<Placeholder> where FontProvider : SPayLottie.SPayAnimationFontProvider, FontProvider : Swift.Equatable
+  public func valueProvider<ValueProvider>(_ valueProvider: ValueProvider, for keypath: SPayLottie.AnimationKeypath) -> SPayLottie.LottieView<Placeholder> where ValueProvider : SPayLottie.AnyValueProvider, ValueProvider : Swift.Equatable
+  public func currentProgress(_ currentProgress: SPayLottie.AnimationProgressTime?) -> SPayLottie.LottieView<Placeholder>
+  public func currentFrame(_ currentFrame: SPayLottie.AnimationFrameTime?) -> SPayLottie.LottieView<Placeholder>
+  public func currentTime(_ currentTime: Foundation.TimeInterval?) -> SPayLottie.LottieView<Placeholder>
+  public func reloadAnimationTrigger<Value>(_ value: Value, showPlaceholder: Swift.Bool = true) -> SPayLottie.LottieView<Placeholder> where Value : Swift.Equatable
+  @available(iOS 15.0, tvOS 15.0, macOS 12.0, *)
+  public func getRealtimeAnimationProgress(_ realtimeAnimationProgress: SwiftUI.Binding<SPayLottie.AnimationProgressTime>?) -> some SwiftUI.View
+  
+  @available(iOS 15.0, tvOS 15.0, macOS 12.0, *)
+  public func getRealtimeAnimationFrame(_ realtimeAnimationFrame: SwiftUI.Binding<SPayLottie.AnimationProgressTime>?) -> some SwiftUI.View
+  
+  public typealias Body = @_opaqueReturnTypeOf("$s10SPayLottie0B4ViewV4bodyQrvp", 0) __<Placeholder>
+}
+public enum DecodingStrategy : Swift.Hashable {
+  case legacyCodable
+  case dictionaryBased
+  public static func == (a: SPayLottie.DecodingStrategy, b: SPayLottie.DecodingStrategy) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension SPayLottie.SPayLottieAnimation {
+  public typealias DownloadClosure = (SPayLottie.SPayLottieAnimation?) -> Swift.Void
+  final public var duration: Foundation.TimeInterval {
+    get
+  }
+  final public var bounds: CoreFoundation.CGRect {
+    get
+  }
+  final public var size: CoreFoundation.CGSize {
+    get
+  }
+  public static func named(_ name: Swift.String, bundle: Foundation.Bundle = Bundle.main, subdirectory: Swift.String? = nil, animationCache: SPayLottie.AnimationCacheProvider? = LottieAnimationCache.shared) -> SPayLottie.SPayLottieAnimation?
+  public static func filepath(_ filepath: Swift.String, animationCache: SPayLottie.AnimationCacheProvider? = LottieAnimationCache.shared) -> SPayLottie.SPayLottieAnimation?
+  public static func asset(_ name: Swift.String, bundle: Foundation.Bundle = Bundle.main, animationCache: SPayLottie.AnimationCacheProvider? = LottieAnimationCache.shared) -> SPayLottie.SPayLottieAnimation?
+  public static func from(data: Foundation.Data, strategy: SPayLottie.DecodingStrategy = SPayLottieConfiguration.shared.decodingStrategy) throws -> SPayLottie.SPayLottieAnimation
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 13.0, macOS 10.15, tvOS 13.0, *)
+  public static func loadedFrom(url: Foundation.URL, session: Foundation.URLSession = .shared, animationCache: SPayLottie.AnimationCacheProvider? = LottieAnimationCache.shared) async -> SPayLottie.SPayLottieAnimation?
+  #endif
+  public static func loadedFrom(url: Foundation.URL, session: Foundation.URLSession = .shared, closure: @escaping SPayLottie.SPayLottieAnimation.DownloadClosure, animationCache: SPayLottie.AnimationCacheProvider? = LottieAnimationCache.shared)
+  final public func progressTime(forMarker named: Swift.String) -> SPayLottie.AnimationProgressTime?
+  final public func frameTime(forMarker named: Swift.String) -> SPayLottie.AnimationFrameTime?
+  final public func durationFrameTime(forMarker named: Swift.String) -> SPayLottie.AnimationFrameTime?
+  final public func progressTime(forFrame frameTime: SPayLottie.AnimationFrameTime, clamped: Swift.Bool = true) -> SPayLottie.AnimationProgressTime
+  final public func frameTime(forProgress progressTime: SPayLottie.AnimationProgressTime) -> SPayLottie.AnimationFrameTime
+  final public func time(forFrame frameTime: SPayLottie.AnimationFrameTime) -> Foundation.TimeInterval
+  final public func frameTime(forTime time: Foundation.TimeInterval) -> SPayLottie.AnimationFrameTime
+}
+extension Foundation.Bundle : @unchecked Swift.Sendable {
+}
+@_hasMissingDesignatedInitializers public class Asset : Swift.Codable {
+  required public init(from decoder: Swift.Decoder) throws
+  final public let id: Swift.String
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension SPayLottie.Asset : @unchecked Swift.Sendable {
+}
+@objc final public class CompatibleAnimation : ObjectiveC.NSObject {
+  @objc public init(name: Swift.String, subdirectory: Swift.String? = nil, bundle: Foundation.Bundle = Bundle.main)
+  @objc deinit
+}
+@objc public enum CompatibleRenderingEngineOption : Swift.Int {
+  case shared
+  case defaultEngine
+  case automatic
+  case mainThread
+  case coreAnimation
+  public static func generateLottieConfiguration(_ configuration: SPayLottie.CompatibleRenderingEngineOption) -> SPayLottie.SPayLottieConfiguration
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum CompatibleBackgroundBehavior : Swift.Int {
+  case stop
+  case pause
+  case pauseAndRestore
+  case forceFinish
+  case continuePlaying
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc @_Concurrency.MainActor(unsafe) final public class CompatibleAnimationView : UIKit.UIView {
+  @objc @_Concurrency.MainActor(unsafe) convenience public init(compatibleAnimation: SPayLottie.CompatibleAnimation)
+  @objc @_Concurrency.MainActor(unsafe) public init(compatibleAnimation: SPayLottie.CompatibleAnimation, compatibleRenderingEngineOption: SPayLottie.CompatibleRenderingEngineOption)
+  @objc @_Concurrency.MainActor(unsafe) convenience public init(url: Foundation.URL)
+  @objc @_Concurrency.MainActor(unsafe) public init(url: Foundation.URL, compatibleRenderingEngineOption: SPayLottie.CompatibleRenderingEngineOption)
+  @objc @_Concurrency.MainActor(unsafe) convenience public init(data: Foundation.Data)
+  @objc @_Concurrency.MainActor(unsafe) public init(data: Foundation.Data, compatibleRenderingEngineOption: SPayLottie.CompatibleRenderingEngineOption)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreFoundation.CGRect)
+  @objc @_Concurrency.MainActor(unsafe) final public var compatibleAnimation: SPayLottie.CompatibleAnimation? {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var loopAnimationCount: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var compatibleDictionaryTextProvider: SPayLottie.CompatibleDictionaryTextProvider? {
+    @objc get
+    @objc set
+  }
+  @_Concurrency.MainActor(unsafe) @objc override final public var contentMode: UIKit.UIView.ContentMode {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var shouldRasterizeWhenIdle: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var currentProgress: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var duration: CoreFoundation.CGFloat {
+    @objc get
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var currentTime: Foundation.TimeInterval {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var currentFrame: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var realtimeAnimationFrame: CoreFoundation.CGFloat {
+    @objc get
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var realtimeAnimationProgress: CoreFoundation.CGFloat {
+    @objc get
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var animationSpeed: CoreFoundation.CGFloat {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var respectAnimationFrameRate: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var isAnimationPlaying: Swift.Bool {
+    @objc get
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var backgroundMode: SPayLottie.CompatibleBackgroundBehavior {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public func play()
+  @objc @_Concurrency.MainActor(unsafe) final public func play(completion: ((Swift.Bool) -> Swift.Void)?)
+  @objc @_Concurrency.MainActor(unsafe) final public func play(fromProgress: CoreFoundation.CGFloat, toProgress: CoreFoundation.CGFloat, completion: ((Swift.Bool) -> Swift.Void)? = nil)
+  @objc @_Concurrency.MainActor(unsafe) final public func play(fromFrame: CoreFoundation.CGFloat, toFrame: CoreFoundation.CGFloat, completion: ((Swift.Bool) -> Swift.Void)? = nil)
+  @objc @_Concurrency.MainActor(unsafe) final public func play(fromMarker: Swift.String, toMarker: Swift.String, completion: ((Swift.Bool) -> Swift.Void)? = nil)
+  @objc @_Concurrency.MainActor(unsafe) final public func play(marker: Swift.String, completion: ((Swift.Bool) -> Swift.Void)? = nil)
+  @objc @_Concurrency.MainActor(unsafe) final public func stop()
+  @objc @_Concurrency.MainActor(unsafe) final public func pause()
+  @objc @_Concurrency.MainActor(unsafe) final public func reloadImages()
+  @objc @_Concurrency.MainActor(unsafe) final public func forceDisplayUpdate()
+  @objc @_Concurrency.MainActor(unsafe) final public func getValue(for keypath: SPayLottie.CompatibleAnimationKeypath, atFrame: CoreFoundation.CGFloat) -> Any?
+  @objc @_Concurrency.MainActor(unsafe) final public func logHierarchyKeypaths()
+  @objc @_Concurrency.MainActor(unsafe) final public func setColorValue(_ color: UIKit.UIColor, forKeypath keypath: SPayLottie.CompatibleAnimationKeypath)
+  @objc @_Concurrency.MainActor(unsafe) final public func getColorValue(for keypath: SPayLottie.CompatibleAnimationKeypath, atFrame: CoreFoundation.CGFloat) -> UIKit.UIColor?
+  @objc @_Concurrency.MainActor(unsafe) final public func addSubview(_ subview: SPayLottie.AnimationSubview, forLayerAt keypath: SPayLottie.CompatibleAnimationKeypath)
+  @objc @_Concurrency.MainActor(unsafe) final public func convert(rect: CoreFoundation.CGRect, toLayerAt keypath: SPayLottie.CompatibleAnimationKeypath?) -> CoreFoundation.CGRect
+  @objc @_Concurrency.MainActor(unsafe) final public func convert(point: CoreFoundation.CGPoint, toLayerAt keypath: SPayLottie.CompatibleAnimationKeypath?) -> CoreFoundation.CGPoint
+  @objc @_Concurrency.MainActor(unsafe) final public func progressTime(forMarker named: Swift.String) -> CoreFoundation.CGFloat
+  @objc @_Concurrency.MainActor(unsafe) final public func frameTime(forMarker named: Swift.String) -> CoreFoundation.CGFloat
+  @objc @_Concurrency.MainActor(unsafe) final public func durationFrameTime(forMarker named: Swift.String) -> CoreFoundation.CGFloat
+  @objc deinit
+}
+@objc final public class CompatibleDictionaryTextProvider : ObjectiveC.NSObject {
+  @objc public init(values: [Swift.String : Swift.String])
+  @objc deinit
+}
+public typealias LottieCompletionBlock = (_ completed: Swift.Bool) -> Swift.Void
+final public class LottieLogger {
+  public init(assert: @escaping SPayLottie.LottieLogger.Assert = { condition, message, file, line in
+      // If we default to `Swift.assert` directly with `assert: Assert = Swift.assert`,
+      // the call will unexpectedly not respect the -O flag and will crash in release
+      // https://github.com/apple/swift/issues/60249
+      Swift.assert(condition(), message(), file: file, line: line)
+    }, assertionFailure: @escaping SPayLottie.LottieLogger.AssertionFailure = { message, file, line in
+      // If we default to `Swift.assertionFailure` directly with
+      // `assertionFailure: AssertionFailure = Swift.assertionFailure`,
+      // the call will unexpectedly not respect the -O flag and will crash in release
+      // https://github.com/apple/swift/issues/60249
+      Swift.assertionFailure(message(), file: file, line: line)
+    }, warn: @escaping SPayLottie.LottieLogger.Warn = { message, _, _ in
+    }, info: @escaping SPayLottie.LottieLogger.Info = { message in
+    })
+  public typealias Assert = (_ condition: @autoclosure () -> Swift.Bool, _ message: @autoclosure () -> Swift.String, _ fileID: Swift.StaticString, _ line: Swift.UInt) -> Swift.Void
+  public typealias AssertionFailure = (_ message: @autoclosure () -> Swift.String, _ fileID: Swift.StaticString, _ line: Swift.UInt) -> Swift.Void
+  public typealias Warn = (_ message: @autoclosure () -> Swift.String, _ fileID: Swift.StaticString, _ line: Swift.UInt) -> Swift.Void
+  public typealias Info = (_ message: @autoclosure () -> Swift.String) -> Swift.Void
+  public static var shared: SPayLottie.LottieLogger
+  final public func assert(_ condition: @autoclosure () -> Swift.Bool, _ message: @autoclosure () -> Swift.String = String(), fileID: Swift.StaticString = #fileID, line: Swift.UInt = #line)
+  final public func assertionFailure(_ message: @autoclosure () -> Swift.String = String(), fileID: Swift.StaticString = #fileID, line: Swift.UInt = #line)
+  final public func warn(_ message: @autoclosure () -> Swift.String = String(), fileID: Swift.StaticString = #fileID, line: Swift.UInt = #line)
+  final public func info(_ message: @autoclosure () -> Swift.String = String())
+  @objc deinit
+}
+extension SPayLottie.LottieLogger {
+  public static var printToConsole: SPayLottie.LottieLogger {
+    get
+  }
+}
+infix operator +| : DefaultPrecedence
+infix operator +- : DefaultPrecedence
+public class FilepathImageProvider : SPayLottie.SPayAnimationImageProvider {
+  public init(filepath: Swift.String, contentsGravity: QuartzCore.CALayerContentsGravity = .resize)
+  public init(filepath: Foundation.URL, contentsGravity: QuartzCore.CALayerContentsGravity = .resize)
+  public func imageForAsset(asset: SPayLottie.ImageAsset) -> CoreGraphics.CGImage?
+  public func contentsGravity(for _: SPayLottie.ImageAsset) -> QuartzCore.CALayerContentsGravity
+  @objc deinit
+}
+extension SPayLottie.FilepathImageProvider : Swift.Equatable {
+  public static func == (lhs: SPayLottie.FilepathImageProvider, rhs: SPayLottie.FilepathImageProvider) -> Swift.Bool
+}
+public struct DotLottieConfiguration {
+  public var id: Swift.String
+  public var imageProvider: SPayLottie.SPayAnimationImageProvider?
+  public var loopMode: SPayLottie.LottieLoopMode
+  public var speed: Swift.Double
+}
+public typealias LottieControlType = UIKit.UIControl
+public typealias LottieControlState = UIKit.UIControl.State
+public typealias LottieControlEvent = UIKit.UIControl.Event
+extension SPayLottie.DotLottieFile {
+  public enum SynchronouslyBlockingCurrentThread {
+    public static func loadedFrom(filepath: Swift.String, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache) -> Swift.Result<SPayLottie.DotLottieFile, Swift.Error>
+    public static func named(_ name: Swift.String, bundle: Foundation.Bundle = Bundle.main, subdirectory: Swift.String? = nil, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache) -> Swift.Result<SPayLottie.DotLottieFile, Swift.Error>
+    public static func loadedFrom(data: Foundation.Data, filename: Swift.String) -> Swift.Result<SPayLottie.DotLottieFile, Swift.Error>
+  }
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 13.0, macOS 10.15, tvOS 13.0, *)
+  public static func named(_ name: Swift.String, bundle: Foundation.Bundle = Bundle.main, subdirectory: Swift.String? = nil, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache) async throws -> SPayLottie.DotLottieFile
+  #endif
+  public static func named(_ name: Swift.String, bundle: Foundation.Bundle = Bundle.main, subdirectory: Swift.String? = nil, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache, dispatchQueue: Dispatch.DispatchQueue = .dotLottie, handleResult: @escaping (Swift.Result<SPayLottie.DotLottieFile, Swift.Error>) -> Swift.Void)
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 13.0, macOS 10.15, tvOS 13.0, *)
+  public static func loadedFrom(filepath: Swift.String, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache) async throws -> SPayLottie.DotLottieFile
+  #endif
+  public static func loadedFrom(filepath: Swift.String, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache, dispatchQueue: Dispatch.DispatchQueue = .dotLottie, handleResult: @escaping (Swift.Result<SPayLottie.DotLottieFile, Swift.Error>) -> Swift.Void)
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 13.0, macOS 10.15, tvOS 13.0, *)
+  public static func asset(named name: Swift.String, bundle: Foundation.Bundle = Bundle.main, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache) async throws -> SPayLottie.DotLottieFile
+  #endif
+  public static func asset(named name: Swift.String, bundle: Foundation.Bundle = Bundle.main, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache, dispatchQueue: Dispatch.DispatchQueue = .dotLottie, handleResult: @escaping (Swift.Result<SPayLottie.DotLottieFile, Swift.Error>) -> Swift.Void)
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 13.0, macOS 10.15, tvOS 13.0, *)
+  public static func loadedFrom(url: Foundation.URL, session: Foundation.URLSession = .shared, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache) async throws -> SPayLottie.DotLottieFile
+  #endif
+  public static func loadedFrom(url: Foundation.URL, session: Foundation.URLSession = .shared, dotLottieCache: SPayLottie.DotLottieCacheProvider? = DotLottieCache.sharedCache, handleResult: @escaping (Swift.Result<SPayLottie.DotLottieFile, Swift.Error>) -> Swift.Void)
+  public static func loadedFrom(data: Foundation.Data, filename: Swift.String, dispatchQueue: Dispatch.DispatchQueue = .dotLottie, handleResult: @escaping (Swift.Result<SPayLottie.DotLottieFile, Swift.Error>) -> Swift.Void)
+  #if compiler(>=5.3) && $AsyncAwait
+  @available(iOS 13.0, macOS 10.15, tvOS 13.0, *)
+  public static func loadedFrom(data: Foundation.Data, filename: Swift.String, dispatchQueue: Dispatch.DispatchQueue = .dotLottie) async throws -> SPayLottie.DotLottieFile
+  #endif
+}
+extension Dispatch.DispatchQueue {
+  public static let dotLottie: Dispatch.DispatchQueue
+}
+public struct AnimationKeypath : Swift.Hashable, Swift.ExpressibleByStringLiteral {
+  public init(keypath: Swift.String)
+  public init(stringLiteral: Swift.String)
+  public init(keys: [Swift.String])
+  public var keys: [Swift.String] {
+    get
+  }
+  public var string: Swift.String {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: SPayLottie.AnimationKeypath, b: SPayLottie.AnimationKeypath) -> Swift.Bool
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.String
+  public typealias StringLiteralType = Swift.String
+  public typealias UnicodeScalarLiteralType = Swift.String
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension SPayLottie.LottieVector1D : Swift.Codable {
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public struct LottieVector2D : Swift.Codable, Swift.Hashable, Swift.Sendable {
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: SPayLottie.LottieVector2D, b: SPayLottie.LottieVector2D) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension SPayLottie.LottieVector3D : Swift.Codable {
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension SPayLottie.LottieVector3D {
+  public var pointValue: CoreFoundation.CGPoint {
+    get
+  }
+  public var sizeValue: CoreFoundation.CGSize {
+    get
+  }
+}
+@objc final public class CompatibleAnimationKeypath : ObjectiveC.NSObject {
+  @objc public init(keypath: Swift.String)
+  @objc public init(keys: [Swift.String])
+  final public let animationKeypath: SPayLottie.AnimationKeypath
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers final public class ImageAsset : SPayLottie.Asset {
+  final public let name: Swift.String
+  final public let directory: Swift.String
+  final public let width: Swift.Double
+  final public let height: Swift.Double
+  override final public func encode(to encoder: Swift.Encoder) throws
+  @objc deinit
+}
+final public class Keyframe<T> {
+  public init(_ value: T, spatialInTangent: SPayLottie.LottieVector3D? = nil, spatialOutTangent: SPayLottie.LottieVector3D? = nil)
+  public init(value: T, time: SPayLottie.AnimationFrameTime, isHold: Swift.Bool = false, inTangent: SPayLottie.LottieVector2D? = nil, outTangent: SPayLottie.LottieVector2D? = nil, spatialInTangent: SPayLottie.LottieVector3D? = nil, spatialOutTangent: SPayLottie.LottieVector3D? = nil)
+  final public let value: T
+  final public let time: SPayLottie.AnimationFrameTime
+  final public let isHold: Swift.Bool
+  final public let inTangent: SPayLottie.LottieVector2D?
+  final public let outTangent: SPayLottie.LottieVector2D?
+  final public let spatialInTangent: SPayLottie.LottieVector3D?
+  final public let spatialOutTangent: SPayLottie.LottieVector3D?
+  @objc deinit
+}
+extension SPayLottie.Keyframe : Swift.Equatable where T : Swift.Equatable {
+  public static func == (lhs: SPayLottie.Keyframe<T>, rhs: SPayLottie.Keyframe<T>) -> Swift.Bool
+}
+extension SPayLottie.Keyframe : Swift.Hashable where T : Swift.Hashable {
+  final public func hash(into hasher: inout Swift.Hasher)
+  final public var hashValue: Swift.Int {
+    get
+  }
+}
+extension SPayLottie.Keyframe : Swift.Sendable where T : Swift.Sendable {
+}
+final public class ColorValueProvider {
+  public init(block: @escaping SPayLottie.ColorValueProvider.ColorValueBlock)
+  public init(_ color: SPayLottie.LottieColor)
+  public init(_ keyframes: [SPayLottie.Keyframe<SPayLottie.LottieColor>])
+  public typealias ColorValueBlock = (CoreFoundation.CGFloat) -> SPayLottie.LottieColor
+  final public var color: SPayLottie.LottieColor {
+    get
+    set
+  }
+  final public var valueType: Any.Type {
+    get
+  }
+  final public var storage: SPayLottie.ValueProviderStorage<SPayLottie.LottieColor> {
+    get
+  }
+  final public func hasUpdate(frame _: CoreFoundation.CGFloat) -> Swift.Bool
+  @objc deinit
+}
+extension SPayLottie.ColorValueProvider : Swift.Equatable {
+  public static func == (lhs: SPayLottie.ColorValueProvider, rhs: SPayLottie.ColorValueProvider) -> Swift.Bool
+}
+public protocol AnyValueProvider {
+  var valueType: Any.Type { get }
+  var typeErasedStorage: SPayLottie.AnyValueProviderStorage { get }
+  func hasUpdate(frame: SPayLottie.AnimationFrameTime) -> Swift.Bool
+}
+extension SPayLottie.AnyValueProvider {
+  public func value(frame: SPayLottie.AnimationFrameTime) -> Any
+}
+public enum ValueProviderStorage<T> where T : SPayLottie.AnyInterpolatable {
+  case singleValue(T)
+  case keyframes([SPayLottie.Keyframe<T>])
+  case closure((SPayLottie.AnimationFrameTime) -> T)
+}
+public enum AnyValueProviderStorage {
+  case singleValue(Any)
+  case keyframes([SPayLottie.Keyframe<Any>], interpolate: (SPayLottie.AnimationFrameTime) -> Any)
+  case closure((SPayLottie.AnimationFrameTime) -> Any)
+}
+@_inheritsConvenienceInitializers @available(iOS 13.0, tvOS 13.0, *)
+@_Concurrency.MainActor(unsafe) open class EpoxySwiftUIHostingController<Content> : SwiftUI.UIHostingController<Content> where Content : SwiftUI.View {
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func viewDidLoad()
+  @_Concurrency.MainActor(unsafe) override public init(rootView: Content)
+  @_Concurrency.MainActor(unsafe) override public init?(coder aDecoder: Foundation.NSCoder, rootView: Content)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  @objc deinit
+}
+public enum LottieAnimationCache {
+  public static var shared: SPayLottie.AnimationCacheProvider?
+}
+@available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
+public struct LottieButton {
+  public init(animation: SPayLottie.SPayLottieAnimation?, action: @escaping () -> Swift.Void)
+  @_Concurrency.MainActor(unsafe) public var body: some SwiftUI.View {
+    get
+  }
+  public func configure(_ configure: @escaping (SPayLottie.AnimatedButton) -> Swift.Void) -> SPayLottie.LottieButton
+  public func configuration(_ configuration: SPayLottie.SPayLottieConfiguration) -> SPayLottie.LottieButton
+  public func animate(fromProgress: SPayLottie.AnimationProgressTime, toProgress: SPayLottie.AnimationProgressTime, on event: SPayLottie.LottieControlEvent) -> SPayLottie.LottieButton
+  public func animate(fromMarker: Swift.String, toMarker: Swift.String, on event: SPayLottie.LottieControlEvent) -> SPayLottie.LottieButton
+  public func valueProvider<ValueProvider>(_ valueProvider: ValueProvider, for keypath: SPayLottie.AnimationKeypath) -> SPayLottie.LottieButton where ValueProvider : SPayLottie.AnyValueProvider, ValueProvider : Swift.Equatable
+  public typealias Body = @_opaqueReturnTypeOf("$s10SPayLottie0B6ButtonV4bodyQrvp", 0) __
+}
+final public class SizeValueProvider {
+  public init(block: @escaping SPayLottie.SizeValueProvider.SizeValueBlock)
+  public init(_ size: CoreFoundation.CGSize)
+  public typealias SizeValueBlock = (CoreFoundation.CGFloat) -> CoreFoundation.CGSize
+  final public var size: CoreFoundation.CGSize {
+    get
+    set
+  }
+  final public var valueType: Any.Type {
+    get
+  }
+  final public var storage: SPayLottie.ValueProviderStorage<SPayLottie.LottieVector3D> {
+    get
+  }
+  final public func hasUpdate(frame _: CoreFoundation.CGFloat) -> Swift.Bool
+  @objc deinit
+}
+extension SPayLottie.SizeValueProvider : Swift.Equatable {
+  public static func == (lhs: SPayLottie.SizeValueProvider, rhs: SPayLottie.SizeValueProvider) -> Swift.Bool
+}
+public enum ColorFormatDenominator : Swift.Hashable {
+  case One
+  case OneHundred
+  case TwoFiftyFive
+  public static func == (a: SPayLottie.ColorFormatDenominator, b: SPayLottie.ColorFormatDenominator) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct LottieColor : Swift.Hashable {
+  public var r: Swift.Double
+  public var g: Swift.Double
+  public var b: Swift.Double
+  public var a: Swift.Double
+  public init(r: Swift.Double, g: Swift.Double, b: Swift.Double, a: Swift.Double, denominator: SPayLottie.ColorFormatDenominator = .One)
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: SPayLottie.LottieColor, b: SPayLottie.LottieColor) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum LayerType : Swift.Int, Swift.Codable {
+  case precomp
+  case solid
+  case image
+  case null
+  case shape
+  case text
+  case unknown
+  public init(from decoder: Swift.Decoder) throws
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum MatteType : Swift.Int, Swift.Codable {
+  case none
+  case add
+  case invert
+  case unknown
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum BlendMode : Swift.Int, Swift.Codable {
+  case normal
+  case multiply
+  case screen
+  case overlay
+  case darken
+  case lighten
+  case colorDodge
+  case colorBurn
+  case hardLight
+  case softLight
+  case difference
+  case exclusion
+  case hue
+  case saturation
+  case color
+  case luminosity
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@available(*, deprecated, message: "Use DefaultAnimationCache instead, which is thread-safe and automatically responds to memory pressure.")
+public typealias LRUAnimationCache = SPayLottie.DefaultAnimationCache
+@_hasMissingDesignatedInitializers final public class DotLottieFile {
+  public struct Animation {
+    public let animation: SPayLottie.SPayLottieAnimation
+    public let configuration: SPayLottie.DotLottieConfiguration
+  }
+  final public var animations: [SPayLottie.DotLottieFile.Animation] {
+    get
+  }
+  @objc deinit
+}
+extension SPayLottie.DotLottieFile : @unchecked Swift.Sendable {
+}
+public struct SPayLottieConfiguration : Swift.Hashable {
+  public init(renderingEngine: SPayLottie.RenderingEngineOption = .automatic, decodingStrategy: SPayLottie.DecodingStrategy = .dictionaryBased, colorSpace: CoreGraphics.CGColorSpace = CGColorSpaceCreateDeviceRGB(), reducedMotionOption: SPayLottie.ReducedMotionOption = .systemReducedMotionToggle)
+  public static var shared: SPayLottie.SPayLottieConfiguration
+  public var renderingEngine: SPayLottie.RenderingEngineOption
+  public var decodingStrategy: SPayLottie.DecodingStrategy
+  public var reducedMotionOption: SPayLottie.ReducedMotionOption
+  public var colorSpace: CoreGraphics.CGColorSpace
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: SPayLottie.SPayLottieConfiguration, b: SPayLottie.SPayLottieConfiguration) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public class DefaultAnimationCache : SPayLottie.AnimationCacheProvider, @unchecked Swift.Sendable {
+  public init()
+  public static let sharedCache: SPayLottie.DefaultAnimationCache
+  public var cacheSize: Swift.Int {
+    get
+    set
+  }
+  public func clearCache()
+  public func animation(forKey key: Swift.String) -> SPayLottie.SPayLottieAnimation?
+  public func setAnimation(_ animation: SPayLottie.SPayLottieAnimation, forKey key: Swift.String)
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @_Concurrency.MainActor(unsafe) final public class AnimationSubview : UIKit.UIView {
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreFoundation.CGRect)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+public enum CoordinateSpace : Swift.Int, Swift.Codable, Swift.Sendable {
+  case type2d
+  case type3d
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+final public class SPayLottieAnimation : Swift.Codable, Swift.Sendable {
+  required public init(from decoder: Swift.Decoder) throws
+  public init(dictionary: [Swift.String : Any]) throws
+  final public let startFrame: SPayLottie.AnimationFrameTime
+  final public let endFrame: SPayLottie.AnimationFrameTime
+  final public let framerate: Swift.Double
+  final public var markerNames: [Swift.String] {
+    get
+  }
+  @objc deinit
+  final public func encode(to encoder: Swift.Encoder) throws
+}
+public protocol SPayAnimationFontProvider {
+  func fontFor(family: Swift.String, size: CoreFoundation.CGFloat) -> CoreText.CTFont?
+}
+final public class DefaultFontProvider : SPayLottie.SPayAnimationFontProvider {
+  public init()
+  final public func fontFor(family: Swift.String, size: CoreFoundation.CGFloat) -> CoreText.CTFont?
+  @objc deinit
+}
+extension SPayLottie.DefaultFontProvider : Swift.Equatable {
+  public static func == (_: SPayLottie.DefaultFontProvider, _: SPayLottie.DefaultFontProvider) -> Swift.Bool
+}
+public enum DotLottieError : Swift.Error {
+  case noDataLoaded
+  case assetNotFound(name: Swift.String, bundle: Foundation.Bundle?)
+  case loadingFromAssetNotSupported
+  @available(*, deprecated, message: "Unused")
+  case invalidFileFormat
+  @available(*, deprecated, message: "Unused")
+  case invalidData
+  @available(*, deprecated, message: "Unused")
+  case animationNotAvailable
+}
+public enum LottiePlaybackMode : Swift.Hashable {
+  case paused(at: SPayLottie.LottiePlaybackMode.PausedState)
+  case playing(_: SPayLottie.LottiePlaybackMode.PlaybackMode)
+  @available(*, deprecated, renamed: "LottiePlaybackMode.paused(at:)", message: "Will be removed in a future major release.")
+  case progress(_: SPayLottie.AnimationProgressTime)
+  @available(*, deprecated, renamed: "LottiePlaybackMode.paused(at:)", message: "Will be removed in a future major release.")
+  case frame(_: SPayLottie.AnimationFrameTime)
+  @available(*, deprecated, renamed: "LottiePlaybackMode.paused(at:)", message: "Will be removed in a future major release.")
+  case time(_: Foundation.TimeInterval)
+  @available(*, deprecated, renamed: "LottiePlaybackMode.paused(at:)", message: "Will be removed in a future major release.")
+  case pause
+  @available(*, deprecated, renamed: "LottiePlaybackMode.playing(_:)", message: "Will be removed in a future major release.")
+  case fromProgress(_: SPayLottie.AnimationProgressTime?, toProgress: SPayLottie.AnimationProgressTime, loopMode: SPayLottie.LottieLoopMode)
+  @available(*, deprecated, renamed: "LottiePlaybackMode.playing(_:)", message: "Will be removed in a future major release.")
+  case fromFrame(_: SPayLottie.AnimationFrameTime?, toFrame: SPayLottie.AnimationFrameTime, loopMode: SPayLottie.LottieLoopMode)
+  @available(*, deprecated, renamed: "LottiePlaybackMode.playing(_:)", message: "Will be removed in a future major release.")
+  case fromMarker(_: Swift.String?, toMarker: Swift.String, playEndMarkerFrame: Swift.Bool = true, loopMode: SPayLottie.LottieLoopMode)
+  @available(*, deprecated, renamed: "LottiePlaybackMode.playing(_:)", message: "Will be removed in a future major release.")
+  case marker(_: Swift.String, loopMode: SPayLottie.LottieLoopMode)
+  @available(*, deprecated, renamed: "LottiePlaybackMode.playing(_:)", message: "Will be removed in a future major release.")
+  case markers(_: [Swift.String])
+  public enum PausedState : Swift.Hashable {
+    case currentFrame
+    case progress(_: SPayLottie.AnimationProgressTime)
+    case frame(_: SPayLottie.AnimationFrameTime)
+    case time(_: Foundation.TimeInterval)
+    case marker(_: Swift.String, position: SPayLottie.LottieMarkerPosition = .start)
+    public func hash(into hasher: inout Swift.Hasher)
+    public static func == (a: SPayLottie.LottiePlaybackMode.PausedState, b: SPayLottie.LottiePlaybackMode.PausedState) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public enum PlaybackMode : Swift.Hashable {
+    case fromProgress(_: SPayLottie.AnimationProgressTime?, toProgress: SPayLottie.AnimationProgressTime, loopMode: SPayLottie.LottieLoopMode)
+    case fromFrame(_: SPayLottie.AnimationFrameTime?, toFrame: SPayLottie.AnimationFrameTime, loopMode: SPayLottie.LottieLoopMode)
+    case fromMarker(_: Swift.String?, toMarker: Swift.String, playEndMarkerFrame: Swift.Bool = true, loopMode: SPayLottie.LottieLoopMode)
+    case marker(_: Swift.String, loopMode: SPayLottie.LottieLoopMode)
+    case markers(_: [Swift.String])
+    public func hash(into hasher: inout Swift.Hasher)
+    public static func == (a: SPayLottie.LottiePlaybackMode.PlaybackMode, b: SPayLottie.LottiePlaybackMode.PlaybackMode) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: SPayLottie.LottiePlaybackMode, b: SPayLottie.LottiePlaybackMode) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension SPayLottie.LottiePlaybackMode {
+  public static var paused: SPayLottie.LottiePlaybackMode {
+    get
+  }
+  @available(*, deprecated, renamed: "LottiePlaybackMode.playing(_:)", message: "Will be removed in a future major release.")
+  public static func toProgress(_ toProgress: SPayLottie.AnimationProgressTime, loopMode: SPayLottie.LottieLoopMode) -> SPayLottie.LottiePlaybackMode
+  @available(*, deprecated, renamed: "LottiePlaybackMode.playing(_:)", message: "Will be removed in a future major release.")
+  public static func toFrame(_ toFrame: SPayLottie.AnimationFrameTime, loopMode: SPayLottie.LottieLoopMode) -> SPayLottie.LottiePlaybackMode
+  @available(*, deprecated, renamed: "LottiePlaybackMode.playing(_:)", message: "Will be removed in a future major release.")
+  public static func toMarker(_ toMarker: Swift.String, playEndMarkerFrame: Swift.Bool = true, loopMode: SPayLottie.LottieLoopMode) -> SPayLottie.LottiePlaybackMode
+}
+extension SPayLottie.LottiePlaybackMode.PlaybackMode {
+  public static func toProgress(_ toProgress: SPayLottie.AnimationProgressTime, loopMode: SPayLottie.LottieLoopMode) -> SPayLottie.LottiePlaybackMode.PlaybackMode
+  public static func toFrame(_ toFrame: SPayLottie.AnimationFrameTime, loopMode: SPayLottie.LottieLoopMode) -> SPayLottie.LottiePlaybackMode.PlaybackMode
+  public static func toMarker(_ toMarker: Swift.String, playEndMarkerFrame: Swift.Bool = true, loopMode: SPayLottie.LottieLoopMode) -> SPayLottie.LottiePlaybackMode.PlaybackMode
+}
+public enum LottieMarkerPosition : Swift.Hashable {
+  case start
+  case end
+  public static func == (a: SPayLottie.LottieMarkerPosition, b: SPayLottie.LottieMarkerPosition) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension SPayLottie.BlendMode : Swift.Equatable {}
+extension SPayLottie.BlendMode : Swift.Hashable {}
+extension SPayLottie.BlendMode : Swift.RawRepresentable {}
+extension SPayLottie.LottieBackgroundBehavior : Swift.Equatable {}
+extension SPayLottie.LottieBackgroundBehavior : Swift.Hashable {}
+extension SPayLottie.PointValueProvider : SPayLottie.AnyValueProvider {}
+@available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
+extension SPayLottie.LottieSwitch : SwiftUI.View {}
+extension SPayLottie.FloatValueProvider : SPayLottie.AnyValueProvider {}
+extension SPayLottie.AnimatedSwitch.CancelBehavior : Swift.Equatable {}
+extension SPayLottie.AnimatedSwitch.CancelBehavior : Swift.Hashable {}
+extension SPayLottie.GradientValueProvider : SPayLottie.AnyValueProvider {}
+@available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
+extension SPayLottie.LottieView : SwiftUI.View {}
+extension SPayLottie.CompatibleRenderingEngineOption : Swift.Equatable {}
+extension SPayLottie.CompatibleRenderingEngineOption : Swift.Hashable {}
+extension SPayLottie.CompatibleRenderingEngineOption : Swift.RawRepresentable {}
+extension SPayLottie.CompatibleBackgroundBehavior : Swift.Equatable {}
+extension SPayLottie.CompatibleBackgroundBehavior : Swift.Hashable {}
+extension SPayLottie.CompatibleBackgroundBehavior : Swift.RawRepresentable {}
+extension SPayLottie.ColorValueProvider : SPayLottie.AnyValueProvider {}
+@available(iOS 13.0, tvOS 13.0, macOS 10.15, *)
+extension SPayLottie.LottieButton : SwiftUI.View {}
+extension SPayLottie.SizeValueProvider : SPayLottie.AnyValueProvider {}
+extension SPayLottie.LayerType : Swift.Equatable {}
+extension SPayLottie.LayerType : Swift.Hashable {}
+extension SPayLottie.LayerType : Swift.RawRepresentable {}
+extension SPayLottie.MatteType : Swift.Equatable {}
+extension SPayLottie.MatteType : Swift.Hashable {}
+extension SPayLottie.MatteType : Swift.RawRepresentable {}
+extension SPayLottie.CoordinateSpace : Swift.Equatable {}
+extension SPayLottie.CoordinateSpace : Swift.Hashable {}
+extension SPayLottie.CoordinateSpace : Swift.RawRepresentable {}
