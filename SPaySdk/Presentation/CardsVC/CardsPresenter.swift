@@ -32,9 +32,13 @@ final class CardsPresenter: CardsPresenting {
     var sectionsCount: Int {
         enoughtCards = []
         notEnoughtCards = []
-        cards.forEach { if Double($0.amountData.amount) >= Double(cost
-            .replacingOccurrences(of: "₽", with: "")
-            .replacingOccurrences(of: " ", with: "")) ?? 0 {
+        
+        let cost = partPayService.bnplplanSelected 
+        ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
+        : userService.user?.orderInfo.orderAmount.amount
+        
+        view?.setCostUI(cost ?? 0)
+        cards.forEach { if $0.amountData.amount >= cost ?? 0 {
             enoughtCards.append($0)
         } else {
             notEnoughtCards.append($0)
@@ -51,7 +55,6 @@ final class CardsPresenter: CardsPresenting {
     private var notEnoughtCards: [PaymentTool] = []
     private let selectedCard: (PaymentTool) -> Void
     private let selectedId: Int
-    private var cost: String
     private var timeManager: OptimizationCheсkerManager
     private var featureToggle: FeatureToggleService
     
@@ -63,7 +66,6 @@ final class CardsPresenter: CardsPresenting {
          analytics: AnalyticsManager,
          cards: [PaymentTool],
          selectedId: Int,
-         cost: String,
          featureToggle: FeatureToggleService,
          timeManager: OptimizationCheсkerManager,
          selectedCard: @escaping (PaymentTool) -> Void) {
@@ -74,7 +76,6 @@ final class CardsPresenter: CardsPresenting {
         self.cards = cards
         self.selectedCard = selectedCard
         self.selectedId = selectedId
-        self.cost = cost
         self.featureToggle = featureToggle
         self.timeManager = timeManager
         self.timeManager.startTraking()

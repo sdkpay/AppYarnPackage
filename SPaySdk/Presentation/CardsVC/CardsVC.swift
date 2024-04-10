@@ -13,6 +13,7 @@ extension CGFloat {
 
 protocol ICardsVC {
     func reloadTableView()
+    func setCostUI(_ cost: Int)
 }
 
 final class CardsVC: ContentVC, ICardsVC {
@@ -22,13 +23,11 @@ final class CardsVC: ContentVC, ICardsVC {
     private let viewBuilder = CardsViewBuilder()
     
     init(_ presenter: CardsPresenting,
-         analytics: AnalyticsManager,
-         cost: String) {
+         analytics: AnalyticsManager) {
         self.presenter = presenter
         self.analytics = analytics
         super.init(nibName: nil, bundle: nil)
         analyticsName = .ListCardView
-        viewBuilder.costLabel.text = cost
     }
     
     required init?(coder: NSCoder) {
@@ -62,6 +61,10 @@ final class CardsVC: ContentVC, ICardsVC {
                           options: .transitionCrossDissolve,
                           animations: { self.viewBuilder.tableView.reloadData() },
                           completion: nil)
+    }
+    
+    func setCostUI(_ cost: Int) {
+        viewBuilder.costLabel.text = cost.price()
     }
 }
 

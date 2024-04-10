@@ -10,7 +10,6 @@ import UIKit
 protocol PaymentRouting: UrlOpenable {
     @MainActor
     func presentCards(cards: [PaymentTool],
-                      cost: String,
                       selectedId: Int) async throws -> PaymentTool
     @MainActor
     func presentPartPay() async
@@ -66,13 +65,12 @@ final class PaymentRouter: PaymentRouting {
         paymentRouteMap.presentPartPayPayment(by: CoverPushTransition(pushInto: nc))
     }
     
-    func presentCards(cards: [PaymentTool], cost: String, selectedId: Int) async throws -> PaymentTool {
+    func presentCards(cards: [PaymentTool], selectedId: Int) async throws -> PaymentTool {
         
         guard let nc = viewController?.contentNavigationController else { throw SDKError(.unowned) }
         
         return await paymentRouteMap.presentCards(by: CoverPushTransition(pushInto: nc),
                                                   cards: cards,
-                                                  cost: cost,
                                                   selectedId: selectedId)
     }
     

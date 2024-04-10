@@ -37,7 +37,8 @@ final class HelperFeatureModuleAssembly {
                                      featureToggle: locator.resolve(),
                                      biometricAuthProvider: locator.resolve(),
                                      partPayService: locator.resolve(),
-                                     helperConfigManager: locator.resolve())
+                                     helperConfigManager: locator.resolve(),
+                                     payAmountValidationManager: locator.resolve())
     }
 
     private func moduleView(presenter: HelperFeatureModulePresenting) -> ModuleVC & IHelperFeatureModuleVC {

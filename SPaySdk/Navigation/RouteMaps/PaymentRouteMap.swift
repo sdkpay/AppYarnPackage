@@ -24,7 +24,6 @@ protocol PaymentRouteMap: AnyObject {
     @MainActor
     func presentCards(by transition: Transition,
                       cards: [PaymentTool],
-                      cost: String,
                       selectedId: Int) async -> PaymentTool
     @MainActor
     func presentPartPay(by transition: Transition) async
@@ -92,12 +91,10 @@ final class DefaultPaymentRouteMap: PaymentRouteMap {
     @MainActor
     func presentCards(by transition: Transition,
                       cards: [PaymentTool],
-                      cost: String,
                       selectedId: Int) async -> PaymentTool {
         await withCheckedContinuation { continuation in
             CardsAssembly(locator: locator).createModule(transition: transition,
                                                          cards: cards,
-                                                         cost: cost,
                                                          selectedId: selectedId) { tool in
                 continuation.resume(returning: tool)
             }
