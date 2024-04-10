@@ -53,10 +53,11 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     private var authService: AuthService
     private let alertService: AlertService
     private let bankManager: BankAppManager
-    private let partPayService: PartPayService
+    private var partPayService: PartPayService
     private let helperConfigManager: HelperConfigManager
     private var featureToggle: FeatureToggleService
     private let biometricAuthProvider: BiometricAuthProviderProtocol
+    private var payAmountValidationManager: PayAmountValidationManager
     
     init(_ router: PaymentRouting,
          manager: SDKManager,
@@ -71,7 +72,8 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
          featureToggle: FeatureToggleService,
          biometricAuthProvider: BiometricAuthProviderProtocol,
          partPayService: PartPayService,
-         helperConfigManager: HelperConfigManager) {
+         helperConfigManager: HelperConfigManager,
+         payAmountValidationManager: PayAmountValidationManager) {
         self.router = router
         self.sdkManager = manager
         self.userService = userService
@@ -85,6 +87,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
         self.partPayService = partPayService
         self.helperConfigManager = helperConfigManager
         self.biometricAuthProvider = biometricAuthProvider
+        self.payAmountValidationManager = payAmountValidationManager
         super.init()
     }
     
@@ -131,63 +134,63 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     }
     
     private func cardTapped() {
-         
+        
         analytics.send(EventBuilder()
             .with(base: .Touch)
             .with(value: .card)
             .build(), on: view?.contentParrent?.analyticsName ?? .None)
-         
-         guard userService.additionalCards else { return }
-         guard let authMethod = authManager.authMethod else { return }
-         
+        
+        guard userService.additionalCards else { return }
+        guard let authMethod = authManager.authMethod else { return }
+        
         guard userService.firstCardUpdate else {
-             presentListCards()
-             return
-         }
-         
-         switch authMethod {
-         case .refresh:
-             
-             Task { @MainActor [biometricAuthProvider] in
-                 
-                 let canEvalute = await biometricAuthProvider.canEvalute()
-                 
-                 switch canEvalute {
-                 case true:
-                     let result = await biometricAuthProvider.evaluate()
-                     
-                     switch result {
-                     case true:
-                         analytics.send(EventBuilder()
-                             .with(base: .LC)
-                             .with(state: .Good)
-                             .with(value: .bioAuth)
-                             .build(), on: view?.contentParrent?.analyticsName ?? .None)
-                         
-                         self.presentListCards()
-                     case false:
-                         analytics.send(EventBuilder()
-                             .with(base: .LC)
-                             .with(state: .Fail)
-                             .with(value: .bioAuth)
-                             .build(), on: view?.contentParrent?.analyticsName ?? .None)
-                         self.appAuth()
-                     }
-                 case false:
-                     analytics.send(EventBuilder()
-                         .with(base: .LC)
-                         .with(state: .Fail)
-                         .with(value: .bioAuth)
-                         .build(), on: view?.contentParrent?.analyticsName ?? .None)
-                     self.appAuth()
-                 }
-             }
-             
-         case .bank, .sid:
-             
-             presentListCards()
-         }
-     }
+            presentListCards()
+            return
+        }
+        
+        switch authMethod {
+        case .refresh:
+            
+            Task { @MainActor [biometricAuthProvider] in
+                
+                let canEvalute = await biometricAuthProvider.canEvalute()
+                
+                switch canEvalute {
+                case true:
+                    let result = await biometricAuthProvider.evaluate()
+                    
+                    switch result {
+                    case true:
+                        analytics.send(EventBuilder()
+                            .with(base: .LC)
+                            .with(state: .Good)
+                            .with(value: .bioAuth)
+                            .build(), on: view?.contentParrent?.analyticsName ?? .None)
+                        
+                        self.presentListCards()
+                    case false:
+                        analytics.send(EventBuilder()
+                            .with(base: .LC)
+                            .with(state: .Fail)
+                            .with(value: .bioAuth)
+                            .build(), on: view?.contentParrent?.analyticsName ?? .None)
+                        self.appAuth()
+                    }
+                case false:
+                    analytics.send(EventBuilder()
+                        .with(base: .LC)
+                        .with(state: .Fail)
+                        .with(value: .bioAuth)
+                        .build(), on: view?.contentParrent?.analyticsName ?? .None)
+                    self.appAuth()
+                }
+            }
+            
+        case .bank, .sid:
+            
+            presentListCards()
+        }
+    }
     
     private func appAuth() {
         
@@ -243,17 +246,15 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
                 }
             }
             
-            let finalCost = partPayService.bnplplanSelected
-            ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
-            : user.orderInfo.orderAmount.amount
-            
             userService.firstCardUpdate = false
-            let card = try await router.presentCards(cards: user.paymentToolInfo.paymentTool,
-                                                     cost: finalCost?.price(.RUB) ?? "",
-                                                     selectedId: selectedCard.paymentID)
+            if try payAmountValidationManager.checkAmountSelectedTool(selectedCard) == .notEnouth {
+                let card = try await router.presentCards(cards: user.paymentToolInfo.paymentTool,
+                                                         selectedId: selectedCard.paymentID)
+                userService.selectedCard = card
+            }
             view?.contentParrent?.hideLoading(animate: true)
-            userService.selectedCard = card
             router.presentPartPayPayment()
+            partPayService.bnplplanSelected = true
         }
     }
     
@@ -276,7 +277,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
     }
     
     private func configViews() {
-
+        
         view?.addSnapShot()
     }
     
@@ -296,7 +297,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
             }
         }
     }
-
+    
     @objc
     private func applicationDidBecomeActive() {
         // Если пользователь не смог получить обратный редирект
@@ -313,17 +314,18 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
         
         var list = [HelperType]()
         
-        if partPayService.bnplplanEnabled {
+        let amountEnought = try? payAmountValidationManager.checkWalletAmountEnouth()
+        if partPayService.bnplplanEnabled, amountEnought == .onlyBnpl {
             list.append(.bnpl)
         }
         
         if helperConfigManager.helperAvaliable(bannerListType: .sbp)
-           && user.promoInfo.bannerList.contains(where: { $0.bannerListType == .sbp }) {
+            && user.promoInfo.bannerList.contains(where: { $0.bannerListType == .sbp }) {
             list.append(.sbp)
         }
         
         if helperConfigManager.helperAvaliable(bannerListType: .creditCard)
-           && user.promoInfo.bannerList.contains(where: { $0.bannerListType == .sbp }) {
+            && user.promoInfo.bannerList.contains(where: { $0.bannerListType == .sbp }) {
             list.append(.credit)
         }
         

@@ -305,6 +305,7 @@ final class AuthPresenter: AuthPresenting {
                 cardNeeded()
                 return
             } else if let card = userService.selectedCard,
+                      try payAmountValidationManager.checkWalletAmountEnouth() == .enouth,
                       try payAmountValidationManager.checkAmountSelectedTool(card) != .enouth {
                 cardNeeded()
                 return
@@ -468,14 +469,9 @@ final class AuthPresenter: AuthPresenting {
                      try await userService.getListCards()
                  }
              }
-   
-             let finalCost = partPayService.bnplplanSelected
-             ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
-             : user.orderInfo.orderAmount.amount
              
              userService.firstCardUpdate = false
              let card = try? await router.presentCards(cards: user.paymentToolInfo.paymentTool,
-                                                       cost: finalCost?.price(.RUB) ?? "",
                                                        selectedId: selectedCard)
              view?.hideLoading(animate: true)
              userService.selectedCard = card

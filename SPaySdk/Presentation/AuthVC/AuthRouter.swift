@@ -29,13 +29,12 @@ final class AuthRouter: AuthRouting {
     }
     
     @MainActor
-    func presentCards(cards: [PaymentTool], cost: String, selectedId: Int) async throws -> PaymentTool {
+    func presentCards(cards: [PaymentTool], selectedId: Int) async throws -> PaymentTool {
         
         guard let nc = viewController?.contentNavigationController else { throw SDKError(.unowned) }
         
         return await routeMap.presentCards(by: CoverPushTransition(pushInto: nc),
                                            cards: cards,
-                                           cost: cost,
                                            selectedId: selectedId)
     }
     

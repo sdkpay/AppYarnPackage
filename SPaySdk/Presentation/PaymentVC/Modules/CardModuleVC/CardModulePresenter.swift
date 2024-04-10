@@ -199,13 +199,8 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
                 }
             }
             
-            let finalCost = partPayService.bnplplanSelected
-            ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
-            : user.orderInfo.orderAmount.amount
-            
             userService.firstCardUpdate = false
             let card = try? await router.presentCards(cards: user.paymentToolInfo.paymentTool,
-                                                      cost: finalCost?.price(.RUB) ?? "",
                                                       selectedId: selectedCard.paymentID)
             view?.contentParrent?.hideLoading(animate: true)
             userService.selectedCard = card
