@@ -43,6 +43,8 @@ final class CardsPresenter: CardsPresenting {
         } else {
             notEnoughtCards.append($0)
         }}
+        sortCards(cards: &enoughtCards)
+        sortCards(cards: &notEnoughtCards)
         return notEnoughtCards.isEmpty ? 1 : 2
     }
 
@@ -151,5 +153,12 @@ final class CardsPresenter: CardsPresenting {
         DispatchQueue.main.async {
             self.view?.contentNavigationController?.popViewController(animated: true)
         }
+    }
+    
+    private func sortCards(cards: inout [PaymentTool]) {
+        
+        cards = cards
+            .sorted(by: { ($0.amountData.amount > $1.amountData.amount) })
+            .sorted(by: { $0.priorityCard && !$1.priorityCard })
     }
 }
