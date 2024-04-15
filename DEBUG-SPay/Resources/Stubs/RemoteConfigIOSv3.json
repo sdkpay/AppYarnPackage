@@ -69,21 +69,32 @@
             "name": "Онлайн",
             "utilLink": "btripsexpenses://sbolonline/",
             "authLink": "btripsexpenses://sbolidexternallogin/",
-            "iconURL": "https://cms-res-web.online.sberbank.ru/sberpay/SDK/iconSB.png"
+            "iconURL": "https://cms-res-web.online.sberbank.ru/sberpay/SDK/iconSB.png",
+            "versionType": "prom"
         },
         {
             "appId": 0,
             "name": "СберБанк Онлайн",
             "utilLink": "sberonline://",
             "authLink": "sberbankidexternallogin://",
-            "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-1.png"
+            "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-1.png",
+            "versionType": "prom"
         },
         {
             "appId": 1,
             "name": "СБОЛ",
             "utilLink": "sbolonline://",
             "authLink": "sbolidexternallogin://",
-            "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-2.png"
+            "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-2.png",
+            "versionType": "prom"
+        },
+        {
+            "appId": -1,
+            "name": "СБОЛ-ТЕСТ",
+            "utilLink": "sbolonline11://",
+            "authLink": "sbolidexternallogin11://",
+            "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-2.png",
+            "versionType": "beta"
         }
     ],
     "images":{

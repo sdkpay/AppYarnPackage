@@ -20,12 +20,21 @@ final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
     private lazy var viewBuilder = BankAppPickerViewBuilder(backButtonDidTap: { [weak self] in
         self?.presenter.closeButtonDidTapped()
     })
+    
+    private lazy var tapRecognizer: UITapGestureRecognizer = {
+        let recognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(handleTap)
+        )
+        return recognizer
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.tag = 1
         presenter.viewDidLoad()
         viewBuilder.setupUI(view: view)
+        addGesture()
         viewBuilder.tableView.delegate = self
         viewBuilder.tableView.dataSource = self
         SBLogger.log(.didLoad(view: self))
@@ -54,6 +63,24 @@ final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
         analyticsName = .BankAppView
     }
     
+    private func addGesture() {
+        viewBuilder.titleLabel.isUserInteractionEnabled = true
+        viewBuilder.titleLabel.addGestureRecognizer(tapRecognizer)
+    }
+    
+    private var tapCounter = 0
+    
+    @objc
+    private func handleTap() {
+        
+        if tapCounter < 11 {
+            tapCounter += 1
+        } else {
+            presenter.debugBankTapped()
+            tapCounter = 0
+        }
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -62,7 +89,10 @@ final class BankAppPickerVC: ContentVC, IBankAppPickerVC {
         UIView.transition(with: viewBuilder.tableView,
                           duration: 0.3,
                           options: .transitionCrossDissolve,
-                          animations: { self.viewBuilder.tableView.reloadData() },
+                          animations: {
+            self.viewBuilder.tableView.reloadData()
+            self.view.layoutIfNeeded()
+        },
                           completion: nil)
     }
     

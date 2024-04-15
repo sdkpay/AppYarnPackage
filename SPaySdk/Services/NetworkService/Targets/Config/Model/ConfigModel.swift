@@ -21,6 +21,7 @@ enum BankSchemeAuthType: String {
 struct ConfigModel: Codable {
     let localization: Localization
     let bankApps: [BankApp]
+    let bankAppsBeta: [BankApp]?
     let schemas: Schemas
     let versionInfo: VersionInfo?
     let featuresToggle: [FeaturesToggle]
@@ -53,11 +54,18 @@ struct Schemas: Codable {
 }
 
 struct BankApp: Codable {
+    
+    enum VersionType: String, Codable {
+        case prom
+        case beta
+    }
+    
     let appId: Int?
     let name: String
     let utilLink: String
     let authLink: String
     let iconURL: String?
+    let versionType: String
     
     func url(type: BankUrlType) -> String {
         
@@ -68,6 +76,10 @@ struct BankApp: Codable {
         case .util:
             return utilLink
         }
+    }
+    
+    var versionTypeEnum: VersionType? {
+        VersionType(rawValue: versionType)
     }
 }
 

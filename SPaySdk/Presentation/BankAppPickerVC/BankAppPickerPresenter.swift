@@ -13,11 +13,12 @@ protocol BankAppPickerPresenting {
     func closeButtonDidTapped()
     func model(for indexPath: IndexPath) -> BankAppCellModel
     func didSelectRow(at indexPath: IndexPath)
+    func debugBankTapped()
     func viewDidLoad()
 }
 
 final class BankAppPickerPresenter: BankAppPickerPresenting {
-    
+
     var bankAppCount: Int {
         bankAppModels.count
     }
@@ -48,7 +49,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     }
     
     func viewDidLoad() {
-        bankAppModels = bankManager.avaliableBanks.map({ BankAppCellModel(with: $0) })
+        bankAppModels = getModels(type: .prom)
         view?.setTilte(Strings.BankAppPicker.subtitle(Bundle.main.displayName))
         addObserver()
     }
@@ -57,6 +58,19 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         bankAppModels[indexPath.row]
     }
     
+    func debugBankTapped() {
+        
+        let debugModels = getModels(type: .beta)
+        
+        guard let firstModel = debugModels.first else { return }
+        if bankAppModels.contains(where: { $0.link == firstModel.link }) {
+            bankAppModels = getModels(type: .prom)
+        } else {
+            bankAppModels.append(contentsOf: debugModels)
+        }
+        view?.reloadTableView()
+    }
+
     func didSelectRow(at indexPath: IndexPath) {
         bankManager.selectedBank = bankManager.avaliableBanks[indexPath.row]
         bankAppModels.indices.forEach({ bankAppModels[$0].deprecated = false })
@@ -74,6 +88,13 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
             showErrorAlert()
         }
     }
+    
+    private func getModels(type: BankApp.VersionType) -> [BankAppCellModel] {
+        bankManager.avaliableBanks
+            .filter({ $0.versionTypeEnum == type })
+            .map({ BankAppCellModel(with: $0) })
+    }
+    
 
     private func appAuthMethod() {
         Task { @MainActor [view] in
