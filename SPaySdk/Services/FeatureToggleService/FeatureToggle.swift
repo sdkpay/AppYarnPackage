@@ -18,6 +18,7 @@ enum Feature: String, Codable {
     case retryPayment
     case spasiboBonuses
     case dynamicCardsUpdate
+    case sortListCards
 }
 
 final class FeatureToggleServiceAssembly: Assembly {

@@ -43,8 +43,12 @@ final class CardsPresenter: CardsPresenting {
         } else {
             notEnoughtCards.append($0)
         }}
-        sortCards(cards: &enoughtCards)
-        sortCards(cards: &notEnoughtCards)
+        
+        if featureToggle.isEnabled(.sortListCards) {
+            sortCards(cards: &enoughtCards)
+            sortCards(cards: &notEnoughtCards)
+        }
+        
         return notEnoughtCards.isEmpty ? 1 : 2
     }
 
