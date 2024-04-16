@@ -20,8 +20,8 @@ enum BankSchemeAuthType: String {
 // MARK: - ConfigModel
 struct ConfigModel: Codable {
     let localization: Localization
-    let bankApps: [BankApp]
-    let bankAppsBeta: [BankApp]?
+    let bankApps: [BankAppModel]
+    let bankAppsBeta: [BankAppModel]?
     let schemas: Schemas
     let versionInfo: VersionInfo?
     let featuresToggle: [FeaturesToggle]
@@ -53,9 +53,18 @@ struct Schemas: Codable {
     let getIpUrl: String?
 }
 
+struct BankAppModel: Codable {
+    
+    let appId: Int?
+    let name: String
+    let utilLink: String
+    let authLink: String
+    let iconURL: String?
+}
+
 struct BankApp: Codable {
     
-    enum VersionType: String, Codable {
+    enum VersionType: Codable {
         case prom
         case beta
     }
@@ -65,7 +74,7 @@ struct BankApp: Codable {
     let utilLink: String
     let authLink: String
     let iconURL: String?
-    let versionType: String
+    let versionType: VersionType
     
     func url(type: BankUrlType) -> String {
         
@@ -78,8 +87,14 @@ struct BankApp: Codable {
         }
     }
     
-    var versionTypeEnum: VersionType? {
-        VersionType(rawValue: versionType)
+    init(_ model: BankAppModel, versionType: VersionType) {
+        
+        appId = model.appId
+        name = model.name
+        utilLink = model.utilLink
+        authLink = model.authLink
+        iconURL = model.iconURL
+        self.versionType = versionType
     }
 }
 

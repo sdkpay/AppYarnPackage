@@ -61,7 +61,9 @@ final class DefaultRemoteConfigService: RemoteConfigService {
     private func saveConfig(_ value: ConfigModel) {
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
-        UserDefaults.bankApps = value.bankApps
+        let bankApps = value.bankApps.map({ BankApp($0, versionType: .prom) })
+        let bankAppsBeta = value.bankAppsBeta?.map({ BankApp($0, versionType: .beta) }) ?? []
+        UserDefaults.bankApps = bankApps + bankAppsBeta
         UserDefaults.images = value.images
         UserDefaults.certKeys = value.certHashes
     }

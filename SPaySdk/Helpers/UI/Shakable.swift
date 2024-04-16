@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 protocol Shakable: UIView {
     
     func shake()

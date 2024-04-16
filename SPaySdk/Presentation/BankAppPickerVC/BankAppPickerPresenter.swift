@@ -63,7 +63,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         let debugModels = getModels(type: .beta)
         
         guard let firstModel = debugModels.first else { return }
-        if bankAppModels.contains(where: { $0.link == firstModel.link }) {
+        if bankAppModels.contains(where: { $0.title == firstModel.title }) {
             bankAppModels = getModels(type: .prom)
         } else {
             bankAppModels.append(contentsOf: debugModels)
@@ -91,10 +91,9 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     
     private func getModels(type: BankApp.VersionType) -> [BankAppCellModel] {
         bankManager.avaliableBanks
-            .filter({ $0.versionTypeEnum == type })
+            .filter({ $0.versionType == type })
             .map({ BankAppCellModel(with: $0) })
     }
-    
 
     private func appAuthMethod() {
         Task { @MainActor [view] in
