@@ -8,14 +8,14 @@
           "financialProductId" : "40817810138260194230",
           "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
           "productName" : "Visa Classic",
-          "paymentId" : 4,
+          "paymentId" : 1,
           "cardNumber" : "6478",
           "isSpPaymentTools" : true,
           "amountData" : {
             "amount" : 2000000,
             "currency" : "810"
           },
-          "priorityCard" : false,
+          "priorityCard" : true,
           "paymentSystemType" : "VISA"
         },
         {
@@ -25,7 +25,7 @@
           "financialProductId" : "40817810138260194410",
           "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
           "productName" : "Visa Classic",
-          "paymentId" : 4,
+          "paymentId" : 2,
           "cardNumber" : "6478",
           "isSpPaymentTools" : true,
           "amountData" : {
@@ -42,7 +42,7 @@
         "financialProductId" : "40817810138260194280",
         "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
         "productName" : "Visa Classic",
-        "paymentId" : 4,
+        "paymentId" : 3,
         "cardNumber" : "6478",
         "isSpPaymentTools" : true,
         "amountData" : {
@@ -76,7 +76,7 @@
         "financialProductId" : "40817810132331111",
         "cardLogoUrl" : "https:\/\/cms-res-web.online.sberbank.ru\/sberpay\/Card\/ds_mc_36_visa.png",
         "productName" : "Visa Classic",
-        "paymentId" : 4,
+        "paymentId" : 5,
         "cardNumber" : "6478",
         "isSpPaymentTools" : true,
         "amountData" : {

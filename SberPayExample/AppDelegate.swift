@@ -29,27 +29,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      open url: URL,
                      options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         
-        if url.scheme == "testapp" && url.host == "spay" {
-            SPay.getAuthURL(url)
-        }
-        
 //        if url.scheme == "testapp" && url.host == "spay" {
-//            SIDManager.getResponseFrom(url) { response in
-//                
-//                let status = response.isSuccess ? "✅" : "❌"
-//                
-//                let text: [String: String] = [
-//                    "appToken": response.appToken ?? "none",
-//                    "state": response.state ?? "none",
-//                    "nonce": response.nonce,
-//                    "authCode": response.authCode ?? "none",
-//                    "error": response.error ?? "none"
-//                ]
-//
-//                 showAlert(title: "SID auth \(status)",
-//                           text: text.json)
-//            }
+//            SPay.getAuthURL(url)
 //        }
+        
+        if url.scheme == "testapp" && url.host == "spay" {
+            SIDManager.getResponseFrom(url) { response in
+                
+                let status = response.isSuccess ? "✅" : "❌"
+                
+                let text: [String: String] = [
+                    "appToken": response.appToken ?? "none",
+                    "state": response.state ?? "none",
+                    "nonce": response.nonce,
+                    "authCode": response.authCode ?? "none",
+                    "error": response.error ?? "none"
+                ]
+
+                 showAlert(title: "SID auth \(status)",
+                           text: text.json)
+            }
+        }
         
         return true
     }

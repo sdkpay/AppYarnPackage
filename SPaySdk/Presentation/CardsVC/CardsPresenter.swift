@@ -153,7 +153,7 @@ final class CardsPresenter: CardsPresenting {
             .with(base: .Touch)
             .with(value: .card)
             .build(), on: view?.analyticsName ?? .None)
-        selectedCard(cards[indexPath.row])
+        selectedCard(enoughtCards[indexPath.row])
         DispatchQueue.main.async {
             self.view?.contentNavigationController?.popViewController(animated: true)
         }
