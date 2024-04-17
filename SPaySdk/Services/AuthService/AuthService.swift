@@ -358,6 +358,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             authManager.userInfo = authResult.result.userInfo
             authManager.isOtpNeed = authResult.result.isOtpNeed
         } catch {
+            cookieStorage.cleanCookie()
             throw error
         }
     }
