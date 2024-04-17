@@ -148,8 +148,22 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         SBLogger.log("🏦 Save selected bank")
         switch decodeParametersFrom(url: url) {
         case .success(let result):
-            authManager.authCode = result.code
-            authManager.state = result.state
+            
+            if let code = result.code,
+               let state = result.state {
+                authManager.authCode = code
+                authManager.state = state
+            } else {
+                analytics.send(EventBuilder()
+                    .with(base: .LC)
+                    .with(value: .bankAppAuth)
+                    .with(postState: .Fail)
+                    .with(value: MetricsValue(rawValue: url.absoluteString))
+                    .build())
+                
+                appAuthCompletion?(.failure(.init(.bankAppError)))
+                return
+            }
             
             analytics.send(EventBuilder()
                 .with(base: .LC)
@@ -164,6 +178,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                 .with(base: .LC)
                 .with(value: .bankAppAuth)
                 .with(postState: .Fail)
+                .with(value: MetricsValue(rawValue: url.absoluteString))
                 .build())
             
             appAuthCompletion?(.failure(error))
@@ -258,18 +273,24 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         switch result {
         case true:
             
-            try await withCheckedThrowingContinuation({( inCont: CheckedContinuation<Void, Error>) -> Void in
+            try await withCheckedThrowingContinuation { continuation in
+                
+                var nillableContinuation: CheckedContinuation<Void, Error>? = continuation
+                
                 self.appAuthCompletion = { result in
                     switch result {
                     case .success:
-                        inCont.resume()
                         self.removeOnScreenNotification()
+                        nillableContinuation?.resume()
+                        nillableContinuation = nil
                     case .failure(let error):
                         self.removeOnScreenNotification()
-                        inCont.resume(throwing: error)
+                        nillableContinuation?.resume(throwing: error)
+                        nillableContinuation = nil
                     }
                 }
-            })
+            }
+  
         case false:
             removeOnScreenNotification()
             throw SDKError(.bankAppNotFound)
