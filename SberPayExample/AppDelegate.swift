@@ -7,7 +7,7 @@
 
 import UIKit
 import SPaySdkDEBUG
-import SberIdSDK
+//import SberIdSDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
-        SIDManager.initSberID(clientId: "9f80261c-3455-4942-be48-cd1b2a2d7ba5")
+//        SIDManager.initSberID(clientId: "9f80261c-3455-4942-be48-cd1b2a2d7ba5")
         startupService.setupInitialState(with: window)
         return true
     }
