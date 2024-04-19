@@ -170,7 +170,8 @@ final class HelperVC: ContentVC, IHelperVC {
         
         contentStackView
             .add(toSuperview: backView)
-            .touchEdgesToSuperview([.left, .right], respectingGuide: .safeAreaLayout)
+            .touchEdgesToSuperview([.left, .right],
+                                   withInsets: UIEdgeInsets(inset: Helper.Button.Cancel.left))
             .centerInSuperview()
     }
 }

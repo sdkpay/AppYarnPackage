@@ -301,6 +301,11 @@ final class AuthPresenter: AuthPresenting {
                 return
             }
             
+            guard let user = userService.user, !user.paymentToolInfo.paymentTool.isEmpty else {
+                await self.router.presentHelper()
+                return
+            }
+            
             if userService.selectedCard == nil {
                 cardNeeded()
                 return
