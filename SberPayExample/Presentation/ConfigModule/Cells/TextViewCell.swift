@@ -49,20 +49,15 @@ final class TextViewCell: UITableViewCell {
 
     private lazy var refreshButton: ActionButton = {
         let view = ActionButton()
-        if #available(iOS 13.0, *) {
-            view.setImage(UIImage(systemName: "goforward"), for: .normal)
-        }
+        view.setImage(UIImage(systemName: "info"), for: .normal)
         view.tintColor = .lightGray
-        view.layer.borderColor = UIColor.gray.cgColor
-        view.layer.borderWidth = 1.5
-        view.layer.cornerRadius = 7
         view.addAction {
-            self.refreshButtonTapped?()
+            self.infoButtonTapped?()
         }
         return view
     }()
     
-    private var refreshButtonTapped: (() -> Void)?
+    private var infoButtonTapped: (() -> Void)?
     private var textEdited: ((String) -> Void)?
 
     func config(title: String,
@@ -71,26 +66,27 @@ final class TextViewCell: UITableViewCell {
                 placeholder: String? = nil,
                 keyboardType: UIKeyboardType = .default,
                 description: String? = nil,
-                refreshButtonAvaliable: Bool = false,
-                needRefreshButton: Bool = false,
                 maxLength: Int? = nil,
                 textEdited: @escaping (String) -> Void,
-                refreshButtonTapped: (() -> Void)? = nil) {
+                infoButtonTapped: (() -> Void)? = nil) {
         titleLabel.text = title
         textField.text = text
         textField.accessibilityIdentifier = accessibilityIdentifier
+        
         self.textEdited = textEdited
+        self.infoButtonTapped = infoButtonTapped
         
         if let placeholder {
             textField.placeholder = placeholder
         } else {
             textField.placeholder = title
         }
-        setupUI(with: needRefreshButton)
+        setupUI()
         contentView.backgroundColor = .clear
     }
     
-    private func setupUI(with needRefreshButton: Bool) {
+    private func setupUI() {
+        
         titleLabel
             .add(toSuperview: contentView)
             .touchEdge(SBEdge.top, toEdge: SBEdge.top, ofView: contentView)
@@ -98,11 +94,28 @@ final class TextViewCell: UITableViewCell {
             .touchEdge(SBEdge.bottom, toEdge: SBEdge.bottom, ofView: contentView)
             .setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
+        if infoButtonTapped != nil {
+            
+            refreshButton
+                .add(toSuperview: contentView)
+                .touchEdge(SBEdge.right, toEdge: SBEdge.right, ofView: contentView)
+                .height(40)
+                .width(40)
+                .centerInSuperview(.y)
+        }
+        
         textField
             .add(toSuperview: contentView)
             .touchEdge(SBEdge.top, toEdge: SBEdge.top, ofView: contentView)
             .touchEdge(SBEdge.left, toEdge: SBEdge.right, ofView: titleLabel, withInset: .sideMargin)
             .touchEdge(SBEdge.bottom, toEdge: SBEdge.bottom, ofView: contentView)
-            .touchEdge(SBEdge.right, toEdge: SBEdge.right, ofView: contentView)
+        
+        if infoButtonTapped != nil {
+            textField
+                .touchEdge(SBEdge.right, toEdge: SBEdge.left, ofView: refreshButton, withInset: .sideMargin)
+        } else {
+            textField
+                .touchEdge(SBEdge.right, toEdge: SBEdge.right, ofView: contentView)
+        }
     }
 }

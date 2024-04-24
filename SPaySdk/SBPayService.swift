@@ -37,6 +37,7 @@ protocol SBPayService {
                         completion: @escaping PaymentCompletion)
     func completePayment(paymentSuccess: SPayState,
                          completion: @escaping Action)
+    func setBankScheme(_ url: URL) throws
     func getResponseFrom(_ url: URL)
     func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool, debugLogLevel: [DebugLogLevel])
 }
@@ -292,12 +293,21 @@ final class DefaultSBPayService: SBPayService {
     }
     
     func getResponseFrom(_ url: URL) {
+        
         locator
             .resolve(AuthService.self)
             .completeAuth(with: url)
     }
     
+    func setBankScheme(_ url: URL) throws {
+        
+        try locator
+            .resolve(BankAppManager.self)
+            .setMerchantBank(url)
+    }
+    
     func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool, debugLogLevel: [DebugLogLevel]) {
+        
         buildSettings.setConfig(networkState: network, ssl: ssl, refresh: refresh, debugLogLevel: debugLogLevel)
     }
 }

@@ -20,6 +20,7 @@ enum SectionData: Int, CaseIterable {
 enum CellType: String, CaseIterable {
     case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, refresh, environment, bnpl, next, sid
     case sbp, newCreditCard, newDebitCard, helpers, resultViewNeeded
+    case merchantBank
 }
 
 private struct ConfigCellTextModel {
@@ -95,7 +96,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                 .helpers,
                 .sbp,
                 .newCreditCard,
-                .newDebitCard
+                .newDebitCard,
+                .merchantBank
             ]
         case .next:
             return [
@@ -151,6 +153,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             return helpersCell(type: type)
         case .resultViewNeeded:
             return resultViewNeededCell(type: type)
+        case .merchantBank:
+            return merchantBankCell(type: type)
         }
     }
     
@@ -250,6 +254,16 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             if let error {
                 self.view?.showAlert(with: error.errorDescription)
             } else {
+                
+                if let merchantBank = self.configValues.merchantBank,
+                    let merchantBankUrl = URL(string: merchantBank) {
+                    do {
+                        try SPay.setBankScheme(merchantBankUrl)
+                    } catch {
+                        self.view?.showAlert(with: "Не смогли найти приложение банка по схеме")
+                    }
+                }
+                
                 self.view?.navigationController?.pushViewController(vc, animated: true)
             }
         }
@@ -319,9 +333,9 @@ final class ConfigPresenter: ConfigPresenterProtocol {
     
     func configLogs() {
         
-        let vc = CustomAlertVC(with: "Log levels",
-                               values: DebugLogLevel.allCases.map({ $0.rawValue }),
-                               selected: configValues.debugLogLevels.map({ $0.rawValue })) { selected in
+        let vc = CustomSwitchAlertVC(with: "Log levels",
+                                     values: DebugLogLevel.allCases.map({ $0.rawValue }),
+                                     selected: configValues.debugLogLevels.map({ $0.rawValue })) { selected in
             self.configValues.debugLogLevels = selected.map({ DebugLogLevel(rawValue: $0) ?? .defaultLevel })
         }
         vc.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
@@ -591,6 +605,26 @@ extension ConfigPresenter {
                     value: configValues.resultViewNeeded) { bool in
             self.configValues.resultViewNeeded = bool
         }
+        return cell
+    }
+    
+    private func merchantBankCell(type: CellType) -> UITableViewCell {
+        let cell = TextViewCell()
+        cell.config(title: "Merchant bank url",
+                    text: configValues.merchantBank,
+                    textEdited: { text in
+            self.configValues.merchantBank = text
+        }, infoButtonTapped: {
+            let banks = [
+                "btripsexpenses://",
+                "sberbankidexternallogin://",
+                "sbolidexternallogin://"
+            ]
+            let vc = CustomTextAlertVC(with: "Ссылки на банк", values: banks)
+            vc.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            vc.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            self.view?.present(vc, animated: true)
+        })
         return cell
     }
 }

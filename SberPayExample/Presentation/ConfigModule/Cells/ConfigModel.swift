@@ -117,4 +117,8 @@ struct ConfigValues {
     @UserDefault(key: "DebugLogLevel",
                  defaultValue: DebugLogLevel.allCases)
     var debugLogLevels: [DebugLogLevel]
+    
+    @UserDefault(key: CellType.merchantBank.rawValue,
+                 defaultValue: nil)
+    var merchantBank: String?
 }

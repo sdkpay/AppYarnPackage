@@ -1,13 +1,13 @@
 //
-//  CustomAlertVC.swift
-//  SPaySdk
+//  CustomTextAlertVC.swift
+//  SPaySdkExample
 //
-//  Created by Ипатов Александр Станиславович on 22.03.2024.
+//  Created by Ипатов Александр Станиславович on 24.04.2024.
 //
 
 import UIKit
 
-final class CustomAlertVC: UIViewController {
+final class CustomTextAlertVC: UIViewController {
     
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
@@ -18,7 +18,7 @@ final class CustomAlertVC: UIViewController {
         return view
     }()
     
-    private var valuesDictionary = [(key: String, value: Bool)]()
+    private var values = [String]()
     
     private lazy var backView: UIView = {
        
@@ -38,22 +38,19 @@ final class CustomAlertVC: UIViewController {
         return view
     }()
     
-    private var completion: ([String]) -> Void
-    
     private lazy var contentStack: UIStackView = {
         
        let view = UIStackView()
-        view.spacing = 4
+        view.spacing = 20
         view.distribution = .fill
         view.axis = .vertical
         return view
     }()
     
-    init(with title: String, values: [String], selected: [String], completion: @escaping ([String]) -> Void) {
-        self.completion = completion
+    init(with title: String, values: [String]) {
         super.init(nibName: nil, bundle: nil)
         self.titleLabel.text = title
-        values.forEach({ valuesDictionary.append(($0, selected.contains($0))) })
+        self.values = values
     }
     
     required init?(coder: NSCoder) {
@@ -65,12 +62,9 @@ final class CustomAlertVC: UIViewController {
         
         contentStack.addArrangedSubview(titleLabel)
         
-        for (index, value) in valuesDictionary.enumerated() {
+        for value in values {
             
-            let view = AlertPartView(value: value.key,
-                                     state: value.value) { result in
-                self.valuesDictionary[index].value = result
-            }
+            let view = AlertTextPartView(value: value)
             contentStack.addArrangedSubview(view)
         }
         
@@ -87,14 +81,6 @@ final class CustomAlertVC: UIViewController {
         view.addGestureRecognizer(tapGr)
         configStack()
         setupUI()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        self.completion(self.valuesDictionary
-            .filter({ $0.value == true })
-            .map({ $0.key }))
     }
     
     @objc
@@ -121,23 +107,16 @@ final class CustomAlertVC: UIViewController {
     }
 }
 
-typealias BoolAction = ((Bool) -> Void)
+private class AlertTextPartView: UIView {
 
-private class AlertPartView: UIView {
-    
-    private var action: BoolAction
-    
     private lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.textColor = .gray
-        view.font = .systemFont(ofSize: 13, weight: .medium)
+        view.textColor = .black
+        view.font = .systemFont(ofSize: 16, weight: .medium)
+        view.isUserInteractionEnabled = true
+        let tapGr = UITapGestureRecognizer(target: self, action: #selector(titleTapped))
+        view.addGestureRecognizer(tapGr)
         view.sizeToFit()
-        return view
-    }()
-    
-    private lazy var switchControl: UISwitch = {
-        let view = UISwitch(frame: .zero)
-        view.addTarget(self, action: #selector(switchControlChanged), for: .allEvents)
         return view
     }()
     
@@ -146,17 +125,14 @@ private class AlertPartView: UIView {
         view.distribution = .fill
         view.alignment = .center
         view.axis = .horizontal
-        view.spacing = 10
+        view.spacing = 15
         view.addArrangedSubview(titleLabel)
-        view.addArrangedSubview(switchControl)
         return view
     }()
     
-    init(value: String, state: Bool, action: @escaping BoolAction) {
-        self.action = action
+    init(value: String) {
         super.init(frame: .zero)
         titleLabel.text = value
-        switchControl.isOn = state
         setupUI()
     }
     
@@ -165,11 +141,11 @@ private class AlertPartView: UIView {
     }
     
     @objc
-    private func switchControlChanged() {
-        
-       action(switchControl.isOn)
+    private func titleTapped() {
+        UIPasteboard.general.string = titleLabel.text
+        titleLabel.text = "Скопировано"
     }
-     
+
     private func setupUI() {
         
         stackView

@@ -32,6 +32,7 @@ protocol BankAppManager {
     var avaliableBanks: [BankApp] { get }
     func configUrl(path: String, type: BankUrlType) -> URL?
     func saveSelectedBank()
+    func setMerchantBank(_ url: URL) throws
     func removeSavedBank()
 }
  
@@ -48,6 +49,7 @@ final class DefaultBankAppManager: BankAppManager {
     }
     
     private var _selectedBank: BankApp?
+    private var merchantBank: BankApp?
     
     @Published private var bankAppSaved: BankApp?
     
@@ -58,7 +60,7 @@ final class DefaultBankAppManager: BankAppManager {
             if let bankApp = getSelectedBank() {
                 return bankApp
             } else {
-                return nil
+                return merchantBank
             }
         } set {
             _selectedBank = newValue
@@ -92,6 +94,16 @@ final class DefaultBankAppManager: BankAppManager {
         guard let link = selectedBank?.url(type: type) else { return nil }
         
         return URL(string: link + path)
+    }
+    
+    var task: Task<Void, Error>?
+    
+    func setMerchantBank(_ url: URL) throws {
+        
+        guard let merchantBank = UserDefaults.bankApps?
+            .first(where: { $0.authLink.contains(url.absoluteString) })
+        else { throw SDKError(.bankAppNotFound) }
+        self.merchantBank = merchantBank
     }
     
     private func getSelectedBank() -> BankApp? {

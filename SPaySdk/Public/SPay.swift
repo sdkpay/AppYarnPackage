@@ -88,6 +88,14 @@ public final class SPay: NSObject {
     }
     
     /**
+     Метод для передачи
+     */
+    @objc
+    public static func setBankScheme(_ url: URL) throws {
+        try payService?.setBankScheme(url)
+    }
+    
+    /**
      Метод для установки моков, только для тестовых версий
      */
 #if SDKDEBUG

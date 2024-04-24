@@ -17,7 +17,7 @@ final class StartupService {
     }
     
     private func setupKeyboard() {
-//        IQKeyboardManager.shared.enable = true
-//        IQKeyboardManager.shared.keyboardDistanceFromTextField = 80
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.keyboardDistanceFromTextField = 80
     }
 }
