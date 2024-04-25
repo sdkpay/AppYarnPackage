@@ -55,7 +55,7 @@
             "value": true
         },
         {
-            "name": "dynamicCardsUpdate",
+            "name": "useCachedCardsList",
             "value": true
         },
         {

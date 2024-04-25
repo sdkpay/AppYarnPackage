@@ -60,7 +60,7 @@ final class AuthRouter: AuthRouting {
         
         guard let nc = viewController?.contentNavigationController else { return }
         
-        await routeMap.presentFakeScreen(by: CoverPushTransition(pushInto: nc))
+        await routeMap.presentFakeScreen(by: PresentTransition(pushInto: nc))
     }
     
     @MainActor

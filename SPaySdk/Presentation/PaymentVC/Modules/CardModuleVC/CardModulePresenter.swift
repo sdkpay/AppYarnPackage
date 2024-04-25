@@ -191,12 +191,8 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
                   let user = userService.user
             else { return }
             
-            if userService.firstCardUpdate {
+            if !featureToggle.isEnabled(.useCachedCardsList) {
                 try await userService.getListCards()
-            } else {
-                Task {
-                    try await userService.getListCards()
-                }
             }
             
             userService.firstCardUpdate = false

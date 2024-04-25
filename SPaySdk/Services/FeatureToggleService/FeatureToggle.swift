@@ -19,6 +19,7 @@ enum Feature: String, Codable {
     case spasiboBonuses
     case dynamicCardsUpdate
     case sortListCards
+    case useCachedCardsList
 }
 
 final class FeatureToggleServiceAssembly: Assembly {

@@ -467,15 +467,8 @@ final class AuthPresenter: AuthPresenting {
              guard let selectedCard = userService.user?.paymentToolInfo.paymentTool.first?.paymentID,
                    let user = userService.user else { return }
               
-             if userService.firstCardUpdate || !featureToggle.isEnabled(.dynamicCardsUpdate) {
-                 try await userService.getListCards()
-             } else {
-                 Task {
-                     try await userService.getListCards()
-                 }
-             }
-             
-             userService.firstCardUpdate = false
+             try await userService.getListCards()
+    
              let card = try? await router.presentCards(cards: user.paymentToolInfo.paymentTool,
                                                        selectedId: selectedCard)
              view?.hideLoading(animate: true)

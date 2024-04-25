@@ -238,13 +238,7 @@ final class HelperFeatureModulePresenter: NSObject, HelperFeatureModulePresentin
             guard let selectedCard = userService.selectedCard,
                   let user = userService.user else { return }
             
-            if userService.firstCardUpdate, !featureToggle.isEnabled(.dynamicCardsUpdate) {
-                try await userService.getListCards()
-            } else {
-                Task {
-                    try await userService.getListCards()
-                }
-            }
+            try await userService.getListCards()
             
             userService.firstCardUpdate = false
             if try payAmountValidationManager.checkAmountSelectedTool(selectedCard) == .notEnouth {
