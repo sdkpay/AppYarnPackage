@@ -106,22 +106,9 @@ final class DefaultPaymentService: PaymentService {
                 self.authManager.apiKey = self.authManager.initialApiKey
             }
             
-            switch self.sdkManager.payStrategy {
-            case .auto, .partPay, .withoutRefresh:
-                try await pay(bnpl: isBnplEnabled,
-                              with: paymentToken.paymentToken ?? "",
-                              orderId: orderid, merchantLogin: merchantLogin)
-            case .manual:
-                self.sdkManager.payHandler = { payInfo in
-                    Task {
-                        try await self.pay(bnpl: isBnplEnabled,
-                                           with: payInfo.paymentToken ?? "",
-                                           orderId: orderid,
-                                           merchantLogin: merchantLogin)
-                    }
-                }
-                self.completionManager.completePaymentToken(with: paymentToken.paymentToken)
-            }
+            try await pay(bnpl: isBnplEnabled,
+                          with: paymentToken.paymentToken ?? "",
+                          orderId: orderid, merchantLogin: merchantLogin)
         } catch {
             if error is PayError, isBnplEnabled {
                 throw PayError.partPayError

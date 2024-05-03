@@ -114,7 +114,7 @@ final class DefaultPartPayService: PartPayService {
     
     func getBnplPlan() async throws {
         switch sdkManager.payStrategy {
-        case .auto, .manual:
+        case .auto:
             try await getFourPartsPlan()
         case .withoutRefresh, .partPay:
             try await getSixPartsPlan()

@@ -202,7 +202,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             await self.view?.contentParrent?.showLoading(animate: false)
 
             switch sdkManager.payStrategy {
-            case .auto, .manual:
+            case .auto:
                 
                 try await payWithPaymentToken()
             case .partPay, .withoutRefresh:
@@ -305,7 +305,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         
         switch sdkManager.payStrategy {
             
-        case .auto, .manual:
+        case .auto:
             try await paymentService.tryToPayWithToken(paymentId: paymentId,
                                                        isBnplEnabled: partPayService.bnplplanSelected,
                                                        resolution: resolution)

@@ -21,9 +21,6 @@ protocol SBPayService {
                environment: SEnvironment,
                completion: ((SPError?) -> Void)?)
     var isReadyForSPay: Bool { get }
-    func getPaymentToken(with viewController: UIViewController,
-                         with request: SPaymentTokenRequest,
-                         completion: @escaping PaymentTokenCompletion)
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
     func payWithoutRefresh(with viewController: UIViewController,
@@ -35,8 +32,6 @@ protocol SBPayService {
     func payWithPartPay(with viewController: UIViewController,
                         paymentRequest: SBankInvoicePaymentRequest,
                         completion: @escaping PaymentCompletion)
-    func completePayment(paymentSuccess: SPayState,
-                         completion: @escaping Action)
     func setBankScheme(_ url: URL) throws
     func getResponseFrom(_ url: URL)
     func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool, debugLogLevel: [DebugLogLevel])
@@ -133,36 +128,12 @@ final class DefaultSBPayService: SBPayService {
         SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
         return !apps.isEmpty
     }
-
-    func getPaymentToken(with viewController: UIViewController,
-                         with request: SPaymentTokenRequest,
-                         completion: @escaping PaymentTokenCompletion) {
-        assemblyManager.registerSessionServices(to: locator)
-        if apiKey == nil {
-            apiKey = request.apiKey
-        }
-        
-        guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
-        locator
-            .resolve(SDKManager.self)
-            .config(apiKey: apiKey,
-                    paymentTokenRequest: request,
-                    completion: { response in
-                completion(response)
-            })
-        liveCircleManager.openInitialScreen(with: viewController, with: locator)
-    }
     
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
         locator
             .resolve(SDKManager.self)
             .pay(with: paymentRequest, completion: completion)
-    }
-    
-    func completePayment(paymentSuccess: SPayState,
-                         completion: @escaping Action) {
-        liveCircleManager.completePayment(paymentSuccess: paymentSuccess, completion: completion)
     }
     
     func payWithBankInvoiceId(with viewController: UIViewController,

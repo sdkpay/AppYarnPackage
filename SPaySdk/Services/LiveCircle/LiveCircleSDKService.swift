@@ -10,11 +10,10 @@ import UIKit
 protocol LiveCircleManager {
     func openInitialScreen(with viewController: UIViewController,
                            with locator: LocatorService)
-    func completePayment(paymentSuccess: SPayState,
-                         completion: @escaping Action)
     var closeWithGesture: Action? { get set }
     var rootController: RootVC? { get }
-    func closeSDKWindow()
+    @MainActor
+    func closeSDKWindow() async
 }
 
 final class DefaultLiveCircleManager: LiveCircleManager {
@@ -41,17 +40,19 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         SBLogger.log(.stop(obj: self))
     }
     
-    func closeSDKWindow() {
+    @MainActor
+    func closeSDKWindow() async {
         locator?.resolve(NetworkService.self).cancelTask()
-        DispatchQueue.main.async {
-            self.rootController?.dismiss(animated: false)
-            self.rootController = nil
+        
+        await withCheckedContinuation { continuation in
+            
+            var nillableContinuation: CheckedContinuation<Void, Never>? = continuation
+            
+            self.rootController?.dismiss(animated: false, completion: {
+                nillableContinuation?.resume()
+                self.rootController = nil
+            })
         }
-    }
-    
-    func completePayment(paymentSuccess: SPayState,
-                         completion: @escaping Action) {
-        return
     }
 
     private func setupWindows(viewController: UIViewController,

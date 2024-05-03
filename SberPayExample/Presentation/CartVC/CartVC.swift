@@ -145,11 +145,9 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
 
     private func showResult(title: String, message: String) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let vc = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            vc.addAction(UIAlertAction(title: "OK", style: .cancel))
-            self.present(vc, animated: true)
-        }
+        let vc = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        vc.addAction(UIAlertAction(title: "OK", style: .cancel))
+        self.present(vc, animated: true)
     }
  
     private func setupUI() {

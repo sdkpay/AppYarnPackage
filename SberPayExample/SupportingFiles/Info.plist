@@ -60,11 +60,6 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>cms-res.online.sberbank.ru</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
 			<key>gate1.spaymentsplus.ru</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>

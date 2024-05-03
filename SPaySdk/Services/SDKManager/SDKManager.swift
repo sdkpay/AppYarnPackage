@@ -9,7 +9,6 @@ import UIKit
 
 enum PayStrategy {
     case auto
-    case manual
     case partPay
     case withoutRefresh
 }
@@ -33,9 +32,6 @@ protocol SDKManager {
     var payStrategy: PayStrategy { get }
     var authInfo: AuthInfo? { get }
     var payHandler: ((PayInfo) -> Void)? { get set }
-    func config(apiKey: String,
-                paymentTokenRequest: SPaymentTokenRequest,
-                completion: @escaping PaymentTokenCompletion)
     func configWithBankInvoiceId(apiKey: String,
                                  paymentRequest: SBankInvoicePaymentRequest,
                                  completion: @escaping PaymentCompletion)
@@ -74,19 +70,6 @@ final class DefaultSDKManager: SDKManager {
     deinit {
         SBLogger.log(.stop(obj: self))
         NotificationCenter.default.removeObserver(self, name: .closeSDKNotification, object: nil)
-    }
-
-    func config(apiKey: String,
-                paymentTokenRequest: SPaymentTokenRequest,
-                completion: @escaping PaymentTokenCompletion) {
-        let authInfo = AuthInfo(paymentTokenRequest: paymentTokenRequest)
-        self.authInfo = authInfo
-        payStrategy = .manual
-        authManager.apiKey = apiKey
-        authManager.initialApiKey = apiKey
-        authManager.lang = paymentTokenRequest.language
-        authManager.orderNumber = paymentTokenRequest.orderNumber
-        completionManager.setPaymentTokenCompletion(completion)
     }
     
     func configWithBankInvoiceId(apiKey: String,

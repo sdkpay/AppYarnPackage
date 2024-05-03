@@ -382,7 +382,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         
     private func getRefreshCookies() -> [HTTPCookie] {
         
-        guard sdkManager.payStrategy == .auto || sdkManager.payStrategy == .manual else { return [] }
+        guard sdkManager.payStrategy == .auto else { return [] }
         
         var cookies = [HTTPCookie]()
         
