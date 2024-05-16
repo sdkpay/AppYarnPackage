@@ -15,7 +15,7 @@ extension ConfigTarget: TargetType {
     var path: String {
         switch self {
         case .getConfig:
-            return "sdk-gateway/v1/remoteConfigIOSv2"
+            return "sdk-gateway/v1/remoteConfigIOSv3"
         }
     }
     
@@ -40,7 +40,7 @@ extension ConfigTarget: TargetType {
     var sampleData: Data? {
         switch self {
         case .getConfig:
-            return try? Data(contentsOf: Files.Stubs.remoteConfigIOSv2Json.url)
+            return try? Data(contentsOf: Files.Stubs.remoteConfigIOSv3Json.url)
         }
     }
 }

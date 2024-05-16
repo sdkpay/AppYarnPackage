@@ -20,7 +20,6 @@ protocol SBPayService {
                config: SBHelperConfig,
                environment: SEnvironment,
                completion: ((SPError?) -> Void)?)
-    var isReadyForSPay: Bool { get }
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
     func payWithoutRefresh(with viewController: UIViewController,
@@ -92,43 +91,15 @@ final class DefaultSBPayService: SBPayService {
         
         Task(priority: .medium) {
             
-            do {
-                try await locator
-                    .resolve(RemoteConfigService.self)
-                    .getConfig(with: apiKey)
-                locator
-                    .resolve(AnalyticsService.self)
-                    .config()
-                DispatchQueue.main.async {
-                    completion?(nil)
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    completion?(SPError(errorState: .init(.configError)))
-                }
+            locator
+                .resolve(AnalyticsService.self)
+                .config()
+            DispatchQueue.main.async {
+                completion?(nil)
             }
         }
     }
-    
-    var isReadyForSPay: Bool {
-        
-        SBLogger.log(.version)
-        
-        let manager = locator.resolve(AnalyticsManager.self)
-        
-        manager
-            .send(EventBuilder().with(base: .MA).with(value: MetricsValue(rawValue: #function.removeArgs)).build(),
-                  on: .None)
-        
-        let apps = locator.resolve(BankAppManager.self).avaliableBanks
-        manager
-            .send(EventBuilder().with(base: .MAC).with(value: MetricsValue(rawValue: #function.removeArgs)).build(),
-                  on: .None,
-                  values: [.Value: (!apps.isEmpty).description])
-        SBLogger.log("🏦 Found bank apps: \n\(apps.map({ $0.name }))")
-        return !apps.isEmpty
-    }
-    
+
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion) {
         locator

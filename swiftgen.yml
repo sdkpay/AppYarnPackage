@@ -24,6 +24,7 @@ files:
   inputs:
     - DEBUG-SPay/Resources/Stubs
     - SPaySdk/Resources/Lottie
+    - SPaySdk/Resources/AssetsData
   outputs:
     - templateName: structured-swift5
       output: Files.swift

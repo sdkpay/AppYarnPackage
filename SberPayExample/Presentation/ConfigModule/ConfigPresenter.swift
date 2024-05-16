@@ -7,6 +7,7 @@
 
 import UIKit
 import SPaySdkDEBUG
+import SwiftUI
 //import SberIdSDK
 
 enum SectionData: Int, CaseIterable {
@@ -220,7 +221,9 @@ final class ConfigPresenter: ConfigPresenterProtocol {
     }
     
     private func goForward() {
+        
         view?.startLoader()
+        
         let vc: UIViewController
         
         switch configValues.lang {
@@ -228,7 +231,11 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             vc = CartVC(values: configValues)
         case .Obj:
             vc = ObjcCartVC()
+        case .Sui:
+            vc = CartVC(values: configValues)
+//            vc = UIHostingController(rootView: CartView())
         }
+        
         let environment: SEnvironment
         switch configValues.environment {
         case .Prod:

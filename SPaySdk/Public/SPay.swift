@@ -42,11 +42,11 @@ public final class SPay: NSObject {
     }
     
     /**
-     Требуется задать LSApplicationQueriesSchemes в Info.plist
+     Метод проверки доступности сервисов оплаты 
      */
     @objc
     public static var isReadyForSPay: Bool {
-         payService?.isReadyForSPay ?? false
+         payService != nil
     }
     
     /**

@@ -22,13 +22,12 @@ final class RemoteConfigServiceAssembly: Assembly {
 
 protocol RemoteConfigService {
     
-    func getConfig(with apiKey: String?) async throws
+    func getConfig() async throws
 }
 
 final class DefaultRemoteConfigService: RemoteConfigService {
     private let network: NetworkService
     private let optimizationManager = OptimizationCheсkerManager()
-    private var apiKey: String?
     private let featureToggle: FeatureToggleService
     private let analytics: AnalyticsService
     private let versionСontrolManager: VersionСontrolManager
@@ -44,26 +43,28 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         self.featureToggle = featureToggle
     }
     
-    func getConfig(with apiKey: String?) async throws {
+    func getConfig() async throws {
         
-        self.apiKey = apiKey
-        
-        let result = try await network.request(ConfigTarget.getConfig,
-                                               to: ConfigModel.self,
-                                               retrySettings: (2, []))
-        
-        self.versionСontrolManager.setVersionsInfo(result.versionInfo)
-        self.saveConfig(result)
-        self.checkVersion(version: result.versionInfo?.active)
-        self.setFeatures(result.featuresToggle)
+        do {
+            let result = try await network.request(ConfigTarget.getConfig,
+                                                   to: ConfigModel.self,
+                                                   retrySettings: (2, []))
+            
+            self.versionСontrolManager.setVersionsInfo(result.versionInfo)
+            self.saveConfig(result)
+            self.checkVersion(version: result.versionInfo?.active)
+            self.setFeatures(result.featuresToggle)
+        } catch {
+            if UserDefaults.localization == nil, UserDefaults.images == nil {
+                throw error
+            }
+        }
     }
     
     private func saveConfig(_ value: ConfigModel) {
         UserDefaults.localization = value.localization
         UserDefaults.schemas = value.schemas
-        let bankApps = value.bankApps.map({ BankApp($0, versionType: .prom) })
-        let bankAppsBeta = value.bankAppsBeta?.map({ BankApp($0, versionType: .beta) }) ?? []
-        UserDefaults.bankApps = bankApps + bankAppsBeta
+        UserDefaults.bankApps = value.bankApps
         UserDefaults.images = value.images
         UserDefaults.certKeys = value.certHashes
     }

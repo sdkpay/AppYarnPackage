@@ -46,7 +46,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         
         await withCheckedContinuation { continuation in
             
-            var nillableContinuation: CheckedContinuation<Void, Never>? = continuation
+            let nillableContinuation: CheckedContinuation<Void, Never>? = continuation
             
             self.rootController?.dismiss(animated: false, completion: {
                 nillableContinuation?.resume()

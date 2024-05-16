@@ -10,6 +10,7 @@ import SPaySdkDEBUG
 import IQKeyboardManagerSwift
 
 final class StartupService {
+    
     func setupInitialState(with window: UIWindow) {
         setupKeyboard()
         window.rootViewController = UINavigationController(rootViewController: ConfigAssembly().createModule())

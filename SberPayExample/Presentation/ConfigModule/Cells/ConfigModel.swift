@@ -28,7 +28,7 @@ enum PayMode: String, CaseIterable, Codable {
 }
 
 enum Lang: String, CaseIterable, Codable {
-    case Swift, Obj
+    case Swift, Obj, Sui
 }
 
 enum Environment: String, CaseIterable, Codable {

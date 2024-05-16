@@ -34,6 +34,7 @@ final class AuthPresenter: AuthPresenting {
     private var helperManager: HelperConfigManager
     private var featureToggle: FeatureToggleService
     private var partPayService: PartPayService
+    private let remoteConfigService: RemoteConfigService
     private let biometricAuthProvider: BiometricAuthProviderProtocol
     
     private var authMethod: AuthMethod = .bank
@@ -51,6 +52,7 @@ final class AuthPresenter: AuthPresenting {
          partPayService: PartPayService,
          timeManager: OptimizationCheсkerManager,
          enviromentManager: EnvironmentManager,
+         remoteConfigService: RemoteConfigService,
          biometricAuthProvider: BiometricAuthProviderProtocol,
          payAmountValidationManager: PayAmountValidationManager,
          featureToggle: FeatureToggleService,
@@ -72,6 +74,7 @@ final class AuthPresenter: AuthPresenting {
         self.payAmountValidationManager = payAmountValidationManager
         self.helperManager = helperManager
         self.authManager = authManager
+        self.remoteConfigService = remoteConfigService
         self.featureToggle = featureToggle
         self.biometricAuthProvider = biometricAuthProvider
         self.timeManager.startTraking()
@@ -82,37 +85,42 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
-
-        startAuth()
+        
+        Task {
+            await startAuth()
+        }
     }
     
     func viewDidDisappear() {}
     
-    private func startAuth() {
+    private func startAuth() async {
         
         guard !versionСontrolManager.isVersionDepicated else {
             
-            Task {
-                
-                await alertService.show(on: view,
-                                        with: Strings.Error.Version.title,
-                                        with: Strings.Error.Version.subtitle,
-                                        with: nil,
-                                        with: nil,
-                                        state: .failure,
-                                        buttons: [
-                                            AlertButtonModel(title: Strings.Common.Return.title,
-                                                             type: .info, 
-                                                             neededResult: .cancel,
-                                                             action: { [weak self] in
-                                                                 self?.completionManager.dismissCloseAction(self?.view)
-                                                             })
-                                        ])
-            }
+            await alertService.show(on: view,
+                                    with: Strings.Error.Version.title,
+                                    with: Strings.Error.Version.subtitle,
+                                    with: nil,
+                                    with: nil,
+                                    state: .failure,
+                                    buttons: [
+                                        AlertButtonModel(title: Strings.Common.Return.title,
+                                                         type: .info,
+                                                         neededResult: .cancel,
+                                                         action: { [weak self] in
+                                                             self?.completionManager.dismissCloseAction(self?.view)
+                                                         })
+                                    ])
             return
         }
         
-        getSessiond()
+        do {
+            try await getRemoteConfig()
+            getSessiond()
+        } catch {
+            await alertService.show(on: view,
+                                    type: .defaultError)
+        }
     }
     
     @MainActor
@@ -129,6 +137,11 @@ final class AuthPresenter: AuthPresenting {
             guard let self = self else { return }
             self.getSessiond()
         }
+    }
+    
+    private func getRemoteConfig() async throws {
+        
+        try await remoteConfigService.getConfig()
     }
     
     private func getSessiond() {

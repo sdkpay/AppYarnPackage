@@ -20,7 +20,7 @@ enum DefaultsKey: String {
 @propertyWrapper
 struct UserDefault<Value: Codable> {
     let key: DefaultsKey
-    let defaultValue: Value?
+    var defaultValue: Value?
     var container = UserDefaults.standard
 
     var wrappedValue: Value? {
@@ -43,31 +43,22 @@ extension UserDefaults {
 }
 
 extension UserDefaults {
-    @UserDefault(key: .selectedBank, defaultValue: 666)
+    @UserDefault(key: .selectedBank)
     static var bankApp: Int?
     
-    @UserDefault(key: .localization,
-                 defaultValue: Localization(authTitle: "foo",
-                                            payLoading: "foo",
-                                            connectTitle: "foo"))
+    @UserDefault(key: .localization)
     static var localization: Localization?
     
-    @UserDefault(key: .schemas,
-                 defaultValue: Schemas(dynatraceUrl: "foo",
-                                       dynatraceId: "foo",
-                                       getIpUrl: "foo"))
+    @UserDefault(key: .schemas)
     static var schemas: Schemas?
     
-    @UserDefault(key: .images,
-                 defaultValue: Images(logoIcon: "foo",
-                                      logoClear: "foo",
-                                      logoBlack: "foo"))
+    @UserDefault(key: .images)
     static var images: Images?
     
     @UserDefault(key: .bankApps,
                  defaultValue: [])
     static var bankApps: [BankApp]?
     
-    @UserDefault(key: .certKeys, defaultValue: [String]())
+    @UserDefault(key: .certKeys)
     static var certKeys: [String]?
 }

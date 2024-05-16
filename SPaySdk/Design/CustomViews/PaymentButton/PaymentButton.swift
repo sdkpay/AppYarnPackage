@@ -45,7 +45,7 @@ final class PaymentButton: UIView {
     
     private lazy var logoImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(base64: UserDefaults.images?.logoClear ?? "")
+        view.image = UIImage(jsonPath: Files.AssetsData.logoClearJson.url)
         NSLayoutConstraint.activate([
             view.widthAnchor.constraint(equalToConstant: .logoWidth),
             view.heightAnchor.constraint(equalToConstant: .logoHeight)
