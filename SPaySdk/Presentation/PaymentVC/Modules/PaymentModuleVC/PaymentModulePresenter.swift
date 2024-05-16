@@ -8,6 +8,11 @@
 import UIKit
 import Combine
 
+extension MetricsValue {
+    
+    static let payBNPL = MetricsValue(rawValue: "payBNPL")
+}
+
 protocol PaymentModulePresenting: NSObject {
 
     func payButtonTapped()
@@ -246,6 +251,17 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         let challengeState = try await secureChallengeService.challenge(paymentId: paymentId,
                                                                         isBnplEnabled: partPayService.bnplplanSelected)
         
+        if partPayService.bnplplanSelected {
+            
+            await analytics
+                .send(EventBuilder()
+                    .with(base: .LC)
+                    .with(value: .payBNPL)
+                    .with(postAction: .Start)
+                    .build(),
+                      on: view?.contentParrent?.analyticsName)
+        }
+        
         switch challengeState {
         case .review:
             
@@ -270,6 +286,16 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     private func payWithoutPaymentToken() async throws {
         
         guard let paymentId = userService.selectedCard?.paymentID else { return }
+        
+        if partPayService.bnplplanSelected {
+            await analytics
+                .send(EventBuilder()
+                    .with(base: .LC)
+                    .with(value: .payBNPL)
+                    .with(postAction: .Start)
+                    .build(),
+                      on: view?.contentParrent?.analyticsName)
+        }
         
         let challengeResult = try await paymentService.tryToPayWithoutToken(paymentId: paymentId,
                                                                             isBnplEnabled: partPayService.bnplplanSelected,
@@ -314,7 +340,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
                                                           isBnplEnabled: partPayService.bnplplanSelected,
                                                           resolution: resolution)
         }
-    
+        
         await showPaySuccessResult()
     }
     

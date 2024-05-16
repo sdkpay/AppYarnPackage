@@ -36,6 +36,7 @@ enum PaymentTarget {
 }
 
 extension PaymentTarget: TargetType {
+    
     var path: String {
         switch self {
         case .getPaymentToken:

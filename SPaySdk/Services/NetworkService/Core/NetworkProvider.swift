@@ -96,7 +96,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
             
             let request = try self.buildRequest(from: target, hostSettings: host)
             SBLogger.logRequestStarted(request)
-            analytics.sendRequestStarted(request)
+            analytics.sendRequestStarted(target)
             guard let session else {
                 throw SDKError(.system)
             }
