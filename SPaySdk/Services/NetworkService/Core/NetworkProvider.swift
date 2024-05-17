@@ -110,7 +110,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                                          response: response,
                                          data: data,
                                          error: nil)
-            analytics.sendRequestCompleted(target, response: response, error: nil)
+            analytics.sendRequestCompleted(target, data: data, response: response, error: nil)
             
             return (data, response)
         } catch {
@@ -121,7 +121,7 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
                                          data: nil,
                                          error: error)
             
-            analytics.sendRequestCompleted(target, response: nil, error: error)
+            analytics.sendRequestCompleted(target, data: nil, response: nil, error: error)
             
             if  retrySettings.count != 1,
                 retry < retrySettings.count,

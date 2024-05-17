@@ -37,10 +37,7 @@
 		</dict>
 	</array>
 	<key>NSPrivacyTrackingDomains</key>
-	<array>
-		<string>gate1.spaymentsplus.ru</string>
-		<string>ift.gate2.spaymentsplus.ru:</string>
-	</array>
+	<array/>
 	<key>NSPrivacyTracking</key>
 	<false/>
 </dict>

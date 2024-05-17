@@ -43,7 +43,7 @@ final class StubNetworkProvider: NSObject, NetworkProvider {
         
         let sampleData = target.sampleData ?? Data()
         
-        analytics.sendRequestCompleted(target, response: response, error: nil)
+        analytics.sendRequestCompleted(target, data: sampleData, response: response, error: nil)
         
         return (sampleData, response)
     }

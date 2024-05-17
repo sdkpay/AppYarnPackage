@@ -61,6 +61,7 @@ protocol AnalyticsManager: NSObject {
     
     func sendRequestStarted(_ target: TargetType)
     func sendRequestCompleted(_ target: TargetType,
+                              data: Data?,
                               response: URLResponse?,
                               error: Error?)
     func sendResponseDecoded(_ target: TargetType, response: URLResponse?)
@@ -131,6 +132,7 @@ extension DefaultAnalyticsManager {
     }
     
     func sendRequestCompleted(_ target: TargetType,
+                              data: Data?,
                               response: URLResponse?,
                               error: Error?) {
         Task {
@@ -147,15 +149,24 @@ extension DefaultAnalyticsManager {
             if let response = response as? HTTPURLResponse {
                 code = String(response.statusCode)
             } else if let error = error {
-                code = "\(error._code) - \(error.localizedDescription)"
+                code = String(error._code)
             }
             
             if code == "200" {
                 event.with(state: .Good)
             } else {
                 event.with(state: .Fail)
-                analytics[.ErrorCode] = String(error?.sdkError.httpCode ?? 0)
+                analytics[.HttpCode] = code
                 analytics[.ParsingError] = error?.sdkError.description
+            }
+            
+            if let data, code != "200" {
+                
+                guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary else { return }
+                
+                guard let errorCode = json["errorCode"] as? String else { return }
+                
+                analytics[.ErrorCode] = errorCode
             }
             
             send(event.build(),
