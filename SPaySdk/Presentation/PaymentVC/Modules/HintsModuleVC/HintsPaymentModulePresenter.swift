@@ -74,7 +74,7 @@ final class HintsPaymentModulePresenter: NSObject, HintsModulePresenting {
     private func connectIfNeeded() -> String? {
         
         guard let merchantInfo = userService.user?.merchantInfo else { return nil }
-        guard merchantInfo.bindingIsNeeded else { return nil }
+        guard merchantInfo.bindingIsNeeded ?? false else { return nil }
         
         return merchantInfo.bindingSafeText
     }

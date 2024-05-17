@@ -49,7 +49,7 @@ struct FormInfo: Codable {
 struct MerchantInfo: Codable {
     let merchantName: String
     let logoURL: String?
-    let bindingIsNeeded: Bool
+    let bindingIsNeeded: Bool?
     let bindingSafeText: String?
 
     enum CodingKeys: String, CodingKey {
