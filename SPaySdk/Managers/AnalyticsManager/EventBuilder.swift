@@ -46,6 +46,8 @@ enum MetricsStateKey: String {
     
     case Good
     case Fail
+    case Available
+    case Unavailable
 }
 
 struct MetricsValue: RawRepresentable {

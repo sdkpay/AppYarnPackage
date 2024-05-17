@@ -244,10 +244,24 @@ final class AuthPresenter: AuthPresenting {
         
         let type = ContentType.bnpl
         
+        let event = EventBuilder()
+            .with(base: .LC)
+            .with(value: MetricsValue(rawValue: "payBNPL"))
+        
         do {
             try await partPayService.getBnplPlan()
+            
+            if partPayService.bnplplanEnabled {
+                event.with(postState: .Available)
+            } else {
+                event.with(postState: .Unavailable)
+            }
+            await analytics.send(event.build(), on: view?.analyticsName)
             return (nil, type)
         } catch {
+            
+            event.with(postState: .Unavailable)
+            await analytics.send(event.build(), on: view?.analyticsName)
             return (error.sdkError, type)
         }
     }

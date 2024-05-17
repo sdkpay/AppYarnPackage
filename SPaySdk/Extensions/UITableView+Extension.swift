@@ -29,7 +29,7 @@ extension UITableView {
     
     public func dequeueResuableCell<T: UITableViewCell>(forIndexPath indexPath: IndexPath) -> T {
         guard let cell = dequeueReusableCell(withIdentifier: T.reuseIdentifier, for: indexPath) as? T else {
-            fatalError(" Could not dequeue cell with identifier: \(T.reuseIdentifier)")
+            fatalError("Could not dequeue cell with identifier: \(T.reuseIdentifier)")
         }
         return cell
     }
