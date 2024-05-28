@@ -49,14 +49,13 @@ final class DefaultPayAmountValidationManager: PayAmountValidationManager {
         
         var state = PayAmountStatus.notEnouth
         
-        try user.paymentToolInfo.paymentTool.forEach { tool in
-            
+        for tool in user.paymentToolInfo.paymentTool {
             if try checkAmountSelectedTool(tool) == .enouth {
                 state = .enouth
-                return
+                break
             } else if try checkAmountSelectedTool(tool) == .onlyBnpl {
                 state = .onlyBnpl
-                return
+                break
             }
         }
         
