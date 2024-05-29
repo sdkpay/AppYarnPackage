@@ -11,6 +11,7 @@ import Combine
 extension MetricsValue {
     
     static let payBNPL = MetricsValue(rawValue: "payBNPL")
+    static let BNPL = MetricsValue(rawValue: "BNPL")
 }
 
 protocol PaymentModulePresenting: NSObject {

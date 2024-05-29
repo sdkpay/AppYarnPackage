@@ -246,7 +246,7 @@ final class AuthPresenter: AuthPresenting {
         
         let event = EventBuilder()
             .with(base: .LC)
-            .with(value: MetricsValue(rawValue: "payBNPL"))
+            .with(value: .payBNPL)
         
         do {
             try await partPayService.getBnplPlan()

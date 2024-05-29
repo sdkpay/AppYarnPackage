@@ -117,7 +117,14 @@ final class PaymentFeatureModulePresenter: NSObject, PaymentFeatureModulePresent
     }
     
     func didSelectPaymentItem(at indexPath: IndexPath) {
-        
+        Task {
+            await analytics
+                .send(EventBuilder()
+                    .with(base: .Touch)
+                    .with(value: .BNPL)
+                    .build(),
+                      on: view?.contentParrent?.analyticsName)
+        }
         partPayTapped()
     }
     
