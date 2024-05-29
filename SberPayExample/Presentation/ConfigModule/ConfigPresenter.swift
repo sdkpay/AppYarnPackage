@@ -7,7 +7,7 @@
 
 import UIKit
 import SPaySdkDEBUG
-import SberIdSDK
+//import SberIdSDK
 
 enum SectionData: Int, CaseIterable {
     case config
@@ -252,18 +252,18 @@ final class ConfigPresenter: ConfigPresenterProtocol {
     private func sidAuth() {
         // Параметры для поддержки PKCE
          
-        let request = SIDAuthRequest()
-        request.nonce = "2Y25sDS8494W7xJva2z01nL6hajMhAUXF3Xk7hXk49M484t708GD8tjPus71NViJ"
-        // Перечисление scope через пробел
-        request.scope = "openid+mapp_sso"
-        request.state = "ZwyFM6WS8yV"
-        request.redirectUri = "testapp://spay"
-        // Необязательный параметр
-        request.codeChallenge = "Ddt8Pl8ohzMFAVPlsZ04lEDKIGQdcDD_FcuxBQxAV1I"
-        // Необязательный параметр
-        request.codeChallengeMethod = "S256"
-
-        SIDManager.auth(withSberId: request, viewController: view ?? UIViewController())
+//        let request = SIDAuthRequest()
+//        request.nonce = "2Y25sDS8494W7xJva2z01nL6hajMhAUXF3Xk7hXk49M484t708GD8tjPus71NViJ"
+//        // Перечисление scope через пробел
+//        request.scope = "openid+mapp_sso"
+//        request.state = "ZwyFM6WS8yV"
+//        request.redirectUri = "testapp://spay"
+//        // Необязательный параметр
+//        request.codeChallenge = "Ddt8Pl8ohzMFAVPlsZ04lEDKIGQdcDD_FcuxBQxAV1I"
+//        // Необязательный параметр
+//        request.codeChallengeMethod = "S256"
+//
+//        SIDManager.auth(withSberId: request, viewController: view ?? UIViewController())
     }
     
     func generateOrderIdTapped() {

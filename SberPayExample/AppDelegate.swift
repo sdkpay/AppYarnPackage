@@ -7,7 +7,7 @@
 
 import UIKit
 import SPaySdkDEBUG
-import SberIdSDK
+//import SberIdSDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
-        SIDManager.initSberID(clientId: "9f80261c-3455-4942-be48-cd1b2a2d7ba5")
+//        SIDManager.initSberID(clientId: "9f80261c-3455-4942-be48-cd1b2a2d7ba5")
         startupService.setupInitialState(with: window)
         return true
     }
@@ -33,23 +33,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             SPay.getAuthURL(url)
         }
         
-        if url.scheme == "testapp" && url.host == "spay" {
-            SIDManager.getResponseFrom(url) { response in
-                
-                let status = response.isSuccess ? "✅" : "❌"
-                
-                let text: [String: String] = [
-                    "appToken": response.appToken ?? "none",
-                    "state": response.state ?? "none",
-                    "nonce": response.nonce,
-                    "authCode": response.authCode ?? "none",
-                    "error": response.error ?? "none"
-                ]
-
-                 showAlert(title: "SID auth \(status)",
-                           text: text.json)
-            }
-        }
+//        if url.scheme == "testapp" && url.host == "spay" {
+//            SIDManager.getResponseFrom(url) { response in
+//                
+//                let status = response.isSuccess ? "✅" : "❌"
+//                
+//                let text: [String: String] = [
+//                    "appToken": response.appToken ?? "none",
+//                    "state": response.state ?? "none",
+//                    "nonce": response.nonce,
+//                    "authCode": response.authCode ?? "none",
+//                    "error": response.error ?? "none"
+//                ]
+//
+//                 showAlert(title: "SID auth \(status)",
+//                           text: text.json)
+//            }
+//        }
         
         return true
     }

@@ -8,14 +8,14 @@ ENV["SCHEME_NAME"] = "SPaySdkExample"
 ENV["PLIST_PATH"] = "./SberPayExample/SupportingFiles/Info.plist"
 
 #Appstore
-ENV["KEY_ID"] = "YR2LX8W79A"
-ENV["ISSUER_ID"] = "32c2a5e1-1bea-4fd8-8cff-4235733105fc"
-ENV["KEY_PATH"] = "./fastlane/AuthKey_YR2LX8W79A.p8"
-ENV["TEAM_ID"] = "582949"
+ENV["KEY_ID"] = "8GW2SFC53Q"
+ENV["ISSUER_ID"] = "0e8dc5a3-1219-4b9e-8a1c-00ddcaf56dab"
+ENV["KEY_PATH"] = "./fastlane/AuthKey_8GW2SFC53Q.p8"
+ENV["TEAM_ID"] = "26W7AF4Y74"
 
 # Marvin Bot
 ENV["TG_BOT_TOKEN"] = "5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4"
-ENV["TG_CHAT_ID"] = "-866042957"
+ENV["TG_CHAT_ID"] = "-1001899215484"
 
 # PROD BOT -866042957
 # DEV BOT -1001899215484
@@ -99,19 +99,15 @@ platform :ios do
     status = (options[:success] ? "✅" : "❌")
       
     message = "
-<i>@lessov @DKovchina #сборка🚀</i>
-<b><ins>Новая сборка:</ins></b>
+<i>@lessov @DKovchina @Alisa_Umnikova </i>
+<b><ins>🚀 Новая сборка:</ins></b>
     <i>Проект: </i><code>#{ENV["TARGET_NAME"]}</code>
     <i>Статус: </i>#{status}
-    <i>Платформа: iOS </i>
+    <i>Платформа: #iOS </i>
     <i>Версия: #{plist_version}(#{plist_build})</i>
     <i>Ветка: </i><code>#{git_branch}</code>
 <b><ins>Изменения:</ins></b>
-#{changelog_from_git_commits(
-      pretty: "[%an] %n   - %s",
-      date_format: "short", 
-      merge_commit_filtering: "include_merges"
-)}
+#{get_changelog}
     "
  if options[:exception]
       message += "
@@ -119,6 +115,13 @@ platform :ios do
  "
     end
     message
+  end
+
+  private_lane :get_changelog do
+    changelog = prompt(
+      text: "Changelog: ",
+      multi_line_end_keyword: "END"
+    )
   end
   
   desc "Send message to Marvin bot"
@@ -136,12 +139,6 @@ platform :ios do
   end
 
   #  Build xcframework lanes
-
-  desc "Create xcframework"
-  lane :create_xcframework do 
-    build_xcframework
-    framework_plist_version
-  end
 
   desc "Framework version from plist"
   private_lane :framework_plist_version do 
