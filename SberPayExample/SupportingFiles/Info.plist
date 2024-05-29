@@ -87,6 +87,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Данные о Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Так вы подтвердите, что именно вы выполняете вход</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

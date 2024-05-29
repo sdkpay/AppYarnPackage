@@ -118,6 +118,7 @@ targets:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        NSBluetoothAlwaysUsageDescription: Данные о Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSLocationWhenInUseUsageDescription: Данные о местонахождении собираются и отправляются на сервер для безопасного проведения оплаты
         NSFaceIDUsageDescription: "Так вы подтвердите, что именно вы выполняете вход"
