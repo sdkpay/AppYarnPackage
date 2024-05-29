@@ -20,6 +20,8 @@ enum AnalyticsKey: String {
     case State
     case Environment
     case Value
+    case Description
+    case Info
 }
 
 enum AnlyticsViewName: String {
@@ -165,6 +167,14 @@ extension DefaultAnalyticsManager {
                 guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as? NSDictionary else { return }
                 
                 guard let errorCode = json["errorCode"] as? String else { return }
+                
+                if let description = json["description"] as? String {
+                    analytics[.Description] = description
+                }
+                
+                if let info = json["info"] as? String {
+                    analytics[.Info] = info
+                }
                 
                 analytics[.ErrorCode] = errorCode
             }

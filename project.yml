@@ -80,9 +80,10 @@ targets:
     settings:
       TARGETED_DEVICE_FAMILY: 1
       MARKETING_VERSION: 2.2.1
-      CURRENT_PROJECT_VERSION: 13
-      PRODUCT_BUNDLE_IDENTIFIER: com.team11.spay.sdk
-      DEVELOPMENT_TEAM: 9CYS9A2HF7
+      CURRENT_PROJECT_VERSION: 15
+      CODE_SIGN_STYLE: Manual
+      PRODUCT_BUNDLE_IDENTIFIER: com.team1.spay.test
+      DEVELOPMENT_TEAM: 26W7AF4Y74
       INFOPLIST_KEY_CFBundleDisplayName: SPayTest
       CODE_SIGN_ENTITLEMENTS: SberPayExample/SupportingFiles/SPaySdkExample.entitlements
       SWIFT_OBJC_BRIDGING_HEADER: SberPayExample/Presentation/ObjcCartVC/SberPayExample-Bridging-Header.h

@@ -8,9 +8,9 @@ ENV["SCHEME_NAME"] = "SPaySdkExample"
 ENV["PLIST_PATH"] = "./SberPayExample/SupportingFiles/Info.plist"
 
 #Appstore
-ENV["KEY_ID"] = "YR2LX8W79A"
-ENV["ISSUER_ID"] = "32c2a5e1-1bea-4fd8-8cff-4235733105fc"
-ENV["KEY_PATH"] = "./fastlane/AuthKey_YR2LX8W79A.p8"
+ENV["KEY_ID"] = "8GW2SFC53Q"
+ENV["ISSUER_ID"] = "0e8dc5a3-1219-4b9e-8a1c-00ddcaf56dab"
+ENV["KEY_PATH"] = "./fastlane/AuthKey_8GW2SFC53Q.p8"
 ENV["TEAM_ID"] = "582949"
 
 # Marvin Bot
