@@ -111,6 +111,7 @@ final class DefaultPersonalMetricsService: NSObject, PersonalMetricsService {
             
             getUserPrivateData { string in
                 if let string = string {
+                    SBLogger.log(.biZone + string)
                     inCont.resume(returning: string)
                 } else {
                     self.analytics.send(EventBuilder()

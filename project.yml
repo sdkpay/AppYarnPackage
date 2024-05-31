@@ -80,7 +80,7 @@ targets:
     settings:
       TARGETED_DEVICE_FAMILY: 1
       MARKETING_VERSION: 2.2.1
-      CURRENT_PROJECT_VERSION: 15
+      CURRENT_PROJECT_VERSION: 16
       CODE_SIGN_STYLE: Manual
       PRODUCT_BUNDLE_IDENTIFIER: com.team1.spay.test
       DEVELOPMENT_TEAM: 26W7AF4Y74
@@ -118,7 +118,6 @@ targets:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
-        NSBluetoothAlwaysUsageDescription: Данные о Bluetooth собираются и отправляются на сервер для безопасного проведения оплаты
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSLocationWhenInUseUsageDescription: Данные о местонахождении собираются и отправляются на сервер для безопасного проведения оплаты
         NSFaceIDUsageDescription: "Так вы подтвердите, что именно вы выполняете вход"

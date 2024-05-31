@@ -17,12 +17,7 @@
 @protocol FPConfigurationProtocol;
 @protocol FPAuthInfoProviderProtocol;
 @protocol FPShareScreenInfoProviderProtocol;
-@protocol FPBluetoothInfoProviderProtocol;
 @protocol FPScreenshotProviderProtocol;
-@protocol FPInstalledAppsProviderProtocol;
-@protocol FPDebugInfoProviderProtocol;
-@protocol FPFontInfoProviderProtocol;
-@protocol FPLocaleInfoProviderProtocol;
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -54,12 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 					 callStateProvider:(id<FPCallStateProviderProtocol>)callStateProvider
 					  authInfoProvider:(id<FPAuthInfoProviderProtocol>)authInfoProvider
 			   shareScreenInfoProvider:(id<FPShareScreenInfoProviderProtocol>)shareScreenInfoProvider
-				 bluetoothInfoProvider:(id<FPBluetoothInfoProviderProtocol>)bluetoothInfoProvider
 					screenshotProvider:(id<FPScreenshotProviderProtocol>)screenshotProvider
-					installAppProvider:(id<FPInstalledAppsProviderProtocol>)installAppProvider
-					 debugInfoProvider:(id<FPDebugInfoProviderProtocol>)debugInfoProvider
-					  fontInfoProvider:(id<FPFontInfoProviderProtocol>)fontInfoProvider
-					localeInfoProvider:(id<FPLocaleInfoProviderProtocol>)localeInfoProvider
 						 configuration:(id<FPConfigurationProtocol>)configuration;
 
 /**
