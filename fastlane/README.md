@@ -23,6 +23,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Builds, achieves and uploads IPA to testflight
 
+### ios create_xcframework
+
+```sh
+[bundle exec] fastlane ios create_xcframework
+```
+
+Create xcframework
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

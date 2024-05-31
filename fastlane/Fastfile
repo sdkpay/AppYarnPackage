@@ -11,11 +11,11 @@ ENV["PLIST_PATH"] = "./SberPayExample/SupportingFiles/Info.plist"
 ENV["KEY_ID"] = "8GW2SFC53Q"
 ENV["ISSUER_ID"] = "0e8dc5a3-1219-4b9e-8a1c-00ddcaf56dab"
 ENV["KEY_PATH"] = "./fastlane/AuthKey_8GW2SFC53Q.p8"
-ENV["TEAM_ID"] = "582949"
+ENV["TEAM_ID"] = "26W7AF4Y74"
 
 # Marvin Bot
 ENV["TG_BOT_TOKEN"] = "5672018524:AAFfFSjB5GodidvwS2rtESvxf0SK4_6VMX4"
-ENV["TG_CHAT_ID"] = "-1001899215484"
+ENV["TG_CHAT_ID"] = "-866042957"
 
 # PROD BOT -866042957
 # DEV BOT -1001899215484
@@ -139,6 +139,12 @@ platform :ios do
   end
 
   #  Build xcframework lanes
+
+  desc "Create xcframework"
+  lane :create_xcframework do 
+    build_xcframework
+    framework_plist_version
+  end
 
   desc "Framework version from plist"
   private_lane :framework_plist_version do 
