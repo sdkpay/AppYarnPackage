@@ -90,10 +90,10 @@
         },
         {
             "appId": -1,
-            "name": "СБОЛ-ТЕСТ",
-            "utilLink": "sbolonline://",
-            "authLink": "sbolidexternallogin://",
-            "iconURL": "https://cms-res.online.sberbank.ru/sberpay/SDK/image-2.png",
+            "name": "Умный онлайн",
+            "utilLink": "ios-app-smartonline://sbolonline/",
+            "authLink": "ios-app-smartonline://sbolidexternallogin/",
+            "iconURL": "https://cms-res-web.online.sberbank.ru/sberpay/SDK/SBOL_logo_small.png",
             "type": "beta"
         }
     ],
