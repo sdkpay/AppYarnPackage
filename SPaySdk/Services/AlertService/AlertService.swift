@@ -312,7 +312,7 @@ final class DefaultAlertService: AlertService {
             let cancel = AlertButtonModel(title: Strings.Common.Return.title,
                                           type: .cancel,
                                           neededResult: .cancel,
-                                          action: nil)
+                                          action: {})
             return await show(on: view,
                               with: Strings.Error.NoMoney.title,
                               with: Strings.Error.NoMoney.subtitle,

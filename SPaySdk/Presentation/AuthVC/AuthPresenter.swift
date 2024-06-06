@@ -349,6 +349,7 @@ final class AuthPresenter: AuthPresenting {
                     await self.router.presentPayment(state: mode)
                 } catch {
                     await alertService.show(on: view, type: .noMoney)
+                    completionManager.dismissCloseAction(view)
                 }
             } else {
                 await self.router.presentHelper()
@@ -507,6 +508,7 @@ final class AuthPresenter: AuthPresenting {
                      router.presentPayment(state: mode)
                  } catch {
                      await alertService.show(on: view, type: .noMoney)
+                     completionManager.dismissCloseAction(view)
                  }
              } else {
                  router.presentHelper()

@@ -13,7 +13,7 @@
 "cancel.title" = "Отменить";
 "cancel.pay.title" = "Отменить оплату";
 "ok.title" = "Понятно";
-"return.title" = "К способам оплаты";
+"return.title" = "Закрыть";
 "try.title" = "Попробовать ещё раз";
 "back.title" = "Вернуться";
 "from.title" = " из %@";

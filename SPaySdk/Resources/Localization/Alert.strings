@@ -22,4 +22,4 @@
 "bankAppPicker.subtitle" = "Не смогли открыть ни одно из приложений банка.\nПожалуйста, выберете другой способ оплаты";
 "connect.title" = "Подключили SberPay %@";
 "button.close.title" = "Закрыть";
-"button.return.title" = "К способам оплаты";
+"button.return.title" = "Закрыть";
