@@ -43,7 +43,7 @@ targetTemplates:
         PRODUCT_BUNDLE_IDENTIFIER: com.s.pay.SPaySdk
         BUILD_LIBRARY_FOR_DISTRIBUTION: true
         ONLY_ACTIVE_ARCH: false
-        MARKETING_VERSION: 2.1.1
+        MARKETING_VERSION: 2.2.2
         OTHER_LDFLAGS:
           - $(inherited)
           - $(OTHER_LDFLAGS)
@@ -65,9 +65,9 @@ targetTemplates:
         CFBundleInfoDictionaryVersion: 6.0
         CFBundleName: $(PRODUCT_NAME)
         CFBundlePackageType: FMWK
-        CFBundleShortVersionString: 2.2.1
-        CFBundleVersion: 2.2.1
-        SDKVersion: "2.2.1"
+        CFBundleShortVersionString: 2.2.2
+        CFBundleVersion: 2.2.2
+        SDKVersion: "2.2.2"
   
 targets:
   SPaySdkExample:
@@ -79,8 +79,8 @@ targets:
        - path: ./SberPayExample
     settings:
       TARGETED_DEVICE_FAMILY: 1
-      MARKETING_VERSION: 2.2.1
-      CURRENT_PROJECT_VERSION: 16
+      MARKETING_VERSION: 2.2.2
+      CURRENT_PROJECT_VERSION: 1
       CODE_SIGN_STYLE: Manual
       PRODUCT_BUNDLE_IDENTIFIER: com.team1.spay.test
       DEVELOPMENT_TEAM: 26W7AF4Y74
