@@ -120,6 +120,7 @@ final class AuthPresenter: AuthPresenting {
         } catch {
             await alertService.show(on: view,
                                     type: .defaultError)
+            dismissWithError(error.sdkError)
         }
     }
     
