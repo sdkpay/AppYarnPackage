@@ -176,7 +176,7 @@ final class AlertVC: ContentVC, IAlertVC {
             .add(toSuperview: view)
             .touchEdge(.left, toSuperviewEdge: .left, withInset: .sideMargin)
             .touchEdge(.right, toSuperviewEdge: .right, withInset: .sideMargin)
-            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view))
+            .touchEdge(.bottom, toEdge: .bottom, ofGuide: .safeAreaLayout(of: view), withInset: .margin)
         
         let backView = UIView()
         backView
