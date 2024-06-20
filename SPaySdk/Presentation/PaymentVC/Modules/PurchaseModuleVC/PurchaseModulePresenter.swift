@@ -70,6 +70,7 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
             .sink { _ in
                 self.configViews()
                 self.showPartsViewifNeed()
+                self.configBonusesView()
             }
             .store(in: &cancellable)
         userService.selectedCardPublisher

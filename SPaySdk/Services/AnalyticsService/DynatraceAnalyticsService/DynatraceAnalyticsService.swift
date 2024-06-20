@@ -28,7 +28,7 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
     }
     
     func startSession() {
-        Dynatrace.identifyUser(Bundle.main.displayName)
+//        Dynatrace.identifyUser(Bundle.main.displayName)
     }
     
     func finishSession() {
@@ -56,12 +56,20 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
         let startupDictionary: [String: Any?] = [
             kDTXApplicationID: dynatraceId,
             kDTXBeaconURL: dynatraceUrl,
-            kDTXLogLevel: "OFF",
+            kDTXLogLevel: "ALL",
             kDTXInstrumentLifecycleMonitoring: false,
             kDTXInstrumentAutoUserAction: false,
-            kDTXExcludedControlClasses: [],
-            kDTXExcludedControls: []
+            kDTXDetectRageTaps: false,
+            kDTXInstrumentFrameworks: false
         ]
+        
+        let privacyOptions = Dynatrace.userPrivacyOptions()
+        privacyOptions.crashReplayOptedIn = false
+        privacyOptions.crashReportingOptedIn = false
+        privacyOptions.dataCollectionLevel = .off
+        
         Dynatrace.startup(withConfig: startupDictionary as [String: Any])
+        Dynatrace.identifyUser(Bundle.main.displayName)
+        Dynatrace.applyUserPrivacyOptions(privacyOptions)
     }
 }
