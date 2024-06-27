@@ -56,6 +56,7 @@ targetTemplates:
       - package: FingerprintPackage
       - sdk: libresolv.9.tbd
       - framework: ./SPayLottie.xcframework
+      - framework: ./ClickstreamAnalytics.xcframework
     info:
       path: ./SPaySdk/SupportingFiles/Info.plist
       properties:

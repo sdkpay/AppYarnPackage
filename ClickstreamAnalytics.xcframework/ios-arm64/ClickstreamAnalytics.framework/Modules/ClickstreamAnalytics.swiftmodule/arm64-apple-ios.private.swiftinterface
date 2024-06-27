@@ -1,0 +1,183 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.9 (swiftlang-5.9.0.128.108 clang-1500.0.40.1)
+// swift-module-flags: -target arm64-apple-ios13.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name ClickstreamAnalytics
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import AdSupport
+import AppTrackingTransparency
+@_exported import ClickstreamAnalytics
+import CoreData
+import CoreLocation
+import CoreTelephony
+import CryptoKit
+import Dispatch
+import Foundation
+import CoreData.NSManagedObjectID
+import Network
+import QuartzCore
+import Swift
+import SystemConfiguration
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+public typealias EventTrackingCompletion = (AnalyticsError?) -> Void
+@objc(MPNetworkingEventTrackerProtocol) public protocol NetworkingEventTracking {
+  @objc func sendEvent(urlSessionTaskResponse: URLResponse, completion: EventTrackingCompletion?)
+  @objc func sendEvent(transportError: Error, completion: EventTrackingCompletion?)
+  @objc func sendEvent(sessionTaskMetrics: URLSessionTaskMetrics, task: URLSessionTask, completion: EventTrackingCompletion?)
+}
+extension NetworkingEventTracking {
+  public func sendEvent(urlSessionTaskResponse: URLResponse, completion: EventTrackingCompletion? = nil)
+  public func sendEvent(transportError: Error, completion: EventTrackingCompletion? = nil)
+  public func sendEvent(sessionTaskMetrics: URLSessionTaskMetrics, task: URLSessionTask, completion: EventTrackingCompletion? = nil)
+}
+public protocol AnalyticsNetworking {
+  func send(body: Event.Body, completionHandler: @escaping (Result<HTTPURLResponse, NetworkingError>) -> Void)
+  func updateUrl(_ url: URL)
+}
+public struct NetworkingError : Swift.Error {
+  public let httpCode: Int?
+  public let error: Error
+  public init(httpCode: Int?, error: Error)
+}
+@inlinable internal func debugOnly(_ body: () -> Void) {
+	Swift.assert({ body(); return true }())
+}
+public enum AnalyticsFacadeBuilder {
+  public static func build(networkService: AnalyticsNetworking, deviceConfiguration: CommonAnalyticsData, metaData: CommonAnalyticsData, queue: DispatchQueue = .init(label: "com.mpanalytics.tracking-queue.serial", qos: .background), sdkContext: String = "default", deleteAllEventsOlderThan: TimeInterval? = 604800, maxPackageSize: Int = 10) -> AnalyticsFacading
+}
+public struct ClickstreamAnalyticsConfig {
+  public var betaFeatures: Bool
+  public var locationDetection: Bool
+  public var locationAuthRequest: Bool
+  public var locationDesiredAccuracy: CLLocationAccuracy
+  public var locationContiniousUpdate: Bool
+  public var idfaAccessRequest: Bool
+  public var debugMode: Bool
+  public var suspendedAtStart: Bool
+  public var hashFunction: ((String) -> String)?
+  public init(betaFeatures: Bool = false, locationDetection: Bool = false, locationAuthRequest: Bool = false, locationDesiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyThreeKilometers, locationContiniousUpdate: Bool = false, idfaAccessRequest: Bool = false, debugMode: Bool = false, suspendedAtStart: Bool = false)
+}
+@_hasMissingDesignatedInitializers final public class Event : CustomDebugStringConvertible, CustomStringConvertible {
+  final public var description: String {
+    get
+  }
+  final public var debugDescription: String {
+    get
+  }
+  @objc deinit
+}
+extension Event : Equatable {
+  public static func == (lhs: Event, rhs: Event) -> Bool
+}
+@objc(MPPerformanceAnalyzerProtocol) public protocol PerformanceAnalyzing {
+  @objc var enabled: Bool { get set }
+  @objc func get(performanceMetrics: @escaping (PerformanceMetrics) -> Void)
+}
+@objc(MPPerformanceMetrics) public class PerformanceMetrics : NSObject {
+  public init(viewControllerName: String?, cpuUsage: Double, ramUsage: Int, fps: Int)
+  @objc deinit
+}
+@objc(MPAnalyticsConfigurable) public protocol Configurable {
+  @objc func update(deviceConfiguration: CommonAnalyticsData)
+}
+extension ClickstreamProfile : CommonAnalyticsData {
+}
+public enum EventType : String {
+  case business
+  case sensitive
+  case technical
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum ClickstreamBuilder {
+  public static func build(url: URL, apiKey: String, profile: ClickstreamProfile = ClickstreamProfile(), network: AnalyticsNetworking? = nil, config: ClickstreamAnalyticsConfig = ClickstreamAnalyticsConfig(), sdkContext: String = "default", logger: @escaping (String) -> Void = { print($0) }, deleteAllEventsOlderThanTimeInterval: TimeInterval = 604800) -> AnalyticsTools
+}
+@_hasMissingDesignatedInitializers final public class AnalyticsTools {
+  final public let clickstream: ClickstreamAnalyticsProtocol
+  final public let config: ClickstreamConfigurable
+  final public let networkTracker: NetworkingEventTracking
+  final public let perfomanceAnalyzer: PerformanceAnalyzing?
+  final public func updateUrl(_ url: URL)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc(MPAnalyticsError) public class AnalyticsError : NSObject, LocalizedError {
+  public static let invalidEvent: ClickstreamAnalytics.AnalyticsError
+  @objc override dynamic public init()
+  @objc deinit
+}
+public protocol ClickstreamAnalyticsProtocol {
+  func sendEvent(eventName: String, eventType: EventType, properties: [String : String]?, location: CLLocation?, timestamp: Date)
+  func suspend()
+  func resume()
+}
+public protocol ClickstreamConfigurable {
+  func update(profile: ClickstreamProfile)
+}
+@objc(MPAnalyticsFacadeProtocol) public protocol AnalyticsFacading : ClickstreamAnalytics.Configurable, ClickstreamAnalytics.EventTracking, ClickstreamAnalytics.NetworkingEventTracking, ClickstreamAnalytics.PerformanceAnalyzerProviding {
+}
+@_hasMissingDesignatedInitializers final public class ClickstreamProfile {
+  final public var applicationLanguage: String?
+  final public var clientBlock: String?
+  final public var userLoginId: String?
+  convenience public init(applicationLanguage: String? = nil, clientBlock: String? = nil, userLoginId: String? = nil, betaFeatures: Bool = false)
+  convenience public init(betaFeatures: Bool = false)
+  @objc deinit
+}
+extension ClickstreamProfile {
+  final public func copy() -> ClickstreamProfile
+}
+extension ClickstreamProfile {
+  @objc final public var dict: [String : String] {
+    @objc get
+  }
+}
+extension Event {
+  public struct Data : Hashable {
+    public static func == (a: ClickstreamAnalytics.Event.Data, b: ClickstreamAnalytics.Event.Data) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension Event.Data : Encodable {
+  public func encode(to encoder: Encoder) throws
+}
+@objc(MPEventTrackerProtocol) public protocol EventTracking {
+  @objc func sendEvent(eventName: String, eventType: String, value: String?, properties: [String : String]?, storable: Bool, location: CLLocation?, timestamp: Date, completion: EventTrackingCompletion?)
+  @objc func suspend()
+  @objc func resume()
+}
+extension EventTracking {
+  public func sendEvent(eventName: String, eventType: String, value: String? = nil, properties: [String : String]? = nil, storable: Bool = true, location: CLLocation? = nil, timestamp: Date = Date(), completion: EventTrackingCompletion? = nil)
+}
+extension Event {
+  public struct Body : Hashable {
+    public func hash(into hasher: inout Swift.Hasher)
+    public static func == (a: ClickstreamAnalytics.Event.Body, b: ClickstreamAnalytics.Event.Body) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+}
+extension Event.Body {
+  public func toData() throws -> Data
+}
+@objc(MPPerformanceAnalyzerProviderProtocol) public protocol PerformanceAnalyzerProviding {
+  @objc var performanceAnalyzer: PerformanceAnalyzing? { get set }
+}
+@objc public protocol CommonAnalyticsData {
+  @objc var dict: [String : String] { get }
+}
+@objc public class ClickstreamSessionDelegate : NSObject, URLSessionDelegate {
+  public init(acceptAllChallenges: Bool)
+  @objc public func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void)
+  @objc deinit
+}
+extension ClickstreamAnalytics.EventType : Swift.Equatable {}
+extension ClickstreamAnalytics.EventType : Swift.Hashable {}
+extension ClickstreamAnalytics.EventType : Swift.RawRepresentable {}

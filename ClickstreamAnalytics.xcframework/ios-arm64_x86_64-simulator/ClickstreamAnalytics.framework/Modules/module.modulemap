@@ -1,0 +1,11 @@
+framework module ClickstreamAnalytics {
+  umbrella header "ClickstreamAnalytics.h"
+  export *
+
+  module * { export * }
+}
+
+module ClickstreamAnalytics.Swift {
+  header "ClickstreamAnalytics-Swift.h"
+  requires objc
+}

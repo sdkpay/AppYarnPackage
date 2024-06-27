@@ -50,6 +50,8 @@ struct Schemas: Codable {
     let dynatraceUrl: String
     let dynatraceId: String
     let getIpUrl: String?
+    let clickstreamUrl: String?
+    let clickstreamApiKey: String?
 }
 
 struct BankAppModel: Codable {

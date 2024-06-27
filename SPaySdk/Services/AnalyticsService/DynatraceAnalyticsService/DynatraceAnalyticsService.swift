@@ -56,7 +56,7 @@ final class DefaultDynatraceAnalyticsService: AnalyticsService {
         let startupDictionary: [String: Any?] = [
             kDTXApplicationID: dynatraceId,
             kDTXBeaconURL: dynatraceUrl,
-            kDTXLogLevel: "ALL",
+            kDTXLogLevel: "OFF",
             kDTXInstrumentLifecycleMonitoring: false,
             kDTXInstrumentAutoUserAction: false,
             kDTXDetectRageTaps: false,

@@ -41,7 +41,8 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
     }
     
     private lazy var analyticServices: [AnalyticsService] = [
-        DefaultDynatraceAnalyticsService()
+        DefaultDynatraceAnalyticsService(),
+        DefaultClickstreamAnalyticsService()
     ]
     
     func sendEvent(_ event: String) {

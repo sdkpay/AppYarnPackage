@@ -7,6 +7,7 @@
 
 import UIKit
 import SPaySdkDEBUG
+import ClickstreamAnalytics
 
 private extension CGFloat {
     static let paymentHeight = 150.0
