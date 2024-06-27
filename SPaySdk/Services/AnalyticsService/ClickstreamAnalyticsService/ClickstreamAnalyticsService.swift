@@ -33,12 +33,9 @@ final class DefaultClickstreamAnalyticsService: AnalyticsService {
                                               timestamp: Date())
     }
     
-    func startSession() {
-    }
+    func startSession() { }
     
-    func finishSession() {
-        analyticsTools?.config.update(profile: .init())
-    }
+    func finishSession() { }
     
     func sendEvent(_ event: String, with dictionaty: [AnalyticsKey: String]) {
         
@@ -73,7 +70,7 @@ final class DefaultClickstreamAnalyticsService: AnalyticsService {
         analyticsTools = ClickstreamAnalytics.ClickstreamBuilder.build(url: clickstreamUrl,
                                                                        apiKey: apikey,
                                                                        profile: ClickstreamProfile(userLoginId: Bundle.main.displayName),
-                                                                       config: ClickstreamAnalyticsConfig(debugMode: debugMode),
-                                                                       logger: { print($0)})
+                                                                       config: ClickstreamAnalyticsConfig(debugMode: true),
+                                                                       logger: { print($0) })
     }
 }

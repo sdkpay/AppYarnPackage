@@ -67,6 +67,7 @@ final class DefaultRemoteConfigService: RemoteConfigService {
         UserDefaults.bankApps = value.bankApps
         UserDefaults.images = value.images
         UserDefaults.certKeys = value.certHashes
+        UserDefaults.featureToggle = value.featuresToggle
     }
     
     private func setFeatures(_ values: [FeaturesToggle]) {

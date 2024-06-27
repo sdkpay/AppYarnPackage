@@ -10,7 +10,7 @@ import Foundation
 final class AssemblyManager {
     
     private var startAssemblies: [Assembly] = [
-        
+        FeatureToggleServiceAssembly(),
         SetupManagerAssembly(),
         KeychainStorageAssembly(),
         VersionСontrolManagerAssembly(),
@@ -24,7 +24,6 @@ final class AssemblyManager {
         EnvironmentManagerAssembly(),
         HostManagerAssembly(),
         BankAppManagerAssembly(),
-        FeatureToggleServiceAssembly(),
         HelperConfigManagerAssembly(),
         BaseRequestManagerAssembly(),
         NetworkServiceAssembly(),

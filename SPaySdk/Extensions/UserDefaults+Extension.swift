@@ -15,26 +15,46 @@ enum DefaultsKey: String {
     case images
     case offerTitle
     case certKeys
+    case featureToggle
+}
+
+protocol AnyOptional {
+    var isNil: Bool { get }
+}
+
+extension Optional: AnyOptional {
+    public var isNil: Bool { self == nil }
 }
 
 @propertyWrapper
 struct UserDefault<Value: Codable> {
     let key: DefaultsKey
-    var defaultValue: Value?
-    var container = UserDefaults.standard
+    let defaultValue: Value
+    var container: UserDefaults = .standard
 
-    var wrappedValue: Value? {
+    var wrappedValue: Value {
         get {
             let data = container.object(forKey: key.rawValue) as? Data ?? Data()
-            let value = data.decode(to: Value.self)
+            let value = data.decode(to: Value.self) ?? defaultValue
             return value
         }
         set {
-            guard let data = newValue.data else { return }
-            container.set(data, forKey: key.rawValue)
+            if let optional = newValue as? AnyOptional, optional.isNil {
+                container.removeObject(forKey: key.rawValue)
+            } else {
+                guard let data = newValue.data else { return }
+                container.set(data, forKey: key.rawValue)
+            }
         }
     }
 }
+
+extension UserDefault where Value: ExpressibleByNilLiteral {
+    init(key: DefaultsKey, _ container: UserDefaults = .standard) {
+        self.init(key: key, defaultValue: nil, container: container)
+    }
+}
+
 
 extension UserDefaults {
     static func removeValue(for key: DefaultsKey) {
@@ -61,4 +81,7 @@ extension UserDefaults {
     
     @UserDefault(key: .certKeys)
     static var certKeys: [String]?
+    
+    @UserDefault(key: .featureToggle, defaultValue: [])
+    static var featureToggle: [FeaturesToggle]
 }

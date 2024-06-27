@@ -12,7 +12,7 @@ final class AnalyticsServiceAssembly: Assembly {
     var type = ObjectIdentifier(AnalyticsService.self)
     
     func register(in locator: LocatorService) {
-        let service: AnalyticsService = DefaultAnalyticsService()
+        let service: AnalyticsService = DefaultAnalyticsService(featureToggle: locator.resolve())
         locator.register(service: service)
     }
 }
@@ -32,6 +32,10 @@ protocol AnalyticsService {
 
 final class DefaultAnalyticsService: NSObject, AnalyticsService {
     
+    private var configured = false
+    
+    private let featureToggle: FeatureToggleService
+    
     func startSession() {
         analyticServices.forEach { $0.startSession() }
     }
@@ -40,10 +44,16 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         analyticServices.forEach { $0.finishSession() }
     }
     
-    private lazy var analyticServices: [AnalyticsService] = [
-        DefaultDynatraceAnalyticsService(),
-        DefaultClickstreamAnalyticsService()
-    ]
+    private lazy var analyticServices: [AnalyticsService] = {
+        
+        var analytics = [AnalyticsService]()
+        
+        if featureToggle.isEnabled(.useClickstream) {
+            analytics.append(DefaultClickstreamAnalyticsService())
+        }
+        
+        return analytics
+    }()
     
     func sendEvent(_ event: String) {
         
@@ -60,19 +70,22 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         analyticServices.forEach({ $0.sendEvent(event, with: dictionaty) })
     }
     
-    override init() {
+    init(featureToggle: FeatureToggleService) {
+        self.featureToggle = featureToggle
         super.init()
         SBLogger.log(.start(obj: self))
     }
     
     deinit {
-        self.finishSession()
         SBLogger.log(.stop(obj: self))
     }
     
     func config() {
-        analyticServices.forEach({ $0.config() })
-        sendEvent("SDKVersion", with: Bundle.sdkVersion)
-        startSession()
+        if !configured {
+            configured = true
+            analyticServices.forEach({ $0.config() })
+            sendEvent("SDKVersion", with: Bundle.sdkVersion)
+            startSession()
+        }
     }
 }

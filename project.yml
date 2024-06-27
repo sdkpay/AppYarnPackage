@@ -16,9 +16,6 @@ packages:
   IQKeyboardManagerSwift:
     url: https://github.com/hackiftekhar/IQKeyboardManager.git
     from: 6.0.0
-  Dynatrace-Static:
-   url: https://github.com/Dynatrace/swift-mobile-sdk.git
-   from: 8.0.0
   FingerprintPackage:
     path: ./FingerprintPack
   YandexMobileMetrica:
@@ -52,7 +49,6 @@ targetTemplates:
       - path: ./SPaySdk
       - path: ./Generated
     dependencies:
-      - package: Dynatrace-Static
       - package: FingerprintPackage
       - sdk: libresolv.9.tbd
       - framework: ./SPayLottie.xcframework
@@ -93,7 +89,6 @@ targets:
       - package: YandexMobileMetrica
       - target: SPaySdkDEBUG
         link: true
-      - framework: ./SberIdSDK.xcframework
     preBuildScripts:
       - name: Swiftlint
         script: |
@@ -146,6 +141,8 @@ targets:
             ift.gate2.spaymentsplus.ru:
               NSExceptionAllowsInsecureHTTPLoads: true
             cms-res.online.sberbank.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            iftmpclickstream.testonline.sberbank.ru:
               NSExceptionAllowsInsecureHTTPLoads: true
         UIFileSharingEnabled: true
         LSApplicationQueriesSchemes:

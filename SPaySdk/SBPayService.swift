@@ -80,20 +80,8 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(HelperConfigManager.self)
             .setHelpersNeeded(helpers)
-        locator
-            .resolve(AnalyticsManager.self)
-            .send(EventBuilder()
-                    .with(base: .MA)
-                    .with(action: .Init)
-                    .build(),
-                  on: .None,
-                  values: [.Environment: "\(environment.rawValue)"])
         
         Task(priority: .medium) {
-            
-            locator
-                .resolve(AnalyticsService.self)
-                .config()
             DispatchQueue.main.async {
                 completion?(nil)
             }
@@ -111,6 +99,9 @@ final class DefaultSBPayService: SBPayService {
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
         assemblyManager.registerSessionServices(to: locator)
+        locator
+            .resolve(AnalyticsService.self)
+            .config()
         guard !inProgress else { return }
         inProgress = true
         timeManager.startCheckingCPULoad()
@@ -152,6 +143,9 @@ final class DefaultSBPayService: SBPayService {
                            paymentRequest: SBankInvoicePaymentRequest,
                            completion: @escaping PaymentCompletion) {
         assemblyManager.registerSessionServices(to: locator)
+        locator
+            .resolve(AnalyticsService.self)
+            .config()
         guard !inProgress else { return }
         inProgress = true
         timeManager.startCheckingCPULoad()
@@ -193,6 +187,9 @@ final class DefaultSBPayService: SBPayService {
                         paymentRequest: SBankInvoicePaymentRequest,
                         completion: @escaping PaymentCompletion) {
         assemblyManager.registerSessionServices(to: locator)
+        locator
+            .resolve(AnalyticsService.self)
+            .config()
         guard !inProgress else { return }
         inProgress = true
         timeManager.startCheckingCPULoad()

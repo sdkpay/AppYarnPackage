@@ -20,6 +20,7 @@ enum Feature: String, Codable {
     case dynamicCardsUpdate
     case sortListCards
     case useCachedCardsList
+    case useClickstream
 }
 
 final class FeatureToggleServiceAssembly: Assembly {
@@ -40,13 +41,14 @@ protocol FeatureToggleService {
 
 final class DefaultFeatureToggleService: FeatureToggleService {
     
-    private var features: [FeaturesToggle] = []
+    private var features: [FeaturesToggle] = UserDefaults.featureToggle
     
     func setFeature(_ feature: FeaturesToggle) {
         features.append(feature)
     }
     
     func setFeatures(_ features: [FeaturesToggle]) {
+        self.features = []
         self.features.append(contentsOf: features)
     }
     

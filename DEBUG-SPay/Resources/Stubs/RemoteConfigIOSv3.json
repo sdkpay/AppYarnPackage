@@ -8,8 +8,8 @@
         "dynatraceUrl":"https://vito.sbrf.ru:443/mbeacon/7e4bdb68-cd47-4ecc-b649-69eb5cd44c91",
         "dynatraceId":"656e76e7-76f4-40ca-86bf-39db12cbc857",
         "getIpUrl":"https://safepayonline.ru/sdk-api/getIp",
-        "clickstreamUrl":"https://ext.clickstream.sberbank.ru/metrics/ecosystem/link",
-        "clickstreamApiKey":"2e1ce70ad1822381e75a38be86b08fa828cbca603c498dcc9590b0a43ff50e22"
+        "clickstreamUrl":"https://iftmpclickstream.testonline.sberbank.ru:8097/metrics/ecosystem/sdk-sber-pay-in-app",
+        "clickstreamApiKey":"d12d860723095964741a09ba379620db1ac48784f35133ff6ca5db714311d250"
     },
     "versionInfo": {
         "deprecated": [],
@@ -62,6 +62,10 @@
         },
         {
             "name": "sortListCards",
+            "value": true
+        },
+        {
+            "name": "useClickstream",
             "value": true
         }
     ],
