@@ -55,7 +55,6 @@ extension UserDefault where Value: ExpressibleByNilLiteral {
     }
 }
 
-
 extension UserDefaults {
     static func removeValue(for key: DefaultsKey) {
         UserDefaults.standard.removeObject(forKey: key.rawValue)

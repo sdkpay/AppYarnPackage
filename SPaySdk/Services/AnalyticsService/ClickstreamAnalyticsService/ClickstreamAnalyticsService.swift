@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ClickstreamAnalytics
+@_implementationOnly import ClickstreamAnalytics
 
 private enum ClickstreamCredential {
     static let url = "https://iftmpclickstream.testonline.sberbank.ru:8097/metrics/ecosystem/sdk-sber-pay-in-app"
@@ -58,8 +58,8 @@ final class DefaultClickstreamAnalyticsService: AnalyticsService {
         
         debugMode = true
 #else
-        let apikey = ConfigGlobal.schemas?.clickstreamApiKey
-        guard clickstreamUrlString = ConfigGlobal.schemas?.dynatraceUrl,
+        guard let apikey = ConfigGlobal.schemas?.clickstreamApiKey else { return }
+        guard let clickstreamUrlString = ConfigGlobal.schemas?.clickstreamUrl,
               let clickstreamUrl = URL(string: clickstreamUrlString)
         else { return }
         
@@ -67,10 +67,12 @@ final class DefaultClickstreamAnalyticsService: AnalyticsService {
         
 #endif
         
-        analyticsTools = ClickstreamAnalytics.ClickstreamBuilder.build(url: clickstreamUrl,
-                                                                       apiKey: apikey,
-                                                                       profile: ClickstreamProfile(userLoginId: Bundle.main.displayName),
-                                                                       config: ClickstreamAnalyticsConfig(debugMode: true),
-                                                                       logger: { print($0) })
+        analyticsTools = ClickstreamAnalytics
+            .ClickstreamBuilder
+            .build(url: clickstreamUrl,
+                   apiKey: apikey,
+                   profile: ClickstreamProfile(userLoginId: Bundle.main.displayName),
+                   config: ClickstreamAnalyticsConfig(debugMode: debugMode),
+                   logger: { print($0) })
     }
 }

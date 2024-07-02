@@ -220,9 +220,9 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
             
             if let error = error as? PayError {
                 await self.validatePayError(error)
-            } else if let error = error as? SDKError {
+            } else {
                 
-                if error.represents(.noInternetConnection) {
+                if error.sdkError.represents(.noInternetConnection) {
                     
                     let result = await alertService.show(on: view?.contentParrent, type: .noInternet)
                     
@@ -230,12 +230,12 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
                     case .approve:
                         await goToPay()
                     case .cancel:
-                        self.completionManager.completeWithError(error)
+                        self.completionManager.completeWithError(error.sdkError)
                         await alertService.show(on: view?.contentParrent, type: .defaultError)
                         await self.completionManager.dismissCloseAction(view?.contentParrent)
                     }
                 }
-                self.dismissWithError(error)
+                self.dismissWithError(error.sdkError)
             }
         }
     }

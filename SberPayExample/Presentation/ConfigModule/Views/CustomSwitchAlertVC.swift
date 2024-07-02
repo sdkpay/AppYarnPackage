@@ -68,7 +68,7 @@ final class CustomSwitchAlertVC: UIViewController {
         for (index, value) in valuesDictionary.enumerated() {
             
             let view = AlertSwitchPartView(value: value.key,
-                                     state: value.value) { result in
+                                           state: value.value) { result in
                 self.valuesDictionary[index].value = result
             }
             contentStack.addArrangedSubview(view)

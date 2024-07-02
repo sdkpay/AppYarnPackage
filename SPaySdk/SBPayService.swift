@@ -120,6 +120,8 @@ final class DefaultSBPayService: SBPayService {
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
             let response = PaymentResponse(SPayState.error, error)
             completion(response)
+            inProgress = false
+            return
         }
         locator
             .resolve(SDKManager.self)
@@ -164,6 +166,8 @@ final class DefaultSBPayService: SBPayService {
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
             let response = PaymentResponse(SPayState.error, error)
             completion(response)
+            inProgress = false
+            return
         }
         locator
             .resolve(SDKManager.self)
@@ -208,6 +212,8 @@ final class DefaultSBPayService: SBPayService {
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
             let response = PaymentResponse(SPayState.error, error)
             completion(response)
+            inProgress = false
+            return
         }
         locator
             .resolve(SDKManager.self)
