@@ -67,12 +67,18 @@ final class DefaultClickstreamAnalyticsService: AnalyticsService {
         
 #endif
         
+        var conf = ClickstreamAnalyticsConfig(debugMode: debugMode)
+        
+        conf.hashFunction = { $0 }
+        
         analyticsTools = ClickstreamAnalytics
             .ClickstreamBuilder
             .build(url: clickstreamUrl,
                    apiKey: apikey,
                    profile: ClickstreamProfile(userLoginId: Bundle.main.displayName),
-                   config: ClickstreamAnalyticsConfig(debugMode: debugMode),
-                   logger: { print($0) })
+                   config: conf,
+                   logger: { log in
+                print(log)
+            })
     }
 }
