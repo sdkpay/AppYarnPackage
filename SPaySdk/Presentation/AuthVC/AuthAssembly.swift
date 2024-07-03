@@ -48,7 +48,8 @@ final class AuthAssembly {
                       payAmountValidationManager: locator.resolve(),
                       featureToggle: locator.resolve(),
                       authManager: locator.resolve(),
-                      helperManager: locator.resolve())
+                      helperManager: locator.resolve(),
+                      localSessionIdService: locator.resolve())
     }
 
     private func moduleView(presenter: AuthPresenter) -> ContentVC & IAuthVC {

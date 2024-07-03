@@ -107,7 +107,9 @@ final class AlertServiceAssembly: Assembly {
                                                             liveCircleManager: container.resolve(),
                                                             analytics: container.resolve(),
                                                             sdkManager: container.resolve(),
-                                                            setupManager: container.resolve())
+                                                            setupManager: container.resolve(),
+                                                            localSessionIdService: container.resolve(),
+                                                            featureToggle: container.resolve())
             return service
         })
     }
@@ -164,6 +166,8 @@ final class DefaultAlertService: AlertService {
     private let liveCircleManager: LiveCircleManager
     private let sdkManager: SDKManager
     private let setupManager: SetupManager
+    private let localSessionIdService: LocalSessionIdentifierService
+    private let featureToggle: FeatureToggleService
     
     @MainActor
     @discardableResult
@@ -361,13 +365,17 @@ final class DefaultAlertService: AlertService {
                                    isFailure: state != .success,
                                    bonuses: bonuses)
         
+        let localSessionId = featureToggle.isEnabled(.hideLocalSessionId) 
+        ? "" : localSessionIdService.localSessionIdentifier
+        
         let result = await withCheckedContinuation({( inCont: CheckedContinuation<AlertResult, Never>) -> Void in
             
             var nillableContinuation: CheckedContinuation<AlertResult, Never>? = inCont
             
             let alertVC = AlertAssembly().createModule(alertModel: model,
                                                        analytics: analytics,
-                                                       liveCircleManager: self.liveCircleManager) { result in
+                                                       liveCircleManager: self.liveCircleManager,
+                                                       localSessionId: localSessionId) { result in
                 nillableContinuation?.resume(with: .success(result))
                 nillableContinuation = nil
                 return
@@ -385,12 +393,17 @@ final class DefaultAlertService: AlertService {
          liveCircleManager: LiveCircleManager,
          analytics: AnalyticsManager,
          sdkManager: SDKManager,
-         setupManager: SetupManager) {
+         setupManager: SetupManager,
+         localSessionIdService: LocalSessionIdentifierService,
+         featureToggle: FeatureToggleService
+    ) {
         self.completionManager = completionManager
         self.liveCircleManager = liveCircleManager
         self.analytics = analytics
         self.sdkManager = sdkManager
         self.setupManager = setupManager
+        self.localSessionIdService = localSessionIdService
+        self.featureToggle = featureToggle
         SBLogger.log(.start(obj: self))
     }
     

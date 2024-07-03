@@ -90,7 +90,9 @@
                                                                           redirectUri:@"testapp://test"
                                                                                apiKey: @"a12312"];
     
-    [SPay payWithBankInvoiceIdWith:self paymentRequest:request completion:^(enum SPayState state, NSString * _Nonnull info) {
+    [SPay payWithBankInvoiceIdWith:self paymentRequest:request completion:^(enum SPayState state,
+                                                                            NSString * _Nonnull info,
+                                                                            NSString * _Nonnull session) {
         switch(state) {
             case SPayStateSuccess:
                 NSLog(@"Успешный результат");

@@ -25,6 +25,7 @@ extension String {
         static let sdkVersion = "sdkVersion"
         static let appName = "appName"
         static let systemId = "X-System-Id"
+        static let localSessionIdentifier = "localSessionId"
     }
 }
 
@@ -55,7 +56,7 @@ final class BaseRequestManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
             let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve(),
-                                                                        storage: container.resolve())
+                                                                        storage: container.resolve(), localSessionIdentifierService:  container.resolve())
             return service
         }
     }
@@ -79,6 +80,7 @@ final class DefaultBaseRequestManager: BaseRequestManager {
     
     private let authManager: AuthManager
     private let storage: KeychainStorage
+    private let localSessionIdentifierService: LocalSessionIdentifierService
 
     var headers: HTTPHeaders {
         var headers = HTTPHeaders()
@@ -103,6 +105,10 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         if let ip = authManager.ipAddress {
             headers[.Headers.netAdd] = ip
         }
+        if let localSessionIdentifier = localSessionIdentifierService.localSessionIdentifier {
+            headers[.Headers.localSessionIdentifier] = localSessionIdentifier
+        }
+        
         headers[.Headers.systemId] = "SBERPAY_SDK"
         
         headers[.Headers.os] = UIDevice.current.fullSystemVersion
@@ -113,9 +119,11 @@ final class DefaultBaseRequestManager: BaseRequestManager {
     }
 
     init(authManager: AuthManager,
-         storage: KeychainStorage) {
+         storage: KeychainStorage,
+         localSessionIdentifierService: LocalSessionIdentifierService) {
         self.authManager = authManager
         self.storage = storage
+        self.localSessionIdentifierService = localSessionIdentifierService
     }
     
     func generateB3Cookie() {

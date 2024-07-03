@@ -67,6 +67,14 @@
         {
             "name": "useClickstream",
             "value": true
+        },
+        {
+            "name": "allowClickStreamAllCerts",
+            "value": false
+        },
+        {
+            "name": "hideLocalSessionId",
+            "value": true
         }
     ],
     "bankApps": [

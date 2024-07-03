@@ -56,6 +56,16 @@ final class AlertVC: ContentVC, IAlertVC {
         return view
     }()
     
+    private lazy var alertLocalSessionIdLabel: UILabel = {
+       let view = UILabel()
+        view.font = .medium3
+        view.numberOfLines = 0
+        view.textColor = .textSecondary
+        view.textAlignment = .center
+        view.text = presenter.localSessionId
+        return view
+    }()
+    
     private lazy var textStack: UIStackView = {
         let view = UIStackView()
         view.spacing = 8
@@ -108,6 +118,8 @@ final class AlertVC: ContentVC, IAlertVC {
         if model.isFailure {
             contentStack.addArrangedSubview(textStack)
             contentStack.addArrangedSubview(imageView)
+            contentStack.addArrangedSubview(alertLocalSessionIdLabel)
+            contentStack.addArrangedSubview(alertLocalSessionIdLabel)
             contentNavigationController?.setBackground(Asset.Image.errorBackground.image)
             imageWidth = 250
             imageHeight = 150
@@ -123,6 +135,10 @@ final class AlertVC: ContentVC, IAlertVC {
             view.config(with: bonuses)
             textStack.addArrangedSubview(view)
             textStack.setCustomSpacing(25, after: alertSubtitle)
+        }
+        if !model.isFailure {
+            contentStack.addArrangedSubview(alertLocalSessionIdLabel)
+            contentStack.setCustomSpacing(25, after: textStack)
         }
         
         imageView

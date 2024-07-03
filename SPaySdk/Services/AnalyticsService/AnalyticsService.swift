@@ -49,7 +49,7 @@ final class DefaultAnalyticsService: NSObject, AnalyticsService {
         var analytics = [AnalyticsService]()
         
         if featureToggle.isEnabled(.useClickstream) {
-            analytics.append(DefaultClickstreamAnalyticsService())
+            analytics.append(DefaultClickstreamAnalyticsService(featureToggle: featureToggle))
         }
         
         return analytics

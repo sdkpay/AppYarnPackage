@@ -16,10 +16,11 @@ private extension CGFloat {
 
 protocol IAuthVC {
     func goTo(url: URL)
+    func showSessionId(value: String?)
 }
 
 final class AuthVC: ContentVC, IAuthVC {
-    
+
     private let presenter: AuthPresenting
     private let analytics: AnalyticsManager
     
@@ -28,6 +29,15 @@ final class AuthVC: ContentVC, IAuthVC {
         configuration.websiteDataStore = .default()
         let view = WKWebView(frame: .zero, configuration: configuration)
         view.navigationDelegate = self
+        return view
+    }()
+    
+    private lazy var localSessionIdLabel: UILabel = {
+       let view = UILabel()
+        view.font = .medium3
+        view.numberOfLines = 0
+        view.textColor = .textSecondary
+        view.textAlignment = .center
         return view
     }()
     
@@ -90,6 +100,10 @@ final class AuthVC: ContentVC, IAuthVC {
         webView.load(request)
     }
     
+    func showSessionId(value: String?) {
+        localSessionIdLabel.text = value
+    }
+    
     private func setupUI() {
         
         view.height(ScreenHeightState.normal.height)
@@ -98,6 +112,11 @@ final class AuthVC: ContentVC, IAuthVC {
             .add(toSuperview: view)
             .size(.equal, to: .init(width: .logoWidth, height: .logoHeight))
             .centerInSuperview()
+        
+        localSessionIdLabel
+            .add(toSuperview: view)
+            .centerInSuperview(.x)
+            .touchEdgeToSuperview(.bottom, respectingGuide: .safeAreaLayout)
     }
 }
 

@@ -55,7 +55,9 @@ public final class SPay: NSObject {
     @objc
     public static func payWithBankInvoiceId(with viewController: UIViewController,
                                             paymentRequest: SBankInvoicePaymentRequest,
-                                            completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
+                                            completion: @escaping (_ state: SPayState,
+                                                                   _ info: String,
+                                                                   _ localSessionId: String?) -> Void) {
         payService?.payWithBankInvoiceId(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }
     
@@ -65,7 +67,9 @@ public final class SPay: NSObject {
     @objc
     public static func payWithoutRefresh(with viewController: UIViewController,
                                          paymentRequest: SBankInvoicePaymentRequest,
-                                         completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
+                                         completion: @escaping (_ state: SPayState,
+                                                                _ info: String,
+                                                                _ localSessionId: String?) -> Void) {
         payService?.payWithoutRefresh(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }
     
@@ -75,7 +79,9 @@ public final class SPay: NSObject {
     @objc
     public static func payWithPartPay(with viewController: UIViewController,
                                       paymentRequest: SBankInvoicePaymentRequest,
-                                      completion: @escaping (_ state: SPayState, _ info: String) -> Void) {
+                                      completion: @escaping (_ state: SPayState,
+                                                             _ info: String,
+                                                             _ localSessionId: String?) -> Void) {
         payService?.payWithPartPay(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }
 

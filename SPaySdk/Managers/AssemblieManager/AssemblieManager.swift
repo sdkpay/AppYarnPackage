@@ -10,6 +10,7 @@ import Foundation
 final class AssemblyManager {
     
     private var startAssemblies: [Assembly] = [
+        LocalSessionIdentifierServiceAssembly(),
         FeatureToggleServiceAssembly(),
         SetupManagerAssembly(),
         KeychainStorageAssembly(),

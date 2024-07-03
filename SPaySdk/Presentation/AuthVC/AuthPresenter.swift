@@ -36,6 +36,7 @@ final class AuthPresenter: AuthPresenting {
     private var partPayService: PartPayService
     private let remoteConfigService: RemoteConfigService
     private let biometricAuthProvider: BiometricAuthProviderProtocol
+    private let localSessionIdService: LocalSessionIdentifierService
     
     private var authMethod: AuthMethod = .bank
     
@@ -57,7 +58,8 @@ final class AuthPresenter: AuthPresenting {
          payAmountValidationManager: PayAmountValidationManager,
          featureToggle: FeatureToggleService,
          authManager: AuthManager,
-         helperManager: HelperConfigManager) {
+         helperManager: HelperConfigManager,
+         localSessionIdService: LocalSessionIdentifierService) {
         self.analytics = analytics
         self.router = router
         self.authService = authService
@@ -77,6 +79,7 @@ final class AuthPresenter: AuthPresenting {
         self.remoteConfigService = remoteConfigService
         self.featureToggle = featureToggle
         self.biometricAuthProvider = biometricAuthProvider
+        self.localSessionIdService = localSessionIdService
         self.timeManager.startTraking()
     }
     
@@ -85,7 +88,10 @@ final class AuthPresenter: AuthPresenting {
     }
     
     func viewDidLoad() {
-        
+        localSessionIdService.generateId()
+        if !featureToggle.isEnabled(.hideLocalSessionId) {
+            view?.showSessionId(value: localSessionIdService.localSessionIdentifier)
+        }
         Task {
             await startAuth()
         }
@@ -115,6 +121,7 @@ final class AuthPresenter: AuthPresenting {
         }
         
         do {
+            
             try await getRemoteConfig()
             getSessiond()
         } catch {

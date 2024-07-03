@@ -18,6 +18,8 @@ private extension TimeInterval {
 protocol AlertPresenting {
     func viewDidLoad()
     func buttonTapped(item: AlertButtonModel)
+    
+    var localSessionId: String? { get }
 }
 
 final class AlertPresenter: AlertPresenting {
@@ -30,11 +32,14 @@ final class AlertPresenter: AlertPresenting {
     private var completionDispatchWorkItem: DispatchWorkItem?
     private var liveCircleManager: LiveCircleManager
     private var alertResultAction: AlertResultAction?
+    private(set) var localSessionId: String?
     
     init(with model: AlertViewModel,
          liveCircleManager: LiveCircleManager,
+         localSessionId: String?,
          alertResultAction: @escaping AlertResultAction) {
         self.model = model
+        self.localSessionId = localSessionId
         self.alertResultAction = alertResultAction
         self.liveCircleManager = liveCircleManager
     }

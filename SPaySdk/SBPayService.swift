@@ -9,7 +9,7 @@ import UIKit
 
 typealias PaymentTokenResponse = (state: SPayTokenState, info: SPaymentTokenResponseModel)
 typealias PaymentTokenCompletion = (PaymentTokenResponse) -> Void
-typealias PaymentResponse = (state: SPayState, info: String)
+typealias PaymentResponse = (state: SPayState, info: String, localSessionId: String?)
 typealias PaymentCompletion = (PaymentResponse) -> Void
 
 protocol SBPayService {
@@ -118,7 +118,7 @@ final class DefaultSBPayService: SBPayService {
         apiKey = paymentRequest.apiKey
         guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
-            let response = PaymentResponse(SPayState.error, error)
+            let response = PaymentResponse(SPayState.error, error, nil)
             completion(response)
             inProgress = false
             return
@@ -164,7 +164,7 @@ final class DefaultSBPayService: SBPayService {
         apiKey = paymentRequest.apiKey
         guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
-            let response = PaymentResponse(SPayState.error, error)
+            let response = PaymentResponse(SPayState.error, error, nil)
             completion(response)
             inProgress = false
             return
@@ -210,7 +210,7 @@ final class DefaultSBPayService: SBPayService {
         apiKey = paymentRequest.apiKey
         guard let apiKey = apiKey else { return assertionFailure(Strings.MerchantAlert.apikey) }
         if let error = MerchParamsValidator.validateSBankInvoicePaymentRequest(paymentRequest) {
-            let response = PaymentResponse(SPayState.error, error)
+            let response = PaymentResponse(SPayState.error, error, nil)
             completion(response)
             inProgress = false
             return

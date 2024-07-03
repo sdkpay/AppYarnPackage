@@ -232,16 +232,20 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                  redirectUri: redirectUri,
                                                  apiKey: values.apiKey)
         
-        SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info in
+        SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info, localSessionId in
             switch state {
             case .success:
-                self.showResult(title: "Отдали мерчу success", message: info)
+                self.showResult(title: "Отдали мерчу success",
+                                message: "\(info) \n \(localSessionId ?? "")")
             case .waiting:
-                self.showResult(title: "Отдали мерчу waiting", message: info)
+                self.showResult(title: "Отдали мерчу waiting",
+                                message: "\(info) \n \(localSessionId ?? "")")
             case .error:
-                self.showResult(title: "Отдали мерчу error", message: info)
+                self.showResult(title: "Отдали мерчу error",
+                                message: "\(info) \n \(localSessionId ?? "")")
             case .cancel:
-                self.showResult(title: "Отдали мерчу cancel", message: info)
+                self.showResult(title: "Отдали мерчу cancel",
+                                message: "\(info) \n \(localSessionId ?? "")")
             @unknown default:
                 self.showResult(title: "Отдали мерчу @unknown default", message: info)
             }
@@ -256,16 +260,20 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                  redirectUri: redirectUri,
                                                  apiKey: values.apiKey)
         
-        SPay.payWithPartPay(with: self, paymentRequest: request) { state, info in
+        SPay.payWithPartPay(with: self, paymentRequest: request) { state, info, localSessionId in
             switch state {
             case .success:
-                self.showResult(title: "Отдали мерчу success", message: info)
+                self.showResult(title: "Отдали мерчу success",
+                                message: "\(info) \n \(localSessionId ?? "")")
             case .waiting:
-                self.showResult(title: "Отдали мерчу waiting", message: info)
+                self.showResult(title: "Отдали мерчу waiting",
+                                message: "\(info) \n \(localSessionId ?? "")")
             case .error:
-                self.showResult(title: "Отдали мерчу error", message: info)
+                self.showResult(title: "Отдали мерчу error",
+                                message: "\(info) \n \(localSessionId ?? "")")
             case .cancel:
-                self.showResult(title: "Отдали мерчу cancel", message: info)
+                self.showResult(title: "Отдали мерчу cancel",
+                                message: "\(info) \n \(localSessionId ?? "")")
             @unknown default:
                 self.showResult(title: "Отдали мерчу @unknown default", message: info)
             }
@@ -280,16 +288,20 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                  redirectUri: redirectUri,
                                                  apiKey: values.apiKey)
         
-        SPay.payWithoutRefresh(with: self, paymentRequest: request) { state, info in
+        SPay.payWithoutRefresh(with: self, paymentRequest: request) { state, info, localSessionId in
             switch state {
             case .success:
-                self.showResult(title: "Отдали мерчу success", message: info)
+                self.showResult(title: "Отдали мерчу success",
+                                message: "\(info) \n \(localSessionId ?? "")")
             case .waiting:
-                self.showResult(title: "Отдали мерчу waiting", message: info)
+                self.showResult(title: "Отдали мерчу waiting",
+                                message: "\(info) \n \(localSessionId ?? "")")
             case .error:
-                self.showResult(title: "Отдали мерчу error", message: info)
+                self.showResult(title: "Отдали мерчу error",
+                                message: "\(info) \n \(localSessionId ?? "")")
             case .cancel:
-                self.showResult(title: "Отдали мерчу cancel", message: info)
+                self.showResult(title: "Отдали мерчу cancel",
+                                message: "\(info) \n \(localSessionId ?? "")")
             @unknown default:
                 self.showResult(title: "Отдали мерчу @unknown default", message: info)
             }

@@ -21,6 +21,8 @@ enum Feature: String, Codable {
     case sortListCards
     case useCachedCardsList
     case useClickstream
+    case allowClickStreamAllCerts
+    case hideLocalSessionId
 }
 
 final class FeatureToggleServiceAssembly: Assembly {

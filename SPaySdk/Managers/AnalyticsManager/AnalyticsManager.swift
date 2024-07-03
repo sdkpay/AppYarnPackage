@@ -12,6 +12,7 @@ enum AnalyticsKey: String {
     case OrderNumber
     case MerchLogin
     case SessionId
+    case LocalSessionId
     case ErrorCode
     case ParsingError
     case HttpCode
@@ -52,7 +53,8 @@ final class AnalyticsServiceManager: Assembly {
     func register(in locator: LocatorService) {
         let service: AnalyticsManager = DefaultAnalyticsManager(service: locator.resolve(),
                                                                 authManager: locator.resolve(),
-                                                                sdkManager: locator.resolve())
+                                                                sdkManager: locator.resolve(),
+                                                                localSessionIdService: locator.resolve())
         locator.register(service: service)
     }
 }
@@ -85,13 +87,16 @@ final class DefaultAnalyticsManager: NSObject, AnalyticsManager {
     private let service: AnalyticsService
     private let authManager: AuthManager
     private let sdkManager: SDKManager
+    private let localSessionIdService: LocalSessionIdentifierService
     
     init(service: AnalyticsService,
          authManager: AuthManager,
-         sdkManager: SDKManager) {
+         sdkManager: SDKManager,
+         localSessionIdService: LocalSessionIdentifierService) {
         self.service = service
         self.authManager = authManager
         self.sdkManager = sdkManager
+        self.localSessionIdService = localSessionIdService
     }
     
     func send(_ event: String, on view: AnlyticsViewName?, values: [AnalyticsKey: String]) {
@@ -114,6 +119,7 @@ final class DefaultAnalyticsManager: NSObject, AnalyticsManager {
         dictionary[.OrderNumber] = authManager.orderNumber
         dictionary[.SessionId] = authManager.sessionId
         dictionary[.MerchLogin] = sdkManager.authInfo?.merchantLogin
+        dictionary[.LocalSessionId] = localSessionIdService.localSessionIdentifier
     }
 }
 

@@ -12,9 +12,11 @@ final class AlertAssembly {
     func createModule(alertModel: AlertViewModel,
                       analytics: AnalyticsManager,
                       liveCircleManager: LiveCircleManager,
+                      localSessionId: String?,
                       alertResultAction: @escaping AlertResultAction) -> ContentVC {
         let presenter = modulePresenter(alertModel: alertModel,
                                         liveCircleManager: liveCircleManager,
+                                        localSessionId: localSessionId,
                                         alertResultAction: alertResultAction)
         let contentView = moduleView(presenter: presenter, analytics: analytics)
         presenter.view = contentView
@@ -23,8 +25,12 @@ final class AlertAssembly {
 
     private func modulePresenter(alertModel: AlertViewModel,
                                  liveCircleManager: LiveCircleManager,
+                                 localSessionId: String?,
                                  alertResultAction: @escaping AlertResultAction) -> AlertPresenter {
-        let presenter = AlertPresenter(with: alertModel, liveCircleManager: liveCircleManager, alertResultAction: alertResultAction)
+        let presenter = AlertPresenter(with: alertModel, 
+                                       liveCircleManager: liveCircleManager,
+                                       localSessionId: localSessionId,
+                                       alertResultAction: alertResultAction)
         return presenter
     }
     

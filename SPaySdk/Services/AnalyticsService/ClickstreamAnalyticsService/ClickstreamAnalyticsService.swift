@@ -16,6 +16,11 @@ private enum ClickstreamCredential {
 final class DefaultClickstreamAnalyticsService: AnalyticsService {
     
     private var analyticsTools: AnalyticsTools?
+    private let featureToggle: FeatureToggleService
+    
+    init(featureToggle: FeatureToggleService) {
+        self.featureToggle = featureToggle
+    }
     
     func sendEvent(_ event: String) {
         analyticsTools?.clickstream.sendEvent(eventName: event,
@@ -50,20 +55,20 @@ final class DefaultClickstreamAnalyticsService: AnalyticsService {
     
     func config() {
         
-        var debugMode = false
+        var debugMode = featureToggle.isEnabled(.allowClickStreamAllCerts)
+        var showLogs = false
         
 #if SDKDEBUG
         guard let clickstreamUrl = URL(string: ClickstreamCredential.url) else { return }
         let apikey = ClickstreamCredential.apikey
         
         debugMode = true
+        showLogs = true
 #else
         guard let apikey = ConfigGlobal.schemas?.clickstreamApiKey else { return }
         guard let clickstreamUrlString = ConfigGlobal.schemas?.clickstreamUrl,
               let clickstreamUrl = URL(string: clickstreamUrlString)
         else { return }
-        
-        debugMode = false
         
 #endif
         
@@ -78,7 +83,9 @@ final class DefaultClickstreamAnalyticsService: AnalyticsService {
                    profile: ClickstreamProfile(userLoginId: Bundle.main.displayName),
                    config: conf,
                    logger: { log in
-                print(log)
+                if showLogs {
+                    print(log)
+                }
             })
     }
 }
