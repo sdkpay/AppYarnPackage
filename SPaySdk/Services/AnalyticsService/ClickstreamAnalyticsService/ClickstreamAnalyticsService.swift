@@ -63,7 +63,7 @@ final class DefaultClickstreamAnalyticsService: AnalyticsService {
         let apikey = ClickstreamCredential.apikey
         
         debugMode = true
-        showLogs = true
+        showLogs = false
 #else
         guard let apikey = ConfigGlobal.schemas?.clickstreamApiKey else { return }
         guard let clickstreamUrlString = ConfigGlobal.schemas?.clickstreamUrl,

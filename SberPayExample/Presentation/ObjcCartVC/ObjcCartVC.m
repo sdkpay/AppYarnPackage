@@ -92,7 +92,7 @@
     
     [SPay payWithBankInvoiceIdWith:self paymentRequest:request completion:^(enum SPayState state,
                                                                             NSString * _Nonnull info,
-                                                                            NSString * _Nonnull session) {
+                                                                            NSString * _Nonnull localSessionId) {
         switch(state) {
             case SPayStateSuccess:
                 NSLog(@"Успешный результат");

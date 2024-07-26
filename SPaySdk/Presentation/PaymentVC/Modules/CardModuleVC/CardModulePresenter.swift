@@ -214,18 +214,15 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
                 
                 repeatAuth()
             } catch {
-                if let error = error as? SDKError {
+                
+                if error.sdkError.represents(.bankAppError)
+                    || error.sdkError.represents(.bankAppNotFound) {
                     
-                    if error.represents(.noData)
-                        || error.represents(.bankAppError)
-                        || error.represents(.bankAppNotFound) {
-                        
-                        await router.presentBankAppPicker()
-                        self.repeatAuth()
-                    } else {
-                        await alertService.show(on: view?.contentParrent, type: .defaultError)
-                        await completionManager.dismissCloseAction(view?.contentParrent)
-                    }
+                    await router.presentBankAppPicker()
+                    self.repeatAuth()
+                } else {
+                    await alertService.show(on: view?.contentParrent, type: .defaultError)
+                    await completionManager.dismissCloseAction(view?.contentParrent)
                 }
             }
         }

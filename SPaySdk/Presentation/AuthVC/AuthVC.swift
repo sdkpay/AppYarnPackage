@@ -132,17 +132,17 @@ extension AuthVC: WKNavigationDelegate {
                                           completionHandler: completionHandler)
         }
     }
+    
+    func webView(_ webView: WKWebView,
+                 decidePolicyFor navigationAction: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         
-        func webView(_ webView: WKWebView,
-                     decidePolicyFor navigationAction: WKNavigationAction,
-                     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            
-            guard let url = navigationAction.request.url else {
-                decisionHandler(.cancel)
-                return }
-            
-            SBLogger.log("🔗 Sid go to: \(url.absoluteString)")
-            presenter.webViewGoTo(url: url)
-            decisionHandler(.allow)
-        }
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.cancel)
+            return }
+        
+        SBLogger.log("🔗 Sid go to: \(url.absoluteString)")
+        presenter.webViewGoTo(url: url)
+        decisionHandler(.allow)
+    }
 }

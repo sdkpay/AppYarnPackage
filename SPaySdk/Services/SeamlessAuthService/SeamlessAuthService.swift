@@ -69,8 +69,7 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
         guard let appToken = try? storage.get(for: .appToken,
                                               mode: .sid,
                                               to: AppTokenDataModel.self) else { return false }
-//        return appToken.authTypeEnum == .app2app
-        return false
+        return appToken.authTypeEnum == .app2app
     }
     
     func getTransitTokenUrl() async throws -> URL {

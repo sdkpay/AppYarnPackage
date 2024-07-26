@@ -340,7 +340,7 @@ final class AuthPresenter: AuthPresenting {
                 await self.router.presentHelper()
                 return
             }
-            
+
             if userService.selectedCard == nil {
                 cardNeeded()
                 return
