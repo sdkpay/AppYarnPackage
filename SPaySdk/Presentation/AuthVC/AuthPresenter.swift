@@ -554,10 +554,23 @@ final class AuthPresenter: AuthPresenting {
      private func repeatAuth() {
          Task {
              
-             try await self.authService.auth()
+//             try await self.authService.auth()
+//             
+//             self.authService.bankCheck = true
+//             self.presentListCards()
              
-             self.authService.bankCheck = true
-             self.presentListCards()
+             do {
+                 try await self.authService.auth()
+                 
+                 self.authService.bankCheck = true
+                 self.presentListCards()
+             } catch {
+                 if let error = error as? SDKError {
+                     validateAuthError(error: error)
+                 } else {
+                     validateAuthError(error: .init(.errorSystem))
+                 }
+             }
          }
      }
 }
