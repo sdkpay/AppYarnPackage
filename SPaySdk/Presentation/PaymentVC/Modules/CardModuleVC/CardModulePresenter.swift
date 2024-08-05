@@ -116,26 +116,26 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
     private func partPayTapped() {
         
         Task {
-           await router.presentPartPay()
+            await router.presentPartPay()
             configViews()
             view?.reloadData()
         }
     }
-
-   private func cardTapped() {
+    
+    private func cardTapped() {
         
-       analytics.send(EventBuilder()
-           .with(base: .Touch)
-           .with(value: .card)
-           .build(), on: view?.contentParrent?.analyticsName ?? .None)
+        analytics.send(EventBuilder()
+            .with(base: .Touch)
+            .with(value: .card)
+            .build(), on: view?.contentParrent?.analyticsName ?? .None)
         
         guard userService.additionalCards else { return }
         guard let authMethod = authManager.authMethod else { return }
         
-       guard userService.firstCardUpdate else {
-           presentListCards()
-           return
-       }
+        guard userService.firstCardUpdate else {
+            presentListCards()
+            return
+        }
         
         switch authMethod {
         case .refresh:
@@ -203,7 +203,7 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
             view?.reloadData()
         }
     }
-        
+    
     private func appAuth() {
         
         Task {
@@ -230,11 +230,16 @@ final class CardModulePresenter: NSObject, CardModulePresenting {
     
     private func repeatAuth() {
         Task {
-            
-            try await self.authService.auth()
-            
-            self.authService.bankCheck = true
-            self.presentListCards()
+            do {
+                try await self.authService.auth()
+                
+                self.authService.bankCheck = true
+                self.presentListCards()
+            } catch {
+                
+                await alertService.show(on: view?.contentParrent, type: .defaultError)
+                await completionManager.dismissCloseAction(view?.contentParrent)
+            }
         }
     }
 }
