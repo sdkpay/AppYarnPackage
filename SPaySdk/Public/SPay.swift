@@ -84,6 +84,33 @@ public final class SPay: NSObject {
                                                              _ localSessionId: String?) -> Void) {
         payService?.payWithPartPay(with: viewController, paymentRequest: paymentRequest, completion: completion)
     }
+    
+    // Новые методы работающие на window
+    
+    @objc
+    public static func payWithBankInvoiceId(paymentRequest: SBankInvoicePaymentRequest,
+                                            completion: @escaping (_ state: SPayState,
+                                                                   _ info: String,
+                                                                   _ localSessionId: String?) -> Void) {
+        payService?.payWithBankInvoiceId(paymentRequest: paymentRequest, completion: completion)
+    }
+    
+    @objc
+    public static func payWithoutRefresh(paymentRequest: SBankInvoicePaymentRequest,
+                                         completion: @escaping (_ state: SPayState,
+                                                                _ info: String,
+                                                                _ localSessionId: String?) -> Void) {
+        payService?.payWithoutRefresh(paymentRequest: paymentRequest, completion: completion)
+    }
+    
+    
+    @objc
+    public static func payWithPartPay(paymentRequest: SBankInvoicePaymentRequest,
+                                      completion: @escaping (_ state: SPayState,
+                                                             _ info: String,
+                                                             _ localSessionId: String?) -> Void) {
+        payService?.payWithPartPay(paymentRequest: paymentRequest, completion: completion)
+    }
 
     /**
      Метод для авторизации банка необходимо интегрировать в AppDelegate

@@ -22,18 +22,35 @@ protocol SBPayService {
                completion: ((SPError?) -> Void)?)
     func pay(with paymentRequest: SPaymentRequest,
              completion: @escaping PaymentCompletion)
-    func payWithoutRefresh(with viewController: UIViewController,
+    func payWithoutRefresh(with viewController: UIViewController?,
                            paymentRequest: SBankInvoicePaymentRequest,
                            completion: @escaping PaymentCompletion)
-    func payWithBankInvoiceId(with viewController: UIViewController,
+    func payWithBankInvoiceId(with viewController: UIViewController?,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion)
-    func payWithPartPay(with viewController: UIViewController,
+    func payWithPartPay(with viewController: UIViewController?,
                         paymentRequest: SBankInvoicePaymentRequest,
                         completion: @escaping PaymentCompletion)
     func setBankScheme(_ url: URL) throws
     func getResponseFrom(_ url: URL)
     func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool, debugLogLevel: [DebugLogLevel])
+}
+extension SBPayService {
+    
+    func payWithoutRefresh(paymentRequest: SBankInvoicePaymentRequest,
+                           completion: @escaping PaymentCompletion) {
+        payWithoutRefresh(with: nil, paymentRequest: paymentRequest, completion: completion)
+    }
+    
+    func payWithBankInvoiceId(paymentRequest: SBankInvoicePaymentRequest,
+                              completion: @escaping PaymentCompletion) {
+        payWithBankInvoiceId(with: nil, paymentRequest: paymentRequest, completion: completion)
+    }
+    
+    func payWithPartPay(paymentRequest: SBankInvoicePaymentRequest,
+                        completion: @escaping PaymentCompletion) {
+        payWithPartPay(with: nil, paymentRequest: paymentRequest, completion: completion)
+    }
 }
 
 final class DefaultSBPayService: SBPayService {
@@ -95,7 +112,7 @@ final class DefaultSBPayService: SBPayService {
             .pay(with: paymentRequest, completion: completion)
     }
     
-    func payWithBankInvoiceId(with viewController: UIViewController,
+    func payWithBankInvoiceId(with viewController: UIViewController?,
                               paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
         assemblyManager.registerSessionServices(to: locator)
@@ -141,7 +158,7 @@ final class DefaultSBPayService: SBPayService {
                   on: .None)
     }
     
-    func payWithoutRefresh(with viewController: UIViewController, 
+    func payWithoutRefresh(with viewController: UIViewController?,
                            paymentRequest: SBankInvoicePaymentRequest,
                            completion: @escaping PaymentCompletion) {
         assemblyManager.registerSessionServices(to: locator)
@@ -187,7 +204,7 @@ final class DefaultSBPayService: SBPayService {
                   on: .None)
     }
     
-    func payWithPartPay(with viewController: UIViewController,
+    func payWithPartPay(with viewController: UIViewController?,
                         paymentRequest: SBankInvoicePaymentRequest,
                         completion: @escaping PaymentCompletion) {
         assemblyManager.registerSessionServices(to: locator)

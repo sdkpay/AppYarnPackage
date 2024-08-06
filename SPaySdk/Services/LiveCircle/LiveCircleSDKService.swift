@@ -8,7 +8,7 @@
 import UIKit
 
 protocol LiveCircleManager {
-    func openInitialScreen(with viewController: UIViewController,
+    func openInitialScreen(with viewController: UIViewController?,
                            with locator: LocatorService)
     var closeWithGesture: Action? { get set }
     var rootController: RootVC? { get }
@@ -22,12 +22,13 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     private weak var metchVC: UIViewController?
     private let timeManager: OptimizationCheсkerManager?
     var closeWithGesture: Action?
+    var sdkWindow: UIWindow?
     
     init(timeManager: OptimizationCheсkerManager) {
         self.timeManager = timeManager
     }
 
-    func openInitialScreen(with viewController: UIViewController,
+    func openInitialScreen(with viewController: UIViewController?,
                            with locator: LocatorService) {
         let rootVC = RootAssembly(locator: locator).createModule()
         rootController = rootVC
@@ -55,11 +56,22 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         }
     }
 
-    private func setupWindows(viewController: UIViewController,
+    private func setupWindows(viewController: UIViewController?,
                               locator: LocatorService,
                               rootVC: UIViewController) {
         rootVC.modalPresentationStyle = .custom
-        viewController.present(rootVC, animated: false)
+        if let viewController = viewController {
+            viewController.present(rootVC, animated: false)
+            
+        } else {
+            if let currentWindowScene = UIApplication.shared.connectedScenes.first as?  UIWindowScene {
+                sdkWindow = UIWindow(windowScene: currentWindowScene)
+                sdkWindow?.backgroundColor = .clear
+                sdkWindow?.windowLevel = .normal + 1
+                sdkWindow?.rootViewController = rootVC
+                sdkWindow?.makeKeyAndVisible()
+            }
+        }
     }
     
     private func topVC(for window: UIWindow?) -> UIViewController? {
