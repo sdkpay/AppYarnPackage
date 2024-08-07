@@ -52,6 +52,7 @@ final class DefaultLiveCircleManager: LiveCircleManager {
             self.rootController?.dismiss(animated: false, completion: {
                 nillableContinuation?.resume()
                 self.rootController = nil
+                self.sdkWindow = nil
             })
         }
     }
@@ -62,12 +63,11 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         rootVC.modalPresentationStyle = .custom
         if let viewController = viewController {
             viewController.present(rootVC, animated: false)
-            
         } else {
             if let currentWindowScene = UIApplication.shared.connectedScenes.first as?  UIWindowScene {
                 sdkWindow = UIWindow(windowScene: currentWindowScene)
                 sdkWindow?.backgroundColor = .clear
-                sdkWindow?.windowLevel = .normal + 1
+                sdkWindow?.windowLevel = .alert + 1
                 sdkWindow?.rootViewController = rootVC
                 sdkWindow?.makeKeyAndVisible()
             }

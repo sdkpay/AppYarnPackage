@@ -35,6 +35,7 @@ protocol SBPayService {
     func getResponseFrom(_ url: URL)
     func debugConfig(network: NetworkState, ssl: Bool, refresh: Bool, debugLogLevel: [DebugLogLevel])
 }
+
 extension SBPayService {
     
     func payWithoutRefresh(paymentRequest: SBankInvoicePaymentRequest,
