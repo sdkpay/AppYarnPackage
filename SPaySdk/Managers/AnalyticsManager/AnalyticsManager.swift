@@ -12,6 +12,7 @@ enum AnalyticsKey: String {
     case OrderNumber
     case MerchLogin
     case SessionId
+    case SDKVersion
     case LocalSessionId
     case ErrorCode
     case ParsingError
@@ -120,6 +121,7 @@ final class DefaultAnalyticsManager: NSObject, AnalyticsManager {
         dictionary[.SessionId] = authManager.sessionId
         dictionary[.MerchLogin] = sdkManager.authInfo?.merchantLogin
         dictionary[.LocalSessionId] = localSessionIdService.localSessionIdentifier
+        dictionary[.SDKVersion] = Bundle.sdkVersion
     }
 }
 
