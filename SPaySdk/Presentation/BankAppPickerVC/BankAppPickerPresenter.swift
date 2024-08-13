@@ -33,6 +33,9 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     private let analytics: AnalyticsManager
     
     private var completion: Action?
+
+    private var autoOpen = true
+    private var index = 0
     
     init(bankManager: BankAppManager,
          authService: AuthService,
@@ -52,6 +55,14 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
         bankAppModels = getModels(type: .prom)
         view?.setTilte(Strings.BankAppPicker.subtitle(Bundle.main.displayName))
         addObserver()
+        tryOpen()
+    }
+
+    private func tryOpen() {
+        if autoOpen && index < bankAppModels.count {
+            didSelectRow(at: IndexPath(row: index, section: 0))
+            index += 1
+        }
     }
     
     func model(for indexPath: IndexPath) -> BankAppCellModel {
@@ -120,6 +131,9 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
                     .with(postState: .Fail)
                     .build(), on: view?.analyticsName ?? .None)
                 view?.reloadTableView()
+                if autoOpen {
+                    tryOpen()
+                }
             }
         }
     }
@@ -150,6 +164,7 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     // Клиент сам перешел из приложения банка
     @objc
     private func applicationDidBecomeActive() {
+        autoOpen = false
         SBLogger.log("📲 Become active without redirect")
         view?.reloadTableView()
         checkTappedAppsCount()
