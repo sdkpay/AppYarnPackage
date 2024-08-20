@@ -333,26 +333,34 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             authManager.authCode = Constants.sendboxAuthCode
         }
         
+        var authParams: (redirectUri: String?, authCode: String?, state: String?) = (nil, nil, nil)
+        
+        if authManager.authMethod == .bank {
+            let bankAuthParams = try authManager.getParamsForBankAuth()
+            authParams = (request.redirectUri, authCode: bankAuthParams.authCode, state: bankAuthParams.state)
+        }
+
         do {
             
-            let authResult = try await network.requestFull(AuthTarget.auth(redirectUri: authManager.authMethod == .bank ? request.redirectUri : nil,
-                                                                           authCode: authManager.authMethod == .bank ? authManager.authCode : nil,
-                                                                           sessionId: authManager.sessionId ?? "",
-                                                                           state: authManager.authMethod == .bank ? authManager.state : nil,
-                                                                           deviceInfo: deviceInfo,
-                                                                           orderId: request.orderId,
-                                                                           amount: request.amount,
-                                                                           currency: request.currency,
-                                                                           mobilePhone: nil,
-                                                                           orderNumber: request.orderNumber,
-                                                                           description: nil,
-                                                                           expiry: request.expiry,
-                                                                           frequency: request.frequency,
-                                                                           userName: nil,
-                                                                           merchantLogin: request.merchantLogin,
-                                                                           resourceName: Bundle.main.bundleIdentifier ?? "no.info",
-                                                                           authCookie: getRefreshCookies()),
-                                                           to: AuthRefreshModel.self)
+            let authResult = try await network
+                .requestFull(AuthTarget.auth(redirectUri: authParams.redirectUri,
+                                             authCode: authParams.authCode,
+                                             sessionId: authManager.sessionId ?? "",
+                                             state: authParams.state,
+                                             deviceInfo: deviceInfo,
+                                             orderId: request.orderId,
+                                             amount: request.amount,
+                                             currency: request.currency,
+                                             mobilePhone: nil,
+                                             orderNumber: request.orderNumber,
+                                             description: nil,
+                                             expiry: request.expiry,
+                                             frequency: request.frequency,
+                                             userName: nil,
+                                             merchantLogin: request.merchantLogin,
+                                             resourceName: Bundle.main.bundleIdentifier ?? "no.info",
+                                             authCookie: getRefreshCookies()),
+                             to: AuthRefreshModel.self)
             
             saveRefreshIfNeeded(from: authResult.cookies)
             authManager.userInfo = authResult.result.userInfo
@@ -403,15 +411,6 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         
         analytics.send(event.build())
         return cookies
-    }
-    
-    private func getIdCookies() -> [HTTPCookie] {
-        
-        if let idCookies = cookieStorage.getCookie(for: .id) {
-            return [idCookies]
-        } else {
-            return []
-        }
     }
     
     private func addOnScreenNotification() {

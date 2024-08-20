@@ -40,7 +40,7 @@ protocol AuthManager {
     var authModel: AuthModel? { get set }
     var bnplMerchEnabled: Bool { get }
     var initialApiKey: String? { get set }
-    
+    func getParamsForBankAuth() throws -> (authCode: String, state: String)
     func setEnabledBnpl(_ value: Bool)
 }
 
@@ -67,5 +67,13 @@ final class DefaultAuthManager: AuthManager {
     
     func setEnabledBnpl(_ value: Bool) {
         bnplMerchEnabled = value
+    }
+    
+    func getParamsForBankAuth() throws -> (authCode: String, state: String) {
+        
+        guard let authCode else { throw SDKError(.noData) }
+        guard let state else { throw SDKError(.noData) }
+        
+        return (authCode, state)
     }
 }

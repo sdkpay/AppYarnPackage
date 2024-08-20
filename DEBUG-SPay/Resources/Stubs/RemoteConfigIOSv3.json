@@ -109,6 +109,14 @@
             "authLink": "sbolidexternallogin://",
             "iconURL": "https://cms-res-web.online.sberbank.ru/sberpay/SDK/image-2.png",
             "type": "prom"
+        },
+        {
+            "appId": 4,
+            "name": "Бюджет онлайн",
+            "utilLink": "bud://sbolonline/",
+            "authLink": "ios-app-smartonline://sbolidexternallogin/",
+            "iconURL": "https://cms-res-web.online.sberbank.ru/sberpay/SDK/image-2.png",
+            "type": "beta"
         }
     ],
     "images":{
