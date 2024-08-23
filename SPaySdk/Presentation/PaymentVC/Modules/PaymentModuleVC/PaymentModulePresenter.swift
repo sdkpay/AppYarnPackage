@@ -412,7 +412,9 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
                 ? partPayService.bnplplan?.graphBnpl?.parts.first?.amount
                 : user.orderInfo.orderAmount.amount
                 
-                let bonusesEnabled = featureToggle.isEnabled(.spasiboBonuses) && !partPayService.bnplplanSelected
+                let bonusesEnabled = featureToggle.isEnabled(.spasiboBonuses) &&
+                                     !partPayService.bnplplanSelected &&
+                                     authManager.spasiboBonusesEnabled
                 let bonuses = bonusesEnabled ? userService.selectedCard?.precalculateBonuses : nil
                 
                 await alertService.show(on: self.view?.contentParrent,

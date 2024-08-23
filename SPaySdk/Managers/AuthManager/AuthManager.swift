@@ -39,9 +39,11 @@ protocol AuthManager {
     var ipAddress: String? { get set }
     var authModel: AuthModel? { get set }
     var bnplMerchEnabled: Bool { get }
+    var spasiboBonusesEnabled: Bool { get }
     var initialApiKey: String? { get set }
     
     func setEnabledBnpl(_ value: Bool)
+    func setEnableBonuses(_ value: Bool)
 }
 
 final class DefaultAuthManager: AuthManager {
@@ -62,10 +64,15 @@ final class DefaultAuthManager: AuthManager {
     var isOtpNeed: Bool?
     var authModel: AuthModel?
     var bnplMerchEnabled = false
+    var spasiboBonusesEnabled = false
     
     var initialApiKey: String?
     
     func setEnabledBnpl(_ value: Bool) {
         bnplMerchEnabled = value
+    }
+    
+    func setEnableBonuses(_ value: Bool) {
+        spasiboBonusesEnabled = value
     }
 }

@@ -35,6 +35,7 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     
     weak var view: (IPurchaseModuleVC & ModuleVC)?
     private let router: PaymentRouting
+    private let authManager: AuthManager
     private let partPayService: PartPayService
     private let userService: UserService
     private let featureToggle: FeatureToggleService
@@ -44,12 +45,14 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     init(_ router: PaymentRouting,
          manager: SDKManager,
          userService: UserService,
+         authManager: AuthManager,
          partPayService: PartPayService,
          featureToggle: FeatureToggleService,
          payAmountValidationManager: PayAmountValidationManager) {
         self.router = router
         self.partPayService = partPayService
         self.userService = userService
+        self.authManager = authManager
         self.featureToggle = featureToggle
         self.payAmountValidationManager = payAmountValidationManager
         super.init()
@@ -102,7 +105,9 @@ final class PurchaseModulePresenter: NSObject, PurchaseModulePresenting {
     }
     
     private func configBonusesView() {
-        let bonusesEnabled = featureToggle.isEnabled(.spasiboBonuses) && !partPayService.bnplplanSelected
+        let bonusesEnabled = featureToggle.isEnabled(.spasiboBonuses) &&
+                             !partPayService.bnplplanSelected &&
+                             authManager.spasiboBonusesEnabled
         let bonuses = bonusesEnabled ? userService.selectedCard?.precalculateBonuses : nil
         
         view?.configBonusesView(bonuses)
