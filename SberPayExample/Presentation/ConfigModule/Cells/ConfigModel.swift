@@ -94,6 +94,10 @@ struct ConfigValues {
                  defaultValue: true)
     var bnpl: Bool
     
+    @UserDefault(key: CellType.spasiboBonuses.rawValue,
+                 defaultValue: true)
+    var spasiboBonuses: Bool
+    
     @UserDefault(key: CellType.resultViewNeeded.rawValue,
                  defaultValue: true)
     var resultViewNeeded: Bool
