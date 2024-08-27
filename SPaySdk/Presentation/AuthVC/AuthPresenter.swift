@@ -39,6 +39,7 @@ final class AuthPresenter: AuthPresenting {
     private let localSessionIdService: LocalSessionIdentifierService
     
     private var authMethod: AuthMethod = .bank
+    private var banks: [BankApp] = []
     
     init(_ router: AuthRouter,
          authService: AuthService,
@@ -183,10 +184,38 @@ final class AuthPresenter: AuthPresenting {
         }
         
         if bankManager.selectedBank == nil {
-            await showBanksStack()
+            banks = bankManager.avaliableBanks.filter({ $0.versionType == .prom })
+            
+            bankManager.selectedBank = banks.first
+            
+            addObserver()
+            
+            await tryFindBank()
         } else {
             appAuthMethod()
         }
+    }
+    
+    private var bankIndex = 1
+    
+    @MainActor
+    private func tryFindBank() {
+        
+            Task {
+                do {
+                    try await authService.appAuth()
+                    await auth()
+                    removeObserver()
+                } catch {
+                    bankIndex += 1
+                    if bankIndex < banks.count {
+                        bankManager.selectedBank = banks[bankIndex]
+                        tryFindBank()
+                    } else {
+                        showBanksStack()
+                    }
+                }
+            }
     }
     
     private func appAuthMethod() {
@@ -565,4 +594,17 @@ final class AuthPresenter: AuthPresenting {
              }
          }
      }
+    
+    private func addObserver() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationDidBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
+    }
+    
+    private func removeObserver() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: UIApplication.didBecomeActiveNotification,
+                                                  object: nil)
+    }
 }
