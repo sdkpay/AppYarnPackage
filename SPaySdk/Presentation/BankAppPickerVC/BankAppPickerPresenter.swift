@@ -34,7 +34,6 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     
     private var completion: Action?
 
-//    private var autoOpen = true
     private var index = 0
     
     init(bankManager: BankAppManager,
