@@ -46,6 +46,10 @@ extension SBPayService {
     
     func payWithBankInvoiceId(paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
+        SBLogger.log("merchLog: \(paymentRequest.merchantLogin)")
+        SBLogger.log("orderNumber: \(paymentRequest.orderNumber)")
+        SBLogger.log("apiKey: \(paymentRequest.apiKey)")
+        SBLogger.log("bankInvoiceid: \(paymentRequest.bankInvoiceId)")
         payWithBankInvoiceId(with: nil, paymentRequest: paymentRequest, completion: completion)
     }
     
