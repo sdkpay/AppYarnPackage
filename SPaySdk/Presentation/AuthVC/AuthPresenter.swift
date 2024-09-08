@@ -39,6 +39,7 @@ final class AuthPresenter: AuthPresenting {
     private let localSessionIdService: LocalSessionIdentifierService
     
     private var authMethod: AuthMethod = .bank
+    private var banks: [BankApp] = []
     
     init(_ router: AuthRouter,
          authService: AuthService,
@@ -185,9 +186,33 @@ final class AuthPresenter: AuthPresenting {
         }
         
         if bankManager.selectedBank == nil {
-            await showBanksStack()
+            banks = bankManager.avaliableBanks.filter({ $0.versionType == .prom })
+            
+            bankManager.selectedBank = banks.first
+
+            await tryFindBank()
         } else {
             appAuthMethod()
+        }
+    }
+    
+    private var bankIndex = 0
+    
+    @MainActor
+    private func tryFindBank() {
+        Task {
+            do {
+                try await authService.appAuth()
+                await auth()
+            } catch {
+                bankIndex += 1
+                if bankIndex < banks.count && error.sdkError.represents(.bankAppNotFound) {
+                    bankManager.selectedBank = banks[bankIndex]
+                    tryFindBank()
+                } else {
+                    showBanksStack()
+                }
+            }
         }
     }
     

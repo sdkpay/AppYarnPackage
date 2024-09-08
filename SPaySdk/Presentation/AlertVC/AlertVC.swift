@@ -177,6 +177,10 @@ final class AlertVC: ContentVC, IAlertVC {
         super.viewWillDisappear(animated)
         SBLogger.log(.didDissapear(view: self))
         analytics.sendDisappeared(view: self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         contentNavigationController?.setBackground(Asset.Image.background.image)
     }
     

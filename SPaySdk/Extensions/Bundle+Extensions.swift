@@ -11,9 +11,11 @@ extension Bundle {
     
     var displayName: String {
         
-        if let displayName = object(forInfoDictionaryKey: "CFBundleDisplayName") as? String, !displayName.isEmpty {
+        if let displayName = object(forInfoDictionaryKey: "CFBundleDisplayName") as? String,
+           !displayName.replacingOccurrences(of: " ", with: "").isEmpty {
             return displayName
-        } else if let bundleName = object(forInfoDictionaryKey: "CFBundleName") as? String, !bundleName.isEmpty {
+        } else if let bundleName = object(forInfoDictionaryKey: "CFBundleName") as? String,
+                  !bundleName.replacingOccurrences(of: " ", with: "").isEmpty {
             return bundleName
         } else {
             return "No info"

@@ -64,7 +64,9 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         if let viewController = viewController {
             viewController.present(rootVC, animated: false)
         } else {
-            if let currentWindowScene = UIApplication.shared.connectedScenes.first as?  UIWindowScene {
+            if let currentWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                sdkWindow = nil
+                SBLogger.log("----> Начали инитить Window <----")
                 sdkWindow = UIWindow(windowScene: currentWindowScene)
                 sdkWindow?.backgroundColor = .clear
                 sdkWindow?.windowLevel = .alert + 1

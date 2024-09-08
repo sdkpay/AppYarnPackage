@@ -22,6 +22,7 @@ public final class SPay: NSObject {
     /// Ключ Kлиента для работы с сервисами платежного шлюза через SDK.
     @objc
     public static func setup(bnplPlan: Bool = true,
+                             spasiboBonuses: Bool = true,
                              resultViewNeeded: Bool = true,
                              helpers: Bool = true,
                              needLogs: Bool = true,
@@ -33,6 +34,7 @@ public final class SPay: NSObject {
             payService = DefaultSBPayService()
         }
         payService?.setup(bnplPlan: bnplPlan,
+                          spasiboBonuses: spasiboBonuses,
                           resultViewNeeded: resultViewNeeded,
                           helpers: helpers,
                           needLogs: needLogs,

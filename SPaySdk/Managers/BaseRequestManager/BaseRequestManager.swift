@@ -22,6 +22,7 @@ extension String {
         static let b3TraceId = "x-b3-traceid"
         static let b3SpanId = "x-b3-spanid"
         static let netAdd = "X-Net-Add-Sourсe"
+        static let merchantLogin = "merchantLogin"
         static let sdkVersion = "sdkVersion"
         static let appName = "appName"
         static let systemId = "X-System-Id"
@@ -56,7 +57,9 @@ final class BaseRequestManagerAssembly: Assembly {
     func register(in container: LocatorService) {
         container.register {
             let service: BaseRequestManager = DefaultBaseRequestManager(authManager: container.resolve(),
-                                                                        storage: container.resolve(), localSessionIdentifierService:  container.resolve())
+                                                                        storage: container.resolve(),
+                                                                        sdkManager: container.resolve(),
+                                                                        localSessionIdentifierService: container.resolve())
             return service
         }
     }
@@ -79,6 +82,7 @@ final class DefaultBaseRequestManager: BaseRequestManager {
     var b3SpanId: String?
     
     private let authManager: AuthManager
+    private let sdkManager: SDKManager
     private let storage: KeychainStorage
     private let localSessionIdentifierService: LocalSessionIdentifierService
 
@@ -105,6 +109,9 @@ final class DefaultBaseRequestManager: BaseRequestManager {
         if let ip = authManager.ipAddress {
             headers[.Headers.netAdd] = ip
         }
+        if let merchLogin = sdkManager.authInfo?.merchantLogin {
+            headers[.Headers.merchantLogin] = merchLogin
+        }
         if let localSessionIdentifier = localSessionIdentifierService.localSessionIdentifier {
             headers[.Headers.localSessionIdentifier] = localSessionIdentifier
         }
@@ -120,8 +127,10 @@ final class DefaultBaseRequestManager: BaseRequestManager {
 
     init(authManager: AuthManager,
          storage: KeychainStorage,
+         sdkManager: SDKManager,
          localSessionIdentifierService: LocalSessionIdentifierService) {
         self.authManager = authManager
+        self.sdkManager = sdkManager
         self.storage = storage
         self.localSessionIdentifierService = localSessionIdentifierService
     }

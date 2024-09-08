@@ -19,7 +19,8 @@ enum SectionData: Int, CaseIterable {
 }
 
 enum CellType: String, CaseIterable {
-    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber, lang, mode, network, ssl, refresh, environment, bnpl, next, sid
+    case apiKey, merchantLogin, cost, configMethod, orderId, currency, orderNumber,
+         lang, mode, network, ssl, refresh, environment, bnpl, spasiboBonuses, next, sid
     case sbp, newCreditCard, newDebitCard, helpers, resultViewNeeded
     case merchantBank
 }
@@ -93,6 +94,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
         case .merchantConfig:
             return [
                 .bnpl,
+                .spasiboBonuses,
                 .resultViewNeeded,
                 .helpers,
                 .sbp,
@@ -138,6 +140,8 @@ final class ConfigPresenter: ConfigPresenterProtocol {
             return environmentCell(type: type)
         case .bnpl:
             return bnplCell(type: type)
+        case .spasiboBonuses:
+            return spasiboBonusesCell(type: type)
         case .next:
             return nextButtonCell(type: type)
         case .refresh:
@@ -252,6 +256,7 @@ final class ConfigPresenter: ConfigPresenterProtocol {
                          debugLogLevel: configValues.debugLogLevels)
         
         SPay.setup(bnplPlan: configValues.bnpl,
+                   spasiboBonuses: configValues.spasiboBonuses,
                    resultViewNeeded: configValues.resultViewNeeded,
                    helpers: configValues.helpers,
                    needLogs: true,
@@ -520,6 +525,15 @@ extension ConfigPresenter {
         cell.config(with: "BNPL",
                     value: configValues.bnpl) { bool in
             self.configValues.bnpl = bool
+        }
+        return cell
+    }
+    
+    private func spasiboBonusesCell(type: CellType) -> UITableViewCell {
+        let cell = SwitchCell()
+        cell.config(with: "Spasibo",
+                    value: configValues.spasiboBonuses) { bool in
+            self.configValues.spasiboBonuses = bool
         }
         return cell
     }

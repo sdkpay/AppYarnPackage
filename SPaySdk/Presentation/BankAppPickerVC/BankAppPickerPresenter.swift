@@ -33,6 +33,8 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     private let analytics: AnalyticsManager
     
     private var completion: Action?
+
+    private var index = 0
     
     init(bankManager: BankAppManager,
          authService: AuthService,

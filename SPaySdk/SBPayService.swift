@@ -14,6 +14,7 @@ typealias PaymentCompletion = (PaymentResponse) -> Void
 
 protocol SBPayService {
     func setup(bnplPlan: Bool,
+               spasiboBonuses: Bool,
                resultViewNeeded: Bool,
                helpers: Bool,
                needLogs: Bool,
@@ -45,6 +46,10 @@ extension SBPayService {
     
     func payWithBankInvoiceId(paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
+        SBLogger.log("merchLog: \(paymentRequest.merchantLogin)")
+        SBLogger.log("orderNumber: \(paymentRequest.orderNumber)")
+        SBLogger.log("apiKey: \(paymentRequest.apiKey)")
+        SBLogger.log("bankInvoiceid: \(paymentRequest.bankInvoiceId)")
         payWithBankInvoiceId(with: nil, paymentRequest: paymentRequest, completion: completion)
     }
     
@@ -66,6 +71,7 @@ final class DefaultSBPayService: SBPayService {
     private var apiKey: String?
     
     func setup(bnplPlan: Bool,
+               spasiboBonuses: Bool,
                resultViewNeeded: Bool,
                helpers: Bool,
                needLogs: Bool,
@@ -92,6 +98,8 @@ final class DefaultSBPayService: SBPayService {
         locator
             .resolve(AuthManager.self)
             .setEnabledBnpl(bnplPlan)
+        locator.resolve(AuthManager.self)
+            .setEnableBonuses(spasiboBonuses)
         locator
             .resolve(HelperConfigManager.self)
             .setConfig(config)
