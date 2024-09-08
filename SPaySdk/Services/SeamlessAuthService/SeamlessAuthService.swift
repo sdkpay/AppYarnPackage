@@ -66,10 +66,10 @@ final class DefaultSeamlessAuthService: NSObject, SeamlessAuthService {
     
     var isReadyForSeamless: Bool {
         
-        guard let appToken = try? storage.get(for: .appToken,
+        let appToken = try? storage.get(for: .appToken,
                                               mode: .sid,
-                                              to: AppTokenDataModel.self) else { return false }
-        return false
+                                              to: AppTokenDataModel.self)
+        return appToken != nil
     }
     
     func getTransitTokenUrl() async throws -> URL {

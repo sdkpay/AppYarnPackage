@@ -207,7 +207,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
         do {
             await self.view?.contentParrent?.showLoading(animate: false)
 
-            switch sdkManager.payStrategy {
+            switch sdkManager.payStrategy { 
             case .auto:
                 
                 try await payWithPaymentToken()
@@ -242,7 +242,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     
     private func payWithPaymentToken() async throws {
         
-        guard let paymentId = userService.selectedCard?.paymentID else { return }
+        guard let paymentId = userService.selectedCard?.paymentID else { throw SDKError(.errorSystem) }
         
         if otpService.otpRequired {
             
@@ -286,7 +286,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     
     private func payWithoutPaymentToken() async throws {
         
-        guard let paymentId = userService.selectedCard?.paymentID else { return }
+        guard let paymentId = userService.selectedCard?.paymentID else { throw SDKError(.errorSystem) }
         
         if partPayService.bnplplanSelected {
             await analytics
@@ -328,7 +328,7 @@ final class PaymentModulePresenter: NSObject, PaymentModulePresenting {
     
     private func payWithResolution(resolution: SecureChallengeResolution?) async throws {
         
-        guard let paymentId = userService.selectedCard?.paymentID else { return }
+        guard let paymentId = userService.selectedCard?.paymentID else { throw SDKError(.errorSystem) }
         
         switch sdkManager.payStrategy {
             

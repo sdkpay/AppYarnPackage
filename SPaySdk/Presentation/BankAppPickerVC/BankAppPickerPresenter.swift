@@ -114,11 +114,6 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
                     .build(), on: view?.analyticsName ?? .None)
                 bankManager.selectedBank = nil
                 checkTappedAppsCount()
-                analytics.send(EventBuilder()
-                    .with(base: .LC)
-                    .with(value: .bankApp)
-                    .with(postState: .Fail)
-                    .build(), on: view?.analyticsName ?? .None)
                 view?.reloadTableView()
             }
         }

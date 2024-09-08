@@ -87,6 +87,7 @@ targets:
     dependencies:
       - package: IQKeyboardManagerSwift
       - package: YandexMobileMetrica
+      - framework: SberIdSDK.xcframework
       - target: SPaySdkDEBUG
         link: true
     preBuildScripts:
@@ -143,6 +144,12 @@ targets:
             cms-res.online.sberbank.ru:
               NSExceptionAllowsInsecureHTTPLoads: true
             iftmpclickstream.testonline.sberbank.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            id-ift.sber.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            id-psi.sber.ru:
+              NSExceptionAllowsInsecureHTTPLoads: true
+            id.sber.ru:
               NSExceptionAllowsInsecureHTTPLoads: true
         UIFileSharingEnabled: true
         LSApplicationQueriesSchemes:

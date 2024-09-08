@@ -6,59 +6,63 @@
 	<dict>
 		<key>Assets.car</key>
 		<data>
-		Jcp9o2y12aCTl5JjhOL5PcXk1LU=
+		d7+el7oIqKZtjLGehuTEzWBayK4=
 		</data>
 		<key>Headers/SberIdSDK-Swift.h</key>
 		<data>
-		kEE9uMcCgGoegu05dBFouHZZKk4=
+		9ARccKe7JSKuy+Vv2YonPL6w+0k=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		cMCi+35HmT011WAI/DFmf33sBCc=
+		jZ7razle8snsXR9iekF5Pbh44f4=
 		</data>
 		<key>Modules/SberIdSDK.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		4Gg4vuu9iUhyS+bK6/Xr8RJe5k0=
+		62iJh1xGCqzAJcACDPF2Xn8t1X8=
 		</data>
 		<key>Modules/SberIdSDK.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		S1zfDmJWOvctuC+SiFvp8/9CnM8=
+		Mo8VuPujGwby6GOavlqmXuJu+hw=
 		</data>
 		<key>Modules/SberIdSDK.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		z0pK3VWiOfjCgEwIMHd2WWD1qmY=
+		ZOkUpDK2Vgnxxxhf5TiswSm+zRM=
 		</data>
 		<key>Modules/SberIdSDK.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		S1zfDmJWOvctuC+SiFvp8/9CnM8=
+		Mo8VuPujGwby6GOavlqmXuJu+hw=
 		</data>
 		<key>Modules/SberIdSDK.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		wIZ77VCO/20usmEAIq17skmUVAQ=
+		5ThdyPXaT3A6+8co6OM/YdoeaHE=
 		</data>
 		<key>Modules/SberIdSDK.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		4Gg4vuu9iUhyS+bK6/Xr8RJe5k0=
+		62iJh1xGCqzAJcACDPF2Xn8t1X8=
 		</data>
 		<key>Modules/SberIdSDK.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		i4CKFnp5Zvs6q3G/Im6xyo2qtJ4=
+		HrDhmOQYxH+Zlke7flV0VISbsfg=
 		</data>
 		<key>Modules/SberIdSDK.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		JgsPp0pAnd+g3jkcwVlQ39gGU4k=
+		Fw1ukiA9B0esKcWfnqbygETxIRg=
 		</data>
 		<key>Modules/SberIdSDK.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		i4CKFnp5Zvs6q3G/Im6xyo2qtJ4=
+		HrDhmOQYxH+Zlke7flV0VISbsfg=
 		</data>
 		<key>Modules/SberIdSDK.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		+kVlkQ2d4Y1teoSLX86CsMeOQX0=
+		wqZP6J+pv3lGStk4FI1eDCwV6p8=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
 		x/PV4VY9Rz36tPoXkkVcyr699Xw=
+		</data>
+		<key>PrivacyInfo.xcprivacy</key>
+		<data>
+		Jexa4Rw/O74HBHAxvRy0PeP1Ncs=
 		</data>
 		<key>SBSansText-Bold.otf</key>
 		<data>
@@ -102,13 +106,13 @@
 		</data>
 		<key>VERSIONS.md</key>
 		<data>
-		mU4qOyIjdOVG80Fc1Jc87GLcV98=
+		a5cUGZFzaSKERbAQ4AMQphgye60=
 		</data>
 		<key>en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			ny06PYRf01ufUzjT6jr+LyAsHuY=
+			DtzplHsezbCnbfJNWyQ/QBW/kjM=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -117,7 +121,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			b8MX2ZiZ1D7HpIBdtvTB0+7y+Go=
+			tf4l2haKpJG7nv+Yx5W4nj4kYlM=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -153,84 +157,84 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			1I0Tx/9DrBrDlhLLZNNCK8uiPrWGWoyv4WZ5DZT5IjE=
+			3o9YlePkFcEzmuypRUXIqdkp6DJkGo/W8ylkoIvW1hc=
 			</data>
 		</dict>
 		<key>Headers/SberIdSDK-Swift.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			TZuYFuKoLSbHFpnm92cAT3JlU8+j+PkFrDfziqUD8qo=
+			oXVhtpMRd9oQmNASoOreO6dZKkCaAIPiJo1nr3kaO68=
 			</data>
 		</dict>
 		<key>Modules/SberIdSDK.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			jsnHpjHpXf/wGkSmj7L0fBwWDNtn5VYxw3kf7NVXNQU=
+			0f3uNVJLAOKn0q5jzgfFe47gfcQjddoBNF6HtJSUHoo=
 			</data>
 		</dict>
 		<key>Modules/SberIdSDK.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			btB0RvVCW8K5+xQwkZzF7jgAbmDWn6Ljjb0F4PDjJzQ=
+			AANIVRqin1F5ySQmOCPi6Toiy/Scp2YyuKbWH38vOOE=
 			</data>
 		</dict>
 		<key>Modules/SberIdSDK.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			M+UV3zcnSyimaknJKw05n5mY0somM6BCazf55le/fV0=
+			Q+NfDgLtB7QcJihvN1woSOdCMw5auSNR8Cq+01wGXf4=
 			</data>
 		</dict>
 		<key>Modules/SberIdSDK.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			btB0RvVCW8K5+xQwkZzF7jgAbmDWn6Ljjb0F4PDjJzQ=
+			AANIVRqin1F5ySQmOCPi6Toiy/Scp2YyuKbWH38vOOE=
 			</data>
 		</dict>
 		<key>Modules/SberIdSDK.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			fKBtEk+mf5UKnk5jd7O55VBURb55/jtgHmOst6COSwA=
+			n1rpBVK1qr/ZP/rK+oAFeZxNl+NGB50QEhmhx9uf9GQ=
 			</data>
 		</dict>
 		<key>Modules/SberIdSDK.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			jsnHpjHpXf/wGkSmj7L0fBwWDNtn5VYxw3kf7NVXNQU=
+			0f3uNVJLAOKn0q5jzgfFe47gfcQjddoBNF6HtJSUHoo=
 			</data>
 		</dict>
 		<key>Modules/SberIdSDK.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			yoT2j1z66WxRNhFNNSKrqW+r2CJR7+EAhufOwSR84U4=
+			rPdQ8rGS1r58MOQvWYhALzmFXX3n6nl3rQZNmf/nVpY=
 			</data>
 		</dict>
 		<key>Modules/SberIdSDK.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			MMvLkysRUwAbLpei9fvj6hwIQ4w+VHHGV+rmAfgjfkg=
+			X61nOp/BdHffGJ4vaLl1hItfQK+gCfKqtybGNPJWSnI=
 			</data>
 		</dict>
 		<key>Modules/SberIdSDK.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			yoT2j1z66WxRNhFNNSKrqW+r2CJR7+EAhufOwSR84U4=
+			rPdQ8rGS1r58MOQvWYhALzmFXX3n6nl3rQZNmf/nVpY=
 			</data>
 		</dict>
 		<key>Modules/SberIdSDK.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			OENCT+YSBroH868OGtkP1vMhzL79QwNRuYZuNQaV5oY=
+			Hr22AiIbehPbOI2Y5+86WBXzmchMxcFNhoE6O3qe6M8=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -238,6 +242,13 @@
 			<key>hash2</key>
 			<data>
 			fcspXNh7whYvlKQLGXHJmCvM4e2nOhyECiFPx4gpMfM=
+			</data>
+		</dict>
+		<key>PrivacyInfo.xcprivacy</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ToCReDnF3VsZWvaigjwD1UrmohwMKKYJggZH+4kT8ZE=
 			</data>
 		</dict>
 		<key>SBSansText-Bold.otf</key>
@@ -314,14 +325,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			HdYVSFdT6X53GZXPSsfqaGJ+SD1fVRXv1Y1zxvjzqEI=
+			NZtWobH2H604tSkGt6188ky95STtg7zkJKfV3gJIy0I=
 			</data>
 		</dict>
 		<key>en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			FvAPVUONEcQjaJ21EnnrcTkJIIJCUoM6Ea9C5pmbJNk=
+			aSDXRFDyWt7hW6Vog2oBP/epBhSxUzYrm0swpjPHVe8=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -330,7 +341,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			dZXNkTfFr/36/NMQVJQax17p60BtMMDOTjvQmPE0KZI=
+			W37EmNFlJpJvFjvmu1NDJZ0UQ5caetotSi80016pf8o=
 			</data>
 			<key>optional</key>
 			<true/>

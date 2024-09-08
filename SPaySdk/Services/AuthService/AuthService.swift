@@ -37,6 +37,7 @@ private extension MetricsValue {
     
     static let refresh = MetricsValue(rawValue: "Refresh")
     static let bankAppAuth = MetricsValue(rawValue: "BankAppAuth")
+    static let bankAppAuthOutedated = MetricsValue(rawValue: "BankAppAuthOutedated")
 }
 
 private enum Constants {
@@ -77,6 +78,8 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
     private let seamlessAuthService: SeamlessAuthService
     private var appAuthCompletion: ((Result<Void, SDKError>) -> Void)?
     private var appLink: String?
+    
+    private var currentAuthCode: String?
     
     private var cancellable: Cancellable?
     
@@ -150,10 +153,12 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         case .success(let result):
             
             if let code = result.code,
-               let state = result.state {
+               let state = result.state, code != currentAuthCode {
+                currentAuthCode = code
                 authManager.authCode = code
                 authManager.state = state
             } else {
+                
                 analytics.send(EventBuilder()
                     .with(base: .LC)
                     .with(value: .bankAppAuth)
@@ -333,11 +338,41 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
             authManager.authCode = Constants.sendboxAuthCode
         }
         
-        var authParams: (redirectUri: String?, authCode: String?, state: String?) = (nil, nil, nil)
+        var authParams: (redirectUri: String?,
+                         authCode: String?,
+                         state: String?,
+                         cookies: [HTTPCookie]) = (nil, nil, nil, [])
         
-        if authManager.authMethod == .bank {
+        // Проверяем пустой ли рефреш токен в хранилище
+        if authManager.authMethod == .refresh, getRefreshCookies().isEmpty {
+            
+            authManager.authMethod = .bank
+        }
+        
+        switch authManager.authMethod {
+            
+        case .bank:
+            
             let bankAuthParams = try authManager.getParamsForBankAuth()
-            authParams = (request.redirectUri, authCode: bankAuthParams.authCode, state: bankAuthParams.state)
+
+            authParams = (request.redirectUri,
+                          authCode: bankAuthParams.authCode,
+                          state: bankAuthParams.state,
+                          cookies: [])
+        case .refresh:
+            var cookies = getRefreshCookies()
+            
+            if cookies.isEmpty {
+                throw SDKError(.errorSystem)
+            }
+            
+            authParams = (nil,
+                          authCode: nil,
+                          state: nil,
+                          cookies: cookies)
+            
+        default:
+            return
         }
 
         do {
@@ -359,7 +394,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                                              userName: nil,
                                              merchantLogin: request.merchantLogin,
                                              resourceName: Bundle.main.bundleIdentifier ?? "no.info",
-                                             authCookie: getRefreshCookies()),
+                                             authCookie: authParams.cookies),
                              to: AuthRefreshModel.self)
             
             saveRefreshIfNeeded(from: authResult.cookies)
@@ -392,23 +427,27 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
         
         guard sdkManager.payStrategy == .auto else { return [] }
         
-        var cookies = [HTTPCookie]()
-        
-        if let idCookie = cookieStorage.getCookie(for: .id) {
-            cookies.append(idCookie)
-        }
-        if let cookieData = cookieStorage.getCookie(for: .refreshData) {
-            cookies.append(cookieData)
-        }
-        
         let event = EventBuilder().with(base: .ST).with(action: .Get).with(value: .refresh)
         
-        if cookies.isEmpty {
-            event.with(state: .Fail)
+        var cookies = [HTTPCookie]()
+        
+        if let idCookie = cookieStorage.getCookie(for: .id), !idCookie.value.isEmpty {
+            cookies.append(idCookie)
         } else {
-            event.with(state: .Good)   
+            event.with(state: .Fail)
+            analytics.send(event.build())
+            return []
         }
         
+        if let cookieData = cookieStorage.getCookie(for: .refreshData), !cookieData.value.isEmpty {
+            cookies.append(cookieData)
+        } else {
+            event.with(state: .Fail)
+            analytics.send(event.build())
+            return []
+        }
+        
+        event.with(state: .Good)
         analytics.send(event.build())
         return cookies
     }

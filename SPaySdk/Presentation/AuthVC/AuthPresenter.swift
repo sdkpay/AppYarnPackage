@@ -20,7 +20,7 @@ final class AuthPresenter: AuthPresenting {
     private let analytics: AnalyticsManager
     private let router: AuthRouter
     private var authService: AuthService
-    private let authManager: AuthManager
+    private var authManager: AuthManager
     private let completionManager: CompletionManager
     private let sdkManager: SDKManager
     private var userService: UserService
@@ -177,6 +177,8 @@ final class AuthPresenter: AuthPresenting {
     
     private func appAuth() async {
         
+        authManager.authMethod = .bank
+        
         if enviromentManager.environment == .sandboxWithoutBankApp {
             await router.presentFakeScreen()
             await self.auth()
@@ -192,9 +194,7 @@ final class AuthPresenter: AuthPresenting {
     private func appAuthMethod() {
         Task {
             do {
-                SBLogger.logThread(obj: self)
                 try await authService.appAuth()
-                SBLogger.logThread(obj: self)
                 await auth()
             } catch {
                 
@@ -416,6 +416,7 @@ final class AuthPresenter: AuthPresenting {
     }
     
     private func dismissWithError(_ error: SDKError) {
+        completionManager.completeWithError(error)
         completionManager.dismissCloseAction(view)
     }
     
@@ -520,48 +521,6 @@ final class AuthPresenter: AuthPresenting {
                  }
              } else {
                  router.presentHelper()
-             }
-         }
-     }
-     
-     private func appAuth() {
-         
-         Task {
-             do {
-                 try await authService.appAuth()
-                 
-                 await self.view?.showLoading()
-                 
-                 repeatAuth()
-             } catch {
-                 if let error = error as? SDKError {
-                     
-                     if error.represents(.noData)
-                         || error.represents(.bankAppError)
-                         || error.represents(.bankAppNotFound) {
-                         
-                         await router.presentBankAppPicker()
-                         self.repeatAuth()
-                     } else {
-                         await alertService.show(on: view, type: .defaultError)
-                         completionManager.dismissCloseAction(view)
-                     }
-                 }
-             }
-         }
-     }
-     
-     private func repeatAuth() {
-         Task {
-             do {
-                 try await self.authService.auth()
-                 
-                 self.authService.bankCheck = true
-                 self.presentListCards()
-             } catch {
-                 
-                 await alertService.show(on: view, type: .defaultError)
-                 completionManager.dismissCloseAction(view)
              }
          }
      }

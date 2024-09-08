@@ -8,6 +8,13 @@
 import Foundation
 import Security
 
+private enum SharedKeychainConstants {
+    
+    static let groupEnding = "ru.sid.iphone.shared"
+    static let appIdKey = "AppIdentifierPrefix"
+}
+
+
 enum StorageKey: String {
     
     case cookieData
@@ -34,8 +41,8 @@ enum StorageMode {
         case .local:
             return nil
         case .sid:
-            let appIdPrefix = Bundle.main.object(forInfoDictionaryKey: "AppIdentifierPrefix") as? String ?? ""
-            return appIdPrefix + "ru.sid.iphone.shared"
+            guard let appIdPrefix = Bundle.main.object(forInfoDictionaryKey: SharedKeychainConstants.appIdKey) as? String else { return nil }
+            return appIdPrefix + SharedKeychainConstants.groupEnding
         }
     }
 }
