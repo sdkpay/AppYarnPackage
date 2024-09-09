@@ -29,7 +29,6 @@ final class PartPayPresenter: PartPayPresenting {
     
     private var partPayService: PartPayService
     private let router: PartPayRouter
-    private let timeManager: OptimizationCheсkerManager
     private let analytics: AnalyticsManager
     private var partPaySelected: Action
     private var isSelected = true
@@ -40,16 +39,13 @@ final class PartPayPresenter: PartPayPresenting {
     init(_ router: PartPayRouter,
          partPayService: PartPayService,
          partPayModule: ModuleVC,
-         timeManager: OptimizationCheсkerManager,
          analytics: AnalyticsManager,
          partPaySelected: @escaping Action) {
         self.partPayService = partPayService
         self.router = router
         self.analytics = analytics
-        self.timeManager = timeManager
         self.partPayModule = partPayModule
         self.partPaySelected = partPaySelected
-        self.timeManager.startTraking()
     }
     
     func viewDidLoad() {

@@ -26,7 +26,6 @@ final class AuthPresenter: AuthPresenting {
     private var userService: UserService
     private var bankManager: BankAppManager
     private let alertService: AlertService
-    private let timeManager: OptimizationCheсkerManager
     private let enviromentManager: EnvironmentManager
     private let versionСontrolManager: VersionСontrolManager
     private let seamlessAuthService: SeamlessAuthService
@@ -52,7 +51,6 @@ final class AuthPresenter: AuthPresenting {
          bankManager: BankAppManager,
          versionСontrolManager: VersionСontrolManager,
          partPayService: PartPayService,
-         timeManager: OptimizationCheсkerManager,
          enviromentManager: EnvironmentManager,
          remoteConfigService: RemoteConfigService,
          biometricAuthProvider: BiometricAuthProviderProtocol,
@@ -71,7 +69,6 @@ final class AuthPresenter: AuthPresenting {
         self.alertService = alertService
         self.partPayService = partPayService
         self.bankManager = bankManager
-        self.timeManager = timeManager
         self.enviromentManager = enviromentManager
         self.seamlessAuthService = seamlessAuthService
         self.payAmountValidationManager = payAmountValidationManager
@@ -81,7 +78,6 @@ final class AuthPresenter: AuthPresenting {
         self.featureToggle = featureToggle
         self.biometricAuthProvider = biometricAuthProvider
         self.localSessionIdService = localSessionIdService
-        self.timeManager.startTraking()
     }
     
     deinit {

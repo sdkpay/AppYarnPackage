@@ -7,7 +7,7 @@
 
 import UIKit
 import SPaySdkDEBUG
-import SberIdSDK
+// import SberIdSDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

@@ -41,7 +41,6 @@ final class AuthAssembly {
                       bankManager: locator.resolve(),
                       versionСontrolManager: locator.resolve(),
                       partPayService: locator.resolve(),
-                      timeManager: OptimizationCheсkerManager(),
                       enviromentManager: locator.resolve(),
                       remoteConfigService: locator.resolve(),
                       biometricAuthProvider: locator.resolve(),

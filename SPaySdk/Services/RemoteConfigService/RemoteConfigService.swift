@@ -27,7 +27,6 @@ protocol RemoteConfigService {
 
 final class DefaultRemoteConfigService: RemoteConfigService {
     private let network: NetworkService
-    private let optimizationManager = OptimizationCheсkerManager()
     private let featureToggle: FeatureToggleService
     private let analytics: AnalyticsService
     private let versionСontrolManager: VersionСontrolManager

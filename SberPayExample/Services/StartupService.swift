@@ -7,7 +7,7 @@
 
 import UIKit
 import SPaySdkDEBUG
-import SberIdSDK
+//import SberIdSDK
 import IQKeyboardManagerSwift
 
 final class StartupService {
@@ -25,6 +25,6 @@ final class StartupService {
     }
     
     private func setupSberId() {
-        SID.initializer.initialize()
+       // SID.initializer.initialize()
     }
 }

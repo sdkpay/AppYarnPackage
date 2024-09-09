@@ -232,7 +232,7 @@ final class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource
                                                  redirectUri: redirectUri,
                                                  apiKey: values.apiKey)
         
-        SPay.payWithBankInvoiceId(with: self, paymentRequest: request) { state, info, localSessionId in
+        SPay.payWithBankInvoiceId(paymentRequest: request) { state, info, localSessionId in
             switch state {
             case .success:
                 self.showResult(title: "Отдали мерчу success",

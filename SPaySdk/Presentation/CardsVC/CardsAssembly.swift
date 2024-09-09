@@ -47,7 +47,6 @@ final class CardsAssembly {
                                        cards: cards,
                                        selectedId: selectedId,
                                        featureToggle: locator.resolve(),
-                                       timeManager: OptimizationCheсkerManager(),
                                        selectedCard: selectedCard)
         return presenter
     }

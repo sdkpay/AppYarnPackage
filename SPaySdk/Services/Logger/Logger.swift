@@ -39,6 +39,7 @@ public enum DebugLogLevel: String, CaseIterable, Codable {
     case lifeCycle = "LifeCycle"
     case analytics = "Analytics"
     case storage = "Storage"
+    case sourceCode = "SourceCode"
     case defaultLevel = "Default"
 }
 #else
@@ -496,7 +497,7 @@ enum SBLogger {
                     fileName: String = #file,
                     lineNumber: Int = #line) {
         log(
-            level: .debug(level: .defaultLevel),
+            level: .debug(level: .sourceCode),
             """
             📄 Log name: \(name)
                class: \(String(describing: type(of: obj)))

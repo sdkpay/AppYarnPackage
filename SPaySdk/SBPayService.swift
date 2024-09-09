@@ -46,10 +46,6 @@ extension SBPayService {
     
     func payWithBankInvoiceId(paymentRequest: SBankInvoicePaymentRequest,
                               completion: @escaping PaymentCompletion) {
-        SBLogger.log("merchLog: \(paymentRequest.merchantLogin)")
-        SBLogger.log("orderNumber: \(paymentRequest.orderNumber)")
-        SBLogger.log("apiKey: \(paymentRequest.apiKey)")
-        SBLogger.log("bankInvoiceid: \(paymentRequest.bankInvoiceId)")
         payWithBankInvoiceId(with: nil, paymentRequest: paymentRequest, completion: completion)
     }
     
@@ -61,13 +57,12 @@ extension SBPayService {
 
 final class DefaultSBPayService: SBPayService {
 
-    private lazy var liveCircleManager: LiveCircleManager = DefaultLiveCircleManager(timeManager: timeManager)
+    private lazy var liveCircleManager: LiveCircleManager = DefaultLiveCircleManager()
     private lazy var locator: LocatorService = DefaultLocatorService()
     private lazy var buildSettings: BuildSettings = DefaultBuildSettings()
     private lazy var logService: LogService = DefaultLogService()
     private lazy var inProgress = false
     private let assemblyManager = AssemblyManager()
-    private let timeManager = OptimizationCheсkerManager()
     private var apiKey: String?
     
     func setup(bnplPlan: Bool,
@@ -130,8 +125,6 @@ final class DefaultSBPayService: SBPayService {
             .config()
         guard !inProgress else { return }
         inProgress = true
-        timeManager.startCheckingCPULoad()
-        timeManager.startContectionTypeChecking()
         
         locator
             .resolve(AnalyticsManager.self)
@@ -176,8 +169,6 @@ final class DefaultSBPayService: SBPayService {
             .config()
         guard !inProgress else { return }
         inProgress = true
-        timeManager.startCheckingCPULoad()
-        timeManager.startContectionTypeChecking()
         
         locator
             .resolve(AnalyticsManager.self)
@@ -222,8 +213,6 @@ final class DefaultSBPayService: SBPayService {
             .config()
         guard !inProgress else { return }
         inProgress = true
-        timeManager.startCheckingCPULoad()
-        timeManager.startContectionTypeChecking()
         
         locator
             .resolve(AnalyticsManager.self)

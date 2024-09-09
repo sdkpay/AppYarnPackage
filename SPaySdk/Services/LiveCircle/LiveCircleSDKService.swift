@@ -20,13 +20,8 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     private var locator: LocatorService?
     var rootController: RootVC?
     private weak var metchVC: UIViewController?
-    private let timeManager: OptimizationCheсkerManager?
     var closeWithGesture: Action?
     var sdkWindow: UIWindow?
-    
-    init(timeManager: OptimizationCheсkerManager) {
-        self.timeManager = timeManager
-    }
 
     func openInitialScreen(with viewController: UIViewController?,
                            with locator: LocatorService) {
@@ -40,21 +35,12 @@ final class DefaultLiveCircleManager: LiveCircleManager {
     deinit {
         SBLogger.log(.stop(obj: self))
     }
-    
+
     @MainActor
     func closeSDKWindow() async {
         locator?.resolve(NetworkService.self).cancelTask()
-        
-        await withCheckedContinuation { continuation in
-            
-            let nillableContinuation: CheckedContinuation<Void, Never>? = continuation
-            
-            self.rootController?.dismiss(animated: false, completion: {
-                nillableContinuation?.resume()
-                self.rootController = nil
-                self.sdkWindow = nil
-            })
-        }
+        self.rootController = nil
+        self.sdkWindow = nil
     }
 
     private func setupWindows(viewController: UIViewController?,
@@ -66,7 +52,6 @@ final class DefaultLiveCircleManager: LiveCircleManager {
         } else {
             if let currentWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
                 sdkWindow = nil
-                SBLogger.log("----> Начали инитить Window <----")
                 sdkWindow = UIWindow(windowScene: currentWindowScene)
                 sdkWindow?.backgroundColor = .clear
                 sdkWindow?.windowLevel = .alert + 1

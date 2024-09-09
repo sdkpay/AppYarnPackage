@@ -33,7 +33,6 @@ final class PartPayAssembly {
         let presenter = PartPayPresenter(router,
                                          partPayService: locator.resolve(), 
                                          partPayModule: partPayModule(),
-                                         timeManager: OptimizationCheсkerManager(),
                                          analytics: locator.resolve(),
                                          partPaySelected: partPaySelected)
         return presenter

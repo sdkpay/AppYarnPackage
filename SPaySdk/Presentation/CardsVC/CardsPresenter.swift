@@ -62,7 +62,6 @@ final class CardsPresenter: CardsPresenting {
     private var notEnoughtCards: [PaymentTool] = []
     private let selectedCard: (PaymentTool) -> Void
     private let selectedId: Int
-    private var timeManager: OptimizationCheсkerManager
     private var featureToggle: FeatureToggleService
     
     private var cancellable = Set<AnyCancellable>()
@@ -75,7 +74,6 @@ final class CardsPresenter: CardsPresenting {
          cards: [PaymentTool],
          selectedId: Int,
          featureToggle: FeatureToggleService,
-         timeManager: OptimizationCheсkerManager,
          selectedCard: @escaping (PaymentTool) -> Void) {
         self.router = router
         self.analytics = analytics
@@ -86,8 +84,6 @@ final class CardsPresenter: CardsPresenting {
         self.selectedCard = selectedCard
         self.selectedId = selectedId
         self.featureToggle = featureToggle
-        self.timeManager = timeManager
-        self.timeManager.startTraking()
     }
     
     func viewDidLoad() {

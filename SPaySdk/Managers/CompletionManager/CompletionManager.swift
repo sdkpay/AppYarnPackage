@@ -73,27 +73,38 @@ final class DefaultCompletionManager: CompletionManager {
     }
     
     func closeAction() {
-        
-        giveActualCompletion()
+        Task {
+            await giveActualCompletion()
+        }
     }
     
     func dismissCloseAction(_ view: ContentVC?) {
-
-        DispatchQueue.main.async {
-            self.liveCircleManager.rootController?.dismiss(animated: true,
-                                                           completion: { [weak self] in
-                self?.giveActualCompletion()
+        
+        Task {
+            await dismissRootVC()
+            await giveActualCompletion()
+        }
+    }
+    
+    private var nillableContinuation: CheckedContinuation<Void, Never>?
+    
+    @MainActor
+    private func dismissRootVC() async {
+        
+        await withCheckedContinuation { continuation in
+            
+            nillableContinuation = continuation
+            
+            self.liveCircleManager.rootController?.dismiss(animated: true, completion: {
+                self.nillableContinuation?.resume()
             })
         }
     }
     
-    private func giveActualCompletion() {
+    private func giveActualCompletion() async {
         
         analyticsService.finishSession()
-        
-        Task {
-            await givePayCompletion()
-        }
+        await givePayCompletion()
     }
     
     @MainActor

@@ -105,7 +105,6 @@ public final class SPay: NSObject {
         payService?.payWithoutRefresh(paymentRequest: paymentRequest, completion: completion)
     }
     
-    
     @objc
     public static func payWithPartPay(paymentRequest: SBankInvoicePaymentRequest,
                                       completion: @escaping (_ state: SPayState,

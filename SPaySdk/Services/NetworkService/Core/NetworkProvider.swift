@@ -64,7 +64,6 @@ final class DefaultNetworkProvider: NSObject, NetworkProvider {
     private var requestManager: BaseRequestManager
     private var hostManager: HostManager
     private var analytics: AnalyticsManager
-    private let timeManager = OptimizationCheсkerManager()
     private var buildSettings: BuildSettings
 
     init(requestManager: BaseRequestManager,
