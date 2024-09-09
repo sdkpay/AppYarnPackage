@@ -78,6 +78,7 @@ final class DefaultAuthManager: AuthManager {
         guard let state else { throw SDKError(.noData) }
         
         return (authCode, state)
+    }
         
     func setEnableBonuses(_ value: Bool) {
         spasiboBonusesEnabled = value
