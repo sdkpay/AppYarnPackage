@@ -130,7 +130,7 @@ final class AuthPresenter: AuthPresenting {
     
     @MainActor
     private func showBanksStack() {
-        bankManager.removeSavedBank()
+//        bankManager.removeSavedBank()
         Task {
             await router.presentBankAppPicker()
             await self.auth()
@@ -181,7 +181,7 @@ final class AuthPresenter: AuthPresenting {
             await self.auth()
         }
         
-        if bankManager.selectedBank == nil {
+        if bankManager.selectedBank == nil || featureToggle.isEnabled(.saveBank) {
             banks = bankManager.avaliableBanks.filter({ $0.versionType == .prom })
             
             bankManager.selectedBank = banks.first

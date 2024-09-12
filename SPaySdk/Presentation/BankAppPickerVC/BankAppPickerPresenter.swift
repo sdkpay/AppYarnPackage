@@ -52,6 +52,12 @@ final class BankAppPickerPresenter: BankAppPickerPresenting {
     
     func viewDidLoad() {
         bankAppModels = getModels(type: .prom)
+        if let selected = bankAppModels.firstIndex(where: { $0.link == bankManager.selectedBank?.authLink }) {
+            bankAppModels[selected].deprecated = true
+            bankAppModels[selected].tapped = true
+        }
+        bankManager.selectedBank = nil
+        view?.reloadTableView()
         view?.setTilte(Strings.BankAppPicker.subtitle(Bundle.main.displayName))
         addObserver()
     }

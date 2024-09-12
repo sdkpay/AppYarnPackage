@@ -463,7 +463,7 @@ final class DefaultAuthService: AuthService, ResponseDecoder {
                     .with(value: .bankAppAuth)
                     .with(postState: .Fail)
                     .build())
-                self.bankAppManager.selectedBank = nil
+//                self.bankAppManager.selectedBank = nil
                 self.appAuthCompletion?(.failure(SDKError(.bankAppError)))
         }
     }

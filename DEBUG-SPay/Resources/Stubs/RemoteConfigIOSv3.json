@@ -75,6 +75,10 @@
         {
             "name": "hideLocalSessionId",
             "value": true
+        },
+        {
+            "name": "saveBank",
+            "value": false
         }
     ],
     "bankApps": [

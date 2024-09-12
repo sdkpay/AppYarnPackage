@@ -23,6 +23,7 @@ enum Feature: String, Codable {
     case useClickstream
     case allowClickStreamAllCerts
     case hideLocalSessionId
+    case saveBank
 }
 
 final class FeatureToggleServiceAssembly: Assembly {

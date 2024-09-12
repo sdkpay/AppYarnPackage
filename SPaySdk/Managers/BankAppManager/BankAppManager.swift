@@ -27,6 +27,7 @@ final class BankAppManagerAssembly: Assembly {
 
 protocol BankAppManager {
     
+    var autoOpenedBank: BankApp? { get set }
     var selectedBank: BankApp? { get set }
     var bankAppSavedPublisher: Published<BankApp?>.Publisher { get }
     var avaliableBanks: [BankApp] { get }
@@ -49,6 +50,7 @@ final class DefaultBankAppManager: BankAppManager {
     }
     
     private var _selectedBank: BankApp?
+    var autoOpenedBank: BankApp?
     private var merchantBank: BankApp?
     
     @Published private var bankAppSaved: BankApp?
