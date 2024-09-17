@@ -5,6 +5,7 @@
 @interface AppYarnPackage : NSObject <NativeAppYarnPackageSpec>
 #else
 #import <React/RCTBridgeModule.h>
+#import <SPaySdk/SPaySdk.h>
 
 @interface AppYarnPackage : NSObject <RCTBridgeModule>
 #endif
