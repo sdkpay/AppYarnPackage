@@ -6,6 +6,12 @@ import {
   type ViewStyle,
 } from 'react-native';
 
+export enum SDKEnvironment {
+	EnvironmentProd = 0,
+	EnvironmentSandboxWithoutBankApp = 1,
+	EnvironmentSandboxRealBankApp = 2
+}
+
 const LINKING_ERROR =
   `The package 'demo-project' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
@@ -46,8 +52,9 @@ const AppYarnPackage = NativeModules.AppYarnPackage
       creditCard: boolean,
       debitCard: boolean
     },
+    environment: SDKEnvironment,
     fn: (errorString: string) => void) {
-  AppYarnPackage.setupSDK(params, (errorString: string) => fn(errorString))
+  AppYarnPackage.setupSDK(params, environment, (errorString: string) => fn(errorString))
 }
 
 export function isReadyForSPay(fn: (isReady: boolean) => void) {

@@ -12,7 +12,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import { AppYarnPackageView } from '/Users/19046354/AppYarnPackage/src/index';
+import { AppYarnPackageView, SDKEnvironment } from '/Users/19046354/AppYarnPackage/src/index';
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 
@@ -39,7 +39,7 @@ function Section({ children, title }: SectionProps): JSX.Element {
         ]}>
         {title}
       </Text>
-      { children }
+      {children}
     </View>
   );
 }
@@ -104,6 +104,7 @@ export default function App(): JSX.Element {
 }
 
 function appSetupSDK() {
+  var environment = SDKEnvironment.EnvironmentProd
   var testSetupParams = {
     'bnplPlan': true,
     'resultViewNeeded': true,
@@ -115,6 +116,7 @@ function appSetupSDK() {
   }
   setupSDK(
     testSetupParams,
+    environment,
     (errorString: string) => {
       if(errorString) {
         Alert.alert(`Error found! ${errorString}`)
@@ -133,12 +135,12 @@ function appIsReadyForSPay() {
 
 function appPayWithBankInvoiceId() {
   var requestParams = {
-    'merchantLogin': 'Test shop',
-    'bankInvoiceId': '12332323095123323230951233232322',
+    'merchantLogin': 'mineev_sdk',
+    'bankInvoiceId': 'b38892a1784d45db81a1a89134946cf1',
     'orderNumber': '412',
     'language': 'rus',
-    'redirectUri': 'sberPayExampleapp://sberidauth',
-    'apiKey': 'testApiKey'
+    'redirectUri': 'sdkdpxxaqglg://spay',
+    'apiKey': 'AJpyllTD+0LKpCMDVZEB2ecAAAAAAAAADDLBcwrQjr5bOjn3yzYlFpCBk1nyQ9J46Ar3DrFBNyA92UJ7g/8zwuNose2pNnduv8JnjxD4h3HXdK8jTQB3pu7/HWqntPpBUCaA/8wqXK/gbgbJdWCU/7hzbtdYkxSD0u3qau9/4wM1p9WgkzNEPtPJE/gRKMk='
   }
 
   payWithBankInvoiceId(

@@ -10,7 +10,9 @@
 @implementation AppYarnPackage
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(setupSDK: (NSDictionary *)params callback: (RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(setupSDK: (NSDictionary *)params
+				  environment: (NSInteger)environment
+				  callback: (RCTResponseSenderBlock)callback)
 {
   SConfig* config = [[SConfig alloc] initWithSbp:params[@"sbp"]
 									   creditCard:params[@"creditCard"]
@@ -20,7 +22,7 @@ RCT_EXPORT_METHOD(setupSDK: (NSDictionary *)params callback: (RCTResponseSenderB
 				  helpers:params[@"helpers"]
 				 needLogs:params[@"needLogs"]
 			 helperConfig:config
-			  environment:SEnvironmentSandboxRealBankApp
+			  environment:environment
 			   completion:^(SPError * _Nullable error) {
 	callback(@[error.description ?: [NSNull null]]);
   }];
@@ -39,7 +41,7 @@ RCT_EXPORT_METHOD(payWithBankInvoiceId: (NSDictionary *)params callback: (RCTRes
 	SBankInvoiceIdPaymentRequest * request = [[SBankInvoiceIdPaymentRequest alloc]
 											  initWithMerchantLogin:params[@"merchantLogin"]
 											  bankInvoiceId:params[@"bankInvoiceId"]
-											  orderNumber:params[@"orderNumber123"]
+											  orderNumber:params[@"orderNumber"]
 											  language:params[@"language"]
 											  redirectUri:params[@"redirectUri"]
 											  apiKey:params[@"apiKey"]];

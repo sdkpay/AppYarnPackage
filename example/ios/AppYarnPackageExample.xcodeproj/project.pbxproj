@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* AppYarnPackageExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AppYarnPackageExampleTests.m */; };
 		0C80B921A6F3F58F76C31292 /* libPods-AppYarnPackageExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-AppYarnPackageExample.a */; };
-		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		42B64D292C945975007B1C56 /* SPaySdk.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42B64D282C945975007B1C56 /* SPaySdk.xcframework */; };
 		42B64D2A2C945975007B1C56 /* SPaySdk.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 42B64D282C945975007B1C56 /* SPaySdk.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		42B8B2E72C9C454F00D27743 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 42B8B2E62C9C454F00D27743 /* AppDelegate.m */; };
 		7699B88040F8A987B510C191 /* libPods-AppYarnPackageExample-AppYarnPackageExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-AppYarnPackageExample-AppYarnPackageExampleTests.a */; };
 		79AE592C98AA8086BF462E8C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = FA468A71A1BE97D1DFDE8F8E /* PrivacyInfo.xcprivacy */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -49,7 +49,6 @@
 		00E356F21AD99517003FC87E /* AppYarnPackageExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppYarnPackageExampleTests.m; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* AppYarnPackageExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppYarnPackageExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = AppYarnPackageExample/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = AppYarnPackageExample/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AppYarnPackageExample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AppYarnPackageExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = AppYarnPackageExample/main.m; sourceTree = "<group>"; };
@@ -57,6 +56,7 @@
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-AppYarnPackageExample-AppYarnPackageExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppYarnPackageExample-AppYarnPackageExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-AppYarnPackageExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppYarnPackageExample.debug.xcconfig"; path = "Target Support Files/Pods-AppYarnPackageExample/Pods-AppYarnPackageExample.debug.xcconfig"; sourceTree = "<group>"; };
 		42B64D282C945975007B1C56 /* SPaySdk.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SPaySdk.xcframework; path = ../SPaySdk.xcframework; sourceTree = "<group>"; };
+		42B8B2E62C9C454F00D27743 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-AppYarnPackageExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppYarnPackageExample.release.xcconfig"; path = "Target Support Files/Pods-AppYarnPackageExample/Pods-AppYarnPackageExample.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-AppYarnPackageExample-AppYarnPackageExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppYarnPackageExample-AppYarnPackageExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-AppYarnPackageExample-AppYarnPackageExampleTests/Pods-AppYarnPackageExample-AppYarnPackageExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-AppYarnPackageExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppYarnPackageExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,7 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
+				42B8B2E62C9C454F00D27743 /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -418,8 +418,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				42B8B2E72C9C454F00D27743 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,6 +492,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = AppYarnPackageExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -519,6 +520,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = AppYarnPackageExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

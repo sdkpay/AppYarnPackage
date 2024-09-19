@@ -1,3 +1,10 @@
+//
+//  AppDelegate.m
+//  AppYarnPackageExample
+//
+//  Created by Гладкий Сергей Игоревич on 19.09.2024.
+//
+
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
@@ -26,6 +33,16 @@
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  if ([url.scheme isEqualToString:@"sdkdpxxaqglg"] && [url.host isEqualToString:@"spay"])
+  {
+    [SPay getAuthURL: url];
+  }
+  return YES;
 }
 
 @end
